@@ -27,7 +27,7 @@ jobs:
       run: dotnet restore src/RagnaController/RagnaController.csproj
 
     - name: Build
-      run: dotnet build src/RagnaController/RagnaController.csproj --configuration Release --no-restore
+      run: dotnet build src/RagnaController/RagnaController.csproj --configuration Release
 
     - name: Run Tests
       run: dotnet test tests/RagnaController.Tests/RagnaController.Tests.csproj --configuration Release --verbosity normal
