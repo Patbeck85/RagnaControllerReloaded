@@ -88,15 +88,19 @@ jobs:
         run: dotnet restore src/RagnaController/RagnaController.csproj
         working-directory: .
 
-      - name: Build (Release)
+      - name: Build Main Project (Release)
         run: dotnet build src/RagnaController/RagnaController.csproj --configuration Release
+        working-directory: .
+
+      - name: Build Test Project (Release)
+        run: dotnet build tests/RagnaController.Tests/RagnaController.Tests.csproj --configuration Release
         working-directory: .
 
       - name: Run Stryker Mutation Tests
         run: >
           dotnet stryker
           --config-file stryker-config.json
-          --reporters "html,progress,json"
+          --reporter "html,progress,json"
         working-directory: .
 
       - name: Upload Stryker Report
