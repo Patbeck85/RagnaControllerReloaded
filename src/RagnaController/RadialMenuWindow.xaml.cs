@@ -51,7 +51,7 @@ namespace RagnaController
             public double? SelectionHighlightAlpha { get; set; } = null; // 0-255
         }
 
-        private readonly RadialMenuConfig _config;
+        private readonly RadialMenuConfig? _config;
 
         public RadialMenuWindow(InputCommandQueue queue, RadialMenuConfig config = null) : this()
         {
@@ -192,16 +192,16 @@ namespace RagnaController
 
         public void ExecuteAndClose()
         {
-            if (_items == null || _selectedIndex < 0 || _selectedIndex >= _items.Count) return; // Null check for CS8602
+            if (_items == null || _selectedIndex < 0 || _selectedIndex >= _items.Count) return;
 
             var item = _items[_selectedIndex];
             if (item.IsEmote && !string.IsNullOrWhiteSpace(item.Command))
             {
-                _queue.SendChatString(item.Command);
+                _queue?.SendChatString(item.Command);
             }
             else if (item.Key != VirtualKey.None)
             {
-                _queue.TapKey(item.Key);
+                _queue?.TapKey(item.Key);
             }
             _selectedIndex = -1;
             this.Visibility = Visibility.Hidden;

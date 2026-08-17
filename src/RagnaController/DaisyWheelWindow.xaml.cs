@@ -29,8 +29,8 @@ namespace RagnaController
         private sealed class DaisyWheelConfig
         {
             public int? SectorCount { get; set; } = 8;
-            public string?[] SectorLabels { get; set; } = null;
-            public Color?[] SectorColors { get; set; } = null;
+            public string?[]? SectorLabels { get; set; }
+            public Color?[]? SectorColors { get; set; }
         }
 
         private static readonly Color[] BtnColors = {
@@ -52,6 +52,7 @@ namespace RagnaController
 
         private bool _prevA, _prevB, _prevX, _prevY, _prevL3, _prevR3, _prevStart;
         private readonly InputCommandQueue? _queue;
+        private DaisyWheelConfig? _config;
 
         public DaisyWheelWindow(InputCommandQueue queue) : this()
         {
@@ -61,6 +62,7 @@ namespace RagnaController
         public DaisyWheelWindow()
         {
             InitializeComponent();
+            _config = new DaisyWheelConfig();
             DrawWheel();
         }
 
@@ -155,7 +157,7 @@ namespace RagnaController
 
             if (start && !_prevStart)
             {
-                _queue.SendChatString(_currentText);
+                _queue?.SendChatString(_currentText);
                 Dispatcher.BeginInvoke(() => Close());
                 return true;
             }
