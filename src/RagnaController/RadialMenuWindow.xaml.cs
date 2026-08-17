@@ -53,7 +53,7 @@ namespace RagnaController
 
         private readonly RadialMenuConfig? _config;
 
-        public RadialMenuWindow(InputCommandQueue queue, RadialMenuConfig config = null) : this()
+        public RadialMenuWindow(InputCommandQueue queue, RadialMenuConfig? config = null) : this()
         {
             _config = config ?? new RadialMenuConfig();
             InitializeFromConfig();
