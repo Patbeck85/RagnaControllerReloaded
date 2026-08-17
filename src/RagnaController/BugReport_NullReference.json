@@ -1,0 +1,58 @@
+[
+  {
+    "file": "Profiles/Profile.cs",
+    "line": 42,
+    "severity": "high",
+    "category": "null_ref",
+    "description": "Feld 'KiteEnabled' hat keinen Default-Wert und kann null sein, wenn es nicht explizit gesetzt wird.",
+    "fix": "Ändere zu: public bool KiteEnabled { get; set; } = false;"
+  },
+  {
+    "file": "Profiles/Profile.cs",
+    "line": 45,
+    "severity": "high",
+    "category": "null_ref",
+    "description": "Feld 'AutoAttackEnabled' hat keinen Default-Wert und kann null sein.",
+    "fix": "Ändere zu: public bool AutoAttackEnabled { get; set; } = false;"
+  },
+  {
+    "file": "Profiles/Profile.cs",
+    "line": 46,
+    "severity": "high",
+    "category": "null_ref",
+    "description": "Feld 'AutoRetargetEnabled' hat keinen Default-Wert und kann null sein.",
+    "fix": "Ändere zu: public bool AutoRetargetEnabled { get; set; } = false;"
+  },
+  {
+    "file": "Profiles/Profile.cs",
+    "line": 52,
+    "severity": "high",
+    "category": "null_ref",
+    "description": "Feld 'MageEnabled' hat keinen Default-Wert und kann null sein.",
+    "fix": "Ändere zu: public bool MageEnabled { get; set; } = false;"
+  },
+  {
+    "file": "Profiles/Profile.cs",
+    "line": 55,
+    "severity": "high",
+    "category": "null_ref",
+    "description": "Feld 'SupportEnabled' hat keinen Default-Wert und kann null sein.",
+    "fix": "Ändere zu: public bool SupportEnabled { get; set; } = false;"
+  },
+  {
+    "file": "Profiles/Profile.cs",
+    "line": 60,
+    "severity": "high",
+    "category": "null_ref",
+    "description": "Feld 'ComboEnabled' hat keinen Default-Wert und kann null sein.",
+    "fix": "Ändere zu: public bool ComboEnabled { get; set; } = false;"
+  },
+  {
+    "file": "Profiles/ProfileManager.cs",
+    "line": 23,
+    "severity": "medium",
+    "category": "null_ref",
+    "description": "Property 'ActiveProfile' kann null sein, wenn Profiles.Find() kein Element findet. Kann NullReferenceException verursachen bei Zugriff.",
+    "fix": "Ändere zu: public Profile? ActiveProfile => Profiles.Find(p => p.Name == ActiveProfileName) ?? null;"
+  }
+]

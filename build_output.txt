@@ -1,0 +1,13 @@
+  Wiederherzustellende Projekte werden ermittelt...
+  "C:\Hermes\RagnaController\src\RagnaController\RagnaController.csproj" wiederhergestellt (in 605 ms.).
+C:\Hermes\RagnaController\src\RagnaController\Core\ControllerService.cs(198,31): error CS0103: Der Name "GetForegroundWindow" ist im aktuellen Kontext nicht vorhanden. [C:\Hermes\RagnaController\src\RagnaController\RagnaController_wtiakcdd_wpftmp.csproj]
+C:\Hermes\RagnaController\src\RagnaController\Core\ControllerService.cs(202,51): error CS0246: Der Typ- oder Namespacename "Win32" wurde nicht gefunden (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [C:\Hermes\RagnaController\src\RagnaController\RagnaController_wtiakcdd_wpftmp.csproj]
+
+Fehler beim Buildvorgang.
+
+C:\Hermes\RagnaController\src\RagnaController\Core\ControllerService.cs(198,31): error CS0103: Der Name "GetForegroundWindow" ist im aktuellen Kontext nicht vorhanden. [C:\Hermes\RagnaController\src\RagnaController\RagnaController_wtiakcdd_wpftmp.csproj]
+C:\Hermes\RagnaController\src\RagnaController\Core\ControllerService.cs(202,51): error CS0246: Der Typ- oder Namespacename "Win32" wurde nicht gefunden (möglicherweise fehlt eine using-Direktive oder ein Assemblyverweis). [C:\Hermes\RagnaController\src\RagnaController\RagnaController_wtiakcdd_wpftmp.csproj]
+    0 Warnung(en)
+    2 Fehler
+
+Verstrichene Zeit 00:00:04.50

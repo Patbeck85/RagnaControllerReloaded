@@ -1,0 +1,19 @@
+routes:
+  hermes_free_tier:
+    type: escalation
+    judge:
+      model: gemini-3.1-flash-lite
+      api_key: ${GEMINI_API_KEY}
+      base_url: https://generativelanguage.googleapis.com/v1beta/openai
+      disable_reasoning: false
+    weak:
+      model: nvidia/nemotron-3.5-lightning-30b-a3b
+      api_key: ${NVIDIA_API_KEY}
+      base_url: https://integrate.api.nvidia.com/v1
+      format: openai
+    strong:
+      model: nvidia/nemotron-3-ultra-550b-a55b
+      api_key: ${NVIDIA_API_KEY}
+      base_url: https://integrate.api.nvidia.com/v1
+      format: openai
+    fallback_target_on_evict: weak

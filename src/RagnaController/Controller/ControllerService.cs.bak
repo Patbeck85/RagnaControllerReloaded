@@ -1,0 +1,197 @@
+using System;
+using System.Threading;
+using Hexa.NET.SDL2;
+
+namespace RagnaController.Controller
+{
+    /// <summary>
+    /// SDL2 GameController wrapper.
+    /// All SDL calls run on a single dedicated background thread (_sdlThread)
+    /// because SDL2 is NOT thread-safe for event pumping — PumpEvents() must
+    /// be called from the same OS thread that called SDL.Init().
+    /// </summary>
+    public unsafe class ControllerService : IDisposable
+    {
+        // ── Shared state (volatile for cross-thread visibility) ──────────
+        private volatile bool    _isConnected;
+        private volatile bool    _disposed;
+        private SDLGameController* _controller = null;
+
+        public bool   IsConnected   => _isConnected;
+        public string ControllerName  { get; private set; } = "No Controller";
+        public string ControllerType  { get; private set; } = "Unknown";
+
+        // ── SDL thread ────────────────────────────────────────────────────
+        private readonly Thread _sdlThread;
+        private readonly ManualResetEventSlim _scanNow = new(false);
+
+        public ControllerService()
+        {
+            _sdlThread = new Thread(SdlThreadLoop)
+            {
+                Name         = "SDL2_ControllerThread",
+                IsBackground = true
+            };
+            _sdlThread.Start();
+        }
+
+        // ── Public API ────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Request an immediate controller scan (signal the SDL thread).
+        /// Safe to call from any thread.
+        /// </summary>
+        public void DetectController() => _scanNow.Set();
+
+        public SDLGameController* GetRawController() => _controller;
+
+        public string GetBatteryLevel()
+        {
+            if (!_isConnected || _controller == null) return "Unknown";
+            // NOTE: must only be called from the SDL thread — callers must use Dispatcher
+            SDLJoystick* joy = SDL.GameControllerGetJoystick(_controller);
+            if (joy == null) return "Unknown";
+            SDLJoystickPowerLevel level = SDL.JoystickCurrentPowerLevel(joy);
+            return level switch
+            {
+                SDLJoystickPowerLevel.Empty  => "Empty",
+                SDLJoystickPowerLevel.Low    => "Low",
+                SDLJoystickPowerLevel.Medium => "Mid",
+                SDLJoystickPowerLevel.Full   => "Full",
+                SDLJoystickPowerLevel.Wired  => "Wired",
+                _                            => "Unknown"
+            };
+        }
+
+        public void SetRumble(float left, float right)
+        {
+            if (!_isConnected || _controller == null) return;
+            ushort l = (ushort)(Math.Clamp(left,  0f, 1f) * 65535);
+            ushort r = (ushort)(Math.Clamp(right, 0f, 1f) * 65535);
+            SDL.GameControllerRumble(_controller, l, r, 0xFFFFFFFF);
+        }
+
+        public void SetLED(byte r, byte g, byte b)
+        {
+            if (!_isConnected || _controller == null) return;
+            if (SDL.GameControllerHasLED(_controller) == SDLBool.True)
+                SDL.GameControllerSetLED(_controller, r, g, b);
+        }
+
+        public void Dispose()
+        {
+            _disposed = true;
+            _scanNow.Set(); // unblock the SDL thread so it can exit
+        }
+
+        // ── SDL thread body (ALL SDL calls live here) ─────────────────────
+
+        private void SdlThreadLoop()
+        {
+            // ── Init SDL on this thread ──────────────────────────────────
+            int result = SDL.Init(SDL.SDL_INIT_GAMECONTROLLER |
+                                  SDL.SDL_INIT_JOYSTICK       |
+                                  SDL.SDL_INIT_HAPTIC         |
+                                  SDL.SDL_INIT_EVENTS);
+            if (result < 0)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"[ControllerService] SDL.Init failed: {SDL.GetErrorS()}");
+                return;
+            }
+
+            System.Diagnostics.Debug.WriteLine("[ControllerService] SDL2 initialized ✓");
+
+            // ── Initial scan ────────────────────────────────────────────
+            ScanForController();
+
+            // ── Main loop: scan on request or every 3 s ─────────────────
+            while (!_disposed)
+            {
+                // Wait up to 3000 ms for a scan request or disposal
+                bool signalled = _scanNow.Wait(3000);
+                if (_disposed) break;
+                _scanNow.Reset();
+
+                // Pump SDL events (safe — same thread as SDL.Init)
+                SDL.PumpEvents();
+
+                if (!_isConnected || _controller == null)
+                    ScanForController();
+                else
+                    VerifyStillConnected();
+            }
+
+            // ── Cleanup on this thread ───────────────────────────────────
+            if (_controller != null)
+            {
+                SDL.GameControllerRumble(_controller, 0, 0, 0);
+                SDL.GameControllerClose(_controller);
+                _controller = null;
+            }
+            _isConnected = false;
+            SDL.Quit();
+            System.Diagnostics.Debug.WriteLine("[ControllerService] SDL2 shut down");
+        }
+
+        private void ScanForController()
+        {
+            // Pump first so newly-plugged devices are visible
+            SDL.PumpEvents();
+
+            int numJoysticks = SDL.NumJoysticks();
+            System.Diagnostics.Debug.WriteLine(
+                $"[ControllerService] Scanning — {numJoysticks} joystick(s) found");
+
+            for (int i = 0; i < numJoysticks; i++)
+            {
+                if (SDL.IsGameController(i) != SDLBool.True) continue;
+
+                SDLGameController* ctrl = SDL.GameControllerOpen(i);
+                if (ctrl == null) continue;
+
+                string name = SDL.GameControllerNameS(ctrl) ?? "Unknown Gamepad";
+                _controller   = ctrl;
+                ControllerName = name;
+                DetermineControllerType(name);
+                _isConnected   = true;
+
+                System.Diagnostics.Debug.WriteLine(
+                    $"[ControllerService] Connected: {name}");
+                return;
+            }
+
+            // Nothing found
+            _isConnected   = false;
+            ControllerName = "No Controller";
+            ControllerType = "Unknown";
+        }
+
+        private void VerifyStillConnected()
+        {
+            if (_controller == null) { _isConnected = false; return; }
+
+            // GameControllerGetAttached returns SDL_FALSE when the device is gone
+            if (SDL.GameControllerGetAttached(_controller) != SDLBool.True)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"[ControllerService] {ControllerName} disconnected");
+                SDL.GameControllerClose(_controller);
+                _controller    = null;
+                _isConnected   = false;
+                ControllerName = "No Controller";
+                ControllerType = "Unknown";
+            }
+        }
+
+        private void DetermineControllerType(string name)
+        {
+            string lower = name.ToLowerInvariant();
+            if      (lower.Contains("dualsense") || lower.Contains("ps5"))       ControllerType = "PS5";
+            else if (lower.Contains("dualshock") || lower.Contains("ps4"))       ControllerType = "PS4";
+            else if (lower.Contains("nintendo")  || lower.Contains("switch") ||
+                     lower.Contains("pro controller"))                            ControllerType = "Switch";
+            else                                                                  ControllerType = "Xbox";
+        }
+    }
+}

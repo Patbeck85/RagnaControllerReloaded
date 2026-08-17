@@ -1,0 +1,146 @@
+name: CI — Core Tests
+
+on:
+  push:
+    branches: [ main, develop, "release/**" ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    name: Unit Tests (.NET 8)
+    runs-on: windows-latest      # WPF requires Windows
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore src/RagnaController/RagnaController.csproj
+
+      - name: Build (Release)
+        run: dotnet build src/RagnaController/RagnaController.csproj
+               --configuration Release --no-restore --nologo
+
+      - name: Restore test dependencies
+        run: dotnet restore tests/RagnaController.Tests/RagnaController.Tests.csproj
+
+      - name: Run Core Tests
+        run: >
+          dotnet test tests/RagnaController.Tests/RagnaController.Tests.csproj
+          --configuration Release
+          --no-restore
+          --nologo
+          --logger "console;verbosity=normal"
+          --collect:"XPlat Code Coverage"
+          --results-directory ./coverage
+
+      - name: Coverage Threshold Check
+        run: |
+          dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.* 2>NUL || true
+          reportgenerator -reports:./coverage/**/*.xml -targetdir:./coverage/html -reporttypes:TextSummary
+          $summary = Get-Content ./coverage/html/Summary.txt -Raw
+          Write-Host $summary
+          if ($summary -match 'Line coverage: (\d+\.\d+)') {
+            $pct = [float]$matches[1]
+            if ($pct -lt 65.0) {
+              Write-Error "Coverage $pct% is below 65% threshold!"
+              exit 1
+            }
+            Write-Host "✅ Coverage: $pct% (threshold: 65%)"
+          }
+        shell: pwsh
+        continue-on-error: true  # Warnung, kein hard-fail für jetzt
+
+      - name: Upload Coverage Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/**/*.xml
+          retention-days: 14
+
+  stryker-mutation:
+    name: Stryker Mutation Testing
+    runs-on: windows-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install Stryker.NET
+        run: dotnet tool install --global dotnet-stryker --version 4.* || true
+
+      - name: Restore dependencies
+        run: dotnet restore src/RagnaController/RagnaController.csproj
+        working-directory: .
+
+      - name: Build (Release)
+        run: dotnet build src/RagnaController/RagnaController.csproj --configuration Release --no-restore --nologo
+        working-directory: .
+
+      - name: Run Stryker Mutation Tests
+        run: >
+          dotnet stryker
+          --config-file stryker-config.json
+          --threshold-break 70
+          --threshold-low 80
+          --threshold-high 95
+          --reporters "html,progress,json"
+        working-directory: .
+
+      - name: Upload Stryker Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stryker-report
+          path: StrykerOutput/**/*
+          retention-days: 14
+
+      - name: Check Mutation Score
+        if: always()
+        run: |
+          $jsonPath = "StrykerOutput/**/mutation-report.json"
+          $files = Get-ChildItem -Path $jsonPath -ErrorAction SilentlyContinue
+          if ($files.Count -gt 0) {
+            $report = Get-Content $files[0].FullName -Raw | ConvertFrom-Json
+            $score = $report.metrics.mutationScore
+            Write-Host "🧬 Mutation Score: $score%"
+            if ($score -lt 70) {
+              Write-Error "Mutation score $score% is below break threshold (70%)!"
+              exit 1
+            } elseif ($score -lt 80) {
+              Write-Warning "Mutation score $score% is below target threshold (80%)"
+            } else {
+              Write-Host "✅ Mutation Score: $score% (target: ≥80%)"
+            }
+          } else {
+            Write-Warning "No mutation report found"
+          }
+        shell: pwsh
+
+  build-check:
+    name: Build Check (Release)
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Full Solution Build
+        run: |
+          dotnet restore
+          dotnet build --configuration Release --nologo

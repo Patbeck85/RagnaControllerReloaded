@@ -1,0 +1,177 @@
+<Window x:Class="RagnaController.HandheldWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:RagnaController.Core"
+        Title="RagnaController"
+        WindowState="Maximized" WindowStyle="None"
+        Background="#080A0F" Foreground="#F0F4F8"
+        KeyDown="Window_KeyDown"
+        Loaded="Window_Loaded"
+             Closed="Window_Closed">
+
+    <Window.Resources>
+        <DropShadowEffect x:Key="NeonGold"  Color="#E5B842" BlurRadius="16" ShadowDepth="0" Opacity="0.75"/>
+        <DropShadowEffect x:Key="NeonGreen" Color="#3DDB6E" BlurRadius="12" ShadowDepth="0" Opacity="0.6"/>
+        <DropShadowEffect x:Key="NeonRed"   Color="#FF3A52" BlurRadius="12" ShadowDepth="0" Opacity="0.6"/>
+
+        <!-- Riesen-Kachel-Stil für Controller-Steuerung -->
+        <Style x:Key="TileBtn" TargetType="Button">
+            <Setter Property="Background" Value="#121620"/>
+            <Setter Property="Foreground" Value="#F0F4F8"/>
+            <Setter Property="BorderBrush" Value="#2A3245"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Margin" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="14">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="bd" Property="BorderBrush" Value="#E5B842"/>
+                                <Setter TargetName="bd" Property="BorderThickness" Value="4"/>
+                                <Setter TargetName="bd" Property="Effect" Value="{StaticResource NeonGold}"/>
+                                <Setter TargetName="bd" Property="Background" Value="#1C2235"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#1A2030"/>
+                                <Setter TargetName="bd" Property="BorderBrush" Value="#3A4A65"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd" Property="Background" Value="#E5B842"/>
+                                <Setter Property="Foreground" Value="#080A0F"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="72"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="54"/>
+        </Grid.RowDefinitions>
+
+        <!-- ── TOP BAR ─────────────────────────────────────────────────── -->
+        <Border Grid.Row="0" Background="#0D1018" BorderBrush="#2A3245" BorderThickness="0,0,0,1">
+            <Grid Margin="40,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="⚔ RAGNA" FontWeight="Black" FontSize="26" Foreground="#F0F4F8"/>
+                    <TextBlock Text="CONTROLLER" FontWeight="Light" FontSize="26"
+                               Foreground="#E5B842" Margin="6,0,0,0"
+                               Effect="{StaticResource NeonGold}"/>
+                    <Border Background="#E5B842" CornerRadius="4" Padding="8,3" Margin="18,0,0,0" VerticalAlignment="Center">
+                        <TextBlock x:Name="DeviceLabel" Text="Device:"
+                                   FontWeight="Black" FontSize="12" Foreground="#080A0F"/>
+                    </Border>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock x:Name="ActiveProfileText" Text="No profile loaded"
+                               FontSize="17" Foreground="#A1B0C5" Margin="0,0,24,0" VerticalAlignment="Center"/>
+                    <Ellipse x:Name="ControllerDot" Width="10" Height="10"
+                             Fill="#3DDB6E" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock x:Name="ControllerStatusText" Text="Controller disconnected"
+                               FontSize="17" Foreground="#3DDB6E" FontWeight="Bold" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ── KACHEL-GRID ──────────────────────────────────────────────── -->
+        <UniformGrid Grid.Row="1" Columns="3" Rows="2" Margin="48,32">
+
+            <Button x:Name="BtnPlay" Style="{StaticResource TileBtn}" Click="BtnPlay_Click">
+                <StackPanel Margin="0,20">
+                    <TextBlock Text="▶" FontSize="72" Foreground="#3DDB6E"
+                               HorizontalAlignment="Center" Effect="{StaticResource NeonGreen}"/>
+                    <TextBlock Text="PLAY GAME" FontSize="22" FontWeight="Black"
+                               Margin="0,16,0,0" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Launch Ragnarok Online" FontSize="13"
+                               Foreground="#7D8B9E" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                </StackPanel>
+                <Button.ToolTip><ToolTip Content="Start Game"/></Button.ToolTip>
+            </Button>
+
+            <Button x:Name="BtnProfiles" Style="{StaticResource TileBtn}" Click="BtnProfiles_Click">
+                <StackPanel Margin="0,20">
+                    <TextBlock Text="👥" FontSize="72" HorizontalAlignment="Center"/>
+                    <TextBlock Text="PROFILES" FontSize="22" FontWeight="Black"
+                               Margin="0,16,0,0" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Switch class profile" FontSize="13"
+                               Foreground="#7D8B9E" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                </StackPanel>
+                <Button.ToolTip><ToolTip Content="Profile Management"/></Button.ToolTip>
+            </Button>
+
+            <Button x:Name="BtnOverlay" Style="{StaticResource TileBtn}" Click="BtnOverlay_Click">
+                <StackPanel Margin="0,20">
+                    <TextBlock Text="📺" FontSize="72" Foreground="#E5B842"
+                               HorizontalAlignment="Center" Effect="{StaticResource NeonGold}"/>
+                    <TextBlock Text="MINI OVERLAY" FontSize="22" FontWeight="Black"
+                               Margin="0,16,0,0" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Compact in-game HUD" FontSize="13"
+                               Foreground="#7D8B9E" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                </StackPanel>
+                <Button.ToolTip><ToolTip Content="Toggle Overlay"/></Button.ToolTip>
+            </Button>
+
+            <Button x:Name="BtnSettings" Style="{StaticResource TileBtn}" Click="BtnSettings_Click">
+                <StackPanel Margin="0,20">
+                    <TextBlock Text="⚙" FontSize="72" Foreground="#A1B0C5"
+                               HorizontalAlignment="Center"/>
+                    <TextBlock Text="SETTINGS" FontSize="22" FontWeight="Black"
+                               Margin="0,16,0,0" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Deadzone, Turbo, Gyro" FontSize="13"
+                               Foreground="#7D8B9E" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                </StackPanel>
+                <Button.ToolTip><ToolTip Content="Settings"/></Button.ToolTip>
+            </Button>
+
+            <Button x:Name="BtnCommunity" Style="{StaticResource TileBtn}" Click="BtnCommunity_Click">
+                <StackPanel Margin="0,20">
+                    <TextBlock Text="🌐" FontSize="72" HorizontalAlignment="Center"/>
+                    <TextBlock Text="COMMUNITY" FontSize="22" FontWeight="Black"
+                               Margin="0,16,0,0" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Download profiles" FontSize="13"
+                               Foreground="#7D8B9E" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                </StackPanel>
+                <Button.ToolTip><ToolTip Content="Community Hub"/></Button.ToolTip>
+            </Button>
+
+            <Button x:Name="BtnExit" Style="{StaticResource TileBtn}" Click="BtnExit_Click">
+                <StackPanel Margin="0,20">
+                    <TextBlock Text="⏻" FontSize="72" Foreground="#FF3A52"
+                               HorizontalAlignment="Center" Effect="{StaticResource NeonRed}"/>
+                    <TextBlock Text="EXIT" FontSize="22" FontWeight="Black"
+                               Margin="0,16,0,0" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Close RagnaController" FontSize="13"
+                               Foreground="#7D8B9E" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                </StackPanel>
+                <Button.ToolTip><ToolTip Content="Exit Application"/></Button.ToolTip>
+            </Button>
+
+        </UniformGrid>
+
+        <!-- ── FOOTER: Controller-Hints ─────────────────────────────────── -->
+        <Border Grid.Row="2" Background="#0D1018" BorderBrush="#2A3245" BorderThickness="0,1,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,4">
+                <TextBlock FontSize="15" Foreground="#A1B0C5" FontWeight="SemiBold">
+                    <Run Text="D-Pad"/><Run Foreground="#7D8B9E" Text="  Navigate    "/>
+                    <Run Foreground="#4AF578" FontWeight="Bold" Text="Ⓐ"/><Run Foreground="#7D8B9E" Text="  Select    "/>
+                    <Run Foreground="#F57A4A" FontWeight="Bold" Text="Ⓑ"/><Run Foreground="#7D8B9E" Text="  Back    "/>
+                    <Run Foreground="#E5B842" FontWeight="Bold" Text="Start"/><Run Foreground="#7D8B9E" Text="  Enter Game"/>
+                </TextBlock>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

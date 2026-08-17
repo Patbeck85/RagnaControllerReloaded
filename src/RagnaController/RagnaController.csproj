@@ -1,0 +1,202 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>12.0</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>RagnaController</AssemblyName>
+    <RootNamespace>RagnaController</RootNamespace>
+    <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Version>2.0.0</Version>
+    <Authors>RagnaController Contributors</Authors>
+    <Description>Hybrid Action Controller Layer for Ragnarok Online — Smart Cursor Edition</Description>
+    <!-- Disable XAML compilation to avoid conflicts with manually written methods -->
+    <XamlCompilation>Disabled</XamlCompilation>
+    <!-- Enable Windows targeting to allow building on WSL -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <!-- Override NuGet package folder to avoid Windows-specific paths -->
+    <NuGetPackageRoot>/home/patbe/.nuget/packages</NuGetPackageRoot>
+    <!-- Localization namespace mapping for {core:Loc ...} bindings -->
+    <XamlNamespaceMappings>
+      <XamlNamespaceMapping>
+        <Prefix>core</Prefix>
+        <Assembly>RagnaController</Assembly>
+        <Namespace>RagnaController.Locales</Namespace>
+      </XamlNamespaceMapping>
+    </XamlNamespaceMappings>
+    <!-- Disable default compile items to avoid duplicates with Buildalyzer/generated files -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Using Remove="System.Drawing" />
+    <!-- v1.7.0: System.Windows.Forms for Tray Icon support -->
+    <PackageReference Include="System.Windows.Forms" Version="4.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+    <!-- Discord Rich Presence -->
+    <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
+    <!-- v1.7.2: Hexa.NET.SDL2 for native gamepad support (Xbox, DualShock 4, DualSense, Switch Pro) with Lightbar/Rumble -->
+    <PackageReference Include="Hexa.NET.SDL2" Version="1.2.17" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- NU1701 Override: Suppress compatibility warning for System.Windows.Forms 4.0.0 -->
+    <NoWarn>$(NoWarn);NU1701</NoWarn>
+    <!-- Disable fallback package folders to avoid Windows-specific paths in WSL -->
+    <EnableFallbackPackageFolders>false</EnableFallbackPackageFolders>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\icon.ico"            Condition="Exists('Assets\icon.ico')" />
+    <Resource Include="Assets\splash_bg.png"       Condition="Exists('Assets\splash_bg.png')" />
+    <Resource Include="Assets\character_color.png" Condition="Exists('Assets\character_color.png')" />
+    <Resource Include="Assets\character_gray.png"  Condition="Exists('Assets\character_gray.png')" />
+    <Resource Include="Assets\controller.png"      Condition="Exists('Assets\controller.png')" />
+    <Resource Include="Assets\splash_logo.png"     Condition="Exists('Assets\splash_logo.png')" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="App.xaml.cs" />
+    <Compile Include="ButtonRemappingWindow.xaml.cs" />
+    <Compile Include="ComboEditorWindow.xaml.cs" />
+    <Compile Include="CommunityBrowserWindow.xaml.cs" />
+    <Compile Include="Controller\ControllerSnapshot.cs" />
+    <Compile Include="Controller\DualSenseHardwareService.cs" />
+    <Compile Include="Controller\SnapshotBuilder.cs" />
+    <Compile Include="ControllerPreview.cs" />
+    <Compile Include="Converters.cs" />
+    <Compile Include="Core\ActionLogService.cs" />
+    <Compile Include="Core\AdvancedLogger.cs" />
+    <Compile Include="Core\AppVersion.cs" />
+    <Compile Include="Core\AutoStartManager.cs" />
+    <Compile Include="Core\AutoTargetEngine.cs" />
+    <Compile Include="Core\BackgroundTickProvider.cs" />
+    <Compile Include="Core\BezierMouseService.cs" />
+    <Compile Include="Core\CombatEngine.cs" />
+    <Compile Include="Core\ComboEngine.cs" />
+    <Compile Include="Core\ControllerService.cs" />
+    <Compile Include="Core\ControllerSnapshot.cs" />
+    <Compile Include="Core\CooldownManager.cs" />
+    <Compile Include="Core\CursorEngine.cs" />
+    <Compile Include="Core\DefaultProfileLoader.cs" />
+    <Compile Include="Core\DeviceNotificationWindow.cs" />
+    <Compile Include="Core\DiscordRpcService.cs" />
+    <Compile Include="Core\EngineOptimizationPool.cs" />
+    <Compile Include="Core\EngineOrchestrator.cs" />
+    <Compile Include="Core\EngineWatchdog.cs" />
+    <Compile Include="Core\FeedbackSystem.cs" />
+    <Compile Include="Core\GamepadUiNavigator.cs" />
+    <Compile Include="Core\GyroService.cs" />
+    <Compile Include="Core\HandheldDetector.cs" />
+    <Compile Include="Core\HandheldModeManager.cs" />
+    <Compile Include="Core\HybridEngine.cs" />
+    <Compile Include="Core\ICombatState.cs" />
+    <Compile Include="Core\ICommandQueue.cs" />
+    <Compile Include="Core\IFileSystem.cs" />
+    <Compile Include="Core\IInputHandler.cs" />
+    <Compile Include="Core\IMessenger.cs" />
+    <Compile Include="Core\IMouseEmulationStrategy.cs" />
+    <Compile Include="Core\InputChain.cs" />
+    <Compile Include="Core\InputCommandQueue.cs" />
+    <Compile Include="Core\InputReader.cs" />
+    <Compile Include="Core\InputRouter.cs" />
+    <Compile Include="Core\IProfileManager.cs" />
+    <Compile Include="Core\ITickProvider.cs" />
+    <Compile Include="Core\IWindowTracker.cs" />
+    <Compile Include="Core\JitterService.cs" />
+    <Compile Include="Core\KernelInputService.cs" />
+    <Compile Include="Core\KiteEngine.cs" />
+    <Compile Include="Core\KiteStates.cs" />
+    <Compile Include="Core\LocalizationManager.cs" />
+    <Compile Include="Core\MacroRecorder.cs" />
+    <Compile Include="Core\MageEngine.cs" />
+    <Compile Include="Core\MainViewModel.cs" />
+    <Compile Include="Core\Messages.cs" />
+    <Compile Include="Core\MobSweepEngine.cs" />
+    <Compile Include="Core\MovementEngine.cs" />
+    <Compile Include="Core\NativeMethods.cs" />
+    <Compile Include="Core\ObjectPools.cs" />
+    <Compile Include="Core\OverlayRouter.cs" />
+    <Compile Include="Core\Pools.cs" />
+    <Compile Include="Core\PowerModeService.cs" />
+    <Compile Include="Core\PowerMonitor.cs" />
+    <Compile Include="Core\ProfileApplier.cs" />
+    <Compile Include="Core\ProfileShareService.cs" />
+    <Compile Include="Core\ClassDetector.cs" />
+    <Compile Include="Core\RoFeatures.cs" />
+    <Compile Include="Core\RoUiMenuService.cs" />
+    <Compile Include="Core\SendInputMouseStrategy.cs" />
+    <Compile Include="Core\SkillOrchestrator.cs" />
+    <Compile Include="Core\SmartCursorEngine.cs" />
+    <Compile Include="Core\SmartCursorService.cs" />
+    <Compile Include="Core\SnapshotBuilder.cs" />
+    <Compile Include="Core\StandbyManager.cs" />
+    <Compile Include="Core\SupportEngine.cs" />
+    <Compile Include="Core\SystemMonitor.cs" />
+    <Compile Include="Core\TelemetryService.cs" />
+    <Compile Include="Core\TtsAnnouncerService.cs" />
+    <Compile Include="Core\UpdateChecker.cs" />
+    <Compile Include="Core\VoiceChatService.cs" />
+    <Compile Include="Core\WindowSwitcher.cs" />
+    <Compile Include="Core\WindowTracker.cs" />
+    <Compile Include="Core\WpfTickProvider.cs" />
+    <Compile Include="DaisyWheelWindow.xaml.cs" />
+    <Compile Include="DeveloperConsoleWindow.xaml.cs" />
+    <Compile Include="HandheldWindow.xaml.cs" />
+    <Compile Include="InGameOverlayWindow.xaml.cs" />
+    <Compile Include="LocStrings.Designer.cs" />
+    <Compile Include="MacroEditorWindow.xaml.cs" />
+    <Compile Include="MacroRecorderWindow.xaml.cs" />
+    <Compile Include="MacroTimelineWindow.xaml.cs" />
+    <Compile Include="MainWindow.xaml.cs" />
+    <Compile Include="MiniModeWindow.xaml.cs" />
+    <Compile Include="Models\AdaptiveTriggerMode.cs" />
+    <Compile Include="Models\ButtonAction.cs" />
+    <Compile Include="Models\CommunityEntry.cs" />
+    <Compile Include="Models\ParsedInput.cs" />
+    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\VirtualKey.cs" />
+    <Compile Include="Models\WindowTracker.cs" />
+    <Compile Include="ProfileLibraryWindow.xaml.cs" />
+    <Compile Include="Profiles\AppJsonContext.cs" />
+    <Compile Include="Profiles\Profile.cs" />
+    <Compile Include="Profiles\ProfileManager.cs" />
+    <Compile Include="ProfileWizardWindow.xaml.cs" />
+    <Compile Include="RadialMenuWindow.xaml.cs" />
+    <Compile Include="RadialSetupWindow.xaml.cs" />
+    <Compile Include="SettingsWindow.xaml.cs" />
+    <Compile Include="SplashWindow.xaml.cs" />
+    <Compile Include="TutorialWindow.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="startup_voice.mp3" CopyToOutputDirectory="PreserveNewest" Condition="Exists('startup_voice.mp3')" />
+    <None Include="startup_voice.wav" CopyToOutputDirectory="PreserveNewest" Condition="Exists('startup_voice.wav')" />
+    <None Include="GetEmotes.ps1"     CopyToOutputDirectory="PreserveNewest" />
+    <None Include="GetClassSprites.ps1" CopyToOutputDirectory="PreserveNewest" /> <!-- NEW: Class sprite downloader -->
+    <!-- GetDS4Windows.bat removed - SDL2 provides native PS4/PS5 support! -->
+    <Content Include="DefaultProfiles\*.json" CopyToOutputDirectory="PreserveNewest" />
+    <!-- i18n: Kopiert den kompletten Locales Ordner in den Release/Publish Ordner -->
+    <None Update="Locales\**" CopyToOutputDirectory="PreserveNewest" />
+    <!-- AntiCheat: Kopiert den kompletten AntiCheat Ordner in den Release/Publish Ordner -->
+    <None Update="AntiCheat\**" CopyToOutputDirectory="PreserveNewest" />
+    <!-- Class Sprites: Kopiert alle heruntergeladenen Charakter-Bilder in den Release/Publish Ordner -->
+    <None Update="Assets\Classes\*.png" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Target Name="CopySDL2NativeLib" AfterTargets="Build" Condition="Exists('$(NuGetPackageRoot)\SDL2-CS\2.0.0\runtimes\win-x64\native\SDL2.dll')">
+    <Copy SourceFiles="$(NuGetPackageRoot)\SDL2-CS\2.0.0\runtimes\win-x64\native\SDL2.dll"
+          DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
+
+  <Target Name="CopyBatAfterPublish" AfterTargets="Publish">
+    <!-- GetDS4Windows.bat removed - Hexa.NET.SDL provides native PS4/PS5 support! -->
+    <!-- Zip-Erstellung übersprungen - wird manuell auf Windows durchgeführt -->
+  </Target>
+
+</Project>

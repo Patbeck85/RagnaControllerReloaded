@@ -1,0 +1,155 @@
+<Window x:Class="RagnaController.MacroTimelineWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Timeline Editor" Width="900" Height="320"
+        Background="Transparent" AllowsTransparency="True" WindowStyle="None"
+        WindowStartupLocation="CenterOwner">
+
+    <Border Background="#080A0F" BorderBrush="#2A3245" BorderThickness="1" CornerRadius="10">
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0" Margin="0,0,0,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="TIMELINE EDITOR" FontSize="22" FontWeight="Black"
+                               Foreground="#E5B842">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="#E5B842" BlurRadius="8" ShadowDepth="0" Opacity="0.7"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                    <TextBlock x:Name="SubtitleText"
+                               Text="Load a macro to visualize its timing"
+                               FontSize="11" Foreground="#4A5568" Margin="0,3,0,0"/>
+                </StackPanel>
+
+                <!-- Close button -->
+                <Button Grid.Column="1" Content="✕" Width="32" Height="32"
+                        Style="{StaticResource ConsoleGhostBtn}"
+                        Click="BtnClose_Click" VerticalAlignment="Top" ToolTip="Close macro timeline window"/>
+            </Grid>
+
+            <!-- Toolbar -->
+            <Border Grid.Row="1" Background="#0D1117" BorderBrush="#1A2535"
+                    BorderThickness="1" CornerRadius="6" Padding="12,8" Margin="0,0,0,10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" x:Name="BtnLoad" Content="📂 Load"
+                            Style="{StaticResource ConsoleGhostBtn}" Padding="10,4"
+                            Click="BtnLoad_Click" Margin="0,0,8,0">
+                        <Button.ToolTip>
+                            <ToolTip Content="Load a macro timeline file" Foreground="#F0F4F8" FontSize="11"/>
+                        </Button.ToolTip>
+                    </Button>
+
+                    <Button Grid.Column="1" x:Name="BtnPlay" Content="▶ Play"
+                            Style="{StaticResource ConsolePrimaryBtn}" Padding="10,4"
+                            Click="BtnPlay_Click" Margin="0,0,8,0" IsEnabled="False">
+                        <Button.ToolTip>
+                            <ToolTip Content="Play the macro timeline" Foreground="#F0F4F8" FontSize="11"/>
+                        </Button.ToolTip>
+                    </Button>
+
+                    <!-- Zoom slider -->
+                    <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="ZOOM" FontSize="10" Foreground="#4A5568"
+                                   VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <Slider x:Name="ZoomSlider" Width="100" Minimum="0.5" Maximum="5"
+                                Value="1.5" TickFrequency="0.5" SmallChange="0.25"
+                                VerticalAlignment="Center"
+                                ValueChanged="ZoomSlider_Changed">
+                            <Slider.ToolTip>
+                                <ToolTip Content="Zoom in/out on the timeline" Foreground="#F0F4F8" FontSize="11"/>
+                            </Slider.ToolTip>
+                        </Slider>
+                        <TextBlock x:Name="ZoomLabel" Text="1.5×" FontSize="10" Foreground="#7D8B9E"
+                                   VerticalAlignment="Center" Margin="6,0,0,0" Width="30"/>
+                    </StackPanel>
+
+                    <!-- Legend -->
+                    <StackPanel Grid.Column="4" Orientation="Horizontal"
+                                VerticalAlignment="Center" Margin="12,0,0,0">
+                        <Rectangle Width="12" Height="12" Fill="#3FB8E0" RadiusX="2" RadiusY="2" Margin="0,0,4,0"/>
+                        <TextBlock Text="Key" FontSize="10" Foreground="#7D8B9E" Margin="0,0,10,0">
+                            <TextBlock.ToolTip>
+                                <ToolTip Content="Press a key to add a key event" Foreground="#7D8B9E" FontSize="10"/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <Rectangle Width="12" Height="12" Fill="#4ADE80" RadiusX="2" RadiusY="2" Margin="0,0,4,0"/>
+                        <TextBlock Text="Click" FontSize="10" Foreground="#7D8B9E" Margin="0,0,10,0">
+                            <TextBlock.ToolTip>
+                                <ToolTip Content="Click to add a mouse click event" Foreground="#7D8B9E" FontSize="10"/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <Rectangle Width="12" Height="12" Fill="#F87171" RadiusX="2" RadiusY="2" Margin="0,0,4,0"/>
+                        <TextBlock Text="R-Click" FontSize="10" Foreground="#7D8B9E" Margin="0,0,10,0">
+                            <TextBlock.ToolTip>
+                                <ToolTip Content="Right-click to add a right-click event" Foreground="#7D8B9E" FontSize="10"/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                        <Rectangle Width="12" Height="12" Fill="#374151" RadiusX="2" RadiusY="2" Margin="0,0,4,0"/>
+                        <TextBlock Text="Delay" FontSize="10" Foreground="#7D8B9E">
+                            <TextBlock.ToolTip>
+                                <ToolTip Content="Set delay between events (ms)" Foreground="#7D8B9E" FontSize="10"/>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <TextBlock Grid.Column="5" x:Name="TotalDurText"
+                               Text="" FontSize="11" Foreground="#4A5568"
+                               VerticalAlignment="Center" Margin="12,0,0,0">
+                        <ToolTipService.ToolTip>
+                            <ToolTip Content="Total duration of the macro timeline" Foreground="#4A5568" FontSize="11"/>
+                        </ToolTipService.ToolTip>
+                    </TextBlock>
+                </Grid>
+            </Border>
+
+            <!-- Timeline canvas area -->
+            <Border Grid.Row="2" Background="#0A0C12" BorderBrush="#1A2535"
+                    BorderThickness="1" CornerRadius="6" Padding="2">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Disabled">
+                    <Canvas x:Name="TimelineCanvas" Height="120" MinWidth="860"
+                            Background="Transparent"
+                            MouseMove="Canvas_MouseMove"/>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Step tooltip / info bar -->
+            <Border Grid.Row="3" Background="#0D1117" BorderBrush="#1A2535"
+                    BorderThickness="1" CornerRadius="6" Padding="12,6" Margin="0,8,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock x:Name="HoverInfo"
+                               Text="Hover over a step to see details"
+                               FontSize="11" Foreground="#4A5568" VerticalAlignment="Center"/>
+                    <Button Grid.Column="1" Content="Close"
+                            Style="{StaticResource ConsoleGhostBtn}" Padding="14,4"
+                            Click="BtnClose_Click" ToolTip="Close timeline view"/>
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Border>
+</Window>

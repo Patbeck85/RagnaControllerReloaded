@@ -1,0 +1,13 @@
+**/obj/**/*
+**/bin/**/*
+**/*.g.cs
+**/*.g.i.cs
+**/*Window*.cs
+**/*Window*.xaml.cs
+**/App.xaml.cs
+**/ButtonRemappingWindow.*
+**/ComboEditorWindow.*
+**/CommunityBrowserWindow.*
+**/ControllerPreview.cs
+**/DaisyWheelWindow.*
+**/RadialMenuWindow.*

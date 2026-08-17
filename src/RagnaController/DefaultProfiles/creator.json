@@ -1,0 +1,68 @@
+{
+  "Name": "Creator",
+  "Class": "Merchant",
+  "MouseSensitivity": 1.2,
+  "Deadzone": 0.18,
+  "MovementCurve": 1.5,
+  "CursorMaxSpeed": 1200.0,
+  "ActionRpgMode": false,
+  "AutoAttackEnabled": false,
+  "SmartSkillEnabled": true,
+  "PreRenewalAttackIntervalMs": 100,
+  "RenewalAttackIntervalMs": 70,
+  "ClassTips": "A = Acid Demonstration (snap to target). B = Bomb throw (directional). X = Slim Potion Pitcher. L1+A = Aid Berserk Potion. R2 = Summon Homunculus attack.",
+  "SkillRecommendations": [
+    "Acid Demonstration",
+    "Slim Potion Pitcher",
+    "Bomb",
+    "Aid Berserk Potion",
+    "Potion Pitcher",
+    "Resurrection Plant"
+  ],
+  "ButtonMappings": {
+    "A": {
+      "Type": "Key",
+      "Key": "F1",
+      "Label": "Acid Demonstration"
+    },
+    "B": {
+      "Type": "Key",
+      "Key": "F2",
+      "Label": "Bomb",
+      "IsGroundSpell": true
+    },
+    "X": {
+      "Type": "Key",
+      "Key": "F3",
+      "Label": "Slim Potion Pitcher"
+    },
+    "Y": {
+      "Type": "Key",
+      "Key": "F4",
+      "Label": "Potion Pitcher"
+    },
+    "L1+A": {
+      "Type": "Key",
+      "Key": "F5",
+      "Label": "Aid Berserk Potion"
+    },
+    "L1+B": {
+      "Type": "Key",
+      "Key": "F6",
+      "Label": "Aid Potion"
+    },
+    "L1+X": {
+      "Type": "Key",
+      "Key": "F7",
+      "Label": "Sphere Mine",
+      "IsGroundSpell": true
+    },
+    "L1+Y": {
+      "Type": "Key",
+      "Key": "F8",
+      "Label": "Summon Marine Sphere"
+    }
+  },
+  "RenewalSkillInterruptMs": 500,
+  "PreRenewalSkillInterruptMs": 1000
+}

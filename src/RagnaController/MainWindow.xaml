@@ -1,0 +1,717 @@
+<Window x:Class="RagnaController.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:RagnaController"
+        Title="RagnaController" Width="1360" Height="880"
+        MinWidth="1120" MinHeight="740" ResizeMode="CanResize"
+        Background="Transparent" WindowStyle="None" AllowsTransparency="True"
+        Closing="Window_Closing" MouseLeftButtonDown="Window_MouseLeftButtonDown" Loaded="Window_Loaded">
+    <Window.Resources>
+        <SolidColorBrush x:Key="CardBg"     Color="#0D0F18"/>
+        <SolidColorBrush x:Key="RaisedBg"   Color="#161A28"/>
+        <SolidColorBrush x:Key="HairlineBr" Color="#1C2235"/>
+        <SolidColorBrush x:Key="Gold"       Color="#C9A646"/>
+        <SolidColorBrush x:Key="GoldDim"    Color="#7A6230"/>
+        <SolidColorBrush x:Key="Signal"     Color="#4A7FE8"/>
+        <SolidColorBrush x:Key="Live"       Color="#39FF8C"/>
+        <SolidColorBrush x:Key="TextHi"     Color="#E8EDF7"/>
+        <SolidColorBrush x:Key="TextMid"    Color="#8A95AC"/>
+        <SolidColorBrush x:Key="TextDim"    Color="#454F66"/>
+        <DropShadowEffect x:Key="GoldGlow"  Color="#C9A646" BlurRadius="14" ShadowDepth="0" Opacity="0.55"/>
+        <DropShadowEffect x:Key="GreenGlow" Color="#39FF8C" BlurRadius="10" ShadowDepth="0" Opacity="0.6"/>
+        <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+        <Style x:Key="Eyebrow" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource TextDim}"/>
+            <Setter Property="FontSize" Value="9.5"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontFamily" Value="Segoe UI Semibold"/>
+            <Setter Property="Typography.Capitals" Value="AllSmallCaps"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <Style x:Key="Telemetry" TargetType="TextBlock">
+            <Setter Property="FontFamily" Value="Consolas"/>
+            <Setter Property="Foreground" Value="{StaticResource Signal}"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="MinWidth" Value="42"/>
+            <Setter Property="TextAlignment" Value="Right"/>
+        </Style>
+
+        <Style x:Key="TabButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource TextMid}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="10.5"/>
+            <Setter Property="FontFamily" Value="Segoe UI Semibold"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Margin" Value="1,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="2"/>
+                            </Grid.RowDefinitions>
+                            <ContentPresenter Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border Grid.Row="1" Background="Transparent" Height="2"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource TextHi}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="TabButtonActive" TargetType="Button" BasedOn="{StaticResource TabButton}">
+            <Setter Property="Foreground" Value="{StaticResource Gold}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="2"/>
+                            </Grid.RowDefinitions>
+                            <ContentPresenter Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Border Grid.Row="1" Background="{StaticResource Gold}" Height="2" Effect="{StaticResource GoldGlow}"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="Card" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBg}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource HairlineBr}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="16,14"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <Style x:Key="ResetGlyph" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="{StaticResource TextDim}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Width" Value="22"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="GhostBtn" TargetType="Button">
+            <Setter Property="Background" Value="#0A0C14"/>
+            <Setter Property="BorderBrush" Value="{StaticResource HairlineBr}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="{StaticResource TextMid}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource GoldDim}"/>
+                                <Setter Property="Foreground" Value="{StaticResource TextHi}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.35"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ConsolePrimaryBtn" TargetType="Button" BasedOn="{StaticResource GhostBtn}"/>
+        <Style x:Key="ConsoleGhostBtn"   TargetType="Button" BasedOn="{StaticResource GhostBtn}"/>
+
+        <Style x:Key="DarkComboBox" TargetType="ComboBox">
+            <Setter Property="Background" Value="#0A0C14"/>
+            <Setter Property="Foreground" Value="{StaticResource TextHi}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource HairlineBr}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton x:Name="Toggle" Background="{TemplateBinding Background}"
+                                          BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1"
+                                          IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                          ClickMode="Press" Focusable="False">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="1" CornerRadius="5">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="22"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Path Grid.Column="1" Data="M0,0 L4,4 L8,0" Stroke="{StaticResource TextDim}"
+                                                      StrokeThickness="1.4" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <ContentPresenter Margin="{TemplateBinding Padding}" IsHitTestVisible="False"
+                                              HorizontalAlignment="Left" VerticalAlignment="Center"
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"/>
+                            <Popup x:Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                <Border Background="{StaticResource RaisedBg}" BorderBrush="{StaticResource HairlineBr}"
+                                        BorderThickness="1" CornerRadius="5" Margin="0,3,0,0" MinWidth="{TemplateBinding ActualWidth}">
+                                    <ScrollViewer MaxHeight="280"><ItemsPresenter/></ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Padding" Value="10,7"/>
+                        <Setter Property="Foreground" Value="{StaticResource TextHi}"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ComboBoxItem">
+                                    <Border x:Name="Bd" Background="Transparent" Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsHighlighted" Value="True">
+                                            <Setter TargetName="Bd" Property="Background" Value="#1A2030"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Slider">
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid VerticalAlignment="Center">
+                            <Border Height="3" Background="#161A28" CornerRadius="2"/>
+                            <Track x:Name="PART_Track">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Background="{StaticResource Gold}" BorderThickness="0">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="{StaticResource Gold}" CornerRadius="2" Height="3"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.DecreaseRepeatButton>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Background="Transparent" BorderThickness="0">
+                                        <RepeatButton.Template>
+                                            <ControlTemplate TargetType="RepeatButton">
+                                                <Border Background="Transparent"/>
+                                            </ControlTemplate>
+                                        </RepeatButton.Template>
+                                    </RepeatButton>
+                                </Track.IncreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Width="13" Height="13">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Ellipse Fill="{StaticResource Gold}" Width="13" Height="13" Effect="{StaticResource GoldGlow}"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="{StaticResource TextMid}"/>
+            <Setter Property="FontSize" Value="10.5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <StackPanel Orientation="Horizontal">
+                            <Border x:Name="Box" Width="14" Height="14" CornerRadius="3"
+                                    Background="#0A0C14" BorderBrush="{StaticResource HairlineBr}" BorderThickness="1">
+                                <Path x:Name="Check" Data="M2,6 L5,9 L11,2" Stroke="{StaticResource Gold}"
+                                      StrokeThickness="1.6" Visibility="Collapsed"
+                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round"/>
+                            </Border>
+                            <ContentPresenter Margin="7,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Check" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="Box" Property="BorderBrush" Value="{StaticResource Gold}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderValue" TargetType="TextBlock" BasedOn="{StaticResource Telemetry}"/>
+    </Window.Resources>
+
+    <!-- ROOT with radial depth gradient -->
+    <Border CornerRadius="14" BorderThickness="1" BorderBrush="#1A2340">
+        <Border.Background>
+            <RadialGradientBrush Center="0.18,0" RadiusX="0.9" RadiusY="0.9">
+                <GradientStop Color="#0E1320" Offset="0"/>
+                <GradientStop Color="#06070C" Offset="0.55"/>
+                <GradientStop Color="#040508" Offset="1"/>
+            </RadialGradientBrush>
+        </Border.Background>
+        <Border CornerRadius="14" ClipToBounds="True">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="58"/>
+                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="58"/>
+                </Grid.RowDefinitions>
+
+                <!-- HEADER -->
+                <Grid Grid.Row="0" Margin="20,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Wordmark with accent bar -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="4" Height="22" Background="{StaticResource Gold}" Effect="{StaticResource GoldGlow}" Margin="0,0,10,0"/>
+                        <TextBlock VerticalAlignment="Center">
+                            <Run Text="RAGNA" Foreground="{StaticResource TextHi}" FontWeight="Black" FontSize="17" FontFamily="Segoe UI"/>
+                            <Run Text="CONTROLLER" Foreground="{StaticResource Gold}" FontWeight="Black" FontSize="17" FontFamily="Segoe UI"/>
+                        </TextBlock>
+                        <Border Background="#11141F" BorderBrush="{StaticResource HairlineBr}" BorderThickness="1"
+                                CornerRadius="3" Padding="6,2" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Text="2.0" Foreground="{StaticResource TextDim}" FontSize="9" FontFamily="Consolas" FontWeight="Bold"/>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Center cluster -->
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <ComboBox x:Name="ProfileCombo" Width="210" Height="32" Style="{StaticResource DarkComboBox}"
+                                  SelectionChanged="ProfileCombo_SelectionChanged" FontSize="11.5" FontWeight="SemiBold"
+                                  VerticalAlignment="Center" ToolTip="Active profile">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" Foreground="{StaticResource TextHi}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <Border x:Name="ClassBadge" Background="#15130A" BorderBrush="{StaticResource Gold}" BorderThickness="1"
+                                CornerRadius="3" Padding="9,5" Margin="8,0,0,0" VerticalAlignment="Center">
+                            <TextBlock x:Name="ClassBadgeText" Text="&#x2014;" Foreground="{StaticResource Gold}"
+                                       FontSize="10" FontWeight="Bold" FontFamily="Segoe UI Semibold"
+                                       Typography.Capitals="AllSmallCaps"/>
+                        </Border>
+
+                        <Border Width="1" Height="22" Background="{StaticResource HairlineBr}" Margin="14,0"/>
+
+                        <ComboBox x:Name="GameModeCombo" Width="128" Height="32" Style="{StaticResource DarkComboBox}"
+                                  SelectionChanged="GameModeCombo_SelectionChanged" FontSize="11" VerticalAlignment="Center"
+                                  ToolTip="Renewal / Pre-Renewal">
+                            <ComboBoxItem Content="Pre-Renewal" Tag="Pre"/>
+                            <ComboBoxItem Content="Renewal"     Tag="Ren" IsSelected="True"/>
+                        </ComboBox>
+
+                        <Border Width="1" Height="22" Background="{StaticResource HairlineBr}" Margin="14,0"/>
+
+                        <Button x:Name="BtnScanController" Click="BtnScanController_Click" Style="{StaticResource GhostBtn}"
+                                Height="32" Width="32" Margin="0,0,8,0" VerticalAlignment="Center" ToolTip="Scan for controller">
+                            <Viewbox Width="13" Height="13">
+                                <Path Data="M17.65 6.35A7.958 7.958 0 0012 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0112 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Stretch="Uniform"/>
+                            </Viewbox>
+                        </Button>
+
+                        <Border Background="#0A0C14" BorderBrush="{StaticResource HairlineBr}" BorderThickness="1"
+                                CornerRadius="16" Padding="12,6" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="7" Height="7" Margin="0,0,7,0" VerticalAlignment="Center">
+                                    <Ellipse.Fill><SolidColorBrush x:Name="ControllerDot" Color="#2A3344"/></Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock x:Name="ControllerNameText" Text="No Controller" Foreground="{StaticResource TextMid}"
+                                           FontSize="11" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0"
+                                            Visibility="{Binding ElementName=ControllerNameText, Path=Tag, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <Grid VerticalAlignment="Center" Margin="0,0,5,0">
+                                        <Border Width="22" Height="10" CornerRadius="2" BorderBrush="{StaticResource TextDim}" BorderThickness="1.5" Background="Transparent"/>
+                                        <Border Width="2" Height="5" CornerRadius="0,1,1,0" Background="{StaticResource TextDim}" HorizontalAlignment="Right" Margin="0,0,-3,0"/>
+                                        <Border x:Name="BatteryFill" Width="0" Height="6" CornerRadius="1" HorizontalAlignment="Left" Margin="2,0,0,0" Background="{StaticResource Live}"/>
+                                    </Grid>
+                                    <TextBlock x:Name="BatteryLevelText" Text="&#x2014;" Foreground="{StaticResource TextDim}"
+                                               FontSize="9" FontFamily="Consolas" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Chrome buttons -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="BtnSettings" Click="BtnSettings_Click" Width="32" Height="32" Background="Transparent"
+                                Foreground="{StaticResource TextDim}" BorderThickness="0" Cursor="Hand" ToolTip="Settings" Margin="0,0,2,0">
+                            <Viewbox Width="15" Height="15">
+                                <Path Data="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.43 1.17 14.24 1 14 1h-4c-.24 0-.43.17-.47.41l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.22-.08-.49 0-.61.22l-2 3.46c-.12.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.04.24.24.41.47.41h4c.24 0 .43-.17.47-.41l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"
+                                      Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Stretch="Uniform"/>
+                            </Viewbox>
+                        </Button>
+                        <Button Click="BtnMinimize_Click" Width="32" Height="32" Background="Transparent"
+                                Foreground="{StaticResource TextDim}" BorderThickness="0" Cursor="Hand" ToolTip="Minimize">
+                            <Viewbox Width="10" Height="10">
+                                <Path Data="M2 7H14" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                      StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Stretch="Uniform"/>
+                            </Viewbox>
+                        </Button>
+                        <Button Click="BtnClose_Click" Width="32" Height="32" Background="Transparent"
+                                Foreground="{StaticResource TextDim}" BorderThickness="0" Cursor="Hand" ToolTip="Close">
+                            <Viewbox Width="10" Height="10">
+                                <Path Data="M2 2L12 12M12 2L2 12" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                      StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Stretch="Uniform"/>
+                            </Viewbox>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+
+                <Border Grid.Row="1" Background="{StaticResource HairlineBr}"/>
+
+                <!-- BODY -->
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="236"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="346"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- LEFT sidebar -->
+                    <Border Grid.Column="0" Background="#08090F" BorderBrush="{StaticResource HairlineBr}" BorderThickness="0,0,1,0">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="14,16,14,16">
+                            <StackPanel>
+                                <Border Height="138" CornerRadius="6" Margin="0,0,0,16" ClipToBounds="True"
+                                        Background="#0A0C14" BorderBrush="{StaticResource HairlineBr}" BorderThickness="1">
+                                    <Grid>
+                                        <Image Source="{Binding ClassImageSource}" Stretch="UniformToFill"
+                                               HorizontalAlignment="Center" VerticalAlignment="Top" Opacity="0.55">
+                                            <Image.OpacityMask>
+                                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                    <GradientStop Color="Black" Offset="0"/>
+                                                    <GradientStop Color="Black" Offset="0.45"/>
+                                                    <GradientStop Color="Transparent" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Image.OpacityMask>
+                                        </Image>
+                                        <TextBlock x:Name="ControllerNameText2" Text="No Controller"
+                                                   Foreground="{StaticResource TextDim}" FontSize="9.5" FontFamily="Consolas"
+                                                   VerticalAlignment="Bottom" Margin="10,0,10,9"/>
+                                    </Grid>
+                                </Border>
+
+                                <TextBlock Text="Engine" Style="{StaticResource Eyebrow}"/>
+                                <Border Style="{StaticResource Card}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/><RowDefinition Height="10"/><RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/><ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Grid.Column="0">
+                                            <TextBlock Text="Latency" Foreground="{StaticResource TextDim}" FontSize="9" FontWeight="SemiBold" Margin="0,0,0,3"/>
+                                            <TextBlock x:Name="LatencyText" Text="0ms" Foreground="{StaticResource Live}" FontSize="21" FontFamily="Consolas" FontWeight="Bold"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="1">
+                                            <TextBlock Text="State" Foreground="{StaticResource TextDim}" FontSize="9" FontWeight="SemiBold" Margin="0,0,0,3"/>
+                                            <TextBlock x:Name="EngineStateText" Text="Stopped" Foreground="{StaticResource TextMid}" FontSize="13" FontFamily="Consolas" FontWeight="Bold"/>
+                                        </StackPanel>
+                                        <TextBlock x:Name="AutoStatusText" Grid.Row="2" Grid.ColumnSpan="2" Text=""
+                                                   Foreground="{StaticResource TextDim}" FontSize="9" FontFamily="Consolas" TextWrapping="Wrap"/>
+                                    </Grid>
+                                </Border>
+
+                                <TextBlock Text="Controller" Style="{StaticResource Eyebrow}"/>
+                                <Border Style="{StaticResource Card}">
+                                    <StackPanel>
+                                        <TextBlock x:Name="StatusTextDisplay" Text="DISCONNECTED"
+                                                   Foreground="{StaticResource TextDim}" FontSize="10.5" FontFamily="Consolas" FontWeight="Bold" Margin="0,0,0,9"/>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                            <Border Height="3" CornerRadius="2" Background="#161A28"/>
+                                            <Border x:Name="BatteryFill2" Height="3" CornerRadius="2" Background="{StaticResource Live}" HorizontalAlignment="Left" Width="0"/>
+                                            <TextBlock x:Name="BatteryLevelText2" Grid.Column="1" Text="&#x2014;"
+                                                       Foreground="{StaticResource TextDim}" FontSize="9" FontFamily="Consolas" VerticalAlignment="Center" Margin="6,0,0,0"/>
+                                        </Grid>
+                                        <TextBlock x:Name="VoiceStatusText1" Text="" Foreground="{StaticResource TextDim}" FontSize="9" FontFamily="Consolas" Margin="0,7,0,0"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <TextBlock Text="Log" Style="{StaticResource Eyebrow}"/>
+                                <Border Style="{StaticResource Card}" Margin="0">
+                                    <ScrollViewer x:Name="LogScrollViewer" Height="168" VerticalScrollBarVisibility="Auto">
+                                        <TextBlock x:Name="LogTextBlock" Text="" Foreground="{StaticResource TextDim}" FontSize="9" FontFamily="Consolas" TextWrapping="Wrap"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+
+                    <!-- CENTER controls -->
+                    <Border Grid.Column="1" Background="Transparent" Padding="22,18">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel MaxWidth="640">
+                                <TextBlock Text="Analog Settings" Style="{StaticResource Eyebrow}"/>
+
+                                <Border Style="{StaticResource Card}">
+                                    <Grid>
+                                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="11"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="52"/><ColumnDefinition Width="26"/></Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Row="0" Text="Deadzone" Foreground="{StaticResource TextMid}" FontSize="11.5" FontWeight="SemiBold"
+                                                   Cursor="Hand" MouseLeftButtonDown="DeadzoneLabel_DblClick" ToolTip="Double-click to reset"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="DeadzoneValue" Text="0.12" Style="{StaticResource Telemetry}" HorizontalAlignment="Right"/>
+                                        <Button   Grid.Row="0" Grid.Column="2" Content="&#x21BA;" Style="{StaticResource ResetGlyph}"
+                                                  Click="DeadzoneReset_Click" MouseEnter="ResetBtn_MouseEnter" MouseLeave="ResetBtn_MouseLeave"/>
+                                        <Slider   Grid.Row="2" Grid.ColumnSpan="3" x:Name="DeadzoneSlider" Minimum="0" Maximum="0.5"
+                                                  Value="0.12" SmallChange="0.01" LargeChange="0.05" ValueChanged="DeadzoneSlider_ValueChanged"/>
+                                    </Grid>
+                                </Border>
+
+                                <Border Style="{StaticResource Card}">
+                                    <Grid>
+                                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="11"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="52"/><ColumnDefinition Width="26"/></Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Row="0" Text="Cursor Speed" Foreground="{StaticResource TextMid}" FontSize="11.5" FontWeight="SemiBold"
+                                                   Cursor="Hand" MouseLeftButtonDown="SensitivityLabel_DblClick"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="SensitivityValue" Text="1200" Style="{StaticResource Telemetry}" HorizontalAlignment="Right"/>
+                                        <Button   Grid.Row="0" Grid.Column="2" Content="&#x21BA;" Style="{StaticResource ResetGlyph}"
+                                                  Click="SensitivityReset_Click" MouseEnter="ResetBtn_MouseEnter" MouseLeave="ResetBtn_MouseLeave"/>
+                                        <Slider   Grid.Row="2" Grid.ColumnSpan="3" x:Name="SensitivitySlider" Minimum="400" Maximum="1800"
+                                                  Value="1200" SmallChange="50" ValueChanged="SensitivitySlider_ValueChanged"/>
+                                    </Grid>
+                                </Border>
+
+                                <Border Style="{StaticResource Card}">
+                                    <Grid>
+                                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="11"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="52"/><ColumnDefinition Width="26"/></Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Row="0" Text="Movement Curve" Foreground="{StaticResource TextMid}" FontSize="11.5" FontWeight="SemiBold"
+                                                   Cursor="Hand" MouseLeftButtonDown="CurveLabel_DblClick"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="CurveValue" Text="1.00" Style="{StaticResource Telemetry}" HorizontalAlignment="Right"/>
+                                        <Button   Grid.Row="0" Grid.Column="2" Content="&#x21BA;" Style="{StaticResource ResetGlyph}"
+                                                  Click="CurveReset_Click" MouseEnter="ResetBtn_MouseEnter" MouseLeave="ResetBtn_MouseLeave"/>
+                                        <Slider   Grid.Row="2" Grid.ColumnSpan="3" x:Name="CurveSlider" Minimum="0.5" Maximum="3.0"
+                                                  Value="1.0" SmallChange="0.1" ValueChanged="CurveSlider_ValueChanged"/>
+                                    </Grid>
+                                </Border>
+
+                                <Border Style="{StaticResource Card}">
+                                    <Grid>
+                                        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="11"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="52"/><ColumnDefinition Width="26"/></Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Row="0" Text="Action Speed" Foreground="{StaticResource TextMid}" FontSize="11.5" FontWeight="SemiBold"
+                                                   Cursor="Hand" MouseLeftButtonDown="ActionSpeedLabel_DblClick"/>
+                                        <TextBlock Grid.Row="0" Grid.Column="1" x:Name="ActionSpeedValue" Text="1.00" Style="{StaticResource Telemetry}" HorizontalAlignment="Right"/>
+                                        <Button   Grid.Row="0" Grid.Column="2" Content="&#x21BA;" Style="{StaticResource ResetGlyph}"
+                                                  Click="ActionSpeedReset_Click" MouseEnter="ResetBtn_MouseEnter" MouseLeave="ResetBtn_MouseLeave"/>
+                                        <Slider   Grid.Row="2" Grid.ColumnSpan="3" x:Name="ActionSpeedSlider" Minimum="0.5" Maximum="3.0"
+                                                  Value="1.0" SmallChange="0.1" ValueChanged="ActionSpeedSlider_ValueChanged"/>
+                                    </Grid>
+                                </Border>
+
+                                <TextBlock Text="Combat Mode" Style="{StaticResource Eyebrow}" Margin="0,8,0,8"/>
+                                <Border Style="{StaticResource Card}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <TextBlock Text="RPG Action Mode" Foreground="{StaticResource TextHi}" FontSize="11.5" FontWeight="SemiBold"/>
+                                            <TextBlock Text="Auto-attack and skill chaining" Foreground="{StaticResource TextDim}" FontSize="9.5" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                        <Border x:Name="ToggleBg" Grid.Column="1" Width="44" Height="24" CornerRadius="12"
+                                                Background="#0A0C14" BorderBrush="{StaticResource HairlineBr}" BorderThickness="1.5"
+                                                Cursor="Hand" MouseLeftButtonDown="MoveModeToggle_Click" VerticalAlignment="Center">
+                                            <Ellipse x:Name="ToggleThumb" Width="16" Height="16" Fill="{StaticResource TextDim}" HorizontalAlignment="Right" Margin="0,0,3,0"/>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+
+                                <TextBlock Text="Turbo" Style="{StaticResource Eyebrow}" Margin="0,8,0,8"/>
+                                <Border Style="{StaticResource Card}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                        <StackPanel>
+                                            <CheckBox x:Name="ChkTurboTest" Content="Enable turbo test" Click="ChkTurboTest_Click"/>
+                                            <TextBlock x:Name="TurboFreqText" Text="" Foreground="{StaticResource Signal}" FontSize="9" FontFamily="Consolas" Margin="0,5,0,0"/>
+                                        </StackPanel>
+                                        <TextBlock x:Name="TurboValue" Grid.Column="1" Text="3.0s" Style="{StaticResource Telemetry}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                        <Button x:Name="BtnTurboTest" Grid.Column="2" Content="Test" Width="64" Height="30" Style="{StaticResource GhostBtn}" Click="BtnTurboTest_Click"/>
+                                    </Grid>
+                                </Border>
+
+                                <Border x:Name="ToastBorder" CornerRadius="6" Padding="14,10" Margin="0,8,0,0" Visibility="Collapsed"
+                                        BorderThickness="1" BorderBrush="{StaticResource HairlineBr}">
+                                    <Border.Background><SolidColorBrush x:Name="ToastBg" Color="#0E1812"/></Border.Background>
+                                    <TextBlock x:Name="ToastText" Text="" Foreground="{StaticResource Live}" FontSize="11" FontFamily="Consolas" HorizontalAlignment="Center"/>
+                                </Border>
+
+                                <Ellipse x:Name="LeftDeadzoneRing"  Visibility="Collapsed" Width="0" Height="0"/>
+                                <Ellipse x:Name="RightDeadzoneRing" Visibility="Collapsed" Width="0" Height="0"/>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+
+                    <!-- RIGHT: tab inspector -->
+                    <Border Grid.Column="2" Background="#08090F" BorderBrush="{StaticResource HairlineBr}" BorderThickness="1,0,0,0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="50"/>
+                                <RowDefinition Height="1"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <Border Grid.Row="0" Padding="12,4,12,0">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom">
+                                    <Button x:Name="TabBtnBase"   Content="Base"   Click="TabBase_Click"   Style="{StaticResource TabButtonActive}"/>
+                                    <Button x:Name="TabBtnL1"     Content="L1"     Click="TabL1_Click"     Style="{StaticResource TabButton}"/>
+                                    <Button x:Name="TabBtnR1"     Content="R1"     Click="TabR1_Click"     Style="{StaticResource TabButton}"/>
+                                    <Button x:Name="TabBtnL2"     Content="L2"     Click="TabL2_Click"     Style="{StaticResource TabButton}"/>
+                                    <Button x:Name="TabBtnR2"     Content="R2"     Click="TabR2_Click"     Style="{StaticResource TabButton}"/>
+                                    <Border Width="1" Height="16" Background="{StaticResource HairlineBr}" Margin="6,0"/>
+                                    <Button x:Name="TabBtnLog"    Content="Log"    Click="TabLog_Click"    Style="{StaticResource TabButton}"/>
+                                    <Button x:Name="TabBtnInfo"   Content="Info"   Click="TabInfo_Click"   Style="{StaticResource TabButton}"/>
+                                    <Button x:Name="TabBtnHealth" Content="Health" Click="TabHealth_Click" Style="{StaticResource TabButton}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Grid.Row="1" Background="{StaticResource HairlineBr}"/>
+
+                            <Grid Grid.Row="2">
+                                <StackPanel x:Name="LogPanel" Margin="16,14">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                        <TextBlock Text="Filter" Style="{StaticResource Eyebrow}" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                                        <CheckBox x:Name="LogFilterEngine"  Content="Engine"  IsChecked="True" Margin="0,0,12,0" Checked="LogFilter_Changed" Unchecked="LogFilter_Changed"/>
+                                        <CheckBox x:Name="LogFilterInput"   Content="Input"   IsChecked="True" Margin="0,0,12,0" Checked="LogFilter_Changed" Unchecked="LogFilter_Changed"/>
+                                        <CheckBox x:Name="LogFilterProfile" Content="Profile" IsChecked="True" Checked="LogFilter_Changed" Unchecked="LogFilter_Changed"/>
+                                    </StackPanel>
+                                    <Border Background="#0A0C14" BorderBrush="{StaticResource HairlineBr}" BorderThickness="1" CornerRadius="6" Padding="12">
+                                        <ScrollViewer x:Name="LogScrollViewer2" Height="226" VerticalScrollBarVisibility="Auto">
+                                            <TextBlock x:Name="LogTextBlock2" Text="" Foreground="#3A5020" FontSize="9" FontFamily="Consolas" TextWrapping="Wrap"/>
+                                        </ScrollViewer>
+                                    </Border>
+                                    <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                                        <Button Click="BtnLogClear_Click"  Style="{StaticResource GhostBtn}" Height="30" Padding="14,0" Margin="0,0,8,0"><TextBlock Text="Clear"  FontSize="10.5"/></Button>
+                                        <Button Click="BtnLogExport_Click" Style="{StaticResource GhostBtn}" Height="30" Padding="14,0"                ><TextBlock Text="Export" FontSize="10.5"/></Button>
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <Border x:Name="PanelBase" Visibility="Collapsed" Background="#08090F" CornerRadius="6" Margin="16,14" Panel.ZIndex="10"/>
+                                <Border x:Name="PanelL1"   Visibility="Collapsed" Background="#08090F" CornerRadius="6" Margin="16,14" Panel.ZIndex="10"/>
+                                <Border x:Name="PanelR1"   Visibility="Collapsed" Background="#08090F" CornerRadius="6" Margin="16,14" Panel.ZIndex="10"/>
+                                <Border x:Name="PanelL2"   Visibility="Collapsed" Background="#08090F" CornerRadius="6" Margin="16,14" Panel.ZIndex="10"/>
+                                <Border x:Name="PanelR2"   Visibility="Collapsed" Background="#08090F" CornerRadius="6" Margin="16,14" Panel.ZIndex="10"/>
+                                <Border x:Name="PanelHealth" Visibility="Collapsed" Background="#08090F" CornerRadius="6" Margin="16,14" Panel.ZIndex="10"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+
+                <Border Grid.Row="3" Background="{StaticResource HairlineBr}"/>
+
+                <!-- FOOTER -->
+                <Grid Grid.Row="4" Background="#08090F" Margin="20,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" Background="#0A0C14" BorderBrush="{StaticResource HairlineBr}" BorderThickness="1"
+                            CornerRadius="4" Padding="11,6" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="LAT" Foreground="{StaticResource TextDim}" FontSize="8" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,7,0"/>
+                            <TextBlock x:Name="LatencyText2" Text="0ms" Foreground="{StaticResource Live}" FontSize="12" FontFamily="Consolas" FontWeight="Bold" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Grid.Column="1"/>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button x:Name="BtnRemapBtn" Click="BtnRemap_Click" Width="88" Height="36" Margin="4,0" IsEnabled="False" Style="{StaticResource GhostBtn}" ToolTip="Button Remapping">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Viewbox Width="13" Height="13" Margin="0,0,7,0">
+                                    <Path Data="M3 6h13M3 10h13M3 14h13" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                                          StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Stretch="Uniform"/>
+                                </Viewbox>
+                                <TextBlock Text="Remap" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="BtnMacroBtn" Click="BtnMacro_Click" Width="88" Height="36" Margin="4,0" IsEnabled="False" Style="{StaticResource GhostBtn}" ToolTip="Macro Recorder">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Viewbox Width="13" Height="13" Margin="0,0,7,0">
+                                    <Path Data="M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
+                                          Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Stretch="Uniform"/>
+                                </Viewbox>
+                                <TextBlock Text="Macro" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="BtnRadialBtn" Click="BtnRadial_Click" Width="88" Height="36" Margin="4,0" IsEnabled="False" Style="{StaticResource GhostBtn}" ToolTip="Radial Menu">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Viewbox Width="13" Height="13" Margin="0,0,7,0">
+                                    <Path Data="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm0-12.5A4.5 4.5 0 1 0 16.5 12 4.5 4.5 0 0 0 12 7.5zm0 7A2.5 2.5 0 1 1 14.5 12 2.5 2.5 0 0 1 12 14.5z"
+                                          Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Stretch="Uniform"/>
+                                </Viewbox>
+                                <TextBlock Text="Radial" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                        <Button x:Name="BtnComboBtn" Click="BtnCombo_Click" Width="88" Height="36" Margin="4,0,0,0" IsEnabled="False" Style="{StaticResource GhostBtn}" ToolTip="Combo Keys">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Viewbox Width="13" Height="13" Margin="0,0,7,0">
+                                    <Path Data="M7 4v3H4l4 4 4-4h-3V4H7zm6 9h3v3H7v-3H4l4-4 4 4h-3v3h4v-3z"
+                                          Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Stretch="Uniform"/>
+                                </Viewbox>
+                                <TextBlock Text="Combo" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </Border>
+    </Border>
+</Window>

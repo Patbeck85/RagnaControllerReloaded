@@ -1,0 +1,24 @@
+{
+  "stryker-config": {
+    "project": "src/RagnaController/RagnaController.csproj",
+    "test-projects": [
+      "tests/RagnaController.Tests/RagnaController.Tests.csproj"
+    ],
+    "mutate": [
+      "src/RagnaController/Core/*Engine.cs",
+      "src/RagnaController/Core/KiteStates.cs",
+      "src/RagnaController/Core/SmartCursorService.cs"
+    ],
+    "thresholds": {
+      "high": 95,
+      "low": 80,
+      "break": 70
+    },
+    "reporters": [
+      "progress",
+      "html",
+      "json"
+    ],
+    "concurrency": 4
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "project": "RagnaController",
+  "version": "2.0.0",
+  "description": "Multi-Agent System für RagnaController (Qwen3.5-9B)",
+  "agents": [
+    {
+      "id": "orchestrator",
+      "config": ".hermes/orchestrator.json",
+      "role": "coordinator",
+      "triggers": ["*"]
+    },
+    {
+      "id": "bug_hunter",
+      "config": ".hermes/bug_hunter.json",
+      "role": "specialist",
+      "triggers": ["Fehler", "Bug", "crash", "Freeze", "Deadlock", "SDL2", "Pointer", "Input klemmt"]
+    },
+    {
+      "id": "ui_ux_agent",
+      "config": ".hermes/ui_ux_agent.json",
+      "role": "specialist",
+      "triggers": ["UI", "XAML", "Sprache", "i18n", "Übersetzung", "json", "Design", "Overlay", "HUD"]
+    },
+    {
+      "id": "performance_optimizer",
+      "config": ".hermes/performance_optimizer.json",
+      "role": "specialist",
+      "triggers": ["Performance", "Lag", "Ruckeln", "GC", "Memory", "CPU", "125Hz"]
+    },
+    {
+      "id": "profile_creator",
+      "config": ".hermes/profile_creator.json",
+      "role": "specialist",
+      "triggers": ["Profil", "Klasse", "RO", "Skills", "Timings", "Renewal", "Extended"]
+    },
+    {
+      "id": "test_writer",
+      "config": ".hermes/test_writer.json",
+      "role": "specialist",
+      "triggers": ["Test", "Coverage", "Stryker", "xUnit", "Mutant"]
+    },
+    {
+      "id": "build_agent",
+      "config": ".hermes/build_agent.json",
+      "role": "specialist",
+      "triggers": ["build", "kompilieren", "Kompilierfehler", "dotnet", "CS", "unsafe"]
+    },
+    {
+      "id": "git_agent",
+      "config": ".hermes/git_agent.json",
+      "role": "specialist",
+      "triggers": ["commit", "git", "changelog", "branch", "diff", "push"]
+    },
+    {
+      "id": "doc_agent",
+      "config": ".hermes/doc_agent.json",
+      "role": "specialist",
+      "triggers": ["Dokumentation", "README", "Changelog", "docs", "Anleitung", "Guide"]
+    }
+  ],
+  "settings": {
+    "max_parallel_agents": 1,
+    "output_dir": ".hermes/results/",
+    "log_level": "info",
+    "auto_apply_fixes": true,
+    "require_confirmation_for": ["apply_fix", "apply_optimization", "create_profile"]
+  }
+}

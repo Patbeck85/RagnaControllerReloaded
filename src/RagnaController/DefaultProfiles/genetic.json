@@ -1,0 +1,71 @@
+{
+  "Name": "Genetic",
+  "Class": "Merchant",
+  "MouseSensitivity": 1.1,
+  "Deadzone": 0.13,
+  "MovementCurve": 1.5,
+  "CursorMaxSpeed": 1060.0,
+  "ActionRpgMode": true,
+  "AutoAttackEnabled": true,
+  "AutoRetargetEnabled": true,
+  "SmartSkillEnabled": true,
+  "PreRenewalAttackIntervalMs": 94,
+  "RenewalAttackIntervalMs": 57,
+  "ComboEnabled": true,
+  "ClassTips": "Hold R2 to auto-attack. A = Genetic Change (press once). L1+A = Analyze. L1+B = Summon.",
+  "SkillRecommendations": [
+    "Genetic Change",
+    "Analyze",
+    "Summon",
+    "Crafting",
+    "Item Analysis"
+  ],
+  "ButtonMappings": {
+    "A": {
+      "Type": "Key",
+      "Key": "F1",
+      "Label": "Genetic Change",
+      "TurboEnabled": true,
+      "Mode": "Adaptive",
+      "TurboIntervalMs": 50
+    },
+    "B": {
+      "Type": "Key",
+      "Key": "F2",
+      "Label": "Analyze"
+    },
+    "X": {
+      "Type": "Key",
+      "Key": "F3",
+      "Label": "Summon"
+    },
+    "Y": {
+      "Type": "Key",
+      "Key": "F4",
+      "Label": "Crafting"
+    },
+    "L1+A": {
+      "Type": "Key",
+      "Key": "F5",
+      "Label": "Item Analysis",
+      "IsGroundSpell": true
+    },
+    "L1+B": {
+      "Type": "Key",
+      "Key": "F6",
+      "Label": "Workbench"
+    },
+    "L1+X": {
+      "Type": "Key",
+      "Key": "F7",
+      "Label": "Blueprint"
+    },
+    "L1+Y": {
+      "Type": "Key",
+      "Key": "F8",
+      "Label": "Material Scan"
+    }
+  },
+  "RenewalSkillInterruptMs": 280,
+  "PreRenewalSkillInterruptMs": 550
+}

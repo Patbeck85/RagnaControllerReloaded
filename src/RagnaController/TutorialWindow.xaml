@@ -1,0 +1,65 @@
+<Window x:Class="RagnaController.TutorialWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:RagnaController.Core"
+        Title="Tutorial" Width="700" Height="500"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        Topmost="True" WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
+    <Border Background="#080A0F" BorderBrush="#2A3245" BorderThickness="1" CornerRadius="12">
+        <Border.Effect>
+            <DropShadowEffect Color="#E5B842" BlurRadius="20" ShadowDepth="0" Opacity="0.3"/>
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="80"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0" BorderBrush="#2A3245" BorderThickness="0,0,0,1" Padding="20,15">
+                <Grid>
+                    <TextBlock Text="RAGNACONTROLLER TUTORIALS" FontWeight="Black" FontSize="14" Foreground="#E5B842" VerticalAlignment="Center" Effect="{StaticResource NeonGlow}"/>
+                    <Button Content="✕" Click="BtnClose_Click" HorizontalAlignment="Right" Width="30" Height="30" Style="{StaticResource ConsoleGhostBtn}"/>
+                </Grid>
+            </Border>
+
+            <!-- Content Area (The Slide) -->
+            <Grid Grid.Row="1" Margin="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left: Text Content -->
+                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,20,0">
+                    <TextBlock x:Name="TxtTitle" Text="{core:Loc Tut_1_Title}" Foreground="#F0F4F8" FontSize="26" FontWeight="Black" TextWrapping="Wrap" Margin="0,0,0,15"/>
+                    <TextBlock x:Name="TxtDesc" Text="{core:Loc Tut_1_Desc}" Foreground="#A1B0C5" FontSize="15" TextWrapping="Wrap" LineHeight="24"/>
+                </StackPanel>
+
+                <!-- Right: Media/GIF Placeholder -->
+                <Border Grid.Column="1" Background="#121620" BorderBrush="#2A3245" BorderThickness="1" CornerRadius="8">
+                    <!-- MediaElement is used here to potentially load GIFs/MP4s in the future -->
+                    <MediaElement x:Name="MediaPreview" LoadedBehavior="Play" UnloadedBehavior="Stop" Stretch="Uniform" Margin="5"/>
+                </Border>
+            </Grid>
+
+            <!-- Footer (Navigation) -->
+            <Border Grid.Row="2" Background="#07090D" BorderBrush="#2A3245" BorderThickness="0,1,0,0" CornerRadius="0,0,12,12" Padding="30,0">
+                <Grid VerticalAlignment="Center">
+                    <!-- Progress Dots -->
+                    <StackPanel x:Name="DotPanel" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                    <!-- Buttons -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="BtnPrev" Content="{core:Loc Tut_Btn_Prev}" Click="BtnPrev_Click" Style="{StaticResource ConsoleGhostBtn}" Width="110" Height="40" Margin="0,0,15,0" IsEnabled="False"/>
+                        <Button x:Name="BtnNext" Content="{core:Loc Tut_Btn_Next}" Click="BtnNext_Click" Style="{StaticResource ConsolePrimaryBtn}" Width="140" Height="40"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

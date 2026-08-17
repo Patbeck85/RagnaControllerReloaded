@@ -1,0 +1,47 @@
+name: Release Build
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    name: Publish win-framework Release
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Run Tests (must pass before release)
+        run: |
+          dotnet restore tests/RagnaController.Tests/RagnaController.Tests.csproj
+          dotnet test tests/RagnaController.Tests/RagnaController.Tests.csproj
+            --configuration Release --no-restore --nologo
+
+      - name: Publish (framework-dependent)
+        run: |
+          dotnet publish src/RagnaController/RagnaController.csproj `
+            --configuration Release `
+            --runtime win-x64 `
+            --self-contained false `
+            --output ./publish `
+            -p:PublishSingleFile=true `
+            --nologo
+
+      - name: Package
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $zip = "RagnaController_${tag}_win-framework.zip"
+          Copy-Item DefaultProfiles, docs, GetDotNet8.bat, GetDS4Windows.bat, GetEmotes.ps1, LICENSE, README.md, startup_voice.mp3 ./publish -Recurse -Force -ErrorAction SilentlyContinue
+          Compress-Archive -Path ./publish/* -DestinationPath $zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "*.zip"
+          generate_release_notes: true

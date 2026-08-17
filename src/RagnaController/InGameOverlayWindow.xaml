@@ -1,0 +1,94 @@
+<Window x:Class="RagnaController.InGameOverlayWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="RagnaController Overlay"
+        Width="170" Height="72"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Topmost="True"
+        ShowInTaskbar="False"
+        IsHitTestVisible="False"
+        ResizeMode="NoResize">
+
+    <!-- Root border: semi-transparent dark panel, rounded corners, thin gold border -->
+    <Border Background="#CC080A0F"
+            BorderBrush="#44E5B842"
+            BorderThickness="1"
+            CornerRadius="6"
+            Padding="10,6">
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Row 0→1 separator (visual only) -->
+            <Border Grid.Row="0" VerticalAlignment="Bottom" Height="1" Background="#22E5B842" Margin="0,2,0,0"/>
+
+            <!-- Row 0: Layer indicator + window lock icon -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Static label -->
+                <TextBlock Grid.Column="0"
+                           Text="LAYER"
+                           FontFamily="Consolas"
+                           FontSize="9"
+                           FontWeight="Bold"
+                           Foreground="#44E5B842"
+                           VerticalAlignment="Center"
+                           Margin="0,0,6,0"/>
+
+                <!-- Dynamic layer text: BASE / L1+ / R1+ / L2+ / R2+ -->
+                <TextBlock Grid.Column="1"
+                           x:Name="LayerText"
+                           Text="BASE"
+                           FontFamily="Consolas"
+                           FontSize="15"
+                           FontWeight="Black"
+                           Foreground="#E5B842"
+                           VerticalAlignment="Center">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="#E5B842" BlurRadius="6" ShadowDepth="0" Opacity="0.8"/>
+                    </TextBlock.Effect>
+                    <ToolTipService.ToolTip>
+                        <ToolTip Content="Aktuelle Layer-Anzeige: BASE / L1+ / R1+ / L2+ / R2+" Foreground="#E5B842" FontSize="11"/>
+                    </ToolTipService.ToolTip>
+                </TextBlock>
+
+                <!-- Window tracking indicator dot -->
+                <Ellipse Grid.Column="2"
+                         x:Name="TrackDot"
+                         Width="6" Height="6"
+                         Fill="#FF4040"
+                         VerticalAlignment="Center"
+                         Margin="6,0,0,0"
+                         ToolTip="RO window tracking active"/>
+            </Grid>
+
+            <!-- Row 1: Combat state label -->
+            <TextBlock Grid.Row="1"
+                       x:Name="StateText"
+                       Text="IDLE"
+                       FontFamily="Consolas"
+                       FontSize="13"
+                       FontWeight="Bold"
+                       Foreground="#3FB8E0"
+                       HorizontalAlignment="Left">
+                <TextBlock.Effect>
+                    <DropShadowEffect Color="#3FB8E0" BlurRadius="5" ShadowDepth="0" Opacity="0.7"/>
+                </TextBlock.Effect>
+                <ToolTipService.ToolTip>
+                    <ToolTip Content="Combat state: IDLE / COMBAT / STUN / CRITICAL" Foreground="#3FB8E0" FontSize="11"/>
+                </ToolTipService.ToolTip>
+            </TextBlock>
+        </Grid>
+
+    </Border>
+</Window>

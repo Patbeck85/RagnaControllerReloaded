@@ -1,0 +1,215 @@
+<Window x:Class="RagnaController.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Settings" Width="540" Height="620"
+        MinWidth="480" MinHeight="560" ResizeMode="CanResize"
+        Background="#0F1420" WindowStyle="None" AllowsTransparency="True"
+        Topmost="True" Closing="Window_Closing">
+
+    <Window.Resources>
+        <!-- Settings Toggle Switch -->
+        <Style x:Key="SettingsToggle" TargetType="Border">
+            <Setter Property="Width" Value="44"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Background" Value="#0D111C"/>
+            <Setter Property="BorderBrush" Value="#1E2840"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <!-- Settings Toggle Thumb -->
+        <Style x:Key="SettingsToggleThumb" TargetType="Ellipse">
+            <Setter Property="Width" Value="16"/>
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="Fill" Value="#3A4A60"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Margin" Value="0,0,3,0"/>
+        </Style>
+
+        <!-- Settings Checkbox -->
+        <Style x:Key="SettingsCheckbox" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#7D8B9E"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="0,4"/>
+        </Style>
+
+        <!-- Settings Section Header -->
+        <Style x:Key="SettingsSectionHeader" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#55637A"/>
+            <Setter Property="FontSize" Value="9"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <!-- Settings Card -->
+        <Style x:Key="SettingsCard" TargetType="Border">
+            <Setter Property="Background" Value="#060810"/>
+            <Setter Property="BorderBrush" Value="#121A2A"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="14,12"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+        </Style>
+
+        <!-- Language Item -->
+        <Style x:Key="LanguageItem" TargetType="ComboBoxItem">
+            <Setter Property="Foreground" Value="#C8D6E8"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="#080B12" BorderBrush="#1A2340" BorderThickness="1" CornerRadius="14">
+        <Grid Margin="16,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="⚙️ Settings" Foreground="#C8D6E8" FontSize="16"
+                           FontWeight="Bold" FontFamily="Segoe UI"/>
+            </StackPanel>
+
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+
+                    <!-- Controller Settings -->
+                    <TextBlock Text="CONTROLLER" Style="{StaticResource SettingsSectionHeader}"/>
+                    <Border Style="{StaticResource SettingsCard}">
+                        <StackPanel>
+                            <TextBlock Text="Enable Turbo Mode"
+                                       Foreground="#C8D6E8" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                            <TextBlock Text="Activates turbo mode for faster input processing"
+                                       Foreground="#3A4A60" FontSize="9" Margin="0,0,0,8"/>
+                            <!-- Turbo Toggle Switch -->
+                            <Border x:Name="TurboToggleBg" Style="{StaticResource SettingsToggle}"
+                                    MouseLeftButtonDown="TurboToggle_Click">
+                                <Ellipse x:Name="TurboToggleThumb" Style="{StaticResource SettingsToggleThumb}"
+                                         HorizontalAlignment="Right"/>
+                            </Border>
+                            <TextBlock x:Name="TurboStatusText" Text=""
+                                       Foreground="#3A8EFF" FontSize="9"
+                                       FontFamily="Consolas" Margin="0,6,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Profile Settings -->
+                    <TextBlock Text="PROFILE" Style="{StaticResource SettingsSectionHeader}"/>
+                    <Border Style="{StaticResource SettingsCard}">
+                        <StackPanel>
+                            <ComboBox x:Name="ProfileCombo" ItemsSource="{Binding}" SelectedIndex="-1"
+                                      Foreground="#C8D6E8" FontSize="10" Margin="0,0,0,6"/>
+                            
+                            <CheckBox x:Name="ChkAutoLoadProfile" Content="Auto-load last profile"
+                                      Foreground="#7D8B9E" FontSize="10"
+                                      Click="ChkAutoLoadProfile_Click"/>
+                            
+                            <TextBlock Text="Save current profile on close"
+                                       Foreground="#C8D6E8" FontSize="11" FontWeight="SemiBold" Margin="0,10,0,6"/>
+                            <TextBlock x:Name="CurrentProfileText" Text="No profile loaded"
+                                       Foreground="#3A4A60" FontSize="9"
+                                       FontFamily="Consolas" Margin="0,0,0,8"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Engine Settings -->
+                    <TextBlock Text="ENGINE" Style="{StaticResource SettingsSectionHeader}"/>
+                    <Border Style="{StaticResource SettingsCard}">
+                        <StackPanel>
+                            <CheckBox x:Name="ChkStartWithWindows" Content="Start with Windows"
+                                      Foreground="#7D8B9E" FontSize="10"
+                                      Click="ChkStartWithWindows_Click"/>
+                            
+                            <CheckBox x:Name="ChkMinimizeToTray" Content="Minimize to tray on close"
+                                      Foreground="#7D8B9E" FontSize="10" Margin="0,4"
+                                      Click="ChkMinimizeToTray_Click"/>
+                            
+                            <!-- Engine State Display -->
+                            <TextBlock x:Name="EngineStateText" Text="Ready"
+                                       Foreground="#C8D6E8" FontSize="9"
+                                       FontFamily="Consolas" Margin="0,10,0,6"/>
+                            
+                            <!-- Show Latency Checkbox -->
+                            <CheckBox x:Name="ChkShowLatency" Content="Show Latency"
+                                      Foreground="#7D8B9E" FontSize="10" Margin="0,4"
+                                      Click="ChkShowLatency_Click"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Advanced Settings -->
+                    <TextBlock Text="ADVANCED" Style="{StaticResource SettingsSectionHeader}"/>
+                    <Border Style="{StaticResource SettingsCard}">
+                        <StackPanel>
+                            <CheckBox x:Name="ChkAutoStart" Content="Enable Auto-Start"
+                                      Foreground="#7D8B9E" FontSize="10" Margin="0,4"/>
+                            <CheckBox x:Name="ChkSound" Content="Enable Sound"
+                                      Foreground="#7D8B9E" FontSize="10" Margin="0,4"/>
+                            <CheckBox x:Name="ChkRumble" Content="Enable Rumble Feedback"
+                                      Foreground="#7D8B9E" FontSize="10" Margin="0,4"/>
+                            <CheckBox x:Name="ChkHapticMetronome" Content="Enable Haptic Metronome"
+                                      Foreground="#7D8B9E" FontSize="10" Margin="0,4"/>
+                            <CheckBox x:Name="ChkStartInMiniMode" Content="Start in Mini Mode"
+                                      Foreground="#7D8B9E" FontSize="10" Margin="0,4"/>
+                            <CheckBox x:Name="ChkSmartStandby" Content="Enable Smart Standby (AFK Battery Saver)"
+                                      Foreground="#7D8B9E" FontSize="10" Margin="0,4"/>
+                            <TextBox x:Name="TxtStandbyMinutes" Text="5" 
+                                     Foreground="#C8D6E8" FontSize="10" Width="60" Height="20"
+                                     Margin="0,4"/>
+                            <CheckBox x:Name="ChkFocusLock" Content="Enable Focus Lock"
+                                      Foreground="#7D8B9E" FontSize="10" Margin="0,4"/>
+                            <ComboBox x:Name="LogLevelCombo" ItemsSource="{Binding}" 
+                                      Foreground="#C8D6E8" FontSize="10" Width="120" Height="20"
+                                      Margin="0,4"/>
+                            <CheckBox x:Name="ChkDiscordRPC" Content="Enable Discord Rich Presence"
+                                      Foreground="#7D8B9E" FontSize="10" Margin="0,4"/>
+                            <CheckBox x:Name="ChkVoiceAnnouncements" Content="Enable Voice Announcements"
+                                      Foreground="#7D8B9E" FontSize="10" Margin="0,4"/>
+                            <CheckBox x:Name="ChkTelemetry" Content="Enable Anonymous Telemetry"
+                                      Foreground="#7D8B9E" FontSize="10" Margin="0,4"/>
+                            <ComboBox x:Name="LanguageCombo" ItemsSource="{Binding}" 
+                                      Foreground="#C8D6E8" FontSize="10" Width="120" Height="20"
+                                      Margin="0,4"/>
+                            
+                            <!-- Ragnarok Online Path Selector -->
+                            <TextBlock Text="Ragnarok Online Setup" Foreground="#C8D6E8" FontSize="10" FontWeight="SemiBold" Margin="0,10,0,4"/>
+                            <ComboBox x:Name="RoExePathCombo" ItemsSource="{Binding}" 
+                                      Foreground="#C8D6E8" FontSize="10" Width="300" Height="20"
+                                      Margin="0,0,0,4"/>
+                            <TextBlock x:Name="LblRoExeStatus" Text="" Foreground="#55637A" FontSize="9"
+                                     FontFamily="Consolas" Margin="0,0,0,8"/>
+                            
+                            <!-- Calibrate Button -->
+                            <Button x:Name="BtnCalibrate" Content="Calibrate Gamepad" 
+                                    Foreground="#C8D6E8" FontSize="10" Padding="10,4"
+                                    Margin="0,0,0,8" Click="BtnCalibrate_Click"/>
+                            
+                            <!-- Version and Path Info -->
+                            <TextBlock x:Name="LblVersion" Text="" Foreground="#55637A" FontSize="9"
+                                     FontFamily="Consolas" Margin="0,8,0,4"/>
+                            <TextBlock x:Name="LblSettingsPath" Text="" Foreground="#55637A" FontSize="9"
+                                     FontFamily="Consolas" Margin="0,0,0,8"/>
+                        </StackPanel>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Footer -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" 
+                        HorizontalAlignment="Right" VerticalAlignment="Center">
+                <Button Content="Cancel" Click="BtnCancel_Click"
+                        Style="{StaticResource ConsoleGhostBtn}"
+                        Height="34" Padding="20,0" Margin="0,0,8,0"/>
+                <Button Content="Apply" Click="BtnApply_Click"
+                        Style="{StaticResource ConsolePrimaryBtn}"
+                        Height="34" Padding="20,0"/>
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>EngineBenchmarks-20260817-105454</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26200.9168)
+AMD Ryzen 7 8745HS w/ Radeon 780M Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 10.0.301
+  [Host]   : .NET 8.0.26 (8.0.2626.16921), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+  ShortRun : .NET 8.0.26 (8.0.2626.16921), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+</code></pre>
+<pre><code>Job=ShortRun  IterationCount=3  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                                       </th><th>Mean </th><th>Error</th><th>StdDev</th><th>Code Size</th><th>Gen0</th><th>Allocated</th>
+</tr>
+</thead><tbody><tr><td>&#39;ComboEngine.Update (button held)&#39;</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td>
+</tr><tr><td>&#39;MovementEngine.Update (stick forward)&#39;</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td><td>NA</td>
+</tr><tr><td>&#39;Messenger.Publish&lt;SnapshotReadyMessage&gt; (10 subs)&#39;</td><td>25.3419 ns</td><td>5.0200 ns</td><td>0.2752 ns</td><td>398 B</td><td>0.0029</td><td>24 B</td>
+</tr><tr><td>&#39;ControllerSnapshot init (readonly record struct)&#39;</td><td>118.4355 ns</td><td>8.4914 ns</td><td>0.4654 ns</td><td>479 B</td><td>0.0440</td><td>368 B</td>
+</tr><tr><td>&#39;JitterService.Apply (Random.Shared)&#39;</td><td>2.5789 ns</td><td>0.4824 ns</td><td>0.0264 ns</td><td>357 B</td><td>-</td><td>-</td>
+</tr><tr><td>&#39;ComboEngine.Update (button released)&#39;</td><td>0.4443 ns</td><td>0.2285 ns</td><td>0.0125 ns</td><td>152 B</td><td>-</td><td>-</td>
+</tr><tr><td>&#39;MovementEngine.Update (no movement)&#39;</td><td>1.2832 ns</td><td>0.1908 ns</td><td>0.0105 ns</td><td>919 B</td><td>-</td><td>-</td>
+</tr><tr><td>&#39;Messenger.Publish (empty message)&#39;</td><td>24.6125 ns</td><td>0.6735 ns</td><td>0.0369 ns</td><td>398 B</td><td>0.0029</td><td>24 B</td>
+</tr><tr><td>&#39;JitterService.Apply (low jitter)&#39;</td><td>3.7349 ns</td><td>0.8209 ns</td><td>0.0450 ns</td><td>357 B</td><td>-</td><td>-</td>
+</tr><tr><td>&#39;JitterService.Apply (high jitter)&#39;</td><td>2.5744 ns</td><td>0.1381 ns</td><td>0.0076 ns</td><td>360 B</td><td>-</td><td>-</td>
+</tr></tbody></table>
+</body>
+</html>

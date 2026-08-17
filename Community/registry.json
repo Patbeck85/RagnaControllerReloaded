@@ -1,0 +1,26 @@
+{
+  "$schema": "https://gist.githubusercontent.com/Patbeck85/YOUR_GIST_ID/raw/schema.json",
+  "profiles": [
+    {
+      "name": "Mage - Fire Specialist",
+      "class": "mage",
+      "author": "Patbeck85",
+      "description": "Optimized for fire spells with ground-targeting. Includes combo chains: Fireball → Meteor → Inferno.",
+      "shareCode": "gist://raw.githubusercontent.com/Patbeck85/RagnaController/main/registry.json?profile=mage-fire"
+    },
+    {
+      "name": "Archer - DPS Master",
+      "class": "archer",
+      "author": "Patbeck85",
+      "description": "Bolt spamming with smart-aim. Perfect for ranged combat and kiting.",
+      "shareCode": "gist://raw.githubusercontent.com/Patbeck85/RagnaController/main/registry.json?profile=archer-dps"
+    },
+    {
+      "name": "Thief - Stealth Assassin",
+      "class": "thief",
+      "author": "Patbeck85",
+      "description": "Combo chains: Dagger → Shadow Step → Backstab. Includes stealth mechanics.",
+      "shareCode": "gist://raw.githubusercontent.com/Patbeck85/RagnaController/main/registry.json?profile=thief-assassin"
+    }
+  ]
+}

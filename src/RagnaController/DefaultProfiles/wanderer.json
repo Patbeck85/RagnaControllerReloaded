@@ -1,0 +1,71 @@
+{
+  "Name": "Wanderer",
+  "Class": "Bard",
+  "MouseSensitivity": 1.0,
+  "Deadzone": 0.12,
+  "MovementCurve": 1.4,
+  "CursorMaxSpeed": 940.0,
+  "ActionRpgMode": true,
+  "AutoAttackEnabled": false,
+  "AutoRetargetEnabled": true,
+  "SmartSkillEnabled": true,
+  "PreRenewalAttackIntervalMs": 132,
+  "RenewalAttackIntervalMs": 78,
+  "ComboEnabled": true,
+  "ClassTips": "Hold R2 to auto-cast. A = Healing Waltz (press once). L1+A = Dance. L1+B = Buff.",
+  "SkillRecommendations": [
+    "Healing Waltz",
+    "Dance",
+    "Buff",
+    "Pain Kill",
+    "Soul Song"
+  ],
+  "ButtonMappings": {
+    "A": {
+      "Type": "Key",
+      "Key": "F1",
+      "Label": "Healing Waltz",
+      "TurboEnabled": true,
+      "Mode": "Adaptive",
+      "TurboIntervalMs": 55
+    },
+    "B": {
+      "Type": "Key",
+      "Key": "F2",
+      "Label": "Dance"
+    },
+    "X": {
+      "Type": "Key",
+      "Key": "F3",
+      "Label": "Buff"
+    },
+    "Y": {
+      "Type": "Key",
+      "Key": "F4",
+      "Label": "Pain Kill"
+    },
+    "L1+A": {
+      "Type": "Key",
+      "Key": "F5",
+      "Label": "Soul Song",
+      "IsGroundSpell": true
+    },
+    "L1+B": {
+      "Type": "Key",
+      "Key": "F6",
+      "Label": "Music Aura"
+    },
+    "L1+X": {
+      "Type": "Key",
+      "Key": "F7",
+      "Label": "Rhythm Step"
+    },
+    "L1+Y": {
+      "Type": "Key",
+      "Key": "F8",
+      "Label": "Melody Ward"
+    }
+  },
+  "RenewalSkillInterruptMs": 260,
+  "PreRenewalSkillInterruptMs": 520
+}

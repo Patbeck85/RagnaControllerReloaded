@@ -1,0 +1,16 @@
+        private void LblSettingsPath_Click(object sender, MouseButtonEventArgs e)
+        {
+            try { Process.Start("explorer.exe", $"\"\"{LblSettingsPath.Text}\"\"\"); } catch { }
+        }
+
+        private void BtnDevConsole_Click(object sender, RoutedEventArgs e)
+        {
+            var logger = App.Services.GetService(typeof(RagnaController.Core.AdvancedLogger)) as RagnaController.Core.AdvancedLogger;
+            if (logger != null)
+            {
+                var consoleWin = new DeveloperConsoleWindow(logger) { Owner = this };
+                consoleWin.Show();
+            }
+        }
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e) => Close();

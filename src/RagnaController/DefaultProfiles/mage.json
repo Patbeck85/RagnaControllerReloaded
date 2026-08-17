@@ -1,0 +1,31 @@
+{
+  "Name": "Mage",
+  "Class": "Mage",
+  "MouseSensitivity": 1.0,
+  "Deadzone": 0.18,
+  "MovementCurve": 1.3,
+  "CursorMaxSpeed": 1300.0,
+  "ActionRpgMode": false,
+  "AutoAttackEnabled": false,
+  "MageEnabled": true,
+  "MageBoltKeyVK": 112,
+  "MageBoltCastDelayMs": 1000,
+  "SmartSkillEnabled": true,
+  "PreRenewalAttackIntervalMs": 150,
+  "RenewalAttackIntervalMs": 100,
+  "ClassTips": "Rechter Stick zielt, A feuert Bolt. B = Cold Bolt. X = Fire Ball. Y = Lightning Bolt. L1+X = Safety Wall Cursor. Kein AutoAttack — Mana sorgfältig einteilen.",
+  "SkillRecommendations": ["Fire Bolt", "Cold Bolt", "Lightning Bolt", "Fire Ball", "Frost Diver", "Safety Wall"],
+  "ButtonMappings": {
+    "A": { "Type": "Key", "Key": "F1", "Label": "Fire Bolt" },
+    "B": { "Type": "Key", "Key": "F2", "Label": "Cold Bolt" },
+    "X": { "Type": "Key", "Key": "F3", "Label": "Fire Ball", "IsGroundSpell": true },
+    "Y": { "Type": "Key", "Key": "F4", "Label": "Lightning Bolt" },
+    "L1+A": { "Type": "Key", "Key": "F5", "Label": "Frost Diver" },
+    "L1+X": { "Type": "Key", "Key": "F6", "Label": "Safety Wall", "IsGroundSpell": true },
+    "L1+Y": { "Type": "Key", "Key": "F7", "Label": "Stone Curse" },
+    "R1+A": { "Type": "Key", "Key": "F9", "Label": "Blue Potion", "TurboEnabled": true, "Mode": "Burst", "TurboIntervalMs": 100 },
+    "R1+B": { "Type": "Key", "Key": "F10", "Label": "White Potion" }
+  },
+  "RenewalSkillInterruptMs": 350,
+  "PreRenewalSkillInterruptMs": 600
+}

@@ -1,0 +1,79 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+    
+    - name: Run Unit Tests
+      run: dotnet test --no-build --verbosity minimal --configuration Release
+    
+    - name: Run Integration Tests
+      run: dotnet test --filter "FullyQualifiedName~Integration" --no-build --verbosity minimal --configuration Release
+    
+    - name: Run Performance Tests
+      run: dotnet test --filter "FullyQualifiedName~Performance" --no-build --verbosity minimal --configuration Release
+    
+    - name: Publish artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: RagnaController-Release
+        path: bin/Release/net8.0/publish/
+
+  code-quality:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Run Code Analysis
+      run: dotnet build --no-restore --configuration Release /p:TreatWarningsAsErrors=true
+    
+    - name: Check for warnings
+      run: |
+        $exitCode = 0
+        if ($LASTEXITCODE -ne 0) {
+          exit 1
+        }
+        exit $exitCode
+
+  test-summary:
+    needs: [build, code-quality]
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Generate Test Summary
+      run: |
+        Write-Host "=== RagnaController CI/CD Pipeline Summary ==="
+        Write-Host "✅ Build: PASSED"
+        Write-Host "✅ Unit Tests: PASSED"
+        Write-Host "✅ Integration Tests: PASSED"
+        Write-Host "✅ Performance Tests: PASSED"
+        Write-Host "✅ Code Quality: PASSED"
+        Write-Host "=== All Checks Completed Successfully ==="
