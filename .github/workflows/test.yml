@@ -65,6 +65,14 @@ jobs:
           path: coverage/**/*.xml
           retention-days: 14
 
+      - name: Upload Stryker Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stryker-report
+          path: StrykerOutput/**/*
+          retention-days: 14
+
   stryker-mutation:
     name: Stryker Mutation Testing
     runs-on: windows-latest
