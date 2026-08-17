@@ -71,7 +71,7 @@ namespace RagnaController
         private void InitializeFromConfig()
         {
             // Use configured items if provided, otherwise defaults
-            var items = _config.Items ?? DefaultItems;
+            var items = _config?.Items ?? DefaultItems;
             _items = new List<RadialItem>(items);
         }
 
