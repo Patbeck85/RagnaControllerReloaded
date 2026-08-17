@@ -53,14 +53,6 @@ jobs:
     - name: Run Code Analysis
       run: dotnet build --configuration Release /p:TreatWarningsAsErrors=true
     
-    - name: Check for warnings
-      run: |
-        $exitCode = 0
-        if ($LASTEXITCODE -ne 0) {
-          exit 1
-        }
-        exit $exitCode
-
   test-summary:
     needs: [build, code-quality]
     runs-on: windows-latest
