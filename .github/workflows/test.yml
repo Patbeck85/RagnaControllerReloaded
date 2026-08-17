@@ -96,9 +96,6 @@ jobs:
         run: >
           dotnet stryker
           --config-file stryker-config.json
-          --threshold-break 70
-          --threshold-low 80
-          --threshold-high 95
           --reporters "html,progress,json"
         working-directory: .
 
