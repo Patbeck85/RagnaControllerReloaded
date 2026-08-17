@@ -23,18 +23,10 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore src/RagnaController/RagnaController.csproj
 
-      - name: Build (Release)
-        run: dotnet build src/RagnaController/RagnaController.csproj
-               --configuration Release --no-restore --nologo
-
-      - name: Restore test dependencies
-        run: dotnet restore tests/RagnaController.Tests/RagnaController.Tests.csproj
-
       - name: Run Core Tests
         run: >
           dotnet test tests/RagnaController.Tests/RagnaController.Tests.csproj
           --configuration Release
-          --no-restore
           --nologo
           --logger "console;verbosity=normal"
           --collect:"XPlat Code Coverage"
