@@ -51,7 +51,7 @@ jobs:
         dotnet-version: '8.0.x'
     
     - name: Run Code Analysis
-      run: dotnet build --no-restore --configuration Release /p:TreatWarningsAsErrors=true
+      run: dotnet build --configuration Release /p:TreatWarningsAsErrors=true
     
     - name: Check for warnings
       run: |

@@ -89,7 +89,7 @@ jobs:
         working-directory: .
 
       - name: Build (Release)
-        run: dotnet build src/RagnaController/RagnaController.csproj --configuration Release --no-restore --nologo
+        run: dotnet build src/RagnaController/RagnaController.csproj --configuration Release
         working-directory: .
 
       - name: Run Stryker Mutation Tests
