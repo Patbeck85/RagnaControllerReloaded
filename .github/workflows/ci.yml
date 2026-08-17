@@ -25,13 +25,13 @@ jobs:
       run: dotnet build --no-restore --configuration Release
     
     - name: Run Unit Tests
-      run: dotnet test --no-build --verbosity minimal --configuration Release
+      run: dotnet test --verbosity minimal --configuration Release
     
     - name: Run Integration Tests
-      run: dotnet test --filter "FullyQualifiedName~Integration" --no-build --verbosity minimal --configuration Release
+      run: dotnet test --filter "FullyQualifiedName~Integration" --verbosity minimal --configuration Release
     
     - name: Run Performance Tests
-      run: dotnet test --filter "FullyQualifiedName~Performance" --no-build --verbosity minimal --configuration Release
+      run: dotnet test --filter "FullyQualifiedName~Performance" --verbosity minimal --configuration Release
     
     - name: Publish artifacts
       uses: actions/upload-artifact@v4
