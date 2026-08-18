@@ -97,6 +97,8 @@ jobs:
         working-directory: .
 
       - name: Run Stryker Mutation Tests
+        env:
+          STRYKER_DASHBOARD_API_KEY: 077092c3-2808-483a-a686-7d4fe5532a2f
         run: >
           dotnet stryker
           --config-file stryker-config.json
