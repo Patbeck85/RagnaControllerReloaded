@@ -100,16 +100,16 @@ jobs:
         env:
           STRYKER_DASHBOARD_API_KEY: 077092c3-2808-483a-a686-7d4fe5532a2f
         run: |
-          dotnet stryker
-          --config-file stryker-config.json
-          --project "src/RagnaController/RagnaController.csproj"
-          --test-project "tests/RagnaController.Tests/RagnaController.Tests.csproj"
-          --reporter "html,progress,json"
-          --verbosity trace
-          --mutate "src/RagnaController/Core/**/*.cs"
-          --mutate "!src/RagnaController/Core/*Window*.cs"
-          --mutate "!src/RagnaController/Core/*Window*.xaml.cs"
-          --mutate "!src/RagnaController/Core/App.xaml.cs"
+          dotnet stryker `
+          --config-file stryker-config.json `
+          --project src/RagnaController/RagnaController.csproj `
+          --test-project tests/RagnaController.Tests/RagnaController.Tests.csproj `
+          --reporter "html,progress,json" `
+          --verbosity trace `
+          --mutate "src/RagnaController/Core/**/*.cs" `
+          --mutate "!src/RagnaController/Core/*Window*.cs" `
+          --mutate "!src/RagnaController/Core/*Window*.xaml.cs" `
+          --mutate "!src/RagnaController/Core/App.xaml.cs" `
           --mutate "!src/RagnaController/Core/DeviceNotificationWindow.cs"
         working-directory: .
 
