@@ -105,12 +105,7 @@ jobs:
           --project src/RagnaController/RagnaController.csproj `
           --test-project tests/RagnaController.Tests/RagnaController.Tests.csproj `
           --reporter "html,progress,json" `
-          --verbosity trace `
-          --mutate "src/RagnaController/Core/**/*.cs" `
-          --mutate "!src/RagnaController/Core/*Window*.cs" `
-          --mutate "!src/RagnaController/Core/*Window*.xaml.cs" `
-          --mutate "!src/RagnaController/Core/App.xaml.cs" `
-          --mutate "!src/RagnaController/Core/DeviceNotificationWindow.cs"
+          --verbosity trace
         working-directory: .
 
       - name: Upload Stryker Report

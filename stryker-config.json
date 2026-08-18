@@ -1,5 +1,19 @@
 {
   "stryker-config": {
+    "project": "src/RagnaController/RagnaController.csproj",
+    "test-projects": [
+      "tests/RagnaController.Tests/RagnaController.Tests.csproj"
+    ],
+    "mutate": [
+      "src/RagnaController/Core/**/*.cs"
+    ],
+    "ignore-mutations": [
+      "src/RagnaController/Core/DeviceNotificationWindow.cs",
+      "**/*.g.cs",
+      "**/*Window*.xaml.cs",
+      "**/*Window*.xaml",
+      "**/App.xaml.cs"
+    ],
     "thresholds": {
       "high": 95,
       "low": 80,
