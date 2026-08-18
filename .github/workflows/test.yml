@@ -9,7 +9,7 @@ on:
 jobs:
   test:
     name: Unit Tests (.NET 8)
-    runs-on: windows-latest      # WPF requires Windows
+    runs-on: windows-latest
 
     steps:
       - name: Checkout
@@ -47,7 +47,7 @@ jobs:
             Write-Host "✅ Coverage: $pct% (threshold: 65%)"
           }
         shell: pwsh
-        continue-on-error: true  # Warnung, kein hard-fail für jetzt
+        continue-on-error: true
 
       - name: Upload Coverage Report
         if: always()
@@ -101,50 +101,15 @@ jobs:
           STRYKER_DASHBOARD_API_KEY: 077092c3-2808-483a-a686-7d4fe5532a2f
         run: |
           dotnet stryker
-          --config-file stryker-config.json
+          --project src/RagnaController/RagnaController.csproj
+          --test-project tests/RagnaController.Tests/RagnaController.Tests.csproj
           --reporter "html,progress,json"
           --verbosity trace
-          --mutate "**/*Engine*.cs"
-          --mutate "**/*Engine.cs"
-          --mutate "**/KiteStates.cs"
-          --mutate "**/SmartCursorService.cs"
-          --mutate "**/ProfileManager.cs"
-          --mutate "**/ActionLogService.cs"
-          --mutate "**/AdvancedLogger.cs"
-          --mutate "**/AutoTargetEngine.cs"
-          --mutate "**/BackgroundTickProvider.cs"
-          --mutate "**/BezierMouseService.cs"
-          --mutate "**/CombatEngine.cs"
-          --mutate "**/ComboEngine.cs"
-          --mutate "**/ControllerService.cs"
-          --mutate "**/CooldownManager.cs"
-          --mutate "**/CursorEngine.cs"
-          --mutate "**/DefaultProfileLoader.cs"
-          --mutate "**/DiscordRpcService.cs"
-          --mutate "**/EngineOptimizationPool.cs"
-          --mutate "**/EngineOrchestrator.cs"
-          --mutate "**/EngineWatchdog.cs"
-          --mutate "**/FeedbackSystem.cs"
-          --mutate "**/HotkeyEngine.cs"
-          --mutate "**/HybridEngine.cs"
-          --mutate "**/MacroEngine.cs"
-          --mutate "**/PerformanceMonitor.cs"
-          --mutate "**/SchedulerEngine.cs"
-          --mutate "**/SmoothingEngine.cs"
-          --mutate "**/StateManager.cs"
-          --mutate "**/ZoneManager.cs"
-          --mutate "!**/*Window*.cs"
-          --mutate "!**/*Window*.xaml.cs"
-          --mutate "!**/App.xaml.cs"
-          --mutate "!**/ButtonRemappingWindow.*"
-          --mutate "!**/ComboEditorWindow.*"
-          --mutate "!**/CommunityBrowserWindow.*"
-          --mutate "!**/ControllerPreview.cs"
-          --mutate "!**/DaisyWheelWindow.*"
-          --mutate "!**/RadialMenuWindow.*"
-          --mutate "!**/*.xaml"
-          --mutate "!**/obj/**/*.g.cs"
-          --mutate "!**/obj/**/*.g.i.cs"
+          --mutate "src/RagnaController/Core/**/*.cs"
+          --mutate "!src/RagnaController/Core/*Window*.cs"
+          --mutate "!src/RagnaController/Core/*Window*.xaml.cs"
+          --mutate "!src/RagnaController/Core/App.xaml.cs"
+          --mutate "!src/RagnaController/Core/DeviceNotificationWindow.cs"
         working-directory: .
 
       - name: Upload Stryker Report
