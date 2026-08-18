@@ -2,7 +2,6 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Markup;
 using RagnaController.Core;
 using RagnaController.Profiles;
 
@@ -11,7 +10,7 @@ namespace RagnaController
     /// <summary>
     /// Button Remapping Window - Complete implementation matching XAML structure
     /// </summary>
-    public partial class ButtonRemappingWindow : Window, IComponentConnector
+    public partial class ButtonRemappingWindow : Window
     {
         private readonly HybridEngine _engine;
         private ProfileManager _manager;
@@ -41,10 +40,6 @@ namespace RagnaController
 
             // Initialize turbo test checkbox
             if (ChkTurboTest != null) ChkTurboTest.IsChecked = false;
-        }
-
-        public void Connect(int targetId, object connector)
-        {
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
