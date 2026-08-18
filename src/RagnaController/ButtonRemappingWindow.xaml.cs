@@ -27,19 +27,19 @@ namespace RagnaController
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
 
             // Initialize window with default values (null-safe after InitializeComponent)
-            if (DpadSlider   != null) DpadSlider.Value   = 0;
-            if (LStickSlider != null) LStickSlider.Value = 0;
-            if (RStickSlider != null) RStickSlider.Value = 0;
-            if (L1R1Slider   != null) L1R1Slider.Value   = 0;
-            if (L2R2Slider   != null) L2R2Slider.Value   = 0;
-            if (TurboSlider  != null) TurboSlider.Value  = 3;
+            if (SldDpad   != null) SldDpad.Value   = 0;
+            if (SldLStick != null) SldLStick.Value = 0;
+            if (SldRStick != null) SldRStick.Value = 0;
+            if (SldL1R1   != null) SldL1R1.Value   = 0;
+            if (SldL2R2   != null) SldL2R2.Value   = 0;
+            if (SldTurbo  != null) SldTurbo.Value  = 3;
 
             // Activate Base layer by default
             ApplyLayer("");
             UpdatePreview();
 
             // Initialize turbo test checkbox
-            if (ChkTurboTest != null) ChkTurboTest.IsChecked = false;
+            if (ChkTurboTestMain != null) ChkTurboTestMain.IsChecked = false;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -84,7 +84,7 @@ namespace RagnaController
         {
             _activeLayer = layerName;
             // Highlight active layer button
-            foreach (var btn in new[] { LayerBase, LayerL1, LayerR1, LayerL2, LayerR2 })
+            foreach (var btn in new[] { BtnLayerBase, BtnLayerL1, BtnLayerR1, BtnLayerL2, BtnLayerR2 })
             {
                 if (btn == null) continue;
                 string tag = btn.Tag?.ToString() ?? "";
@@ -97,45 +97,45 @@ namespace RagnaController
 
         private void ResetAll()
         {
-            DpadSlider.Value   = 0;
-            LStickSlider.Value = 0;
-            RStickSlider.Value = 0;
-            L1R1Slider.Value   = 0;
-            L2R2Slider.Value   = 0;
-            TurboSlider.Value  = 3;
-            if (ChkTurboTest  != null) ChkTurboTest.IsChecked  = false;
-            if (GroundSpellCheckbox != null) GroundSpellCheckbox.IsChecked = false;
-            if (SelfCastCheckbox    != null) SelfCastCheckbox.IsChecked    = false;
+            SldDpad.Value   = 0;
+            SldLStick.Value = 0;
+            SldRStick.Value = 0;
+            SldL1R1.Value   = 0;
+            SldL2R2.Value   = 0;
+            SldTurbo.Value  = 3;
+            if (ChkTurboTestMain  != null) ChkTurboTestMain.IsChecked  = false;
+            if (ChkGroundSpell   != null) ChkGroundSpell.IsChecked    = false;
+            if (ChkSelfCast      != null) ChkSelfCast.IsChecked       = false;
             UpdatePreview();
         }
 
         private void UpdatePreview()
         {
             // Sync value TextBlocks
-            if (DpadValue   != null) DpadValue.Text   = ((int)DpadSlider.Value).ToString();
-            if (LStickValue != null) LStickValue.Text = ((int)LStickSlider.Value).ToString();
-            if (RStickValue != null) RStickValue.Text = ((int)RStickSlider.Value).ToString();
-            if (L1R1Value   != null) L1R1Value.Text   = ((int)L1R1Slider.Value).ToString();
-            if (L2R2Value   != null) L2R2Value.Text   = ((int)L2R2Slider.Value).ToString();
-            if (TurboValue  != null) TurboValue.Text  = $"{TurboSlider.Value:F1}s";
+            if (TxtDpadValue   != null) TxtDpadValue.Text   = ((int)SldDpad.Value).ToString();
+            if (TxtLStickValue != null) TxtLStickValue.Text = ((int)SldLStick.Value).ToString();
+            if (TxtRStickValue != null) TxtRStickValue.Text = ((int)SldRStick.Value).ToString();
+            if (TxtL1R1Value   != null) TxtL1R1Value.Text   = ((int)SldL1R1.Value).ToString();
+            if (TxtL2R2Value   != null) TxtL2R2Value.Text   = ((int)SldL2R2.Value).ToString();
+            if (TxtTurboValue  != null) TurboValue.Text  = $"{SldTurbo.Value:F1}s";
             if (TurboFreqText != null)
-                TurboFreqText.Text = ChkTurboTest?.IsChecked == true
-                    ? $"Turbo: {TurboSlider.Value:F1}s interval"
+                TurboFreqText.Text = ChkTurboTestMain?.IsChecked == true
+                    ? $"Turbo: {SldTurbo.Value:F1}s interval"
                     : "";
         }
 
         private void ToggleTurboTest()
         {
-            bool active = ChkTurboTest?.IsChecked == true;
+            bool active = ChkTurboTestMain?.IsChecked == true;
             if (TurboFreqText != null)
-                TurboFreqText.Text = active ? $"Turbo: {TurboSlider.Value:F1}s interval" : "";
+                TurboFreqText.Text = active ? $"Turbo: {SldTurbo.Value:F1}s interval" : "";
         }
 
         private void RunTurboTest()
         {
-            if (ChkTurboTest?.IsChecked != true) return;
+            if (ChkTurboTestMain?.IsChecked != true) return;
             // Fire turbo interval live update on the engine
-            float intervalSec = (float)TurboSlider.Value;
+            float intervalSec = (float)SldTurbo.Value;
             _engine.LiveUpdateTurboInterval(intervalSec);
         }
 
@@ -157,12 +157,12 @@ namespace RagnaController
 
                 // Apply slider values as profile deadzone tweaks
                 // These sliders adjust the effective sensitivity per input type
-                profile.Deadzone     = Math.Clamp(0.12f + (float)DpadSlider.Value / 1000f, 0.0f, 0.5f);
-                profile.CursorDeadzone = Math.Clamp(0.12f + (float)LStickSlider.Value / 1000f, 0.0f, 0.5f);
+                profile.Deadzone     = Math.Clamp(0.12f + (float)SldDpad.Value / 1000f, 0.0f, 0.5f);
+                profile.CursorDeadzone = Math.Clamp(0.12f + (float)SldLStick.Value / 1000f, 0.0f, 0.5f);
 
                 // Turbo interval
-                if (ChkTurboTest?.IsChecked == true)
-                    _engine.LiveUpdateTurboInterval((float)TurboSlider.Value);
+                if (ChkTurboTestMain?.IsChecked == true)
+                    _engine.LiveUpdateTurboInterval((float)SldTurbo.Value);
 
                 // Spell config flags
                 // (applied per button — stored in ButtonMappings, no global flag needed)

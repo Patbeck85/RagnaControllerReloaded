@@ -38,7 +38,7 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 
 | Task ID | Task | Priority | Dependencies | Definition of Done | Status |
 |---------|------|----------|--------------|---------------------|--------|
-| **TEST-001** | Stryker.NET mutation testing ≥80% | HIGH | Phase 2 | `dotnet stryker` integrated in CI, ≥80% mutation score on core engines | ✅ READY: Config added, mutate-only core sources configured — CI pipeline ready |
+| **TEST-001** | Stryker.NET mutation testing ≥80% | HIGH | Phase 2 | `dotnet stryker` integrated in CI, ≥80% mutation score on core engines | ✅ CONFIGURED — CI pipeline ready, commit `0d4f32d` |
 | **TEST-002** | Performance regression benchmarks | MEDIUM | — | BenchmarkDotNet suite for `EngineOrchestrator.Tick()`, `InputCommandQueue` throughput, cursor latency | ✅ DONE — Baselines established |
 | **TEST-003** | Integration test: full overlay → RO client | MEDIUM | ARCH-001 | Headless integration test with mocked RO window | 📋 PLANNED |
 
@@ -57,7 +57,7 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 
 ---
 
-## 🚀 Phase 4: Feature Expansion (COMPLETE)
+## ✅ Phase 4: Feature Expansion (COMPLETE)
 
 | Task ID | Task | Priority | Status |
 |---------|------|----------|--------|
@@ -75,7 +75,7 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 | Task ID | Task | Priority | Dependencies | Definition of Done |
 |---------|------|----------|--------------|-------------------|
 | POLISH-001 | Fix ControllerSnapshot benchmark warning (record struct overhead) | MEDIUM | TEST-002 | Benchmark mean < 50 ns achieved |
-| POLISH-002 | Stryker CI integration: first mutation test run | HIGH | TEST-001 | CI pipeline reports mutation score ≥80% |
+| POLISH-002 | Stryker CI integration: first mutation test run | HIGH | TEST-001 | CI pipeline reports mutation score ≥80% — **COMMITTED LOCALLY, PUSH PENDING** |
 | POLISH-003 | Integration test scaffold completion | MEDIUM | ARCH-001, FEAT-002 | Headless test with mocked RO window runs >90% stable |
 | POLISH-004 | Release package prep: clean `release_final/` isolation | HIGH | POLISH-002, POLISH-003 | `release_final/` contains only end products (no .obj, .pdb, .tmp, logs, scratch files) |
 | POLISH-005 | CHANGELOG.md update for v1.2.0 release | MEDIUM | POLISH-004 | All changes documented; SemVer v1.2.0 increment |
@@ -93,21 +93,22 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 
 ## Current Sprint
 
-**Phase 4 — Feature Expansion** (COMPLETE)
+**Phase 5 — Polish & Release Prep** (IN PROGRESS)
 
 - ✅ FEAT-001: DaisyWheel/RadialMenu configurable sectors — COMPLETE
 - ✅ FEAT-002: Profile Wizard guided first-run setup — COMPLETE (Profile saving via ProfileManager integrated; ProfileLibraryWindow updated)
-- 📋 FEAT-003: Community Hub profile sharing (opt-in) — planned, not started
 - ✅ FEAT-004: HybridEngine auto-class detection from keybinds — COMPLETE
-- 🔄 POLISH-002: Stryker CI integration — **CI pipeline configured and ready** (stryker-config.json + .github/workflows/test.yml)
+- 📋 FEAT-003: Community Hub profile sharing (opt-in) — planned, not started
+- 🔄 **POLISH-002: Stryker CI integration — CI pipeline configured and ready (stryker-config.json + .github/workflows/test.yml)**
 - 📋 POLISH-003: Integration test scaffold — pending
 
-**Next Priority:** POLISH-002 (Stryker CI integration) — trigger CI pipeline run on push to main
+**Next Priority:** POLISH-002 (Stryker CI integration) — **push to main branch to trigger CI pipeline for first Stryker.NET mutation test run**
 
 ---
 
 ## Session State
-Current focus: POLISH-002 Stryker CI integration
+
+Current focus: POLISH-002 Stryker CI integration — commit ready, push blocked by credential prompt
 Next action: Push to main branch to trigger CI pipeline for first Stryker.NET mutation test run
 
 ---

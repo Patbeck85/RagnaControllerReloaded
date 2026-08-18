@@ -280,5 +280,24 @@
   },
   "Desc": {
     "StickCalibration": "Calibrate your controller stick for optimal responsiveness."
-  }
+  },
+  "Controller.BatteryLevel_Empty": "Battery: Empty",
+  "Controller.ControllerName_NoController": "No Controller Connected",
+  "Controller.Tab_NoMappings": "No mappings configured",
+  "Macro.MacroTimeline_NoSteps": "No steps defined",
+  "Macro.MacroTimeline_HoverHint": "Hover over a step for details",
+  "Tut.Btn_Finish": "Finish",
+  "ComboEditor.NoStepsDefined": "No steps defined. Add steps to create a combo.",
+  "CommunityBrowser.Downloading": "Downloading...",
+  "CommunityBrowser.Installed": "Installed",
+  "CommunityBrowser.DownloadButton": "Download",
+  "Handheld.Play_NoGameFound_Message": "No game found. Please start the game first.",
+  "Handheld.Play_NoGameFound_Title": "Game Not Found",
+  "Handheld.Play_Error_Message": "Error launching game",
+  "ProfileLibrary.Uploading": "Uploading...",
+  "ProfileLibrary.ShareButton": "Share",
+  "RadialMenu.SelectItem": "Select an item",
+  "RadialSetup.Downloading": "Downloading...",
+  "RadialSetup.ChatEmote": "Chat Emote",
+  "RadialSetup.Gallery": "Gallery"
 }

@@ -76,7 +76,10 @@
     "DeleteController": "Delete Controller",
     "ControllerSaved": "Controller saved!",
     "ControllerLoaded": "Controller loaded!",
-    "ControllerDeleted": "Controller deleted!"
+    "ControllerDeleted": "Controller deleted!",
+    "BatteryLevel_Empty": "Battery: Empty",
+    "ControllerName_NoController": "No Controller Connected",
+    "Tab_NoMappings": "No mappings configured"
   },
   "Debug": {
     "TabName": "Debug",
@@ -116,7 +119,9 @@
     "NoMacros": "No macros",
     "SelectMacro": "Select a macro to edit",
     "MacroNameRequired": "Macro name is required",
-    "InvalidMacroCommands": "Invalid macro commands"
+    "InvalidMacroCommands": "Invalid macro commands",
+    "MacroTimeline_NoSteps": "No steps defined",
+    "MacroTimeline_HoverHint": "Hover over a step for details"
   },
   "Rumble": {
     "TabName": "Rumble",
@@ -263,9 +268,36 @@
     "1_Title": "Getting Started",
     "1_Desc": "Welcome to RagnaController! This tutorial will help you get started.",
     "Btn_Next": "Next",
-    "Btn_Prev": "Previous"
+    "Btn_Prev": "Previous",
+    "Btn_Finish": "Finish",
+    "Btn_Next": "Next"
   },
   "Desc": {
     "StickCalibration": "Calibrate your controller stick for optimal responsiveness."
+  },
+  "ComboEditor": {
+    "NoStepsDefined": "No steps defined. Add steps to create a combo."
+  },
+  "CommunityBrowser": {
+    "Downloading": "Downloading...",
+    "Installed": "Installed",
+    "DownloadButton": "Download"
+  },
+  "Handheld": {
+    "Play_NoGameFound_Message": "No game found. Please start the game first.",
+    "Play_NoGameFound_Title": "Game Not Found",
+    "Play_Error_Message": "Error launching game"
+  },
+  "ProfileLibrary": {
+    "Uploading": "Uploading...",
+    "ShareButton": "Share"
+  },
+  "RadialMenu": {
+    "SelectItem": "Select an item"
+  },
+  "RadialSetup": {
+    "Downloading": "Downloading...",
+    "ChatEmote": "Chat Emote",
+    "Gallery": "Gallery"
   }
 }

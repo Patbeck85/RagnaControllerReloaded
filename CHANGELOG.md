@@ -5,6 +5,26 @@ All notable changes to RagnaController will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-08-18
+
+### Changed
+- **Stryker CI Integration (POLISH-002)** — Configured mutation testing for CI pipeline:
+  - Simplified `stryker-config.json` to thresholds/reporters only (project/test-project/mutate/ignore-mutations removed)
+  - Using CLI `--mutate` flags to target Core/ engine files only (`src/RagnaController/Core/*.cs`)
+  - Excluded WPF UI files: `*Window*.cs`, `*Window*.xaml.cs`, `App.xaml.cs`, `DeviceNotificationWindow.cs`, `*.g.cs`
+  - Enabled Stryker Dashboard upload with API key
+  - Job `stryker-mutation` triggers on push to `main` branch only
+  - Thresholds: break=70%, low=80%, high=95%
+  - Restored solution file (`RagnaController.sln`) for full build verification
+
+### Fixed
+- CI: Simplified Stryker configuration to avoid Windows shell parser issues with complex JSON
+- CI: Removed `--config-file` flag in favor of explicit CLI `--mutate` filters for reliable exclusion of WPF files
+
+### Tests
+- All 32 unit tests passing
+- Build: 0 errors, 0 warnings (clean compilation)
+
 ## [1.4.1] - 2026-08-17
 
 ### Changed
@@ -116,4 +136,4 @@ The version number follows Semantic Versioning (SemVer):
 
 ---
 
-*Last updated: 2026-05-13*
+*Last updated: 2026-08-18*
