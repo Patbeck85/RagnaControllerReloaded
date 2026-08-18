@@ -21,6 +21,13 @@
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     <!-- Override NuGet package folder to avoid Windows-specific paths -->
     <NuGetPackageRoot>/home/patbe/.nuget/packages</NuGetPackageRoot>
+    <!-- SourceLink for Stryker mutation testing -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <RepositoryUrl>https://github.com/Patbeck85/RagnaControllerReloaded</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
     <!-- Localization namespace mapping for {core:Loc ...} bindings -->
     <XamlNamespaceMappings>
       <XamlNamespaceMapping>
@@ -42,6 +49,8 @@
     <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
     <!-- v1.7.2: Hexa.NET.SDL2 for native gamepad support (Xbox, DualShock 4, DualSense, Switch Pro) with Lightbar/Rumble -->
     <PackageReference Include="Hexa.NET.SDL2" Version="1.2.17" />
+    <!-- SourceLink for Stryker mutation testing -->
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <PropertyGroup>
