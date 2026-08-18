@@ -101,8 +101,9 @@ jobs:
           STRYKER_DASHBOARD_API_KEY: 077092c3-2808-483a-a686-7d4fe5532a2f
         run: |
           dotnet stryker
-          --project src/RagnaController/RagnaController.csproj
-          --test-project tests/RagnaController.Tests/RagnaController.Tests.csproj
+          --config-file stryker-config.json
+          --project "src/RagnaController/RagnaController.csproj"
+          --test-project "tests/RagnaController.Tests/RagnaController.Tests.csproj"
           --reporter "html,progress,json"
           --verbosity trace
           --mutate "src/RagnaController/Core/**/*.cs"
