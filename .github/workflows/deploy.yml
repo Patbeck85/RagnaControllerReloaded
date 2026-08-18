@@ -26,6 +26,9 @@ jobs:
     - name: Run Tests
       run: dotnet test --verbosity minimal
     
+    - name: Publish (Release)
+      run: dotnet publish src/RagnaController/RagnaController.csproj --configuration Release --output bin/Release/net8.0/publish
+    
     - name: Publish artifacts
       uses: actions/upload-artifact@v4
       with:
