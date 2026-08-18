@@ -11,3 +11,6 @@
 **/ControllerPreview.cs
 **/DaisyWheelWindow.*
 **/RadialMenuWindow.*
+**/*.xaml
+**/obj/**/*.g.cs
+**/obj/**/*.g.i.cs

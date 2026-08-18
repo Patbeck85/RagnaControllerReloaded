@@ -103,6 +103,7 @@ jobs:
           dotnet stryker
           --config-file stryker-config.json
           --reporter "html,progress,json"
+          --verbosity trace
         working-directory: .
 
       - name: Upload Stryker Report

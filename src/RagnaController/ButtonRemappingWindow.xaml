@@ -152,7 +152,7 @@
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
                                 <TextBlock Text="D-Pad" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
                                 <Button Content="↺" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                <Slider x:Name="DpadPreviewSlider" Minimum="-100" Maximum="100" Value="0" ValueChanged="DpadPreviewSlider_ValueChanged" VerticalAlignment="Center"/>
+                                <Slider x:Name="PreviewDpadSlider" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewDpadSlider_ValueChanged" VerticalAlignment="Center"/>
                                 <TextBlock Grid.Column="1" x:Name="DpadPreviewValue" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
                             </Grid>
                         </Border>
@@ -163,7 +163,7 @@
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
                                 <TextBlock Text="Left Stick" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
                                 <Button Content="↺" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                <Slider x:Name="LStickPreviewSlider" Minimum="-100" Maximum="100" Value="0" ValueChanged="LStickPreviewSlider_ValueChanged" VerticalAlignment="Center"/>
+                                <Slider x:Name="PreviewLStickSlider" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewLStickSlider_ValueChanged" VerticalAlignment="Center"/>
                                 <TextBlock Grid.Column="1" x:Name="LStickPreviewValue" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
                             </Grid>
                         </Border>
@@ -174,7 +174,7 @@
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
                                 <TextBlock Text="Right Stick" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
                                 <Button Content="↺" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                <Slider x:Name="RStickPreviewSlider" Minimum="-100" Maximum="100" Value="0" ValueChanged="RStickPreviewSlider_ValueChanged" VerticalAlignment="Center"/>
+                                <Slider x:Name="PreviewRStickSlider" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewRStickSlider_ValueChanged" VerticalAlignment="Center"/>
                                 <TextBlock Grid.Column="1" x:Name="RStickPreviewValue" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
                             </Grid>
                         </Border>
@@ -185,7 +185,7 @@
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
                                 <TextBlock Text="L1/R1" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
                                 <Button Content="↺" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                <Slider x:Name="L1R1PreviewSlider" Minimum="-100" Maximum="100" Value="0" ValueChanged="L1R1PreviewSlider_ValueChanged" VerticalAlignment="Center"/>
+                                <Slider x:Name="PreviewL1R1Slider" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewL1R1Slider_ValueChanged" VerticalAlignment="Center"/>
                                 <TextBlock Grid.Column="1" x:Name="L1R1PreviewValue" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
                             </Grid>
                         </Border>
@@ -196,7 +196,7 @@
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
                                 <TextBlock Text="L2/R2" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
                                 <Button Content="↺" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                <Slider x:Name="L2R2PreviewSlider" Minimum="-100" Maximum="100" Value="0" ValueChanged="L2R2PreviewSlider_ValueChanged" VerticalAlignment="Center"/>
+                                <Slider x:Name="PreviewL2R2Slider" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewL2R2Slider_ValueChanged" VerticalAlignment="Center"/>
                                 <TextBlock Grid.Column="1" x:Name="L2R2PreviewValue" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
                             </Grid>
                         </Border>
@@ -207,7 +207,7 @@
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
                                 <TextBlock Text="Turbo" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
                                 <Button Content="↺" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                <Slider x:Name="TurboPreviewSlider" Minimum="1" Maximum="10" Value="3" ValueChanged="TurboPreviewSlider_ValueChanged" VerticalAlignment="Center"/>
+                                <Slider x:Name="PreviewTurboSlider" Minimum="1" Maximum="10" Value="3" ValueChanged="PreviewTurboSlider_ValueChanged" VerticalAlignment="Center"/>
                                 <TextBlock Grid.Column="1" x:Name="TurboPreviewValue" Text="3.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
                             </Grid>
                         </Border>
@@ -217,13 +217,13 @@
                             <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
                             <StackPanel Grid.Column="0" Orientation="Horizontal">
                                 <TextBlock Text="Turbo Test" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                <CheckBox x:Name="ChkTurboTestPreview" Content="Enable" Foreground="#7D8B9E" FontSize="10" Margin="0,0,10,0" Click="ChkTurboTestPreview_Click"/>
+                                <CheckBox x:Name="PreviewChkTurboTest" Content="Enable" Foreground="#7D8B9E" FontSize="10" Margin="0,0,10,0" Click="PreviewChkTurboTest_Click"/>
                             </StackPanel>
-                            <Button Grid.Column="1" x:Name="BtnTurboTestPreview" Content="▶ Test" Width="75" Height="36" Margin="10,0,0,0" Style="{StaticResource ConsoleGhostBtn}" Click="BtnTurboTestPreview_Click"/>
+                            <Button Grid.Column="1" x:Name="PreviewBtnTurboTest" Content="▶ Test" Width="75" Height="36" Margin="10,0,0,0" Style="{StaticResource ConsoleGhostBtn}" Click="PreviewBtnTurboTest_Click"/>
                         </Grid>
 
                         <!-- Turbo Frequency Text -->
-                        <TextBlock x:Name="TurboFreqTextPreview" Text="" Foreground="#3A8EFF" FontSize="11" FontFamily="Consolas" FontWeight="Bold" Margin="0,6,0,0"/>
+                        <TextBlock x:Name="PreviewTurboFreqText" Text="" Foreground="#3A8EFF" FontSize="11" FontFamily="Consolas" FontWeight="Bold" Margin="0,6,0,0"/>
                     </Grid>
                 </Border>
             </Grid>

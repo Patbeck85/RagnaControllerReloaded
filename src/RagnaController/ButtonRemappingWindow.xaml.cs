@@ -69,14 +69,14 @@ namespace RagnaController
         private void BtnTurboTest_Click(object sender, RoutedEventArgs e) => RunTurboTest();
         private void SpellCheckbox_Changed(object sender, RoutedEventArgs e) => UpdateSpellConfig();
         private void BtnSave_Click(object sender, RoutedEventArgs e) => SaveProfile();
-        private void DpadPreviewSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void LStickPreviewSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void RStickPreviewSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void L1R1PreviewSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void L2R2PreviewSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void TurboPreviewSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void ChkTurboTestPreview_Click(object sender, RoutedEventArgs e) => ToggleTurboTest();
-        private void BtnTurboTestPreview_Click(object sender, RoutedEventArgs e) => RunTurboTest();
+        private void PreviewDpadSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
+        private void PreviewLStickSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
+        private void PreviewRStickSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
+        private void PreviewL1R1Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
+        private void PreviewL2R2Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
+        private void PreviewTurboSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
+        private void PreviewChkTurboTest_Click(object sender, RoutedEventArgs e) => ToggleTurboTest();
+        private void PreviewBtnTurboTest_Click(object sender, RoutedEventArgs e) => RunTurboTest();
 
         private string _activeLayer = "";
 
