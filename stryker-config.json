@@ -35,6 +35,20 @@
       "src/RagnaController/Core/StateManager.cs",
       "src/RagnaController/Core/ZoneManager.cs"
     ],
+    "ignore-mutations": [
+      "**/*Window*.cs",
+      "**/*Window*.xaml.cs",
+      "**/App.xaml.cs",
+      "**/ButtonRemappingWindow.*",
+      "**/ComboEditorWindow.*",
+      "**/CommunityBrowserWindow.*",
+      "**/ControllerPreview.cs",
+      "**/DaisyWheelWindow.*",
+      "**/RadialMenuWindow.*",
+      "**/*.xaml",
+      "**/obj/**/*.g.cs",
+      "**/obj/**/*.g.i.cs"
+    ],
     "thresholds": {
       "high": 95,
       "low": 80,
