@@ -97,11 +97,12 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 - ✅ `CommunityBrowserWindow.xaml.cs` — Registry URL set to GitHub Gist (ID: 56042cbefe3dd5381186d43c3a38af0e) with 3 sample profiles
 - ✅ `ProfileShareService.cs` — Upload/Download API fully implemented (GitHub Gist)
 - ✅ `ProfileLibraryWindow.xaml.cs` — Share/Download buttons integrated
-- ✅ Registry published to GitHub Gist with 3 starter profiles
-- ⏳ Test end-to-end upload/download flow
-- ⏳ Add localization for all 32+ languages
+- ✅ Registry published to GitHub Gist with 3 starter profiles (Acolyte, Archer, Mage)
+- ✅ All 3 CommunityBrowser localization keys present in all 41 language files
+- ⏳ Test end-to-end: ProfileLibraryWindow upload → CommunityBrowserWindow download flow
+- ⏳ (Localization complete for FEAT-003)
 
-**Next Priority:** Test ProfileLibraryWindow upload → CommunityBrowserWindow download flow
+**Next Priority:** Test end-to-end upload/download flow with actual profile data
 
 ---
 
