@@ -15,9 +15,9 @@
 
 ## Active Tasks
 - **FEAT-003**: Community Hub: profile sharing (opt-in) — **IN PROGRESS**
-  - Publish `registry.json` to GitHub Gist
-  - Test ProfileLibraryWindow upload → CommunityBrowserWindow download flow
-  - Add localization for all 32+ languages
+  - ✅ Registry published to GitHub Gist (ID: 56042cbefe3dd5381186d43c3a38af0e) with 3 starter profiles
+  - ⏳ Test ProfileLibraryWindow upload → CommunityBrowserWindow download flow
+  - ⏳ Add localization for all 32+ languages
 
 ## Verification Gates
 | Gate | Status |
@@ -27,7 +27,7 @@
 | SOUL RULE-001..004 | ✅ All satisfied |
 
 ## Next Actions
-**FEAT-003**: Publish GitHub Gist with `registry.json`, then test end-to-end upload/download flow
+**FEAT-003**: Test end-to-end upload/download flow, add localization for 32+ languages
 
 ## Local Stryker Status
 CI pipeline is ready (runs on clean checkout, no `obj/` artifacts). Local runs need `rm -rf obj bin` first.

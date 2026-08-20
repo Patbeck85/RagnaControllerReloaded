@@ -94,13 +94,14 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 | FEAT-003 | Community Hub: profile sharing (opt-in) | LOW | FEAT-002 | Profile upload/download via REST API (GitHub Gist), moderation queue, in-app browser | 🔄 IN PROGRESS (registry URL updated in CommunityBrowserWindow) |
 
 ### FEAT-003 Implementation Status
-- ✅ `CommunityBrowserWindow.xaml.cs` — Registry URL set to Gist endpoint with format docs
+- ✅ `CommunityBrowserWindow.xaml.cs` — Registry URL set to GitHub Gist (ID: 56042cbefe3dd5381186d43c3a38af0e) with 3 sample profiles
 - ✅ `ProfileShareService.cs` — Upload/Download API fully implemented (GitHub Gist)
 - ✅ `ProfileLibraryWindow.xaml.cs` — Share/Download buttons integrated
-- ⏳ Publish `registry.json` to GitHub Gist to populate CommunityHub
+- ✅ Registry published to GitHub Gist with 3 starter profiles
+- ⏳ Test end-to-end upload/download flow
 - ⏳ Add localization for all 32+ languages
 
-**Next Priority:** Publish GitHub Gist registry.json, test upload/download flow
+**Next Priority:** Test ProfileLibraryWindow upload → CommunityBrowserWindow download flow
 
 ---
 
