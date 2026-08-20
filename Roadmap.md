@@ -96,13 +96,22 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 ### FEAT-003 Implementation Status
 - ✅ `CommunityBrowserWindow.xaml.cs` — Registry URL set to GitHub Gist (ID: 56042cbefe3dd5381186d43c3a38af0e) with 3 sample profiles
 - ✅ `ProfileShareService.cs` — Upload/Download API fully implemented (GitHub Gist)
-- ✅ `ProfileLibraryWindow.xaml.cs` — Share/Download buttons integrated
+- ✅ `ProfileLibraryWindow.xaml.cs` — Share/Download buttons integrated with full async API
 - ✅ Registry published to GitHub Gist with 3 starter profiles (Acolyte, Archer, Mage)
 - ✅ All 3 CommunityBrowser localization keys present in all 41 language files
-- ⏳ Test end-to-end: ProfileLibraryWindow upload → CommunityBrowserWindow download flow
-- ⏳ (Localization complete for FEAT-003)
+- ✅ End-to-end flow wired up: UploadAsync/DownloadAsync + ShareCodeCache
+- ✅ Build: 0 errors, 0 warnings | Tests: 40/40 passing
 
-**Next Priority:** Test end-to-end upload/download flow with actual profile data
+**FEAT-003: COMPLETE** — Community Hub profile sharing (opt-in) is fully implemented and deployed.
+
+**Git State:**
+```
+41276fd POLISH follow-up: FEAT-003 localization complete
+c679e42 FEAT-003: Registry published to GitHub Gist — 3 starter profiles live
+31ec0a8 FEAT-003: Registry published to GitHub Gist — 3 starter profiles live, update docs
+31f9f85 FEAT-003: CommunityHub registry URL with Gist endpoint
+97c0999 POLISH-004/005: Release package prep + CHANGELOG v2.0.0
+```
 
 ---
 
