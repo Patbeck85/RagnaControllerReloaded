@@ -184,19 +184,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="startup_voice.mp3" CopyToOutputDirectory="PreserveNewest" Condition="Exists('startup_voice.mp3')" />
-    <None Include="startup_voice.wav" CopyToOutputDirectory="PreserveNewest" Condition="Exists('startup_voice.wav')" />
-    <None Include="GetEmotes.ps1"     CopyToOutputDirectory="PreserveNewest" />
-    <None Include="GetClassSprites.ps1" CopyToOutputDirectory="PreserveNewest" /> <!-- NEW: Class sprite downloader -->
-    <!-- GetDS4Windows.bat removed - SDL2 provides native PS4/PS5 support! -->
-    <Content Include="DefaultProfiles\*.json" CopyToOutputDirectory="PreserveNewest" />
-    <!-- i18n: Kopiert den kompletten Locales Ordner in den Release/Publish Ordner -->
-    <None Update="Locales\**" CopyToOutputDirectory="PreserveNewest" />
-    <!-- AntiCheat: Kopiert den kompletten AntiCheat Ordner in den Release/Publish Ordner -->
-    <None Update="AntiCheat\**" CopyToOutputDirectory="PreserveNewest" />
-    <!-- Class Sprites: Kopiert alle heruntergeladenen Charakter-Bilder in den Release/Publish Ordner -->
-    <None Update="Assets\Classes\*.png" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
+      <None Include="startup_voice.mp3" CopyToOutputDirectory="PreserveNewest" Condition="Exists('startup_voice.mp3')" />
+      <None Include="startup_voice.wav" CopyToOutputDirectory="PreserveNewest" Condition="Exists('startup_voice.wav')" />
+      <Content Include="DefaultProfiles\*.json" CopyToOutputDirectory="PreserveNewest" />
+      <!-- i18n: Kopiert den kompletten Locales Ordner in den Release/Publish Ordner -->
+      <None Update="Locales\**" CopyToOutputDirectory="PreserveNewest" />
+      <!-- AntiCheat: Kopiert den kompletten AntiCheat Ordner in den Release/Publish Ordner -->
+      <None Update="AntiCheat\**" CopyToOutputDirectory="PreserveNewest" />
+      <!-- Class Sprites: Kopiert alle heruntergeladenen Charakter-Bilder in den Release/Publish Ordner -->
+      <None Update="Assets\Classes\*.png" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
 
   <Target Name="CopySDL2NativeLib" AfterTargets="Build" Condition="Exists('$(NuGetPackageRoot)\SDL2-CS\2.0.0\runtimes\win-x64\native\SDL2.dll')">
     <Copy SourceFiles="$(NuGetPackageRoot)\SDL2-CS\2.0.0\runtimes\win-x64\native\SDL2.dll"

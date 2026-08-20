@@ -117,7 +117,7 @@ namespace RagnaController
             if (TxtRStickValue != null) TxtRStickValue.Text = ((int)SldRStick.Value).ToString();
             if (TxtL1R1Value   != null) TxtL1R1Value.Text   = ((int)SldL1R1.Value).ToString();
             if (TxtL2R2Value   != null) TxtL2R2Value.Text   = ((int)SldL2R2.Value).ToString();
-            if (TxtTurboValue  != null) TurboValue.Text  = $"{SldTurbo.Value:F1}s";
+            if (TxtTurboValue  != null) TxtTurboValue.Text  = $"{SldTurbo.Value:F1}s";
             if (TurboFreqText != null)
                 TurboFreqText.Text = ChkTurboTestMain?.IsChecked == true
                     ? $"Turbo: {SldTurbo.Value:F1}s interval"

@@ -126,7 +126,7 @@
 
                                 <!-- Turbo Frequency Text -->
                                 <TextBlock x:Name="TurboFreqText" Text="" Foreground="#3A8EFF" FontSize="11" FontFamily="Consolas" FontWeight="Bold" Margin="0,6,0,0"/>
-                      
+                     
                                 <!-- Ground Spell & Self Cast Toggles -->
                                 <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
                                     <Grid>
@@ -229,7 +229,7 @@
             </Grid>
             <Border Grid.Row="2" Background="#07090D" BorderBrush="#2A3245" BorderThickness="0,1,0,0" CornerRadius="0,0,12,12">
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="SAVE & CLOSE" Style="{StaticResource ConsolePrimaryBtn}" Width="160" Height="40" Margin="0,0,15,0" Click="BtnSave_Click" ToolTip="Save settings and close window"/>
+                    <Button Content="SAVE &amp; CLOSE" Style="{StaticResource ConsolePrimaryBtn}" Width="160" Height="40" Margin="0,0,15,0" Click="BtnSave_Click" ToolTip="Save settings and close window"/>
                     <Button Content="CANCEL" Style="{StaticResource ConsoleGhostBtn}" Width="110" Height="40" Click="BtnCancel_Click" ToolTip="Discard changes and close window"/>
                 </StackPanel>
             </Border>
