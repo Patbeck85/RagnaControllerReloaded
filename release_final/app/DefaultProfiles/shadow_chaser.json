@@ -1,0 +1,71 @@
+{
+  "Name": "Shadow Chaser",
+  "Class": "Assassin",
+  "MouseSensitivity": 1.2,
+  "Deadzone": 0.15,
+  "MovementCurve": 1.6,
+  "CursorMaxSpeed": 1160.0,
+  "ActionRpgMode": true,
+  "AutoAttackEnabled": true,
+  "AutoRetargetEnabled": true,
+  "SmartSkillEnabled": true,
+  "PreRenewalAttackIntervalMs": 87,
+  "RenewalAttackIntervalMs": 51,
+  "ComboEnabled": true,
+  "ClassTips": "Hold R2 to auto-attack. A = Shadow Bolt (press once). L1+A = Dark Rush. L1+B = Phantom Step.",
+  "SkillRecommendations": [
+    "Shadow Bolt",
+    "Dark Rush",
+    "Phantom Step",
+    "Poison Arrow",
+    "Silent Death"
+  ],
+  "ButtonMappings": {
+    "A": {
+      "Type": "Key",
+      "Key": "F1",
+      "Label": "Shadow Bolt",
+      "TurboEnabled": true,
+      "Mode": "Adaptive",
+      "TurboIntervalMs": 48
+    },
+    "B": {
+      "Type": "Key",
+      "Key": "F2",
+      "Label": "Dark Rush"
+    },
+    "X": {
+      "Type": "Key",
+      "Key": "F3",
+      "Label": "Phantom Step"
+    },
+    "Y": {
+      "Type": "Key",
+      "Key": "F4",
+      "Label": "Poison Arrow"
+    },
+    "L1+A": {
+      "Type": "Key",
+      "Key": "F5",
+      "Label": "Silent Death",
+      "IsGroundSpell": true
+    },
+    "L1+B": {
+      "Type": "Key",
+      "Key": "F6",
+      "Label": "Shadow Aura"
+    },
+    "L1+X": {
+      "Type": "Key",
+      "Key": "F7",
+      "Label": "Ninja Art"
+    },
+    "L1+Y": {
+      "Type": "Key",
+      "Key": "F8",
+      "Label": "Stealth Mode"
+    }
+  },
+  "RenewalSkillInterruptMs": 260,
+  "PreRenewalSkillInterruptMs": 520
+}

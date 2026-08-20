@@ -1,0 +1,32 @@
+{
+  "Name": "Dancer",
+  "Class": "Archer",
+  "MouseSensitivity": 1.1,
+  "Deadzone": 0.16,
+  "MovementCurve": 1.4,
+  "CursorMaxSpeed": 1300.0,
+  "ActionRpgMode": true,
+  "AutoAttackEnabled": true,
+  "AutoRetargetEnabled": true,
+  "KiteEnabled": true,
+  "KiteAttackKeyVK": 90,
+  "KiteAttackIntervalMs": 65,
+  "SmartSkillEnabled": true,
+  "PreRenewalAttackIntervalMs": 95,
+  "RenewalAttackIntervalMs": 55,
+  "ClassTips": "A = Arrow Vulcan. B = Slinging Arrow. X = Encore. Y = Lady Luck (CRIT-Buff). L1+A = Gypsy's Kiss (SP-Regen Party). L1+B = Marionette Control (Stat-Share). Duo-Songs nur mit Bard im Team.",
+  "SkillRecommendations": ["Arrow Vulcan", "Gypsy's Kiss", "Lady Luck", "Marionette Control", "Encore", "Hip Shaker"],
+  "ButtonMappings": {
+    "A": { "Type": "Key", "Key": "F1", "Label": "Arrow Vulcan", "TurboEnabled": true, "Mode": "Adaptive", "TurboIntervalMs": 55 },
+    "B": { "Type": "Key", "Key": "F2", "Label": "Slinging Arrow" },
+    "X": { "Type": "Key", "Key": "F3", "Label": "Encore" },
+    "Y": { "Type": "Key", "Key": "F4", "Label": "Lady Luck" },
+    "L1+A": { "Type": "Key", "Key": "F5", "Label": "Gypsy's Kiss" },
+    "L1+B": { "Type": "Key", "Key": "F6", "Label": "Hip Shaker" },
+    "L1+X": { "Type": "Key", "Key": "F7", "Label": "Marionette Control" },
+    "L1+Y": { "Type": "Key", "Key": "F8", "Label": "Forget Me Not" },
+    "R1+A": { "Type": "Key", "Key": "F9", "Label": "White Potion", "TurboEnabled": true, "Mode": "Burst", "TurboIntervalMs": 90 }
+  },
+  "RenewalSkillInterruptMs": 350,
+  "PreRenewalSkillInterruptMs": 600
+}

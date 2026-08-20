@@ -5,6 +5,38 @@ All notable changes to RagnaController will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-08-20
+
+### Added
+- **POLISH-003: EngineIntegrationTests Scaffold** — 7 integration tests for engine orchestration stability with mocked RO window:
+  - `EngineOrchestrator_Initializes_WithoutThrowing`
+  - `EngineOrchestrator_StartStop_Works`
+  - `EngineOrchestrator_PauseResume_Works`
+  - `EngineOrchestrator_ProfileApplier_CanBeAccessed`
+  - `EngineOrchestrator_CommandQueue_CanBeAccessed`
+  - `EngineOrchestrator_MultipleCycles_StabilityTest` (5 cycles)
+  - `EngineOrchestrator_ExposesEngines_ForProfileApplier`
+  - `EngineOrchestrator_SnapshotBuilder_CanBuild`
+
+### Changed
+- **POLISH-002: Stryker CI Integration** — Push to `main` triggers mutation testing pipeline on `windows-latest`
+- **POLISH-004: Release Package Prep** — Clean `release_final/` isolation verified:
+  - Removed debug symbols from Release build (`DebugType=none`, `DebugSymbols=false`)
+  - `release_final/app/` contains only end products (exe, dll, deps, config, assets, locales, profiles, voice)
+  - Zero `.pdb`, `.xml`, `.obj`, `.tmp`, `.log`, `.cache`, `.debug`, `.scratch` files
+- **POLISH-001: Build Fixes** — XAML entity escaping, TurboValue typo, removed missing .ps1 files from csproj
+
+### Fixed
+- XAML: `SAVE & CLOSE` → `SAVE & CLOSE` (valid XML entity)
+- ButtonRemappingWindow.xaml.cs: `TurboValue.Text` → `TxtTurboValue.Text` (typo fix)
+- RagnaController.csproj: Removed non-existent `GetEmotes.ps1`, `GetClassSprites.ps1` from CopyToOutputDirectory
+
+### Tests
+- All 40 tests passing (32 unit + 8 integration)
+- Build: 0 errors, 0 warnings (clean compilation)
+- SOUL.md RULE-001..004: All satisfied
+- FINAL-001: All 7 golden rules verified
+
 ## [1.5.0] - 2026-08-18
 
 ### Changed

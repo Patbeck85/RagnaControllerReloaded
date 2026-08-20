@@ -1,0 +1,28 @@
+{
+  "Name": "Rogue",
+  "Class": "Thief",
+  "MouseSensitivity": 1.2,
+  "Deadzone": 0.15,
+  "MovementCurve": 1.6,
+  "CursorMaxSpeed": 1250.0,
+  "ActionRpgMode": true,
+  "AutoAttackEnabled": true,
+  "AutoRetargetEnabled": true,
+  "SmartSkillEnabled": true,
+  "PreRenewalAttackIntervalMs": 88,
+  "RenewalAttackIntervalMs": 52,
+  "ClassTips": "A = Backstab (Rücken = Maximaldamage). B = Raid AoE Blind+Stun. X = Steal / Snatcher passiv. Y = Intimidate (kopiert Mob-Skill). L1+A = Divest Helm. Bow-Build: Vulture's Eye maximieren.",
+  "SkillRecommendations": ["Backstab", "Raid", "Intimidate", "Divest Helm", "Snatcher", "Plagiarism"],
+  "ButtonMappings": {
+    "A": { "Type": "Key", "Key": "F1", "Label": "Backstab", "TurboEnabled": true, "Mode": "Adaptive", "TurboIntervalMs": 52 },
+    "B": { "Type": "Key", "Key": "F2", "Label": "Raid" },
+    "X": { "Type": "Key", "Key": "F3", "Label": "Steal" },
+    "Y": { "Type": "Key", "Key": "F4", "Label": "Intimidate" },
+    "L1+A": { "Type": "Key", "Key": "F5", "Label": "Divest Helm" },
+    "L1+B": { "Type": "Key", "Key": "F6", "Label": "Tunnel Drive" },
+    "L1+X": { "Type": "Key", "Key": "F7", "Label": "Plagiarism" },
+    "R1+A": { "Type": "Key", "Key": "F9", "Label": "White Potion", "TurboEnabled": true, "Mode": "Burst", "TurboIntervalMs": 80 }
+  },
+  "RenewalSkillInterruptMs": 320,
+  "PreRenewalSkillInterruptMs": 580
+}

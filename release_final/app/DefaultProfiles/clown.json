@@ -1,0 +1,72 @@
+{
+  "Name": "Clown",
+  "Class": "Archer",
+  "MouseSensitivity": 1.2,
+  "Deadzone": 0.15,
+  "MovementCurve": 1.5,
+  "CursorMaxSpeed": 1200.0,
+  "ActionRpgMode": true,
+  "KiteEnabled": true,
+  "KiteAttackKeyVK": 86,
+  "KiteAttackIntervalMs": 70,
+  "AutoAttackEnabled": true,
+  "SmartSkillEnabled": true,
+  "PreRenewalAttackIntervalMs": 100,
+  "RenewalAttackIntervalMs": 60,
+  "ClassTips": "A = Arrow Vulcan (spam). B = Tarot Card of Fate. X = Longing for Freedom (duo). L1+A = Poem of Bragi (AoE buff, directional).",
+  "SkillRecommendations": [
+    "Arrow Vulcan",
+    "Poem of Bragi",
+    "Tarot Card of Fate",
+    "Longing for Freedom",
+    "Marionette Control"
+  ],
+  "ButtonMappings": {
+    "A": {
+      "Type": "Key",
+      "Key": "F1",
+      "Label": "Arrow Vulcan",
+      "TurboEnabled": true,
+      "Mode": "Adaptive",
+      "TurboIntervalMs": 60
+    },
+    "B": {
+      "Type": "Key",
+      "Key": "F2",
+      "Label": "Tarot Card of Fate"
+    },
+    "X": {
+      "Type": "Key",
+      "Key": "F3",
+      "Label": "Longing for Freedom"
+    },
+    "Y": {
+      "Type": "Key",
+      "Key": "F4",
+      "Label": "Adaptation to Circumstances"
+    },
+    "L1+A": {
+      "Type": "Key",
+      "Key": "F5",
+      "Label": "Poem of Bragi",
+      "IsGroundSpell": true
+    },
+    "L1+B": {
+      "Type": "Key",
+      "Key": "F6",
+      "Label": "A Whistle"
+    },
+    "L1+X": {
+      "Type": "Key",
+      "Key": "F7",
+      "Label": "Invulnerable Siegfried"
+    },
+    "L1+Y": {
+      "Type": "Key",
+      "Key": "F8",
+      "Label": "Magic Strings"
+    }
+  },
+  "RenewalSkillInterruptMs": 400,
+  "PreRenewalSkillInterruptMs": 800
+}

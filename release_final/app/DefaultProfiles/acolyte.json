@@ -1,0 +1,31 @@
+{
+  "Name": "Acolyte",
+  "Class": "Acolyte",
+  "MouseSensitivity": 1.0,
+  "Deadzone": 0.16,
+  "MovementCurve": 1.3,
+  "CursorMaxSpeed": 1100.0,
+  "ActionRpgMode": false,
+  "AutoAttackEnabled": false,
+  "SupportEnabled": true,
+  "SupportHealKeyVK": 112,
+  "SupportPartyTabCycle": true,
+  "SmartSkillEnabled": true,
+  "PreRenewalAttackIntervalMs": 130,
+  "RenewalAttackIntervalMs": 90,
+  "ClassTips": "Support-Fokus. A = Heal Ziel. B = Aqua Benedicta/Holy Water. X = Blessing Buff. Y = Increase AGI Buff. L1+A = Resurrect. R1+Tab = Party-Cycle. Undead mit Heal direkt schaden.",
+  "SkillRecommendations": ["Heal", "Blessing", "Increase AGI", "Pneuma", "Angelus", "Warp Portal"],
+  "ButtonMappings": {
+    "A": { "Type": "Key", "Key": "F1", "Label": "Heal" },
+    "B": { "Type": "Key", "Key": "F2", "Label": "Aqua Benedicta" },
+    "X": { "Type": "Key", "Key": "F3", "Label": "Blessing" },
+    "Y": { "Type": "Key", "Key": "F4", "Label": "Increase AGI" },
+    "L1+A": { "Type": "Key", "Key": "F5", "Label": "Resurrection" },
+    "L1+B": { "Type": "Key", "Key": "F6", "Label": "Pneuma", "IsGroundSpell": true },
+    "L1+X": { "Type": "Key", "Key": "F7", "Label": "Warp Portal", "IsGroundSpell": true },
+    "L1+Y": { "Type": "Key", "Key": "F8", "Label": "Angelus" },
+    "R1+A": { "Type": "Key", "Key": "F9", "Label": "Blue Potion", "TurboEnabled": true, "Mode": "Burst", "TurboIntervalMs": 100 }
+  },
+  "RenewalSkillInterruptMs": 350,
+  "PreRenewalSkillInterruptMs": 600
+}

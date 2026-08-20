@@ -54,11 +54,14 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <!-- NU1701 Override: Suppress compatibility warning for System.Windows.Forms 4.0.0 -->
-    <NoWarn>$(NoWarn);NU1701</NoWarn>
-    <!-- Disable fallback package folders to avoid Windows-specific paths in WSL -->
-    <EnableFallbackPackageFolders>false</EnableFallbackPackageFolders>
-  </PropertyGroup>
+      <!-- Disable debug symbols in Release to satisfy SOUL.md RULE-001 (Release Isolation) -->
+      <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
+      <DebugSymbols Condition="'$(Configuration)' == 'Release'">false</DebugSymbols>
+      <!-- NU1701 Override: Suppress compatibility warning for System.Windows.Forms 4.0.0 -->
+      <NoWarn>$(NoWarn);NU1701</NoWarn>
+      <!-- Disable fallback package folders to avoid Windows-specific paths in WSL -->
+      <EnableFallbackPackageFolders>false</EnableFallbackPackageFolders>
+    </PropertyGroup>
 
   <ItemGroup>
     <Resource Include="Assets\icon.ico"            Condition="Exists('Assets\icon.ico')" />

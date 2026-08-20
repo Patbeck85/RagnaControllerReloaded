@@ -1,0 +1,82 @@
+{
+  "Name": "Stalker",
+  "Class": "Thief",
+  "MouseSensitivity": 1.4,
+  "Deadzone": 0.15,
+  "MovementCurve": 1.8,
+  "CursorMaxSpeed": 1400.0,
+  "ActionRpgMode": true,
+  "AutoAttackEnabled": true,
+  "AutoRetargetEnabled": true,
+  "SmartSkillEnabled": true,
+  "PreRenewalAttackIntervalMs": 80,
+  "RenewalAttackIntervalMs": 45,
+  "MobSweepEnabled": true,
+  "MobSweepTabIntervalMs": 350,
+  "ClassTips": "A = Raid/Envenom (Adaptive). B = Backslide dodge. L1+A = Backstab (snap behind target). L1+R1 = Fast Grid Loot.",
+  "SkillRecommendations": [
+    "Backstab",
+    "Raid",
+    "Backslide",
+    "Intimidate",
+    "Preserve",
+    "Mug",
+    "Divest"
+  ],
+  "ButtonMappings": {
+    "A": {
+      "Type": "Key",
+      "Key": "F1",
+      "Label": "Raid / Envenom",
+      "TurboEnabled": true,
+      "Mode": "Adaptive",
+      "TurboIntervalMs": 50
+    },
+    "B": {
+      "Type": "Key",
+      "Key": "F2",
+      "Label": "Backslide",
+      "IsGroundSpell": true
+    },
+    "X": {
+      "Type": "Key",
+      "Key": "F3",
+      "Label": "Steal (Mug)"
+    },
+    "Y": {
+      "Type": "Key",
+      "Key": "F4",
+      "Label": "Hiding"
+    },
+    "L1+A": {
+      "Type": "Key",
+      "Key": "F5",
+      "Label": "Backstab"
+    },
+    "L1+B": {
+      "Type": "Key",
+      "Key": "F6",
+      "Label": "Intimidate"
+    },
+    "L1+X": {
+      "Type": "Key",
+      "Key": "F7",
+      "Label": "Preserve"
+    },
+    "L1+Y": {
+      "Type": "Key",
+      "Key": "F8",
+      "Label": "Divest Weapon"
+    },
+    "R1+A": {
+      "Type": "Key",
+      "Key": "F9",
+      "Label": "White Potion",
+      "TurboEnabled": true,
+      "Mode": "Burst",
+      "TurboIntervalMs": 80
+    }
+  },
+  "RenewalSkillInterruptMs": 250,
+  "PreRenewalSkillInterruptMs": 500
+}

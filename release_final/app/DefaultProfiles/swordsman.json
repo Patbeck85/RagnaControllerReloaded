@@ -1,0 +1,28 @@
+{
+  "Name": "Swordsman",
+  "Class": "Swordsman",
+  "MouseSensitivity": 1.2,
+  "Deadzone": 0.15,
+  "MovementCurve": 1.5,
+  "CursorMaxSpeed": 1100.0,
+  "ActionRpgMode": true,
+  "AutoAttackEnabled": true,
+  "AutoRetargetEnabled": true,
+  "SmartSkillEnabled": true,
+  "PreRenewalAttackIntervalMs": 110,
+  "RenewalAttackIntervalMs": 65,
+  "ClassTips": "A = Bash für Single-Target. B = Magnum Break AoE-Knockback. Y = Provoke für ATK-Buff. L1+A = Endure. Solides 1st-Class Fundament für Knight oder Crusader.",
+  "SkillRecommendations": ["Bash", "Magnum Break", "Provoke", "Endure", "Sword Mastery", "Two-Hand Quicken"],
+  "ButtonMappings": {
+    "A": { "Type": "Key", "Key": "F1", "Label": "Bash", "TurboEnabled": true, "Mode": "Adaptive", "TurboIntervalMs": 65 },
+    "B": { "Type": "Key", "Key": "F2", "Label": "Magnum Break" },
+    "X": { "Type": "Key", "Key": "F3", "Label": "Sword Mastery" },
+    "Y": { "Type": "Key", "Key": "F4", "Label": "Provoke" },
+    "L1+A": { "Type": "Key", "Key": "F5", "Label": "Endure" },
+    "L1+B": { "Type": "Key", "Key": "F6", "Label": "Two-Hand Quicken" },
+    "R1+A": { "Type": "Key", "Key": "F9", "Label": "White Potion", "TurboEnabled": true, "Mode": "Burst", "TurboIntervalMs": 90 },
+    "R1+B": { "Type": "Key", "Key": "F10", "Label": "Red Potion" }
+  },
+  "RenewalSkillInterruptMs": 400,
+  "PreRenewalSkillInterruptMs": 700
+}
