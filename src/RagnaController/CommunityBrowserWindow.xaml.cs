@@ -21,7 +21,9 @@ namespace RagnaController
         // IMPORTANT: Replace this placeholder URL with your actual GitHub Gist URL!
         // To create a gist: https://gist.github.com/new
         // Then update this constant with: "https://gist.githubusercontent.com/YOUR_USERNAME/YOUR_GIST_ID/raw/registry.json"
-        private const string RegistryUrl = "https://gist.githubusercontent.com/Patbeck85/YOUR_GIST_ID/raw/registry.json";
+        // Registry JSON format: array of { Name, Class, Author, Description, ShareCode }
+        // Upload profiles via ProfileLibraryWindow.BtnShare_Click to generate share codes
+        private const string RegistryUrl = "https://gist.githubusercontent.com/Patbeck85/6e6a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8/raw/registry.json";
         
         private readonly ProfileManager _manager;
         private static readonly HttpClient _http;
