@@ -40,7 +40,7 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 |---------|------|----------|--------------|---------------------|--------|
 | **TEST-001** | Stryker.NET mutation testing ≥80% | HIGH | Phase 2 | `dotnet stryker` integrated in CI, ≥80% mutation score on core engines | ✅ CONFIGURED — CI pipeline ready, commit `0d4f32d` |
 | **TEST-002** | Performance regression benchmarks | MEDIUM | — | BenchmarkDotNet suite for `EngineOrchestrator.Tick()`, `InputCommandQueue` throughput, cursor latency | ✅ DONE — Baselines established |
-| **TEST-003** | Integration test: full overlay → RO client | MEDIUM | ARCH-001 | Headless integration test with mocked RO window | 📋 PLANNED |
+|| **TEST-003** | Integration test: full overlay → RO client | MEDIUM | ARCH-001 | Headless integration test with mocked RO window | ✅ DONE — 13 tests in FullOverlayIntegrationTests.cs passing |
 
 ### TEST-002 Benchmark Results (Baseline Established — 2026-08-17)
 
@@ -85,13 +85,13 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 
 ---
 
-## ✅ Phase 6: Community Features (IN PROGRESS)
+## ✅ Phase 6: Community Features (COMPLETED)
 
 **Goal:** Enable community-driven profile sharing and discovery
 
 | Task ID | Task | Priority | Dependencies | Definition of Done | Status |
 |---------|------|----------|--------------|-------------------|--------|
-| FEAT-003 | Community Hub: profile sharing (opt-in) | LOW | FEAT-002 | Profile upload/download via REST API (GitHub Gist), moderation queue, in-app browser | 🔄 IN PROGRESS (registry URL updated in CommunityBrowserWindow) |
+| FEAT-003 | Community Hub: profile sharing (opt-in) | LOW | FEAT-002 | Profile upload/download via REST API (GitHub Gist), moderation queue, in-app browser | ✅ COMPLETE |
 
 ### FEAT-003 Implementation Status
 - ✅ `CommunityBrowserWindow.xaml.cs` — Registry URL set to GitHub Gist (ID: 56042cbefe3dd5381186d43c3a38af0e) with 3 sample profiles
@@ -104,8 +104,27 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 
 **FEAT-003: COMPLETE** — Community Hub profile sharing (opt-in) is fully implemented and deployed.
 
+### TEST-003 Implementation Status
+- ✅ `FullOverlayIntegrationTests.cs` — 13 headless integration tests covering:
+  - EngineOrchestrator initialization and Start/Stop lifecycle
+  - Full profile loading end-to-end via ProfileApplier
+  - Profile switching (Wizard → Priest) with state isolation
+  - Combat settings application (AutoTarget, Kite, Mage, Cursor, Movement, MobSweep)
+  - Auto-class detection with combat presets
+  - Game mode switching (Renewal/Pre-Renewal)
+  - Live parameter updates (deadzone, curve, action speed, cursor speed)
+  - Sound/Rumble/Standby settings application
+  - Full tick cycle with input command processing
+- ✅ All 13 tests passing
+- ✅ Total test suite: 53 tests passing (40 existing + 13 new)
+
+**TEST-003: COMPLETE** — Integration test for full overlay → RO client is fully implemented with 13 passing tests.
+
 **Git State:**
 ```
+35678d4 TEST-003 COMPLETE: Integration test for full overlay → RO client
+e90ef31 SESSION_STATE.md: Update to reflect FEAT-003 complete
+083c0fa FEAT-003 COMPLETE: Community Hub profile sharing
 41276fd POLISH follow-up: FEAT-003 localization complete
 c679e42 FEAT-003: Registry published to GitHub Gist — 3 starter profiles live
 31ec0a8 FEAT-003: Registry published to GitHub Gist — 3 starter profiles live, update docs
