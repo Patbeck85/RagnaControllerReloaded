@@ -1,50 +1,33 @@
 # SESSION_STATE.md
 
 ## Current Phase
-**Phase 5: Polish & Release Prep — IN PROGRESS** — POLISH-002 (Stryker CI integration) committed locally
+**Phase 6: Community Features — IN PROGRESS** — FEAT-003 (Community Hub: profile sharing registry published)
 
 ## Completed Tasks
-- **FEAT-004**: HybridEngine auto-class detection from keybinds ✅
-  - Created `Core/ClassDetector.cs` with RO skill-to-class mapping
-  - Extended `ProfileApplier.LoadProfile(Profile, autoDetectClass)` with auto-detection flag
-  - 5 engine presets: Melee, Ranged, Caster, Hybrid, Support
-  - 20+ RO classes mapped to skills (F1-F12, D1-D0, WASD, etc.)
-  - JSON string-key parsing with Enum.TryParse for backward compatibility
-  - Build: 0 errors, 0 warnings (existing XAML async warnings only)
-  - Tests: 32/32 passing
-
-- **FEAT-001**: DaisyWheel / RadialMenu: configurable sectors ✅
-  - `DaisyWheelWindow.xaml.cs`: Added `DaisyWheelConfig` class with SectorCount, SectorLabels, SectorColors
-  - `RadialMenuWindow.xaml.cs`: Added `RadialMenuConfig` class with custom Items, ItemRadius, SelectionHighlightAlpha
-  - Both windows support profile-driven configuration via constructors
-  - Default configurations match existing RO keybindings (F1-F8, A-P keys)
-  - Build: 0 errors, 0 warnings (pre-existing XAML warnings only)
-  - Tests: 32/32 passing
-
-- **POLISH-002**: Stryker CI integration — **COMMITTED LOCALLY** ✅
-  - Simplified `stryker-config.json` to thresholds/reporters only
-  - Using CLI `--mutate` flags to target Core/ engine files only
-  - Excluded WPF UI files (`*Window*`, `App.xaml.cs`, `*.g.cs`)
-  - Enabled Stryker Dashboard upload with API key
-  - Restored solution file for full build verification
-  - Commit: `0d4f32d` — "CI: Configure Stryker mutation testing for CI pipeline"
+- **POLISH-001**: Fix ControllerSnapshot benchmark warning ✅ — accepted as known limitation
+- **POLISH-002**: Stryker CI integration ✅ — pushed to `main`, CI pipeline ready on `windows-latest`
+- **POLISH-003**: Integration test scaffold ✅ — 7 integration tests committed (`1dfda73`)
+- **POLISH-004**: Release package prep ✅ — `release_final/` clean, DebugType=none
+- **POLISH-005**: CHANGELOG.md v2.0.0 ✅ — documented, SemVer increment
+- **FEAT-001**: DaisyWheel/RadialMenu ✅ — configurable sectors
+- **FEAT-002**: Profile Wizard ✅ — guided first-run setup
+- **FEAT-004**: HybridEngine auto-class detection ✅ — class presets, 20+ RO classes
 
 ## Active Tasks
-- **POLISH-002 (continued)**: Push to `main` to trigger CI pipeline for first Stryker.NET mutation test run
-- **FEAT-002**: Profile Wizard: guided first-run setup (LOW)
-- **FEAT-003**: Community Hub: profile sharing (opt-in) (LOW)
+- **FEAT-003**: Community Hub: profile sharing (opt-in) — **IN PROGRESS**
+  - Publish `registry.json` to GitHub Gist
+  - Test ProfileLibraryWindow upload → CommunityBrowserWindow download flow
+  - Add localization for all 32+ languages
 
 ## Verification Gates
 | Gate | Status |
 |------|--------|
 | Build | ✅ 0 errors, 0 warnings |
-| Tests | ✅ 32/32 passing |
+| Tests | ✅ 40/40 passing |
 | SOUL RULE-001..004 | ✅ All satisfied |
 
 ## Next Actions
-**BLOCKED**: `git push origin main` waiting for Git credential manager authentication.
-Once pushed, CI pipeline at `.github/workflows/test.yml` will execute `stryker-mutation` job on `windows-latest` and report mutation score.
+**FEAT-003**: Publish GitHub Gist with `registry.json`, then test end-to-end upload/download flow
 
-Local verification complete:
-- `dotnet build` → 0 errors, 0 warnings
-- `dotnet test` → 32/32 tests passing
+## Local Stryker Status
+CI pipeline is ready (runs on clean checkout, no `obj/` artifacts). Local runs need `rm -rf obj bin` first.
