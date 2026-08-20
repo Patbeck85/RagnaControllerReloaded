@@ -504,8 +504,6 @@
   "UI.Select_Ragnarok_Online__exe": "Ragnarok Online .exe 선택",
   "UI.Select_a_profile_and_press_A_to_load_it_into_the_game_": "프로필을 선택하고 A 를 눌러 게임에 로드하세요.",
   "UI.Initializing...": "초기화 중...",
-  "Btn_SaveAndClose": "저장 및 닫기",
-  "Btn_SaveAndClose_Tooltip": "설정 저장 및 창 닫기",
   "UI.SAVE_&amp;_CLOSE": "저장 및 닫기",
   "UI.&#x2014;": "&#x2014;",
   "UI.&#x21BA;": "&#x21BA;",
@@ -547,5 +545,8 @@
   "UI.State": "상태",
   "UI.Stopped": "정지됨",
   "UI.Test": "테스트",
-  "UI.⚙️_Settings": "⚙️ 설정"
+  "UI.⚙️_Settings": "⚙️ 설정",
+  "CommunityBrowser_Downloading": "DOWNLOADING...",
+  "CommunityBrowser_Installed": "✓ INSTALLED",
+  "CommunityBrowser_DownloadButton": "↓ DOWNLOAD"
 }

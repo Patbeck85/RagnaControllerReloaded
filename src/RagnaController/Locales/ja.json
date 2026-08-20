@@ -504,8 +504,6 @@
   "UI.Select_Ragnarok_Online__exe": "Select Ragnarok Online .exe",
   "UI.Select_a_profile_and_press_A_to_load_it_into_the_game_": "Select a profile and press A to load it into the game.",
   "UI.Initializing...": "Initializing…",
-  "Btn_SaveAndClose": "SAVE & CLOSE",
-  "Btn_SaveAndClose_Tooltip": "Save settings and close window",
   "UI.SAVE_&amp;_CLOSE": "SAVE & CLOSE",
   "UI.&#x2014;": "&#x2014;",
   "UI.&#x21BA;": "&#x21BA;",
@@ -547,5 +545,8 @@
   "UI.State": "State",
   "UI.Stopped": "Stopped",
   "UI.Test": "Test",
-  "UI.⚙️_Settings": "⚙️ Settings"
+  "UI.⚙️_Settings": "⚙️ Settings",
+  "CommunityBrowser_Downloading": "DOWNLOADING...",
+  "CommunityBrowser_Installed": "✓ INSTALLED",
+  "CommunityBrowser_DownloadButton": "↓ DOWNLOAD"
 }
