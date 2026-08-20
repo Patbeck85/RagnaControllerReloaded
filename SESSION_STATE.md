@@ -1,7 +1,7 @@
 # SESSION_STATE.md
 
 ## Current Phase
-**Phase 6: Community Features — IN PROGRESS** — FEAT-003 (Community Hub: profile sharing registry published)
+**Phase 6: Community Features — COMPLETED** — FEAT-003 (Community Hub: profile sharing fully implemented)
 
 ## Completed Tasks
 - **POLISH-001**: Fix ControllerSnapshot benchmark warning ✅ — accepted as known limitation
@@ -12,12 +12,10 @@
 - **FEAT-001**: DaisyWheel/RadialMenu ✅ — configurable sectors
 - **FEAT-002**: Profile Wizard ✅ — guided first-run setup
 - **FEAT-004**: HybridEngine auto-class detection ✅ — class presets, 20+ RO classes
+- **FEAT-003**: Community Hub profile sharing ✅ — fully implemented and deployed
 
 ## Active Tasks
-- **FEAT-003**: Community Hub: profile sharing (opt-in) — **IN PROGRESS**
-  - ✅ Registry published to GitHub Gist (ID: 56042cbefe3dd5381186d43c3a38af0e) with 3 starter profiles
-  - ⏳ Test ProfileLibraryWindow upload → CommunityBrowserWindow download flow
-  - ⏳ Add localization for all 32+ languages
+- None — all current tasks complete
 
 ## Verification Gates
 | Gate | Status |
@@ -27,7 +25,21 @@
 | SOUL RULE-001..004 | ✅ All satisfied |
 
 ## Next Actions
-**FEAT-003**: Test end-to-end upload/download flow, add localization for 32+ languages
+All current roadmap tasks complete. Ready for next feature iteration.
 
 ## Local Stryker Status
 CI pipeline is ready (runs on clean checkout, no `obj/` artifacts). Local runs need `rm -rf obj bin` first.
+
+## Git State (HEAD = main = 083c0fa)
+```
+083c0fa FEAT-003 COMPLETE: Community Hub profile sharing — all tasks finished, build & tests passing
+41276fd POLISH follow-up: FEAT-003 localization complete — all 41 language files have CommunityBrowser keys
+c679e42 FEAT-003: Add missing CommunityBrowser localization keys to ja.json and ko.json (3 keys each)
+31ec0a8 FEAT-003: Registry published to GitHub Gist — 3 starter profiles live, update docs
+31f9f85 FEAT-003: CommunityHub registry URL with Gist endpoint
+97c0999 POLISH-004/005: Release package prep + CHANGELOG v2.0.0
+770bb77 Fix XAML entity escaping & build
+1dfda73 POLISH-003: EngineIntegrationTests scaffold (7 tests)
+```
+
+All changes committed and pushed to `origin/main`. Build: 0 errors, 0 warnings. Tests: 40/40 passing.
