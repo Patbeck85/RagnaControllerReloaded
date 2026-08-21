@@ -213,7 +213,7 @@ namespace RagnaController.Profiles
                     RightTriggerMode = p.RightTriggerMode,
                     ComboAutoLoop = p.ComboAutoLoop,
                     ComboChainCooldownMs = p.ComboChainCooldownMs,
-                    ButtonMappings = new Dictionary<string, ButtonAction>(p.ButtonMappings),
+                    ButtonMappings = new Dictionary<ButtonKey, ButtonAction>(p.ButtonMappings),
                     SkillRecommendations = new List<string>(p.SkillRecommendations),
                     ClassTips = p.ClassTips,
                     IsBuiltIn = false // Always false for saved profiles

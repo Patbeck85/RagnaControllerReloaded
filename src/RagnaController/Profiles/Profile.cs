@@ -98,11 +98,11 @@ namespace RagnaController.Profiles
         public int  ComboChainCooldownMs { get; set; } = 800;
 
         /// <summary>
-        /// v1.7.2: Key-to-action mappings using VirtualKey for compile-time safety.
-        /// </summary>
-        /// <remarks>Keys are typed as VirtualKey enum values instead of string keys for better IntelliSense and error prevention.
-        /// JSON persistence uses string keys for backward compatibility with existing profile files.</remarks>
-        public Dictionary<string, ButtonAction> ButtonMappings { get; set; } = new();
+                /// v1.7.2: Key-to-action mappings using ButtonKey for compile-time safety.
+                /// </summary>
+                /// <remarks>Keys are typed as ButtonKey (VirtualKey + optional modifier) instead of string keys for better IntelliSense and error prevention.
+                /// JSON persistence uses string keys for backward compatibility with existing profile files.</remarks>
+                public Dictionary<ButtonKey, ButtonAction> ButtonMappings { get; set; } = new();
 
         public List<string> SkillRecommendations { get; set; } = new();
         public string ClassTips { get; set; } = "";

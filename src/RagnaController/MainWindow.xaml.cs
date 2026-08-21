@@ -607,27 +607,29 @@ namespace RagnaController
             }
 
             var relevantMappings = p.ButtonMappings
-                .Where(kv => layerKey == "" ? !kv.Key.Contains('+') : kv.Key.StartsWith(layerKey))
-                .OrderBy(kv => kv.Key);
+                            .Where(kv => layerKey == "" 
+                                ? !kv.Key.ToString().Contains('+') 
+                                : kv.Key.ToString().StartsWith(layerKey))
+                            .OrderBy(kv => kv.Key.ToString());
 
-            foreach (var kv in relevantMappings)
-            {
-                var row = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal, Margin = new Thickness(0, 2, 0, 2) };
-                row.Children.Add(new TextBlock
-                {
-                    Text = kv.Key.Replace(layerKey, "") + ":",
-                    Width = 60,
-                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)),
-                    FontSize = 11
-                });
-                row.Children.Add(new TextBlock
-                {
-                    Text = kv.Value.Label ?? kv.Value.Type.ToString(),
-                    Foreground = new SolidColorBrush(Color.FromRgb(229, 184, 66)),
-                    FontSize = 11
-                });
-                stack.Children.Add(row);
-            }
+                        foreach (var kv in relevantMappings)
+                        {
+                            var row = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal, Margin = new Thickness(0, 2, 0, 2) };
+                            row.Children.Add(new TextBlock
+                            {
+                                Text = kv.Key.ToString().Replace(layerKey, "") + ":",
+                                Width = 60,
+                                Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)),
+                                FontSize = 11
+                            });
+                            row.Children.Add(new TextBlock
+                            {
+                                Text = kv.Value.Label ?? kv.Value.Type.ToString(),
+                                Foreground = new SolidColorBrush(Color.FromRgb(229, 184, 66)),
+                                FontSize = 11
+                            });
+                            stack.Children.Add(row);
+                        }
 
             if (!stack.Children.OfType<UIElement>().Any())
             {

@@ -130,15 +130,16 @@ namespace RagnaController.Core
 
             foreach (var kvp in profile.ButtonMappings)
             {
-                var keyStr = kvp.Key;
+                var buttonKey = kvp.Key;
                 var action = kvp.Value;
 
                 // Only count actual skill actions (not movement, basic attack, etc.)
                 if (!IsSkillAction(action))
                     continue;
 
-                // Parse string key to VirtualKey
-                if (!Enum.TryParse<VirtualKey>(keyStr, true, out var vk))
+                // Use the VirtualKey directly from ButtonKey (ignoring modifier for class detection)
+                var vk = buttonKey.Key;
+                if (vk == VirtualKey.None)
                     continue;
 
                 if (SkillToClassMap.TryGetValue(vk, out var classes))

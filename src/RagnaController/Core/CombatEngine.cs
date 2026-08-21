@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using RagnaController.Profiles;
-using RagnaController.Models; // WICHTIG: Verweis auf den Models-Ordner
-using static RagnaController.Core.NativeMethods; // For GetCursorPos and POINT
+using RagnaController.Models;
+using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Core
 {
@@ -127,26 +127,32 @@ namespace RagnaController.Core
         public void ProcessButton(string btn, bool pressed, int ms)
         {
             if (_profile == null) return;
-            
-            // FIX: Use cached string for full key combination (e.g., "L1+A")
-            string fullKey = EngineOptimizationPool.Instance.GetString(_prefix + btn);
+
+            // FIX: Convert btn string to ButtonKey for dictionary lookup.
+            // The profile stores Dictionary<ButtonKey, ButtonAction> but ProcessButton receives string keys
+            // from input events. We parse the string to create a ButtonKey.
+            var buttonKey = ButtonKey.Parse(btn);
 
             // Mapping suchen (mit Fallback auf Base-Layer)
-            if (!_profile.ButtonMappings.TryGetValue(fullKey, out var action))
+            // TryGetValue with ButtonKey directly
+            if (!_profile.ButtonMappings.TryGetValue(buttonKey, out var action))
             {
-                if (_prefix == "" || !_profile.ButtonMappings.TryGetValue(btn, out action)) return;
+                // Fallback: try without modifier (for legacy L1+A patterns where only "A" is checked)
+                if (_prefix == "" || !_profile.ButtonMappings.TryGetValue(buttonKey.Key, out action)) return;
             }
 
             // Combo-Aktionen werden von der ComboEngine separat verarbeitet
             if (action.Type == ActionType.Combo) return;
 
-            if (!_turboStates.TryGetValue(fullKey, out var state)) { state = new TurboState(); _turboStates[fullKey] = state; }
+            // Use the full button key (with modifier) for turbo/macro tracking
+            var displayKey = buttonKey.ToString();
+            if (!_turboStates.TryGetValue(displayKey, out var state)) { state = new TurboState(); _turboStates[displayKey] = state; }
 
             if (pressed)
             {
                 if (action.IsMacro && !state.WasPressed)
                 {
-                    ExecuteMacro(fullKey, action);
+                    ExecuteMacro(displayKey, action);
                 }
                 // NEW: Intercept Self-Cast (bypass aiming, snap to center)
                 else if (action.IsSelfCast && !state.WasPressed)
@@ -189,7 +195,7 @@ namespace RagnaController.Core
                     // FIX: Strict LIFO Overwrite. The newest button press ALWAYS wins 
                     // and resets the validity window.
                     _bufferedAction = action;
-                    _bufferedKey = fullKey;
+                    _bufferedKey = displayKey;
                 }
             }
             else
@@ -204,7 +210,7 @@ namespace RagnaController.Core
                 }
             }
 
-state.WasPressed = pressed;
+            state.WasPressed = pressed;
         }
 
         private void ExecuteMacro(string key, ButtonAction action)
@@ -240,13 +246,16 @@ state.WasPressed = pressed;
             {
                 if (mapping.Value.Type != ActionType.Combo) continue;
 
-                string key = mapping.Key;
-
+                // mapping.Key is now ButtonKey, check if it starts with current prefix
+                var mappedKey = mapping.Key.ToString();
+                
                 // Layer-Prüfung: Der Mapping-Key muss mit dem aktuellen Layer übereinstimmen
-                if (!_prefix.Equals(key.Substring(0, _prefix.Length))) continue;
+                if (!_prefix.Equals(mappedKey.Substring(0, Math.Min(_prefix.Length, mappedKey.Length)))) continue;
 
                 // Button-Teil extrahieren (nach dem '+')
-                string btnPart = key.Substring(_prefix.Length + 1);
+                string btnPart = mappedKey.Length > _prefix.Length 
+                    ? mappedKey.Substring(_prefix.Length + 1) 
+                    : mappedKey;
 
                 if (Enum.TryParse<GamepadButtonFlags>(btnPart, out var flag) && buttons.HasFlag(flag))
                     return true;

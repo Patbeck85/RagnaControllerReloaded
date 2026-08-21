@@ -169,7 +169,8 @@
     <Compile Include="MiniModeWindow.xaml.cs" />
     <Compile Include="Models\AdaptiveTriggerMode.cs" />
     <Compile Include="Models\ButtonAction.cs" />
-    <Compile Include="Models\CommunityEntry.cs" />
+        <Compile Include="Models\ButtonKey.cs" />
+        <Compile Include="Models\CommunityEntry.cs" />
     <Compile Include="Models\ParsedInput.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\VirtualKey.cs" />

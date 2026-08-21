@@ -113,12 +113,12 @@ namespace RagnaController
                 KiteEnabled = EnableKiteCheck.IsChecked == true,
                 MageEnabled = EnableMageCheck.IsChecked == true,
                 SupportEnabled = EnableSupportCheck.IsChecked == true,
-                ButtonMappings = new Dictionary<string, ButtonAction>
+                ButtonMappings = new Dictionary<ButtonKey, ButtonAction>
                 {
-                    { "A", new ButtonAction { Type = ActionType.Key, Key = AButtonCombo.SelectedItem is ComboBoxItem a ? (VirtualKey)a.Tag : VirtualKey.None, Label = "Quick Key A" } },
-                    { "B", new ButtonAction { Type = ActionType.Key, Key = BButtonCombo.SelectedItem is ComboBoxItem b ? (VirtualKey)b.Tag : VirtualKey.None, Label = "Quick Key B" } },
-                    { "X", new ButtonAction { Type = ActionType.Key, Key = XButtonCombo.SelectedItem is ComboBoxItem x ? (VirtualKey)x.Tag : VirtualKey.None, Label = "Quick Key X" } },
-                    { "Y", new ButtonAction { Type = ActionType.Key, Key = YButtonCombo.SelectedItem is ComboBoxItem y ? (VirtualKey)y.Tag : VirtualKey.None, Label = "Quick Key Y" } }
+                    { VirtualKey.A, new ButtonAction { Type = ActionType.Key, Key = AButtonCombo.SelectedItem is ComboBoxItem a ? (VirtualKey)a.Tag : VirtualKey.None, Label = "Quick Key A" } },
+                    { VirtualKey.B, new ButtonAction { Type = ActionType.Key, Key = BButtonCombo.SelectedItem is ComboBoxItem b ? (VirtualKey)b.Tag : VirtualKey.None, Label = "Quick Key B" } },
+                    { VirtualKey.X, new ButtonAction { Type = ActionType.Key, Key = XButtonCombo.SelectedItem is ComboBoxItem x ? (VirtualKey)x.Tag : VirtualKey.None, Label = "Quick Key X" } },
+                    { VirtualKey.Y, new ButtonAction { Type = ActionType.Key, Key = YButtonCombo.SelectedItem is ComboBoxItem y ? (VirtualKey)y.Tag : VirtualKey.None, Label = "Quick Key Y" } }
                 }
             };
 

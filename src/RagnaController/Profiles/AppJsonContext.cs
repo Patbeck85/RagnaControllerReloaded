@@ -8,8 +8,9 @@ namespace RagnaController
     [JsonSerializable(typeof(Profile))]
     [JsonSerializable(typeof(List<Profile>))]
     [JsonSerializable(typeof(Models.Settings))]
-    [JsonSerializable(typeof(ButtonAction))] // Explizit hinzufügen
+    [JsonSerializable(typeof(ButtonAction))]
     [JsonSerializable(typeof(VirtualKey))]
+    [JsonSerializable(typeof(Models.ButtonKey))]
     [JsonSerializable(typeof(CommunityEntry))]
     [JsonSerializable(typeof(List<CommunityEntry>))]
     [JsonSourceGenerationOptions(
