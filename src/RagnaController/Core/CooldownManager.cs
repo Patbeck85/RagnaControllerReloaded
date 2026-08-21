@@ -7,13 +7,13 @@ namespace RagnaController.Core
     public sealed class CooldownManager
     {
         private readonly IMessenger _messenger;
-        private readonly FeedbackSystem _feedback;
-        
+        private readonly IFeedbackProvider _feedback;
+
         // Tracks: ActionLabel -> WarningTime (TickCount64)
         private readonly Dictionary<string, long> _activeTrackers = new();
         private readonly List<string> _keysToRemove = new();
 
-        public CooldownManager(IMessenger messenger, FeedbackSystem feedback)
+        public CooldownManager(IMessenger messenger, IFeedbackProvider feedback)
         {
             _messenger = messenger;
             _feedback = feedback;

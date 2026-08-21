@@ -11,12 +11,12 @@ namespace RagnaController.Core
     {
         private readonly InputCommandQueue _queue;
         private readonly WindowTracker _tracker;
-        private readonly FeedbackSystem _feedback;
+        private readonly IFeedbackProvider _feedback;
 
         // ── Smart Cursor State (v2.0) ───────────────────────────────────────
         public bool IsMenuMode { get; private set; }
         public bool GridModeEnabled { get; private set; } = true;
-        
+
         // Smart Grid Detection
         private int _currentSlotX = 0;
         private int _currentSlotY = 0;
@@ -50,7 +50,7 @@ namespace RagnaController.Core
         private int _anchorX, _anchorY;
         private int _gridX, _gridY;
 
-        public SmartCursorService(InputCommandQueue queue, WindowTracker tracker, FeedbackSystem feedback)
+        public SmartCursorService(InputCommandQueue queue, WindowTracker tracker, IFeedbackProvider feedback)
         {
             _queue = queue;
             _tracker = tracker;

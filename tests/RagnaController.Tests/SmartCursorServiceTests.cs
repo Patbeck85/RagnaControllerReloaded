@@ -11,11 +11,10 @@ namespace RagnaController.Tests
         [Fact]
         public void SmartCursorService_Constructor_Works()
         {
-            // Arrange - create a mock controller service
-            var mockController = new ControllerService();
+            // Arrange - use NullFeedbackProvider for headless testing
             var queue = new InputCommandQueue();
             var tracker = new Core.WindowTracker();
-            var feedback = new FeedbackSystem(mockController);
+            var feedback = new NullFeedbackProvider();
 
             // Act
             var service = new SmartCursorService(queue, tracker, feedback);
@@ -28,10 +27,9 @@ namespace RagnaController.Tests
         public void ToggleMenuMode_ActivatesAndDeactivates()
         {
             // Arrange
-            var mockController = new ControllerService();
             var queue = new InputCommandQueue();
             var tracker = new Core.WindowTracker();
-            var feedback = new FeedbackSystem(mockController);
+            var feedback = new NullFeedbackProvider();
             var service = new SmartCursorService(queue, tracker, feedback);
 
             // Act - Toggle on
@@ -51,10 +49,9 @@ namespace RagnaController.Tests
         public void Reset_ResetsState()
         {
             // Arrange
-            var mockController = new ControllerService();
             var queue = new InputCommandQueue();
             var tracker = new Core.WindowTracker();
-            var feedback = new FeedbackSystem(mockController);
+            var feedback = new NullFeedbackProvider();
             var service = new SmartCursorService(queue, tracker, feedback);
 
             // Act - Set state then reset
@@ -72,10 +69,9 @@ namespace RagnaController.Tests
         public void Tick_WithInput_ReturnsResult()
         {
             // Arrange
-            var mockController = new ControllerService();
             var queue = new InputCommandQueue();
             var tracker = new Core.WindowTracker();
-            var feedback = new FeedbackSystem(mockController);
+            var feedback = new NullFeedbackProvider();
             var service = new SmartCursorService(queue, tracker, feedback);
 
             service.ToggleMenuMode();

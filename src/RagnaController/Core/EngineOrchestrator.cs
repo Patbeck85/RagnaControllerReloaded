@@ -32,7 +32,7 @@ namespace RagnaController.Core
         private readonly SmartCursorService _smartCursor;
         private readonly KiteEngine _kite;
         private readonly SupportEngine _support;
-        private readonly FeedbackSystem _feedback;
+        private readonly IFeedbackProvider _feedback;
         private readonly OverlayRouter _overlayRouter;
         private readonly VoiceChatService _voice;
         private readonly MobSweepEngine _mobSweep;
@@ -181,7 +181,7 @@ namespace RagnaController.Core
         public SmartCursorService SmartCursor => _smartCursor;
         public KiteEngine Kite => _kite;
         public SupportEngine Support => _support;
-        public FeedbackSystem Feedback => _feedback;
+        public IFeedbackProvider Feedback => _feedback;
         public OverlayRouter OverlayRouter => _overlayRouter;
         public MobSweepEngine MobSweep => _mobSweep;
         public HandheldModeManager Handheld => _handheld;

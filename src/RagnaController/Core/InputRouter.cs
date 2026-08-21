@@ -22,7 +22,7 @@ namespace RagnaController.Core
         private readonly OverlayRouter _overlayRouter;
         private readonly MobSweepEngine _mobSweep;
         private readonly HandheldModeManager _handheld;
-        private readonly FeedbackSystem _feedback;
+        private readonly IFeedbackProvider _feedback;
         private readonly CooldownManager _cooldownManager;
 
         public InputRouter(
@@ -38,7 +38,7 @@ namespace RagnaController.Core
             OverlayRouter overlayRouter,
             MobSweepEngine mobSweep,
             HandheldModeManager handheld,
-            FeedbackSystem feedback,
+            IFeedbackProvider feedback,
             CooldownManager cooldownManager)
         {
             _combat = combat;

@@ -34,7 +34,7 @@ namespace RagnaController.Core
             ParsedInput input,
             Profile? currentProfile,
             bool rumbleEnabled,
-            FeedbackSystem feedback,
+            IFeedbackProvider feedback,
             MovementEngine movement,
             AdvancedLogger? logger,
             out bool shouldSkip)
@@ -59,8 +59,8 @@ namespace RagnaController.Core
             {
                 double idleMinutes = (now - _lastInputTime) / (double)Stopwatch.Frequency / 60.0;
 
-                int timeoutMins = currentProfile?.StandbyTimeoutMinutes > 0 
-                    ? currentProfile.StandbyTimeoutMinutes 
+                int timeoutMins = currentProfile?.StandbyTimeoutMinutes > 0
+                    ? currentProfile.StandbyTimeoutMinutes
                     : _standbyTimeoutMinutes;
 
                 if (!_isStandby && idleMinutes >= timeoutMins)
@@ -78,7 +78,7 @@ namespace RagnaController.Core
             return false;
         }
 
-        private void EnterStandby(bool rumbleEnabled, FeedbackSystem feedback, MovementEngine movement, AdvancedLogger? logger)
+        private void EnterStandby(bool rumbleEnabled, IFeedbackProvider feedback, MovementEngine movement, AdvancedLogger? logger)
         {
             _isStandby = true;
             movement.ForceStop();
@@ -87,7 +87,7 @@ namespace RagnaController.Core
             StandbyEntered?.Invoke();
         }
 
-        private void ExitStandby(bool rumbleEnabled, FeedbackSystem feedback, AdvancedLogger? logger)
+        private void ExitStandby(bool rumbleEnabled, IFeedbackProvider feedback, AdvancedLogger? logger)
         {
             _isStandby = false;
             if (rumbleEnabled) feedback.Trigger(FeedbackType.StandbyOff);

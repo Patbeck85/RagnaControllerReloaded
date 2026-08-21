@@ -4,10 +4,41 @@ using RagnaController.Controller;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Rumble-Feedback ohne Task/CancellationToken-Overhead.
-    /// Der Rumble-Stop wird über einen Timestamp geregelt und im 125Hz-Tick geprüft.
+    /// ARCH-005: Abstract feedback provider interface.
+    /// Allows headless/testing implementations without SDL audio dependency.
     /// </summary>
-    public class FeedbackSystem
+    public interface IFeedbackProvider : IDisposable
+    {
+        void StopAll();
+        void SetLED(byte r, byte g, byte b);
+        void Tick();
+        void Trigger(FeedbackType type);
+        void TriggerSkillFired();
+        void StopRumble();
+    }
+
+    /// <summary>
+    /// FeedbackType enum - moved from FeedbackSystem for reuse across implementations.
+    /// </summary>
+    public enum FeedbackType 
+    { 
+        CombatModeOn, 
+        CombatModeOff, 
+        TargetLocked, 
+        PhaseChange, 
+        Warning, 
+        PrecisionModeOn, 
+        BuffWarning, 
+        TurboPulse, 
+        StandbyOn, 
+        StandbyOff 
+    }
+
+    /// <summary>
+    /// ARCH-005: SDL-backed feedback implementation.
+    /// Implements IFeedbackProvider for testability and headless scenarios.
+    /// </summary>
+    public class FeedbackSystem : IFeedbackProvider
     {
         private readonly ControllerService _controller;
         private long _rumbleStopTime; // Environment.TickCount64 wann Rumble stoppen soll
@@ -112,9 +143,12 @@ namespace RagnaController.Core
             _controller.SetRumble(0, 0);
         }
 
+        public void Dispose()
+        {
+            StopAll();
+        }
+
         private void ScheduleStop(int ms)
             => _rumbleStopTime = Environment.TickCount64 + ms;
     }
-
-    public enum FeedbackType { CombatModeOn, CombatModeOff, TargetLocked, PhaseChange, Warning, PrecisionModeOn, BuffWarning, TurboPulse, StandbyOn, StandbyOff }
 }
