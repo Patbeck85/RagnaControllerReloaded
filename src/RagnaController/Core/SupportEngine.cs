@@ -6,11 +6,15 @@ namespace RagnaController.Core
     public class SupportEngine : IInputHandler
     {
         public bool        SupportEnabled  { get; set; }
-        public bool        IsActive        { get; private set; }
-        public SupportPhase Phase          { get; private set; } = SupportPhase.Idle;
+                public bool        IsActive        { get; private set; }
+                public SupportPhase Phase          { get; private set; } = SupportPhase.Idle;
 
-        public VirtualKey  HealKeyVK       { get; set; } = VirtualKey.F1;
-        public bool        PartyTabCycle   { get; set; } = false;
+                public VirtualKey  HealKeyVK       { get; set; } = VirtualKey.F1;
+                public bool        PartyTabCycle   { get; set; } = false;
+        
+                // FEAT-007: Properties for SkillOrchestrator condition evaluation
+                public List<string> ActiveBuffs { get; private set; } = new();
+                public List<string> ActiveDebuffs { get; private set; } = new();
 
         private int  _tabCooldown;
         private int  _healCooldown;

@@ -18,8 +18,11 @@ namespace RagnaController.Core
         private const float BASE_RES_H = 1080f;  // Referenz-Auflösung (1080p)
 
         // Zustand
-        private bool  _isWalking;
-        public  bool  IsWalking => _isWalking;
+                private bool  _isWalking;
+                public  bool  IsWalking => _isWalking;
+        
+                // FEAT-007: Property for SkillOrchestrator condition evaluation
+                public bool IsMoving => _isWalking;
         private float _lastX, _lastY;
         private int   _lastTx = -1; // letzte gesendete X-Koordinate (für Deduplizierung)
         private int   _lastTy = -1; // letzte gesendete Y-Koordinate (für Deduplizierung)

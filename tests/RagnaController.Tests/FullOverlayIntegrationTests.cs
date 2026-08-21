@@ -120,12 +120,12 @@ namespace RagnaController.Tests
                 MobSweepEnabled = true,
                 HandheldModeEnabled = false,
                 TurboEnabled = false,
-                ButtonMappings = new Dictionary<string, ButtonAction>
+                ButtonMappings = new Dictionary<RagnaController.Models.ButtonKey, RagnaController.Models.ButtonAction>
                 {
-                    { "A", new ButtonAction { Type = ActionType.Key, Key = VirtualKey.A } },
-                    { "B", new ButtonAction { Type = ActionType.Key, Key = VirtualKey.B } },
-                    { "X", new ButtonAction { Type = ActionType.Key, Key = VirtualKey.X } },
-                    { "Y", new ButtonAction { Type = ActionType.Key, Key = VirtualKey.Y } }
+                    { ButtonKey.Parse("A"), new ButtonAction { Type = ActionType.Key, Key = VirtualKey.A } },
+                    { ButtonKey.Parse("B"), new ButtonAction { Type = ActionType.Key, Key = VirtualKey.B } },
+                    { ButtonKey.Parse("X"), new ButtonAction { Type = ActionType.Key, Key = VirtualKey.X } },
+                    { ButtonKey.Parse("Y"), new ButtonAction { Type = ActionType.Key, Key = VirtualKey.Y } }
                 }
             };
 
@@ -166,9 +166,9 @@ namespace RagnaController.Tests
                 SupportEnabled = false,
                 ComboEnabled = false,
                 MobSweepEnabled = false,
-                ButtonMappings = new Dictionary<string, ButtonAction>
+                ButtonMappings = new Dictionary<RagnaController.Models.ButtonKey, RagnaController.Models.ButtonAction>
                 {
-                    { "A", new ButtonAction { Type = ActionType.Key, Key = VirtualKey.A } }
+                    { ButtonKey.Parse("A"), new ButtonAction { Type = ActionType.Key, Key = VirtualKey.A } }
                 }
             };
             engine.ProfileApplier.LoadProfile(wizardProfile, autoDetectClass: false);
@@ -187,9 +187,9 @@ namespace RagnaController.Tests
                 SupportEnabled = true,
                 ComboEnabled = false,
                 MobSweepEnabled = false,
-                ButtonMappings = new Dictionary<string, ButtonAction>
+                ButtonMappings = new Dictionary<RagnaController.Models.ButtonKey, RagnaController.Models.ButtonAction>
                 {
-                    { "A", new ButtonAction { Type = ActionType.Key, Key = VirtualKey.A } }
+                    { ButtonKey.Parse("A"), new ButtonAction { Type = ActionType.Key, Key = VirtualKey.A } }
                 }
             };
             engine.ProfileApplier.LoadProfile(priestProfile, autoDetectClass: false);
@@ -288,10 +288,10 @@ namespace RagnaController.Tests
                 MobSweepAttackKeyVK = 0x5A,
                 MobSweepAttackDelayMs = 60,
                 MobSweepTabIntervalMs = 350,
-                ButtonMappings = new Dictionary<string, ButtonAction>
+                ButtonMappings = new Dictionary<RagnaController.Models.ButtonKey, RagnaController.Models.ButtonAction>
                 {
-                    { "A", new ButtonAction { Type = ActionType.Key, Key = VirtualKey.A } },
-                    { "B", new ButtonAction { Type = ActionType.Key, Key = VirtualKey.B } }
+                    { ButtonKey.Parse("A"), new ButtonAction { Type = ActionType.Key, Key = VirtualKey.A } },
+                    { ButtonKey.Parse("B"), new ButtonAction { Type = ActionType.Key, Key = VirtualKey.B } }
                 }
             };
 
@@ -354,12 +354,12 @@ namespace RagnaController.Tests
             {
                 Name = "Mage-like Profile",
                 Class = "Novice", // Will be auto-detected
-                ButtonMappings = new Dictionary<string, ButtonAction>
+                ButtonMappings = new Dictionary<RagnaController.Models.ButtonKey, RagnaController.Models.ButtonAction>
                 {
-                    { "A", new ButtonAction { Type = ActionType.Key, Key = VirtualKey.A } },  // Fire Bolt
-                    { "B", new ButtonAction { Type = ActionType.Key, Key = VirtualKey.B } },  // Cold Bolt
-                    { "X", new ButtonAction { Type = ActionType.Key, Key = VirtualKey.X } },  // Lightning Bolt
-                    { "Y", new ButtonAction { Type = ActionType.Key, Key = VirtualKey.Y } }   // Fire Wall
+                    { ButtonKey.Parse("A"), new ButtonAction { Type = ActionType.Key, Key = VirtualKey.A } },  // Fire Bolt
+                    { ButtonKey.Parse("B"), new ButtonAction { Type = ActionType.Key, Key = VirtualKey.B } },  // Cold Bolt
+                    { ButtonKey.Parse("X"), new ButtonAction { Type = ActionType.Key, Key = VirtualKey.X } },  // Lightning Bolt
+                    { ButtonKey.Parse("Y"), new ButtonAction { Type = ActionType.Key, Key = VirtualKey.Y } }   // Fire Wall
                 }
             };
 
@@ -390,7 +390,7 @@ namespace RagnaController.Tests
                 RenewalAttackIntervalMs = 60,
                 PreRenewalSkillInterruptMs = 800,
                 RenewalSkillInterruptMs = 400,
-                ButtonMappings = new Dictionary<string, ButtonAction>()
+                ButtonMappings = new Dictionary<RagnaController.Models.ButtonKey, RagnaController.Models.ButtonAction>()
             };
 
             engine.ProfileApplier.LoadProfile(profile, autoDetectClass: false);
@@ -433,7 +433,7 @@ namespace RagnaController.Tests
                 CursorMaxSpeed = 1200f,
                 CursorDeadzone = 0.12f,
                 CursorCurve = 1.5f,
-                ButtonMappings = new Dictionary<string, ButtonAction>()
+                ButtonMappings = new Dictionary<RagnaController.Models.ButtonKey, RagnaController.Models.ButtonAction>()
             };
 
             engine.ProfileApplier.LoadProfile(profile, autoDetectClass: false);
@@ -481,7 +481,7 @@ namespace RagnaController.Tests
             {
                 Name = "Test",
                 Class = "Knight",
-                ButtonMappings = new Dictionary<string, ButtonAction>()
+                ButtonMappings = new Dictionary<RagnaController.Models.ButtonKey, RagnaController.Models.ButtonAction>()
             };
 
             engine.ProfileApplier.LoadProfile(profile, autoDetectClass: false);
@@ -520,7 +520,7 @@ namespace RagnaController.Tests
             {
                 Name = "Test",
                 Class = "Knight",
-                ButtonMappings = new Dictionary<string, ButtonAction>()
+                ButtonMappings = new Dictionary<RagnaController.Models.ButtonKey, RagnaController.Models.ButtonAction>()
             };
 
             engine.ProfileApplier.LoadProfile(profile, autoDetectClass: false);

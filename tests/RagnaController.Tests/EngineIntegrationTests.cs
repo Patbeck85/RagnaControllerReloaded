@@ -202,22 +202,122 @@ namespace RagnaController.Tests
         }
 
         [Fact]
-        public void EngineOrchestrator_SnapshotBuilder_CanBuild()
-        {
-            var tickProvider = new MockTickProvider();
-            var messenger = new MockMessenger();
-            var queue = new InputCommandQueue();
-            var logger = new AdvancedLogger("IntegrationTest");
+                public void EngineOrchestrator_SnapshotBuilder_CanBuild()
+                {
+                    var tickProvider = new MockTickProvider();
+                    var messenger = new MockMessenger();
+                    var queue = new InputCommandQueue();
+                    var logger = new AdvancedLogger("IntegrationTest");
 
-            var engine = new EngineOrchestrator(tickProvider, messenger, queue, logger);
+                    var engine = new EngineOrchestrator(tickProvider, messenger, queue, logger);
 
-            // SnapshotBuilder should be able to build a snapshot
-            var input = new ParsedInput { IsConnected = true };
-            var snapshot = engine.Snapshot.Build(input, false, 8.0);
+                    // SnapshotBuilder should be able to build a snapshot
+                    var input = new ParsedInput { IsConnected = true };
+                    var snapshot = engine.Snapshot.Build(input, false, 8.0);
 
-            Assert.NotNull(snapshot);
+                    Assert.NotNull(snapshot);
 
-            engine.Shutdown();
+                    engine.Shutdown();
+                }
+
+                [Fact]
+                public void GroundSpellEngine_RegisterAndUpdate_SpellsAreTracked()
+                {
+                    var queue = new InputCommandQueue();
+                    var engine = new GroundSpellEngine(queue);
+
+                    // Register a ground spell
+                    var action = new ButtonAction
+                    {
+                        IsGroundSpell = true,
+                        GroundSpellDurationSec = 10,
+                        GroundSpellTickIntervalMs = 1000,
+                        GroundSpellRadius = 3f,
+                        GroundSpellIsHealing = true,
+                        Label = "Heal Circle"
+                    };
+                    engine.RegisterGroundSpell(action, 100f, 200f, "Heal Circle");
+
+                    // Update with 500ms - spell should still be active
+                    var input = new ParsedInput { IsConnected = true };
+                    engine.Handle(input, 500);
+
+                    var spells = engine.GetActiveSpells();
+                    Assert.Single(spells);
+                    Assert.Equal("Heal Circle", spells[0].SkillName);
+                    Assert.Equal(100f, spells[0].WorldX);
+                    Assert.Equal(200f, spells[0].WorldY);
+                    Assert.False(spells[0].IsExpired);
+
+                    // Update with 10 more seconds - spell should expire
+                    engine.Handle(input, 10000);
+
+                    spells = engine.GetActiveSpells();
+                    Assert.Empty(spells);
+
+                    engine.ClearAll();
+                }
+
+                [Fact]
+                public void GroundSpellEngine_TickEvent_FiresAtInterval()
+                {
+                    var queue = new InputCommandQueue();
+                    var engine = new GroundSpellEngine(queue);
+
+                    int tickCount = 0;
+                    engine.GroundSpellTick += spell => tickCount++;
+
+                    var action = new ButtonAction
+                    {
+                        IsGroundSpell = true,
+                        GroundSpellDurationSec = 5,
+                        GroundSpellTickIntervalMs = 1000, // 1 second
+                        GroundSpellRadius = 2f,
+                        GroundSpellIsHealing = false,
+                        Label = "Fire Wall"
+                    };
+                    engine.RegisterGroundSpell(action, 50f, 50f, "Fire Wall");
+
+                    var input = new ParsedInput { IsConnected = true };
+
+                    // 500ms - no tick yet
+                    engine.Handle(input, 500);
+                    Assert.Equal(0, tickCount);
+
+                    // Another 600ms - should fire first tick at ~1000ms total
+                    engine.Handle(input, 600);
+                    Assert.Equal(1, tickCount);
+
+                    // Another 1000ms - should fire second tick
+                    engine.Handle(input, 1000);
+                    Assert.Equal(2, tickCount);
+
+                    engine.ClearAll();
+                }
+
+                [Fact]
+                public void GroundSpellEngine_ClearAll_RemovesAllSpells()
+                {
+                    var queue = new InputCommandQueue();
+                    var engine = new GroundSpellEngine(queue);
+
+                    var action = new ButtonAction
+                    {
+                        IsGroundSpell = true,
+                        GroundSpellDurationSec = 30,
+                        GroundSpellTickIntervalMs = 1000,
+                        GroundSpellRadius = 3f,
+                        GroundSpellIsHealing = true,
+                        Label = "Sanctuary"
+                    };
+                    engine.RegisterGroundSpell(action, 0f, 0f, "Sanctuary");
+
+                    var input = new ParsedInput { IsConnected = true };
+                    engine.Handle(input, 100);
+                    Assert.Single(engine.GetActiveSpells());
+
+                    engine.ClearAll();
+                    Assert.Empty(engine.GetActiveSpells());
+                }
+            }
         }
-    }
-}

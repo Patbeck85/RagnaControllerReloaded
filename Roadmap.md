@@ -208,3 +208,63 @@ Next action: Push to main branch to trigger CI pipeline for first Stryker.NET mu
 - Checks mutation score and fails if <70%
 
 The CI pipeline is ready. Pushing to `main` will execute the first mutation test run.
+
+---
+
+## 🎯 Phase 7: Action RPG Completeness & Full Class Support (IN PROGRESS)
+
+**Goal:** Complete Action RPG playability for all RO classes — Melee, Ranged, Caster, Support, Hybrid — with full skill orchestration, ground spells, buff tracking, and class-specific rotations.
+
+| Task ID | Task | Priority | Dependencies | Definition of Done | Status |
+|---------|------|----------|--------------|-------------------|--------|
+| FEAT-005 | Full Class Engine Presets | HIGH | ARCH-003, ARCH-005 | Every RO class has complete EnginePreset with priority, targeting, skill routing | ✅ COMPLETE |
+| FEAT-006 | Ground Spell / AoE Skill System | HIGH | FEAT-005 | Ground spells (Heal Circle, Frozen Ground, etc.) track duration, auto-cleanup, UI timer | 🔄 IN PROGRESS |
+| FEAT-007 | Class-Specific Skill Orchestration | HIGH | FEAT-005 | Data-driven rotations per class (attack→combo→buff→self-heal→ground) | 📋 PLANNED |
+| FEAT-008 | Buff / Debuff Tracking System | MEDIUM | FEAT-005 | Buff duration warnings, auto-recast, party member tracking | 📋 PLANNED |
+| FEAT-009 | Auto-Class Detection Enhancement | MEDIUM | FEAT-004 | Detect class + role (tank/dps/support) from 5+ mapped skills reliably | 📋 PLANNED |
+| TEST-004 | Class Engine Integration Tests | MEDIUM | FEAT-005 | Integration tests for each EnginePreset with mocked RO client | 📋 PLANNED |
+
+### FEAT-006 Implementation Status
+- ✅ `ButtonAction.cs` — Added ground spell properties (DurationSec, TickIntervalMs, Radius, FollowsTarget, IsHealing, IsSelfCast)
+- ✅ `GroundSpellEngine.cs` — Created with ActiveGroundSpell tracking, duration management, tick events, auto-cleanup
+- ✅ `EngineOrchestrator.cs` — Integrated GroundSpellEngine into tick loop, connected CombatEngine.ActionFired to register spells
+- ✅ Unit tests: 3 tests covering register/update, tick events, and ClearAll
+- ✅ Build: 0 errors, 1 warning | Tests: 56/56 passing (53 existing + 3 new)
+
+### 📋 Improvement List — Per Class Type (for implementation reference)
+
+#### Melee Classes (Swordsman, Knight, Crusader, Blacksmith)
+- [ ] Rotation priority: Auto-attack → skill 1 → skill 2 → combo → auto-attack
+- [ ] Leash/range limit: Disengage when target > 12m
+- [ ] Auto-retaliate: When hit, auto-cast defensive skill (Shield Boomerang)
+- [ ] Buff cycle: Auto-cast Blessing/Increase ATK at session start
+
+#### Ranged Classes (Archer, Hunter, Bard, Dancer, Gunslinger, Rebellion)
+- [ ] Lead target: Aim ahead of moving target based on speed estimation
+- [ ] Ammo management: Auto-refer arrow/bolt skills when "ammo" depleted
+- [ ] Snare kite: Auto-retreat + shoot when enemy closes
+- [ ] Pet support: Bard/Dancer auto-buff pet/summon
+
+#### Mage / Caster Classes (Mage, Wizard, Sage, Professor, Alchemist)
+- [ ] Ground spell support: Stone Curse, Frozen Ground, Healing Circle AOEs
+- [ ] Cast bar protection: Don't move/interrupt when casting > 1.5s unless stunned
+- [ ] Mana management: Auto-potion when < 30% (configurable threshold)
+- [ ] Skill queue: Cast next skill when GCD available, not just on keypress
+
+#### Support / Healer Classes (Acolyte, Priest)
+- [ ] Party member targeting: Auto-detect nearest party member HP < 70%
+- [ ] Heal priority: Single target → party → self, with cooldown per target
+- [ ] Resurrection: Auto-cast Revive/Resurrection when party member downed
+- [ ] Debuff clear: Auto-dispel Stone Curse/Poison on party
+
+#### Hybrid Classes (Thief, Assassin, Rogue, Stalker)
+- [ ] Dual-weapon mode: Dagger + Shortsword switching based on situation
+- [ ] Stealth mode: Auto-toggle when out of combat, auto-untarget when engaging
+- [ ] Backstab priority: Back-attacks do 2x damage, auto-aim when behind target
+- [ ] Escape art: Auto-retreat + heal when HP < 40%
+
+#### All Classes — General
+- [ ] Profile import/export: Class presets persisted separately from profiles
+- [ ] Live profile switching: Smooth transition without engine reset lag
+- [ ] Telemetry: Per-class skill firing stats (count, last used, success rate)
+- [ ] Hotkey re-binding: Real-time remap without restart

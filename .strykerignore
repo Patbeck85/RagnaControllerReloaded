@@ -1,8 +1,10 @@
+# Stryker ignore config for RagnaController
+# Exclude generated/designer files that cause compile errors
+
 **/obj/**/*
 **/bin/**/*
 **/*.g.cs
 **/*.g.i.cs
-**/*Window*.cs
 **/*Window*.xaml.cs
 **/App.xaml.cs
 **/ButtonRemappingWindow.*
@@ -12,5 +14,3 @@
 **/DaisyWheelWindow.*
 **/RadialMenuWindow.*
 **/*.xaml
-**/obj/**/*.g.cs
-**/obj/**/*.g.i.cs

@@ -7,8 +7,58 @@ using RagnaController.Profiles;
 namespace RagnaController.Core
 {
     /// <summary>
+    /// FEAT-005: Extended engine preset data with per-class configuration.
+    /// Holds class-specific engine engine flags beyond the basic category (Melee/Ranged/Caster/etc.).
+    /// </summary>
+    public struct ClassPresetData
+    {
+        /// <summary>Enable auto-attack for this class</summary>
+        public bool AutoAttack;
+        /// <summary>Enable kite/retreat behavior</summary>
+        public bool Kite;
+        /// <summary>Enable mage/casting engine</summary>
+        public bool Mage;
+        /// <summary>Enable support/buff engine</summary>
+        public bool Support;
+        /// <summary>Enable combo system</summary>
+        public bool Combo;
+        /// <summary>Enable mob sweep (AoE clearing)</summary>
+        public bool MobSweep;
+        /// <summary>Enable auto-retaliate when hit</summary>
+        public bool AutoRetaliate;
+        /// <summary>Enable party member targeting</summary>
+        public bool PartyTargeting;
+
+        /// <summary>Default Melee preset (Swordsman, Knight, Crusader, Blacksmith)</summary>
+        public static ClassPresetData MeleeDefault => new() { AutoAttack = true, Kite = false, Mage = false, Support = false, Combo = false, MobSweep = false, AutoRetaliate = false, PartyTargeting = false };
+
+        /// <summary>Default Ranged preset (Archer, Hunter, Bard, Dancer, Gunslinger, Rebellion)</summary>
+        public static ClassPresetData RangedDefault => new() { AutoAttack = true, Kite = true, Mage = false, Support = false, Combo = false, MobSweep = false, AutoRetaliate = false, PartyTargeting = false };
+
+        /// <summary>Default Caster preset (Mage, Wizard, Sage, Professor, Alchemist)</summary>
+        public static ClassPresetData CasterDefault => new() { AutoAttack = false, Kite = false, Mage = true, Support = true, Combo = false, MobSweep = false, AutoRetaliate = false, PartyTargeting = false };
+
+        /// <summary>Default Hybrid preset (Thief, Assassin, Rogue, Stalker, Monk, Taekwon, Ninja, Kagerou, Oboro)</summary>
+        public static ClassPresetData HybridDefault => new() { AutoAttack = true, Kite = true, Mage = true, Support = false, Combo = true, MobSweep = false, AutoRetaliate = false, PartyTargeting = false };
+
+        /// <summary>Default Support preset (Acolyte, Priest, Soul Linker)</summary>
+        public static ClassPresetData SupportDefault => new() { AutoAttack = false, Kite = false, Mage = false, Support = true, Combo = false, MobSweep = false, AutoRetaliate = false, PartyTargeting = true };
+    }
+
+    /// <summary>
+    /// FEAT-007: Class-specific rotation data for SkillOrchestrator.
+    /// </summary>
+    public class ClassRotationData
+    {
+        public string ClassName { get; set; } = "";
+        public EnginePreset PresetType { get; set; } = EnginePreset.Melee;
+        public RotationConfig RotationConfig { get; set; } = new();
+    }
+
+    /// <summary>
     /// FEAT-004: Auto-class detection from keybinds.
     /// Analyzes Profile.ButtonMappings for class-specific skills and assigns appropriate engine preset.
+    /// FEAT-007: Extended to provide rotation configs.
     /// </summary>
     public static class ClassDetector
     {
@@ -93,7 +143,6 @@ namespace RagnaController.Core
             ["Wizard"] = EnginePreset.Caster,
             ["Sage"] = EnginePreset.Caster,
             ["Professor"] = EnginePreset.Caster,
-            ["Sage"] = EnginePreset.Caster,
             ["Alchemist"] = EnginePreset.Caster,
 
             // Assassin/Thief presets (hybrid)
@@ -186,37 +235,68 @@ namespace RagnaController.Core
         }
 
         /// <summary>
+        /// FEAT-007: Gets the rotation config for a class.
+        /// </summary>
+        public static RotationConfig GetRotationConfig(string className)
+        {
+            var preset = GetPresetForClass(className);
+            var provider = new DefaultRotationProvider();
+            return provider.GetRotation(className);
+        }
+
+        /// <summary>
+        /// FEAT-007: Gets the rotation config for an EnginePreset.
+        /// </summary>
+        public static RotationConfig GetRotationConfig(EnginePreset preset)
+        {
+            var provider = new DefaultRotationProvider();
+            return provider.GetRotation(preset);
+        }
+
+        /// <summary>
         /// Applies the detected class preset to the EngineOrchestrator.
+        /// Uses ClassPresetData for class-specific engine configuration.
         /// </summary>
         public static void ApplyClassPreset(EngineOrchestrator orchestrator, Profile profile, EnginePreset preset)
         {
             if (orchestrator == null || profile == null)
                 return;
 
+            // Get the class-specific preset data
+            var classData = preset switch
+            {
+                EnginePreset.Melee => ClassPresetData.MeleeDefault,
+                EnginePreset.Ranged => ClassPresetData.RangedDefault,
+                EnginePreset.Caster => ClassPresetData.CasterDefault,
+                EnginePreset.Hybrid => ClassPresetData.HybridDefault,
+                EnginePreset.Support => ClassPresetData.SupportDefault,
+                _ => ClassPresetData.MeleeDefault
+            };
+
             profile.Class = preset.ToString();
 
-            switch (preset)
-            {
-                case EnginePreset.Melee:
-                    ApplyMeleePreset(orchestrator, profile);
-                    break;
-                case EnginePreset.Ranged:
-                    ApplyRangedPreset(orchestrator, profile);
-                    break;
-                case EnginePreset.Caster:
-                    ApplyCasterPreset(orchestrator, profile);
-                    break;
-                case EnginePreset.Hybrid:
-                    ApplyHybridPreset(orchestrator, profile);
-                    break;
-                case EnginePreset.Support:
-                    ApplySupportPreset(orchestrator, profile);
-                    break;
-            }
+            // Apply class-specific engine configuration
+            orchestrator.AutoTarget.AutoAttackEnabled = classData.AutoAttack;
+            orchestrator.AutoTarget.AutoRetargetEnabled = classData.AutoAttack; // reuse same flag
+            orchestrator.Kite.KiteEnabled = classData.Kite;
+            orchestrator.Mage.MageEnabled = classData.Mage;
+            orchestrator.Support.SupportEnabled = classData.Support;
+            orchestrator.Combo.Enabled = classData.Combo;
+            orchestrator.MobSweep.MobSweepEnabled = classData.MobSweep;
+
+            // FEAT-005: Additional configuration flags
+            orchestrator.AutoTarget.AutoRetaliateEnabled = classData.AutoRetaliate;
+            orchestrator.AutoTarget.PartyTargetingEnabled = classData.PartyTargeting;
+
+            // FEAT-007: Load rotation config for this class
+            var rotationConfig = GetRotationConfig(preset);
+            orchestrator.SkillOrchestrator.LoadRotation(rotationConfig);
+            orchestrator.SkillOrchestrator.SetEnabled(true);
 
             orchestrator.SubscribeToLog($"[Engine] Auto-class applied: {preset} ({profile.Class})");
         }
 
+        // Legacy Apply*Preset methods kept for backward compatibility
         private static void ApplyMeleePreset(EngineOrchestrator o, Profile p)
         {
             // Melee: Movement + AutoTarget, disable caster engines

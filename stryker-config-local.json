@@ -1,0 +1,15 @@
+{
+  "stryker-config": {
+    "thresholds": {
+      "high": 95,
+      "low": 80,
+      "break": 70
+    },
+    "reporters": [
+      "progress",
+      "html",
+      "json"
+    ],
+    "concurrency": 4
+  }
+}

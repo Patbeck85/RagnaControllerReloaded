@@ -1,0 +1,19 @@
+{
+  "stryker-config": {
+    "thresholds": {
+      "high": 95,
+      "low": 80,
+      "break": 70
+    },
+    "reporters": [
+      "Progress",
+      "Html",
+      "Json"
+    ],
+    "concurrency": 4,
+    "mutation-level": "Standard",
+    "mutate": [
+      "src/RagnaController/Core/*.cs"
+    ]
+  }
+}

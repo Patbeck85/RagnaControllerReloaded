@@ -4,37 +4,6 @@ using RagnaController.Controller;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// ARCH-005: Abstract feedback provider interface.
-    /// Allows headless/testing implementations without SDL audio dependency.
-    /// </summary>
-    public interface IFeedbackProvider : IDisposable
-    {
-        void StopAll();
-        void SetLED(byte r, byte g, byte b);
-        void Tick();
-        void Trigger(FeedbackType type);
-        void TriggerSkillFired();
-        void StopRumble();
-    }
-
-    /// <summary>
-    /// FeedbackType enum - moved from FeedbackSystem for reuse across implementations.
-    /// </summary>
-    public enum FeedbackType 
-    { 
-        CombatModeOn, 
-        CombatModeOff, 
-        TargetLocked, 
-        PhaseChange, 
-        Warning, 
-        PrecisionModeOn, 
-        BuffWarning, 
-        TurboPulse, 
-        StandbyOn, 
-        StandbyOff 
-    }
-
-    /// <summary>
     /// ARCH-005: SDL-backed feedback implementation.
     /// Implements IFeedbackProvider for testability and headless scenarios.
     /// </summary>

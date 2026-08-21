@@ -1,0 +1,29 @@
+{
+  "stryker-config": {
+    "thresholds": {
+      "high": 95,
+      "low": 80,
+      "break": 70
+    },
+    "reporters": [
+      "Progress",
+      "Html",
+      "Json"
+    ],
+    "concurrency": 4,
+    "mutation-level": "Standard",
+    "mutate": [
+      "src/RagnaController/Core/ClassDetector.cs",
+      "src/RagnaController/Core/CombatEngine.cs",
+      "src/RagnaController/Core/CooldownManager.cs",
+      "src/RagnaController/Core/EngineOrchestrator.cs",
+      "src/RagnaController/Core/FeedbackSystem.cs",
+      "src/RagnaController/Core/HybridEngine.cs",
+      "src/RagnaController/Core/InputCommandQueue.cs",
+      "src/RagnaController/Core/InputRouter.cs",
+      "src/RagnaController/Core/ProfileApplier.cs",
+      "src/RagnaController/Core/SmartCursorService.cs",
+      "src/RagnaController/Core/StandbyManager.cs"
+    ]
+  }
+}

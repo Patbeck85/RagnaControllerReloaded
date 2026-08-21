@@ -32,10 +32,14 @@ namespace RagnaController.Core
 
         public event Action<ButtonAction>? ActionFired;
 
-        // NEW: Haptic Metronome Event
-        public event Action? TurboPulsed;
+                // NEW: Haptic Metronome Event
+                public event Action? TurboPulsed;
+        
+                // FEAT-007: Properties for SkillOrchestrator condition evaluation
+                public int CurrentSP { get; private set; } = 0;
+                public int CurrentHPPercent { get; private set; } = 100;
 
-        /// <summary>Physische Ausführung der konfigurierten Aktion.</summary>
+                /// <summary>Physische Ausführung der konfigurierten Aktion.</summary>
         private void ExecuteAction(ButtonAction action)
         {
             switch (action.Type)

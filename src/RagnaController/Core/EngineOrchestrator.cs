@@ -3,6 +3,7 @@ using System.Diagnostics;
 using RagnaController.Models;
 using RagnaController.Controller;
 using RagnaController.Profiles;
+using RagnaController.Core; // FEAT-006: GroundSpellEngine
 
 namespace RagnaController.Core
 {
@@ -40,6 +41,13 @@ namespace RagnaController.Core
         private readonly EngineWatchdog _watchdog;
         private readonly CooldownManager _cooldownManager;
         private readonly DualSenseHardwareService _dualSense;
+
+        // FEAT-006: Ground Spell Engine
+                private readonly GroundSpellEngine _groundSpell;
+
+                // FEAT-007: Skill Orchestrator
+                private readonly SkillOrchestrator _skillOrchestrator;
+                private readonly DefaultRotationProvider _rotationProvider;
 
         // ── Runtime ──
         private volatile bool _isRunning;
@@ -104,30 +112,41 @@ namespace RagnaController.Core
             _mobSweep = new MobSweepEngine(engineQueue);
             _dualSense = new DualSenseHardwareService();
 
-            _sysMonitor = new SystemMonitor(_winTracker, _movement);
-            _snapshot = new SnapshotBuilder(_autoTarget, _mage, _combo, _winTracker, _cursor, _smartCursor);
+                        _sysMonitor = new SystemMonitor(_winTracker, _movement);
+                        _snapshot = new SnapshotBuilder(_autoTarget, _mage, _combo, _winTracker, _cursor, _smartCursor);
 
-            _handheld = new HandheldModeManager(
-                _tickProvider as BackgroundTickProvider, _snapshot, _mage, _overlayRouter, _combat, engineQueue);
+                        _handheld = new HandheldModeManager(
+                            _tickProvider as BackgroundTickProvider, _snapshot, _mage, _overlayRouter, _combat, engineQueue);
 
-            _watchdog = new EngineWatchdog();
-            _watchdog.PerformanceWarning += (avgMs) =>
-            {
-                string msg = $"⚠ CPU/Thread Overload detected! Engine running slow: {avgMs:F1}ms per tick.";
-                _logger?.Warn(msg);
-                LogMessage?.Invoke(msg);
-            };
-            _watchdog.PerformanceRecovered += () =>
-            {
-                string msg = "✓ CPU/Thread performance recovered to normal levels.";
-                _logger?.Info(msg);
-                LogMessage?.Invoke(msg);
-            };
+                        _watchdog = new EngineWatchdog();
+                        _watchdog.PerformanceWarning += (avgMs) =>
+                        {
+                            string msg = $"⚠ CPU/Thread Overload detected! Engine running slow: {avgMs:F1}ms per tick.";
+                            _logger?.Warn(msg);
+                            LogMessage?.Invoke(msg);
+                        };
+                        _watchdog.PerformanceRecovered += () =>
+                        {
+                            string msg = "✓ CPU/Thread performance recovered to normal levels.";
+                            _logger?.Info(msg);
+                            LogMessage?.Invoke(msg);
+                        };
 
-            _cooldownManager = new CooldownManager(_messenger, _feedback);
+                        _cooldownManager = new CooldownManager(_messenger, _feedback);
 
-            _overlayRouter.ProfileQuickSwitch += delta => ProfileQuickSwitch?.Invoke(delta);
-            _overlayRouter.RestoreMainWindowRequested += () => RestoreMainWindowRequested?.Invoke();
+                        // FEAT-007: Initialize Skill Orchestrator
+                                                _rotationProvider = new DefaultRotationProvider();
+                                                _skillOrchestrator = new SkillOrchestrator(engineQueue, _rotationProvider);
+                                                _skillOrchestrator.SetDependencies(
+                                                    autoTarget: _autoTarget,
+                                                    mage: _mage,
+                                                    support: _support,
+                                                    combo: _combo,
+                                                    cooldownManager: _cooldownManager,
+                                                    groundSpell: _groundSpell);
+
+                        _overlayRouter.ProfileQuickSwitch += delta => ProfileQuickSwitch?.Invoke(delta);
+                        _overlayRouter.RestoreMainWindowRequested += () => RestoreMainWindowRequested?.Invoke();
 
             // Initialize decomposed components FIRST (before using them in event handlers)
             _standbyManager = new StandbyManager();
@@ -137,14 +156,23 @@ namespace RagnaController.Core
             _profileApplier = new ProfileApplier(this, _messenger);
 
             // NOW subscribe to events - _inputRouter is guaranteed non-null
-            _combat.ActionFired += action =>
-            {
-                if (_rumbleEnabled) _feedback.TriggerSkillFired();
-                _messenger.Publish(new ActionFiredMessage(action.Label, ActionFiredKind.Skill));
-                _cooldownManager.RegisterAction(action);
-                // Also notify InputRouter
-                _inputRouter.OnActionFired(action, _rumbleEnabled);
-            };
+                        _combat.ActionFired += action =>
+                        {
+                            if (_rumbleEnabled) _feedback.TriggerSkillFired();
+                            _messenger.Publish(new ActionFiredMessage(action.Label, ActionFiredKind.Skill));
+                            _cooldownManager.RegisterAction(action);
+                            // Also notify InputRouter
+                            _inputRouter.OnActionFired(action, _rumbleEnabled);
+
+                            // FEAT-006: Register ground spell if applicable
+                                                        if (action.IsGroundSpell && _winTracker.IsTracking && _groundSpell != null)
+                                                        {
+                                                            // Get current world position (mouse cursor position in game world)
+                                                            var centerX = _winTracker.CenterX;
+                                                            var centerY = _winTracker.CenterY;
+                                                            _groundSpell.RegisterGroundSpell(action, centerX, centerY, action.Label);
+                                                        }
+                        };
 
             _combat.TurboPulsed += () =>
             {
@@ -157,6 +185,7 @@ namespace RagnaController.Core
             };
 
             _tickProvider.Tick += OnTick;
+                        _groundSpell = new GroundSpellEngine(engineQueue);
         }
 
         // These will be set via ProfileApplier
@@ -203,9 +232,16 @@ namespace RagnaController.Core
         public IMessenger Messenger => _messenger;
 
         // Expose new components
-        public StandbyManager StandbyManager => _standbyManager;
-        public InputRouter InputRouter => _inputRouter;
-        public ProfileApplier ProfileApplier => _profileApplier;
+                        public StandbyManager StandbyManager => _standbyManager;
+                        public InputRouter InputRouter => _inputRouter;
+                        public ProfileApplier ProfileApplier => _profileApplier;
+
+                        // FEAT-006: Ground Spell Engine
+                        public GroundSpellEngine GroundSpell => _groundSpell;
+
+                        // FEAT-007: Skill Orchestrator
+                        public SkillOrchestrator SkillOrchestrator => _skillOrchestrator;
+                        public DefaultRotationProvider RotationProvider => _rotationProvider;
 
         // Public method for external log subscription - takes a message and invokes the event
         public void SubscribeToLog(string message) => LogMessage?.Invoke(message);
@@ -268,9 +304,25 @@ namespace RagnaController.Core
                 }
 
                 // Routing - delegate to InputRouter
-                _inputRouter.RouteInput(input, _actualDeltaMs, _rumbleEnabled, _hapticMetronomeEnabled);
+                                _inputRouter.RouteInput(input, _actualDeltaMs, _rumbleEnabled, _hapticMetronomeEnabled);
 
-                // UI Update
+                                // FEAT-006: Update ground spells
+                                                                _groundSpell?.Handle(input, _actualDeltaMs);
+
+                                                                // FEAT-007: Update skill orchestrator (class-specific rotations)
+                                                                _skillOrchestrator?.Update(input, _actualDeltaMs, 
+                                                                    _autoTarget?.CurrentTarget != null,
+                                                                    _autoTarget?.CurrentTargetDistance ?? 0f,
+                                                                    _combat.CurrentSP,
+                                                                    _combat.CurrentHPPercent,
+                                                                    _movement.IsMoving,
+                                                                    _autoTarget?.IsFacingTarget ?? false,
+                                                                    _support?.ActiveBuffs ?? new(),
+                                                                    _support?.ActiveDebuffs ?? new(),
+                                                                    _autoTarget?.NearbyEnemyCount ?? 0,
+                                                                    _groundSpell?.GetActiveSpellNames() ?? new());
+
+                                // UI Update
                 if (++_uiTick < UI_INTERVAL) return;
                 _uiTick = 0;
 

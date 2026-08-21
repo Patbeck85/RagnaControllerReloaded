@@ -6,10 +6,12 @@ using RagnaController.Models;
 namespace RagnaController.Core
 {
     public class AutoTargetEngine : IInputHandler
-    {
-        public bool AutoAttackEnabled { get; set; } = true;
-        public bool AutoRetargetEnabled { get; set; } = true;
-        public bool SmartSkillEnabled { get; set; } = true;
+        {
+            public bool AutoAttackEnabled { get; set; } = true;
+            public bool AutoRetargetEnabled { get; set; } = true;
+            public bool AutoRetaliateEnabled { get; set; } = false;
+            public bool PartyTargetingEnabled { get; set; } = false;
+            public bool SmartSkillEnabled { get; set; } = true;
         public int AttackKey_VK { get; set; } = 90;
         public int TabCycleMs { get; set; } = 80;
         public int AttackIntervalMs { get; set; } = 60;
@@ -24,10 +26,16 @@ namespace RagnaController.Core
         public bool IsAutoAttacking { get; private set; }
 
         public CombatState State { get; private set; } = CombatState.Idle;
-        private readonly InputCommandQueue _queue;
-        public bool IsTargetLocked { get; private set; }
-        // FIX: Dynamischer Getter - SuppressMovementClicks ist true, sobald State != Idle!
-        public bool SuppressMovementClicks => State != CombatState.Idle;
+                private readonly InputCommandQueue _queue;
+                public bool IsTargetLocked { get; private set; }
+        
+                // FEAT-007: Properties for SkillOrchestrator condition evaluation
+                public object? CurrentTarget { get; private set; }
+                public float CurrentTargetDistance { get; private set; }
+                public bool IsFacingTarget { get; private set; }
+                public int NearbyEnemyCount { get; private set; }
+                // FIX: Dynamischer Getter - SuppressMovementClicks ist true, sobald State != Idle!
+                public bool SuppressMovementClicks => State != CombatState.Idle;
 
         public AutoTargetEngine(InputCommandQueue queue) { _queue = queue; }
         

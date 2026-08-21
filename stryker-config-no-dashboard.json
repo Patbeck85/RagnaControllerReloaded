@@ -1,0 +1,35 @@
+{
+  "stryker-config": {
+    "thresholds": {
+      "high": 95,
+      "low": 80,
+      "break": 70
+    },
+    "reporters": [
+      "Progress",
+      "Html",
+      "Json"
+    ],
+    "concurrency": 4,
+    "mutation-level": "Standard",
+    "mutate": [
+      "src/RagnaController/Core/*.cs"
+    ],
+    "ignore-mutations": [
+      "**/obj/**",
+      "**/bin/**",
+      "**/*.g.cs",
+      "**/*.g.i.cs",
+      "**/*Window*.cs",
+      "**/*Window*.xaml.cs",
+      "**/App.xaml.cs",
+      "**/ButtonRemappingWindow.*",
+      "**/ComboEditorWindow.*",
+      "**/CommunityBrowserWindow.*",
+      "**/ControllerPreview.cs",
+      "**/DaisyWheelWindow.*",
+      "**/RadialMenuWindow.*",
+      "**/*.xaml"
+    ]
+  }
+}
