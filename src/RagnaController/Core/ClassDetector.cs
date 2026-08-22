@@ -62,64 +62,108 @@ namespace RagnaController.Core
     /// </summary>
     public static class ClassDetector
     {
-        // Known RO skill key mappings per class (VirtualKey -> class hints)
-        private static readonly Dictionary<VirtualKey, string[]> SkillToClassMap = new()
-        {
-            // Swordsman / Knight / Crusader
-            [VirtualKey.F1] = new[] { "Swordsman", "Knight", "Crusader" },        // Bash
-            [VirtualKey.F2] = new[] { "Swordsman", "Knight", "Crusader" },        // Magnum Break
-            [VirtualKey.F3] = new[] { "Knight", "Crusader" },                     // Bowling Bash
-            [VirtualKey.F4] = new[] { "Knight" },                                 // Brandish Spear
-            [VirtualKey.F5] = new[] { "Crusader" },                               // Holy Cross
-            [VirtualKey.F6] = new[] { "Crusader" },                               // Grand Cross
+        // Known RO skill key mappings per class (VirtualKey -> class hints with weights)
+                // Format: VirtualKey -> List of (ClassName, Weight, SkillCategory)
+                // Weight: 3 = signature skill (unique to class), 2 = class-specific, 1 = shared across category
+                // SkillCategory: "weapon", "offensive", "defensive", "support", "utility", "signature"
+                private static readonly Dictionary<VirtualKey, List<(string Class, int Weight, string Category)>> SkillToClassMap = new()
+                {
+                    // Swordsman / Knight / Crusader
+                    [VirtualKey.F1] = new() { ("Swordsman", 2, "offensive"), ("Knight", 2, "offensive"), ("Crusader", 1, "offensive") },        // Bash
+                    [VirtualKey.F2] = new() { ("Swordsman", 2, "offensive"), ("Knight", 2, "offensive"), ("Crusader", 1, "offensive") },        // Magnum Break
+                    [VirtualKey.F3] = new() { ("Knight", 3, "signature"), ("Crusader", 2, "offensive") },                     // Bowling Bash (Knight signature)
+                    [VirtualKey.F4] = new() { ("Knight", 3, "signature") },                                 // Brandish Spear (Knight signature)
+                    [VirtualKey.F5] = new() { ("Crusader", 3, "signature") },                               // Holy Cross (Crusader signature)
+                    [VirtualKey.F6] = new() { ("Crusader", 3, "signature") },                               // Grand Cross (Crusader signature)
 
-            // Mage / Wizard / Sage / Professor
-            [VirtualKey.F7] = new[] { "Mage", "Wizard", "Sage", "Professor" },    // Fire Bolt
-            [VirtualKey.F8] = new[] { "Mage", "Wizard", "Sage", "Professor" },    // Cold Bolt
-            [VirtualKey.F9] = new[] { "Mage", "Wizard", "Sage", "Professor" },    // Lightning Bolt
-            [VirtualKey.F10] = new[] { "Wizard", "Professor" },                   // Fire Wall
-            [VirtualKey.F11] = new[] { "Wizard" },                                // Storm Gust
-            [VirtualKey.F12] = new[] { "Sage", "Professor" },                     // Magic Rod
+                    // Lord Knight / Paladin (Transcendent)
+                    [VirtualKey.F7] = new() { ("Lord Knight", 3, "signature"), ("Paladin", 2, "offensive") }, // Spiral Pierce / Shield Boomerang
+                    [VirtualKey.F8] = new() { ("Paladin", 3, "signature") },                                // Martyr's Reckoning / Shield Chain
 
-            // Archer / Hunter / Bard / Dancer
-            [VirtualKey.D1] = new[] { "Archer", "Hunter", "Bard", "Dancer" },     // Double Strafe
-            [VirtualKey.D2] = new[] { "Hunter", "Bard" },                         // Arrow Shower
-            [VirtualKey.D3] = new[] { "Bard", "Dancer" },                         // Arrow Vulcan
-            [VirtualKey.D4] = new[] { "Hunter" },                                 // Blitz Beat
+                    // Mage / Wizard / Sage / Professor
+                    [VirtualKey.F7] = new() { ("Mage", 2, "offensive"), ("Wizard", 2, "offensive"), ("Sage", 1, "offensive"), ("Professor", 1, "offensive") },    // Fire Bolt
+                    [VirtualKey.F8] = new() { ("Mage", 2, "offensive"), ("Wizard", 2, "offensive"), ("Sage", 1, "offensive"), ("Professor", 1, "offensive") },    // Cold Bolt
+                    [VirtualKey.F9] = new() { ("Mage", 2, "offensive"), ("Wizard", 2, "offensive"), ("Sage", 1, "offensive"), ("Professor", 1, "offensive") },    // Lightning Bolt
+                    [VirtualKey.F10] = new() { ("Wizard", 3, "signature"), ("Professor", 2, "offensive") },                   // Fire Wall / Meteor Storm
+                    [VirtualKey.F11] = new() { ("Wizard", 3, "signature") },                                // Storm Gust (Wizard signature)
+                    [VirtualKey.F12] = new() { ("Sage", 3, "signature"), ("Professor", 2, "support") },                     // Magic Rod / Abracadabra
 
-            // Thief / Assassin / Rogue / Stalker
-            [VirtualKey.D5] = new[] { "Thief", "Assassin", "Rogue", "Stalker" },  // Double Attack
-            [VirtualKey.D6] = new[] { "Assassin", "Stalker" },                    // Sonic Blow
-            [VirtualKey.D7] = new[] { "Rogue", "Stalker" },                       // Back Stab
-            [VirtualKey.D8] = new[] { "Stalker" },                                // Chase Walk
+                    // High Wizard / Professor (Transcendent)
+                    [VirtualKey.F1] = new() { ("High Wizard", 3, "signature") },                             // Meteor Storm
+                    [VirtualKey.F2] = new() { ("Professor", 3, "signature") },                               // Double Bolt
 
-            // Merchant / Blacksmith / Alchemist
-            [VirtualKey.D9] = new[] { "Merchant", "Blacksmith", "Alchemist" },    // Mammonite
-            [VirtualKey.D0] = new[] { "Blacksmith" },                             // Cart Revolution
-            [VirtualKey.Q] = new[] { "Alchemist" },                               // Acid Terror
+                    // Archer / Hunter / Bard / Dancer
+                    [VirtualKey.D1] = new() { ("Archer", 2, "offensive"), ("Hunter", 2, "offensive"), ("Bard", 1, "offensive"), ("Dancer", 1, "offensive") },     // Double Strafe
+                    [VirtualKey.D2] = new() { ("Hunter", 3, "signature"), ("Bard", 2, "offensive") },                         // Arrow Shower (Hunter signature)
+                    [VirtualKey.D3] = new() { ("Bard", 3, "signature"), ("Dancer", 2, "offensive") },                         // Arrow Vulcan (Bard signature)
+                    [VirtualKey.D4] = new() { ("Hunter", 3, "signature") },                                 // Blitz Beat (Hunter signature)
 
-            // Acolyte / Priest / Monk
-            [VirtualKey.W] = new[] { "Acolyte", "Priest", "Monk" },               // Heal
-            [VirtualKey.E] = new[] { "Priest", "Monk" },                          // Blessing
-            [VirtualKey.R] = new[] { "Monk" },                                    // Asura Strike
-            [VirtualKey.T] = new[] { "Monk" },                                    // Snap
+                    // Sniper / Clown / Gypsy (Transcendent)
+                    [VirtualKey.D5] = new() { ("Sniper", 3, "signature"), ("Clown", 2, "offensive") },      // Sharp Shooting / Arrow Vulcan
+                    [VirtualKey.D6] = new() { ("Sniper", 2, "offensive"), ("Gypsy", 2, "offensive") },      // Focused Arrow Strike
 
-            // Taekwon / Soul Linker / Star Gladiator
-            [VirtualKey.Y] = new[] { "Taekwon", "Star Gladiator" },               // Flying Kick
-            [VirtualKey.U] = new[] { "Star Gladiator" },                          // Demon of the Sun
+                    // Thief / Assassin / Rogue / Stalker
+                    [VirtualKey.D5] = new() { ("Thief", 2, "offensive"), ("Assassin", 2, "offensive"), ("Rogue", 2, "offensive"), ("Stalker", 1, "offensive") },  // Double Attack
+                    [VirtualKey.D6] = new() { ("Assassin", 3, "signature"), ("Stalker", 2, "offensive") },                    // Sonic Blow (Assassin signature)
+                    [VirtualKey.D7] = new() { ("Rogue", 3, "signature"), ("Stalker", 2, "offensive") },                       // Back Stab (Rogue signature)
+                    [VirtualKey.D8] = new() { ("Stalker", 3, "signature") },                                // Chase Walk (Stalker signature)
 
-            // Gunslinger / Rebellion
-            [VirtualKey.I] = new[] { "Gunslinger", "Rebellion" },                 // Desperado
-            [VirtualKey.O] = new[] { "Rebellion" },                               // Eternal Chain
+                    // Assassin Cross / Stalker (Transcendent)
+                    [VirtualKey.D9] = new() { ("Assassin Cross", 3, "signature") },                          // Meteor Assault
+                    [VirtualKey.D0] = new() { ("Stalker", 3, "signature") },                                 // Shadow Spell
 
-            // Ninja / Kagerou / Oboro
-            [VirtualKey.P] = new[] { "Ninja", "Kagerou", "Oboro" },               // Throw Shuriken
-            [VirtualKey.A] = new[] { "Kagerou" },                                 // Kunai Splash
-            [VirtualKey.S] = new[] { "Oboro" },                                   // Shadow Slash
+                    // Merchant / Blacksmith / Alchemist
+                    [VirtualKey.D9] = new() { ("Merchant", 2, "offensive"), ("Blacksmith", 2, "offensive"), ("Alchemist", 1, "offensive") },    // Mammonite
+                    [VirtualKey.D0] = new() { ("Blacksmith", 3, "signature") },                             // Cart Revolution (Blacksmith signature)
+                    [VirtualKey.Q] = new() { ("Alchemist", 3, "signature") },                               // Acid Terror (Alchemist signature)
+                    [VirtualKey.W] = new() { ("Alchemist", 2, "support") },                                 // Homunculus skills
 
-            // Super Novice
-            [VirtualKey.H] = new[] { "Super Novice" },                            // Heal (Super Novice)
-        };
+                    // Whitesmith / Creator (Transcendent)
+                    [VirtualKey.E] = new() { ("Whitesmith", 3, "signature") },                              // Cart Boost
+                    [VirtualKey.R] = new() { ("Creator", 3, "signature") },                                 // Homunculus Call
+
+                    // Acolyte / Priest / Monk
+                    [VirtualKey.W] = new() { ("Acolyte", 2, "support"), ("Priest", 2, "support"), ("Monk", 1, "support") },               // Heal
+                    [VirtualKey.E] = new() { ("Priest", 3, "signature"), ("Monk", 2, "support") },                          // Blessing (Priest signature)
+                    [VirtualKey.R] = new() { ("Monk", 3, "signature") },                                    // Asura Strike (Monk signature)
+                    [VirtualKey.T] = new() { ("Monk", 2, "offensive") },                                    // Snap
+                    [VirtualKey.Y] = new() { ("Priest", 3, "signature") },                                  // Resurrection / Sanctuary
+
+                    // High Priest / Champion (Transcendent)
+                    [VirtualKey.U] = new() { ("High Priest", 3, "signature") },                             // Magnus Exorcismus
+                    [VirtualKey.I] = new() { ("Champion", 3, "signature") },                                // Asura Strike (Champion)
+
+                    // Taekwon / Soul Linker / Star Gladiator
+                    [VirtualKey.Y] = new() { ("Taekwon", 3, "signature"), ("Star Gladiator", 2, "offensive") },               // Flying Kick
+                    [VirtualKey.U] = new() { ("Star Gladiator", 3, "signature") },                          // Demon of the Sun
+                    [VirtualKey.I] = new() { ("Soul Linker", 3, "signature") },                             // Soul Link skills
+
+                    // Gunslinger / Rebellion
+                    [VirtualKey.I] = new() { ("Gunslinger", 3, "signature"), ("Rebellion", 2, "offensive") },                 // Desperado
+                    [VirtualKey.O] = new() { ("Rebellion", 3, "signature") },                               // Eternal Chain
+                    [VirtualKey.P] = new() { ("Gunslinger", 2, "offensive"), ("Rebellion", 2, "offensive") }, // Triple Action
+
+                    // Ninja / Kagerou / Oboro
+                    [VirtualKey.P] = new() { ("Ninja", 3, "signature"), ("Kagerou", 2, "offensive"), ("Oboro", 2, "offensive") },               // Throw Shuriken
+                    [VirtualKey.A] = new() { ("Kagerou", 3, "signature") },                                 // Kunai Splash
+                    [VirtualKey.S] = new() { ("Oboro", 3, "signature") },                                   // Shadow Slash
+
+                    // Super Novice
+                    [VirtualKey.H] = new() { ("Super Novice", 3, "signature") },                            // Heal (Super Novice) - unique
+                    [VirtualKey.J] = new() { ("Super Novice", 2, "support") },                              // Various mimic skills
+
+                    // Additional common skills mapped to number keys / letters
+                    [VirtualKey.D1] = new() { ("Archer", 2, "offensive"), ("Hunter", 2, "offensive"), ("Bard", 1, "offensive"), ("Dancer", 1, "offensive") },     // Double Strafe (duplicate for num keys)
+                    [VirtualKey.D2] = new() { ("Hunter", 3, "signature"), ("Bard", 2, "offensive") },
+                    [VirtualKey.D3] = new() { ("Bard", 3, "signature"), ("Dancer", 2, "offensive") },
+                    [VirtualKey.D4] = new() { ("Hunter", 3, "signature") },
+                    [VirtualKey.D5] = new() { ("Thief", 2, "offensive"), ("Assassin", 2, "offensive"), ("Rogue", 2, "offensive"), ("Stalker", 1, "offensive") },
+                    [VirtualKey.D6] = new() { ("Assassin", 3, "signature"), ("Stalker", 2, "offensive") },
+                    [VirtualKey.D7] = new() { ("Rogue", 3, "signature"), ("Stalker", 2, "offensive") },
+                    [VirtualKey.D8] = new() { ("Stalker", 3, "signature") },
+                    [VirtualKey.D9] = new() { ("Merchant", 2, "offensive"), ("Blacksmith", 2, "offensive"), ("Alchemist", 1, "offensive") },
+                    [VirtualKey.D0] = new() { ("Blacksmith", 3, "signature") },
+                };
 
         // Class to engine preset mapping
         private static readonly Dictionary<string, EnginePreset> ClassToPreset = new(StringComparer.OrdinalIgnoreCase)
@@ -167,46 +211,48 @@ namespace RagnaController.Core
         };
 
         /// <summary>
-        /// Detects RO class from Profile.ButtonMappings.
-        /// Returns the most likely class based on mapped skills.
-        /// </summary>
-        public static string DetectClass(Profile profile)
-        {
-            if (profile?.ButtonMappings == null || profile.ButtonMappings.Count == 0)
-                return "Melee"; // Default fallback
-
-            var classScores = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-
-            foreach (var kvp in profile.ButtonMappings)
-            {
-                var buttonKey = kvp.Key;
-                var action = kvp.Value;
-
-                // Only count actual skill actions (not movement, basic attack, etc.)
-                if (!IsSkillAction(action))
-                    continue;
-
-                // Use the VirtualKey directly from ButtonKey (ignoring modifier for class detection)
-                var vk = buttonKey.Key;
-                if (vk == VirtualKey.None)
-                    continue;
-
-                if (SkillToClassMap.TryGetValue(vk, out var classes))
+                /// Detects RO class from Profile.ButtonMappings using weighted heuristic scoring.
+                /// Returns the most likely class based on mapped skills, with signature skills weighted higher.
+                /// </summary>
+                public static string DetectClass(Profile profile)
                 {
-                    foreach (var cls in classes)
+                    if (profile?.ButtonMappings == null || profile.ButtonMappings.Count == 0)
+                        return "Melee"; // Default fallback
+
+                    var classScores = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+                    foreach (var kvp in profile.ButtonMappings)
                     {
-                        classScores[cls] = classScores.GetValueOrDefault(cls) + 1;
+                        var buttonKey = kvp.Key;
+                        var action = kvp.Value;
+
+                        // Only count actual skill actions (not movement, basic attack, etc.)
+                        if (!IsSkillAction(action))
+                            continue;
+
+                        // Use the VirtualKey directly from ButtonKey (ignoring modifier for class detection)
+                        var vk = buttonKey.Key;
+                        if (vk == VirtualKey.None)
+                            continue;
+
+                        if (SkillToClassMap.TryGetValue(vk, out var classEntries))
+                        {
+                            foreach (var entry in classEntries)
+                            {
+                                // Weighted scoring: signature skills (weight=3) count more
+                                int scoreMultiplier = entry.Weight;
+                                classScores[entry.Class] = classScores.GetValueOrDefault(entry.Class) + scoreMultiplier;
+                            }
+                        }
                     }
+
+                    if (classScores.Count == 0)
+                        return profile.Class; // Keep existing if no skills mapped
+
+                    // Return class with highest weighted score
+                    var detected = classScores.OrderByDescending(kvp => kvp.Value).First().Key;
+                    return detected;
                 }
-            }
-
-            if (classScores.Count == 0)
-                return profile.Class; // Keep existing if no skills mapped
-
-            // Return class with highest score
-            var detected = classScores.OrderByDescending(kvp => kvp.Value).First().Key;
-            return detected;
-        }
 
         /// <summary>
         /// Determines if a ButtonAction represents a class-specific skill.
