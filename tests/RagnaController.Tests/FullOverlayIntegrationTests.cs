@@ -546,8 +546,8 @@ namespace RagnaController.Tests
             engine.CommandQueue?.Start();
 
             // Simulate an input command being enqueued
-            engine.CommandQueue.KeyDown(VirtualKey.A);
-            engine.CommandQueue.KeyUp(VirtualKey.A);
+            engine.CommandQueue?.KeyDown(VirtualKey.A);
+            engine.CommandQueue?.KeyUp(VirtualKey.A);
 
             // Fire tick - should process queued inputs
             var tickProvider = new MockTickProvider();
