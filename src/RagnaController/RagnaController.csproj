@@ -149,10 +149,11 @@
         <Compile Include="Core\SmartCursorEngine.cs" />
         <Compile Include="Core\SmartCursorService.cs" />
                 <Compile Include="Core\SnapshotBuilder.cs" />
-                <Compile Include="Core\StandbyManager.cs" />
-                <Compile Include="Core\SupportEngine.cs" />
-                <Compile Include="Core\GroundSpellEngine.cs" />
-        <Compile Include="Core\SystemMonitor.cs" />
+                                <Compile Include="Core\StandbyManager.cs" />
+                                <Compile Include="Core\SupportEngine.cs" />
+                                <Compile Include="Core\GroundSpellEngine.cs" />
+                                <Compile Include="Core\BuffManager.cs" />
+                        <Compile Include="Core\SystemMonitor.cs" />
     <Compile Include="Core\TelemetryService.cs" />
     <Compile Include="Core\TtsAnnouncerService.cs" />
     <Compile Include="Core\UpdateChecker.cs" />

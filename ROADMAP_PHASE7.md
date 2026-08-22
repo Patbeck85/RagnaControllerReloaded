@@ -42,7 +42,12 @@
 ## FEAT-008: Buff / Debuff Tracking System
 - **Goal:** Add comprehensive buff/debuff tracking for both self and party members. Support duration warnings, cooldown tracking, and automatic re-casting when expired. Extend `ButtonAction.TrackBuff` + add `BuffManager` service.
 - **Files:** `Models/ButtonAction.cs` → add `TrackBuff`, `BuffDurationSec`, `BuffWarningSec` (already exist — extend usage); create `BuffManager` class; `ProfileApplier` → wire buff config.
-- **Definition of Done:** Profile can enable buff tracking for any skill → system shows warning 10s before expiry, auto-recasts if configured.
+- **Definition of Done:** Profile can enable buff tracking for any skill → system shows warning 10s before expiry, auto-recasts if configured. ✅ **COMPLETE**
+- **Implementation:**
+  - ✅ `BuffManager.cs` — Created with active buff/debuff tracking (`ActiveBuff`, `ActiveDebuff` entries with duration, warning threshold, auto-recast, recast key); `RegisterBuff`, `RegisterDebuff`, `Update`, `ClearAll`, `BuffExpiringWarning`, `BuffExpired` events
+  - ✅ `EngineOrchestrator.cs` — BuffManager integrated into tick loop (Update called each tick), CombatEngine.ActionFired registers tracked buffs from ButtonAction (TrackBuff, BuffDurationSec, BuffWarningSec, Key)
+  - ✅ `Models/ButtonAction.cs` — Already had TrackBuff, BuffDurationSec, BuffWarningSec properties
+  - ✅ Build: 0 errors | Tests: 56/56 passing
 
 ## FEAT-009: Auto-Class Detection from Keybinds (FEAT-004 completion)
 - **Goal:** Improve `ClassDetector.DetectClass()` to analyze `ButtonMappings` more thoroughly — currently relies on few skill keys. Add detection for: attack type (melee/ranged), casting time, buff presence, ground spell indicators.

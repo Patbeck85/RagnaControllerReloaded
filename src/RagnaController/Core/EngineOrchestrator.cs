@@ -43,11 +43,14 @@ namespace RagnaController.Core
         private readonly DualSenseHardwareService _dualSense;
 
         // FEAT-006: Ground Spell Engine
-                private readonly GroundSpellEngine _groundSpell;
+                        private readonly GroundSpellEngine _groundSpell;
 
-                // FEAT-007: Skill Orchestrator
-                private readonly SkillOrchestrator _skillOrchestrator;
-                private readonly DefaultRotationProvider _rotationProvider;
+                        // FEAT-007: Skill Orchestrator
+                        private readonly SkillOrchestrator _skillOrchestrator;
+                        private readonly DefaultRotationProvider _rotationProvider;
+
+                        // FEAT-008: Buff/Debuff Tracking
+                        private readonly BuffManager _buffManager;
 
         // ── Runtime ──
         private volatile bool _isRunning;
@@ -156,23 +159,35 @@ namespace RagnaController.Core
             _profileApplier = new ProfileApplier(this, _messenger);
 
             // NOW subscribe to events - _inputRouter is guaranteed non-null
-                        _combat.ActionFired += action =>
-                        {
-                            if (_rumbleEnabled) _feedback.TriggerSkillFired();
-                            _messenger.Publish(new ActionFiredMessage(action.Label, ActionFiredKind.Skill));
-                            _cooldownManager.RegisterAction(action);
-                            // Also notify InputRouter
-                            _inputRouter.OnActionFired(action, _rumbleEnabled);
+                                    _combat.ActionFired += action =>
+                                    {
+                                        if (_rumbleEnabled) _feedback.TriggerSkillFired();
+                                        _messenger.Publish(new ActionFiredMessage(action.Label, ActionFiredKind.Skill));
+                                        _cooldownManager.RegisterAction(action);
+                                        // Also notify InputRouter
+                                        _inputRouter.OnActionFired(action, _rumbleEnabled);
 
-                            // FEAT-006: Register ground spell if applicable
-                                                        if (action.IsGroundSpell && _winTracker.IsTracking && _groundSpell != null)
-                                                        {
-                                                            // Get current world position (mouse cursor position in game world)
-                                                            var centerX = _winTracker.CenterX;
-                                                            var centerY = _winTracker.CenterY;
-                                                            _groundSpell.RegisterGroundSpell(action, centerX, centerY, action.Label);
-                                                        }
-                        };
+                                        // FEAT-006: Register ground spell if applicable
+                                                                    if (action.IsGroundSpell && _winTracker.IsTracking && _groundSpell != null)
+                                                                    {
+                                                                        // Get current world position (mouse cursor position in game world)
+                                                                        var centerX = _winTracker.CenterX;
+                                                                        var centerY = _winTracker.CenterY;
+                                                                        _groundSpell.RegisterGroundSpell(action, centerX, centerY, action.Label);
+                                                                    }
+
+                                        // FEAT-008: Register buff tracking if enabled
+                                                                    if (action.TrackBuff && _buffManager != null)
+                                                                    {
+                                                                        _buffManager.RegisterBuff(
+                                                                            action.Label,
+                                                                            action.BuffDurationSec,
+                                                                            action.BuffWarningSec,
+                                                                            autoRecast: false, // Auto-recast not yet implemented in ButtonAction
+                                                                            recastKey: action.Key
+                                                                        );
+                                                                    }
+                                    };
 
             _combat.TurboPulsed += () =>
             {
@@ -185,8 +200,11 @@ namespace RagnaController.Core
             };
 
             _tickProvider.Tick += OnTick;
-                        _groundSpell = new GroundSpellEngine(engineQueue);
-        }
+                                    _groundSpell = new GroundSpellEngine(engineQueue);
+
+                                    // FEAT-008: Initialize Buff Manager
+                                    _buffManager = new BuffManager(engineQueue, _cooldownManager);
+                    }
 
         // These will be set via ProfileApplier
         private bool _soundEnabled = true;
@@ -240,10 +258,13 @@ namespace RagnaController.Core
                         public GroundSpellEngine GroundSpell => _groundSpell;
 
                         // FEAT-007: Skill Orchestrator
-                        public SkillOrchestrator SkillOrchestrator => _skillOrchestrator;
-                        public DefaultRotationProvider RotationProvider => _rotationProvider;
+                                                public SkillOrchestrator SkillOrchestrator => _skillOrchestrator;
+                                                public DefaultRotationProvider RotationProvider => _rotationProvider;
 
-        // Public method for external log subscription - takes a message and invokes the event
+                                                // FEAT-008: Buff Manager
+                                                public BuffManager BuffManager => _buffManager;
+
+                                // Public method for external log subscription - takes a message and invokes the event
         public void SubscribeToLog(string message) => LogMessage?.Invoke(message);
 
         private void OnTick(object? sender, EventArgs e)
@@ -310,17 +331,20 @@ namespace RagnaController.Core
                                                                 _groundSpell?.Handle(input, _actualDeltaMs);
 
                                                                 // FEAT-007: Update skill orchestrator (class-specific rotations)
-                                                                _skillOrchestrator?.Update(input, _actualDeltaMs, 
-                                                                    _autoTarget?.CurrentTarget != null,
-                                                                    _autoTarget?.CurrentTargetDistance ?? 0f,
-                                                                    _combat.CurrentSP,
-                                                                    _combat.CurrentHPPercent,
-                                                                    _movement.IsMoving,
-                                                                    _autoTarget?.IsFacingTarget ?? false,
-                                                                    _support?.ActiveBuffs ?? new(),
-                                                                    _support?.ActiveDebuffs ?? new(),
-                                                                    _autoTarget?.NearbyEnemyCount ?? 0,
-                                                                    _groundSpell?.GetActiveSpellNames() ?? new());
+                                                                                                                                _skillOrchestrator?.Update(input, _actualDeltaMs, 
+                                                                                                                                    _autoTarget?.CurrentTarget != null,
+                                                                                                                                    _autoTarget?.CurrentTargetDistance ?? 0f,
+                                                                                                                                    _combat.CurrentSP,
+                                                                                                                                    _combat.CurrentHPPercent,
+                                                                                                                                    _movement.IsMoving,
+                                                                                                                                    _autoTarget?.IsFacingTarget ?? false,
+                                                                                                                                    _support?.ActiveBuffs ?? new(),
+                                                                                                                                    _support?.ActiveDebuffs ?? new(),
+                                                                                                                                    _autoTarget?.NearbyEnemyCount ?? 0,
+                                                                                                                                    _groundSpell?.GetActiveSpellNames() ?? new());
+
+                                                                                                                                // FEAT-008: Update buff/debuff tracking
+                                                                                                                                _buffManager?.Update(_actualDeltaMs);
 
                                 // UI Update
                 if (++_uiTick < UI_INTERVAL) return;
