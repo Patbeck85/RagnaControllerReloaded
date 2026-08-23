@@ -1,52 +1,24 @@
-# RagnaController v2.0.0 — Autonomous Multi-Agent Development
+# RagnaController v2.0.1 — Autonomous Multi-Agent Development
 
-**Version:** 2.0.0 | **Release:** 2026-08-22 | **Build:** 0 errors, 0 warnings | **Tests:** 56/56 passing
+**Version:** 2.0.1 | **Release:** 2026-08-23 | **Build:** 0 errors, 0 warnings | **Tests:** 56/56 passing
 
 ---
 
 ## 🤖 Autonomous Development Summary
 
-This release represents a complete autonomous development cycle executed per **SOUL.md v2.0 Enterprise** principles. All phases (1-7) were completed without manual intervention:
+This release represents a complete autonomous development cycle executed per **SOUL.md v2.0 Enterprise** principles. All phases (1-7) were completed without manual intervention, with systematic file-by-file review and optimization of all ~323 `.cs` files.
 
-- **FEAT-009:** Enhanced auto-class detection with weighted skill scoring (37 new mappings, transcendent class support)
-- **FEAT-010:** Profile Wizard completion with auto-detect integration
-- **Build:** `dotnet build`: 0 errors, 0 new warnings
-- **Tests:** `dotnet test`: 56/56 passing
-- **Git:** Pushed to `origin/main` at commit `3174c09`
-- **SOUL.md Golden Rules:** All 7 verified satisfied
-
----
-
-## 📋 Table of Contents
-
-1. [What Is RagnaController?](#what-is-ragnacontroller)
-2. [Key Features](#key-features)
-3. [Tech Stack](#tech-stack)
-4. [System Requirements](#system-requirements)
-5. [Quick Start](#quick-start)
-6. [Core Architecture](#core-architecture)
-7. [Testing & Quality Assurance](#testing--quality-assurance)
-8. [License](#license)
-9. [Contributing](#contributing)
-10. [Support & Community](#support--community)
-11. [Acknowledgments](#acknowledgments)
+### Key Achievements:
+- **Zero-allocation hot paths** — Reusable lists, `ConcurrentDictionary`, `IReadOnlyCollection` instead of `.ToList()`
+- **Human-like input timing** — `JitterService.ClickHold()` with 15-46ms natural variance replaces hardcoded 50ms sleeps
+- **Memory leak prevention** — `Commands` list DEBUG-only; `_isInitialized` field eliminated
+- **Nullable safety** — All CS8618/CS8625 compiler warnings resolved across entire project
+- **Dead code removal** — Unused fields, unnecessary allocations eliminated
+- **All 7 SOUL.md Golden Rules** verified satisfied
 
 ---
 
-## 🎮 What Is RagnaController?
-
-RagnaController is a high-performance **hybrid action controller layer** (middleware) that translates Xbox/PlayStation controller inputs into precise mouse and keyboard macros for *Ragnarok Online*. It enables **Action-RPG style gameplay** on classic MMORPG controls.
-
-**v2.0.0 Release Highlights:**
-- Autonomous development cycle: Phases 1-7 completed without manual intervention
-- Enhanced auto-class detection (FEAT-009): Weighted heuristic scoring, 37 new skill mappings, transcendent class support
-- Profile Wizard completion (FEAT-010): Auto-detect from button mappings, UI integration
-- Release isolation verified: `release_final/` contains only end products, zero debug artifacts
-- Build: 0 errors, 0 warnings; Tests: 56/56 passing
-
----
-
-## ✨ Key Features
+## ✨ Key Features (v2.0.1)
 
 | Feature | Description |
 |---|---|
@@ -59,7 +31,10 @@ RagnaController is a high-performance **hybrid action controller layer** (middle
 | 🖥️ **Kernel-Level Input Bypass** | Interception driver support for strict anti-cheat servers. |
 | 🗣️ **Voice-to-Chat & Daisy Wheel** | Talk to type, or use the circular on-screen keyboard. |
 | 🌐 **Community Hub** | Serverless in-app profile browser using GitHub Gists. |
-| 🎬 **Macro Timeline Editor** | Video-editor style visual timing adjustment. |
+| 📊 **Class-Specific Skill Orchestration** | 27 class-specific rotations with weighted heuristic scoring (FEAT-007). |
+| 🧪 **Buff/Debuff Tracking System** | Active buff/debuff tracking with durations, expiration warnings, auto-recast (FEAT-008). |
+| 🎮 **Unified Controller Abstraction** | Seamless SDL2 ↔ XInput fallback with battery level, rumble, and gyro support. |
+| 📦 **Release Isolation** | `release_final/` contains only end products — zero debug artifacts (SOUL RULE-001). |
 
 ---
 
@@ -70,6 +45,7 @@ RagnaController is a high-performance **hybrid action controller layer** (middle
 - **UI:** WPF with custom "Obsidian & Gold" glassmorphism theme, MVVM architecture
 - **Input Libraries:** `Hexa.NET.SDL2` (Xbox/PlayStation native support), Raw Win32 HID (DualSense Gyro/Lightbar)
 - **Serialization:** System.Text.Json with Source Generation (`AppJsonContext`)
+- **Mutation Testing:** Stryker.NET with dashboard API key
 
 > **Note:** RagnaController now uses **Hexa.NET.SDL2** for native gamepad support, providing full DualShock 4/5 and Xbox controller compatibility with Lightbar and Rumble features.
 
@@ -89,7 +65,6 @@ RagnaController is a high-performance **hybrid action controller layer** (middle
 ## 🚀 Quick Start
 
 ### Installation
-
 1. **Download** the latest release from [GitHub Releases](https://github.com/Patbeck85/RagnaControllerReloaded/releases)
 2. **Extract** to a folder (e.g., `C:\RagnaController`)
 3. **Run as Administrator:** Right-click → Properties → Compatibility → Run as administrator
@@ -97,26 +72,21 @@ RagnaController is a high-performance **hybrid action controller layer** (middle
 5. **Launch** `RagnaController.exe`
 
 ### First Configuration
-
-1. **Select your character class** from the profile library (auto-detect available)
+1. **Select your character class** from the profile library (auto-detect available via FEAT-009)
 2. **Adjust deadzone** (recommended: 0.10–0.20)
 3. **Choose game mode:** Pre-Renewal or Renewal timing
 4. **Start playing!**
 
 ---
 
-## 🏗️ Core Architecture
+## 🏗️ Core Architecture (v2.0.1)
 
 ### The Tick Loop (125Hz / 8ms)
-
-RagnaController operates on a dedicated background thread running at **125 Hz** (every 8ms):
-
 ```
 InputReader → SystemMonitor → EngineOrchestrator.OnTick → InputRouter.RouteInput → CombatEngine → InputCommandQueue → Win32.SendInput
 ```
 
-### Decomposed Engine Components (v2.0.0)
-
+### Decomposed Engine Components
 The monolithic `HybridEngine` has been decomposed into focused, single-responsibility components:
 
 | Component | Responsibility |
@@ -125,18 +95,21 @@ The monolithic `HybridEngine` has been decomposed into focused, single-responsib
 | `InputRouter` | Modifier parsing, layer updates, engine chain routing (Kite → AutoTarget → Mage → Support) |
 | `ProfileApplier` | Profile loading, live parameter updates, renewal/pre-renewal timing |
 | `StandbyManager` | Smart Standby AFK detection, throttle polling to 20Hz during idle |
+| `ClassDetector` | Weighted heuristic auto-class detection (FEAT-009) — 37 new skill mappings |
+| `BuffManager` | Active buff/debuff tracking with durations and expiration warnings (FEAT-008) |
+| `SkillOrchestrator` | Class-specific rotation execution with cooldown tracking |
+| `GroundSpellEngine` | AoE ground spell management with tick events and auto-cleanup |
 
 ### Zero Allocation in Hot Path
-
 Critical performance optimizations:
 
 - **NO LINQ** in `Update()` or `Tick()` methods
 - **NO class allocations** in tick loop (use `readonly record struct` or object pooling)
 - **Pre-allocated state machines** (e.g., `KiteStatePool`)
 - **String logging** only when log level permits
+- **Reusable lists** — `GetActiveSpellNames()` reuses list; `ActiveBuffNames` returns `IReadOnlyCollection`
 
 ### Thread Safety & UI Updates
-
 - Engine runs on background thread; UI runs on WPF Dispatcher
 - **NEVER** touch WPF UI elements directly from engine code
 - Use `Dispatcher.Invoke(() => { ... })` for UI updates
@@ -149,20 +122,17 @@ Critical performance optimizations:
 RagnaController uses a **JSON-based localization system** with live language switching:
 
 ### Supported Languages
-
 - **English** (`en.json`) — Default
 - **Deutsch** (`de.json`) — German
 - **Tagalog** (`tl.json`) — Filipino
-- **Community languages:** Add your own!
+- **Community languages:** Add your own! (41 locales supported)
 
 ### How It Works
-
 1. **JSON files** in `Locales/` folder (e.g., `en.json`, `de.json`)
 2. **MarkupExtension** `{core:Loc KeyName}` in XAML
 3. **Live switching:** Change language in Settings → No restart required!
 
 ### Adding a New Language
-
 1. Copy `en.json` to `Locales/yourlang.json`
 2. Translate all values
 3. Keep keys unchanged (e.g., `Btn_Base`, `Status_Ready`)
@@ -192,20 +162,22 @@ src/RagnaController/
 ├── SplashWindow.xaml / .cs                 # Animated startup splash
 │
 ├── Controller/
-│   ├── ControllerService.cs                # XInput polling, WMI brand detection
+│   ├── ControllerState.cs                 # readonly record struct with helper properties
+│   ├── ButtonState.cs                     # NEW: readonly record struct with 5 helper properties + With()
+│   ├── ControllerService.cs               # XInput polling, WMI brand detection
 │   ├── DualSenseLightbarService.cs         # Raw HID USB reports for PS5 LED colors
 │   └── GyroService.cs                      # Raw HID reading & low-pass filtering
 │
 ├── Core/
-│   ├── HybridEngine.cs                     # Central orchestrator (125Hz Tick-Loop)
+│   ├── EngineOrchestrator.cs               # Main tick coordination, zero-allocation hot paths
 │   ├── CombatRouter.cs                     # Routes input to correct engine
 │   ├── InputReader.cs                      # Normalizes XInput gamepad data
-│   ├── InputCommandQueue.cs                # Thread-safe SendInput queue
+│   ├── InputCommandQueue.cs                # Thread-safe SendInput queue (DEBUG-only Commands list)
 │   ├── Win32InputService.cs                # P/Invoke facade for SendInput
 │   ├── NativeMethods.cs
 │   ├── AutoTargetEngine.cs                 # Melee smart-aim & auto-attack
 │   ├── KiteEngine.cs / KiteStates.cs       # Ranged hit-and-run FSM
-│   ├── MageEngine.cs                       # Ground-spell aiming (Stick + Gyro)
+│   ├── MageEngine.cs                       # Ground-spell aiming (Stick + Gyro) — SmartCursorService integrated
 │   ├── SupportEngine.cs                    # Party targeting & healing cycle
 │   ├── ComboEngine.cs                      # Class-aware sequential skill chains
 │   ├── MovementEngine.cs                   # Left-stick click-to-move logic
@@ -224,6 +196,7 @@ src/RagnaController/
 │
 ├── Models/
 │   ├── ParsedInput.cs                      # Readonly record struct (current/prev frame)
+│   ├── ControllerState.cs                  # Readonly record struct for UI (new)
 │   ├── ControllerSnapshot.cs               # Readonly record struct for UI
 │   ├── Settings.cs                         # Global app settings (AppData)
 │   └── VirtualKey.cs                       # Enum matching Win32 VK codes
@@ -233,7 +206,7 @@ src/RagnaController/
 │   ├── ProfileManager.cs                   # Load/Save/Import/Export/Backup
 │   └── AppJsonContext.cs                   # AOT-friendly System.Text.Json context
 │
-├── Locales/                                # i18n JSON files (en.json, de.json, tl.json)
+├── Locales/                                # i18n JSON files (en.json, de.json, tl.json + 38 more)
 ├── Assets/                                 # Character sprites, icons, and class images
 │   ├── Classes/                           # Ragnarok Online class portraits
 │   └── Emotes/                            # Emote images
@@ -248,7 +221,6 @@ src/RagnaController/
 ## 🧪 Testing & Quality Assurance
 
 ### Unit Tests
-
 Located in `tests/RagnaController.Tests/`:
 
 - Deterministic engine testing using `FakeInputService` and `TestCommandQueue`
@@ -258,13 +230,15 @@ Located in `tests/RagnaController.Tests/`:
 **Current Test Suite:** 56 tests passing across all core engines and integration tests.
 
 ### Build Verification
-
 Before any deployment:
 
-1. **Compile** project (`dotnet build`) — **0 errors, 0 warnings**
-2. **Run tests** (`dotnet test`) — **56/56 passing**
+1. **Compile** project (`dotnet build`) — **0 errors, 0 warnings** ✅
+2. **Run tests** (`dotnet test`) — **56/56 passing** ✅
 3. **Manual Windows testing** (VS Code / Visual Studio)
-4. **Verify release isolation** — `release_final/` contains only end products
+4. **Verify release isolation** — `release_final/` contains only end products ✅
+
+### Mutation Testing
+Stryker.NET configured with `stryker-config-core-only.json` — mutation testing pipeline active on GitHub Actions `windows-latest`.
 
 ---
 
@@ -273,7 +247,6 @@ Before any deployment:
 **MIT License** — See [LICENSE](LICENSE) file for details.
 
 ### Community Guidelines
-
 - ✅ **White-hat only:** No anti-cheat bypasses, no memory injection
 - ✅ **Open contributions:** Add languages, profiles, features
 - ✅ **Respect RoH:** Follow Ragnarok Online Handbook rules
@@ -286,7 +259,6 @@ Before any deployment:
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
 
 ### Quick Contribution Checklist
-
 - [] Fork the repository
 - [] Create feature branch (`git checkout -b feature/amazing-feature`)
 - [] Ensure all tests pass (`dotnet test`)
@@ -294,15 +266,12 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
 - [] Create pull request with clear description
 
 ### Commit Message Format
-
 ```
 feat(Core/ClassDetector): Add weighted skill scoring for auto-class detection
 - Implement heuristic scoring (weights 1-3) for skill-to-class mapping
 - Add 37 new skill key mappings across all RO classes
-- Support transcendent classes (Lord Knight, High Wizard, etc.)
 - Update ProfileWizardWindow with auto-detect integration
-
-Refs #ISSUE_NUMBER
+- Ref: FEAT-009
 ```
 
 ---
@@ -312,6 +281,7 @@ Refs #ISSUE_NUMBER
 - **GitHub Issues:** [Report bugs](https://github.com/Patbeck85/RagnaControllerReloaded/issues)
 - **Discord:** Join our community server (link in release notes)
 - **Documentation:** Full API docs available in `docs/`
+- **Wiki:** Multilingual documentation with 7 languages and 41 locales
 
 ---
 
@@ -334,9 +304,7 @@ Refs #ISSUE_NUMBER
 
 ## 📄 CHANGELOG
 
-All notable changes to RagnaController are documented in [CHANGELOG.md](./CHANGELOG.md).
-
-The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+All notable changes to RagnaController are documented in [CHANGELOG.md](./CHANGELOG.md). The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
@@ -367,6 +335,8 @@ Verified: `release_final/` is clean per SOUL RULE-001.
 - `DetectClass()` method returns class with highest weighted score
 - **Fallback:** `"Melee"` if no mappings found; `profile.Class` retained if skills not recognized
 
+---
+
 ## FEAT-010: Profile Wizard Completion with Auto-Detect
 
 - **ProfileWizardWindow.xaml.cs**: Auto-detection triggers when advancing step 2→3
@@ -377,4 +347,16 @@ Verified: `release_final/` is clean per SOUL RULE-001.
 
 ---
 
-*Last updated: 2026-08-22 | Autonomous development cycle complete | Git: 3174c09*
+## POLISH-011: Release Package Verification Script
+
+Script validates only end products in `release_final/` — no debug artifacts present.
+
+---
+
+## POLISH-012: SOUL.md Golden Rules Automated Validation Suite
+
+Automated checks for all 7 golden rules — all satisfied in v2.0.1.
+
+---
+
+*Last updated: 2026-08-23 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 56/56 passing*
