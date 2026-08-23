@@ -96,6 +96,11 @@ namespace RagnaController.Models
         // Connection state
         public bool IsConnected { get; init; }
 
+        // Controller info (for XInput fallback)
+        public string ControllerName { get; init; }
+        public string ControllerType { get; init; }
+        public string ControllerGuid { get; init; }
+
         // Helper methods
         public bool JustPressed(GamepadButtonFlags flag)
             => RawButtons.HasFlag(flag) && !PrevRawButtons.HasFlag(flag);
@@ -121,7 +126,8 @@ namespace RagnaController.Models
             bool? start = null, bool? back = null,
             float? triggerLeft = null, float? triggerRight = null,
             GamepadButtonFlags? rawButtons = null, GamepadButtonFlags? prevRawButtons = null,
-            bool? isConnected = null)
+            bool? isConnected = null,
+            string? controllerName = null, string? controllerType = null, string? controllerGuid = null)
         {
             return this with
             {
@@ -150,7 +156,10 @@ namespace RagnaController.Models
                 TriggerRight = triggerRight ?? TriggerRight,
                 RawButtons = rawButtons ?? RawButtons,
                 PrevRawButtons = prevRawButtons ?? PrevRawButtons,
-                IsConnected = isConnected ?? IsConnected
+                IsConnected = isConnected ?? IsConnected,
+                ControllerName = controllerName ?? ControllerName,
+                ControllerType = controllerType ?? ControllerType,
+                ControllerGuid = controllerGuid ?? ControllerGuid
             };
         }
     }

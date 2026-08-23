@@ -20,6 +20,18 @@ namespace RagnaController.Profiles
         private static readonly AppJsonContext JsonCtx = AppJsonContext.Default;
         public List<Profile> Profiles { get; } = new();
         public string ActiveProfileName { get; private set; } = "Novice";
+        
+        /// <summary>
+        /// Maps controller GUID/name to profile name for auto-switching.
+        /// Key = controller GUID, Value = profile name to activate.
+        /// </summary>
+        public Dictionary<string, string> ControllerToProfileMap { get; } = new();
+        
+        /// <summary>
+        /// The GUID of the currently connected controller.
+        /// </summary>
+        public string CurrentControllerGuid { get; private set; } = "";
+
         /// <summary>v1.7.2: FIX #7 - Safe access to active profile with null protection.</summary>
         public Profile? ActiveProfile => Profiles.Find(p => p.Name == ActiveProfileName) ?? new Profile { Name = "Novice", Class = "Melee" };
 
@@ -27,6 +39,88 @@ namespace RagnaController.Profiles
         {
             if (Profiles.Any(p => p.Name == name))
                 ActiveProfileName = name;
+        }
+
+        /// <summary>
+        /// Registers a controller-to-profile mapping for auto-switching.
+        /// </summary>
+        public void RegisterControllerMapping(string controllerGuid, string profileName)
+        {
+            if (string.IsNullOrEmpty(controllerGuid) || string.IsNullOrEmpty(profileName))
+                return;
+            
+            ControllerToProfileMap[controllerGuid] = profileName;
+            Logger?.Invoke($"[ProfileManager] Registered controller mapping: {controllerGuid} -> {profileName}");
+        }
+
+        /// <summary>
+        /// Gets the profile name associated with a controller GUID, if any.
+        /// </summary>
+        public string? GetProfileForController(string controllerGuid)
+        {
+            if (string.IsNullOrEmpty(controllerGuid))
+                return null;
+            
+            return ControllerToProfileMap.TryGetValue(controllerGuid, out var profileName) ? profileName : null;
+        }
+
+        /// <summary>
+        /// Handles controller connection change - auto-switches profile if configured.
+        /// </summary>
+        public bool OnControllerConnected(string controllerGuid, string controllerName, string controllerType)
+        {
+            CurrentControllerGuid = controllerGuid;
+            
+            // Check if there's a mapping for this controller
+            var mappedProfile = GetProfileForController(controllerGuid);
+            if (!string.IsNullOrEmpty(mappedProfile) && Profiles.Any(p => p.Name == mappedProfile))
+            {
+                SetActive(mappedProfile);
+                Logger?.Invoke($"[ProfileManager] Auto-switched to profile '{mappedProfile}' for controller '{controllerName}' ({controllerType})");
+                return true;
+            }
+            
+            // Check active profile for auto-activate setting
+            var activeProfile = ActiveProfile;
+            if (activeProfile != null && activeProfile.AutoActivateOnControllerConnect)
+            {
+                // Update the active profile's controller config
+                if (!activeProfile.ControllerConfigs.ContainsKey(controllerGuid))
+                {
+                    activeProfile.ControllerConfigs[controllerGuid] = new ControllerConfig
+                    {
+                        ControllerGuid = controllerGuid,
+                        ControllerName = controllerName,
+                        ControllerType = controllerType,
+                        LastUpdated = DateTime.UtcNow
+                    };
+                    SaveProfile(activeProfile);
+                }
+                else
+                {
+                    activeProfile.ControllerConfigs[controllerGuid].ControllerName = controllerName;
+                    activeProfile.ControllerConfigs[controllerGuid].ControllerType = controllerType;
+                    activeProfile.ControllerConfigs[controllerGuid].LastUpdated = DateTime.UtcNow;
+                }
+                
+                activeProfile.LastControllerGuid = controllerGuid;
+                SaveProfile(activeProfile);
+                Logger?.Invoke($"[ProfileManager] Updated controller config for profile '{activeProfile.Name}' with controller '{controllerName}'");
+            }
+            
+            return false;
+        }
+
+        /// <summary>
+        /// Handles controller disconnection.
+        /// </summary>
+        public void OnControllerDisconnected(string controllerGuid)
+        {
+            if (CurrentControllerGuid == controllerGuid)
+            {
+                CurrentControllerGuid = "";
+                Logger?.Invoke($"[ProfileManager] Controller '{controllerGuid}' disconnected");
+            }
         }
 
         public IEnumerable<string> GetAllNames() => Profiles.Select(p => p.Name);

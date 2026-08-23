@@ -72,10 +72,14 @@ namespace RagnaController.Controller
         public bool L3 { get; set; }
         
         // Combo engine state
-        public string ActionLabel { get; set; } = "";
-        public int ActionId { get; set; }
-        
-        // AutoTarget state
+                public string ActionLabel { get; set; } = "";
+                public int ActionId { get; set; }
+
+                // Skill cooldown tracking (HW-005)
+                public int SkillCooldownMs { get; set; }
+                public int ActiveSkillId { get; set; }
+
+                // AutoTarget state
         public string TargetName { get; set; } = "";
         public string TargetType { get; set; } = "";
         public float TargetDistance { get; set; }

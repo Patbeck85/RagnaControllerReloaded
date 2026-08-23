@@ -47,4 +47,11 @@ namespace RagnaController.Core
         public string ActionLabel { get; }
         public BuffWarningMessage(string label) => ActionLabel = label;
     }
+
+    // NEW: Profile Switched Message
+    public sealed class ProfileSwitchedMessage
+    {
+        public string ProfileName { get; }
+        public ProfileSwitchedMessage(string profileName) => ProfileName = profileName;
+    }
 }

@@ -13,10 +13,12 @@ namespace RagnaController.Controller
         private readonly Core.WindowTracker _winTracker;
         private readonly CursorEngine _cursor;
         private readonly SmartCursorService _smartCursor;
+        private readonly SkillOrchestrator _skillOrchestrator;
         private bool _batteryThrottle = false;
 
         public SnapshotBuilder(AutoTargetEngine autoTarget, MageEngine mage, ComboEngine combo, 
-                               Core.WindowTracker winTracker, CursorEngine cursor, SmartCursorService smartCursor)
+                               Core.WindowTracker winTracker, CursorEngine cursor, SmartCursorService smartCursor,
+                               SkillOrchestrator skillOrchestrator = null)
         {
             _autoTarget = autoTarget;
             _mage = mage;
@@ -24,6 +26,7 @@ namespace RagnaController.Controller
             _winTracker = winTracker;
             _cursor = cursor;
             _smartCursor = smartCursor;
+            _skillOrchestrator = skillOrchestrator;
         }
 
         public bool BatteryThrottle
@@ -60,6 +63,11 @@ namespace RagnaController.Controller
                 Back = input.Back,
                 ActionLabel = _combo.Enabled ? _combo.CurrentActionLabel : "",
                 ActionId = _combo.CurrentActionId,
+                
+                // Skill cooldown tracking (HW-005)
+                SkillCooldownMs = _skillOrchestrator?.GetActiveSkillCooldownMs() ?? 0,
+                ActiveSkillId = _skillOrchestrator?.GetActiveSkillId() ?? 0,
+
                 TargetName = _autoTarget.TargetName,
                 TargetType = _autoTarget.TargetType,
                 TargetDistance = _autoTarget.TargetDistance,
@@ -78,20 +86,24 @@ namespace RagnaController.Controller
             // State foreground color based on mode
             snap.StateForeground = _smartCursor.IsMenuMode 
                 ? new SolidColorBrush(Color.FromRgb(229, 184, 66)) // Gold for Grid Mode
-                : GetStateBrush(snap);
+                : _combo.Enabled 
+                    ? new SolidColorBrush(Color.FromRgb(229, 66, 66)) // Red for Combo
+                    : _mage.MageEnabled
+                        ? new SolidColorBrush(Color.FromRgb(66, 166, 229)) // Blue for Mage
+                        : _autoTarget.AutoAttackEnabled
+                            ? new SolidColorBrush(Color.FromRgb(66, 229, 126)) // Green for Auto
+                            : new SolidColorBrush(Color.FromRgb(255, 255, 255)); // White for Idle
+
+            snap.CombatState = snap.StateLabel;
+            snap.ComboActive = _combo.IsActive;  // Use IsActive property from ComboEngine
+            // Note: PanicActive and VacuumActive not available in ComboEngine - using ComboActive instead
 
             return snap;
         }
 
         private SolidColorBrush GetStateBrush(ControllerSnapshot snap)
         {
-            if (_combo.Enabled && _combo.CurrentActionLabel != "")
-                return new SolidColorBrush(Color.FromRgb(0, 255, 0)); // Green for combo
-            if (_mage.MageEnabled && _mage.IsActive)
-                return new SolidColorBrush(Color.FromRgb(128, 0, 128)); // Purple for mage
-            if (_autoTarget.AutoAttackEnabled && _autoTarget.IsAutoAttacking)
-                return new SolidColorBrush(Color.FromRgb(0, 128, 0)); // Green for auto attack
-            return new SolidColorBrush(Color.FromRgb(255, 255, 255)); // White default
+            return snap.StateForeground;
         }
     }
 }

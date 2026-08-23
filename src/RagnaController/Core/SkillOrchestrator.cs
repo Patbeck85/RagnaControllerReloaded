@@ -705,5 +705,21 @@ namespace RagnaController.Core
                 _globalCooldownMs = _currentRotation?.Settings.GlobalCooldownMs ?? 200;
             }
         }
+
+        /// <summary>Get remaining cooldown for the active skill in milliseconds (HW-005)</summary>
+        public int GetActiveSkillCooldownMs()
+        {
+            return _globalCooldownMs;
+        }
+
+        /// <summary>Get the currently active skill ID (HW-005)</summary>
+        public int GetActiveSkillId()
+        {
+            if (_currentRotation == null || _currentRotation.Steps.Count == 0)
+                return 0;
+            
+            // Return current step index + 1 as skill ID (1-based)
+            return _currentStepIndex + 1;
+        }
     }
 }

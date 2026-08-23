@@ -13,6 +13,8 @@ namespace RagnaController
     [JsonSerializable(typeof(Models.ButtonKey))]
     [JsonSerializable(typeof(CommunityEntry))]
     [JsonSerializable(typeof(List<CommunityEntry>))]
+    [JsonSerializable(typeof(ControllerConfig))]
+    [JsonSerializable(typeof(Dictionary<string, ControllerConfig>))]
     [JsonSourceGenerationOptions(
         PropertyNameCaseInsensitive = true,
         UseStringEnumConverter = true,

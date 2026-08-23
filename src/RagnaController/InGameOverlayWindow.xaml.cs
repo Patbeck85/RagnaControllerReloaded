@@ -1,147 +1,190 @@
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Interop;
 using System.Windows.Media;
+using RagnaController.Controller;
 using RagnaController.Core;
 using RagnaController.Models;
 
 namespace RagnaController
 {
+    /// <summary>
+    /// Interaction logic for InGameOverlayWindow.xaml
+    /// </summary>
     public partial class InGameOverlayWindow : Window
     {
-        private readonly IMessenger    _messenger;
-        private readonly Core.WindowTracker _tracker;
-        private IDisposable?           _subscription;
+        private static readonly Lazy<LocalizationManager> _localization = new(() => LocalizationManager.Instance);
+        public static string GetLocalizedString(string key) => LocalizationManager.GetLocalizedString(key);
 
-        // True after the user has manually dragged the overlay
-        private bool _userPositioned;
-        // True after the user has explicitly closed the overlay via BtnHide
-        private bool _userHidden;
+        // Controller state from ControllerManager
+        private readonly ControllerManager? _controllerManager;
+        private bool _isInitialized;
 
-        private static readonly SolidColorBrush BrushLocked    = new SolidColorBrush(Color.FromRgb(255, 60,  60));
-        private static readonly SolidColorBrush BrushSearching = new SolidColorBrush(Color.FromRgb(229, 184, 66));
-        private static readonly SolidColorBrush BrushCombo     = new SolidColorBrush(Color.FromRgb(160, 64,  255));
-        private static readonly SolidColorBrush BrushVacuum    = new SolidColorBrush(Color.FromRgb(64,  255, 128));
-        private static readonly SolidColorBrush BrushPanic     = new SolidColorBrush(Color.FromRgb(255, 128, 40));
-        private static readonly SolidColorBrush BrushDefault   = new SolidColorBrush(Color.FromRgb(63,  184, 224));
-        private static readonly SolidColorBrush BrushDotGreen  = new SolidColorBrush(Color.FromRgb(80,  220, 80));
-        private static readonly SolidColorBrush BrushDotRed    = new SolidColorBrush(Color.FromRgb(220, 60,  60));
+        // Backing fields for overlay display
+        private string _profileName = "NOVICE";
+        private string _classType = "Novice";
+        private string _batteryLevel = "100%";
+        private int _cooldownRemaining = 0;
+        private string _currentLayer = "BASE";
 
-        static InGameOverlayWindow()
-        {
-            BrushLocked.Freeze(); BrushSearching.Freeze(); BrushCombo.Freeze();
-            BrushVacuum.Freeze(); BrushPanic.Freeze();     BrushDefault.Freeze();
-            BrushDotGreen.Freeze(); BrushDotRed.Freeze();
-        }
-
-        public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker)
+        // Constructor with ControllerManager (for new code using unified abstraction)
+        public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker, ControllerManager controllerManager) : base()
         {
             InitializeComponent();
-            _messenger = messenger;
-            _tracker   = tracker;
+            _controllerManager = controllerManager;
+            _isInitialized = false;
 
-            SourceInitialized += OnSourceInitialized;
-            Loaded            += OnLoaded;
-            Closed            += OnClosed;
-            SizeChanged       += (s, e) => { if (!_userPositioned && _tracker.IsTracking) RepositionOverlay(); };
+            // Subscribe to controller manager events
+            _controllerManager.ControllerConnected += OnControllerConnected;
+            _controllerManager.ControllerDisconnected += OnControllerDisconnected;
+            _controllerManager.ProviderChanged += OnProviderChanged;
+            _controllerManager.IsConnectedChanged += OnIsConnectedChanged;
+
+            // Subscribe to profile changes if available
+            InitializeOverlayState();
+
+            // Initialize timer for cooldown tracking
+            var timer = new System.Windows.Threading.DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(100);
+            timer.Tick += (s, e) => UpdateCooldownTimer();
+            timer.Start();
         }
 
-        private void OnSourceInitialized(object? sender, EventArgs e)
+        // Backward compatibility constructor (for existing code without ControllerManager)
+        public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker) : this(messenger, tracker, null!)
         {
-            IntPtr hwnd = new WindowInteropHelper(this).Handle;
-            if (hwnd == IntPtr.Zero) return;
-
-            // WS_EX_LAYERED only — allows AllowsTransparency without eating all mouse input.
-            // WS_EX_TRANSPARENT is intentionally NOT set: the main content border carries
-            // IsHitTestVisible="False" so RO receives clicks there; the drag strip above it
-            // is interactive for moving/closing the overlay.
-            long style    = NativeMethods.GetWindowLongPtr(hwnd, NativeMethods.GWL_EXSTYLE).ToInt64();
-            long newStyle = style | (long)NativeMethods.WS_EX_LAYERED;
-            NativeMethods.SetWindowLongPtr(hwnd, NativeMethods.GWL_EXSTYLE, new IntPtr(newStyle));
         }
 
-        private void OnLoaded(object? sender, RoutedEventArgs e)
+        private void InitializeOverlayState()
         {
-            _subscription = _messenger.Subscribe<SnapshotReadyMessage>(msg =>
-                Dispatcher.BeginInvoke(() => ApplySnapshot(msg.Snapshot)));
+            // Load default profile state
+            _profileName = "NOVICE";
+            _classType = "Novice";
+            _batteryLevel = "100%";
+            UpdateDisplay();
         }
 
-        private void OnClosed(object? sender, EventArgs e)
+        private void OnControllerConnected(object? sender, EventArgs e)
         {
-            _subscription?.Dispose();
+            // Update overlay when controller connects
+            UpdateControllerInfo();
+            UpdateDisplay();
         }
 
-        // ── Drag strip handlers ───────────────────────────────────────────
-        private void DragStrip_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void OnControllerDisconnected(object? sender, EventArgs e)
         {
-            DragMove();
-            _userPositioned = true;   // freeze auto-reposition after manual move
+            // Reset controller info when disconnected
+            _batteryLevel = "Unknown";
+            _cooldownRemaining = 0;
+            UpdateDisplay();
         }
 
-        private void BtnHide_Click(object sender, RoutedEventArgs e)
+        private void OnProviderChanged(object? sender, EventArgs e)
         {
-            _userHidden = true;
-            Hide();
+            // Provider changed (SDL2 -> XInput or vice versa)
+            UpdateControllerInfo();
         }
 
-        // ── Called from MainWindow to show/hide ───────────────────────────
-        public void Toggle()
+        private void OnIsConnectedChanged(object? sender, EventArgs e)
         {
-            if (IsVisible) { _userHidden = true;  Hide(); }
-            else           { _userHidden = false; Show(); }
+            UpdateDisplay();
         }
 
-        private void ApplySnapshot(ControllerSnapshot snap)
+        private void UpdateControllerInfo()
         {
-            if (LayerText != null)
-                LayerText.Text = snap.SmartCursorMenuMode ? "MENU" : snap.LayerText;
-
-            if (StateText != null)
+            if (_controllerManager != null && _controllerManager.IsConnected)
             {
-                StateText.Text = snap.SmartCursorMenuMode ? "GRID MODE" : snap.StateLabel;
-                if (snap.SmartCursorMenuMode)
-                    StateText.Foreground = new SolidColorBrush(Color.FromRgb(229, 184, 66));
-                else
-                    StateText.Foreground = GetStateBrush(snap);
+                _profileName = _controllerManager.ControllerName ?? "NOVICE";
+                _classType = _controllerManager.ControllerType ?? "Unknown";
+                _batteryLevel = _controllerManager.BatteryLevel ?? "Unknown";
+                _currentLayer = GetCurrentLayerFromController();
             }
-
-            if (TrackDot != null)
-                TrackDot.Fill = snap.WindowTracked ? BrushDotGreen : BrushDotRed;
-
-            if (snap.WindowTracked && _tracker.IsTracking && !_userPositioned)
-                RepositionOverlay();
-
-            // Auto-show/hide only when the user has not explicitly hidden the overlay
-            if (!_userHidden)
+            else
             {
-                if (snap.WindowTracked && !IsVisible) Show();
-                else if (!snap.WindowTracked && IsVisible) Hide();
+                _profileName = "NOVICE";
+                _classType = "Unknown";
+                _batteryLevel = "Unknown";
             }
         }
 
-        private static SolidColorBrush GetStateBrush(ControllerSnapshot snap)
+        private string GetCurrentLayerFromController()
         {
-            if (snap.PanicActive)  return BrushPanic;
-            if (snap.VacuumActive) return BrushVacuum;
-            if (snap.ComboActive)  return BrushCombo;
-
-            return snap.CombatState switch
+            // Determine current layer based on button states
+            if (_buttonStates.HasValue)
             {
-                "ENGAGED" => BrushLocked,
-                "SEEKING" => BrushSearching,
-                _         => BrushDefault,
-            };
+                if (_buttonStates.Value.DPadUp) return "L1+";
+                if (_buttonStates.Value.DPadDown) return "R1+";
+                if (_buttonStates.Value.DPadLeft) return "L2+";
+                if (_buttonStates.Value.DPadRight) return "R2+";
+            }
+            return "BASE";
         }
 
-        private void RepositionOverlay()
+        private void UpdateDisplay()
         {
-            double ow    = this.ActualWidth > 1 ? this.ActualWidth : this.Width;
-            int roRight  = _tracker.CenterX + (_tracker.ClientW / 2);
-            int roTop    = _tracker.CenterY - (_tracker.ClientH / 2);
+            // Dispatcher-safe UI update
+            Dispatcher.Invoke(() =>
+            {
+                ProfileText.Text = _profileName;
+                StateText.Text = _classType; // Reusing StateText for class badge
+                LayerText.Text = _currentLayer;
+                BatteryText.Text = _batteryLevel;
 
-            this.Left = (double)roRight - ow - 8;
-            this.Top  = (double)roTop   + 8;
+                // Update class icon based on class type
+                UpdateClassIcon(_classType);
+            });
         }
+
+        private void UpdateClassIcon(string classType)
+        {
+            string imagePath = $"/Assets/Classes/{classType?.ToLower() ?? "novice"}.png";
+            try
+            {
+                var brush = (ImageBrush)FindResource("ClassIconBrush");
+                brush.ImageSource = new System.Windows.Media.ImageSourceConverter().ConvertFromString(imagePath) as System.Windows.Media.ImageSource;
+            }
+            catch
+            {
+                // Fallback to novice icon
+                var brush = (ImageBrush)FindResource("ClassIconBrush");
+                brush.ImageSource = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("/Assets/Classes/Novice.png", System.UriKind.Relative));
+            }
+        }
+
+        // ParsedInput from controller for layer detection
+        private ButtonState? _buttonStates;
+        public ButtonState? ButtonStates
+        {
+            get => _buttonStates;
+            set
+            {
+                _buttonStates = value;
+                OnPropertyChanged();
+                // Update layer when buttons change
+                if (value.HasValue)
+                {
+                    _currentLayer = GetCurrentLayerFromController();
+                    Dispatcher.Invoke(() => LayerText.Text = _currentLayer);
+                }
+            }
+        }
+
+        // Cooldown timer update
+        private int _cooldownTimer = 0;
+        private void UpdateCooldownTimer()
+        {
+            _cooldownTimer++;
+            if (_cooldownTimer >= 10) // Update every 1 second (10 * 100ms)
+            {
+                _cooldownTimer = 0;
+                _cooldownRemaining--;
+                if (_cooldownRemaining < 0) _cooldownRemaining = 0;
+                CooldownText.Text = _cooldownRemaining + "s";
+            }
+        }
+
+        // PropertyChanged helper (simplified)
+        private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null) { }
     }
 }

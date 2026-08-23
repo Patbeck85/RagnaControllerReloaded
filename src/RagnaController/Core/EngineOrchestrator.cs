@@ -24,33 +24,36 @@ namespace RagnaController.Core
         private readonly InputCommandQueue? _queue;
 
         // ── Engines ──
-        private readonly MovementEngine _movement;
-        private readonly CombatEngine _combat;
-        private readonly AutoTargetEngine _autoTarget;
-        private readonly MageEngine _mage;
-        private readonly ComboEngine _combo;
-        private readonly CursorEngine _cursor;
-        private readonly SmartCursorService _smartCursor;
-        private readonly KiteEngine _kite;
-        private readonly SupportEngine _support;
-        private readonly IFeedbackProvider _feedback;
-        private readonly OverlayRouter _overlayRouter;
-        private readonly VoiceChatService _voice;
-        private readonly MobSweepEngine _mobSweep;
-        private readonly HandheldModeManager _handheld;
-        private readonly EngineWatchdog _watchdog;
-        private readonly CooldownManager _cooldownManager;
-        private readonly DualSenseHardwareService _dualSense;
+                private readonly MovementEngine _movement;
+                private readonly CombatEngine _combat;
+                private readonly AutoTargetEngine _autoTarget;
+                private readonly MageEngine _mage;
+                private readonly ComboEngine _combo;
+                private readonly CursorEngine _cursor;
+                private readonly SmartCursorService _smartCursor;
+                private readonly KiteEngine _kite;
+                private readonly SupportEngine _support;
+                private readonly IFeedbackProvider _feedback;
+                private readonly OverlayRouter _overlayRouter;
+                private readonly VoiceChatService _voice;
+                private readonly MobSweepEngine _mobSweep;
+                private readonly HandheldModeManager _handheld;
+                private readonly EngineWatchdog _watchdog;
+                private readonly CooldownManager _cooldownManager;
+                private readonly DualSenseHardwareService _dualSense;
 
-        // FEAT-006: Ground Spell Engine
-                        private readonly GroundSpellEngine _groundSpell;
+                // FEAT-006: Ground Spell Engine
+                                private readonly GroundSpellEngine _groundSpell;
 
-                        // FEAT-007: Skill Orchestrator
-                        private readonly SkillOrchestrator _skillOrchestrator;
-                        private readonly DefaultRotationProvider _rotationProvider;
+                                // FEAT-007: Skill Orchestrator
+                                private readonly SkillOrchestrator _skillOrchestrator;
+                                private readonly DefaultRotationProvider _rotationProvider;
 
-                        // FEAT-008: Buff/Debuff Tracking
-                        private readonly BuffManager _buffManager;
+                                // FEAT-008: Buff/Debuff Tracking
+                                private readonly BuffManager _buffManager;
+                       
+                                // ProfileManager for auto-switching profiles based on controller
+                                private readonly ProfileManager _profileManager;
 
         // ── Runtime ──
         private volatile bool _isRunning;
@@ -71,6 +74,7 @@ namespace RagnaController.Core
         public event Action<int>? ProfileQuickSwitch;
         public event Action? RestoreMainWindowRequested;
         public event Action<string>? VoiceStatusChanged;
+        public event Action<string>? ProfileSwitched;
 
         // ── Constants ──
         private const int UI_INTERVAL = 4;
@@ -80,21 +84,36 @@ namespace RagnaController.Core
         private int _actualDeltaMs;
 
         public EngineOrchestrator(
-            ITickProvider tickProvider,
-            IMessenger messenger,
-            InputCommandQueue? queue,
-            AdvancedLogger logger)
-        {
-            _tickProvider = tickProvider;
-            _messenger = messenger;
-            _logger = logger;
-            _queue = queue;
+                    ITickProvider tickProvider,
+                    IMessenger messenger,
+                    InputCommandQueue? queue,
+                    AdvancedLogger logger)
+                {
+                    _tickProvider = tickProvider;
+                    _messenger = messenger;
+                    _logger = logger;
+                    _queue = queue;
 
-            this.LogMessage += msg => _logger?.Info(msg);
+                    this.LogMessage += msg => _logger?.Info(msg);
 
-            _ctrl = new ControllerService();
-            _winTracker = new WindowTracker();
-            _inputReader = new InputReader(_ctrl);
+                    _ctrl = new ControllerService();
+                    _profileManager = new ProfileManager();
+                    _profileManager.Logger += msg => _logger?.Info(msg);
+            
+                    // Register default controller-to-profile mapping
+                    // Auto-map Xbox controller to the "Tactician" profile if available
+                    var profiles = _profileManager.GetAllNames();
+                    if (profiles.Contains("Tactician"))
+                    {
+                        _profileManager.RegisterControllerMapping("", "Tactician");
+                    }
+                    else if (profiles.Contains("Novice"))
+                    {
+                        _profileManager.RegisterControllerMapping("", "Novice");
+                    }
+
+                    _winTracker = new WindowTracker();
+                    _inputReader = new InputReader(_ctrl);
 
             var engineQueue = _queue ?? new InputCommandQueue();
             _movement = new MovementEngine(engineQueue, _winTracker);
@@ -116,7 +135,7 @@ namespace RagnaController.Core
             _dualSense = new DualSenseHardwareService();
 
                         _sysMonitor = new SystemMonitor(_winTracker, _movement);
-                        _snapshot = new SnapshotBuilder(_autoTarget, _mage, _combo, _winTracker, _cursor, _smartCursor);
+                        _snapshot = new SnapshotBuilder(_autoTarget, _mage, _combo, _winTracker, _cursor, _smartCursor, _skillOrchestrator);
 
                         _handheld = new HandheldModeManager(
                             _tickProvider as BackgroundTickProvider, _snapshot, _mage, _overlayRouter, _combat, engineQueue);
@@ -373,15 +392,24 @@ namespace RagnaController.Core
         }
 
         private void HandleConnected(ParsedInput input)
-        {
-            IsRunning = true;
-            ControllerConnected?.Invoke(ControllerName);
-            _messenger.Publish(new EngineStatusMessage(EngineStatus.Running, ControllerName));
-
-            string bat = _ctrl.GetBatteryLevel();
-            BatteryChanged?.Invoke(bat);
-            _messenger.Publish(new BatteryChangedMessage(bat));
-        }
+                {
+                    IsRunning = true;
+                    ControllerConnected?.Invoke(ControllerName);
+                    _messenger.Publish(new EngineStatusMessage(EngineStatus.Running, ControllerName));
+                    string bat = _ctrl.BatteryLevel;
+                    BatteryChanged?.Invoke(bat);
+                    _messenger.Publish(new BatteryChangedMessage(bat));
+            
+                    // FEAT-009: Profile auto-switch based on connected controller
+                    _profileManager.OnControllerConnected(
+                        _ctrl.ControllerGuid,
+                        _ctrl.ControllerName,
+                        _ctrl.ControllerType);
+                    ProfileSwitched?.Invoke(_profileManager.ActiveProfileName);
+            
+                    // Update InputReader with new profile settings (deadzone, normalization)
+                    _inputReader.UpdateProfileSettings(_profileManager.ActiveProfile);
+                }
 
         private void HandleFocusLost()
         {

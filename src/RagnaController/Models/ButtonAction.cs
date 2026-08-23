@@ -35,6 +35,12 @@ namespace RagnaController.Models
             public bool TrackBuff { get; set; } = false;
             public int BuffDurationSec { get; set; } = 60;   // How long the buff lasts
             public int BuffWarningSec { get; set; } = 10;    // When to warn before expiration
+
+            // NEW: Long-Press Action (v2.0.0)
+            /// <summary>
+            /// Optional action to trigger on long-press. If null, uses the same action as normal press.
+            /// </summary>
+            public ButtonAction? LongPressAction { get; set; }
         }
 
     // Macro definitions removed - macro functionality has been removed from the application

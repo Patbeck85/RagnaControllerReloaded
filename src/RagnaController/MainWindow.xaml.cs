@@ -95,7 +95,7 @@ namespace RagnaController
                         Dispatcher.BeginInvoke(() =>
                         {
                             string pName = (ProfileCombo?.SelectedItem is Profiles.Profile pf2) ? pf2.Name : "—";
-                            string battery = _engine.ControllerSvc?.GetBatteryLevel() ?? "-";
+                            string battery = _engine.ControllerSvc?.BatteryLevel ?? "-";
                             _miniWindow?.UpdateSnapshot(msg.Snapshot, pName, _engine.IsRunning, battery);
                         });
                     }
@@ -568,7 +568,7 @@ namespace RagnaController
                     FontSize = 10.5, FontWeight = System.Windows.FontWeights.SemiBold, Margin = new Thickness(0, 0, 8, 0)
                 });
                 batteryStack.Children.Add(new Ellipse { Width = 7, Height = 7, VerticalAlignment = System.Windows.VerticalAlignment.Center, 
-                    Fill = new SolidColorBrush(_engine.ControllerSvc?.GetBatteryLevel() switch {
+                    Fill = new SolidColorBrush(_engine.ControllerSvc?.BatteryLevel switch {
                         "Full" or "High" => Color.FromRgb(57, 255, 20),
                         "Mid" => Color.FromRgb(255, 184, 0),
                         "Low" or "Empty" => Color.FromRgb(255, 58, 82),
@@ -576,8 +576,8 @@ namespace RagnaController
                     })
                 });
                 batteryStack.Children.Add(new TextBlock { 
-                    Text = _engine.ControllerSvc?.GetBatteryLevel() ?? "-", 
-                    Foreground = new SolidColorBrush(_engine.ControllerSvc?.GetBatteryLevel() switch {
+                    Text = _engine.ControllerSvc?.BatteryLevel ?? "-", 
+                    Foreground = new SolidColorBrush(_engine.ControllerSvc?.BatteryLevel switch {
                         "Full" or "High" => Color.FromRgb(57, 255, 20),
                         "Mid" => Color.FromRgb(255, 184, 0),
                         "Low" or "Empty" => Color.FromRgb(255, 58, 82),
