@@ -8,6 +8,7 @@ namespace RagnaController.Core
     /// FEAT-008: Buff/Debuff tracking system.
     /// Tracks active buffs/debuffs with durations, provides warnings before expiration,
     /// and supports auto-recast when configured.
+    /// Optimized: Zero allocations in hot path (Update called every tick).
     /// </summary>
     public class BuffManager
     {
@@ -15,6 +16,10 @@ namespace RagnaController.Core
         private readonly CooldownManager _cooldownManager;
         private readonly Dictionary<string, BuffEntry> _activeBuffs = new(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, BuffEntry> _activeDebuffs = new(StringComparer.OrdinalIgnoreCase);
+        
+        // Reusable collections to avoid allocations in hot path
+        private readonly List<string> _expiredBuffs = new();
+        private readonly List<string> _expiredDebuffs = new();
 
         /// <summary>Fired when a buff is about to expire (within warning threshold)</summary>
         public event Action<string, int>? BuffExpiringWarning;
@@ -29,10 +34,10 @@ namespace RagnaController.Core
         public event Action<string>? DebuffExpired;
 
         /// <summary>Current active buff names (for SkillOrchestrator condition evaluation)</summary>
-        public IReadOnlyList<string> ActiveBuffNames => _activeBuffs.Keys.ToList();
+        public IReadOnlyCollection<string> ActiveBuffNames => _activeBuffs.Keys;
 
         /// <summary>Current active debuff names (for SkillOrchestrator condition evaluation)</summary>
-        public IReadOnlyList<string> ActiveDebuffNames => _activeDebuffs.Keys.ToList();
+        public IReadOnlyCollection<string> ActiveDebuffNames => _activeDebuffs.Keys;
 
         public BuffManager(InputCommandQueue queue, CooldownManager cooldownManager)
         {
@@ -152,12 +157,13 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Update all tracked buffs/debuffs - call every tick
+        /// Zero-allocation implementation using reusable lists.
         /// </summary>
         public void Update(int deltaMs)
         {
             var now = DateTime.UtcNow;
-            var expiredBuffs = new List<string>();
-            var expiredDebuffs = new List<string>();
+            _expiredBuffs.Clear();
+            _expiredDebuffs.Clear();
 
             // Update buffs
             foreach (var kvp in _activeBuffs)
@@ -176,13 +182,11 @@ namespace RagnaController.Core
                 // Check expiration
                 if (remaining <= 0)
                 {
-                    expiredBuffs.Add(entry.Name);
+                    _expiredBuffs.Add(entry.Name);
                     
                     // Auto-recast if enabled
                     if (entry.AutoRecast && entry.RecastKey != VirtualKey.None)
                     {
-                        // Check if not on cooldown (CooldownManager doesn't have key-based cooldowns yet)
-                        // For now, always allow recast since autoRecast is false in current implementation
                         _queue.TapKey(entry.RecastKey);
                     }
                 }
@@ -197,18 +201,18 @@ namespace RagnaController.Core
 
                 if (remaining <= 0)
                 {
-                    expiredDebuffs.Add(entry.Name);
+                    _expiredDebuffs.Add(entry.Name);
                 }
             }
 
             // Remove expired
-            foreach (var name in expiredBuffs)
+            foreach (var name in _expiredBuffs)
             {
                 _activeBuffs.Remove(name);
                 BuffExpired?.Invoke(name);
             }
 
-            foreach (var name in expiredDebuffs)
+            foreach (var name in _expiredDebuffs)
             {
                 _activeDebuffs.Remove(name);
                 DebuffExpired?.Invoke(name);

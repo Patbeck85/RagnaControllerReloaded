@@ -6,6 +6,7 @@ namespace RagnaController.Core
 {
     /// <summary>
     /// Tracks button hold times for long-press detection.
+    /// Optimized: Zero allocations in hot path (Update called every tick).
     /// </summary>
     public sealed class LongPressTracker
     {
@@ -13,6 +14,10 @@ namespace RagnaController.Core
         private readonly Dictionary<GamepadButtonFlags, long> _lastRepeatTicks = new();
         private long _thresholdTicks;
         private long _repeatIntervalTicks;
+        
+        // Cached values to avoid allocations
+        private static readonly GamepadButtonFlags[] _allFlags = Enum.GetValues<GamepadButtonFlags>();
+        private readonly List<(GamepadButtonFlags Button, bool IsFirstLongPress, bool IsRepeat)> _reusableResults = new();
 
         public LongPressTracker(int thresholdMs = 500, int repeatIntervalMs = 0)
         {
@@ -37,12 +42,12 @@ namespace RagnaController.Core
         /// <returns>List of (button, isLongPress, isRepeat) tuples for buttons that triggered long-press.</returns>
         public List<(GamepadButtonFlags Button, bool IsFirstLongPress, bool IsRepeat)> Update(GamepadButtonFlags currentButtons, GamepadButtonFlags prevButtons)
         {
-            var results = new List<(GamepadButtonFlags, bool, bool)>();
+            _reusableResults.Clear();
             long now = DateTime.UtcNow.Ticks;
 
             // Check for newly pressed buttons
             var pressedNow = currentButtons & ~prevButtons;
-            foreach (GamepadButtonFlags flag in Enum.GetValues(typeof(GamepadButtonFlags)))
+            foreach (GamepadButtonFlags flag in _allFlags)
             {
                 if (pressedNow.HasFlag(flag) && flag != GamepadButtonFlags.None)
                 {
@@ -53,7 +58,7 @@ namespace RagnaController.Core
 
             // Check for released buttons
             var releasedNow = prevButtons & ~currentButtons;
-            foreach (GamepadButtonFlags flag in Enum.GetValues(typeof(GamepadButtonFlags)))
+            foreach (GamepadButtonFlags flag in _allFlags)
             {
                 if (releasedNow.HasFlag(flag) && flag != GamepadButtonFlags.None)
                 {
@@ -63,7 +68,7 @@ namespace RagnaController.Core
             }
 
             // Check currently held buttons for long-press
-            foreach (GamepadButtonFlags flag in Enum.GetValues(typeof(GamepadButtonFlags)))
+            foreach (GamepadButtonFlags flag in _allFlags)
             {
                 if (flag == GamepadButtonFlags.None) continue;
                 
@@ -80,7 +85,7 @@ namespace RagnaController.Core
                         if (isFirstLongPress)
                         {
                             _lastRepeatTicks[flag] = now;
-                            results.Add((flag, true, false));
+                            _reusableResults.Add((flag, true, false));
                         }
                         else if (_repeatIntervalTicks > 0)
                         {
@@ -88,14 +93,14 @@ namespace RagnaController.Core
                             if (sinceLastRepeat >= _repeatIntervalTicks)
                             {
                                 _lastRepeatTicks[flag] = now;
-                                results.Add((flag, false, true));
+                                _reusableResults.Add((flag, false, true));
                             }
                         }
                     }
                 }
             }
 
-            return results;
+            return _reusableResults;
         }
 
         /// <summary>

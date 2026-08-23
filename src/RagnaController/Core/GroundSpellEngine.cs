@@ -9,12 +9,16 @@ namespace RagnaController.Core
     /// FEAT-006: Ground Spell / AoE Engine
     /// Manages persistent ground effects (Fire Wall, Frozen Ground, Heal Circle, Traps, etc.)
     /// Tracks position, duration, tick intervals, and auto-cleanup.
+    /// Optimized: Zero allocations in hot path (GetActiveSpellNames reuses list).
     /// </summary>
     public class GroundSpellEngine : IInputHandler
     {
         private readonly InputCommandQueue _queue;
         private readonly List<ActiveGroundSpell> _activeSpells = new();
         private int _lastTickMs;
+        
+        // Reusable list to avoid allocations in GetActiveSpellNames hot path
+        private readonly List<string> _activeSpellNamesReusable = new();
 
         public bool Enabled { get; set; } = true;
         public int Priority => 15; // Run after combat engines but before UI
@@ -104,18 +108,19 @@ namespace RagnaController.Core
 
         public event Action<ActiveGroundSpell>? GroundSpellTick;
         public event Action<ActiveGroundSpell>? GroundSpellExpired;
-        
+
         /// <summary>
         /// FEAT-007: Get active spell names for SkillOrchestrator condition evaluation
+        /// Zero-allocation: reuses reusable names list.
         /// </summary>
         public List<string> GetActiveSpellNames()
         {
-            var names = new List<string>();
+            _activeSpellNamesReusable.Clear();
             foreach (var spell in _activeSpells)
             {
-                names.Add(spell.SkillName);
+                _activeSpellNamesReusable.Add(spell.SkillName);
             }
-            return names;
+            return _activeSpellNamesReusable;
         }
     }
 

@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 
 namespace RagnaController.Core
 {
@@ -11,9 +10,9 @@ namespace RagnaController.Core
     {
         public static EngineOptimizationPool Instance { get; } = new();
 
-        // 1. String Interning / Caching
-        // Prevents generating new strings like "L1+A" or "BASE" over and over.
-        private readonly Dictionary<string, string> _stringCache = new();
+        // Thread-safe string interning / caching using ConcurrentDictionary
+        // Eliminates lock contention in hot path
+        private readonly ConcurrentDictionary<string, string> _stringCache = new();
 
         // Pre-warm the cache with known hot-path strings
         private EngineOptimizationPool()
@@ -30,44 +29,31 @@ namespace RagnaController.Core
             
             foreach (var p in prefixes)
             {
-                CacheString(p);
+                _stringCache.TryAdd(p, p);
                 foreach (var b in buttons)
                 {
-                    CacheString(p + b);
+                    _stringCache.TryAdd(p + b, p + b);
                 }
             }
 
-            CacheString("BASE");
-            CacheString("IDLE");
-            CacheString("ENGAGED");
-            CacheString("SEEKING");
-            CacheString("ATTACKING");
-            CacheString("COMBO");
-            CacheString("MAGE");
-            CacheString("AUTO");
-            CacheString("LOCKED");
-            CacheString("MAGE MODE");
-            CacheString("AUTO ATTACK");
+            var staticStrings = new[] { 
+                "BASE", "IDLE", "ENGAGED", "SEEKING", "ATTACKING", 
+                "COMBO", "MAGE", "AUTO", "LOCKED",
+                "MAGE MODE", "AUTO ATTACK"
+            };
+            foreach (var s in staticStrings)
+            {
+                _stringCache.TryAdd(s, s);
+            }
         }
 
+        /// <summary>
+        /// Returns interned string from cache, or adds it atomically on first miss.
+        /// Lock-free using ConcurrentDictionary.
+        /// </summary>
         public string GetString(string input)
         {
-            if (_stringCache.TryGetValue(input, out string? cached)) return cached;
-            return CacheString(input); // Cache on first miss
-        }
-
-        private string CacheString(string input)
-        {
-            // Note: In highly concurrent scenarios, dictionary writes need a lock.
-            // Since most strings are pre-warmed, this lock is rarely hit.
-            lock (_stringCache)
-            {
-                if (!_stringCache.ContainsKey(input))
-                {
-                    _stringCache[input] = input; // Add reference to cache
-                }
-                return _stringCache[input];
-            }
+            return _stringCache.GetOrAdd(input, input);
         }
     }
 }

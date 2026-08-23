@@ -12,12 +12,12 @@ namespace RagnaController.Core
         private readonly WindowTracker _winTracker;
         private readonly CursorEngine _cursor;
         private readonly SmartCursorService _smartCursor;
-        private readonly SkillOrchestrator _skillOrchestrator;
+        private readonly SkillOrchestrator? _skillOrchestrator;
         private bool _batteryThrottle = false;
 
         public SnapshotBuilder(AutoTargetEngine autoTarget, MageEngine mage, ComboEngine combo, 
                                WindowTracker winTracker, CursorEngine cursor, SmartCursorService smartCursor,
-                               SkillOrchestrator skillOrchestrator = null)
+                               SkillOrchestrator? skillOrchestrator = null)
         {
             _autoTarget = autoTarget;
             _mage = mage;

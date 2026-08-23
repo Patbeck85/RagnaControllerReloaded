@@ -123,18 +123,24 @@ namespace RagnaController.Core
         public long SessionSavedKeystrokes => Interlocked.Read(ref _savedKeystrokes);
         public bool IsChatting => _isChatting;
 
-        // Commands collection for testing and inspection
-        public List<InputCmd> Commands { get; } = new();
+        // Commands collection for testing and inspection (only populated in DEBUG builds)
+                public List<InputCmd> Commands { get; } = new();
+        #if DEBUG
+                private void RecordCommand(InputCmd cmd) => Commands.Add(cmd);
+        #else
+                private void RecordCommand(InputCmd cmd) { }
+        #endif
 
-        public void Enqueue(InputCmd cmd)
-        {
-            if (_isDisposed) throw new ObjectDisposedException(nameof(InputCommandQueue));
-            if (!_queue!.IsAddingCompleted)
-            {
-                _queue!.TryAdd(cmd);
-                OnCommandEnqueued?.Invoke(cmd);
-            }
-        }
+                public void Enqueue(InputCmd cmd)
+                {
+                    if (_isDisposed) throw new ObjectDisposedException(nameof(InputCommandQueue));
+                    if (!_queue!.IsAddingCompleted)
+                    {
+                        _queue!.TryAdd(cmd);
+                        OnCommandEnqueued?.Invoke(cmd);
+                        RecordCommand(cmd);
+                    }
+                }
 
         // Mouse
         public void LeftDown() => Enqueue(new InputCmd(CmdType.LeftDown));
@@ -321,17 +327,17 @@ namespace RagnaController.Core
 
                 // Complex Atomic Commands (Batched internally)
                 case CmdType.AtomicLeftClick:
-                    batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_LEFTDOWN));
-                    FlushBatch(ref batch, ref batchCount); // Must flush before sleeping
-                    Thread.Sleep(50); // FIX: JitterService ist ein Typ, nicht eine Instanz - verwenden wir konstanten Wert
-                    batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_LEFTUP));
-                    break;
-                case CmdType.AtomicRightClick:
-                    batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_RIGHTDOWN));
-                    FlushBatch(ref batch, ref batchCount); // Must flush before sleeping
-                    Thread.Sleep(50); // FIX: JitterService ist ein Typ, nicht eine Instanz - verwenden wir konstanten Wert
-                    batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_RIGHTUP));
-                    break;
+                                    batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_LEFTDOWN));
+                                    FlushBatch(ref batch, ref batchCount); // Must flush before sleeping
+                                    Thread.Sleep(JitterService.ClickHold()); // Human-like click hold time
+                                    batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_LEFTUP));
+                                    break;
+                                case CmdType.AtomicRightClick:
+                                    batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_RIGHTDOWN));
+                                    FlushBatch(ref batch, ref batchCount); // Must flush before sleeping
+                                    Thread.Sleep(JitterService.ClickHold()); // Human-like click hold time
+                                    batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_RIGHTUP));
+                                    break;
 
                 // Non-Batchable Commands (Already flushed above)
                 case CmdType.Wait:

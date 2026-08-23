@@ -27,7 +27,7 @@ namespace RagnaController.Core
             if (warnTimeMs <= 0) warnTimeMs = 1000; // Sanity check
 
             long targetTick = Environment.TickCount64 + warnTimeMs;
-            
+
             // Add or overwrite (recasting resets the timer)
             _activeTrackers[action.Label] = targetTick;
         }

@@ -19,7 +19,6 @@ namespace RagnaController
 
         // Controller state from ControllerManager
         private readonly ControllerManager? _controllerManager;
-        private bool _isInitialized;
 
         // Backing fields for overlay display
         private string _profileName = "NOVICE";
@@ -33,7 +32,6 @@ namespace RagnaController
         {
             InitializeComponent();
             _controllerManager = controllerManager;
-            _isInitialized = false;
 
             // Subscribe to controller manager events
             _controllerManager.ControllerConnected += OnControllerConnected;

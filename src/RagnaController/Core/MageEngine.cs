@@ -34,17 +34,20 @@ namespace RagnaController.Core
         // --- Interne Variablen ---
         private int _castCooldown;
         private readonly InputCommandQueue _queue;
+        private readonly SmartCursorService _smartCursorService;
 
         // FIX: Virtual Cursor Pattern - interne Cursor-Position im Engine-Thread (nie GetCursorPos verwenden)
         private bool _cursorInitialized = false;
+        private (int X, int Y) _virtualCursorPos;
 
-        public MageEngine() : this(new InputCommandQueue())
-        {
-        }
+        public MageEngine() : this(new InputCommandQueue(), null!)
+                {
+                }
 
-        public MageEngine(InputCommandQueue queue)
+        public MageEngine(InputCommandQueue queue, SmartCursorService smartCursorService)
         {
             _queue = queue;
+            _smartCursorService = smartCursorService;
         }
 
         public int Priority => 40;
@@ -99,7 +102,8 @@ namespace RagnaController.Core
                     // FIX: Virtual Cursor Pattern - initialisiere Cursor-Position virtuell
                     if (!_cursorInitialized)
                     {
-                        // TODO: Use SmartCursorService.GetVirtualCursorPosition() instead of GetCursorPos
+                        // Use SmartCursorService to get virtual cursor position
+                        _virtualCursorPos = _smartCursorService?.GetVirtualCursorPosition() ?? (0, 0);
                         _cursorInitialized = true;
                     }
 

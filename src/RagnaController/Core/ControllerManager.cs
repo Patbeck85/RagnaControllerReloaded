@@ -17,11 +17,11 @@ namespace RagnaController.Core
 
         // State tracking
         private bool _isConnected;
-        private ButtonState _buttonStates;
-        private string _controllerGuid;
-        private string _controllerName;
-        private string _controllerType;
-        private string _batteryLevel;
+        private ButtonState _buttonStates = new();
+        private string _controllerGuid = "";
+        private string _controllerName = "";
+        private string _controllerType = "";
+        private string _batteryLevel = "Unknown";
 
         public ControllerManager()
         {

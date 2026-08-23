@@ -58,7 +58,7 @@ namespace RagnaController.Controller
             public XINPUT_VIBRATION Vibration;
         }
 
-        private readonly ControllerService _controllerService;
+        private readonly ControllerService? _controllerService;
         private readonly Profile _profile;
         private bool _disposed;
         private int _lastReportedIndex = 0xFFFF;
@@ -75,7 +75,7 @@ namespace RagnaController.Controller
         public string ControllerType { get; private set; }
         public string BatteryLevel { get; private set; }
 
-        public XInputFallbackService(ControllerService controllerService = null, Profile profile = null)
+        public XInputFallbackService(ControllerService? controllerService = null, Profile? profile = null)
         {
             _controllerService = controllerService;
             _profile = profile ?? new Profile();

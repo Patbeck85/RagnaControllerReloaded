@@ -318,19 +318,19 @@ namespace RagnaController.Core
                     baseDelta *= 2;
 
                 _actualDeltaMs = (int)sw.Elapsed.TotalMilliseconds;
-                if (_actualDeltaMs == 0) _actualDeltaMs = baseDelta;
-                if (_actualDeltaMs > 32) _actualDeltaMs = baseDelta;
+                                if (_actualDeltaMs == 0) _actualDeltaMs = baseDelta;
+                                if (_actualDeltaMs > 32) _actualDeltaMs = baseDelta;
 
-                // Smart Standby check - delegate to StandbyManager
-                if (_standbyManager.Tick(input, _currentProfile, _rumbleEnabled, _feedback, _movement, _logger, out bool shouldSkip))
-                {
-                    if (shouldSkip) 
-                    {
-                        // Throttle polling to ~20Hz instead of 125Hz to save CPU
-                        System.Threading.Thread.Sleep(50);
-                        return; // Skip all combat routing and UI updates!
-                    }
-                }
+                                // Smart Standby check - delegate to StandbyManager
+                                if (_standbyManager.Tick(input, _currentProfile, _rumbleEnabled, _feedback, _movement, _logger, out bool shouldSkip))
+                                {
+                                    if (shouldSkip)
+                                    {
+                                        // Throttle polling to ~20Hz instead of 125Hz to save CPU
+                                        Thread.Sleep(50);
+                                        return; // Skip all combat routing and UI updates!
+                                    }
+                                }
 
                 // Routing - delegate to InputRouter
                                 _inputRouter.RouteInput(input, _actualDeltaMs, _rumbleEnabled);
