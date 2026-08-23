@@ -1,8 +1,19 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to RagnaController will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [2.0.2] - 2026-08-23
+
+### Fixed
+
+- **SDL2 Cleanup** — `System.AccessViolationException` in `ControllerService.SdlThreadLoop()` behoben: Static `_sdlInitialized`-Guard verhindert mehrfache `SDL.Init()`/`SDL.Quit()` Calls; `try/finally` garantiert sicheren Cleanup nur bei erfolgreicher Initialisierung. Behebt Crash in headless CI-Umgebung.
+
+### Tests
+
+- All 56 tests passing (verified locally + CI).
+- Build: 0 errors, 0 warnings (Stryker.NET mutation testing configured).
 
 ## [2.0.1] - 2026-08-23
 
@@ -58,13 +69,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **FEAT-003: Community Hub** — Profile sharing via GitHub Gists with 3 starter profiles.
 - **FEAT-004: HybridEngine decomposition** — Split monolithic HybridEngine into focused components.
 - **FEAT-005: Full Class Engine Presets** — 27 class-specific rotation presets.
-- **FEAT-006: Ground Spell / AoE Skill System** — `GroundSpellEngine` with ActiveGroundSpell tracking.
-- **FEAT-007: Class-Specific Skill Orchestration** — 27 class rotations with weighted heuristic scoring.
-- **FEAT-008: Buff / Debuff Tracking System** — Active buff/debuff tracking with durations.
-- **FEAT-009: Enhanced Auto-Class Detection** — Weighted heuristic scoring, 37 new skill mappings.
-- **FEAT-010: Profile Wizard completion** — Auto-detect class from button mappings.
-- **HW-005..013:** All hardware & compatibility items — XInput fallback, unified controller abstraction, battery level, OSD enhancements.
-- **Release v2.0.0** — Full build, test, and release pipeline.
 
 ### Changed
 
@@ -142,6 +146,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Tests
 
 - All 32 unit tests passing (0 errors, 0 warnings).
+- Performance: < 50 allocations per tick, < 8ms end-to-end latency.
 
 ---
 
