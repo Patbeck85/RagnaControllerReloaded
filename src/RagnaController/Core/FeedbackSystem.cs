@@ -77,11 +77,6 @@ namespace RagnaController.Core
                     _nextRumbleStepTime = Environment.TickCount64 + 150; // beat length
                     _rumbleStepSequence = 2; // trigger pause next
                     break;
-                case FeedbackType.TurboPulse:
-                    // Very sharp, 15ms pulse on right (light/fast) motor
-                    _controller.SetRumble(0.0f, 0.5f);
-                    ScheduleStop(15);
-                    break;
                 case FeedbackType.StandbyOn:
                     // Gentle pulse to indicate standby mode entered
                     _controller.SetRumble(0.2f, 0.2f);

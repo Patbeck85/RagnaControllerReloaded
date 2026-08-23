@@ -1,0 +1,15 @@
+*** Begin Patch
+*** Update File: src/RagnaController/MainWindow.xaml.cs
+@@
+-        private void ChkTurboTest_Click(object s, RoutedEventArgs e)
+-        {
+-            // Turbo test checkbox click handler
+-        }
+-
+-        private void BtnTurboTest_Click(object s, RoutedEventArgs e)
+-        {
+-            // Turbo test button click handler
+-        }
+-
+         private void BtnRemap_Click(object s, RoutedEventArgs e)
+*** End Patch

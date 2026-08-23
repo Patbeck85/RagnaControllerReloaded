@@ -806,25 +806,13 @@ namespace RagnaController
             // Mouse leave handler for reset button
         }
 
-        private void ChkTurboTest_Click(object s, RoutedEventArgs e)
-        {
-            // Turbo test checkbox click handler
-        }
 
-        private void BtnTurboTest_Click(object s, RoutedEventArgs e)
-        {
-            // Turbo test button click handler
-        }
 
         private void BtnRemap_Click(object s, RoutedEventArgs e)
         {
             // Remap button click handler
         }
 
-        private void BtnMacro_Click(object s, RoutedEventArgs e)
-        {
-            // Macro button click handler
-        }
 
         private void BtnRadial_Click(object s, RoutedEventArgs e)
         {

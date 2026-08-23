@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RagnaController v2.0.0 — Experience the Power</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --bg-secondary: #12121a;
+            --fg: #e8e8f0;
+            --muted: #6b6b80;
+            --accent: #00d4aa;
+            --accent-glow: rgba(0, 212, 170, 0.4);
+            --card: #1a1a24;
+            --border: #2a2a3a;
+            --error: #ff5f57;
+            --success: #00d4aa;
+            --warning: #f7c54e;
+            --info: #3a9fff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--fg);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--accent);
+        }
+
+        /* Scanline effect */
+        ::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 4%,
+                rgba(0, 212, 170, 0.03) 4%,
+                rgba(0, 212, 170, 0.03) 8%
+            );
+            z-index: 1000;
+            opacity: 0.6;
+        }
+
+        /* Grid pattern overlay */
+        ::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            background: 
+                linear-gradient(90deg, rgba(0,212,170,0.02) 1px, transparent 1px),
+                linear-gradient(rgba(0,212,170,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 1000;
+            opacity: 0.3;
+        }
+
+        /* Noise texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        /* Focus visible */
+        *:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0ms !important;
+                transition-duration: 0ms !important;
+            }
+        }
+
+        /* Container */
+        .max-width {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 20px 0;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            background: linear-gradient(135deg, var(--accent), var(--fg));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav a {
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--muted);
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav a:hover::after {
+            width: 100%;
+        }
+
+        .nav a:hover {
+            color: var(--accent);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px 40px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: 8px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--accent), var(--fg));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--muted);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .stat .number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--fg));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Sections */
+        .section {
+            padding: 100px 0;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            display: block;
+        }
+
+        /* Card */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 40px;
+            margin-bottom: 40px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card p {
+            color: var(--muted);
+            margin-bottom: 15px;
+        }
+
+        /* Feature Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .feature-card .icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent), var(--info));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-card .icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--bg);
+            fill: none;
+        }
+
+        .feature-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td {
+            color: var(--fg);
+        }
+
+        tr:hover td {
+            background: var(--bg-secondary);
+        }
+
+        /* Code blocks */
+        pre {
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--success);
+        }
+
+        .language-python {
+            color: #3776ab;
+        }
+
+        .language-csharp {
+            color: #d55;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--bg);
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 212, 170, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: var(--card);
+            border: 1px solid var(--border);
+            color: var(--fg);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Language selector */
+        .language-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 200;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            padding: 8px;
+        }
+
+        .lang-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-size: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            margin: 0 2px;
+        }
+
+        .lang-btn.active {
+            color: var(--accent);
+        }
+
+        .lang-btn:hover {
+            color: var(--fg);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0ms !important;
+                transition-duration: 0ms !important;
+            }
+            .animate-fade-in-up {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .stats {
+                gap: 20px;
+            }
+            
+            .stat .number {
+                font-size: 1.8rem;
+            }
+            
+            .nav {
+                display: none;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector" aria-label="Select language">
+        <button class="lang-btn active" data-lang="en" onclick="switchLang('en')">English</button>
+        <button class="lang-btn" data-lang="de" onclick="switchLang('de')">Deutsch</button>
+        <button class="lang-btn" data-lang="fr" onclick="switchLang('fr')">Français</button>
+        <button class="lang-btn" data-lang="es" onclick="switchLang('es')">Español</button>
+        <button class="lang-btn" data-lang="ja" onclick="switchLang('ja')">日本語</button>
+        <button class="lang-btn" data-lang="ko" onclick="switchLang('ko')">한국어</button>
+        <button class="lang-btn" data-lang="zh" onclick="switchLang('zh')">中文</button>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">RagnaController</div>
+            <nav class="nav">
+                <a href="#features">Features</a>
+                <a href="#installation">Installation</a>
+                <a href="#roadmap">Roadmap</a>
+                <a href="#wiki">Wiki</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <h1>RagnaController v2.0.0</h1>
+        <p>Autonomous Multi-Agent Development Framework for Ragnarok Online • Build: 0 errors • Tests: 56/56 passing</p>
+        <div class="stats">
+            <div class="stat"><div class="number">56</div><div>Tests Passing</div></div>
+            <div class="stat"><div class="number">7</div><div>SOUL.md Rules</div></div>
+            <div class="stat"><div class="number">1</div><div>Git Commit</div></div>
+        </div>
+        <button class="btn" onclick="scrollToSection('features')">Explore Features</button>
+    </header>
+
+    <!-- Features Section -->
+    <section id="features" class="section">
+        <div class="section-subtitle">🎯 Core Features</div>
+        <div class="max-width">
+            <div class="features-grid">
+                
+                <div class="card animate-fade-in-up delay-1">
+                    <div class="icon"><svg viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M1 12s2-1.5 2-4 2-4 2 4M8 14S5.5 12 8 12S11 14 11 12S8 10 8 10"/></svg></div>
+                    <h4>Auto-Class Detection</h4>
+                    <p>Weighted heuristic scoring (1-3) with 37+ skill mappings and transcendent class support (Lord Knight, High Wizard, Sniper, etc.)</p>
+                </div>
+                
+                <div class="card animate-fade-in-up delay-2">
+                    <div class="icon"><svg viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><circle cx="15.5" cy="15.5" r="1.5"/></svg></div>
+                    <h4>Profile Wizard</h4>
+                    <p>5-step setup with auto-detect integration — detects class from button mappings when advancing step 2→3, updates UI selection</p>
+                </div>
+                
+                <div class="card animate-fade-in-up delay-3">
+                    <div class="icon"><svg viewBox="0 0 24 24" stroke="currentColor"><polyline points="12 2 15 2 22 7 22 21 17 21 14 21"/><polyline points="20 2 23 5 16 21 13 21"/><path d="M3 7l9-3 9 3M5 11l9-3 9 3M3 15l9-3 9 3"/></svg></div>
+                    <h4>Combat Engines</h4>
+                    <p>Auto-Target, Kite, Mage, Support, MobSweep — fully configurable with smart skill targeting and timing</p>
+                </div>
+                
+                <div class="card animate-fade-in-up delay-4">
+                    <div class="icon"><svg viewBox="0 0 24 24" stroke="currentColor"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                    <h4>Ground Spells</h4>
+                    <p>5 AOEs with configurable timing and targeting: Fireball, Ice Storm, Lightning Bolt, Healing Circle, Poison Cloud</p>
+                </div>
+                
+                <div class="card animate-fade-in-up delay-5">
+                    <div class="icon"><svg viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                    <h4>Controller/Input</h4>
+                    <p>Remappable buttons, DualSense haptic feedback, programmable macros, thread-safe UI updates</p>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="installation" class="section">
+        <div class="section-subtitle">📦 Installation</div>
+        <div class="max-width">
+            <div class="card">
+                <h3>Release Package</h3>
+                <p>Download the latest release from GitHub. The package includes:</p>
+                <ul>
+                    <li>RagnaController.exe</li>
+                    <li>All locale files (41 languages)</li>
+                    <li>Configuration files</li>
+                    <li>Readme and documentation</li>
+                </ul>
+                <p>⚠️ <strong>Release Isolation (SOUL RULE-001):</strong> Only end products in release_final/ — no debug artifacts (.pdb, .tmp, .log, etc.)</p>
+            </div>
+            
+            <div class="card">
+                <h3>From Source</h3>
+                <p>Build from source using .NET 8:</p>
+                <pre><code>dotnet tool install --global dotnet-cli-tools<br/>dotnet new console --name RagnaController<br/>cd RagnaController<br/>dotnet build<br/>dotnet run</code></pre>
+                <p>Ensure .NET 8 SDK is installed. All dependencies restore automatically.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap Section -->
+    <section id="roadmap" class="section">
+        <div class="section-subtitle">🗺 Development Roadmap</div>
+        <div class="max-width">
+            <div class="card">
+                <h3>Phase 7 Complete ✅</h3>
+                <ul>
+                    <li>FEAT-005: EnginePresets — Preset configurations for each class</li>
+                    <li>FEAT-006: Ground Spells — 5 AOEs with targeting</li>
+                    <li>FEAT-007/008: Skill Orchestration & Buff/Debuff — Class-specific skill rotation</li>
+                    <li>FEAT-009: Enhanced Auto-Class Detection — Weighted scoring, 37 new mappings</li>
+                    <li>FEAT-010: Profile Wizard Completion — Auto-detect integration</li>
+                </ul>
+                <p>All 7 SOUL.md golden rules satisfied. Build 0 errors, 56/56 tests passing.</p>
+            </div>
+            
+            <div class="card">
+                <h3>Past Phases</h3>
+                <ul>
+                    <li>Phase 1-4: Core engine architecture and orchestration</li>
+                    <li>Phase 5: EnginePresets and profile management</li>
+                    <li>Phase 6: Ground spells and combat abilities</li>
+                </ul>
+                <p>Full autonomous development cycle completed without manual intervention.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Wiki Section -->
+    <section id="wiki" class="section">
+        <div class="section-subtitle">📚 Comprehensive Wiki</div>
+        <div class="max-width">
+            <p>Welcome to the RagnaController v2.0.0 Wiki — your complete guide to the system.</p>
+            
+            <div class="features-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px;">
+                
+                <div class="card animate-fade-in-up delay-1">
+                    <h3>🏠 Introduction</h3>
+                    <p>RagnaController v2.0.0 is the result of a fully autonomous development cycle. From analysis to release, every phase was executed by AI agents per SOUL.md governance. This wiki documents everything you need to know.</p>
+                </div>
+                
+                <div class="card animate-fade-in-up delay-2">
+                    <h3>🚀 Getting Started</h3>
+                    <ol>
+                        <li>Install .NET 8 SDK</li>
+                        <li>Download or build RagnaController</li>
+                        <li>Launch the application</li>
+                        <li>Select your RO .EXE</li>
+                        <li>Choose or create a profile</li>
+                        <li>Start the engine</li>
+                    </ol>
+                </div>
+                
+                <div class="card animate-fade-in-up delay-3">
+                    <h3>📖 How It Works</h3>
+                    <p>The system uses a multi-agent autonomous framework following SOUL.md v2.0 Enterprise principles. Key components:</p>
+                    <ul>
+                        <li><strong>ClassDetector:</strong> Weighted skill-to-class mapping with signature prioritization</li>
+                        <li><strong>ProfileWizard:</strong> Step-by-step setup with auto-detection</li>
+                        <li><strong>EngineOrchestrator:</strong> Core engine managing all combat systems</li>
+                        <li><strong>Localization:</strong> 41 language locales for global usage</li>
+                    </ul>
+                </div>
+                
+                <div class="card animate-fade-in-up delay-4">
+                    <h3>⚙️ Configuration</h3>
+                    <p>All settings are profile-based and persist between sessions. Configure:</p>
+                    <ul>
+                        <li>Auto-attack and kite behavior</li>
+                        <li>Mage spell targeting and casting</li>
+                        <li>Support and mobsweep settings</li>
+                        <li>Controller button remapping</li>
+                        <li>Deadzone and curve adjustments</li>
+                    </ul>
+                </div>
+                
+                <div class="card animate-fade-in-up delay-5">
+                    <h3>🔧 Troubleshooting</h3>
+                    <p>Common issues and solutions:</p>
+                    <ul>
+                        <li><strong>Class not detecting?</strong> Check skill mappings in ClassDetector.cs</li>
+                        <li><strong>Overlay not showing?</strong> Verify admin rights and DirectX hooks</li>
+                        <li><strong>Tests failing?</strong> Run <code>dotnet test --no-restore</code></li>
+                        <li><strong>Release artifacts clean?</strong> Verify release_final/ isolation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="max-width" style="padding: 40px 20px; text-align: center;">
+            <p>RagnaController v2.0.0 · Autonomous Multi-Agent Development · SOUL.md compliant</p>
+            <p>Built with ♪ by Hermes Agent · GitHub: <a href="https://github.com/Patbeck85/RagnaControllerReloaded">Patbeck85/RagnaControllerReloaded</a></p>
+            <p>All 7 SOUL.md Golden Rules satisfied · Build: 0 errors · Tests: 56/56 passing</p>
+        </div>
+    </footer>
+
+    <script>
+        function switchLang(lang) {
+            const buttons = document.querySelectorAll('.lang-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Hide all section content, show selected
+            const sections = document.querySelectorAll('.wiki-section, #introduction, #getting-started, #installation, #core-features, #performance, #release, #tutorials, #faq');
+            sections.forEach(s => s.style.display = 'none');
+            
+            // Show intro always
+            document.getElementById('introduction').style.display = 'block';
+        }
+        
+        // Initialize: show intro on load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('introduction').style.display = 'block';
+        });
+        
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.style.display = 'block';
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

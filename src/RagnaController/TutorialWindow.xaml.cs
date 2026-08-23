@@ -15,7 +15,7 @@ namespace RagnaController
         // Arrays containing the localization keys and image paths for each slide
         private readonly string[] _titles = { "Tut_1_Title", "Tut_2_Title", "Tut_3_Title", "Tut_4_Title", "Tut_5_Title" };
         private readonly string[] _descs = { "Tut_1_Desc", "Tut_2_Desc", "Tut_3_Desc", "Tut_4_Desc", "Tut_5_Desc" };
-        private readonly string[] _mediaPaths = { "tut_focus.mp4", "tut_grid.mp4", "tut_cast.mp4", "tut_aim.mp4", "tut_macro.mp4" }; // Placeholders
+        private readonly string[] _mediaPaths = { "tut_focus.mp4", "tut_grid.mp4", "tut_cast.mp4", "tut_aim.mp4" }; // Placeholders
 
         public TutorialWindow()
         {

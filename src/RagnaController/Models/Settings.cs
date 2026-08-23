@@ -12,7 +12,7 @@ namespace RagnaController.Models
         private static readonly string SettingsPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "RagnaController", "settings.json");
-        
+       
         // FIX: Flag to mark if loading settings failed
         private static bool _loadFailed = false;
 
@@ -33,28 +33,26 @@ namespace RagnaController.Models
         /// </summary>
         public bool ForceHandheldMode { get; set; } = false;
         public bool StartInMiniMode { get; set; } = false;
-        
+       
         // i18n: User's selected language (default: English)
         public string AppLanguage { get; set; } = "en";
-        
+       
         // NEW: Ragnarok Online .exe Path Selector
         public string RoExePath { get; set; } = "";
-        
+       
         // Focus Lock Einstellungen
         public bool FocusLockEnabled { get; set; } = true;
         public string FocusLockProcess { get; set; } = "ragexe"; // Standard RO Name
-        
+       
         public int LogLevel { get; set; } = 1; // 0=Debug, 1=Info, 2=Warning, 3=Error
 
         // NEW: Discord RPC
         public bool EnableDiscordRPC { get; set; } = true;
-        
+       
         // NEW: TTS Voice Announcements
         public bool EnableVoiceAnnouncements { get; set; } = true;
-        
-        // NEW: Haptic Metronome (Turbo Feedback)
-        public bool EnableHapticMetronome { get; set; } = true;
-        
+       
+       
         // NEW: Smart Standby (AFK Battery Saver)
         public bool EnableSmartStandby { get; set; } = true;
         public int StandbyTimeoutMinutes { get; set; } = 5;
@@ -73,11 +71,6 @@ namespace RagnaController.Models
         // ── Lifetime RSI Stats (v1.7.0) ───────────────────────────────────
         public long LifetimeSavedClicks { get; set; } = 0;
         public long LifetimeSavedKeystrokes { get; set; } = 0;
-
-        // NEW: Settings Properties for XAML bindings (Bug Fix)
-        public bool TurboMode { get; set; } = false;
-        public bool AutoLoadProfile { get; set; } = true;
-        public bool ShowLatency { get; set; } = false;
 
         // --- Speicher- & Lade-Logik ---
         public static Settings Load()

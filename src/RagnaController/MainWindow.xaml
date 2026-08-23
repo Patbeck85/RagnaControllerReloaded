@@ -572,22 +572,10 @@
                                     </Grid>
                                 </Border>
 
-                                <TextBlock Text="Turbo" Style="{StaticResource Eyebrow}" Margin="0,8,0,8"/>
-                                <Border Style="{StaticResource Card}">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                        <StackPanel>
-                                            <CheckBox x:Name="ChkTurboTest" Content="Enable turbo test" Click="ChkTurboTest_Click"/>
-                                            <TextBlock x:Name="TurboFreqText" Text="" Foreground="{StaticResource Signal}" FontSize="9" FontFamily="Consolas" Margin="0,5,0,0"/>
-                                        </StackPanel>
-                                        <TextBlock x:Name="TurboValue" Grid.Column="1" Text="3.0s" Style="{StaticResource Telemetry}" VerticalAlignment="Center" Margin="0,0,12,0"/>
-                                        <Button x:Name="BtnTurboTest" Grid.Column="2" Content="Test" Width="64" Height="30" Style="{StaticResource GhostBtn}" Click="BtnTurboTest_Click"/>
-                                    </Grid>
-                                </Border>
 
-                                <Border x:Name="ToastBorder" CornerRadius="6" Padding="14,10" Margin="0,8,0,0" Visibility="Collapsed"
-                                        BorderThickness="1" BorderBrush="{StaticResource HairlineBr}">
-                                    <Border.Background><SolidColorBrush x:Name="ToastBg" Color="#0E1812"/></Border.Background>
+                                                                <Border x:Name="ToastBorder" CornerRadius="6" Padding="14,10" Margin="0,8,0,0" Visibility="Collapsed"
+                                                                        BorderThickness="1" BorderBrush="{StaticResource HairlineBr}">
+                                                                    <Border.Background><SolidColorBrush x:Name="ToastBg" Color="#0E1812"/></Border.Background>
                                     <TextBlock x:Name="ToastText" Text="" Foreground="{StaticResource Live}" FontSize="11" FontFamily="Consolas" HorizontalAlignment="Center"/>
                                 </Border>
 
@@ -680,18 +668,9 @@
                                           StrokeThickness="1.5" StrokeStartLineCap="Round" StrokeEndLineCap="Round" Stretch="Uniform"/>
                                 </Viewbox>
                                 <TextBlock Text="Remap" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="BtnMacroBtn" Click="BtnMacro_Click" Width="88" Height="36" Margin="4,0" IsEnabled="False" Style="{StaticResource GhostBtn}" ToolTip="Macro Recorder">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <Viewbox Width="13" Height="13" Margin="0,0,7,0">
-                                    <Path Data="M12 2C8.14 2 5 5.14 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
-                                          Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Stretch="Uniform"/>
-                                </Viewbox>
-                                <TextBlock Text="Macro" FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="BtnRadialBtn" Click="BtnRadial_Click" Width="88" Height="36" Margin="4,0" IsEnabled="False" Style="{StaticResource GhostBtn}" ToolTip="Radial Menu">
+                                                            </StackPanel>
+                                                        </Button>
+                                                        <Button x:Name="BtnRadialBtn" Click="BtnRadial_Click" Width="88" Height="36" Margin="4,0" IsEnabled="False" Style="{StaticResource GhostBtn}" ToolTip="Radial Menu">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Viewbox Width="13" Height="13" Margin="0,0,7,0">
                                     <Path Data="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm0-12.5A4.5 4.5 0 1 0 16.5 12 4.5 4.5 0 0 0 12 7.5zm0 7A2.5 2.5 0 1 1 14.5 12 2.5 2.5 0 0 1 12 14.5z"

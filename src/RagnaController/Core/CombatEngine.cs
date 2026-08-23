@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using RagnaController.Profiles;
 using RagnaController.Models;
 using static RagnaController.Core.NativeMethods;
@@ -8,9 +9,6 @@ namespace RagnaController.Core
 {
     public class CombatEngine
     {
-        private readonly Dictionary<string, TurboState> _turboStates = new();
-        private readonly Dictionary<string, MacroRecorder> _macroPlayers = new();
-        private readonly Dictionary<string, Macro?> _macroCache = new();
         private Profile? _profile;
         private string _prefix = "";
 
@@ -32,14 +30,11 @@ namespace RagnaController.Core
 
         public event Action<ButtonAction>? ActionFired;
 
-                // NEW: Haptic Metronome Event
-                public event Action? TurboPulsed;
-        
-                // FEAT-007: Properties for SkillOrchestrator condition evaluation
-                public int CurrentSP { get; private set; } = 0;
-                public int CurrentHPPercent { get; private set; } = 100;
+        // FEAT-007: Properties for SkillOrchestrator condition evaluation
+        public int CurrentSP { get; private set; } = 0;
+        public int CurrentHPPercent { get; private set; } = 100;
 
-                /// <summary>Physische Ausführung der konfigurierten Aktion.</summary>
+        /// <summary>Physische Ausführung der konfigurierten Aktion.</summary>
         private void ExecuteAction(ButtonAction action)
         {
             switch (action.Type)
@@ -99,8 +94,6 @@ namespace RagnaController.Core
         public void LoadProfile(Profile p)
         {
             _profile = p;
-            _turboStates.Clear();
-            _macroCache.Clear();
         }
 
         // NEW: Constructor with dependencies for Self-Cast support
@@ -126,8 +119,6 @@ namespace RagnaController.Core
             _prefix = newPrefix;
         }
 
-        public void ClearMacroCache() => _macroCache.Clear();
-
         public void ProcessButton(string btn, bool pressed, int ms)
         {
             if (_profile == null) return;
@@ -148,18 +139,10 @@ namespace RagnaController.Core
             // Combo-Aktionen werden von der ComboEngine separat verarbeitet
             if (action.Type == ActionType.Combo) return;
 
-            // Use the full button key (with modifier) for turbo/macro tracking
-            var displayKey = buttonKey.ToString();
-            if (!_turboStates.TryGetValue(displayKey, out var state)) { state = new TurboState(); _turboStates[displayKey] = state; }
-
             if (pressed)
             {
-                if (action.IsMacro && !state.WasPressed)
-                {
-                    ExecuteMacro(displayKey, action);
-                }
                 // NEW: Intercept Self-Cast (bypass aiming, snap to center)
-                else if (action.IsSelfCast && !state.WasPressed)
+                if (action.IsSelfCast)
                 {
                     ActionFired?.Invoke(action);
                     ExecuteSelfCast(action);
@@ -167,45 +150,24 @@ namespace RagnaController.Core
                 // FIX: Enter Ground Spell Aiming State
                 else if (action.IsGroundSpell)
                 {
-                    if (!state.WasPressed)
-                    {
-                        ActionFired?.Invoke(action);
-                        ExecuteAction(action); // Sends the F-Key to show targeting circle in RO
+                    ActionFired?.Invoke(action);
+                    ExecuteAction(action); // Sends the F-Key to show targeting circle in RO
 
-                        if (!string.IsNullOrEmpty(_prefix))
-                            _activeGroundLayer = _prefix; // Modifier holds the spell
-                        else
-                            _activeBaseGroundButton = btn; // Face button holds the spell
-                    }
+                    if (!string.IsNullOrEmpty(_prefix))
+                        _activeGroundLayer = _prefix; // Modifier holds the spell
+                    else
+                        _activeBaseGroundButton = btn; // Face button holds the spell
                 }
-                else if (action.TurboEnabled)
-                {
-                    state.HoldMs += ms;
-                    if (state.HoldMs >= state.NextInterval || !state.WasPressed)
-                    {
-                        ActionFired?.Invoke(action);
-                        ExecuteAction(action);
-
-                        // NEW: Fire the haptic metronome event
-                        TurboPulsed?.Invoke();
-
-                        state.HoldMs = 0;
-                        // Menschlicher Jitter für den Turbo-Abstand
-                        state.NextInterval = 100; // FIX: JitterService ist ein Typ, nicht eine Instanz - verwenden wir konstanten Wert
-                    }
-                }
-                else if (!state.WasPressed)
+                else
                 {
                     // FIX: Strict LIFO Overwrite. The newest button press ALWAYS wins 
                     // and resets the validity window.
                     _bufferedAction = action;
-                    _bufferedKey = displayKey;
+                    _bufferedKey = buttonKey.ToString();
                 }
             }
             else
             {
-                state.HoldMs = 0;
-
                 // FIX: Release-to-Cast for Base Layer (no modifiers)
                 if (action.IsGroundSpell && _activeBaseGroundButton == btn)
                 {
@@ -213,32 +175,6 @@ namespace RagnaController.Core
                     _activeBaseGroundButton = "";
                 }
             }
-
-            state.WasPressed = pressed;
-        }
-
-        private void ExecuteMacro(string key, ButtonAction action)
-        {
-            if (!_macroPlayers.TryGetValue(key, out var player))
-                _macroPlayers[key] = player = new MacroRecorder(_queue);
-
-            // FIX: Safe null check before accessing MacroFilePath
-            if (string.IsNullOrEmpty(action.MacroFilePath))
-                return;
-
-            if (!_macroCache.TryGetValue(action.MacroFilePath, out var macro))
-            {
-                macro = MacroRecorder.LoadMacro(action.MacroFilePath);
-                _macroCache[action.MacroFilePath] = macro;
-            }
-
-            if (macro != null) player.Play(macro, macro.LoopCount);
-        }
-
-        public void UpdateMacroPlayback(int ms)
-        {
-            foreach (var player in _macroPlayers.Values)
-                if (player.IsPlaying) player.UpdatePlayback(ms);
         }
 
         public bool IsComboActionHeld(GamepadButtonFlags buttons)
@@ -267,21 +203,10 @@ namespace RagnaController.Core
             return false;
         }
 
-        private class TurboState 
-        { 
-            public bool WasPressed; 
-            public int HoldMs; 
-            public int NextInterval = 100; 
-        }
-
         public void StopAllActiveRoutines()
         {
             _activeGroundLayer = "";
             _activeBaseGroundButton = "";
-            // ... existing macro/turbo stopping ...
-            foreach (var player in _macroPlayers.Values)
-                if (player.IsPlaying) player.StopPlayback();
-            _turboStates.Clear();
         }
     }
 }

@@ -219,7 +219,6 @@ namespace RagnaController.Core
         public void LiveUpdateRightStick(float v) => _orchestrator.Cursor.Deadzone = v;
         public void LiveUpdateLeftTrigger(float v) { /* Adaptive Trigger L2 - Placeholder */ }
         public void LiveUpdateRightTrigger(float v) { /* Adaptive Trigger R2 - Placeholder */ }
-        public void LiveUpdateTurboInterval(float v) { /* Turbo-Intervall - Placeholder für v1.7.0 */ }
 
         /// <summary>
         /// Settings: Sound
@@ -241,11 +240,6 @@ namespace RagnaController.Core
         public void TurnOff() => _orchestrator.Controller?.SetLED(0, 0, 0);
 
         /// <summary>
-        /// Settings: Haptic Metronome
-        /// </summary>
-        public void SetHapticMetronomeEnabled(bool enabled) => _orchestrator.HapticMetronomeEnabled = enabled;
-
-        /// <summary>
         /// Smart Standby settings
         /// </summary>
         public void SetStandbySettings(bool enabled, int timeoutMins)
@@ -261,9 +255,5 @@ namespace RagnaController.Core
             pm.ProfileSaved += name => _orchestrator.SubscribeToLog($"[Profile] Gespeichert: {name}");
         }
 
-        /// <summary>
-        /// Clear macro cache
-        /// </summary>
-        public void ClearMacroCache() => _orchestrator.Combat.ClearMacroCache();
     }
 }

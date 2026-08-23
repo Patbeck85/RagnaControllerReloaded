@@ -119,7 +119,6 @@ namespace RagnaController.Tests
                 ComboEnabled = false,
                 MobSweepEnabled = true,
                 HandheldModeEnabled = false,
-                TurboEnabled = false,
                 ButtonMappings = new Dictionary<RagnaController.Models.ButtonKey, RagnaController.Models.ButtonAction>
                 {
                     { ButtonKey.Parse("A"), new ButtonAction { Type = ActionType.Key, Key = VirtualKey.A } },

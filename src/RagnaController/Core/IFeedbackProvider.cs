@@ -25,8 +25,7 @@ namespace RagnaController.Core
         Warning, 
         PrecisionModeOn, 
         BuffWarning, 
-        TurboPulse, 
-        StandbyOn, 
+                StandbyOn, 
         StandbyOff 
     }
 }

@@ -79,37 +79,17 @@
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <StackPanel>
 
-                    <!-- Controller Settings -->
-                    <TextBlock Text="CONTROLLER" Style="{StaticResource SettingsSectionHeader}"/>
-                    <Border Style="{StaticResource SettingsCard}">
-                        <StackPanel>
-                            <TextBlock Text="Enable Turbo Mode"
-                                       Foreground="#C8D6E8" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                            <TextBlock Text="Activates turbo mode for faster input processing"
-                                       Foreground="#3A4A60" FontSize="9" Margin="0,0,0,8"/>
-                            <!-- Turbo Toggle Switch -->
-                            <Border x:Name="TurboToggleBg" Style="{StaticResource SettingsToggle}"
-                                    MouseLeftButtonDown="TurboToggle_Click">
-                                <Ellipse x:Name="TurboToggleThumb" Style="{StaticResource SettingsToggleThumb}"
-                                         HorizontalAlignment="Right"/>
-                            </Border>
-                            <TextBlock x:Name="TurboStatusText" Text=""
-                                       Foreground="#3A8EFF" FontSize="9"
-                                       FontFamily="Consolas" Margin="0,6,0,0"/>
-                        </StackPanel>
-                    </Border>
-
                     <!-- Profile Settings -->
                     <TextBlock Text="PROFILE" Style="{StaticResource SettingsSectionHeader}"/>
                     <Border Style="{StaticResource SettingsCard}">
                         <StackPanel>
                             <ComboBox x:Name="ProfileCombo" ItemsSource="{Binding}" SelectedIndex="-1"
                                       Foreground="#C8D6E8" FontSize="10" Margin="0,0,0,6"/>
-                            
+                           
                             <CheckBox x:Name="ChkAutoLoadProfile" Content="Auto-load last profile"
                                       Foreground="#7D8B9E" FontSize="10"
                                       Click="ChkAutoLoadProfile_Click"/>
-                            
+                           
                             <TextBlock Text="Save current profile on close"
                                        Foreground="#C8D6E8" FontSize="11" FontWeight="SemiBold" Margin="0,10,0,6"/>
                             <TextBlock x:Name="CurrentProfileText" Text="No profile loaded"
@@ -125,16 +105,16 @@
                             <CheckBox x:Name="ChkStartWithWindows" Content="Start with Windows"
                                       Foreground="#7D8B9E" FontSize="10"
                                       Click="ChkStartWithWindows_Click"/>
-                            
+                           
                             <CheckBox x:Name="ChkMinimizeToTray" Content="Minimize to tray on close"
                                       Foreground="#7D8B9E" FontSize="10" Margin="0,4"
                                       Click="ChkMinimizeToTray_Click"/>
-                            
+                           
                             <!-- Engine State Display -->
                             <TextBlock x:Name="EngineStateText" Text="Ready"
                                        Foreground="#C8D6E8" FontSize="9"
                                        FontFamily="Consolas" Margin="0,10,0,6"/>
-                            
+                           
                             <!-- Show Latency Checkbox -->
                             <CheckBox x:Name="ChkShowLatency" Content="Show Latency"
                                       Foreground="#7D8B9E" FontSize="10" Margin="0,4"
@@ -175,7 +155,7 @@
                             <ComboBox x:Name="LanguageCombo" ItemsSource="{Binding}" 
                                       Foreground="#C8D6E8" FontSize="10" Width="120" Height="20"
                                       Margin="0,4"/>
-                            
+                           
                             <!-- Ragnarok Online Path Selector -->
                             <TextBlock Text="Ragnarok Online Setup" Foreground="#C8D6E8" FontSize="10" FontWeight="SemiBold" Margin="0,10,0,4"/>
                             <ComboBox x:Name="RoExePathCombo" ItemsSource="{Binding}" 
@@ -183,12 +163,12 @@
                                       Margin="0,0,0,4"/>
                             <TextBlock x:Name="LblRoExeStatus" Text="" Foreground="#55637A" FontSize="9"
                                      FontFamily="Consolas" Margin="0,0,0,8"/>
-                            
+                           
                             <!-- Calibrate Button -->
                             <Button x:Name="BtnCalibrate" Content="Calibrate Gamepad" 
                                     Foreground="#C8D6E8" FontSize="10" Padding="10,4"
                                     Margin="0,0,0,8" Click="BtnCalibrate_Click"/>
-                            
+                           
                             <!-- Version and Path Info -->
                             <TextBlock x:Name="LblVersion" Text="" Foreground="#55637A" FontSize="9"
                                      FontFamily="Consolas" Margin="0,8,0,4"/>

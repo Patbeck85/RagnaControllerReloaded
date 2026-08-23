@@ -110,10 +110,6 @@ namespace RagnaController.Profiles
         public int Priority { get; set; } = 0;
         public bool IsEnabled { get; set; } = true;
 
-        // Turbo Mode (v1.7.3)
-        public bool TurboEnabled { get; set; } = false;
-        /// <summary>v1.7.3: Radial Menu Items - Custom radial menu commands for the profile.</summary>
-        public List<RadialItem> RadialMenuItems { get; set; } = new();
 
         // Emote Commands (v1.7.3) - Static collection for quick access
         public static List<RadialItem> EmoteCommands => new()

@@ -10,7 +10,7 @@ namespace RagnaController
 {
     public partial class SplashWindow : Window
     {
-        private static readonly string[] StatusMessages = { "Initializing…", "Loading profiles…", "Starting engine…", "Connecting controller…", "Configuring macros…", "Almost ready…", "Ready." };
+        private static readonly string[] StatusMessages = { "Initializing…", "Loading profiles…", "Starting engine…", "Connecting controller…", "Almost ready…", "Ready." };
         private readonly DispatcherTimer _statusTimer = new();
         private int _statusPhase = 0;
 

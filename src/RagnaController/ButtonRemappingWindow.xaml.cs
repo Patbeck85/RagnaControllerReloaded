@@ -32,14 +32,10 @@ namespace RagnaController
             if (SldRStick != null) SldRStick.Value = 0;
             if (SldL1R1   != null) SldL1R1.Value   = 0;
             if (SldL2R2   != null) SldL2R2.Value   = 0;
-            if (SldTurbo  != null) SldTurbo.Value  = 3;
 
             // Activate Base layer by default
             ApplyLayer("");
             UpdatePreview();
-
-            // Initialize turbo test checkbox
-            if (ChkTurboTestMain != null) ChkTurboTestMain.IsChecked = false;
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -64,9 +60,6 @@ namespace RagnaController
         private void RStickSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
         private void L1R1Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
         private void L2R2Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void TurboSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void ChkTurboTest_Click(object sender, RoutedEventArgs e) => ToggleTurboTest();
-        private void BtnTurboTest_Click(object sender, RoutedEventArgs e) => RunTurboTest();
         private void SpellCheckbox_Changed(object sender, RoutedEventArgs e) => UpdateSpellConfig();
         private void BtnSave_Click(object sender, RoutedEventArgs e) => SaveProfile();
         private void PreviewDpadSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
@@ -74,9 +67,6 @@ namespace RagnaController
         private void PreviewRStickSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
         private void PreviewL1R1Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
         private void PreviewL2R2Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void PreviewTurboSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void PreviewChkTurboTest_Click(object sender, RoutedEventArgs e) => ToggleTurboTest();
-        private void PreviewBtnTurboTest_Click(object sender, RoutedEventArgs e) => RunTurboTest();
 
         private string _activeLayer = "";
 
@@ -102,8 +92,6 @@ namespace RagnaController
             SldRStick.Value = 0;
             SldL1R1.Value   = 0;
             SldL2R2.Value   = 0;
-            SldTurbo.Value  = 3;
-            if (ChkTurboTestMain  != null) ChkTurboTestMain.IsChecked  = false;
             if (ChkGroundSpell   != null) ChkGroundSpell.IsChecked    = false;
             if (ChkSelfCast      != null) ChkSelfCast.IsChecked       = false;
             UpdatePreview();
@@ -117,26 +105,6 @@ namespace RagnaController
             if (TxtRStickValue != null) TxtRStickValue.Text = ((int)SldRStick.Value).ToString();
             if (TxtL1R1Value   != null) TxtL1R1Value.Text   = ((int)SldL1R1.Value).ToString();
             if (TxtL2R2Value   != null) TxtL2R2Value.Text   = ((int)SldL2R2.Value).ToString();
-            if (TxtTurboValue  != null) TxtTurboValue.Text  = $"{SldTurbo.Value:F1}s";
-            if (TurboFreqText != null)
-                TurboFreqText.Text = ChkTurboTestMain?.IsChecked == true
-                    ? $"Turbo: {SldTurbo.Value:F1}s interval"
-                    : "";
-        }
-
-        private void ToggleTurboTest()
-        {
-            bool active = ChkTurboTestMain?.IsChecked == true;
-            if (TurboFreqText != null)
-                TurboFreqText.Text = active ? $"Turbo: {SldTurbo.Value:F1}s interval" : "";
-        }
-
-        private void RunTurboTest()
-        {
-            if (ChkTurboTestMain?.IsChecked != true) return;
-            // Fire turbo interval live update on the engine
-            float intervalSec = (float)SldTurbo.Value;
-            _engine.LiveUpdateTurboInterval(intervalSec);
         }
 
         private void UpdateSpellConfig()
@@ -159,10 +127,6 @@ namespace RagnaController
                 // These sliders adjust the effective sensitivity per input type
                 profile.Deadzone     = Math.Clamp(0.12f + (float)SldDpad.Value / 1000f, 0.0f, 0.5f);
                 profile.CursorDeadzone = Math.Clamp(0.12f + (float)SldLStick.Value / 1000f, 0.0f, 0.5f);
-
-                // Turbo interval
-                if (ChkTurboTestMain?.IsChecked == true)
-                    _engine.LiveUpdateTurboInterval((float)SldTurbo.Value);
 
                 // Spell config flags
                 // (applied per button — stored in ButtonMappings, no global flag needed)

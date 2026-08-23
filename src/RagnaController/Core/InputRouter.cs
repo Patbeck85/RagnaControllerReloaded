@@ -60,7 +60,7 @@ namespace RagnaController.Core
         /// <summary>
         /// Route input through the engine chain. Returns true if input was consumed.
         /// </summary>
-        public bool RouteInput(ParsedInput input, int actualDeltaMs, bool rumbleEnabled, bool hapticMetronomeEnabled)
+        public bool RouteInput(ParsedInput input, int actualDeltaMs, bool rumbleEnabled)
         {
             // Update combat layers (L1, R1, L2, R2)
             _combat.UpdateLayers(input.L1, input.R1, input.L2, input.R2);
@@ -94,9 +94,6 @@ namespace RagnaController.Core
             // Cooldown tracking
             _cooldownManager.Tick();
 
-            // Combat macro playback
-            _combat.UpdateMacroPlayback(actualDeltaMs);
-
             // Mob sweep
             _mobSweep.Update(actualDeltaMs);
 
@@ -118,15 +115,5 @@ namespace RagnaController.Core
             _cooldownManager.RegisterAction(action);
         }
 
-        /// <summary>
-        /// Handle turbo pulse event for haptic metronome
-        /// </summary>
-        public void OnTurboPulsed(bool rumbleEnabled, bool hapticMetronomeEnabled)
-        {
-            if (rumbleEnabled && hapticMetronomeEnabled)
-            {
-                _feedback.Trigger(FeedbackType.TurboPulse);
-            }
-        }
     }
 }

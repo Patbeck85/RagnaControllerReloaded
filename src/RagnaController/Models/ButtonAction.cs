@@ -4,8 +4,6 @@ using System.Collections.Generic;
 namespace RagnaController.Models
 {
     public enum ActionType { Key, LeftClick, RightClick, Scroll, Combo, SwitchWindow, RoFeature }
-    public enum TurboMode { Standard, Burst, Rhythmic, Adaptive }
-    public enum MacroStepType { KeyPress, LeftClick, RightClick, Delay }
     public enum CombatState { Idle, Seeking, Engaged, Attacking }
     public enum EngineStatus { Stopped, Running, NoController }
     public enum MagePhase { Idle, GroundAiming, Casting, BoltSpamming }
@@ -17,11 +15,6 @@ namespace RagnaController.Models
             public ActionType Type { get; set; } = ActionType.Key;
             public VirtualKey Key { get; set; } = VirtualKey.None;
             public string Label { get; set; } = "";
-            public bool TurboEnabled { get; set; } = false;
-            public int TurboIntervalMs { get; set; } = 100;
-            public TurboMode Mode { get; set; } = TurboMode.Standard;
-            public string? MacroFilePath { get; set; }
-            public bool IsMacro => !string.IsNullOrEmpty(MacroFilePath);
             public bool IsGroundSpell { get; set; } = false;
 
             // NEW: Ground Spell Properties
@@ -44,20 +37,5 @@ namespace RagnaController.Models
             public int BuffWarningSec { get; set; } = 10;    // When to warn before expiration
         }
 
-    // Die Makro-Definitionen im Models-Namespace
-    /// <summary>Value-Type: Cache-lokale Speicherung in List&lt;MacroStep&gt;, 0 Heap-Allokationen.</summary>
-    public struct MacroStep
-    {
-        public int Index { get; set; }
-        public MacroStepType Type { get; set; }
-        public VirtualKey Key { get; set; }
-        public int DelayMs { get; set; }
-    }
-
-    public class Macro
-    {
-        public string Name { get; set; } = "Untitled";
-        public List<MacroStep> Steps { get; set; } = new List<MacroStep>();
-        public int LoopCount { get; set; } = 1;
-    }
+    // Macro definitions removed - macro functionality has been removed from the application
 }

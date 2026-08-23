@@ -23,16 +23,6 @@ namespace RagnaController.Core
         public const string ComboEditor_RemoveLastTooltip = "Remove last combo step";
         public const string ComboEditor_TriggerHint = "Trigger: Map a button to 'Class Combo' and HOLD it.";
         
-        // MacroTimelineWindow.xaml
-        public const string MacroTimeline_LoadTooltip = "Load macro file (.json) and display in timeline";
-        public const string MacroTimeline_PlayTooltip = "Play macro (simulates timing and events)";
-        public const string MacroTimeline_ZoomTooltip = "Timeline zoom: 0.5x (zoomed out) to 5x (zoomed in)";
-        public const string MacroTimeline_KeyTooltip = "Keyboard event (e.g., 'A' for Attack)";
-        public const string MacroTimeline_ClickTooltip = "Mouse left-click event";
-        public const string MacroTimeline_RClickTooltip = "Mouse right-click event";
-        public const string MacroTimeline_DelayTooltip = "Time delay without event";
-        public const string MacroTimeline_TotalDurationTooltip = "Total macro duration (displayed after loading)";
-        
         // RadialMenuWindow.xaml
         public const string RadialMenu_SelectItemTooltip = "Select a skill or profile from the radial menu";
         public const string RadialMenu_ExecuteTooltip = "Press L2/R2 to execute the selected skill";
@@ -67,14 +57,6 @@ namespace RagnaController.Core
         public const string Combo_AddStep = "+ ADD STEP";
         public const string Combo_RemoveLast = "- REMOVE LAST";
         
-        // Macro buttons
-        public const string Macro_SpeedUp = "SPEED UP (×2)";
-        public const string Macro_SlowDown = "SLOW DOWN (×2)";
-        public const string Macro_Optimize = "OPTIMIZE";
-        public const string Macro_AddStep = "+ ADD STEP";
-        public const string Macro_Preview = "PREVIEW";
-        public const string Macro_SaveChanges = "SAVE CHANGES";
-        
         // Button Remapping
         public const string ButtonRemap_SelectLayerTooltip = "Select the controller layer (BASE / L1+ / R1+ / L2+ / R2+)";
         public const string ButtonRemap_ButtonsTooltip = "Remap Controller-Buttons (A/B/X/Y/LB/RB/LT/RT/L3/R3)";
@@ -106,16 +88,6 @@ namespace RagnaController.Core
         public const string ComboEditor_DelaysTooltip_DE = "Verzögerungen zwischen Combo-Schritten (in ms)";
         public const string ComboEditor_AddStepTooltip_DE = "Neuen Combo-Schritt hinzufügen (Skill/Key/Click/Delay)";
         public const string ComboEditor_RemoveLastTooltip_DE = "Letzten Combo-Schritt entfernen";
-        
-        // MacroTimelineWindow.xaml Tooltips (German)
-        public const string MacroTimeline_LoadTooltip_DE = "Makro-Datei (.json) laden und in der Timeline anzeigen";
-        public const string MacroTimeline_PlayTooltip_DE = "Makro abspielen (simuliert Timing und Events)";
-        public const string MacroTimeline_ZoomTooltip_DE = "Timeline-Zoom: 0.5× (ausgezoomt) bis 5× (herangezoomt)";
-        public const string MacroTimeline_KeyTooltip_DE = "Keyboard-Event (z.B. 'A' für Attack)";
-        public const string MacroTimeline_ClickTooltip_DE = "Maus-Linksklick-Event";
-        public const string MacroTimeline_RClickTooltip_DE = "Maus-Rechtsklick-Event";
-        public const string MacroTimeline_DelayTooltip_DE = "Zeitverzögerung ohne Event";
-        public const string MacroTimeline_TotalDurationTooltip_DE = "Gesamtdauer des Makros (wird nach Laden angezeigt)";
         
         // RadialMenuWindow.xaml Tooltips (German)
         public const string RadialMenu_SelectItemTooltip_DE = "Wähle einen Skill oder Profil aus dem radialen Menü";

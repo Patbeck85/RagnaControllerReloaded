@@ -127,7 +127,6 @@
     <Compile Include="Core\KiteEngine.cs" />
     <Compile Include="Core\KiteStates.cs" />
     <Compile Include="Core\LocalizationManager.cs" />
-    <Compile Include="Core\MacroRecorder.cs" />
     <Compile Include="Core\MageEngine.cs" />
     <Compile Include="Core\MainViewModel.cs" />
     <Compile Include="Core\Messages.cs" />
@@ -166,9 +165,6 @@
     <Compile Include="HandheldWindow.xaml.cs" />
     <Compile Include="InGameOverlayWindow.xaml.cs" />
     <Compile Include="LocStrings.Designer.cs" />
-    <Compile Include="MacroEditorWindow.xaml.cs" />
-    <Compile Include="MacroRecorderWindow.xaml.cs" />
-    <Compile Include="MacroTimelineWindow.xaml.cs" />
     <Compile Include="MainWindow.xaml.cs" />
     <Compile Include="MiniModeWindow.xaml.cs" />
     <Compile Include="Models\AdaptiveTriggerMode.cs" />

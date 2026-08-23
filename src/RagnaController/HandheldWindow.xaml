@@ -131,7 +131,7 @@
                                HorizontalAlignment="Center"/>
                     <TextBlock Text="SETTINGS" FontSize="22" FontWeight="Black"
                                Margin="0,16,0,0" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Deadzone, Turbo, Gyro" FontSize="13"
+                    <TextBlock Text="Deadzone, Gyro" FontSize="13"
                                Foreground="#7D8B9E" HorizontalAlignment="Center" Margin="0,6,0,0"/>
                 </StackPanel>
                 <Button.ToolTip><ToolTip Content="Settings"/></Button.ToolTip>

@@ -1,0 +1,10 @@
+*** Begin Patch
+*** Update File: src/RagnaController/MainWindow.xaml.cs
+@@
+-        private void BtnMacro_Click(object s, RoutedEventArgs e)
+-        {
+-            // Macro button click handler
+-        }
+-
+         private void BtnRadial_Click(object s, RoutedEventArgs e)
+*** End Patch

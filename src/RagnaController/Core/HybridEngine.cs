@@ -78,16 +78,13 @@ namespace RagnaController.Core
         public void LiveUpdateRightStick(float v) => _orchestrator.ProfileApplier.LiveUpdateRightStick(v);
         public void LiveUpdateLeftTrigger(float v) => _orchestrator.ProfileApplier.LiveUpdateLeftTrigger(v);
         public void LiveUpdateRightTrigger(float v) => _orchestrator.ProfileApplier.LiveUpdateRightTrigger(v);
-        public void LiveUpdateTurboInterval(float v) => _orchestrator.ProfileApplier.LiveUpdateTurboInterval(v);
 
         // ── Settings (Delegiert an ProfileApplier) ───────────────────────
         public void SetSoundEnabled(bool enabled) => _orchestrator.ProfileApplier.SetSoundEnabled(enabled);
         public void SetRumbleEnabled(bool enabled) => _orchestrator.ProfileApplier.SetRumbleEnabled(enabled);
         public void TurnOff() => _orchestrator.ProfileApplier.TurnOff();
-        public void SetHapticMetronomeEnabled(bool enabled) => _orchestrator.ProfileApplier.SetHapticMetronomeEnabled(enabled);
         public void SetStandbySettings(bool enabled, int timeoutMins) => _orchestrator.ProfileApplier.SetStandbySettings(enabled, timeoutMins);
         public void AttachProfileManagerLogger(ProfileManager pm) => _orchestrator.ProfileApplier.AttachProfileManagerLogger(pm);
-        public void ClearMacroCache() => _orchestrator.ProfileApplier.ClearMacroCache();
 
         // ── Lifecycle (Delegiert an Orchestrator) ────────────────────────
         public void Start() => _orchestrator.Start();

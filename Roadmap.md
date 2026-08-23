@@ -119,6 +119,9 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 ## ✅ Phase 5: Polish & Release Prep (COMPLETE)
 **Goal:** Stabilize all features, final QA, release isolation, packaging
 
+### FEAT-011 | Auto-Potion System (Toggle) | LOW | ✅ COMPLETE
+Optional Auto-Potion with HP/SP thresholds, standardmäßig AUS. In `SettingsWindow.xaml` als Checkbox ein-/ausschaltbar. Bei aktiviert: Respektiert serverseitigen ~500ms Delay, triggert Key-VK basierend auf `AutoPotionKeyVK`, `AutoPotionHPThreshold`, `AutoPotionSPThreshold`. Optional in `SkillOrchestrator` als Condition nutzbar.
+
 | Task ID | Task | Priority | Dependencies | Definition of Done | Status |
 |---------|------|----------|--------------|-------------------|--------|
 | POLISH-001 | Fix ControllerSnapshot benchmark warning (record struct overhead) | MEDIUM | TEST-02 | Benchmark mean < 50 ns achieved | ✅ DONE (accepted as known limitation) |

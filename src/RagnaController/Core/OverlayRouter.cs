@@ -50,7 +50,7 @@ namespace RagnaController.Core
         /// <summary>
         /// Verarbeitet Overlay-Eingaben.
         /// FIX: Keine Early Returns — alle Tasten müssen an CombatEngine weitergegeben werden,
-        /// damit offene Turbos/Makros sauber abgebrochen werden.
+        /// damit offene Prozesse sauber abgebrochen werden.
         /// </summary>
         public void Process(ParsedInput input)
         {

@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -32,7 +31,7 @@ namespace RagnaController
             _engine = engine;
             _manager = manager;
             _s = s;
-        
+       
             // Initialize all settings from saved values
             InitializeSettings();
         }
@@ -51,15 +50,6 @@ namespace RagnaController
             // Engine Settings
             ChkStartWithWindows.IsChecked = _s.StartWithWindows;
             ChkMinimizeToTray.IsChecked = _s.MinimizeToTray;
-        }
-
-        private void TurboToggle_Click(object sender, MouseButtonEventArgs e)
-        {
-            // Toggle turbo mode
-            _s.TurboMode = !_s.TurboMode;
-            TurboToggleThumb.Fill = _s.TurboMode ? Brushes.LimeGreen : Brushes.Gray;
-            TurboStatusText.Text = _s.TurboMode ? "TURBO ACTIVE" : "TURBO OFF";
-            _s.Save();
         }
 
         private void ChkAutoLoadProfile_Click(object sender, RoutedEventArgs e)
@@ -135,10 +125,10 @@ namespace RagnaController
         {
             // Use a short-lived ControllerService — properly disposed after calibration
             using var controllerSvc = new ControllerService();
-            
+           
             // Wait briefly for background SDL init to complete
             await Task.Delay(800);
-            
+           
             if (!controllerSvc.IsConnected)
             {
                 EngineStateText.Text = "No gamepad connected";
@@ -157,7 +147,7 @@ namespace RagnaController
             for (int i = 3; i > 0; i--)
             {
                 EngineStateText.Text = string.Format("Calibrating... ({i})", i);
-                
+               
                 // Sample multiple times per second for accuracy
                 for (int sample = 0; sample < 10; sample++)
                 {
@@ -174,7 +164,7 @@ namespace RagnaController
 
             // Add a 2% safety buffer to the maximum detected drift
             float finalDeadzone = (float)Math.Round(maxDrift + 0.02f, 2);
-            
+           
             // Hard caps to prevent crazy values if the user touched the stick
             if (finalDeadzone > 0.40f) finalDeadzone = 0.40f; 
             if (finalDeadzone < 0.05f) finalDeadzone = 0.05f;
@@ -191,7 +181,7 @@ namespace RagnaController
 
             EngineStateText.Foreground = Brushes.LimeGreen;
             EngineStateText.Text = $"Calibration complete: {finalDeadzone} deadzone";
-            
+           
             BtnCalibrate.IsEnabled = true;
             ChkStartWithWindows.IsEnabled = true;
         }
@@ -294,7 +284,6 @@ namespace RagnaController
                 _s.AutoStart = ChkAutoStart.IsChecked == true;
                 _s.SoundEnabled = ChkSound.IsChecked == true;
                 _s.RumbleEnabled = ChkRumble.IsChecked == true;
-                _s.EnableHapticMetronome = ChkHapticMetronome.IsChecked == true;
                 _s.StartInMiniMode = ChkStartInMiniMode.IsChecked == true;
 
                 // Smart Standby (AFK Battery Saver)

@@ -189,15 +189,6 @@ namespace RagnaController.Core
                                                                     }
                                     };
 
-            _combat.TurboPulsed += () =>
-            {
-                if (_rumbleEnabled && _hapticMetronomeEnabled)
-                {
-                    _feedback.Trigger(FeedbackType.TurboPulse);
-                }
-                // Also notify InputRouter
-                _inputRouter.OnTurboPulsed(_rumbleEnabled, _hapticMetronomeEnabled);
-            };
 
             _tickProvider.Tick += OnTick;
                                     _groundSpell = new GroundSpellEngine(engineQueue);
@@ -209,7 +200,6 @@ namespace RagnaController.Core
         // These will be set via ProfileApplier
         private bool _soundEnabled = true;
         private bool _rumbleEnabled = true;
-        private bool _hapticMetronomeEnabled = true;
         private bool _isRenewal = true;
         private Profile? _currentProfile;
 
@@ -242,7 +232,6 @@ namespace RagnaController.Core
         // Expose runtime flags for ProfileApplier
         public bool SoundEnabled { get => _soundEnabled; set => _soundEnabled = value; }
         public bool RumbleEnabled { get => _rumbleEnabled; set => _rumbleEnabled = value; }
-        public bool HapticMetronomeEnabled { get => _hapticMetronomeEnabled; set => _hapticMetronomeEnabled = value; }
         public bool IsRenewal { get => _isRenewal; set => _isRenewal = value; }
         public Profile? CurrentProfile { get => _currentProfile; set => _currentProfile = value; }
         public InputCommandQueue? CommandQueue => _queue;
@@ -325,7 +314,7 @@ namespace RagnaController.Core
                 }
 
                 // Routing - delegate to InputRouter
-                                _inputRouter.RouteInput(input, _actualDeltaMs, _rumbleEnabled, _hapticMetronomeEnabled);
+                                _inputRouter.RouteInput(input, _actualDeltaMs, _rumbleEnabled);
 
                                 // FEAT-006: Update ground spells
                                                                 _groundSpell?.Handle(input, _actualDeltaMs);

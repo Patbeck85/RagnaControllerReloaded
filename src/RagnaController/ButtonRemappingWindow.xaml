@@ -103,30 +103,6 @@
                                     </Grid>
                                 </Border>
 
-                                <!-- Turbo -->
-                                <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
-                                        <TextBlock Text="Turbo" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                        <Slider x:Name="SldTurbo" Minimum="1" Maximum="10" Value="3" ValueChanged="TurboSlider_ValueChanged" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="1" x:Name="TxtTurboValue" Text="3.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
-                                    </Grid>
-                                </Border>
-
-                                <!-- Turbo Test -->
-                                <Grid Margin="0,15,0,0">
-                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                    <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                        <TextBlock Text="Turbo Test" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                        <CheckBox x:Name="ChkTurboTestMain" Content="Enable" Foreground="#7D8B9E" FontSize="10" Margin="0,0,10,0" Click="ChkTurboTest_Click"/>
-                                    </StackPanel>
-                                    <Button Grid.Column="1" x:Name="BtnTestTurbo" Content="&#x25B6; Test" Width="75" Height="36" Margin="10,0,0,0" Style="{StaticResource ConsoleGhostBtn}" Click="BtnTurboTest_Click"/>
-                                </Grid>
-
-                                <!-- Turbo Frequency Text -->
-                                <TextBlock x:Name="TurboFreqText" Text="" Foreground="#3A8EFF" FontSize="11" FontFamily="Consolas" FontWeight="Bold" Margin="0,6,0,0"/>
-                     
                                 <!-- Ground Spell & Self Cast Toggles -->
                                 <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
                                     <Grid>
@@ -201,29 +177,6 @@
                             </Grid>
                         </Border>
 
-                        <!-- Turbo -->
-                        <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
-                            <Grid>
-                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
-                                <TextBlock Text="Turbo" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                <Slider x:Name="SldPreviewTurbo" Minimum="1" Maximum="10" Value="3" ValueChanged="PreviewTurboSlider_ValueChanged" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" x:Name="TxtPreviewTurboValue" Text="3.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
-                            </Grid>
-                        </Border>
-
-                        <!-- Turbo Test -->
-                        <Grid Margin="0,15,0,0">
-                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0" Orientation="Horizontal">
-                                <TextBlock Text="Turbo Test" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                <CheckBox x:Name="ChkPreviewTurboTest" Content="Enable" Foreground="#7D8B9E" FontSize="10" Margin="0,0,10,0" Click="PreviewChkTurboTest_Click"/>
-                            </StackPanel>
-                            <Button Grid.Column="1" x:Name="BtnPreviewTestTurbo" Content="&#x25B6; Test" Width="75" Height="36" Margin="10,0,0,0" Style="{StaticResource ConsoleGhostBtn}" Click="PreviewBtnTurboTest_Click"/>
-                        </Grid>
-
-                        <!-- Turbo Frequency Text -->
-                        <TextBlock x:Name="PreviewTurboFreqText" Text="" Foreground="#3A8EFF" FontSize="11" FontFamily="Consolas" FontWeight="Bold" Margin="0,6,0,0"/>
                     </Grid>
                 </Border>
             </Grid>
