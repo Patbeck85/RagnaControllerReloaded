@@ -28,11 +28,14 @@ namespace RagnaController.Controller
         private volatile SDLGameController* _controllerSnapshot = null;
 
         // ── Thread synchronization ─────────────────────────────────────────
-        private readonly Thread _sdlThread;
-        private readonly ManualResetEventSlim _scanNow = new ManualResetEventSlim(false);
-        private Core.DeviceNotificationWindow? _deviceNotificationWindow;
+                private readonly Thread _sdlThread;
+                private readonly ManualResetEventSlim _scanNow = new ManualResetEventSlim(false);
+                private Core.DeviceNotificationWindow? _deviceNotificationWindow;
 
-        public bool   IsConnected   => _isConnected;
+                // ── SDL initialization guard ───────────────────────────────
+                private static bool _sdlInitialized = false;
+
+                public bool   IsConnected   => _isConnected;
         public string ControllerName  { get; private set; } = "No Controller";
         public string ControllerType  { get; private set; } = "Unknown";
         
@@ -176,68 +179,80 @@ namespace RagnaController.Controller
         // ── SDL thread body (ALL SDL calls live here) ──────────────────────
 
         private void SdlThreadLoop()
-        {
-            // ── Init SDL on this thread ──────────────────────────────────
-            int result = SDL.Init(SDL.SDL_INIT_GAMECONTROLLER |
-                                  SDL.SDL_INIT_JOYSTICK       |
-                                  SDL.SDL_INIT_HAPTIC         |
-                                  SDL.SDL_INIT_EVENTS);
-            if (result < 0)
-            {
-                System.Diagnostics.Debug.WriteLine(
-                    "[ControllerService] SDL.Init failed: " + SDL.GetErrorS());
-                return;
-            }
-            System.Diagnostics.Debug.WriteLine("[ControllerService] SDL2 initialized ✓"); // checkmark
-
-            // ── Create Device Notification Window for instant hot-plug detection ────────────
-            try
-            {
-                _deviceNotificationWindow = new Core.DeviceNotificationWindow(() =>
                 {
-                    System.Diagnostics.Debug.WriteLine("[ControllerService] WM_DEVICECHANGE received — requesting immediate scan");
-                    _scanNow.Set();
-                });
-                System.Diagnostics.Debug.WriteLine("[ControllerService] Device notification window created");
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[ControllerService] Failed to create device notification window: {ex.Message}");
-            }
+                    try
+                    {
+                        if (!_sdlInitialized)
+                        {
+                            int result = SDL.Init(SDL.SDL_INIT_GAMECONTROLLER |
+                                                  SDL.SDL_INIT_JOYSTICK |
+                                                  SDL.SDL_INIT_HAPTIC |
+                                                  SDL.SDL_INIT_EVENTS);
+                            if (result < 0)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    "[ControllerService] SDL.Init failed: " + SDL.GetErrorS());
+                                return;
+                            }
+                            _sdlInitialized = true;
+                        }
+                        System.Diagnostics.Debug.WriteLine("[ControllerService] SDL2 initialized ✓");
 
-            // ── Initial scan ────────────────────────────────────────────
-            ScanForController();
+                        // ── Create Device Notification Window for instant hot-plug detection ────────────
+                        try
+                        {
+                            _deviceNotificationWindow = new Core.DeviceNotificationWindow(() =>
+                            {
+                                System.Diagnostics.Debug.WriteLine("[ControllerService] WM_DEVICECHANGE received — requesting immediate scan");
+                                _scanNow.Set();
+                            });
+                            System.Diagnostics.Debug.WriteLine("[ControllerService] Device notification window created");
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"[ControllerService] Failed to create device notification window: {ex.Message}");
+                        }
 
-            // ── Main loop: scan on request or every 3 s ─────────────────
-            while (!_disposed)
-            {
-                // Wait up to 3000 ms for a scan request or disposal
-                bool signalled = _scanNow.Wait(3000);
-                if (_disposed) break;
-                _scanNow.Reset();
+                        // ── Initial scan ────────────────────────────────────────────
+                        ScanForController();
 
-                // Pump SDL events (safe — same thread as SDL.Init)
-                SDL.PumpEvents();
+                        // ── Main loop: scan on request or every 3 s ─────────────────
+                        while (!_disposed)
+                        {
+                            // Wait up to 3000 ms for a scan request or disposal
+                            bool signalled = _scanNow.Wait(3000);
+                            if (_disposed) break;
+                            _scanNow.Reset();
 
-                if (!_isConnected || _controller == null)
-                    ScanForController();
-                else
-                    VerifyStillConnected();
-            }
+                            // Pump SDL events (safe — same thread as SDL.Init)
+                            SDL.PumpEvents();
 
-            // ── Cleanup on this thread ───────────────────────────────────
-            if (_controller != null)
-            {
-                SDL.GameControllerRumble(_controller, 0, 0, 0);
-                SDL.GameControllerClose(_controller);
-                _controller = null;
-            }
-            _isConnected = false;
-            SDL.Quit();
-            System.Diagnostics.Debug.WriteLine("[ControllerService] SDL2 shut down");
-        }
+                            if (!_isConnected || _controller == null)
+                                ScanForController();
+                            else
+                                VerifyStillConnected();
+                        }
+                    }
+                    finally
+                    {
+                        // ── Cleanup on this thread ───────────────────────────────────
+                        if (_controller != null)
+                        {
+                            SDL.GameControllerRumble(_controller, 0, 0, 0);
+                            SDL.GameControllerClose(_controller);
+                            _controller = null;
+                        }
+                        _isConnected = false;
+                        if (_sdlInitialized)
+                        {
+                            SDL.Quit();
+                            _sdlInitialized = false;
+                            System.Diagnostics.Debug.WriteLine("[ControllerService] SDL2 shut down");
+                        }
+                    }
+                }
 
-        private void ScanForController()
+                private void ScanForController()
         {
             // Pump first so newly-plugged devices are visible
             SDL.PumpEvents();
