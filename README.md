@@ -1,14 +1,13 @@
-# RagnaController v2.0.1 — Autonomous Multi-Agent Development
+# RagnaController v2.0.3 — Autonomous Multi-Agent Development
 
-**Version:** 2.0.1 | **Release:** 2026-08-23 | **Build:** 0 errors, 0 warnings | **Tests:** 56/56 passing
-
----
+**Version:** 2.0.3 | **Release:** 2026-08-24 | **Build:** 0 errors, 0 warnings | **Tests:** 56/56 passing
 
 ## 🤖 Autonomous Development Summary
 
 This release represents a complete autonomous development cycle executed per **SOUL.md v2.0 Enterprise** principles. All phases (1-7) were completed without manual intervention, with systematic file-by-file review and optimization of all ~323 `.cs` files.
 
 ### Key Achievements:
+
 - **Zero-allocation hot paths** — Reusable lists, `ConcurrentDictionary`, `IReadOnlyCollection` instead of `.ToList()`
 - **Human-like input timing** — `JitterService.ClickHold()` with 15-46ms natural variance replaces hardcoded 50ms sleeps
 - **Memory leak prevention** — `Commands` list DEBUG-only; `_isInitialized` field eliminated
@@ -18,7 +17,7 @@ This release represents a complete autonomous development cycle executed per **S
 
 ---
 
-## ✨ Key Features (v2.0.1)
+## ✨ Key Features (v2.0.3)
 
 | Feature | Description |
 |---|---|
@@ -65,6 +64,7 @@ This release represents a complete autonomous development cycle executed per **S
 ## 🚀 Quick Start
 
 ### Installation
+
 1. **Download** the latest release from [GitHub Releases](https://github.com/Patbeck85/RagnaControllerReloaded/releases)
 2. **Extract** to a folder (e.g., `C:\RagnaController`)
 3. **Run as Administrator:** Right-click → Properties → Compatibility → Run as administrator
@@ -72,6 +72,7 @@ This release represents a complete autonomous development cycle executed per **S
 5. **Launch** `RagnaController.exe`
 
 ### First Configuration
+
 1. **Select your character class** from the profile library (auto-detect available via FEAT-009)
 2. **Adjust deadzone** (recommended: 0.10–0.20)
 3. **Choose game mode:** Pre-Renewal or Renewal timing
@@ -79,14 +80,16 @@ This release represents a complete autonomous development cycle executed per **S
 
 ---
 
-## 🏗️ Core Architecture (v2.0.1)
+## 🏗️ Core Architecture (v2.0.3)
 
 ### The Tick Loop (125Hz / 8ms)
-```
+
+```text
 InputReader → SystemMonitor → EngineOrchestrator.OnTick → InputRouter.RouteInput → CombatEngine → InputCommandQueue → Win32.SendInput
 ```
 
 ### Decomposed Engine Components
+
 The monolithic `HybridEngine` has been decomposed into focused, single-responsibility components:
 
 | Component | Responsibility |
@@ -101,6 +104,7 @@ The monolithic `HybridEngine` has been decomposed into focused, single-responsib
 | `GroundSpellEngine` | AoE ground spell management with tick events and auto-cleanup |
 
 ### Zero Allocation in Hot Path
+
 Critical performance optimizations:
 
 - **NO LINQ** in `Update()` or `Tick()` methods
@@ -110,6 +114,7 @@ Critical performance optimizations:
 - **Reusable lists** — `GetActiveSpellNames()` reuses list; `ActiveBuffNames` returns `IReadOnlyCollection`
 
 ### Thread Safety & UI Updates
+
 - Engine runs on background thread; UI runs on WPF Dispatcher
 - **NEVER** touch WPF UI elements directly from engine code
 - Use `Dispatcher.Invoke(() => { ... })` for UI updates
@@ -122,17 +127,20 @@ Critical performance optimizations:
 RagnaController uses a **JSON-based localization system** with live language switching:
 
 ### Supported Languages
+
 - **English** (`en.json`) — Default
 - **Deutsch** (`de.json`) — German
 - **Tagalog** (`tl.json`) — Filipino
 - **Community languages:** Add your own! (41 locales supported)
 
 ### How It Works
+
 1. **JSON files** in `Locales/` folder (e.g., `en.json`, `de.json`)
 2. **MarkupExtension** `{core:Loc KeyName}` in XAML
 3. **Live switching:** Change language in Settings → No restart required!
 
 ### Adding a New Language
+
 1. Copy `en.json` to `Locales/yourlang.json`
 2. Translate all values
 3. Keep keys unchanged (e.g., `Btn_Base`, `Status_Ready`)
@@ -221,6 +229,7 @@ src/RagnaController/
 ## 🧪 Testing & Quality Assurance
 
 ### Unit Tests
+
 Located in `tests/RagnaController.Tests/`:
 
 - Deterministic engine testing using `FakeInputService` and `TestCommandQueue`
@@ -230,6 +239,7 @@ Located in `tests/RagnaController.Tests/`:
 **Current Test Suite:** 56 tests passing across all core engines and integration tests.
 
 ### Build Verification
+
 Before any deployment:
 
 1. **Compile** project (`dotnet build`) — **0 errors, 0 warnings** ✅
@@ -238,6 +248,7 @@ Before any deployment:
 4. **Verify release isolation** — `release_final/` contains only end products ✅
 
 ### Mutation Testing
+
 Stryker.NET configured with `stryker-config-core-only.json` — mutation testing pipeline active on GitHub Actions `windows-latest`.
 
 ---
@@ -247,6 +258,7 @@ Stryker.NET configured with `stryker-config-core-only.json` — mutation testing
 **MIT License** — See [LICENSE](LICENSE) file for details.
 
 ### Community Guidelines
+
 - ✅ **White-hat only:** No anti-cheat bypasses, no memory injection
 - ✅ **Open contributions:** Add languages, profiles, features
 - ✅ **Respect RoH:** Follow Ragnarok Online Handbook rules
@@ -259,6 +271,7 @@ Stryker.NET configured with `stryker-config-core-only.json` — mutation testing
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
 
 ### Quick Contribution Checklist
+
 - [] Fork the repository
 - [] Create feature branch (`git checkout -b feature/amazing-feature`)
 - [] Ensure all tests pass (`dotnet test`)
@@ -266,6 +279,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
 - [] Create pull request with clear description
 
 ### Commit Message Format
+
 ```
 feat(Core/ClassDetector): Add weighted skill scoring for auto-class detection
 - Implement heuristic scoring (weights 1-3) for skill-to-class mapping
@@ -319,6 +333,7 @@ The `release_final/` directory contains **only end products**:
 - ✅ **ZIP package** with installer
 
 **Verboten (excluded):**
+
 - `.obj`, `.pdb`, `.tmp`, `.log`, `.cache`, `.debug` files
 - Source code, test files, scratch pads
 - Any debug artifacts
@@ -355,8 +370,8 @@ Script validates only end products in `release_final/` — no debug artifacts pr
 
 ## POLISH-012: SOUL.md Golden Rules Automated Validation Suite
 
-Automated checks for all 7 golden rules — all satisfied in v2.0.1.
+Automated checks for all 7 golden rules — all satisfied in v2.0.3.
 
 ---
 
-*Last updated: 2026-08-23 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 56/56 passing*
+*Last updated: 2026-08-24 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 56/56 passing*

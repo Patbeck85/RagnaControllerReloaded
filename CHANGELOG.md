@@ -4,21 +4,34 @@ All notable changes to RagnaController will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.3] - 2026-08-24
+
+### Added
+- **Documentation update** — CHANGELOG, README, and roadmap synchronized for v2.0.3 release.
+
+### Changed
+- Documentation restructured per SOUL.md v2.0 Enterprise guidelines.
+
+### Fixed
+- No bug fixes in this release.
+
+### Tests
+- Documentation build verified.
+
+---
+
 ## [2.0.2] - 2026-08-23
 
 ### Fixed
-
 - **SDL2 Cleanup** — `System.AccessViolationException` in `ControllerService.SdlThreadLoop()` behoben: Static `_sdlInitialized`-Guard verhindert mehrfache `SDL.Init()`/`SDL.Quit()` Calls; `try/finally` garantiert sicheren Cleanup nur bei erfolgreicher Initialisierung. Behebt Crash in headless CI-Umgebung.
 
 ### Tests
-
 - All 56 tests passing (verified locally + CI).
 - Build: 0 errors, 0 warnings (Stryker.NET mutation testing configured).
 
 ## [2.0.1] - 2026-08-23
 
 ### Added
-
 - **FEAT-007: Class-Specific Skill Orchestration** — 27 class-specific rotations with weighted heuristic scoring, `RotationStep`, `RotationConfig`, `RotationCondition` with 15 condition types. `SkillOrchestrator.Update()` handles evaluation and execution.
 - **FEAT-008: Buff / Debuff Tracking System** — `BuffManager` tracks buffs/debuffs with durations, expiration warnings, and auto-recast support, integrated into `EngineOrchestrator` via `action.TrackBuff`. Exposes `ActiveBuffNames`, `ActiveDebuffNames`, `GetBuffRemainingSec()`, `GetDebuffRemainingSec()`.
 - **POLISH-013:** Zero-allocation hot path optimizations across core engines — reusable lists, `ConcurrentDictionary` + `GetOrAdd`, `IReadOnlyCollection` instead of `.ToList()`.
@@ -26,7 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **POLISH-015:** Memory leak prevention — `Commands` list in `InputCommandQueue` conditionalized under `#if DEBUG`; `_isInitialized` field removed from `InGameOverlayWindow.xaml.cs`.
 
 ### Changed
-
 - **`ButtonState.cs`** — Converted to `readonly record struct` with positional parameters, built-in equality, helper properties (`AnyFaceButtonPressed`, `AnyShoulderPressed`, `AnyDPadPressed`, `AnyStickButtonPressed`, `AnyButtonPressed`), and `With()` method.
 - **`ControllerManager.cs`** — All nullable fields initialized at declaration (`_buttonStates = new()`, `_controllerGuid = ""`, `_controllerName = ""`, `_controllerType = ""`, `_batteryLevel = 0`) — eliminates 5 CS8618 warnings.
 - **`XInputFallbackService.cs`** — Constructor parameters (`ControllerService?`, `Profile?`) and `_controllerService` field made nullable — fixes CS8625 and CS8618 warnings.
@@ -45,13 +57,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`ControllerSnapshot.cs`** — Added `SkillCooldownMs` and `ActiveSkillId` fields for cooldown tracking in overlay UI.
 
 ### Tests
-
 - All 56 tests passing (increased from previous suite).
 - Build: 0 errors, 0 warnings (improved from previous build with temporary warnings).
 - Mutation testing pipeline configured via Stryker.NET `stryker-config-core-only.json`.
 
 ### Fixed
-
 - **CS8618** nullable warnings eliminated across `ControllerManager.cs`, `XInputFallbackService.cs`, `SnapshotBuilder.cs` (Core + Controller paths).
 - **CS8625** nullable warnings fixed — all constructor params and fields properly annotated.
 - **Memory leak** in `InputCommandQueue.cs` — `Commands` list now DEBUG-only; `AtomicLeftClick`/`AtomicRightClick` use `JitterService.ClickHold()` (15-46ms) instead of hardcoded 50ms.
@@ -64,14 +74,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.0.0] - 2026-08-22
 
 ### Added
-
 - **Full autonomous development cycle** — Phases 1-7 completed without manual intervention per SOUL.md.
 - **FEAT-003: Community Hub** — Profile sharing via GitHub Gists with 3 starter profiles.
 - **FEAT-004: HybridEngine decomposition** — Split monolithic HybridEngine into focused components.
 - **FEAT-005: Full Class Engine Presets** — 27 class-specific rotation presets.
 
 ### Changed
-
 - Architecture refactoring: HybridEngine → EngineOrchestrator + InputRouter + ProfileApplier + StandbyManager
 - Controller event renamed from `DetectController` to `ControllerDetected`
 - `GetBatteryLevel()` → `BatteryLevel` property across EngineOrchestrator, MainWindow, ControllerService
@@ -85,7 +93,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tests: 56/56 passing
 
 ### Tests
-
 - All 56 tests passing (previously 40/40).
 - Build: 0 errors, 0 warnings (improved from 1 warning nullable reference).
 - SOUL.md RULE-001..004: All satisfied.
@@ -96,19 +103,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.5.0] - 2026-08-18
 
 ### Added
-
 - **POLISH-003: EngineIntegrationTests Scaffold** — 7 integration tests for engine orchestration stability with mocked RO window.
-- **POLISH-004: Release Package Prep** — Clean `release_final/` isolation verified.
-- **POLISH-001: Build Fixes** — XAML entity escaping, TurboValue typo, removed missing .ps1 files from csproj.
 
 ### Changed
-
 - **POLISH-002: Stryker CI Integration** — Push to `main` triggers mutation testing pipeline on `windows-latest`.
 - **POLISH-004: Release Package Prep** — Clean `release_final/` isolation verified.
 - **POLISH-001: Build Fixes** — XAML entity escaping, typo fixes, csproj cleanup.
 
 ### Tests
-
 - All 40 tests passing (32 unit + 8 integration).
 
 ---
@@ -116,16 +118,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.4.1] - 2026-08-17
 
 ### Changed
-
 - **InputCommandQueue Migration** — All engines now accept `InputCommandQueue` via constructor for unified input dispatch.
 
 ### Fixed
-
 - KiteEngine: corrected method name `MouseMoveRelative` → `MoveMouseRelative`.
 - SmartCursorService.Tick(): test assertion fixed for bool return type.
 
 ### Tests
-
 - All 32 unit tests passing (updated KiteEngineTests to pass queue).
 
 ---
@@ -133,18 +132,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.4.0] - 2026-08-17
 
 ### Added
-
 - **ARCH-001: HybridEngine Decomposition** — Split 605-line monolithic HybridEngine into 4 focused components: EngineOrchestrator, InputRouter, ProfileApplier, StandbyManager.
 - `HybridEngine` now acts as a thin façade maintaining full backward compatibility.
 
 ### Changed
-
 - Architecture version bumped to v1.4.0.
 - HybridEngine reduced from ~605 lines to ~100 lines.
 - Tick loop now delegates to `EngineOrchestrator.OnTick` with clear separation of concerns.
 
 ### Tests
-
 - All 32 unit tests passing (0 errors, 0 warnings).
 - Performance: < 50 allocations per tick, < 8ms end-to-end latency.
 
@@ -153,7 +149,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.3.0] - 2026-08-15
 
 ### Added
-
 - Core engine implementations (HybridEngine, Win32InputService).
 - State machine implementations (KiteStates, CombatRouter).
 - Service providers (ITickProvider, IInputService).
@@ -164,14 +159,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI/CD pipeline configuration (GitHub Actions workflow).
 
 ### Changed
-
 - Repaired critical bugs in InputCommandQueue (added input consumption flag).
 - Repaired critical bugs in AutoTargetEngine (fixed state machine management).
 - Repaired critical bugs in MovementEngine (fixed state machine management).
 - Repaired critical bugs in Win32InputService (fixed input consumption flag).
 
 ### Tests
-
 - All 32 unit tests passing (0 errors, 0 warnings).
 - Performance: < 50 allocations per tick, < 8ms end-to-end latency.
 
@@ -187,4 +180,4 @@ The version number follows Semantic Versioning (SemVer):
 
 ---
 
-*Last updated: 2026-08-23 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 56/56 passing*
+*Last updated: 2026-08-24 | Documentation synchronized | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 56/56 passing*
