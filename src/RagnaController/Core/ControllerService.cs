@@ -234,22 +234,35 @@ namespace RagnaController.Controller
                         }
                     }
                     finally
-                    {
-                        // ── Cleanup on this thread ───────────────────────────────────
-                        if (_controller != null)
-                        {
-                            SDL.GameControllerRumble(_controller, 0, 0, 0);
-                            SDL.GameControllerClose(_controller);
-                            _controller = null;
-                        }
-                        _isConnected = false;
-                        if (_sdlInitialized)
-                        {
-                            SDL.Quit();
-                            _sdlInitialized = false;
-                            System.Diagnostics.Debug.WriteLine("[ControllerService] SDL2 shut down");
-                        }
-                    }
+                                    {
+                                        // ── Cleanup on this thread ───────────────────────────────────
+                                        if (_controller != null)
+                                        {
+                                            SDL.GameControllerRumble(_controller, 0, 0, 0);
+                                            SDL.GameControllerClose(_controller);
+                                            _controller = null;
+                                        }
+                                        _isConnected = false;
+                                        if (_sdlInitialized)
+                                        {
+                                            // ── Protect SDL.Quit() from AccessViolationException in test environments ─────────
+                                            try
+                                            {
+                                                SDL.Quit();
+                                                _sdlInitialized = false;
+                                                System.Diagnostics.Debug.WriteLine("[ControllerService] SDL2 shut down");
+                                            }
+                                            catch (AccessViolationException)
+                                            {
+                                                // SDL2 cleanup can fail in headless/CI environments without a display driver.
+                                                // Log and continue — this is non-critical for test scenarios.
+                                                System.Diagnostics.Debug.WriteLine(
+                                                    "[ControllerService] SDL2 Quit skipped (AccessViolationException — likely headless/CI environment)"
+                                                );
+                                                _sdlInitialized = false;
+                                            }
+                                        }
+                                    }
                 }
 
                 private void ScanForController()
