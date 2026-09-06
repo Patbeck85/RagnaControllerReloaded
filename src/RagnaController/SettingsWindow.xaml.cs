@@ -25,23 +25,26 @@ namespace RagnaController
         private readonly Action<Settings>? _onSave;
 #pragma warning restore CS0649
 
-        public SettingsWindow(HybridEngine engine, ProfileManager manager, Settings s)
-        {
-            InitializeComponent();
-            _engine = engine;
-            _manager = manager;
-            _s = s;
-       
-            // Initialize all settings from saved values
-            InitializeSettings();
-        }
+        public SettingsWindow(HybridEngine engine, ProfileManager manager, Settings s, Action<Settings>? onSave = null)
+                {
+                    InitializeComponent();
+                    _engine = engine;
+                    _manager = manager;
+                    _s = s;
+                    _onSave = onSave;
+      
+                    // Initialize all settings from saved values
+                    InitializeSettings();
+                }
 
         private void InitializeSettings()
         {
-            // Profile Settings
-            if (ProfileCombo.Items.Contains(_s.LastProfileName))
+            // Profile Settings - populate with available profiles
+            ProfileCombo.ItemsSource = _manager.Profiles;
+            var lastProfile = _manager.Profiles.FirstOrDefault(p => p.Name == _s.LastProfileName);
+            if (lastProfile != null)
             {
-                ProfileCombo.SelectedItem = _s.LastProfileName;
+                ProfileCombo.SelectedItem = lastProfile;
             }
             CurrentProfileText.Text = string.IsNullOrEmpty(_s.LastProfileName) 
                 ? "No profile loaded" 
@@ -50,11 +53,149 @@ namespace RagnaController
             // Engine Settings
             ChkStartWithWindows.IsChecked = _s.StartWithWindows;
             ChkMinimizeToTray.IsChecked = _s.MinimizeToTray;
+
+            // Initialize LogLevelCombo
+            InitializeLogLevelCombo();
+
+            // Initialize LanguageCombo
+            InitializeLanguageCombo();
+
+            // Initialize RoExePathCombo
+            InitializeRoExePathCombo();
+
+            // Initialize Overlay Customization Settings
+            InitializeOverlayCustomization();
+        }
+
+        private void InitializeOverlayCustomization()
+        {
+            // OverlayThemeCombo
+            var themes = new[]
+            {
+                new ComboBoxItem { Content = "Neon", Tag = Settings.OverlayThemeType.Neon },
+                new ComboBoxItem { Content = "Soft", Tag = Settings.OverlayThemeType.Soft },
+                new ComboBoxItem { Content = "Dark", Tag = Settings.OverlayThemeType.Dark }
+            };
+            OverlayThemeCombo.ItemsSource = themes;
+            OverlayThemeCombo.SelectedItem = themes.FirstOrDefault(item => (Settings.OverlayThemeType?)item.Tag == _s.OverlayTheme) ?? themes[0];
+
+            // OverlayOpacitySlider
+            OverlayOpacitySlider.Value = _s.OverlayOpacity;
+            OverlayOpacityValue.Text = $"{_s.OverlayOpacity:P0}";
+
+            // OverlayFontScaleSlider
+            OverlayFontScaleSlider.Value = _s.OverlayFontScale;
+            OverlayFontScaleValue.Text = $"{_s.OverlayFontScale:P0}";
         }
 
         private void ChkAutoLoadProfile_Click(object sender, RoutedEventArgs e)
         {
             // Auto-load profile feature removed in v1.7.0
+        }
+
+        private void InitializeLogLevelCombo()
+        {
+            // Log levels matching Settings.LogLevel: 0=Debug, 1=Info, 2=Warning, 3=Error
+            var logLevels = new[]
+            {
+                new ComboBoxItem { Content = "Debug", Tag = 0 },
+                new ComboBoxItem { Content = "Info", Tag = 1 },
+                new ComboBoxItem { Content = "Warning", Tag = 2 },
+                new ComboBoxItem { Content = "Error", Tag = 3 }
+            };
+            LogLevelCombo.ItemsSource = logLevels;
+            LogLevelCombo.SelectedItem = logLevels.FirstOrDefault(item => (int?)item.Tag == _s.LogLevel) ?? logLevels[1];
+        }
+
+        private void InitializeLanguageCombo()
+        {
+            // Language options matching the localization files
+            var languages = new[]
+            {
+                new ComboBoxItem { Content = "English", Tag = "en" },
+                new ComboBoxItem { Content = "Deutsch (German)", Tag = "de" },
+                new ComboBoxItem { Content = "Español (Spanish)", Tag = "es" },
+                new ComboBoxItem { Content = "Français (French)", Tag = "fr" },
+                new ComboBoxItem { Content = "Italiano (Italian)", Tag = "it" },
+                new ComboBoxItem { Content = "Português (Portuguese)", Tag = "pt" },
+                new ComboBoxItem { Content = "Nederlands (Dutch)", Tag = "nl" },
+                new ComboBoxItem { Content = "Polski (Polish)", Tag = "pl" },
+                new ComboBoxItem { Content = "Русский (Russian)", Tag = "ru" },
+                new ComboBoxItem { Content = "中文 (Chinese)", Tag = "zh" },
+                new ComboBoxItem { Content = "日本語 (Japanese)", Tag = "ja" },
+                new ComboBoxItem { Content = "한국어 (Korean)", Tag = "ko" }
+            };
+            LanguageCombo.ItemsSource = languages;
+            LanguageCombo.SelectedItem = languages.FirstOrDefault(item => item.Tag?.ToString() == _s.AppLanguage) ?? languages[0];
+        }
+
+        private void InitializeRoExePathCombo()
+        {
+            // Get recent RO paths from settings or discover common locations
+            var paths = new List<string>();
+            
+            // Add current setting if present
+            if (!string.IsNullOrEmpty(_s.RoExePath))
+            {
+                paths.Add(_s.RoExePath);
+            }
+            
+            // Add common default locations
+            var defaultPaths = new[]
+            {
+                @"C:\Program Files\Ragnarok Online\ragexe.exe",
+                @"C:\Program Files (x86)\Ragnarok Online\ragexe.exe",
+                @"C:\Games\Ragnarok Online\ragexe.exe",
+                @"D:\Ragnarok Online\ragexe.exe",
+                @"D:\Games\Ragnarok Online\ragexe.exe"
+            };
+            
+            foreach (var path in defaultPaths)
+            {
+                if (File.Exists(path) && !paths.Contains(path))
+                    paths.Add(path);
+            }
+            
+            // Add a "Browse..." option at the end
+            paths.Add("Browse...");
+            
+            RoExePathCombo.ItemsSource = paths;
+            
+            // Select the first valid path or "Browse..."
+            if (!string.IsNullOrEmpty(_s.RoExePath) && paths.Contains(_s.RoExePath))
+            {
+                RoExePathCombo.SelectedItem = _s.RoExePath;
+            }
+            else if (paths.Count > 0)
+            {
+                RoExePathCombo.SelectedItem = paths[0];
+            }
+            
+            // Update status label
+            UpdateRoExeStatusLabel();
+        }
+
+        private void UpdateRoExeStatusLabel()
+        {
+            if (RoExePathCombo.SelectedItem is string selectedPath)
+            {
+                if (selectedPath == "Browse...")
+                {
+                    LblRoExeStatus.Text = "Click to browse for RO executable";
+                }
+                else if (File.Exists(selectedPath))
+                {
+                    LblRoExeStatus.Text = $"Found: {selectedPath}";
+                }
+                else
+                {
+                    LblRoExeStatus.Text = "Path not found";
+                }
+            }
+            else
+            {
+                LblRoExeStatus.Text = "No path selected";
+            }
         }
 
         private void ChkStartWithWindows_Click(object sender, RoutedEventArgs e)
@@ -276,6 +417,97 @@ namespace RagnaController
             }
         }
 
+        private void RoExePathCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateRoExeStatusLabel();
+            
+            // If "Browse..." is selected, open file dialog
+            if (RoExePathCombo.SelectedItem is string selectedPath && selectedPath == "Browse...")
+            {
+                var dialog = new Microsoft.Win32.OpenFileDialog
+                {
+                    Title = "Select Ragnarok Online .exe",
+                    Filter = "Executable files|*.exe",
+                    CheckFileExists = true,
+                    ValidateNames = true
+                };
+
+                if (dialog.ShowDialog() == true)
+                {
+                    string selectedFile = dialog.FileName;
+                    // Add to the combo box if not already present
+                    var paths = RoExePathCombo.ItemsSource as List<string>;
+                    if (paths != null && !paths.Contains(selectedFile))
+                    {
+                        paths.Insert(paths.Count - 1, selectedFile); // Insert before "Browse..."
+                        RoExePathCombo.Items.Refresh();
+                    }
+                    RoExePathCombo.SelectedItem = selectedFile;
+                    _s.RoExePath = selectedFile;
+                    _s.Save();
+                }
+                else
+                {
+                    // User cancelled - revert to previous selection
+                    if (!string.IsNullOrEmpty(_s.RoExePath))
+                    {
+                        RoExePathCombo.SelectedItem = _s.RoExePath;
+                    }
+                    else if (RoExePathCombo.Items.Count > 0)
+                    {
+                        RoExePathCombo.SelectedIndex = 0;
+                    }
+                }
+            }
+            else if (RoExePathCombo.SelectedItem is string validPath)
+            {
+                _s.RoExePath = validPath;
+                _s.Save();
+            }
+        }
+
+        private void LogLevelCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LogLevelCombo.SelectedItem is ComboBoxItem item && item.Tag is int level)
+            {
+                _s.LogLevel = level;
+                _s.Save();
+            }
+        }
+
+        private void LanguageCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LanguageCombo.SelectedItem is ComboBoxItem item && item.Tag is string langCode)
+            {
+                _s.AppLanguage = langCode;
+                LocalizationManager.Instance.CurrentLanguage = langCode;
+                _s.Save();
+            }
+        }
+
+        private void OverlayThemeCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (OverlayThemeCombo.SelectedItem is ComboBoxItem item && item.Tag is Settings.OverlayThemeType theme)
+            {
+                _s.OverlayTheme = theme;
+                _s.Save();
+            }
+        }
+
+        private void OverlayOpacitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            _s.OverlayOpacity = e.NewValue;
+            OverlayOpacityValue.Text = $"{e.NewValue:P0}";
+            _s.Save();
+        }
+
+        private void OverlayFontScaleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            _s.OverlayFontScale = e.NewValue;
+            OverlayFontScaleValue.Text = $"{e.NewValue:P0}";
+            _s.Save();
+        }
+
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // Save settings when window is closing
@@ -307,13 +539,6 @@ namespace RagnaController
 
                 // Anonymous Telemetry
                 _s.EnableTelemetry = ChkTelemetry.IsChecked == true;
-
-                // i18n: Handle language switching
-                if (LanguageCombo.SelectedItem is ComboBoxItem item && item.Tag is string langCode)
-                {
-                    _s.AppLanguage = langCode;
-                    LocalizationManager.Instance.CurrentLanguage = langCode;
-                }
 
                 _s.Save();
                 _onSave?.Invoke(_s);

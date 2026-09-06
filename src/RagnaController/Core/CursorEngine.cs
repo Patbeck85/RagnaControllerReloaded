@@ -1,5 +1,6 @@
 using System;
 using RagnaController.Models;
+using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Core
 {
@@ -70,15 +71,15 @@ namespace RagnaController.Core
             if (mx != 0 || my != 0)
             {
                 // FIX: Hole die echte Windows-Mausposition NUR beim allerersten Bewegen aus der Deadzone heraus
-                if (_wasInDeadzone)
-                {
-                    if (NativeMethods.GetCursorPos(out NativeMethods.POINT pt))
-                    {
-                        _virtualX = pt.X;
-                        _virtualY = pt.Y;
-                    }
-                    _wasInDeadzone = false;
-                }
+                                if (_wasInDeadzone)
+                                {
+                                    if (GetCursorPos(out POINT pt))
+                                    {
+                                        _virtualX = pt.X;
+                                        _virtualY = pt.Y;
+                                    }
+                                    _wasInDeadzone = false;
+                                }
 
                 // Wende die Bewegung völlig flüssig auf unseren virtuellen Cursor an
                 _virtualX += mx;

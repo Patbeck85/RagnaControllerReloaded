@@ -4,31 +4,47 @@
         Title="DaisyWheel" Width="560" Height="560"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Topmost="True" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/UI2026DesignSystem.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <!-- Root: Glassmorphism radial container with animated entrance -->
     <Grid x:Name="RootGrid">
-        <Ellipse Width="520" Height="520" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Ellipse.Fill>
+        <Border Width="520" Height="520" HorizontalAlignment="Center" VerticalAlignment="Center"
+                Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusFull}"
+                BorderBrush="{StaticResource AccentBlue}" BorderThickness="2" Effect="{StaticResource BlueGlow}">
+            <Border.Background>
                 <RadialGradientBrush>
-                    <GradientStop Color="#00000000" Offset="0.5"/>
-                    <GradientStop Color="#4DE5B842" Offset="0.75"/>
-                    <GradientStop Color="#80E5B842" Offset="0.88"/>
+                    <GradientStop Color="#00000000" Offset="0.4"/>
+                    <GradientStop Color="{StaticResource AccentBlue}" Offset="0.7"/>
+                    <GradientStop Color="{StaticResource AccentPurple}" Offset="0.85"/>
                     <GradientStop Color="#00000000" Offset="1.0"/>
                 </RadialGradientBrush>
-            </Ellipse.Fill>
-        </Ellipse>
-        <Canvas x:Name="WheelCanvas" Width="500" Height="500" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <Border Width="160" Height="160" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="80" Background="#E6080A0F" BorderBrush="#E5B842" BorderThickness="2">
-            <Border.Effect>
-                <DropShadowEffect Color="#E5B842" BlurRadius="25" ShadowDepth="0" Opacity="0.6"/>
-            </Border.Effect>
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                <TextBlock x:Name="CurrentTextBlock" Text="" Foreground="#F0F4F8" FontSize="18" FontWeight="Black" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="140" TextAlignment="Center"/>
-                <TextBlock Text="▌" Foreground="#E5B842" FontSize="16" HorizontalAlignment="Center" Margin="0,4,0,0" Effect="{StaticResource NeonGlow}"/>
-            </StackPanel>
+            </Border.Background>
+            <Grid>
+                <Canvas x:Name="WheelCanvas" Width="500" Height="500" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                
+                <Border Width="180" Height="180" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="{StaticResource RadiusFull}" 
+                        Background="{StaticResource BgSecondary}" BorderBrush="{StaticResource AccentBlue}" BorderThickness="2" Effect="{StaticResource BlueGlow}">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <TextBlock x:Name="CurrentTextBlock" Text="" Foreground="{StaticResource TextPrimary}" FontSize="20" FontWeight="Black" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="150" TextAlignment="Center"
+                                   FontFamily="Segoe UI Variable, Segoe UI"/>
+                        <TextBlock Text="▌" Foreground="{StaticResource AccentBlue}" FontSize="18" HorizontalAlignment="Center" Margin="0,4,0,0" Effect="{StaticResource BlueGlow}"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
         </Border>
-        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,15">
-            <TextBlock Foreground="#A1B0C5" FontSize="11" FontWeight="Bold" HorizontalAlignment="Center">
+        
+        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,20">
+            <TextBlock Foreground="{StaticResource TextSecondary}" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Center"
+                       FontFamily="Segoe UI Variable, Segoe UI">
                 <Run Text="L3 = ⌫   R3 = Space   "/>
-                <Run Foreground="#3DDB6E" Text="Start = Send"/>
+                <Run Foreground="{StaticResource Live}" Text="Start = Send"/>
                 <Run Text="   B = Cancel"/>
             </TextBlock>
         </StackPanel>

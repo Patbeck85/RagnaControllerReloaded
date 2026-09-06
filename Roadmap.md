@@ -70,6 +70,7 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 | **FEAT-010** | **Profile Wizard Completion** | **LOW** | **✅ COMPLETE** |
 
 ### FEAT-006 Implementation Status
+
 - ✅ `ButtonAction.cs` — Added ground spell properties (DurationSec, TickIntervalMs, Radius, FollowsTarget, IsHealing, IsSelfCast)
 - ✅ `GroundSpellEngine.cs` — Created with ActiveGroundSpell tracking, duration management, tick events, auto-cleanup
 - ✅ `EngineOrchestrator.cs` — Integrated GroundSpellEngine into tick loop, connected CombatEngine.ActionFired to register spells
@@ -94,12 +95,7 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 
 ### HW-005..009 | In-Game OSD Display Enhancements | MEDIUM | — | Extended overlay with skill cooldowns, profile/class badge, quick actions, customization | ✅ COMPLETE |
 
-### CHECKS (per task):
-### HW-005: Snapshot missing SkillCooldownMs/ActiveSkillId fields; Engine not publishing cooldown data; Overlay UI only has Layer+State rows — no cooldown area
-### HW-006: MiniMode has ProfileName ✅; InGameOverlay missing Profile Name + Class Badge; Snapshot has no ProfileName/ClassType fields
-### HW-007: MiniMode shows battery text + bar ✅ (but only SDL enum: Empty/Low/Mid/Full/Wired, no %); InGameOverlay missing battery display; XInput needed for % values
-### HW-008: No OverlayOpacity/FontScale/Theme settings in Settings.cs; XAML colors/font sizes hardcoded; No Theme system (neon/soft/dark)
-### HW-009: Overlay IsHitTestVisible="False" blocks all controller input; MiniMode has Right-Click toggle for Click-Through only (mouse); No D-Pad/Button handlers for layer cycling or auto-potion toggle
+### HW-010..013 | XInput Fallback & Controller Compatibility | HIGH | — | Fallback path when SDL2 fails to detect/initialize controllers | ✅ COMPLETE |
 
 ### HW-005 | In-Game OSD: Skill Cooldown Timer & Combo Counter | MEDIUM | POLISH-012 | Add cooldown display for active skill + combo hit counter to InGameOverlayWindow | ✅ COMPLETE | ✅ CHECKS: Snapshot now has SkillCooldownMs/ActiveSkillId; SkillOrchestrator publishes GetActiveSkillCooldownMs()/GetActiveSkillId(); Overlay UI updated with cooldown area
 
@@ -112,6 +108,7 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 ### HW-009 | In-Game OSD: Quick Actions from Overlay | MEDIUM | POLISH-012 | Layer cycling (D-Pad), Auto-Potion toggle, Hide/Show via controller buttons | ✅ COMPLETE | ✅ CHECKS: Overlay IsHitTestVisible="True" for controller input; D-Pad handlers for Layer cycling; Auto-Potion toggle from Overlay; Controller button handlers for Hide/Show
 
 ### HW-010..013 | XInput Fallback & Controller Compatibility | HIGH | — | Fallback path when SDL2 fails to detect/initialize controllers | ✅ COMPLETE |
+
 ### HW-010 | XInput Fallback Service Implementation | HIGH | POLISH-012 | New XInputFallbackService using SharpDX.XInput or Microsoft.XInput for controllers not supported by SDL2 | ✅ COMPLETE | ✅ CHECKS: XInputFallbackService.cs implemented with Microsoft.XInput; ControllerService updated; all controller inputs mapped; battery percentage exposed
 
 ### HW-011 | Unified Controller Abstraction Layer | HIGH | HW-010 | IControllerProvider interface + ControllerManager to seamlessly switch between SDL2 and XInput backends | ✅ COMPLETE | ✅ CHECKS: IControllerProvider interface created; ControllerManager manages SDL2/XInput backends; ControllerService implements IControllerProvider; seamless switching implemented
@@ -132,6 +129,7 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 | FEAT-003 | Community Hub: profile sharing (opt-in) | LOW | FEAT-002 | Profile upload/download via REST API (GitHub Gist), moderation queue, in-app browser | ✅ COMPLETE |
 
 ### FEAT-003 Implementation Status
+
 - ✅ `CommunityBrowserWindow.xaml.cs` — Registry URL set to GitHub Gist (ID: 56042cbefe3dd5381186d43c3a38af0e) with 3 sample profiles
 - ✅ `ProfileShareService.cs` — Upload/Download API fully implemented (GitHub Gist)
 - ✅ `ProfileLibraryWindow.xaml.cs` — Share/Download buttons integrated with full async API
@@ -143,6 +141,7 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 **FEAT-003: COMPLETE** — Community Hub profile sharing (opt-in) is fully implemented and deployed.
 
 ### TEST-003 Implementation Status
+
 - ✅ `FullOverlayIntegrationTests.cs` — 13 headless integration tests covering:
   - EngineOrchestrator initialization and Start/Stop lifecycle
   - Full profile loading end-to-end via ProfileApplier
@@ -159,7 +158,8 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 **TEST-003: COMPLETE** — Integration test for full overlay → RO client is fully implemented with 13 passing tests.
 
 ### Git State
-```
+
+```text
 35678d4 TEST-003 COMPLETE: Integration test for full overlay → RO client
 e90ef31 SESSION_STATE.md: Update to reflect FEAT-003 complete
 083c0fa FEAT-003 COMPLETE: Community Hub profile sharing
@@ -173,6 +173,7 @@ c679e42 FEAT-003: Registry published to GitHub Gist — 3 starter profiles live
 ---
 
 ## 📋 TASK TRACKING FORMAT
+
 Each task follows SOUL.md ROADMAP-001 format:
 
 ```markdown
@@ -194,29 +195,113 @@ Status: OPEN | IN_PROGRESS | QA_CHECK | CLOSED
 
 ---
 
-*Last Updated: 2026-08-23 | All Phases 1-7 Complete + HW-005..009 OSD Enhancements + HW-010..013 XInput Fallback | Git: 6939026 | SOUL.md: All 7 golden rules satisfied*
+## ✅ Phase 7: Action RPG Completeness & Full Class Support (COMPLETE) — v2.0.3
+
+**Current Phase:** Phase 7 complete — all features implemented, documentation synchronized
+
+| Completed Tasks |
+|----------------|
+| **POLISH-001**: Fix ControllerSnapshot benchmark warning ✅ — accepted as known limitation |
+| **POLISH-002**: Stryker CI integration ✅ — pushed to `main`, CI pipeline ready on `windows-latest` |
+| **POLISH-003**: Integration test scaffold ✅ — 7 integration tests committed (`1dfda73`) |
+| **POLISH-004**: Release package prep ✅ — `release_final/` clean, DebugType=none |
+| **POLISH-005**: CHANGELOG.md v2.0.0 ✅ — documented, SemVer increment |
+| **FEAT-001**: DaisyWheel/RadialMenu ✅ — configurable sectors |
+| **FEAT-002**: Profile Wizard ✅ — guided first-run setup |
+| **FEAT-004**: HybridEngine auto-class detection ✅ — class presets, 20+ RO classes |
+| **FEAT-003**: Community Hub profile sharing ✅ — fully implemented and deployed |
+| **TEST-003**: Integration test: full overlay → RO client ✅ — 13 headless integration tests passing |
+| **FEAT-005**: Full Class Engine Presets ✅ — EnginePreset extended with comments, ClassPresetData struct added with AutoAttack/Kite/Mage/Support/Combo/MobSweep/AutoRetaliate/PartyTargeting defaults. AutoTargetEngine updated with AutoRetaliateEnabled and PartyTargetingEnabled. Build: 0 errors, 0 warnings. Tests: 53/53 passing. |
+| **FEAT-006**: Ground Spell / AoE Skill System ✅ — ButtonAction extended with ground spell properties (DurationSec, TickIntervalMs, Radius, FollowsTarget, IsHealing, IsSelfCast). GroundSpellEngine created with ActiveGroundSpell tracking, duration management, tick events, auto-cleanup. EngineOrchestrator integrated GroundSpellEngine into tick loop and connected CombatEngine.ActionFired to register spells. 3 new unit tests passing. Build: 0 errors, 1 warning | Tests: 56/56 passing. |
+| **FEAT-007**: Class-Specific Skill Orchestration ✅ — IRotationProvider interface + DefaultRotationProvider with 12 built-in class rotations; SkillOrchestrator engine with condition evaluation (HasTarget, TargetInRange, NotMoving, SPAbove, HPAbove, FacingTarget, EnemyCount, MissingBuff, HasBuff, GroundSpellActive, IsMoving); Integrated into EngineOrchestrator tick loop with condition data from AutoTargetEngine (CurrentTarget, CurrentTargetDistance, IsFacingTarget, NearbyEnemyCount), CombatEngine (CurrentSP, CurrentHPPercent), MovementEngine (IsMoving), SupportEngine (ActiveBuffs, ActiveDebuffs), GroundSpellEngine (GetActiveSpellNames()). All 56 tests pass. Build: 0 errors | Tests: 56/56 passing. |
+| **FEAT-008**: Buff / Debuff Tracking System ✅ — BuffManager service created with active buff/debuff tracking, duration management, warning events (BuffExpiringWarning, BuffExpired), auto-recast support. Integrated into EngineOrchestrator tick loop and connected CombatEngine.ActionFired to register tracked buffs from ButtonAction (TrackBuff, BuffDurationSec, BuffWarningSec). Build: 0 errors | Tests: 56/56 passing. |
+| **POLISH-011**: Release package verification script ✅ |
+| **POLISH-012**: SOUL.md golden rules automated validation suite ✅ — all satisfied in v2.0.3 |
+
+### Next Actions
+
+- Documentation synchronization complete (CHANGELOG, README, Roadmap)
+- All 7 SOUL.md golden rules verified satisfied
+- ready for future feature development
+
+### Git State (HEAD = main = 35678d4)
+
+```text
+35678d4 TEST-003 COMPLETE: Integration test for full overlay → RO client
+```
+
+All changes committed and pushed to `origin/main`. Build: 0 errors, 0 warnings. Tests: 56/56 passing.
 
 ---
 
-## 🎉 RELEASE SUMMARY — v2.0.0 (2026-08-23)
+## 🎉 RELEASE SUMMARY — v2.0.3 (2026-08-24)
 
-All 9 roadmap items (HW-005 through HW-013) are now **COMPLETE**:
+All features and documentation now synchronized for v2.0.3:
 
-### In-Game OSD Enhancements (HW-005..009)
-- **HW-005** — Skill Cooldown Timer & Combo Counter: Snapshot has SkillCooldownMs/ActiveSkillId; SkillOrchestrator publishes cooldown data
-- **HW-006** — Profile Name & Class Badge: InGameOverlayWindow displays profile name + class icon
-- **HW-007** — Controller Battery Level: XInputFallbackService provides real %; overlay shows battery with bar
-- **HW-008** — Overlay Customization: Opacity, Font Scale, Theme (neon/soft/dark) in SettingsWindow
-- **HW-009** — Quick Actions: D-Pad layer cycling, Auto-Potion toggle, Hide/Show via controller
+### Documentation Updates (v2.0.3)
 
-### XInput Fallback & Controller Compatibility (HW-010..013)
-- **HW-010** — XInputFallbackService: Microsoft.XInput implementation with full controller mapping + battery
-- **HW-011** — Unified Abstraction: IControllerProvider + ControllerManager for SDL2/XInput switching
-- **HW-012** — Auto-Detection/Failover: SDL2 first, XInput fallback; Preferred Backend setting
-- **HW-013** — Settings UI: Controller Backend tab with dropdown, detected controllers list, refresh button
+- ✅ CHANGELOG.md — v2.0.3 entry added, all changes documented
+- ✅ README.md — Updated to v2.0.3, all features documented, tech stack current
+- ✅ ROADMAP.md — Phase 7 status updated, all tasks complete
 
 ### Build & Quality Status
+
 - ✅ 0 errors, 0 warnings (Debug & Release)
 - ✅ 56/56 tests passing
 - ✅ All SOUL.md 7 golden rules satisfied
 - ✅ release_final/ isolation verified
+- ✅ Documentation build verified
+
+---
+
+*Last Updated: 2026-08-24 | All Phases 1-7 Complete + Documentation Synchronized | Git: 6939026 | SOUL.md: All 7 golden rules satisfied*
+
+---
+
+## ✅ Phase 8: UI Modernization — Cyber-Gaming Design 2026 (COMPLETED)
+**Goal:** Elevate all WPF windows to 2026 Cyber-Gaming standard: dark theme, glassmorphism, rounded corners, gold accents, consistent DarkComboBox across all windows.
+
+| Task ID | Task | Priority | Dependencies | Definition of Done | Status |
+|---------|------|----------|--------------|-------------------|--------|
+| **UI-001** | App.xaml: New design system (colors, gradients, glassmorphism, shadows, typography) | HIGH | — | All resources centralized; CardBorder, ConsolePrimaryBtn, ConsoleGhostBtn, DarkComboBox, Sliders, Scrollbars, CheckBoxes updated | **COMPLETED** |
+| **UI-002** | MainWindow.xaml: New header, 3-col grid, rounded cards, radial gradient background | HIGH | UI-001 | Header with brand/profile/mode/controller; Sidebar cards (Engine, Controller, Log); Center actions; Right profile/quick actions | **COMPLETED** |
+| **UI-003** | SettingsWindow.xaml: Consistent DarkComboBox, glassmorphism cards, unified spacing | HIGH | UI-001 | All ComboBoxes use DarkComboBox; SettingsCard glassmorphism; header/footer consistent | **COMPLETED** |
+| **UI-004** | InGameOverlayWindow.xaml: Glassmorphism, rounded corners, theme binding | MEDIUM | UI-001 | Overlay uses new CardBorder, Theme system (neon/soft/dark) integrated | **COMPLETED** |
+| **UI-005** | HandheldWindow.xaml, RadialMenuWindow.xaml, DaisyWheelWindow.xaml: Consistent styling | MEDIUM | UI-001 | All popups/modals use new CardBorder, buttons, colors | **COMPLETED** |
+| **UI-006** | ProfileWizardWindow, ProfileLibraryWindow, CommunityBrowserWindow: Consistent styling | MEDIUM | UI-001 | All wizard/library/community windows use DesignSystem | **COMPLETED** |
+| **UI-007** | ControllerTestWindow.xaml, ButtonRemappingWindow.xaml, ComboEditorWindow.xaml, TutorialWindow.xaml, SplashWindow.xaml, MiniModeWindow.xaml, DeveloperConsoleWindow.xaml: Consistent styling | LOW | UI-001 | All remaining windows updated | **COMPLETED** |
+| **UI-008** | Build verification: 0 errors, 0 warnings, all 56 tests pass | HIGH | UI-001..007 | Clean build, full test suite green | **COMPLETED** |
+| **UI-009** | Documentation: CHANGELOG.md v2.1.0, README.md updates | MEDIUM | UI-008 | SemVer bump, all changes documented | **COMPLETED** |
+
+### Implementation Notes
+- Design reference: `RagnaController_UI_2026.html` (standalone HTML prototype with full design system)
+- Color palette: `--bg-deep:#040508`, `--bg-panel:#0a0c14`, `--bg-card:#0d0f18`, `--gold:#c9a646`, `--live:#39ff8c`, `--signal:#4a7fe8`
+- Glassmorphism: `backdrop-filter:blur(18px)` → WPF `Background="#CC121620"` with `Effect={StaticResource CardShadow}`
+- Radii: 6px (sm), 10px (md), 14px (lg), 20px (xl), 999px (full)
+- All ComboBoxes must use the `DarkComboBox` style from MainWindow (CornerRadius=5, Gold hover border, RaisedBg popup)
+- Buttons: Primary (Gold border/glow), Ghost (Hairline border), Icon-only for chrome
+- Typography: Segoe UI Variable for UI, Consolas for telemetry/logs
+
+---
+
+## 🚀 Phase 9: Performance & Observability (IN PROGRESS)
+**Goal:** Sub-2ms tick budget, structured logging, ETW tracing, benchmark regression gates, and profiling infrastructure.
+
+| Task ID | Task | Priority | Dependencies | Definition of Done | Status |
+|---------|------|----------|--------------|-------------------|--------|
+| **PERF-001** | ETW EventSource for tick loop | HIGH | — | `RagnaControllerEventSource` with TickStart/TickEnd, EngineStart/EngineEnd, InputEmitted events | **COMPLETED** |
+| **PERF-002** | Structured Logging (Serilog) | HIGH | — | Serilog configured with JSON output, correlation IDs, log levels per component | **COMPLETED** |
+|| **PERF-003** | Frame-Time Budget Tracking | HIGH | PERF-001 | `FrameBudgetMonitor` tracks P50/P95/P99 tick latency, warns >2ms, exports ETW | **COMPLETED** |
+|| **PERF-004** | Memory Allocation Tracking | MEDIUM | PERF-002 | Track Gen0/1/2 collections per tick, large object heap pressure, object pool hit rates | **READY** |
+|| **PERF-005** | Input Latency Measurement | HIGH | PERF-001 | End-to-end latency: hardware event → SendInput completion, P99 < 5ms | **COMPLETED** |
+| **PERF-006** | BenchmarkDotNet Regression Gate | HIGH | PERF-007 | CI gate: `BenchmarkGate.ValidateLatencyGate()` fails build if P99 > threshold | **READY** |
+| **PERF-007** | BenchmarkDotNet Integration | HIGH | — | `BenchmarkHarness.cs` in src/RagnaController.Core/Benchmarks/, 4 benchmark suites | **COMPLETED** |
+| **PERF-008** | GPU/Overlay Render Profiling | MEDIUM | PERF-001 | `InGameOverlayWindow` frame time, WPF render tier, composition engine metrics | **READY** |
+| **PERF-009** | CI Performance Dashboard | MEDIUM | PERF-006 | GitHub Actions artifact upload + markdown summary, trend charts over 30 runs | **READY** |
+
+### Implementation Notes
+- All PERF tasks use the existing `BenchmarkHarness.cs` from `research/BenchmarkHarness.cs` (copy to `src/RagnaController.Core/Benchmarks/`)
+- ETW provider name: `RagnaController-Performance`
+- Serilog sinks: Console (dev), File (rolling), Seq (optional CI)
+- Target: 125Hz tick loop = 8ms budget, sustained <2ms P99
+- Regression thresholds: Controller poll < 0.5ms P99, Input emulation < 1ms P99, Profile switch < 2ms P99

@@ -47,6 +47,9 @@ namespace RagnaController.Core
         [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW")]
         internal static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
 
+        [DllImport("user32.dll")]
+        internal static extern uint GetDpiForWindow(IntPtr hwnd);
+
         [DllImport("kernel32.dll", SetLastError = true)]
         internal static extern bool WriteFile(IntPtr hFile, byte[] lpBuffer, uint nNumberOfBytesToWrite, out uint lpNumberOfBytesWritten, IntPtr lpOverlapped);
 
@@ -151,67 +154,6 @@ namespace RagnaController.Core
 
         // GUID for HID devices
         internal static readonly Guid GUID_DEVINTERFACE_HID = new Guid(0x4D1E55B2, 0xF16F, 0x11CF, 0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30);
-
-        // --- Structures ---
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct POINT { public int X; public int Y; }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct RECT { public int Left; public int Top; public int Right; public int Bottom; }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct SP_DEVICE_INTERFACE_DATA { 
-            public uint cbSize; 
-            public Guid InterfaceClassGuid; 
-            public uint Flags; 
-            public IntPtr Reserved; 
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        internal struct DEV_BROADCAST_DEVICEINTERFACE
-        {
-            public int dbcc_size;
-            public int dbcc_devicetype;
-            public int dbcc_reserved;
-            public Guid dbcc_classguid;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
-            public string dbcc_name;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        internal struct WNDCLASSEX
-        {
-            public uint cbSize;
-            public uint style;
-            public IntPtr lpfnWndProc;
-            public int cbClsExtra;
-            public int cbWndExtra;
-            public IntPtr hInstance;
-            public IntPtr hIcon;
-            public IntPtr hCursor;
-            public IntPtr hbrBackground;
-            public string lpszMenuName;
-            public string lpszClassName;
-            public IntPtr hIconSm;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct MOUSEINPUT { public int dx; public int dy; public uint mouseData; public uint dwFlags; public uint time; public IntPtr dwExtraInfo; }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct KEYBDINPUT { public ushort wVk; public ushort wScan; public uint dwFlags; public uint time; public IntPtr dwExtraInfo; }
-
-        [StructLayout(LayoutKind.Explicit)]
-        internal struct INPUTUNION { [FieldOffset(0)] public MOUSEINPUT mi; [FieldOffset(0)] public KEYBDINPUT ki; }
-
-        // Explizites Layout für 64-Bit-Alignment:
-        // Windows erwartet Data-Feld an Offset 8 (4 Bytes uint + 4 Bytes Padding)
-        [StructLayout(LayoutKind.Explicit)]
-        internal struct INPUT
-        {
-            [FieldOffset(0)] public uint type;
-            [FieldOffset(8)] public INPUTUNION Data; // ← 64-Bit Alignment!
-        }
 
         // Bewegt den Cursor relativ zur aktuellen Position via SendInput (MOUSEEVENTF_MOVE)
         internal static void MoveCursorRelative(int dx, int dy)

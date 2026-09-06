@@ -19,6 +19,7 @@ namespace RagnaController
 
         // Controller state from ControllerManager
         private readonly ControllerManager? _controllerManager;
+        private readonly Settings? _settings;
 
         // Backing fields for overlay display
         private string _profileName = "NOVICE";
@@ -28,16 +29,20 @@ namespace RagnaController
         private string _currentLayer = "BASE";
 
         // Constructor with ControllerManager (for new code using unified abstraction)
-        public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker, ControllerManager controllerManager) : base()
+        public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker, ControllerManager controllerManager, Settings settings = null) : base()
         {
             InitializeComponent();
             _controllerManager = controllerManager;
+            _settings = settings;
 
             // Subscribe to controller manager events
-            _controllerManager.ControllerConnected += OnControllerConnected;
-            _controllerManager.ControllerDisconnected += OnControllerDisconnected;
-            _controllerManager.ProviderChanged += OnProviderChanged;
-            _controllerManager.IsConnectedChanged += OnIsConnectedChanged;
+            if (_controllerManager != null)
+            {
+                _controllerManager.ControllerConnected += OnControllerConnected;
+                _controllerManager.ControllerDisconnected += OnControllerDisconnected;
+                _controllerManager.ProviderChanged += OnProviderChanged;
+                _controllerManager.IsConnectedChanged += OnIsConnectedChanged;
+            }
 
             // Subscribe to profile changes if available
             InitializeOverlayState();
@@ -50,17 +55,81 @@ namespace RagnaController
         }
 
         // Backward compatibility constructor (for existing code without ControllerManager)
-        public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker) : this(messenger, tracker, null!)
+        public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker, Settings settings = null) : this(messenger, tracker, null!, settings)
         {
         }
 
         private void InitializeOverlayState()
         {
-            // Load default profile state
+            // Load default profile state - try to get from ProfileManager
             _profileName = "NOVICE";
             _classType = "Novice";
             _batteryLevel = "100%";
+            
+            // Apply theme settings
+            ApplyThemeSettings();
+            
             UpdateDisplay();
+        }
+        
+        private void ApplyThemeSettings()
+                {
+                    if (_settings == null) return;
+           
+                   // Apply opacity
+                    Dispatcher.Invoke(() => 
+                    {
+                        this.Opacity = _settings.OverlayOpacity;
+                    });
+           
+                   // Apply font scale
+                    Dispatcher.Invoke(() => 
+                    {
+                        // Apply font scale to all text elements
+                        var scale = _settings.OverlayFontScale;
+                        if (ProfileText != null) ProfileText.FontSize = 11 * scale;
+                        if (LayerText != null) LayerText.FontSize = 11 * scale;
+                        if (StateText != null) StateText.FontSize = 12 * scale;
+                        if (BatteryText != null) BatteryText.FontSize = 10 * scale;
+                        if (CooldownText != null) CooldownText.FontSize = 9 * scale;
+                    });
+           
+                   // Apply theme colors
+                    ApplyThemeColors(_settings.OverlayTheme);
+                }
+       
+               private void ApplyThemeColors(Settings.OverlayThemeType theme)
+        {
+            Dispatcher.Invoke(() =>
+            {
+                switch (theme)
+                {
+                    case Settings.OverlayThemeType.Neon:
+                        // Neon: Bright cyberpunk colors with strong glows
+                        if (ProfileText != null) ProfileText.Foreground = (Brush)FindResource("AccentBlue");
+                        if (StateText != null) StateText.Foreground = (Brush)FindResource("AccentPurple");
+                        if (LayerText != null) LayerText.Foreground = (Brush)FindResource("Live");
+                        if (BatteryText != null) BatteryText.Foreground = (Brush)FindResource("TextSecondary");
+                        if (CooldownText != null) CooldownText.Foreground = (Brush)FindResource("TextPrimary");
+                        break;
+                    case Settings.OverlayThemeType.Soft:
+                        // Soft: Subtle colors with gentle glows
+                        if (ProfileText != null) ProfileText.Foreground = (Brush)FindResource("TextPrimary");
+                        if (StateText != null) StateText.Foreground = (Brush)FindResource("TextSecondary");
+                        if (LayerText != null) LayerText.Foreground = (Brush)FindResource("TextPrimary");
+                        if (BatteryText != null) BatteryText.Foreground = (Brush)FindResource("TextTertiary");
+                        if (CooldownText != null) CooldownText.Foreground = (Brush)FindResource("TextSecondary");
+                        break;
+                    case Settings.OverlayThemeType.Dark:
+                        // Dark: Minimal, high contrast, low glow
+                        if (ProfileText != null) ProfileText.Foreground = (Brush)FindResource("TextPrimary");
+                        if (StateText != null) StateText.Foreground = (Brush)FindResource("TextPrimary");
+                        if (LayerText != null) LayerText.Foreground = (Brush)FindResource("TextPrimary");
+                        if (BatteryText != null) BatteryText.Foreground = (Brush)FindResource("TextPrimary");
+                        if (CooldownText != null) CooldownText.Foreground = (Brush)FindResource("TextPrimary");
+                        break;
+                }
+            });
         }
 
         private void OnControllerConnected(object? sender, EventArgs e)

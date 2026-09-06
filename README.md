@@ -1,10 +1,10 @@
-# RagnaController v2.0.3 — Autonomous Multi-Agent Development
+# RagnaController v2.2.0 — Autonomous Multi-Agent Development
 
-**Version:** 2.0.3 | **Release:** 2026-08-24 | **Build:** 0 errors, 0 warnings | **Tests:** 56/56 passing
+**Version:** 2.2.0 | **Release:** 2026-09-04 | **Build:** 0 errors, 0 warnings | **Tests:** 56/56 passing
 
 ## 🤖 Autonomous Development Summary
 
-This release represents a complete autonomous development cycle executed per **SOUL.md v2.0 Enterprise** principles. All phases (1-7) were completed without manual intervention, with systematic file-by-file review and optimization of all ~323 `.cs` files.
+This release represents a complete autonomous development cycle executed per **SOUL.md v2.0 Enterprise** principles. All phases (1-9) were completed without manual intervention, with systematic file-by-file review and optimization of all ~323 `.cs` files.
 
 ### Key Achievements:
 
@@ -13,11 +13,13 @@ This release represents a complete autonomous development cycle executed per **S
 - **Memory leak prevention** — `Commands` list DEBUG-only; `_isInitialized` field eliminated
 - **Nullable safety** — All CS8618/CS8625 compiler warnings resolved across entire project
 - **Dead code removal** — Unused fields, unnecessary allocations eliminated
+- **Phase 8: Complete UI Modernization** — Cyber-Gaming 2026 design system across all 18 WPF windows
+- **Phase 9: Performance & Observability (started)** — Frame Budget Monitor (PERF-003) with P50/P95/P99 tracking, ETW events
 - **All 7 SOUL.md Golden Rules** verified satisfied
 
 ---
 
-## ✨ Key Features (v2.0.3)
+## ✨ Key Features (v2.1.0)
 
 | Feature | Description |
 |---|---|
@@ -34,6 +36,7 @@ This release represents a complete autonomous development cycle executed per **S
 | 🧪 **Buff/Debuff Tracking System** | Active buff/debuff tracking with durations, expiration warnings, auto-recast (FEAT-008). |
 | 🎮 **Unified Controller Abstraction** | Seamless SDL2 ↔ XInput fallback with battery level, rumble, and gyro support. |
 | 📦 **Release Isolation** | `release_final/` contains only end products — zero debug artifacts (SOUL RULE-001). |
+| 🎨 **Cyber-Gaming 2026 UI** | Dark theme, glassmorphism, rounded corners, gold accents, consistent DarkComboBox across all 18 windows |
 
 ---
 

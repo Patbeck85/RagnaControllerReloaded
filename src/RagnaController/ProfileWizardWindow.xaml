@@ -4,59 +4,101 @@
         Title="Wizard" Width="600" Height="550"
         Background="Transparent" WindowStyle="None" AllowsTransparency="True"
         WindowStartupLocation="CenterOwner" MouseLeftButtonDown="Window_MouseLeftButtonDown">
-    <Border Background="#080A0F" BorderBrush="#2A3245" BorderThickness="1" CornerRadius="10">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/UI2026DesignSystem.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Border Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusXl}" BorderBrush="{StaticResource AccentGold}" BorderThickness="1" Effect="{StaticResource GoldGlow}">
         <Grid>
-            <Grid.RowDefinitions><RowDefinition Height="45"/><RowDefinition Height="*"/><RowDefinition Height="60"/></Grid.RowDefinitions>
-            <Border Grid.Row="0" BorderBrush="#2A3245" BorderThickness="0,0,0,1">
-                <Grid Margin="15,0">
-                    <TextBlock Text="Profile Wizard" FontWeight="Bold" FontSize="12" Foreground="#E5B842" VerticalAlignment="Center" Effect="{StaticResource NeonGlow}"/>
-                    <Button Content="✕" Click="BtnCancel_Click" HorizontalAlignment="Right" Width="30" Height="30" Background="Transparent" BorderThickness="0" Foreground="#A1B0C5" FontSize="14" ToolTip="Cancel wizard"/>
+            <Grid.RowDefinitions><RowDefinition Height="50"/><RowDefinition Height="*"/><RowDefinition Height="70"/></Grid.RowDefinitions>
+            
+            <!-- Header -->
+            <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" Margin="16,16,16,0" CornerRadius="{StaticResource RadiusMd}">
+                <Grid Margin="20,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="4" Height="28" Background="{StaticResource AccentGold}" Effect="{StaticResource GoldGlow}" Margin="0,0,12,0" CornerRadius="2"/>
+                        <TextBlock Text="PROFILE WIZARD" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Content="✕" Click="BtnCancel_Click" HorizontalAlignment="Right" Width="36" Height="36" Style="{StaticResource GhostButton}" ToolTip="Cancel wizard"/>
                 </Grid>
             </Border>
-            <Grid Grid.Row="1" Margin="25">
+            
+            <!-- Content Area -->
+            <Grid Grid.Row="1" Margin="24,16">
                 <StackPanel x:Name="Step1Panel">
-                    <TextBlock Text="PROFILE NAME" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,0,8"/>
-                    <Border Background="#121620" BorderBrush="#2A3245" BorderThickness="1" CornerRadius="6" Height="36">
-                        <TextBox x:Name="ProfileNameText" Background="Transparent" Foreground="#F0F4F8" BorderThickness="0" Padding="10,8" VerticalContentAlignment="Center" FontSize="14"/>
+                    <TextBlock Text="PROFILE NAME" Style="{StaticResource Eyebrow}"/>
+                    <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}" Height="44" Margin="0,6,0,20">
+                        <TextBox x:Name="ProfileNameText" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" Padding="14,10" VerticalContentAlignment="Center" FontSize="15" FontFamily="Segoe UI Variable, Segoe UI"/>
                     </Border>
-                    <TextBlock Text="CLASS" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,20,0,8"/>
-                    <ComboBox x:Name="ClassCombo" Style="{StaticResource DarkComboBox}" Height="36" FontSize="14" SelectionChanged="ClassCombo_SelectionChanged">
-                        <ComboBoxItem Content="Melee" Tag="Melee"/><ComboBoxItem Content="Mage" Tag="Mage"/><ComboBoxItem Content="Ranged" Tag="Ranged"/><ComboBoxItem Content="Support" Tag="Support"/>
+                    <TextBlock Text="CLASS" Style="{StaticResource Eyebrow}"/>
+                    <ComboBox x:Name="ClassCombo" Style="{StaticResource DarkComboBox}" Height="44" FontSize="15" SelectionChanged="ClassCombo_SelectionChanged" FontFamily="Segoe UI Variable, Segoe UI">
+                        <ComboBoxItem Content="Melee" Tag="Melee"/>
+                        <ComboBoxItem Content="Mage" Tag="Mage"/>
+                        <ComboBoxItem Content="Ranged" Tag="Ranged"/>
+                        <ComboBoxItem Content="Support" Tag="Support"/>
                     </ComboBox>
                 </StackPanel>
                 <StackPanel x:Name="Step2Panel" Visibility="Collapsed">
-                    <TextBlock Text="COMBAT ENGINES" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,0,15"/>
-                    <CheckBox x:Name="EnableMeleeCheck" Content="Enable Auto-Target" Foreground="#F0F4F8" FontSize="14" Margin="0,0,0,15"/>
-                    <CheckBox x:Name="EnableKiteCheck" Content="Enable Kite Engine" Foreground="#F0F4F8" FontSize="14" Margin="0,0,0,15"/>
-                    <CheckBox x:Name="EnableMageCheck" Content="Enable Mage System" Foreground="#F0F4F8" FontSize="14" Margin="0,0,0,15"/>
-                    <CheckBox x:Name="EnableSupportCheck" Content="Enable Support Mode" Foreground="#F0F4F8" FontSize="14" Margin="0,0,0,15"/>
+                    <TextBlock Text="COMBAT ENGINES" Style="{StaticResource Eyebrow}"/>
+                    <StackPanel Margin="0,10">
+                        <CheckBox x:Name="EnableMeleeCheck" Content="Enable Auto-Target" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI"/>
+                        <CheckBox x:Name="EnableKiteCheck" Content="Enable Kite Engine" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI"/>
+                        <CheckBox x:Name="EnableMageCheck" Content="Enable Mage System" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI"/>
+                        <CheckBox x:Name="EnableSupportCheck" Content="Enable Support Mode" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI"/>
+                    </StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="Step3Panel" Visibility="Collapsed">
-                    <TextBlock Text="QUICK KEYS" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,0,15"/>
-                    <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="50"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><TextBlock Text="A:" Foreground="#E5B842" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/><ComboBox x:Name="AButtonCombo" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="36"/></Grid>
-                    <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="50"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><TextBlock Text="B:" Foreground="#FF3A52" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/><ComboBox x:Name="BButtonCombo" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="36"/></Grid>
-                    <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="50"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><TextBlock Text="X:" Foreground="#3A8EFF" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/><ComboBox x:Name="XButtonCombo" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="36"/></Grid>
-                    <Grid Margin="0,0,0,10"><Grid.ColumnDefinitions><ColumnDefinition Width="50"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><TextBlock Text="Y:" Foreground="#E5B842" FontWeight="Bold" FontSize="14" VerticalAlignment="Center"/><ComboBox x:Name="YButtonCombo" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="36"/></Grid>
+                    <TextBlock Text="QUICK KEYS" Style="{StaticResource Eyebrow}"/>
+                    <Grid Margin="0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="A:" Foreground="{StaticResource AccentGold}" FontWeight="Black" FontSize="16" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" Grid.Row="0" Grid.Column="0"/>
+                        <ComboBox x:Name="AButtonCombo" Grid.Row="0" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="44" FontFamily="Segoe UI Variable, Segoe UI"/>
+                        <TextBlock Text="B:" Foreground="{StaticResource Danger}" FontWeight="Black" FontSize="16" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" Grid.Row="1" Grid.Column="0" Margin="0,10,0,0"/>
+                        <ComboBox x:Name="BButtonCombo" Grid.Row="1" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="44" Margin="0,10,0,0" FontFamily="Segoe UI Variable, Segoe UI"/>
+                        <TextBlock Text="X:" Foreground="{StaticResource AccentBlue}" FontWeight="Black" FontSize="16" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" Grid.Row="2" Grid.Column="0" Margin="0,10,0,0"/>
+                        <ComboBox x:Name="XButtonCombo" Grid.Row="2" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="44" Margin="0,10,0,0" FontFamily="Segoe UI Variable, Segoe UI"/>
+                        <TextBlock Text="Y:" Foreground="{StaticResource AccentGold}" FontWeight="Black" FontSize="16" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" Grid.Row="3" Grid.Column="0" Margin="0,10,0,0"/>
+                        <ComboBox x:Name="YButtonCombo" Grid.Row="3" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="44" Margin="0,10,0,0" FontFamily="Segoe UI Variable, Segoe UI"/>
+                    </Grid>
                 </StackPanel>
                 <StackPanel x:Name="Step4Panel" Visibility="Collapsed">
-                    <TextBlock Text="REVIEW" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,0,10"/>
-                    <Border Style="{StaticResource CardBorder}" Padding="20">
+                    <TextBlock Text="REVIEW" Style="{StaticResource Eyebrow}"/>
+                    <Border Style="{StaticResource GlassPanel}" Padding="24" CornerRadius="{StaticResource RadiusLg}" Margin="0,10">
                         <StackPanel>
-                            <TextBlock x:Name="ReviewName" Foreground="#E5B842" FontSize="22" FontWeight="Black" Margin="0,0,0,5" Effect="{StaticResource NeonGlow}"/>
-                            <TextBlock x:Name="ReviewClass" Foreground="#A1B0C5" FontSize="14" FontWeight="Bold" Margin="0,0,0,20"/>
-                            <TextBlock Text="The profile will be created with default movement settings. You can tweak everything later." Foreground="#7D8B9E" FontSize="12" TextWrapping="Wrap"/>
+                            <TextBlock x:Name="ReviewName" Foreground="{StaticResource AccentGold}" FontSize="26" FontWeight="Black" Margin="0,0,0,8" Effect="{StaticResource GoldGlow}" FontFamily="Segoe UI Variable, Segoe UI"/>
+                            <TextBlock x:Name="ReviewClass" Foreground="{StaticResource TextSecondary}" FontSize="16" FontWeight="Bold" Margin="0,0,0,24" FontFamily="Segoe UI Variable, Segoe UI"/>
+                            <TextBlock Text="The profile will be created with default movement settings. You can tweak everything later." Foreground="{StaticResource TextTertiary}" FontSize="13" TextWrapping="Wrap" FontFamily="Segoe UI Variable, Segoe UI"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
             </Grid>
-            <Border Grid.Row="2" Background="#07090D" BorderBrush="#2A3245" BorderThickness="0,1,0,0" CornerRadius="0,0,10,10" Padding="20,0">
-                <Grid VerticalAlignment="Center">
-                    <StackPanel Orientation="Horizontal">
-                        <Ellipse x:Name="Step1Dot" Width="10" Height="10" Fill="#E5B842" Margin="0,0,8,0" Effect="{StaticResource NeonGlow}"/><Ellipse x:Name="Step2Dot" Width="10" Height="10" Fill="#2A3245" Margin="0,0,8,0"/><Ellipse x:Name="Step3Dot" Width="10" Height="10" Fill="#2A3245" Margin="0,0,8,0"/><Ellipse x:Name="Step4Dot" Width="10" Height="10" Fill="#2A3245"/>
+            
+            <!-- Footer with Step Indicators -->
+            <Border Grid.Row="2" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,1,0,0" Margin="16,0,16,16" CornerRadius="0,0,{StaticResource RadiusMd},{StaticResource RadiusMd}">
+                <Grid VerticalAlignment="Center" Margin="20,0">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                        <Ellipse x:Name="Step1Dot" Width="12" Height="12" Fill="{StaticResource AccentGold}" Margin="0,0,10,0" Effect="{StaticResource GoldGlow}"/>
+                        <Ellipse x:Name="Step2Dot" Width="12" Height="12" Fill="{StaticResource BgBorder}" Margin="0,0,10,0"/>
+                        <Ellipse x:Name="Step3Dot" Width="12" Height="12" Fill="{StaticResource BgBorder}" Margin="0,0,10,0"/>
+                        <Ellipse x:Name="Step4Dot" Width="12" Height="12" Fill="{StaticResource BgBorder}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button x:Name="BtnBack" Content="BACK" Click="BtnBack_Click" Style="{StaticResource ConsoleGhostBtn}" Width="90" Height="36" Margin="0,0,10,0" IsEnabled="False"/>
-                        <Button x:Name="BtnNext" Content="NEXT" Click="BtnNext_Click" Style="{StaticResource ConsolePrimaryBtn}" Width="110" Height="36"/>
+                        <Button x:Name="BtnBack" Content="BACK" Click="BtnBack_Click" Style="{StaticResource GhostButton}" Width="100" Height="40" Margin="0,0,12,0" IsEnabled="False"/>
+                        <Button x:Name="BtnNext" Content="NEXT" Click="BtnNext_Click" Style="{StaticResource PrimaryButton}" Width="120" Height="40"/>
                     </StackPanel>
                 </Grid>
             </Border>

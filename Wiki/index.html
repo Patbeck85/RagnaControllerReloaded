@@ -55,57 +55,23 @@
             color: var(--accent);
         }
 
-        /* Scanline effect */
-        ::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 4%,
-                rgba(0, 212, 170, 0.03) 4%,
-                rgba(0, 212, 170, 0.03) 8%
-            );
-            z-index: 1000;
-            opacity: 0.6;
-        }
-
-        /* Grid pattern overlay */
-        ::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            background: 
-                linear-gradient(90deg, rgba(0,212,170,0.02) 1px, transparent 1px),
-                linear-gradient(rgba(0,212,170,0.02) 1px, transparent 1px);
-            background-size: 60px 60px;
-            z-index: 1000;
-            opacity: 0.3;
-        }
-
-        /* Noise texture */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            opacity: 0.03;
-            z-index: 1000;
-            pointer-events: none;
-        }
+        /* Scanline effect - REMOVED (caused green stripes) */
+        /* Grid pattern overlay - REMOVED (caused visual artifacts) */
+        
+        /* Reduced noise texture - removed scanline/grid artifacts */
+                body::before {
+                    content: '';
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    pointer-events: none;
+                    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.3' numOctaves='2' stitchTiles='stitch'/%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+                    opacity: 0.01;
+                    z-index: 1000;
+                    pointer-events: none;
+                }
 
         /* Focus visible */
         *:focus-visible {
@@ -750,18 +716,9 @@
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Hide all section content, show selected
-            const sections = document.querySelectorAll('.wiki-section, #introduction, #getting-started, #installation, #core-features, #performance, #release, #tutorials, #faq');
-            sections.forEach(s => s.style.display = 'none');
-            
-            // Show intro always
-            document.getElementById('introduction').style.display = 'block';
+            // Language selector only changes button state (single-page design)
+            // For multi-language, use separate pages or i18n framework
         }
-        
-        // Initialize: show intro on load
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('introduction').style.display = 'block';
-        });
         
         // Smooth scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

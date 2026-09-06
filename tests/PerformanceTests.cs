@@ -102,9 +102,11 @@ namespace RagnaController.Tests.Performance
         }
         
         [Fact]
-        public void InputCommandQueue_Dequeue_ShouldBeThreadSafe()
+        public void InputCommandQueue_Enqueue_ShouldBeThreadSafe()
         {
-            // Test: Dequeue Operationen sollten thread-safe sein
+            // Test: Enqueue Operationen sollten thread-safe sein
+            _queue.Start(); // Start the consumer thread
+            
             var concurrentThreads = new System.Threading.Thread[10];
             
             for (int i = 0; i < 10; i++)
@@ -116,11 +118,7 @@ namespace RagnaController.Tests.Performance
                     {
                         try
                         {
-                            var command = _queue.Dequeue();
-                            if (command != null)
-                            {
-                                // Command verarbeiten
-                            }
+                            _queue.Enqueue(new InputCmd(CmdType.Wait, 1));
                         }
                         catch (Exception ex)
                         {
@@ -142,6 +140,8 @@ namespace RagnaController.Tests.Performance
             {
                 thread.Join();
             }
+            
+            _queue.Stop(); // Clean up
         }
         
         [Fact]

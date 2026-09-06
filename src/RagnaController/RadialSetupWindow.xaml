@@ -4,7 +4,14 @@
         Title="Radial Menu Setup" Width="720" Height="760"
         Background="Transparent" WindowStyle="None" AllowsTransparency="True"
         WindowStartupLocation="CenterOwner" MouseLeftButtonDown="Window_MouseLeftButtonDown">
-    <Border Background="#080A0F" BorderBrush="#2A3245" BorderThickness="1" CornerRadius="10">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/UI2026DesignSystem.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Border Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusXl}" BorderBrush="{StaticResource AccentGold}" BorderThickness="1" Effect="{StaticResource GoldGlow}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="45"/>
@@ -12,20 +19,20 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="60"/>
             </Grid.RowDefinitions>
-            <Border Grid.Row="0" BorderBrush="#2A3245" BorderThickness="0,0,0,1">
+            <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" Margin="16,16,16,0" CornerRadius="{StaticResource RadiusMd}">
                 <Grid Margin="20,0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="🎯" Foreground="#E5B842" Margin="0,0,10,0" FontSize="16" Effect="{StaticResource NeonGlow}"/>
-                        <TextBlock Text="RADIAL MENU SETUP" FontWeight="Bold" FontSize="13" Foreground="#F0F4F8"/>
+                        <TextBlock Text="🎯" Foreground="{StaticResource AccentGold}" Margin="0,0,10,0" FontSize="16" Effect="{StaticResource NeonGlow}"/>
+                        <TextBlock Text="RADIAL MENU SETUP" Style="{StaticResource BrandWordmark}" FontSize="13" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <Button Content="✕" Click="BtnClose_Click" HorizontalAlignment="Right" Width="30" Height="30" Background="Transparent" BorderThickness="0" Foreground="#A1B0C5" FontSize="14" ToolTip="Close radial setup window"/>
+                    <Button Content="✕" Click="BtnClose_Click" HorizontalAlignment="Right" Width="36" Height="36" Style="{StaticResource GhostButton}" ToolTip="Close radial setup window"/>
                 </Grid>
             </Border>
-            <Border Grid.Row="1" Padding="20">
+            <Border Grid.Row="1" Style="{StaticResource GlassPanelCompact}" Margin="16,0,16,0" Padding="20">
                 <StackPanel>
-                    <TextBlock Foreground="#A1B0C5" FontSize="12" TextWrapping="Wrap" LineHeight="18" FontWeight="SemiBold">
+                    <TextBlock Foreground="{StaticResource TextSecondary}" FontSize="12" TextWrapping="Wrap" LineHeight="18" FontWeight="SemiBold">
                         <Run Text="Trigger: Hold "/>
-                        <Run Foreground="#E5B842" FontWeight="Black" Text="LT + RT"/>
+                        <Run Foreground="{StaticResource AccentGold}" FontWeight="Black" Text="LT + RT"/>
                         <Run Text=" simultaneously → Aim Right Stick → Release triggers to execute."/>
                     </TextBlock>
                 </StackPanel>
@@ -35,39 +42,38 @@
                     <RowDefinition Height="36"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Background="#1A2030">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50"/>
-                        <ColumnDefinition Width="150"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="130"/>
-                        <ColumnDefinition Width="110"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.Column="0" Text="#" Foreground="#E5B842" FontWeight="Black" FontSize="11" VerticalAlignment="Center" Margin="15,0"/>
-                    <TextBlock Grid.Column="1" Text="DISPLAY NAME" Foreground="#7D8B9E" FontWeight="Bold" FontSize="10" VerticalAlignment="Center" Margin="10,0"/>
-                    <TextBlock Grid.Column="2" Text="COMMAND / CHAT" Foreground="#7D8B9E" FontWeight="Bold" FontSize="10" VerticalAlignment="Center" Margin="10,0"/>
-                    <TextBlock Grid.Column="3" Text="KEY BINDING" Foreground="#7D8B9E" FontWeight="Bold" FontSize="10" VerticalAlignment="Center" Margin="10,0"/>
-                    <TextBlock Grid.Column="4" Text="EMOTES" Foreground="#E5B842" FontWeight="Bold" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                </Grid>
+                <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" Margin="0,0,0,8" CornerRadius="12,12,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="150"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="130"/>
+                            <ColumnDefinition Width="110"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="#" Foreground="{StaticResource AccentGold}" FontWeight="Black" FontSize="11" VerticalAlignment="Center" Margin="15,0"/>
+                        <TextBlock Grid.Column="1" Text="DISPLAY NAME" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="10,0"/>
+                        <TextBlock Grid.Column="2" Text="COMMAND / CHAT" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="10,0"/>
+                        <TextBlock Grid.Column="3" Text="KEY BINDING" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="10,0"/>
+                        <TextBlock Grid.Column="4" Text="EMOTES" Foreground="{StaticResource AccentGold}" FontWeight="Bold" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Grid>
+                </Border>
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                     <StackPanel x:Name="ItemsStack" Margin="0,10,0,0"/>
                 </ScrollViewer>
             </Grid>
-            <Border Grid.Row="3" Background="#07090D" BorderBrush="#2A3245" BorderThickness="0,1,0,0" CornerRadius="0,0,10,10" Padding="20,0">
+            <Border Grid.Row="3" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,1,0,0" Margin="16,0,16,16" CornerRadius="0,0,{StaticResource RadiusXl},{StaticResource RadiusXl}" Padding="20,0">
                 <Grid VerticalAlignment="Center">
-                    <TextBlock Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" VerticalAlignment="Center">
+                    <TextBlock Foreground="{StaticResource TextTertiary}" FontSize="10" FontWeight="Bold" VerticalAlignment="Center">
                         <Run Text="Leave blank to disable a slot. "/>
-                        <Run Foreground="#E5B842" Text="8 Slots"/>
+                        <Run Foreground="{StaticResource AccentGold}" Text="8 Slots"/>
                         <Run Text=" = 8 directions."/>
                     </TextBlock>
-                    <Button Content="SAVE RADIAL" Click="BtnSave_Click" Style="{StaticResource ConsolePrimaryBtn}" HorizontalAlignment="Right" Width="140" Height="36" ToolTip="Save radial menu configuration"/>
+                    <Button Content="SAVE RADIAL" Click="BtnSave_Click" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Width="140" Height="40" ToolTip="Save radial menu configuration"/>
                 </Grid>
             </Border>
             <Grid x:Name="EmoteGalleryOverlay" Grid.RowSpan="4" Background="#E6080A0F" Visibility="Collapsed">
-                <Border Background="#121620" BorderBrush="#E5B842" BorderThickness="1" CornerRadius="12" Width="640" Height="640" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Border.Effect>
-                        <DropShadowEffect Color="#E5B842" BlurRadius="30" ShadowDepth="0" Opacity="0.3"/>
-                    </Border.Effect>
+                <Border Style="{StaticResource GlassPanel}" BorderBrush="{StaticResource AccentGold}" BorderThickness="1" CornerRadius="{StaticResource Radius2Xl}" Width="640" Height="640" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{StaticResource GoldGlow}">
                     <Grid Margin="20">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -77,8 +83,8 @@
 
                         <!-- Header -->
                         <Grid Grid.Row="0" Margin="0,0,0,10">
-                            <TextBlock Text="SELECT EMOTE" Foreground="#F0F4F8" FontSize="16" FontWeight="Black" VerticalAlignment="Center"/>
-                            <Button Content="✕" Click="BtnCloseGallery_Click" HorizontalAlignment="Right" Width="30" Height="30" Background="Transparent" BorderThickness="0" Foreground="#A1B0C5" FontSize="14" FontWeight="Bold" ToolTip="Close emote gallery"/>
+                            <TextBlock Text="SELECT EMOTE" Style="{StaticResource BrandWordmark}" FontSize="16" VerticalAlignment="Center"/>
+                            <Button Content="✕" Click="BtnCloseGallery_Click" HorizontalAlignment="Right" Width="36" Height="36" Style="{StaticResource GhostButton}" ToolTip="Close emote gallery"/>
                         </Grid>
 
                         <!-- Status + Buttons -->
@@ -90,13 +96,13 @@
                             <TextBlock x:Name="EmoteStatusText"
                                        Grid.Column="0"
                                        Text="Emoji fallback active"
-                                       Foreground="#7D8B9E" FontSize="10" FontWeight="SemiBold"
-                                       VerticalAlignment="Center"/>
+                                       Style="{StaticResource BodyText}" FontSize="10" FontWeight="SemiBold"
+                                       VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}"/>
                             <Button Grid.Column="1"
                                     Content="⬇ Download from iROWiki"
                                     Click="BtnDownloadWiki_Click"
-                                    Style="{StaticResource ConsolePrimaryBtn}"
-                                    Height="30" Padding="10,0"
+                                    Style="{StaticResource PrimaryButton}"
+                                    Height="36" Padding="15,0"
                                     FontSize="11"
                                     ToolTip="Download emote images from iROWiki to improve gallery"/>
                         </Grid>
@@ -112,7 +118,7 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Button Margin="4" Width="96" Height="88"
-                                                Style="{StaticResource ConsoleGhostBtn}"
+                                                Style="{StaticResource GhostButton}"
                                                 Click="BtnSelectEmote_Click" Tag="{Binding}">
                                             <StackPanel VerticalAlignment="Center">
                                                 <!-- Echtes Bild wenn vorhanden -->
@@ -126,11 +132,11 @@
                                                            FontSize="26" HorizontalAlignment="Center"
                                                            Margin="0,0,0,4" LineHeight="32"/>
                                                 <TextBlock Text="{Binding Command}"
-                                                           FontSize="11" Foreground="#E5B842"
+                                                           FontSize="11" Foreground="{StaticResource AccentGold}"
                                                            FontWeight="Bold" HorizontalAlignment="Center"
                                                            FontFamily="Consolas"/>
                                                 <TextBlock Text="{Binding Name}"
-                                                           FontSize="9" Foreground="#7D8B9E"
+                                                           FontSize="9" Foreground="{StaticResource TextSecondary}"
                                                            HorizontalAlignment="Center" Margin="0,2,0,0"/>
                                             </StackPanel>
                                         </Button>

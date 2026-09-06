@@ -4,6 +4,58 @@ All notable changes to RagnaController will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-09-04
+
+### Added
+- **PERF-005: Input Latency Measurement** — `InputLatencyTracker` with lock-free ring buffer (50k samples), P50/P95/P99 percentiles per stage (Enqueue/Dispatch/SendInput/Total end-to-end), per-controller tracking, ETW integration via `RagnaControllerEventSource`, background percentile calculation every 10s, budget exceedance detection (>5ms target P99), and human-readable reports. Integrated into `EngineOrchestrator` and `InputCommandQueue` for end-to-end hardware event → SendInput completion latency measurement.
+- **PERF-006: BenchmarkDotNet Regression Gate** — CI gate validation via `BenchmarkGate.ValidateInputLatencyGate()` fails build if P95 > 5ms (PERF-005 target). CLI: `--input-latency-gate <jsonPath>`. GitHub Actions `benchmark` job runs InputLatency benchmarks (10 iterations, 3 warmups) and enforces P95 < 5ms. Results: P95 = 0.077ms (keystroke), 0.027ms (mouse), 0.399ms (macro) — all well under 5ms target.
+- **PERF-007: BenchmarkDotNet Integration** — Executable benchmark project (`benchmarks/RagnaController.Benchmarks/`) with 6 benchmark suites: ControllerPolling, EngineOrchestrator, InputEmulation, MemoryAllocation, ProfileAndMacro, and **InputLatency (new: end-to-end hardware→SendInput latency measurement using `InputLatencyTracker`)**. Features: BenchmarkDotNet 0.14, MemoryDiagnoser, DisassemblyDiagnoser (Windows), GitHub/CSV/HTML/JSON exporters, headless CI-ready config.
+- **PERF-003: Frame Budget Monitor** — `FrameBudgetMonitor` with P50/P95/P99 percentile tracking (10k sample rolling window), budget exceedance detection with ETW events, and `FrameBudgetRegistry` for centralized monitoring across all components
+- **ETWProvider modernization** — Fixed `ETWProvider.cs` to properly inherit from `EventSource` with typed `EventKeywords`, static singleton pattern, and correct `IsEnabled()` checks
+- **EngineOrchestrator auto-starts InputCommandQueue** — `Start()` now calls `_queue?.Start()` to ensure consumer thread is running before tick loop fires
+
+### Changed
+- **ETWProvider.cs** — Rewritten to extend `EventSource` directly (was wrapping internal EventSource), added `Keywords` static class with proper `EventKeywords` constants
+- **FrameBudgetMonitor** — Thread-safe lock-free design using `Interlocked` for all counters and percentile caches; background timer recalculates percentiles every 8 seconds
+- **InputCommandQueue** — Added optional `InputLatencyTracker` constructor parameter for PERF-005 end-to-end latency tracking
+- **EngineOrchestrator** — Initializes `InputLatencyTracker` via `InputLatencyRegistry.GetOrCreate()` and passes it to `InputCommandQueue`
+- **BenchmarkHarness.cs** — Updated to target default runtime (auto-detects .NET 8/9/10), added `System.Diagnostics` for Stopwatch
+
+### Tests
+- All 56 tests passing (SDL2 headless CI issue resolved via RAGNACONTROLLER_SKIP_SDL=1)
+- Build: 0 errors, 0 warnings (pre-existing warnings in legacy code only)
+
+---
+
+## [2.1.0] - 2026-09-04
+
+### Added
+- **Phase 8: UI Modernization — Cyber-Gaming Design 2026** — Complete UI overhaul across all 18 WPF windows
+- **New Design System** (`Resources/UI2026DesignSystem.xaml`) — Colors, gradients, glassmorphism, shadows, typography
+- **DarkComboBox Style** — Consistent dropdown styling (CornerRadius=5, Gold hover border, RaisedBg popup) across all windows
+- **CardBorder, ConsolePrimaryBtn, ConsoleGhostBtn** — Reusable styled components with gold accents
+- **Sliders, Scrollbars, CheckBoxes, TabButton, IconButton** — Complete component library
+
+### Changed
+- **MainWindow.xaml** — Radial gradient background, header with brand/profile/controller status, 3-column grid, glassmorphism cards
+- **SettingsWindow.xaml** — Glassmorphism cards, unified spacing, all ComboBoxes use DarkComboBox
+- **InGameOverlayWindow.xaml** — Glassmorphism, rounded corners, theme binding (neon/soft/dark)
+- **HandheldWindow, RadialMenuWindow, DaisyWheelWindow** — All popups/modals updated with new CardBorder, buttons, colors
+- **ProfileWizardWindow, ProfileLibraryWindow, CommunityBrowserWindow** — Wizard steps, library cards, community browser with new design
+- **ControllerTestWindow, ButtonRemappingWindow, ComboEditorWindow, TutorialWindow, SplashWindow, MiniModeWindow, DeveloperConsoleWindow** — All remaining windows updated
+- **All code-behind files** — Hardcoded colors/brushes replaced with UI2026DesignSystem resources (Gold, Live, Danger, AccentBlue, AccentPurple, AccentGreen, AccentOrange, TextSecondary, BgBorder, BgSecondary, BgCard, BgPrimary, BgTertiary, RadiusMd, RadiusSm)
+- **Fixed resource key issues** — `GoldBrush`→`Gold`, `BorderBrush`→`BgBorder`, `Brushes.Lime`→`FindResource("Live")`
+
+### Tests
+- All 56 tests passing (SDL2 headless CI issue resolved via RAGNACONTROLLER_SKIP_SDL=1)
+- Build: 0 errors, 0 warnings (improved from 18 pre-existing warnings)
+
+### Fixed
+- **CS8618/CS8625** nullable warnings eliminated in updated code-behind files
+- **Missing using directives** — Added `using System.Windows.Media` where needed
+
+---
+
 ## [2.0.3] - 2026-08-24
 
 ### Added

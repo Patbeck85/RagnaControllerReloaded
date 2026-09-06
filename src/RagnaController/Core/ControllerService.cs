@@ -2,9 +2,10 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Hexa.NET.SDL2;
+using RagnaController.Controller;
 using RagnaController.Models;
 
-namespace RagnaController.Controller
+namespace RagnaController.Core
 {
     /// <summary>
     /// SDL2 GameController wrapper.
@@ -15,11 +16,11 @@ namespace RagnaController.Controller
     /// Also hosts a hidden window for WM_DEVICECHANGE to enable instant controller hot-plug detection.
     /// Implements IControllerProvider for unified controller abstraction.
     /// </summary>
-    public unsafe class ControllerService : IDisposable, RagnaController.Core.IControllerProvider
+    public unsafe class ControllerService : IDisposable, IControllerProvider
     {
         // ── Shared state (volatile for cross-thread visibility) ──────────
-        private volatile bool    _isConnected;
-        private volatile bool    _disposed;
+        private volatile bool _isConnected;
+        private volatile bool _disposed;
         private SDLGameController* _controller = null;
 
         // ── Thread-safe snapshot (cached per frame, read-only) ───────────
@@ -28,17 +29,30 @@ namespace RagnaController.Controller
         private volatile SDLGameController* _controllerSnapshot = null;
 
         // ── Thread synchronization ─────────────────────────────────────────
-                private readonly Thread _sdlThread;
+                private readonly Thread? _sdlThread;
                 private readonly ManualResetEventSlim _scanNow = new ManualResetEventSlim(false);
-                private Core.DeviceNotificationWindow? _deviceNotificationWindow;
+        private DeviceNotificationWindow? _deviceNotificationWindow;
 
-                // ── SDL initialization guard ───────────────────────────────
-                private static bool _sdlInitialized = false;
+        // ── SDL initialization guard ───────────────────────────────
+        private static bool _sdlInitialized = false;
 
-                public bool   IsConnected   => _isConnected;
-        public string ControllerName  { get; private set; } = "No Controller";
-        public string ControllerType  { get; private set; } = "Unknown";
-        
+        // ── Headless/CI detection ─────────────────────────────────────
+                /// <summary>
+                        /// Detects if we're running in a headless environment (CI, tests, no display).
+                        /// Can be overridden via environment variable RAGNACONTROLLER_SKIP_SDL=1
+                        /// </summary>
+                        public static bool IsHeadlessEnvironment =>
+                            string.Equals(Environment.GetEnvironmentVariable("RAGNACONTROLLER_SKIP_SDL"), "1", StringComparison.OrdinalIgnoreCase) ||
+                            !OperatingSystem.IsWindows() ||
+                            string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERNAME")) ||
+                            string.Equals(Environment.GetEnvironmentVariable("CI"), "true", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Environment.GetEnvironmentVariable("GITHUB_ACTIONS"), "true", StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(Environment.GetEnvironmentVariable("TF_BUILD"), "true", StringComparison.OrdinalIgnoreCase);
+
+        public bool IsConnected => _isConnected;
+        public string ControllerName { get; private set; } = "No Controller";
+        public string ControllerType { get; private set; } = "Unknown";
+
         /// <summary>
         /// Unique identifier for the connected controller (GUID).
         /// Used for profile-to-controller mapping.
@@ -46,20 +60,29 @@ namespace RagnaController.Controller
         public string ControllerGuid { get; private set; } = "";
 
         public event EventHandler? ControllerDetected;
+        public event EventHandler? ControllerDisconnected;
 
         // Button state
         private ButtonState _buttonStates;
         public ButtonState ButtonStates => _buttonStates;
 
         public ControllerService()
-        {
-            _sdlThread = new Thread(SdlThreadLoop)
-            {
-                Name         = "SDL2_ControllerThread",
-                IsBackground = true
-            };
-            _sdlThread.Start();
-        }
+                {
+                    // Check for headless environment BEFORE starting thread
+                    if (IsHeadlessEnvironment)
+                    {
+                        System.Diagnostics.Debug.WriteLine(
+                            "[ControllerService] Headless environment detected — SDL2 initialization skipped entirely");
+                        return;
+                    }
+
+                    _sdlThread = new Thread(SdlThreadLoop)
+                    {
+                        Name = "SDL2_ControllerThread",
+                        IsBackground = true
+                    };
+                    _sdlThread.Start();
+                }
 
         // ── Public API ──────────────────────────────────────────────────────
 
@@ -89,12 +112,12 @@ namespace RagnaController.Controller
                 SDLJoystickPowerLevel level = SDL.JoystickCurrentPowerLevel(joy);
                 return level switch
                 {
-                    SDLJoystickPowerLevel.Empty  => "Empty",
-                    SDLJoystickPowerLevel.Low    => "Low",
+                    SDLJoystickPowerLevel.Empty => "Empty",
+                    SDLJoystickPowerLevel.Low => "Low",
                     SDLJoystickPowerLevel.Medium => "Mid",
-                    SDLJoystickPowerLevel.Full   => "Full",
-                    SDLJoystickPowerLevel.Wired  => "Wired",
-                    _                            => "Unknown"
+                    SDLJoystickPowerLevel.Full => "Full",
+                    SDLJoystickPowerLevel.Wired => "Wired",
+                    _ => "Unknown"
                 };
             }
         }
@@ -102,7 +125,7 @@ namespace RagnaController.Controller
         public void SetRumble(float left, float right)
         {
             if (!_isConnected || _controller == null) return;
-            ushort l = (ushort)(Math.Clamp(left,  0f, 1f) * 65535);
+            ushort l = (ushort)(Math.Clamp(left, 0f, 1f) * 65535);
             ushort r = (ushort)(Math.Clamp(right, 0f, 1f) * 65535);
             SDL.GameControllerRumble(_controller, l, r, 0xFFFFFFFF);
         }
@@ -162,46 +185,76 @@ namespace RagnaController.Controller
             if (!_isConnected || _controller == null) return "";
             SDLJoystick* joy = SDL.GameControllerGetJoystick(_controller);
             if (joy == null) return "";
-    
+
             Guid guid = SDL.JoystickGetGUID(joy);
             // Convert GUID to hex string
             return guid.ToString("N").ToLowerInvariant();
         }
 
         public void Dispose()
-        {
-            _disposed = true;
-            _scanNow.Set(); // unblock the SDL thread so it can exit
-            _deviceNotificationWindow?.Dispose();
-            _deviceNotificationWindow = null;
-        }
+                {
+                    _disposed = true;
+                    // Only signal if thread was actually started
+                    if (_sdlThread != null && _sdlThread.IsAlive)
+                    {
+                        _scanNow.Set(); // unblock the SDL thread so it can exit
+                    }
+                    _deviceNotificationWindow?.Dispose();
+                    _deviceNotificationWindow = null;
+                }
 
         // ── SDL thread body (ALL SDL calls live here) ──────────────────────
 
-        private void SdlThreadLoop()
+                [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
+                [System.Security.SecurityCritical]
+                private void SdlThreadLoop()
                 {
+                    // ── Skip SDL entirely in headless/CI environments ────────────────────
+                    if (IsHeadlessEnvironment)
+                    {
+                        System.Diagnostics.Debug.WriteLine(
+                            "[ControllerService] Headless environment detected — SDL2 initialization skipped");
+                        return;
+                    }
+
                     try
                     {
-                        if (!_sdlInitialized)
+                        // SDL_INIT_VIDEO is required on Windows for proper controller detection
+                        // (especially Bluetooth controllers like DualSense). Without it,
+                        // SDL_NumJoysticks() may return 0 even when controllers are connected.
+                        // Protect SDL.Init from AccessViolationException in headless/CI environments
+                        try
                         {
-                            int result = SDL.Init(SDL.SDL_INIT_GAMECONTROLLER |
-                                                  SDL.SDL_INIT_JOYSTICK |
-                                                  SDL.SDL_INIT_HAPTIC |
-                                                  SDL.SDL_INIT_EVENTS);
-                            if (result < 0)
+                            if (!_sdlInitialized)
                             {
-                                System.Diagnostics.Debug.WriteLine(
-                                    "[ControllerService] SDL.Init failed: " + SDL.GetErrorS());
-                                return;
+                                int result = SDL.Init(SDL.SDL_INIT_VIDEO |
+                                                      SDL.SDL_INIT_GAMECONTROLLER |
+                                                      SDL.SDL_INIT_JOYSTICK |
+                                                      SDL.SDL_INIT_HAPTIC |
+                                                      SDL.SDL_INIT_EVENTS);
+                                if (result < 0)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        "[ControllerService] SDL.Init failed: " + SDL.GetErrorS());
+                                    return;
+                                }
+                                _sdlInitialized = true;
                             }
-                            _sdlInitialized = true;
+                            System.Diagnostics.Debug.WriteLine("[ControllerService] SDL2 initialized ✓");
                         }
-                        System.Diagnostics.Debug.WriteLine("[ControllerService] SDL2 initialized ✓");
+                        catch (AccessViolationException)
+                        {
+                            // SDL2 init can fail in headless/CI environments without a display driver.
+                            // Log and continue — this allows tests to run without a real display.
+                            System.Diagnostics.Debug.WriteLine(
+                                "[ControllerService] SDL2 Init skipped (AccessViolationException — likely headless/CI environment)");
+                            return; // Exit thread loop gracefully
+                        }
 
                         // ── Create Device Notification Window for instant hot-plug detection ────────────
                         try
                         {
-                            _deviceNotificationWindow = new Core.DeviceNotificationWindow(() =>
+                            _deviceNotificationWindow = new DeviceNotificationWindow(() =>
                             {
                                 System.Diagnostics.Debug.WriteLine("[ControllerService] WM_DEVICECHANGE received — requesting immediate scan");
                                 _scanNow.Set();
@@ -234,38 +287,38 @@ namespace RagnaController.Controller
                         }
                     }
                     finally
-                                    {
-                                        // ── Cleanup on this thread ───────────────────────────────────
-                                        if (_controller != null)
-                                        {
-                                            SDL.GameControllerRumble(_controller, 0, 0, 0);
-                                            SDL.GameControllerClose(_controller);
-                                            _controller = null;
-                                        }
-                                        _isConnected = false;
-                                        if (_sdlInitialized)
-                                        {
-                                            // ── Protect SDL.Quit() from AccessViolationException in test environments ─────────
-                                            try
-                                            {
-                                                SDL.Quit();
-                                                _sdlInitialized = false;
-                                                System.Diagnostics.Debug.WriteLine("[ControllerService] SDL2 shut down");
-                                            }
-                                            catch (AccessViolationException)
-                                            {
-                                                // SDL2 cleanup can fail in headless/CI environments without a display driver.
-                                                // Log and continue — this is non-critical for test scenarios.
-                                                System.Diagnostics.Debug.WriteLine(
-                                                    "[ControllerService] SDL2 Quit skipped (AccessViolationException — likely headless/CI environment)"
-                                                );
-                                                _sdlInitialized = false;
-                                            }
-                                        }
-                                    }
+                    {
+                        // ── Cleanup on this thread ───────────────────────────────────
+                        if (_controller != null)
+                        {
+                            SDL.GameControllerRumble(_controller, 0, 0, 0);
+                            SDL.GameControllerClose(_controller);
+                            _controller = null;
+                        }
+                        _isConnected = false;
+                        if (_sdlInitialized)
+                        {
+                            // ── Protect SDL.Quit() from AccessViolationException in test environments ─────────
+                            try
+                            {
+                                SDL.Quit();
+                                _sdlInitialized = false;
+                                System.Diagnostics.Debug.WriteLine("[ControllerService] SDL2 shut down");
+                            }
+                            catch (AccessViolationException)
+                            {
+                                // SDL2 cleanup can fail in headless/CI environments without a display driver.
+                                // Log and continue — this is non-critical for test scenarios.
+                                System.Diagnostics.Debug.WriteLine(
+                                    "[ControllerService] SDL2 Quit skipped (AccessViolationException — likely headless/CI environment)"
+                                );
+                                _sdlInitialized = false;
+                            }
+                        }
+                    }
                 }
 
-                private void ScanForController()
+        private void ScanForController()
         {
             // Pump first so newly-plugged devices are visible
             SDL.PumpEvents();
@@ -287,10 +340,10 @@ namespace RagnaController.Controller
                 if (ctrl == null) continue;
 
                 string name = SDL.GameControllerNameS(ctrl) ?? "Unknown Gamepad";
-                _controller   = ctrl;
+                _controller = ctrl;
                 ControllerName = name;
                 DetermineControllerType(name);
-                
+
                 // Get and store the controller GUID
                 SDLJoystick* joy = SDL.GameControllerGetJoystick(ctrl);
                 if (joy != null)
@@ -298,22 +351,22 @@ namespace RagnaController.Controller
                     Guid guid = SDL.JoystickGetGUID(joy);
                     ControllerGuid = guid.ToString("N").ToLowerInvariant();
                 }
-                
-                _isConnected   = true;
+
+                _isConnected = true;
 
                 // Update the read-only snapshot for main-thread access (lock-free, single-writer)
                 _controllerSnapshot = ctrl;
 
                 System.Diagnostics.Debug.WriteLine(
                     $"[ControllerService] Connected: {name} (GUID: {ControllerGuid})");
-                
+
                 // Fire event on UI thread
                 ControllerDetected?.Invoke(this, EventArgs.Empty);
                 return;
             }
 
             // Nothing found — clear controller and snapshot
-            _isConnected   = false;
+            _isConnected = false;
             ControllerName = "No Controller";
             ControllerType = "Unknown";
             ControllerGuid = "";
@@ -330,23 +383,26 @@ namespace RagnaController.Controller
                 System.Diagnostics.Debug.WriteLine(
                     $"[ControllerService] {ControllerName} disconnected");
                 SDL.GameControllerClose(_controller);
-                _controller    = null;
-                _isConnected   = false;
+                _controller = null;
+                _isConnected = false;
                 ControllerName = "No Controller";
                 ControllerType = "Unknown";
                 ControllerGuid = "";
 
                 // Update snapshot for main-thread access
                 _controllerSnapshot = null;
+
+                // Fire disconnect event
+                ControllerDisconnected?.Invoke(this, EventArgs.Empty);
             }
         }
 
         private void DetermineControllerType(string name)
         {
             string lower = name.ToLowerInvariant();
-            if      (lower.Contains("dualsense") || lower.Contains("ps5"))       ControllerType = "PS5";
+            if (lower.Contains("dualsense") || lower.Contains("ps5"))       ControllerType = "PS5";
             else if (lower.Contains("dualshock") || lower.Contains("ps4"))       ControllerType = "PS4";
-            else if (lower.Contains("nintendo")  || lower.Contains("switch") ||  lower.Contains("pro controller")) ControllerType = "Switch";
+            else if (lower.Contains("nintendo") || lower.Contains("switch") || lower.Contains("pro controller")) ControllerType = "Switch";
             else                                                                  ControllerType = "Xbox";
         }
     }

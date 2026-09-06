@@ -17,4 +17,17 @@
   <ItemGroup>
     <ProjectReference Include="../../src/RagnaController/RagnaController.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="xunit.runsettings" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="xunit.runsettings">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <PropertyGroup>
+    <EnvironmentVariables>
+      RAGNACONTROLLER_SKIP_SDL=1
+    </EnvironmentVariables>
+  </PropertyGroup>
 </Project>

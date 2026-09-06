@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using RagnaController.Core;
 using RagnaController.Models;
 using RagnaController.Profiles;
@@ -114,7 +115,7 @@ namespace RagnaController
                         _manager.AddAndSave(result.Profile);
                         
                         btn.Content = GetLocalizedString("CommunityBrowser_Installed");
-                        btn.Foreground = System.Windows.Media.Brushes.Lime;
+                        btn.Foreground = (Brush)FindResource("Live");
                     }
                     else
                     {

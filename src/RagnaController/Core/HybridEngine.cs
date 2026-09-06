@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Threading;
 using RagnaController.Models;
 using RagnaController.Controller;
 using RagnaController.Profiles;
@@ -35,16 +36,19 @@ namespace RagnaController.Core
             _orchestrator.VoiceStatusChanged += v => VoiceStatusChanged?.Invoke(v);
         }
 
-        // ── Öffentliche Properties (Delegiert an Orchestrator) ────────────
-        public bool IsRunning => _orchestrator.IsRunning;
-        public bool IsPaused => _orchestrator.IsPaused;
-        public string ControllerName => _orchestrator.ControllerName;
-        public string ControllerType => _orchestrator.ControllerType;
-        public IMessenger Messenger => _orchestrator.Messenger;
-        public ControllerService ControllerSvc => _orchestrator.Controller;
-        public WindowTracker WindowTracker => _orchestrator.WinTracker;
+        // ── Public Properties (Delegiert an Orchestrator) ────────────
+                        public bool IsRunning => _orchestrator.IsRunning;
+                        public bool IsPaused => _orchestrator.IsPaused;
+                        public string ControllerName => _orchestrator.ControllerName;
+                        public string ControllerType => _orchestrator.ControllerType;
+                        public IMessenger Messenger => _orchestrator.Messenger;
+                        public ControllerService ControllerSvc => _orchestrator.Controller;
+                        public ControllerManager ControllerManager => _orchestrator.ControllerManager;
+                        public WindowTracker WindowTracker => _orchestrator.WinTracker;
+                        public Profile? CurrentProfile => _orchestrator.CurrentProfile;
+                        public InputCommandQueue? CommandQueue => _orchestrator.CommandQueue;
 
-        public bool FocusLockEnabled
+                public bool FocusLockEnabled
         {
             get => _orchestrator.SysMonitor.FocusLockEnabled;
             set => _orchestrator.SysMonitor.FocusLockEnabled = value;
@@ -87,11 +91,57 @@ namespace RagnaController.Core
         public void AttachProfileManagerLogger(ProfileManager pm) => _orchestrator.ProfileApplier.AttachProfileManagerLogger(pm);
 
         // ── Lifecycle (Delegiert an Orchestrator) ────────────────────────
-        public void Start() => _orchestrator.Start();
-        public void Stop() => _orchestrator.Stop();
-        public void Pause() => _orchestrator.Pause();
-        public void Resume() => _orchestrator.Resume();
-        public void Shutdown() => _orchestrator.Shutdown();
-        public void Dispose() => _orchestrator.Dispose();
-    }
-}
+                public void Start() => _orchestrator.Start();
+                public void Stop() => _orchestrator.Stop();
+                public void Pause() => _orchestrator.Pause();
+                public void Resume() => _orchestrator.Resume();
+                public void Shutdown() => _orchestrator.Shutdown();
+                public void Dispose() => _orchestrator.Dispose();
+
+                // ── Calibration (Delegiert an InputReader via Orchestrator) ────────────
+                public void StartCalibration()
+                {
+                    // Calibration is handled by InputReader - delegate to SettingsWindow approach
+                    // We'll run a short calibration directly on the controller
+                    var controller = _orchestrator.Controller;
+                    if (controller == null) return;
+            
+                    // Create a temporary InputReader for calibration
+                    var inputReader = new InputReader(controller);
+                    float maxDrift = 0f;
+            
+                    // Sample for 3 seconds
+                    for (int i = 0; i < 30; i++)
+                    {
+                        var input = inputReader.Read();
+                        if (input.IsConnected)
+                        {
+                            float highest = Math.Max(Math.Max(Math.Abs(input.LeftX), Math.Abs(input.LeftY)),
+                                                     Math.Max(Math.Abs(input.RightX), Math.Abs(input.RightY)));
+                            if (highest > maxDrift) maxDrift = highest;
+                        }
+                        System.Threading.Thread.Sleep(100);
+                    }
+            
+                    // Add safety buffer and clamp
+                    float finalDeadzone = (float)Math.Round(maxDrift + 0.02f, 2);
+                    if (finalDeadzone > 0.40f) finalDeadzone = 0.40f;
+                    if (finalDeadzone < 0.05f) finalDeadzone = 0.05f;
+            
+                    // Apply to current profile if available
+                    if (_orchestrator.CurrentProfile != null)
+                    {
+                        _orchestrator.CurrentProfile.Deadzone = finalDeadzone;
+                        _orchestrator.CurrentProfile.CursorDeadzone = finalDeadzone;
+                        _orchestrator.Movement.Deadzone = finalDeadzone;
+                        _orchestrator.Cursor.Deadzone = finalDeadzone;
+                
+                        // Save the profile
+                        var pm = new ProfileManager();
+                        pm.SaveProfile(_orchestrator.CurrentProfile);
+                    }
+            
+                    LogMessage?.Invoke($"Calibration complete: {finalDeadzone} deadzone");
+                }
+            }
+        }

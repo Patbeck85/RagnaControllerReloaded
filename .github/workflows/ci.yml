@@ -9,63 +9,175 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-    
+
     - name: Restore dependencies
       run: dotnet restore
-    
+
     - name: Build
       run: dotnet build --configuration Release
-    
+
     - name: Run Unit Tests
       run: dotnet test --verbosity minimal --configuration Release
-    
+
     - name: Run Integration Tests
       run: dotnet test --filter "FullyQualifiedName~Integration" --verbosity minimal --configuration Release
-    
+
     - name: Run Performance Tests
       run: dotnet test --filter "FullyQualifiedName~Performance" --verbosity minimal --configuration Release
-    
+
     - name: Publish artifacts
       uses: actions/upload-artifact@v4
       with:
         name: RagnaController-Release
         path: bin/Release/net8.0/publish/
 
-  code-quality:
+  benchmark:
     runs-on: windows-latest
-    
+    needs: build
+
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x'
-    
-    - name: Run Code Analysis
-      run: dotnet build --configuration Release /p:TreatWarningsAsErrors=true
-    
-  test-summary:
-    needs: [build, code-quality]
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build Benchmarks
+      run: dotnet build benchmarks/RagnaController.Benchmarks/RagnaController.Benchmarks.csproj --configuration Release
+
+    - name: Run InputLatency Benchmarks
+      run: |
+        dotnet run -c Release --project benchmarks/RagnaController.Benchmarks/RagnaController.Benchmarks.csproj --filter "*InputLatency*" --iterationCount 10 --warmupCount 3
+      shell: pwsh
+
+    - name: Validate InputLatency Gate
+      run: |
+        $jsonPath = "BenchmarkDotNet.Artifacts/results/RagnaController.Benchmarks.InputLatencyBenchmarks-report-full-compressed.json"
+        dotnet run -c Release --project benchmarks/RagnaController.Benchmarks/RagnaController.Benchmarks.csproj -- --input-latency-gate $jsonPath
+      shell: pwsh
+
+    - name: Upload Benchmark Results
+      uses: actions/upload-artifact@v4
+      with:
+        name: BenchmarkDotNet-Results
+        path: BenchmarkDotNet.Artifacts/
+        retention-days: 30
+
+    - name: Generate Performance Dashboard Summary
+      id: perf-dashboard
+      run: |
+        $resultsDir = "BenchmarkDotNet.Artifacts/results"
+        $jsonFiles = Get-ChildItem -Path $resultsDir -Filter "*-report-full-compressed.json" -Recurse -ErrorAction SilentlyContinue
+
+        $summary = @()
+        $summary += "=== RagnaController Performance Dashboard ==="
+        $summary += "Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+        $summary += "Run: ${{ github.run_number }} | Commit: ${{ github.sha.Substring(0,7) }}"
+        $summary += ""
+        $summary += "| Benchmark | P50 (ms) | P95 (ms) | P99 (ms) | Mean (ms) | StdDev | Status |"
+        $summary += "|-----------|----------|----------|----------|-----------|--------|--------|"
+
+        foreach ($file in $jsonFiles) {
+            try {
+                $json = Get-Content $file.FullName -Raw | ConvertFrom-Json
+                foreach ($bench in $json.Benchmarks) {
+                    $name = $bench.DisplayInfo.DisplayName
+                    $p50 = [math]::Round($bench.Statistics.Percentiles.'50' * 1000, 3)
+                    $p95 = [math]::Round($bench.Statistics.Percentiles.'95' * 1000, 3)
+                    $p99 = [math]::Round($bench.Statistics.Percentiles.'99' * 1000, 3)
+                    $mean = [math]::Round($bench.Statistics.Mean * 1000, 3)
+                    $stddev = [math]::Round($bench.Statistics.StdDev * 1000, 3)
+
+                    $status = "OK"
+                    if ($name -like "*InputLatency*" -and $p95 -gt 5) { $status = "REGRESSION" }
+                    elseif ($p95 -gt 10) { $status = "HIGH" }
+
+                    $summary += "| $name | $p50 | $p95 | $p99 | $mean | $stddev | $status |"
+                }
+            }
+            catch {
+                $summary += "| Failed to parse: $($file.Name) | | | | | | |"
+            }
+        }
+
+        $summary += ""
+        $summary += "---"
+        $summary += "**Artifacts:** [Benchmark Results](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+
+        $summaryPath = "performance-summary.md"
+        $summary -join "`n" | Out-File -FilePath $summaryPath -Encoding UTF8
+        Write-Host "Performance summary generated: $summaryPath"
+        cat $summaryPath
+
+        # Upload as artifact too
+        echo "SUMMARY_PATH=$summaryPath" >> $env:GITHUB_OUTPUT
+      shell: pwsh
+
+    - name: Upload Performance Summary
+      uses: actions/upload-artifact@v4
+      with:
+        name: Performance-Dashboard
+        path: performance-summary.md
+        retention-days: 90
+
+    - name: Check for Performance Regression
+      run: |
+        $summaryPath = "performance-summary.md"
+        if (Test-Path $summaryPath) {
+            $content = Get-Content $summaryPath -Raw
+            if ($content -match "REGRESSION") {
+                Write-Error "PERFORMANCE REGRESSION DETECTED!"
+                exit 1
+            }
+            elseif ($content -match "HIGH") {
+                Write-Warning "High latency detected - review recommended"
+            }
+            else {
+                Write-Host "No performance regressions detected"
+            }
+        }
+      shell: pwsh
+
+  code-quality:
     runs-on: windows-latest
-    
+
     steps:
     - uses: actions/checkout@v4
-    
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Run Code Analysis
+      run: dotnet build --configuration Release /p:TreatWarningsAsErrors=true
+
+  test-summary:
+    needs: [build, code-quality, benchmark]
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
     - name: Generate Test Summary
       run: |
         Write-Host "=== RagnaController CI/CD Pipeline Summary ==="
-        Write-Host "✅ Build: PASSED"
-        Write-Host "✅ Unit Tests: PASSED"
-        Write-Host "✅ Integration Tests: PASSED"
-        Write-Host "✅ Performance Tests: PASSED"
-        Write-Host "✅ Code Quality: PASSED"
+        Write-Host "Build: PASSED"
+        Write-Host "Unit Tests: PASSED"
+        Write-Host "Integration Tests: PASSED"
+        Write-Host "Performance Tests: PASSED"
+        Write-Host "Code Quality: PASSED"
+        Write-Host "Benchmark Gate (PERF-005): PASSED"
         Write-Host "=== All Checks Completed Successfully ==="

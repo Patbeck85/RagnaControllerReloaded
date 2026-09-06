@@ -3,114 +3,119 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Button Remapping" Width="1200" Height="850"
         MinWidth="900" MinHeight="640"
-        Background="Transparent" Foreground="#F0F4F8"
+        Background="Transparent" Foreground="{StaticResource TextPrimary}"
         WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
         WindowStyle="None" AllowsTransparency="True"
         MouseLeftButtonDown="Window_MouseLeftButtonDown">
     <Window.Resources>
-        <Style x:Key="LayerButton" TargetType="Button" BasedOn="{StaticResource ConsoleGhostBtn}"><Setter Property="Height" Value="36"/><Setter Property="Margin" Value="2"/><Setter Property="FontSize" Value="12"/></Style>
-        <Style x:Key="LayerButtonActive" TargetType="Button" BasedOn="{StaticResource ConsolePrimaryBtn}"><Setter Property="Height" Value="36"/><Setter Property="Margin" Value="2"/><Setter Property="FontSize" Value="12"/></Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/RagnaController;component/Resources/UI2026DesignSystem.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="LayerButton" TargetType="Button" BasedOn="{StaticResource GhostButton}"><Setter Property="Height" Value="44"/><Setter Property="Margin" Value="4"/><Setter Property="FontSize" Value="13"/><Setter Property="MinWidth" Value="72"/></Style>
+            <Style x:Key="LayerButtonActive" TargetType="Button" BasedOn="{StaticResource PrimaryButton}"><Setter Property="Height" Value="44"/><Setter Property="Margin" Value="4"/><Setter Property="FontSize" Value="13"/><Setter Property="MinWidth" Value="72"/></Style>
+        </ResourceDictionary>
     </Window.Resources>
-    <Border Background="#080A0F" BorderBrush="#2A3245" BorderThickness="1" CornerRadius="12">
+    <Border Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource Radius2Xl}" BorderBrush="{StaticResource BgBorder}" BorderThickness="1">
         <Grid>
-            <Grid.RowDefinitions><RowDefinition Height="50"/><RowDefinition Height="*"/><RowDefinition Height="60"/></Grid.RowDefinitions>
-            <Border Grid.Row="0" BorderBrush="#2A3245" BorderThickness="0,0,0,1">
+            <Grid.RowDefinitions><RowDefinition Height="56"/><RowDefinition Height="*"/><RowDefinition Height="72"/></Grid.RowDefinitions>
+            <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" Margin="16,16,16,0" CornerRadius="{StaticResource RadiusMd}">
                 <Grid Margin="20,0">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center"><TextBlock Text="&#x1F3AE;" Foreground="#E5B842" Margin="0,0,10,0" FontSize="16" Effect="{StaticResource NeonGlow}"/><TextBlock Text="BUTTON REMAPPING" FontWeight="Bold" FontSize="14" Foreground="#F0F4F8"/></StackPanel>
-                    <Button Content="&#x2715;" Click="BtnCancel_Click" HorizontalAlignment="Right" Width="30" Height="30" Background="Transparent" BorderThickness="0" Foreground="#A1B0C5" FontSize="14" ToolTip="Close window"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center"><TextBlock Text="&#x1F3AE;" Foreground="{StaticResource Gold}" Margin="0,0,10,0" FontSize="18" Effect="{StaticResource NeonGlow}"/><TextBlock Text="BUTTON REMAPPING" Style="{StaticResource BrandWordmark}" FontSize="14"/></StackPanel>
+                    <Button Content="&#x2715;" Click="BtnCancel_Click" HorizontalAlignment="Right" Width="44" Height="44" Style="{StaticResource WindowControlButton}" ToolTip="Close window"/>
                 </Grid>
             </Border>
-            <Grid Grid.Row="1" Margin="25">
-                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="440"/><ColumnDefinition Width="360"/></Grid.ColumnDefinitions>
-                <Border Grid.Column="0" Style="{StaticResource CardBorder}" Padding="25">
+            <Grid Grid.Row="1" Margin="16">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="480"/><ColumnDefinition Width="400"/></Grid.ColumnDefinitions>
+                <Border Grid.Column="0" Style="{StaticResource GlassPanel}" Padding="25">
                     <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-                        <TextBlock Text="CONTROLLER PREVIEW" FontSize="12" FontWeight="Black" Foreground="#E5B842" Margin="0,0,0,20" HorizontalAlignment="Center" Effect="{StaticResource NeonGlow}"/>
+                        <TextBlock Text="CONTROLLER PREVIEW" Style="{StaticResource Eyebrow}" Margin="0,0,0,20" HorizontalAlignment="Center"/>
                         <Viewbox Grid.Row="1" Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Center"><ContentControl x:Name="PreviewContainer"/></Viewbox>
                     </Grid>
                 </Border>
-                <Border Grid.Column="1" Style="{StaticResource CardBorder}" Padding="20" Margin="15,0">
+                <Border Grid.Column="1" Style="{StaticResource GlassPanel}" Padding="20" Margin="12,0">
                     <Grid>
                         <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Margin="0,0,0,20">
-                            <TextBlock Text="SELECT LAYER" FontSize="12" FontWeight="Black" Foreground="#E5B842" Margin="0,0,0,15" HorizontalAlignment="Center">
+                            <TextBlock Text="SELECT LAYER" Style="{StaticResource Eyebrow}" Margin="0,0,0,15" HorizontalAlignment="Center">
                                 <TextBlock.ToolTip>
-                                    <ToolTip Content="Select the controller layer (BASE / L1+ / R1+ / L2+ / R2+)" Foreground="#E5B842" FontSize="11"/>
+                                    <ToolTip Content="Select the controller layer (BASE / L1+ / R1+ / L2+ / R2+)" Foreground="{StaticResource Gold}" FontSize="11" Background="{StaticResource BgCard}" BorderBrush="{StaticResource BgBorder}"/>
                                 </TextBlock.ToolTip>
                             </TextBlock>
-                            <UniformGrid Columns="5" HorizontalAlignment="Stretch">
+                            <UniformGrid Columns="5" HorizontalAlignment="Stretch" Rows="1">
                                 <Button x:Name="BtnLayerBase" Content="BASE" Click="LayerBtn_Click" Style="{StaticResource LayerButtonActive}" Tag=""/>
-                                <Button x:Name="BtnLayerL1" Content="L1" Click="LayerBtn_Click" Style="{StaticResource LayerButton}" Tag="L1+"/>
-                                <Button x:Name="BtnLayerR1" Content="R1" Click="LayerBtn_Click" Style="{StaticResource LayerButton}" Tag="R1+"/>
-                                <Button x:Name="BtnLayerL2" Content="L2" Click="LayerBtn_Click" Style="{StaticResource LayerButton}" Tag="L2+"/>
-                                <Button x:Name="BtnLayerR2" Content="R2" Click="LayerBtn_Click" Style="{StaticResource LayerButton}" Tag="R2+"/>
+                                <Button x:Name="BtnLayerL1" Content="L1+" Click="LayerBtn_Click" Style="{StaticResource LayerButton}" Tag="L1+"/>
+                                <Button x:Name="BtnLayerR1" Content="R1+" Click="LayerBtn_Click" Style="{StaticResource LayerButton}" Tag="R1+"/>
+                                <Button x:Name="BtnLayerL2" Content="L2+" Click="LayerBtn_Click" Style="{StaticResource LayerButton}" Tag="L2+"/>
+                                <Button x:Name="BtnLayerR2" Content="R2+" Click="LayerBtn_Click" Style="{StaticResource LayerButton}" Tag="R2+"/>
                             </UniformGrid>
-                            <Rectangle Height="1" Fill="#2A3245" Margin="0,20,0,0"/>
+                            <Rectangle Height="1" Fill="{StaticResource BgBorder}" Margin="0,20,0,0"/>
                         </StackPanel>
                         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,5,0">
                             <StackPanel>
                                 <!-- D-Pad -->
-                                <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                                <Border Style="{StaticResource GlassPanel}" Padding="15" Margin="0,0,0,10">
                                     <Grid>
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
-                                        <TextBlock Text="D-Pad" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                        <Slider x:Name="SldDpad" Minimum="-100" Maximum="100" Value="0" ValueChanged="DpadSlider_ValueChanged" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="1" x:Name="TxtDpadValue" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+                                        <TextBlock Text="D-Pad" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
+                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                        <Slider x:Name="SldDpad" Minimum="-100" Maximum="100" Value="0" ValueChanged="DpadSlider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
+                                        <TextBlock Grid.Column="1" x:Name="TxtDpadValue" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                                     </Grid>
                                 </Border>
 
                                 <!-- Left Stick -->
-                                <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                                <Border Style="{StaticResource GlassPanel}" Padding="15" Margin="0,0,0,10">
                                     <Grid>
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
-                                        <TextBlock Text="Left Stick" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                        <Slider x:Name="SldLStick" Minimum="-100" Maximum="100" Value="0" ValueChanged="LStickSlider_ValueChanged" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="1" x:Name="TxtLStickValue" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+                                        <TextBlock Text="Left Stick" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
+                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                        <Slider x:Name="SldLStick" Minimum="-100" Maximum="100" Value="0" ValueChanged="LStickSlider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
+                                        <TextBlock Grid.Column="1" x:Name="TxtLStickValue" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                                     </Grid>
                                 </Border>
 
                                 <!-- Right Stick -->
-                                <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                                <Border Style="{StaticResource GlassPanel}" Padding="15" Margin="0,0,0,10">
                                     <Grid>
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
-                                        <TextBlock Text="Right Stick" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                        <Slider x:Name="SldRStick" Minimum="-100" Maximum="100" Value="0" ValueChanged="RStickSlider_ValueChanged" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="1" x:Name="TxtRStickValue" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+                                        <TextBlock Text="Right Stick" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
+                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                        <Slider x:Name="SldRStick" Minimum="-100" Maximum="100" Value="0" ValueChanged="RStickSlider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
+                                        <TextBlock Grid.Column="1" x:Name="TxtRStickValue" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                                     </Grid>
                                 </Border>
 
                                 <!-- L1/R1 -->
-                                <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                                <Border Style="{StaticResource GlassPanel}" Padding="15" Margin="0,0,0,10">
                                     <Grid>
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
-                                        <TextBlock Text="L1/R1" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                        <Slider x:Name="SldL1R1" Minimum="-100" Maximum="100" Value="0" ValueChanged="L1R1Slider_ValueChanged" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="1" x:Name="TxtL1R1Value" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+                                        <TextBlock Text="L1/R1" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
+                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                        <Slider x:Name="SldL1R1" Minimum="-100" Maximum="100" Value="0" ValueChanged="L1R1Slider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
+                                        <TextBlock Grid.Column="1" x:Name="TxtL1R1Value" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                                     </Grid>
                                 </Border>
 
                                 <!-- L2/R2 -->
-                                <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                                <Border Style="{StaticResource GlassPanel}" Padding="15" Margin="0,0,0,10">
                                     <Grid>
-                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
-                                        <TextBlock Text="L2/R2" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                        <Slider x:Name="SldL2R2" Minimum="-100" Maximum="100" Value="0" ValueChanged="L2R2Slider_ValueChanged" VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="1" x:Name="TxtL2R2Value" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+                                        <TextBlock Text="L2/R2" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
+                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                        <Slider x:Name="SldL2R2" Minimum="-100" Maximum="100" Value="0" ValueChanged="L2R2Slider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
+                                        <TextBlock Grid.Column="1" x:Name="TxtL2R2Value" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                                     </Grid>
                                 </Border>
 
                                 <!-- Ground Spell & Self Cast Toggles -->
-                                <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                                <Border Style="{StaticResource GlassPanel}" Padding="15" Margin="0,0,0,10">
                                     <Grid>
                                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-                                        <TextBlock Text="Spell Toggles" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
+                                        <TextBlock Text="Spell Toggles" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
                                         <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                            <CheckBox x:Name="ChkGroundSpell" Content="Ground Spell (Aim with R-Stick)" Foreground="#F0F4F8" FontSize="12" FontWeight="SemiBold" Margin="0,0,15,0" Checked="SpellCheckbox_Changed" Unchecked="SpellCheckbox_Changed"/>
-                                            <CheckBox x:Name="ChkSelfCast" Content="Self-Cast (Snap to Center)" Foreground="#E5B842" FontSize="12" FontWeight="SemiBold" Margin="0,0,15,0" Checked="SpellCheckbox_Changed" Unchecked="SpellCheckbox_Changed"/>
+                                            <CheckBox x:Name="ChkGroundSpell" Content="Ground Spell (Aim with R-Stick)" Foreground="{StaticResource TextPrimary}" FontSize="13" FontWeight="SemiBold" Margin="0,0,15,0" Checked="SpellCheckbox_Changed" Unchecked="SpellCheckbox_Changed" Padding="8,6" Style="{StaticResource GlassPanelCompact}" Background="Transparent" BorderBrush="{StaticResource BgBorder}" BorderThickness="1"/>
+                                            <CheckBox x:Name="ChkSelfCast" Content="Self-Cast (Snap to Center)" Foreground="{StaticResource Gold}" FontSize="13" FontWeight="SemiBold" Margin="0,0,15,0" Checked="SpellCheckbox_Changed" Unchecked="SpellCheckbox_Changed" Padding="8,6" Style="{StaticResource GlassPanelCompact}" Background="Transparent" BorderBrush="{StaticResource BgBorder}" BorderThickness="1"/>
                                         </StackPanel>
                                     </Grid>
                                 </Border>
@@ -118,72 +123,71 @@
                         </ScrollViewer>
                     </Grid>
                 </Border>
-                <Border Grid.Column="2" Style="{StaticResource CardBorder}" Padding="20">
+                <Border Grid.Column="2" Style="{StaticResource GlassPanel}" Padding="20">
                     <Grid>
                         <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
 
                         <!-- D-Pad -->
-                        <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                        <Border Style="{StaticResource GlassPanel}" Padding="15" Margin="0,0,0,10">
                             <Grid>
-                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
-                                <TextBlock Text="D-Pad" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                <Slider x:Name="SldPreviewDpad" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewDpadSlider_ValueChanged" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" x:Name="TxtPreviewDpadValue" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+                                <TextBlock Text="D-Pad" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
+                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                <Slider x:Name="SldPreviewDpad" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewDpadSlider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="1" x:Name="TxtPreviewDpadValue" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                             </Grid>
                         </Border>
 
                         <!-- Left Stick -->
-                        <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                        <Border Style="{StaticResource GlassPanel}" Padding="15" Margin="0,0,0,10">
                             <Grid>
-                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
-                                <TextBlock Text="Left Stick" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                <Slider x:Name="SldPreviewLStick" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewLStickSlider_ValueChanged" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" x:Name="TxtPreviewLStickValue" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+                                <TextBlock Text="Left Stick" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
+                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                <Slider x:Name="SldPreviewLStick" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewLStickSlider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="1" x:Name="TxtPreviewLStickValue" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                             </Grid>
                         </Border>
 
                         <!-- Right Stick -->
-                        <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                        <Border Style="{StaticResource GlassPanel}" Padding="15" Margin="0,0,0,10">
                             <Grid>
-                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
-                                <TextBlock Text="Right Stick" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                <Slider x:Name="SldPreviewRStick" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewRStickSlider_ValueChanged" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" x:Name="TxtPreviewRStickValue" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+                                <TextBlock Text="Right Stick" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
+                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                <Slider x:Name="SldPreviewRStick" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewRStickSlider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="1" x:Name="TxtPreviewRStickValue" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                             </Grid>
                         </Border>
 
                         <!-- L1/R1 -->
-                        <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                        <Border Style="{StaticResource GlassPanel}" Padding="15" Margin="0,0,0,10">
                             <Grid>
-                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
-                                <TextBlock Text="L1/R1" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                <Slider x:Name="SldPreviewL1R1" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewL1R1Slider_ValueChanged" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" x:Name="TxtPreviewL1R1Value" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+                                <TextBlock Text="L1/R1" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
+                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                <Slider x:Name="SldPreviewL1R1" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewL1R1Slider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="1" x:Name="TxtPreviewL1R1Value" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                             </Grid>
                         </Border>
 
                         <!-- L2/R2 -->
-                        <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                        <Border Style="{StaticResource GlassPanel}" Padding="15" Margin="0,0,0,10">
                             <Grid>
-                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="50"/></Grid.ColumnDefinitions>
-                                <TextBlock Text="L2/R2" Foreground="#7D8B9E" FontSize="10" FontWeight="Bold" Margin="0,0,10,0"/>
-                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Background="Transparent" BorderThickness="0" Foreground="#3A4560" FontSize="11" Cursor="Hand" ToolTip="Reset to default"/>
-                                <Slider x:Name="SldPreviewL2R2" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewL2R2Slider_ValueChanged" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" x:Name="TxtPreviewL2R2Value" Text="0.00" Style="{StaticResource SliderValue}" HorizontalAlignment="Right"/>
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
+                                <TextBlock Text="L2/R2" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
+                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                <Slider x:Name="SldPreviewL2R2" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewL2R2Slider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
+                                <TextBlock Grid.Column="1" x:Name="TxtPreviewL2R2Value" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                             </Grid>
                         </Border>
-
                     </Grid>
                 </Border>
             </Grid>
-            <Border Grid.Row="2" Background="#07090D" BorderBrush="#2A3245" BorderThickness="0,1,0,0" CornerRadius="0,0,12,12">
-                <StackPanel Orientation="Horizontal">
-                    <Button Content="SAVE &amp; CLOSE" Style="{StaticResource ConsolePrimaryBtn}" Width="160" Height="40" Margin="0,0,15,0" Click="BtnSave_Click" ToolTip="Save settings and close window"/>
-                    <Button Content="CANCEL" Style="{StaticResource ConsoleGhostBtn}" Width="110" Height="40" Click="BtnCancel_Click" ToolTip="Discard changes and close window"/>
+            <Border Grid.Row="2" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,1,0,0" Margin="16,0,16,16" CornerRadius="0,0,{StaticResource Radius2Xl},{StaticResource Radius2Xl}">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Content="SAVE amp; CLOSE" Style="{StaticResource PrimaryButton}" Width="180" Height="48" Margin="0,0,15,0" Click="BtnSave_Click" ToolTip="Save settings and close window"/>
+                    <Button Content="CANCEL" Style="{StaticResource GhostButton}" Width="130" Height="48" Click="BtnCancel_Click" ToolTip="Discard changes and close window"/>
                 </StackPanel>
             </Border>
         </Grid>

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RagnaController UI 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Custom Variables */
+        :root {
+            --bg-primary: #0f0f12;
+            --bg-secondary: #1a1a20;
+            --bg-tertiary: #25252e;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --glass-bg: rgba(26, 26, 32, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glow-blue: 0 0 40px rgba(59, 130, 246, 0.3);
+            --glow-purple: 0 0 40px rgba(139, 92, 246, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, #121218 50%, var(--bg-primary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Effect */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Animated Background */
+        .bg-grid {
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Glowing Accent */
+        .glow-accent {
+            box-shadow: var(--glow-blue);
+        }
+
+        .glow-accent-purple {
+            box-shadow: var(--glow-purple);
+        }
+
+        /* Controller Visualization */
+        .controller-container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        .controller-body {
+            background: linear-gradient(145deg, #1e1e24, #16161a);
+            border-radius: 120px 120px 80px 80px;
+            padding: 20px;
+            position: relative;
+            box-shadow: 
+                inset 0 2px 10px rgba(255, 255, 255, 0.1),
+                0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .d-pad {
+            position: absolute;
+            left: 30px;
+            top: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(145deg, #2a2a35, #1f1f26);
+            border-radius: 20px;
+            display: grid;
+            grid-template-areas: 
+                ". up ."
+                "left center right"
+                ". down .";
+            gap: 4px;
+        }
+
+        .d-pad-btn {
+            background: linear-gradient(145deg, #3a3a45, #2a2a30);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .d-pad-btn:hover {
+            background: var(--accent-blue);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .d-pad-btn:active {
+            transform: scale(0.95);
+        }
+
+        .action-buttons {
+            position: absolute;
+            right: 30px;
+            top: 30px;
+            display: grid;
+            grid-template-areas: 
+                "a b"
+                "x y";
+            gap: 6px;
+        }
+
+        .action-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .btn-a {
+            background: linear-gradient(145deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-b {
+            background: linear-gradient(145deg, #f59e0b, #d97706);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-x {
+            background: linear-gradient(145deg, #3b82f6, #2563eb);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-y {
+            background: linear-gradient(145deg, #a855f7, #9333ea);
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .action-btn:active {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .sticky-buttons {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+
+        .sticky-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #374151, #1f2937);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .sticky-btn:hover {
+            background: var(--accent-blue);
+            transform: scale(1.15);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .start-select-container {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .start-select-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(145deg, #6b7280, #4b5563);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .start-select-btn:hover {
+            background: var(--accent-purple);
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .touchpad {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 60px;
+            background: linear-gradient(145deg, #374151, #1f2937);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .touchpad:hover {
+            background: var(--accent-blue);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Profile Selector */
+        .profile-selector {
+            position: relative;
+        }
+
+        .profile-selector::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 4px;
+            padding: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-blue);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .controller-container {
+                width: 260px;
+                height: 170px;
+            }
+
+            .d-pad {
+                left: 25px;
+                top: 25px;
+                width: 60px;
+                height: 60px;
+            }
+
+            .action-buttons {
+                right: 25px;
+                top: 25px;
+            }
+
+            .action-btn {
+                width: 38px;
+                height: 38px;
+            }
+        }
+    </style>
+</head>
+<body class="relative z-10">
+    <!-- Background Grid -->
+    <div class="bg-grid"></div>
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-8 max-w-7xl">
+        <!-- Header -->
+        <header class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                        RagnaController
+                    </h1>
+                    <p class="text-sm text-secondary mt-1">Advanced Game Controller Configuration</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="glass-panel px-4 py-2 rounded-xl flex items-center gap-2">
+                        <span class="text-xs text-secondary">Status:</span>
+                        <span class="text-green-400 text-sm font-medium">● Online</span>
+                    </div>
+                    <button class="glass-panel px-4 py-2 rounded-xl hover:bg-white/10 transition-all">
+                        <i class="fas fa-cog mr-2"></i>Settings
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Left Panel - Controller Visualization -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Controller Preview -->
+                <div class="glass-panel rounded-2xl p-6">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <i class="fas fa-gamepad text-blue-400"></i>
+                        Controller Layout
+                    </h2>
+                    <div class="controller-container mx-auto">
+                        <div class="controller-body">
+                            <!-- D-Pad -->
+                            <div class="d-pad">
+                                <div class="d-pad-btn" style="grid-area: up;">
+                                    <i class="fas fa-arrow-up text-xs"></i>
+                                </div>
+                                <div class="d-pad-btn" style="grid-area: left;">
+                                    <i class="fas fa-arrow-left text-xs"></i>
+                                </div>
+                                <div class="d-pad-btn" style="grid-area: center;">
+                                    <i class="fas fa-home text-xs"></i>
+                                </div>
+                                <div class="d-pad-btn" style="grid-area: right;">
+                                    <i class="fas fa-arrow-right text-xs"></i>
+                                </div>
+                                <div class="d-pad-btn" style="grid-area: down;">
+                                    <i class="fas fa-arrow-down text-xs"></i>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons">
+                                <div class="action-btn btn-a">A</div>
+                                <div class="action-btn btn-b">B</div>
+                                <div class="action-btn btn-x">X</div>
+                                <div class="action-btn btn-y">Y</div>
+                            </div>
+
+                            <!-- Touchpad -->
+                            <div class="touchpad"></div>
+
+                            <!-- Sticky Buttons -->
+                            <div class="sticky-buttons">
+                                <div class="sticky-btn"><i class="fas fa-volume-up"></i></div>
+                                <div class="sticky-btn"><i class="fas fa-volume-down"></i></div>
+                                <div class="sticky-btn"><i class="fas fa-microphone"></i></div>
+                            </div>
+
+                            <!-- Start/Select -->
+                            <div class="start-select-container">
+                                <div class="start-select-btn">
+                                    <i class="fas fa-play text-xs"></i>
+                                </div>
+                                <div class="start-select-btn">
+                                    <i class="fas fa-check text-xs"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="glass-panel rounded-2xl p-6">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <i class="fas fa-bolt text-yellow-400"></i>
+                        Quick Actions
+                    </h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button class="glass-panel py-3 px-4 rounded-xl hover:bg-white/10 transition-all glow-accent text-sm font-medium">
+                            <i class="fas fa-sync-alt mr-2"></i>Reset
+                        </button>
+                        <button class="glass-panel py-3 px-4 rounded-xl hover:bg-white/10 transition-all glow-accent-purple text-sm font-medium">
+                            <i class="fas fa-save mr-2"></i>Save
+                        </button>
+                        <button class="glass-panel py-3 px-4 rounded-xl hover:bg-white/10 transition-all text-sm font-medium">
+                            <i class="fas fa-upload mr-2"></i>Import
+                        </button>
+                        <button class="glass-panel py-3 px-4 rounded-xl hover:bg-white/10 transition-all text-sm font-medium">
+                            <i class="fas fa-download mr-2"></i>Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Middle Panel - Profile Management -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Profile Selector -->
+                <div class="glass-panel rounded-2xl p-6">
+                    <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                        <i class="fas fa-layer-group text-purple-400"></i>
+                        Active Profile
+                    </h2>
+                    <div class="profile-selector mb-4">
+                        <select class="w-full bg-transparent text-primary font-medium text-lg px-4 py-3 outline-none cursor-pointer appearance-none">
+                            <option>⚔️ Combat Specialist</option>
+                            <option>🛡️ Tank Build</option>
+                            <option>🏹 Ranged Master</option>
+                            <option>🎭 Support Healer</option>
+                        </select>
+                        <i class="fas fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-secondary"></i>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                                    <i class="fas fa-fist text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Combat Specialist</p>
+                                    <p class="text-xs text-secondary">12 mappings</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-1 text-xs rounded-full bg-green-500/20 text-green-400">Active</span>
+                                <button class="p-1.5 rounded-lg hover:bg-white/10 transition-all">
+                                    <i class="fas fa-ellipsis-v text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center">
+                                    <i class="fas fa-shield-alt text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Tank Build</p>
+                                    <p class="text-xs text-secondary">15 mappings</p>
+                                </div>
+                            </div>
+                            <button class="p-2 rounded-lg hover:bg-white/10 transition-all">
+                                <i class="fas fa-plus text-xl"></i>
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center">
+                                    <i class="fas fa-crosshair text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium">Ranged Master</p>
+                                    <p class="text-xs text-secondary">18 mappings</p>
+                                </div>
+                            </div>
+                            <button class="p-2 rounded-lg hover:bg-white/10 transition-all">
+                                <i class="fas fa-plus text-xl"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button class="w-full mt-3 py-3 px-4 rounded-xl glass-panel hover:bg-white/10 transition-all font-medium glow-accent-purple">
+                        <i class="fas fa-plus mr-2"></i>Create New Profile
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel - Key Mapping -->
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Tab Navigation -->
+                <div class="glass-panel rounded-2xl p-4">
+                    <div class="tab-nav mb-4">
+                        <button class="tab-btn active flex items-center justify-center gap-2">
+                            <i class="fas fa-keyboard text-sm"></i>
+                            Keyboard
+                        </button>
+                        <button class="tab-btn flex items-center justify-center gap-2">
+                            <i class="fas fa-mouse text-sm"></i>
+                            Mouse
+                        </button>
+                        <button class="tab-btn flex items-center justify-center gap-2">
+                            <i class="fas fa-gamepad text-sm"></i>
+                            Gamepad
+                        </button>
+                    </div>
+
+                    <!-- Keyboard Mappings -->
+                    <div class="space-y-3">
+                        <div class="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all cursor-pointer group">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-medium text-sm">Attack Button</span>
+                                <span class="text-xs text-secondary px-2 py-1 rounded bg-blue-500/20 text-blue-400">Primary</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="text" value="F" class="w-16 px-3 py-2 bg-white/10 rounded-lg text-center text-sm outline-none focus:ring-2 focus:ring-blue-500/50">
+                                <i class="fas fa-arrow-right text-secondary"></i>
+                                <input type="text" value="Mouse7" class="flex-1 px-3 py-2 bg-white/10 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500/50">
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all cursor-pointer group">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-medium text-sm">Skill 1</span>
+                                <span class="text-xs text-secondary px-2 py-1 rounded bg-purple-500/20 text-purple-400">Secondary</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="text" value="G" class="w-16 px-3 py-2 bg-white/10 rounded-lg text-center text-sm outline-none focus:ring-2 focus:ring-purple-500/50">
+                                <i class="fas fa-arrow-right text-secondary"></i>
+                                <input type="text" value="Mouse8" class="flex-1 px-3 py-2 bg-white/10 rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-500/50">
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all cursor-pointer group">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-medium text-sm">Skill 2</span>
+                                <span class="text-xs text-secondary px-2 py-1 rounded bg-pink-500/20 text-pink-400">Tertiary</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="text" value="H" class="w-16 px-3 py-2 bg-white/10 rounded-lg text-center text-sm outline-none focus:ring-2 focus:ring-pink-500/50">
+                                <i class="fas fa-arrow-right text-secondary"></i>
+                                <input type="text" value="Mouse9" class="flex-1 px-3 py-2 bg-white/10 rounded-lg text-sm outline-none focus:ring-2 focus:ring-pink-500/50">
+                            </div>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-all cursor-pointer group">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-medium text-sm">Skill 3</span>
+                                <span class="text-xs text-secondary px-2 py-1 rounded bg-orange-500/20 text-orange-400">Quaternary</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="text" value="Y" class="w-16 px-3 py-2 bg-white/10 rounded-lg text-center text-sm outline-none focus:ring-2 focus:ring-orange-500/50">
+                                <i class="fas fa-arrow-right text-secondary"></i>
+                                <input type="text" value="Mouse10" class="flex-1 px-3 py-2 bg-white/10 rounded-lg text-sm outline-none focus:ring-2 focus:ring-orange-500/50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="w-full mt-4 py-3 px-4 rounded-xl glass-panel hover:bg-white/10 transition-all font-medium">
+                        <i class="fas fa-plus mr-2"></i>Add New Mapping
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Panel - Advanced Settings -->
+        <div class="mt-6 glass-panel rounded-2xl p-6">
+            <h2 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                <i class="fas fa-sliders-h text-blue-400"></i>
+                Advanced Settings
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Deadzone -->
+                <div class="space-y-3">
+                    <label class="flex items-center justify-between text-sm">
+                        <span>Deadzone</span>
+                        <span class="text-blue-400 font-medium">15%</span>
+                    </label>
+                    <input type="range" min="0" max="100" value="15" class="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-blue-500">
+                </div>
+
+                <!-- Polling Rate -->
+                <div class="space-y-3">
+                    <label class="flex items-center justify-between text-sm">
+                        <span>Polling Rate</span>
+                        <span class="text-purple-400 font-medium">1000 Hz</span>
+                    </label>
+                    <select class="w-full px-3 py-2 bg-white/10 rounded-lg text-sm outline-none focus:ring-2 focus:ring-purple-500/50">
+                        <option>125 Hz</option>
+                        <option selected>1000 Hz</option>
+                        <option>2000 Hz</option>
+                        <option>4000 Hz</option>
+                    </select>
+                </div>
+
+                <!-- Filter -->
+                <div class="space-y-3">
+                    <label class="flex items-center justify-between text-sm">
+                        <span>Filter Type</span>
+                        <span class="text-green-400 font-medium">Linear</span>
+                    </label>
+                    <select class="w-full px-3 py-2 bg-white/10 rounded-lg text-sm outline-none focus:ring-2 focus:ring-green-500/50">
+                        <option selected>Linear</option>
+                        <option>Sigmoid</option>
+                        <option>Exponential</option>
+                    </select>
+                </div>
+
+                <!-- Auto-Connect -->
+                <div class="flex items-center justify-between">
+                    <span class="text-sm">Auto-Connect</span>
+                    <div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                        <input type="checkbox" name="toggle" id="toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer border-green-400 checked:right-0"/>
+                        <label for="toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-700 cursor-pointer"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toggle Switch Styles -->
+    <style>
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #22c55e;
+        }
+        .toggle-label {
+            position: relative;
+            cursor: pointer;
+        }
+    </style>
+
+    <script>
+        // Tab switching functionality
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                tabButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Profile selection
+        const profileSelect = document.querySelector('.profile-selector select');
+        profileSelect.addEventListener('change', function() {
+            console.log('Profile changed to:', this.value);
+        });
+
+        // Controller button interactions
+        const controllerButtons = document.querySelectorAll('.d-pad-btn, .action-btn, .sticky-btn, .start-select-btn, .touchpad');
+        controllerButtons.forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                console.log('Hovered:', this);
+            });
+            
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Clicked:', this);
+            });
+        });
+
+        // Input focus effects
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('ring-2');
+                this.parentElement.classList.add('ring-blue-500/30');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('ring-2');
+                this.parentElement.classList.remove('ring-blue-500/30');
+            });
+        });
+
+        // Quick action buttons
+        const quickActions = document.querySelectorAll('.glass-panel[style*="glow"]');
+        quickActions.forEach(btn => {
+            btn.addEventListener('click', function() {
+                console.log('Quick action clicked:', this.textContent.trim());
+            });
+        });
+    </script>
+</body>
+</html>

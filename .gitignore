@@ -60,3 +60,41 @@ publish/
 
 ## Logs
 *.log
+
+## BenchmarkDotNet artifacts
+BenchmarkDotNet.Artifacts/
+
+## Localization backups
+**/Locales/backup_*/
+
+## Temp files
+*.tmp
+*.temp
+*.bak
+roadmap.md
+SESSION_STATE.md
+build.bat
+publish_log.txt
+START.bat
+Sync-Localization.ps1
+Verify-LocalizationParity.ps1
+fix_locales.py
+fix_locales_v2.py
+sync_localization.py
+extract_section.cs
+test_controller.cs
+xunit.runsettings
+UI_2026_Mockup.html
+RagnaController_UI_2026.html
+KANBAN.md
+research/
+benchmarks/
+
+## Release artifacts
+release_final/
+
+## Local tooling & backups
+.backup*/
+Locales/backup_*/
+src/RagnaController/Locales/backup_*/
+.publish_log.txt

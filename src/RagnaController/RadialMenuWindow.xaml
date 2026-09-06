@@ -4,27 +4,51 @@
         Title="Radial Menu" Width="440" Height="440"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Topmost="True" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/UI2026DesignSystem.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <!-- Root: Glassmorphism radial container with animated entrance -->
     <Grid x:Name="RootGrid" Opacity="0">
-        <Ellipse Width="340" Height="340" Stroke="#E5B842" StrokeThickness="2" Fill="#E6080A0F">
-            <Ellipse.Effect>
-                <DropShadowEffect Color="#E5B842" BlurRadius="30" ShadowDepth="0" Opacity="0.5"/>
-            </Ellipse.Effect>
-        </Ellipse>
-        <Canvas x:Name="ItemsCanvas" Width="340" Height="340" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBlock x:Name="SelectedText" Text="SELECT ITEM" Foreground="#E5B842" FontWeight="Black" FontSize="18" HorizontalAlignment="Center">
-                <TextBlock.Effect>
-                    <DropShadowEffect Color="#E5B842" BlurRadius="15" ShadowDepth="0"/>
-                </TextBlock.Effect>
-                <ToolTipService.ToolTip>
-                    <ToolTip Content="Select a radial menu item to configure" Foreground="#E5B842" FontSize="12"/>
-                </ToolTipService.ToolTip>
-            </TextBlock>
-            <TextBlock Text="Release triggers to use" Foreground="#A1B0C5" FontSize="12" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,8,0,0">
-                <ToolTipService.ToolTip>
-                    <ToolTip Content="Execute the selected action" Foreground="#A1B0C5" FontSize="12"/>
-                </ToolTipService.ToolTip>
-            </TextBlock>
-        </StackPanel>
+        <Border Width="360" Height="360" Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusFull}"
+                BorderBrush="{StaticResource AccentBlue}" BorderThickness="2" Effect="{StaticResource BlueGlow}"
+                Background="{StaticResource GlassPanelGradient}">
+            <Grid>
+                <Canvas x:Name="ItemsCanvas" Width="360" Height="360" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock x:Name="SelectedText" Text="SELECT ITEM" Foreground="{StaticResource AccentBlue}" FontWeight="Black" FontSize="18" HorizontalAlignment="Center"
+                               FontFamily="Segoe UI Variable, Segoe UI">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="{StaticResource GlowBlue}" BlurRadius="15" ShadowDepth="0" Opacity="0.6"/>
+                        </TextBlock.Effect>
+                        <ToolTipService.ToolTip>
+                            <ToolTip Content="Select a radial menu item to configure" 
+                                     Style="{StaticResource GlassPanel}"
+                                     Foreground="{StaticResource TextPrimary}"
+                                     FontSize="11"
+                                     Background="{StaticResource BgTertiary}"
+                                     BorderBrush="{StaticResource BgBorder}"/>
+                        </ToolTipService.ToolTip>
+                    </TextBlock>
+                    <TextBlock Text="Release triggers to use" Foreground="{StaticResource TextSecondary}" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,8,0,0"
+                               FontFamily="Segoe UI Variable, Segoe UI">
+                        <ToolTipService.ToolTip>
+                            <ToolTip Content="Execute the selected action" 
+                                     Style="{StaticResource GlassPanel}"
+                                     Foreground="{StaticResource TextPrimary}"
+                                     FontSize="11"
+                                     Background="{StaticResource BgTertiary}"
+                                     BorderBrush="{StaticResource BgBorder}"/>
+                        </ToolTipService.ToolTip>
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using RagnaController.Core;
 using RagnaController.Profiles;
+using RagnaController.Models;
 
 namespace RagnaController
 {
@@ -16,12 +17,14 @@ namespace RagnaController
         private readonly GamepadUiNavigator  _navigator;
         private InGameOverlayWindow?         _overlay;
         private SettingsWindow?              _settingsWin;
+        private readonly Settings            _settings;
 
-        public HandheldWindow(HybridEngine engine, ProfileManager manager)
+        public HandheldWindow(HybridEngine engine, ProfileManager manager, Settings settings = null)
         {
             InitializeComponent();
             _engine    = engine;
             _manager   = manager;
+            _settings  = settings ?? Settings.Load();
             _navigator = new GamepadUiNavigator(engine.ControllerSvc)
                 { ActiveWindow = this };
 
@@ -107,7 +110,7 @@ namespace RagnaController
         {
             if (_overlay == null)
             {
-                _overlay = new InGameOverlayWindow(_engine.Messenger, _engine.WindowTracker);
+                _overlay = new InGameOverlayWindow(_engine.Messenger, _engine.WindowTracker, _engine.ControllerManager, _settings);
                 _overlay.Closed += (_, _) => _overlay = null;
             }
             if (!_overlay.IsVisible) _overlay.Show();
@@ -145,14 +148,21 @@ namespace RagnaController
         }
 
         // ── Helper Methods ─────────────────────────────────────────────────
-        private void SetControllerStatus(string name, bool connected)
-        {
-            ControllerStatusText.Text       = connected ? $"Connected — {name}" : "No Controller";
-            ControllerStatusText.Foreground = connected
-                ? new SolidColorBrush(Color.FromRgb(0x3D, 0xDB, 0x6E))
-                : new SolidColorBrush(Color.FromRgb(0xFF, 0x3A, 0x52));
-            ControllerDot.Fill = ControllerStatusText.Foreground;
-        }
+                private void SetControllerStatus(string name, bool connected)
+                {
+                    ControllerStatusText.Text = connected ? $"Connected — {name}" : "No Controller";
+
+                    if (connected)
+                    {
+                        ControllerStatusText.Foreground = (SolidColorBrush)FindResource("Live");
+                        ControllerDot.Fill = (SolidColorBrush)FindResource("Live");
+                    }
+                    else
+                    {
+                        ControllerStatusText.Foreground = (SolidColorBrush)FindResource("Danger");
+                        ControllerDot.Fill = (SolidColorBrush)FindResource("Danger");
+                    }
+                }
 
         private void UpdateProfileLabel()
         {

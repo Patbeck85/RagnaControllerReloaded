@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using RagnaController.Models;
+using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Core
 {
@@ -28,7 +29,7 @@ namespace RagnaController.Core
         public CombatState State { get; private set; } = CombatState.Idle;
                 private readonly InputCommandQueue _queue;
                 public bool IsTargetLocked { get; private set; }
-        
+       
                 // FEAT-007: Properties for SkillOrchestrator condition evaluation
                 public object? CurrentTarget { get; private set; }
                 public float CurrentTargetDistance { get; private set; }
@@ -42,7 +43,7 @@ namespace RagnaController.Core
         private volatile int _skillPause;
         private int _tc, _ac, _rc, _wac;
         private bool _prevR3;
-        private NativeMethods.POINT _lockPos;
+        private POINT _lockPos;
         private bool _lockPosValid = false;
         private readonly SemaphoreSlim _skillSem = new(1, 1);
 
@@ -91,9 +92,9 @@ namespace RagnaController.Core
 
             if (!_skillSem.Wait(TimeSpan.FromMilliseconds(10))) return; 
             
-            NativeMethods.GetCursorPos(out NativeMethods.POINT saved);
+                        GetCursorPos(out POINT saved);
             
-            _queue.MouseMoveAbsolute(_lockPos.X, _lockPos.Y);
+                        _queue.MouseMoveAbsolute(_lockPos.X, _lockPos.Y);
             _queue.Wait(10);
             
             _queue.MouseMoveAbsolute(saved.X, saved.Y);

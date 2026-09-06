@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using RagnaController.Models;
+using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Core
 {
@@ -103,16 +105,26 @@ namespace RagnaController.Core
         private bool _isDisposed;
 
         // P/Invoke Batching State
-        private List<NativeMethods.INPUT> _batch = new(64);
+        private List<INPUT> _batch = new(64);
         private int _batchCount;
 
         // RSI Tracking
         private long _savedClicks;
         private long _savedKeystrokes;
 
+        // Input Latency Tracking (PERF-005 - legacy)
+        private long _totalInputLatencyUs;
+        private long _inputCount;
+        private long _maxInputLatencyUs;
+        private readonly object _latencyLock = new();
+
         // Chat state
         private bool _isChatting;
         private volatile bool _shutdownRequested;
+
+        // PERF-005: Input Latency Tracker
+        private readonly InputLatencyTracker? _latencyTracker;
+        private readonly string _controllerId;
 
         public event Action<InputCmd>? OnCommandEnqueued;
         public event Action<InputCmd>? OnCommandExecuted;
@@ -123,24 +135,44 @@ namespace RagnaController.Core
         public long SessionSavedKeystrokes => Interlocked.Read(ref _savedKeystrokes);
         public bool IsChatting => _isChatting;
 
-        // Commands collection for testing and inspection (only populated in DEBUG builds)
-                public List<InputCmd> Commands { get; } = new();
-        #if DEBUG
-                private void RecordCommand(InputCmd cmd) => Commands.Add(cmd);
-        #else
-                private void RecordCommand(InputCmd cmd) { }
-        #endif
+        // Input Latency Properties (PERF-005 - legacy)
+        public double AverageInputLatencyMs => _inputCount > 0 ? (Interlocked.Read(ref _totalInputLatencyUs) / (double)_inputCount) / 1000.0 : 0;
+        public long TotalInputsProcessed => Interlocked.Read(ref _inputCount);
+        public double MaxInputLatencyMs => Interlocked.Read(ref _maxInputLatencyUs) / 1000.0;
 
-                public void Enqueue(InputCmd cmd)
-                {
-                    if (_isDisposed) throw new ObjectDisposedException(nameof(InputCommandQueue));
-                    if (!_queue!.IsAddingCompleted)
-                    {
-                        _queue!.TryAdd(cmd);
-                        OnCommandEnqueued?.Invoke(cmd);
-                        RecordCommand(cmd);
-                    }
-                }
+        // Commands collection for testing and inspection (only populated in DEBUG builds)
+        public List<InputCmd> Commands { get; } = new();
+#if DEBUG
+        private void RecordCommand(InputCmd cmd) => Commands.Add(cmd);
+#else
+        private void RecordCommand(InputCmd cmd) { }
+#endif
+
+        /// <summary>
+        /// Creates a new InputCommandQueue with optional latency tracking.
+        /// </summary>
+        /// <param name="latencyTracker">Optional latency tracker for PERF-005 end-to-end latency measurement.</param>
+        /// <param name="controllerId">Identifier for the controller (used for per-controller latency tracking).</param>
+        public InputCommandQueue(InputLatencyTracker? latencyTracker = null, string controllerId = "Default")
+        {
+            _latencyTracker = latencyTracker;
+            _controllerId = controllerId;
+        }
+
+        public void Enqueue(InputCmd cmd)
+        {
+            if (_isDisposed) throw new ObjectDisposedException(nameof(InputCommandQueue));
+            if (!_queue!.IsAddingCompleted)
+            {
+                _queue!.TryAdd(cmd);
+                OnCommandEnqueued?.Invoke(cmd);
+                
+                // PERF-005: Record enqueue latency (time from hardware event to queue enqueue)
+                _latencyTracker?.RecordEnqueueLatency(0, _controllerId); // Hardware timestamp not available here, measured at source
+                
+                RecordCommand(cmd);
+            }
+        }
 
         // Mouse
         public void LeftDown() => Enqueue(new InputCmd(CmdType.LeftDown));
@@ -186,11 +218,11 @@ namespace RagnaController.Core
         public void Wheel(int delta) => Enqueue(new InputCmd(CmdType.Wheel, (ushort)delta));
         public void ScrollWheel(int delta)
         {
-            NativeMethods.INPUT inp = default;
-            inp.type               = NativeMethods.INPUT_MOUSE;
+            INPUT inp = default;
+            inp.type               = INPUT_MOUSE;
             inp.Data.mi.mouseData  = (uint)delta;
             inp.Data.mi.dwFlags    = 0x0800; // MOUSEEVENTF_WHEEL
-            uint sent1 = NativeMethods.SendInput(1, ref inp, NativeMethods.InputSize);
+            uint sent1 = SendInput(1, ref inp, InputSize);
             if (sent1 == 0) System.Diagnostics.Debug.WriteLine("[Win32Input] ScrollWheel blocked — run as admin?");
         }
 
@@ -210,20 +242,20 @@ namespace RagnaController.Core
                     if (_shutdownRequested) break; // Ghost-Typing verhindern
 
                     // FIX: With KEYEVENTF_UNICODE, wVk must be 0 and character goes in wScan
-                    NativeMethods.INPUT inp = default;
-                    inp.type            = NativeMethods.INPUT_KEYBOARD;
+                    INPUT inp = default;
+                    inp.type            = INPUT_KEYBOARD;
                     inp.Data.ki.wVk     = 0;           // Must be 0 for KEYEVENTF_UNICODE
                     inp.Data.ki.wScan   = (ushort)c;   // Unicode char goes in wScan
                     inp.Data.ki.dwFlags = 0x0004;      // KEYEVENTF_UNICODE
-                    NativeMethods.SendInput(1, ref inp, NativeMethods.InputSize);
+                    SendInput(1, ref inp, InputSize);
 
                     // Release-Befehl hinzufügen — verhindert permanent gedrückt gehaltene Tasten
-                    NativeMethods.INPUT inpUp = default;
-                    inpUp.type            = NativeMethods.INPUT_KEYBOARD;
+                    INPUT inpUp = default;
+                    inpUp.type            = INPUT_KEYBOARD;
                     inpUp.Data.ki.wVk     = 0;           // Must be 0 for KEYEVENTF_UNICODE
                     inpUp.Data.ki.wScan   = (ushort)c;   // Same Unicode char for release
                     inpUp.Data.ki.dwFlags = 0x0004 | 0x0008; // KEYEVENTF_UNICODE | KEYEVENTF_KEYUP
-                    NativeMethods.SendInput(1, ref inpUp, NativeMethods.InputSize);
+                    SendInput(1, ref inpUp, InputSize);
 
                     await Task.Delay(18);
                 }
@@ -286,14 +318,18 @@ namespace RagnaController.Core
                     // Block until at least ONE command is available
                     if (enumerator.MoveNext())
                     {
-                        try { ProcessCommand(enumerator.Current, ref _batch, ref _batchCount); }
+                        // PERF-005: Record dispatch latency (time from dequeue to processing start)
+                        var dispatchSw = System.Diagnostics.Stopwatch.StartNew();
+                        
+                        try { ProcessCommand(enumerator.Current, ref _batch, ref _batchCount, dispatchSw); }
                         catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[InputQueue] Command error: {ex.Message}"); }
 
                         // If more commands are instantly available in the queue, pull them into the same batch!
                         // (Stop pulling if we hit a Wait or Action, which automatically flushes the batch inside ProcessCommand)
                         while (_queue!.Count > 0 && enumerator.MoveNext())
                         {
-                            ProcessCommand(enumerator.Current, ref _batch, ref _batchCount);
+                            try { ProcessCommand(enumerator.Current, ref _batch, ref _batchCount, dispatchSw); }
+                            catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[InputQueue] Command error: {ex.Message}"); }
                         }
 
                         // Flush any remaining batched inputs before going back to sleep
@@ -305,8 +341,15 @@ namespace RagnaController.Core
             finally { enumerator.Dispose(); }
         }
 
-        private void ProcessCommand(InputCmd cmd, ref List<NativeMethods.INPUT> batch, ref int batchCount)
+        private void ProcessCommand(InputCmd cmd, ref List<INPUT> batch, ref int batchCount, Stopwatch dispatchSw)
         {
+            // PERF-005: Start latency measurement for this command
+            var latencyStopwatch = System.Diagnostics.Stopwatch.StartNew();
+
+            // Record dispatch latency (time from dequeue to actual processing start)
+            dispatchSw.Stop();
+            _latencyTracker?.RecordDispatchLatency(dispatchSw.Elapsed.TotalMilliseconds, _controllerId);
+
             // If the command is NOT a SendInput command, we MUST flush the batch first to maintain chronological order!
             if (cmd.Type == CmdType.Wait || cmd.Type == CmdType.Action || cmd.Type == CmdType.MouseAbs)
             {
@@ -316,28 +359,28 @@ namespace RagnaController.Core
             switch (cmd.Type)
             {
                 // SendInput Commands (Batched)
-                case CmdType.MouseRel:  batch.Add(CreateMouseInput(cmd.X, cmd.Y, 0, NativeMethods.MOUSEEVENTF_MOVE | 0x2000)); batchCount++; break; // 0x2000 = NOCOALESCE
-                case CmdType.LeftDown:  batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_LEFTDOWN)); batchCount++; break;
-                case CmdType.LeftUp:    batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_LEFTUP)); batchCount++; break;
-                case CmdType.RightDown: batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_RIGHTDOWN)); batchCount++; break;
-                case CmdType.RightUp:   batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_RIGHTUP)); batchCount++; break;
+                case CmdType.MouseRel:  batch.Add(CreateMouseInput(cmd.X, cmd.Y, 0, MOUSEEVENTF_MOVE | 0x2000)); batchCount++; break; // 0x2000 = NOCOALESCE
+                case CmdType.LeftDown:  batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_LEFTDOWN)); batchCount++; break;
+                case CmdType.LeftUp:    batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_LEFTUP)); batchCount++; break;
+                case CmdType.RightDown: batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_RIGHTDOWN)); batchCount++; break;
+                case CmdType.RightUp:   batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_RIGHTUP)); batchCount++; break;
                 case CmdType.Wheel:     batch.Add(CreateMouseInput(0, 0, (uint)cmd.X, 0x0800)); batchCount++; break; // MOUSEEVENTF_WHEEL
-                case CmdType.KeyDown:   batch.Add(CreateKeyInput((ushort)cmd.Key, NativeMethods.KEYEVENTF_KEYDOWN)); batchCount++; break;
-                case CmdType.KeyUp:     batch.Add(CreateKeyInput((ushort)cmd.Key, NativeMethods.KEYEVENTF_KEYUP)); batchCount++; break;
+                case CmdType.KeyDown:   batch.Add(CreateKeyInput((ushort)cmd.Key, KEYEVENTF_KEYDOWN)); batchCount++; break;
+                case CmdType.KeyUp:     batch.Add(CreateKeyInput((ushort)cmd.Key, KEYEVENTF_KEYUP)); batchCount++; break;
 
                 // Complex Atomic Commands (Batched internally)
                 case CmdType.AtomicLeftClick:
-                                    batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_LEFTDOWN));
-                                    FlushBatch(ref batch, ref batchCount); // Must flush before sleeping
-                                    Thread.Sleep(JitterService.ClickHold()); // Human-like click hold time
-                                    batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_LEFTUP));
-                                    break;
-                                case CmdType.AtomicRightClick:
-                                    batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_RIGHTDOWN));
-                                    FlushBatch(ref batch, ref batchCount); // Must flush before sleeping
-                                    Thread.Sleep(JitterService.ClickHold()); // Human-like click hold time
-                                    batch.Add(CreateMouseInput(0, 0, 0, NativeMethods.MOUSEEVENTF_RIGHTUP));
-                                    break;
+                    batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_LEFTDOWN));
+                    FlushBatch(ref batch, ref batchCount); // Must flush before sleeping
+                    Thread.Sleep(JitterService.ClickHold()); // Human-like click hold time
+                    batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_LEFTUP));
+                    break;
+                case CmdType.AtomicRightClick:
+                    batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_RIGHTDOWN));
+                    FlushBatch(ref batch, ref batchCount); // Must flush before sleeping
+                    Thread.Sleep(JitterService.ClickHold()); // Human-like click hold time
+                    batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_RIGHTUP));
+                    break;
 
                 // Non-Batchable Commands (Already flushed above)
                 case CmdType.Wait:
@@ -347,41 +390,76 @@ namespace RagnaController.Core
                     cmd.Callback?.Invoke();
                     break;
                 case CmdType.MouseAbs:
-                    NativeMethods.SetCursorPos(cmd.X, cmd.Y);
+                    SetCursorPos(cmd.X, cmd.Y);
                     break;
             }
+
+            // PERF-005: Record latency after command execution
+            latencyStopwatch.Stop();
+            RecordInputLatency(latencyStopwatch.Elapsed.TotalMilliseconds * 1000.0); // Convert to microseconds
+            
+            // PERF-005: Record total end-to-end latency
+            _latencyTracker?.RecordTotalLatency(latencyStopwatch.Elapsed.TotalMilliseconds, _controllerId);
 
             OnCommandExecuted?.Invoke(cmd);
         }
 
-        private void FlushBatch(ref List<NativeMethods.INPUT> batch, ref int batchCount)
+        private void FlushBatch(ref List<INPUT> batch, ref int batchCount)
         {
             if (batchCount == 0) return;
 
+            // PERF-005: Measure SendInput latency
+            var sendInputSw = System.Diagnostics.Stopwatch.StartNew();
+            
             // Send all gathered inputs to the Windows Kernel in a single API call
-            NativeMethods.SendInput((uint)batchCount, batch.ToArray(), NativeMethods.InputSize);
+            SendInput((uint)batchCount, batch.ToArray(), InputSize);
+            
+            sendInputSw.Stop();
+            _latencyTracker?.RecordSendInputLatency(sendInputSw.Elapsed.TotalMilliseconds, batchCount, _controllerId);
 
             // Clear the batch for next accumulation
             batch.Clear();
             batchCount = 0;
         }
 
-        // --- Helper Methods for Struct Creation ---
-        private static NativeMethods.INPUT CreateMouseInput(int dx, int dy, uint data, uint flags)
+        // PERF-005: Record input latency statistics (legacy)
+        private void RecordInputLatency(double latencyMicroseconds)
         {
-            return new NativeMethods.INPUT
+            Interlocked.Add(ref _totalInputLatencyUs, (long)latencyMicroseconds);
+            long count = Interlocked.Increment(ref _inputCount);
+
+            // Update max latency (thread-safe using CompareExchange loop)
+            long currentMax = Interlocked.Read(ref _maxInputLatencyUs);
+            while (latencyMicroseconds > currentMax)
             {
-                type = NativeMethods.INPUT_MOUSE,
-                Data = new NativeMethods.INPUTUNION { mi = new NativeMethods.MOUSEINPUT { dx = dx, dy = dy, mouseData = data, dwFlags = flags } }
+                if (Interlocked.CompareExchange(ref _maxInputLatencyUs, (long)latencyMicroseconds, currentMax) == currentMax)
+                    break;
+                currentMax = Interlocked.Read(ref _maxInputLatencyUs);
+            }
+
+            // Emit ETW event for high latency (throttled)
+            if (latencyMicroseconds > 5000.0) // > 5ms threshold
+            {
+                RagnaControllerETW.Log.InputLatencyP99((long)latencyMicroseconds, "InputCommandQueue");
+            }
+        }
+
+        // --- Helper Methods for Struct Creation ---
+        private static INPUT CreateMouseInput(int dx, int dy, uint data, uint flags)
+        {
+            return new INPUT
+            {
+                type = INPUT_MOUSE,
+                Data = new INPUTUNION { mi = new MOUSEINPUT { dx = dx, dy = dy, mouseData = data, dwFlags = flags } }
             };
         }
 
-        private static NativeMethods.INPUT CreateKeyInput(ushort vk, uint flags)
+        private static INPUT CreateKeyInput(ushort vk, uint flags)
         {
-            return new NativeMethods.INPUT
+            return new INPUT
             {
-                type = NativeMethods.INPUT_KEYBOARD,
-                Data = new NativeMethods.INPUTUNION { ki = new NativeMethods.KEYBDINPUT { wVk = vk, dwFlags = flags } }
+                type = INPUT_KEYBOARD,
+                Data = new INPUTUNION { ki = new KEYBDINPUT { wVk = vk, dwFlags = flags } }
             };
         }
 

@@ -80,115 +80,128 @@ namespace RagnaController
         }
 
         private void DrawItems()
-        {
-            if (ItemsCanvas == null) return;
-            ItemsCanvas.Children.Clear();
-            _visualItems.Clear();
-
-            if (_items == null || _items.Count == 0) return;
-
-            double angleStep = 360.0 / _items.Count;
-
-            for (int i = 0; i < _items.Count; i++)
-            {
-                double angle = i * angleStep - 90;
-                double rad = angle * Math.PI / 180.0;
-
-                bool hasImage = !string.IsNullOrEmpty(_items[i].ImagePath) && File.Exists(_items[i].ImagePath);
-                double itemH = hasImage ? 52 : 36;
-
-                double x = 170 + Math.Cos(rad) * 128 - 50;
-                double y = 170 + Math.Sin(rad) * 128 - (itemH / 2);
-
-                var stack = new StackPanel
                 {
-                    VerticalAlignment = VerticalAlignment.Center,
-                    HorizontalAlignment = HorizontalAlignment.Center
-                };
+                    if (ItemsCanvas == null) return;
+                    ItemsCanvas.Children.Clear();
+                    _visualItems.Clear();
 
-                if (hasImage)
-                {
-                    try
+                    if (_items == null || _items.Count == 0) return;
+
+                    double angleStep = 360.0 / _items.Count;
+
+                    // Get design system brushes
+                    var bgBrush = (SolidColorBrush)FindResource("BgSecondary");
+                    var borderBrush = (SolidColorBrush)FindResource("BgBorder");
+                    var textBrush = (SolidColorBrush)FindResource("TextSecondary");
+                    var highlightBgBrush = (SolidColorBrush)FindResource("Gold");
+                    var highlightBorderBrush = (SolidColorBrush)FindResource("TextPrimary");
+                    var cornerRadius = (CornerRadius)FindResource("RadiusSm");
+
+                    for (int i = 0; i < _items.Count; i++)
                     {
-                        var bmp = new BitmapImage();
-                        bmp.BeginInit();
-                        bmp.UriSource = new Uri(_items[i].ImagePath, UriKind.Absolute);
-                        bmp.CacheOption = BitmapCacheOption.OnLoad;
-                        bmp.DecodePixelHeight = 28;
-                        bmp.EndInit();
-                        bmp.Freeze();
-                        var img = new Image { Source = bmp, Width = 28, Height = 28 };
-                        RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.NearestNeighbor);
-                        stack.Children.Add(img);
+                        double angle = i * angleStep - 90;
+                        double rad = angle * Math.PI / 180.0;
+
+                        bool hasImage = !string.IsNullOrEmpty(_items[i].ImagePath) && File.Exists(_items[i].ImagePath);
+                        double itemH = hasImage ? 52 : 36;
+
+                        double x = 170 + Math.Cos(rad) * 128 - 50;
+                        double y = 170 + Math.Sin(rad) * 128 - (itemH / 2);
+
+                        var stack = new StackPanel
+                        {
+                            VerticalAlignment = VerticalAlignment.Center,
+                            HorizontalAlignment = HorizontalAlignment.Center
+                        };
+
+                        if (hasImage)
+                        {
+                            try
+                            {
+                                var bmp = new BitmapImage();
+                                bmp.BeginInit();
+                                bmp.UriSource = new Uri(_items[i].ImagePath, UriKind.Absolute);
+                                bmp.CacheOption = BitmapCacheOption.OnLoad;
+                                bmp.DecodePixelHeight = 28;
+                                bmp.EndInit();
+                                bmp.Freeze();
+                                var img = new Image { Source = bmp, Width = 28, Height = 28 };
+                                RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.NearestNeighbor);
+                                stack.Children.Add(img);
+                            }
+                            catch { }
+                        }
+
+                        stack.Children.Add(new TextBlock
+                        {
+                            Text = _items[i].Name,
+                            Foreground = textBrush,
+                            FontSize = hasImage ? 9 : 11,
+                            FontWeight = FontWeights.Bold,
+                            FontFamily = new System.Windows.Media.FontFamily("Segoe UI Variable, Segoe UI")
+                        });
+
+                        var border = new Border
+                        {
+                            Width = 100,
+                            Height = itemH,
+                            Background = bgBrush,
+                            BorderBrush = borderBrush,
+                            BorderThickness = new Thickness(1.5),
+                            CornerRadius = cornerRadius,
+                            Child = stack
+                        };
+
+                        Canvas.SetLeft(border, x);
+                        Canvas.SetTop(border, y);
+                        ItemsCanvas.Children.Add(border);
+                        _visualItems.Add(border);
                     }
-                    catch { }
                 }
 
-                stack.Children.Add(new TextBlock
-                {
-                    Text = _items[i].Name,
-                    Foreground = new SolidColorBrush(Color.FromRgb(125, 139, 158)),
-                    FontSize = hasImage ? 9 : 11,
-                    FontWeight = FontWeights.Bold
-                });
-
-                var border = new Border
-                {
-                    Width = 100,
-                    Height = itemH,
-                    Background = new SolidColorBrush(Color.FromArgb(100, 18, 22, 32)),
-                    BorderBrush = new SolidColorBrush(Color.FromRgb(42, 50, 69)),
-                    BorderThickness = new Thickness(1.5),
-                    CornerRadius = new CornerRadius(6),
-                    Child = stack
-                };
-
-                Canvas.SetLeft(border, x);
-                Canvas.SetTop(border, y);
-                ItemsCanvas.Children.Add(border);
-                _visualItems.Add(border);
-            }
-        }
-
         public void UpdateSelection(float x, float y)
-        {
-            if (RootGrid == null) return;
-            if (RootGrid.Opacity < 1) RootGrid.Opacity = 1;
+                {
+                    if (RootGrid == null) return;
+                    if (RootGrid.Opacity < 1) RootGrid.Opacity = 1;
 
-            float mag = MathF.Sqrt(x * x + y * y);
-            if (mag < 0.45f)
-            {
-                _selectedIndex = -1;
-                SelectedText.Text = GetLocalizedString("RadialMenu_SelectItem");
-                ResetVisuals();
-                return;
-            }
+                    float mag = MathF.Sqrt(x * x + y * y);
+                    if (mag < 0.45f)
+                    {
+                        _selectedIndex = -1;
+                        SelectedText.Text = GetLocalizedString("RadialMenu_SelectItem");
+                        ResetVisuals();
+                        return;
+                    }
 
-            double angle = (Math.Atan2(x, y) * 180.0 / Math.PI + 360) % 360;
-            if (_items == null || _items.Count == 0) return; // Null check for CS8602
+                    double angle = (Math.Atan2(x, y) * 180.0 / Math.PI + 360) % 360;
+                    if (_items == null || _items.Count == 0) return; // Null check for CS8602
 
-            double sectorSize = 360.0 / _items.Count;
-            _selectedIndex = (int)((angle + sectorSize / 2.0) / sectorSize) % _items.Count;
+                    double sectorSize = 360.0 / _items.Count;
+                    _selectedIndex = (int)((angle + sectorSize / 2.0) / sectorSize) % _items.Count;
 
-            ResetVisuals();
-            if (_selectedIndex >= 0 && _selectedIndex < _visualItems.Count && _selectedIndex < _items.Count)
-            {
-                var b = _visualItems[_selectedIndex];
-                b.BorderBrush = Brushes.White;
-                b.Background = new SolidColorBrush(Color.FromArgb(140, 229, 184, 66));
-                if (SelectedText != null) SelectedText.Text = _items[_selectedIndex].Name;
-            }
-        }
+                    ResetVisuals();
+                    if (_selectedIndex >= 0 && _selectedIndex < _visualItems.Count && _selectedIndex < _items.Count)
+                    {
+                        var b = _visualItems[_selectedIndex];
+                        var goldBrush = (SolidColorBrush)FindResource("Gold");
+                        var textPrimaryBrush = (SolidColorBrush)FindResource("TextPrimary");
+                        b.BorderBrush = textPrimaryBrush;
+                        b.Background = goldBrush;
+                        if (SelectedText != null) SelectedText.Text = _items[_selectedIndex].Name;
+                    }
+                }
 
-        private void ResetVisuals()
-        {
-            if (_items == null) return; // Null check for CS8602
-            foreach (var b in _visualItems)
-            {
-                b.BorderBrush = new SolidColorBrush(Color.FromRgb(42, 50, 69));
-                b.Background = new SolidColorBrush(Color.FromArgb(100, 18, 22, 32));
-            }
-        }
+                private void ResetVisuals()
+                {
+                    if (_items == null) return; // Null check for CS8602
+                    var borderBrush = (SolidColorBrush)FindResource("BgBorder");
+                    var bgSecondaryBrush = (SolidColorBrush)FindResource("BgSecondary");
+                    foreach (var b in _visualItems)
+                    {
+                        b.BorderBrush = borderBrush;
+                        b.Background = bgSecondaryBrush;
+                    }
+                }
 
         public void ExecuteAndClose()
         {

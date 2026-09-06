@@ -1,37 +1,57 @@
 <Window x:Class="RagnaController.ProfileLibraryWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Profile Library" Width="850" Height="600"
+        Title="Profile Library" Width="900" Height="650"
         Background="Transparent" WindowStyle="None" AllowsTransparency="True"
         WindowStartupLocation="CenterOwner" MouseLeftButtonDown="Window_MouseLeftButtonDown">
-    <Border Background="#080A0F" BorderBrush="#2A3245" BorderThickness="1" CornerRadius="10">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/UI2026DesignSystem.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Border Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusXl}" BorderBrush="{StaticResource AccentGold}" BorderThickness="1" Effect="{StaticResource GoldGlow}">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="45"/>
+                <RowDefinition Height="55"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="60"/>
+                <RowDefinition Height="75"/>
             </Grid.RowDefinitions>
-            <Border Grid.Row="0" BorderBrush="#2A3245" BorderThickness="0,0,0,1">
-                <Grid Margin="15,0">
-                    <TextBlock Text="PROFILE LIBRARY" FontWeight="Bold" FontSize="12" Foreground="#E5B842" VerticalAlignment="Center" Effect="{StaticResource NeonGlow}"/>
-                    <Button Content="✕" Click="BtnClose_Click" HorizontalAlignment="Right" Width="30" Height="30" Background="Transparent" BorderThickness="0" Foreground="#A1B0C5" FontSize="14" ToolTip="Close profile library window"/>
+            
+            <!-- Header -->
+            <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" Margin="16,16,16,0" CornerRadius="{StaticResource RadiusMd}">
+                <Grid Margin="20,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="4" Height="28" Background="{StaticResource AccentGold}" Effect="{StaticResource GoldGlow}" Margin="0,0,12,0" CornerRadius="2"/>
+                        <TextBlock Text="PROFILE LIBRARY" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Content="✕" Click="BtnClose_Click" HorizontalAlignment="Right" Width="36" Height="36" Style="{StaticResource GhostButton}" ToolTip="Close profile library window"/>
                 </Grid>
             </Border>
-            <Grid Grid.Row="1" Margin="20">
+            
+            <!-- Content Area -->
+            <Grid Grid.Row="1" Margin="24,16">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Grid Grid.Row="0" Margin="0,0,0,15">
+                
+                <!-- Search & Filter Bar -->
+                <Grid Grid.Row="0" Margin="0,0,0,16">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="160"/>
+                        <ColumnDefinition Width="200"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Border Grid.Column="0" Background="#121620" BorderBrush="#2A3245" BorderThickness="1" CornerRadius="6" Margin="0,0,10,0">
-                        <TextBox x:Name="SearchBox" Height="34" Padding="10,8" TextChanged="SearchBox_TextChanged" Background="Transparent" Foreground="#F0F4F8" BorderThickness="0"/>
+                    
+                    <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}" Height="44" Margin="0,0,12,0">
+                        <TextBox x:Name="SearchBox" Height="44" Padding="14,10" TextChanged="SearchBox_TextChanged" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" FontSize="15" VerticalContentAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI"/>
                     </Border>
-                    <ComboBox x:Name="FilterCombo" Grid.Column="1" Height="36" Style="{StaticResource DarkComboBox}" SelectedIndex="0" SelectionChanged="FilterCombo_SelectionChanged">
+                    
+                    <ComboBox x:Name="FilterCombo" Grid.Column="1" Height="44" Style="{StaticResource DarkComboBox}" SelectedIndex="0" SelectionChanged="FilterCombo_SelectionChanged" FontSize="15" FontFamily="Segoe UI Variable, Segoe UI">
                         <ComboBoxItem Content="All Profiles"/>
                         <ComboBoxItem Content="Built-in Only"/>
                         <ComboBoxItem Content="Custom Only"/>
@@ -40,36 +60,39 @@
                         <ComboBoxItem Content="Mage"/>
                         <ComboBoxItem Content="Support"/>
                     </ComboBox>
-                    <TextBlock x:Name="ProfileCount" Grid.Column="2" Text="0 profiles" Foreground="#7D8B9E" FontSize="11" FontWeight="Bold" VerticalAlignment="Center" Margin="15,0,0,0"/>
+                    
+                    <TextBlock x:Name="ProfileCount" Grid.Column="2" Text="0 profiles" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="16,0,0,0" FontWeight="Bold"/>
                 </Grid>
+                
+                <!-- Profile List -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                     <ItemsControl x:Name="ProfilesList">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border Style="{StaticResource CardBorder}" Padding="15" Margin="0,0,0,10">
+                                <Border Style="{StaticResource GlassPanel}" Padding="18" CornerRadius="{StaticResource RadiusLg}" Margin="0,0,0,12" BorderBrush="{StaticResource BgBorder}" BorderThickness="1">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0">
-                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
-                                                <TextBlock Text="{Binding Name}" FontSize="16" FontWeight="Bold" Foreground="#F0F4F8"/>
-                                                <Border Background="#1A2030" CornerRadius="4" Padding="6,2" Margin="10,0,0,0" Visibility="{Binding IsBuiltIn, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                    <TextBlock Text="BUILT-IN" FontSize="9" FontWeight="Bold" Foreground="#E5B842"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Black" Foreground="{StaticResource TextPrimary}" FontFamily="Segoe UI Variable, Segoe UI"/>
+                                                <Border Background="{StaticResource BgTertiary}" CornerRadius="{StaticResource RadiusSm}" Padding="8,3" Margin="12,0,0,0" Visibility="{Binding IsBuiltIn, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    <TextBlock Text="BUILT-IN" FontSize="9" FontWeight="Black" Foreground="{StaticResource AccentGold}" FontFamily="Segoe UI Variable, Segoe UI"/>
                                                 </Border>
                                             </StackPanel>
-                                            <TextBlock Text="{Binding ClassTips}" FontSize="12" Foreground="#A1B0C5" TextWrapping="Wrap" Margin="0,0,0,8"/>
+                                            <TextBlock Text="{Binding ClassTips}" FontSize="13" Foreground="{StaticResource TextSecondary}" TextWrapping="Wrap" Margin="0,0,0,10" FontFamily="Segoe UI Variable, Segoe UI"/>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="Class: " FontSize="11" FontWeight="Bold" Foreground="#7D8B9E"/>
-                                                <TextBlock Text="{Binding Class}" FontSize="11" FontWeight="Bold" Foreground="#3A8EFF"/>
+                                                <TextBlock Text="Class: " FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" FontFamily="Segoe UI Variable, Segoe UI"/>
+                                                <TextBlock Text="{Binding Class}" FontSize="12" FontWeight="Black" Foreground="{StaticResource AccentBlue}" FontFamily="Segoe UI Variable, Segoe UI"/>
                                             </StackPanel>
                                         </StackPanel>
-                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0,0,0">
-                                            <Button Content="Load"   Width="85" Height="32" Margin="0,0,0,8" Style="{StaticResource ConsolePrimaryBtn}" Click="BtnLoad_Click"   Tag="{Binding}" ToolTip="Load selected profile into the game"/>
-                                            <Button Content="Export" Width="85" Height="32" Margin="0,0,0,8" Style="{StaticResource ConsoleGhostBtn}"  Click="BtnExport_Click" Tag="{Binding}" ToolTip="Export profile to JSON file"/>
-                                            <Button Content="↑ Share" Width="85" Height="32" Margin="0,0,0,8" Style="{StaticResource ConsoleGhostBtn}" Click="BtnShare_Click"  Tag="{Binding}" ToolTip="Upload to GitHub Gist and get a share code"/>
-                                            <Button Content="Delete" Width="85" Height="32" Style="{StaticResource ConsoleDangerBtn}" Click="BtnDelete_Click" Tag="{Binding}" Visibility="{Binding IsBuiltIn, Converter={StaticResource InverseBoolToVisibilityConverter}}" ToolTip="Delete profile from library (built-in profiles cannot be deleted)"/>
+                                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="18,0,0,0">
+                                            <Button Content="Load" Width="100" Height="38" Margin="0,0,0,10" Style="{StaticResource PrimaryButton}" Click="BtnLoad_Click" Tag="{Binding}" ToolTip="Load selected profile into the game" FontSize="14"/>
+                                            <Button Content="Export" Width="100" Height="38" Margin="0,0,0,10" Style="{StaticResource GhostButton}" Click="BtnExport_Click" Tag="{Binding}" ToolTip="Export profile to JSON file" FontSize="14"/>
+                                            <Button Content="↑ Share" Width="100" Height="38" Margin="0,0,0,10" Style="{StaticResource GhostButton}" Click="BtnShare_Click" Tag="{Binding}" ToolTip="Upload to GitHub Gist and get a share code" FontSize="14"/>
+                                            <Button Content="Delete" Width="100" Height="38" Style="{StaticResource DangerButton}" Click="BtnDelete_Click" Tag="{Binding}" Visibility="{Binding IsBuiltIn, Converter={StaticResource InverseBoolToVisibilityConverter}}" ToolTip="Delete profile from library (built-in profiles cannot be deleted)" FontSize="14"/>
                                         </StackPanel>
                                     </Grid>
                                 </Border>
@@ -78,18 +101,19 @@
                     </ItemsControl>
                 </ScrollViewer>
             </Grid>
-            <Border Grid.Row="2" BorderBrush="#2A3245" BorderThickness="0,1,0,0" Background="#07090D" CornerRadius="0,0,10,10">
-                <Grid Margin="15,0">
-                    <TextBlock x:Name="StatusText" Foreground="#7D8B9E" FontSize="11" FontFamily="Consolas"
-                               VerticalAlignment="Center" HorizontalAlignment="Left"/>
+            
+            <!-- Footer Actions -->
+            <Border Grid.Row="2" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,1,0,0" Margin="16,0,16,16" CornerRadius="0,0,{StaticResource RadiusMd},{StaticResource RadiusMd}">
+                <Grid Margin="20,0">
+                    <TextBlock x:Name="StatusText" Style="{StaticResource BodyText}" FontSize="12" FontFamily="JetBrains Mono, Consolas" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0">
-                    <Button Content="New Profile" Style="{StaticResource ConsolePrimaryBtn}" Width="110" Height="36" Margin="0,0,10,0" Click="BtnNew_Click" ToolTip="Create a new profile from scratch"/>
-                    <Button Content="Import" Style="{StaticResource ConsoleGhostBtn}" Width="90" Height="36" Margin="0,0,10,0" Click="BtnImport_Click" ToolTip="Import profile from JSON file"/>
-                    <Border Background="#121620" BorderBrush="#2A3245" BorderThickness="1" CornerRadius="6" Margin="0,0,6,0" Height="36">
-                        <TextBox x:Name="TxtShareCode" Width="90" Background="Transparent" Foreground="#F0F4F8" BorderThickness="0" Padding="8,0" FontFamily="Consolas" FontSize="13" VerticalContentAlignment="Center" ToolTip="Enter a share code (e.g. GX-A3F9) and click ↓ Download"/>
-                    </Border>
-                    <Button Content="↓ Download" Style="{StaticResource ConsoleGhostBtn}" Width="100" Height="36" Margin="0,0,10,0" Click="BtnDownload_Click" ToolTip="Download profile by share code"/>
-                    <Button Content="Close" Style="{StaticResource ConsoleGhostBtn}" Width="80" Height="36" Click="BtnClose_Click" ToolTip="Close profile library window"/>
+                        <Button Content="New Profile" Style="{StaticResource PrimaryButton}" Width="120" Height="40" Margin="0,0,12,0" Click="BtnNew_Click" ToolTip="Create a new profile from scratch" FontSize="14"/>
+                        <Button Content="Import" Style="{StaticResource GhostButton}" Width="90" Height="40" Margin="0,0,12,0" Click="BtnImport_Click" ToolTip="Import profile from JSON file" FontSize="14"/>
+                        <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}" Height="40" Margin="0,0,8,0">
+                            <TextBox x:Name="TxtShareCode" Width="100" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" Padding="10,0" FontFamily="JetBrains Mono, Consolas" FontSize="14" VerticalContentAlignment="Center" ToolTip="Enter a share code (e.g. GX-A3F9) and click ↓ Download"/>
+                        </Border>
+                        <Button Content="↓ Download" Style="{StaticResource GhostButton}" Width="110" Height="40" Margin="0,0,12,0" Click="BtnDownload_Click" ToolTip="Download profile by share code" FontSize="14"/>
+                        <Button Content="Close" Style="{StaticResource GhostButton}" Width="85" Height="40" Click="BtnClose_Click" ToolTip="Close profile library window" FontSize="14"/>
                     </StackPanel>
                 </Grid>
             </Border>

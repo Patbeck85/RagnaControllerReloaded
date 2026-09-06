@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using RagnaController.Core;
 using RagnaController.Models;
+using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Controller
 {
@@ -102,7 +103,7 @@ namespace RagnaController.Controller
                 {
                     try
                     {
-                        NativeMethods.WriteFile(_handle, reportCopy, (uint)reportCopy.Length, out _, IntPtr.Zero);
+                        WriteFile(_handle, reportCopy, (uint)reportCopy.Length, out _, IntPtr.Zero);
                     }
                     finally
                     {
@@ -176,7 +177,7 @@ namespace RagnaController.Controller
                 {
                     try
                     {
-                        NativeMethods.WriteFile(_handle, reportCopy, (uint)reportCopy.Length, out _, IntPtr.Zero);
+                        WriteFile(_handle, reportCopy, (uint)reportCopy.Length, out _, IntPtr.Zero);
                     }
                     finally
                     {
@@ -189,30 +190,30 @@ namespace RagnaController.Controller
         private static IntPtr OpenDualSenseHandle()
         {
             // 1. Get the HID device GUID from the system
-            NativeMethods.HidD_GetHidGuid(out Guid hidGuid);
+            HidD_GetHidGuid(out Guid hidGuid);
 
             // 2. Enumerate all present HID devices
-            IntPtr devInfo = NativeMethods.SetupDiGetClassDevs(
+            IntPtr devInfo = SetupDiGetClassDevs(
                 ref hidGuid, IntPtr.Zero, IntPtr.Zero,
-                NativeMethods.DIGCF_PRESENT | NativeMethods.DIGCF_DEVICEINTERFACE);
+                DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 
             if (devInfo == IntPtr.Zero || devInfo == new IntPtr(-1))
                 return IntPtr.Zero;
 
             try
             {
-                var ifaceData = new NativeMethods.SP_DEVICE_INTERFACE_DATA();
-                ifaceData.cbSize = (uint)Marshal.SizeOf<NativeMethods.SP_DEVICE_INTERFACE_DATA>();
+                var ifaceData = new SP_DEVICE_INTERFACE_DATA();
+                ifaceData.cbSize = (uint)Marshal.SizeOf<SP_DEVICE_INTERFACE_DATA>();
 
                 for (uint i = 0; ; i++)
                 {
                     // Enumerate each HID interface
-                    if (!NativeMethods.SetupDiEnumDeviceInterfaces(
+                    if (!SetupDiEnumDeviceInterfaces(
                             devInfo, IntPtr.Zero, ref hidGuid, i, ref ifaceData))
                         break; // ERROR_NO_MORE_ITEMS
 
                     // Get required buffer size for the detail struct
-                    NativeMethods.SetupDiGetDeviceInterfaceDetail(
+                    SetupDiGetDeviceInterfaceDetail(
                         devInfo, ref ifaceData, IntPtr.Zero, 0, out uint needed, IntPtr.Zero);
 
                     if (needed == 0) continue;
@@ -224,7 +225,7 @@ namespace RagnaController.Controller
                         // First field of SP_DEVICE_INTERFACE_DETAIL_DATA is cbSize (DWORD)
                         Marshal.WriteInt32(detailBuf, IntPtr.Size == 8 ? 8 : 6);
 
-                        if (!NativeMethods.SetupDiGetDeviceInterfaceDetail(
+                        if (!SetupDiGetDeviceInterfaceDetail(
                                 devInfo, ref ifaceData, detailBuf, needed, out _, IntPtr.Zero))
                             continue;
 
@@ -241,13 +242,13 @@ namespace RagnaController.Controller
 
                         Debug.WriteLine($"[DualSense] Found device: {path}");
 
-                        IntPtr handle = NativeMethods.CreateFile(
+                        IntPtr handle = CreateFile(
                             path,
-                            NativeMethods.GENERIC_READ | NativeMethods.GENERIC_WRITE,
-                            NativeMethods.FILE_SHARE_READ | NativeMethods.FILE_SHARE_WRITE,
+                            GENERIC_READ | GENERIC_WRITE,
+                            FILE_SHARE_READ | FILE_SHARE_WRITE,
                             IntPtr.Zero,
-                            NativeMethods.OPEN_EXISTING,
-                            NativeMethods.FILE_ATTRIBUTE_NORMAL,
+                            OPEN_EXISTING,
+                            FILE_ATTRIBUTE_NORMAL,
                             IntPtr.Zero);
 
                         if (handle != IntPtr.Zero && handle != new IntPtr(-1))
@@ -261,7 +262,7 @@ namespace RagnaController.Controller
             }
             finally
             {
-                NativeMethods.SetupDiDestroyDeviceInfoList(devInfo);
+                SetupDiDestroyDeviceInfoList(devInfo);
             }
 
             return IntPtr.Zero;
@@ -274,7 +275,7 @@ namespace RagnaController.Controller
             if (_handle != IntPtr.Zero)
             {
                 TurnOff();
-                NativeMethods.CloseHandle(_handle);
+                CloseHandle(_handle);
                 _handle = IntPtr.Zero;
             }
         }

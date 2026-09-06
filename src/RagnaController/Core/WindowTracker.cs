@@ -26,6 +26,9 @@ namespace RagnaController.Core
         private const uint EVENT_SYSTEM_FOREGROUND = 0x0003;
         private const uint WINEVENT_OUTOFCONTEXT   = 0x0000;
 
+        // ── Dependency Injection ──────────────────────────────────────────
+        private readonly INativeMethods _native;
+
         // ── State ─────────────────────────────────────────────────────────
         private IntPtr  _hook = IntPtr.Zero;
         private IntPtr  _hwnd = IntPtr.Zero;
@@ -42,6 +45,15 @@ namespace RagnaController.Core
         public bool  WindowTracked { get; private set; }
 
         public event Action? ForegroundChanged;
+
+        /// <summary>
+        /// Erstellt einen neuen WindowTracker mit der angegebenen Win32-Implementierung.
+        /// Für Production: <see cref="NativeMethodsImpl"/>. Für Tests: Mock<INativeMethods>.
+        /// </summary>
+        public WindowTracker(INativeMethods? native = null)
+        {
+            _native = native ?? new NativeMethodsImpl();
+        }
 
         public void SetProcessName(string name)
         {
@@ -86,14 +98,14 @@ namespace RagnaController.Core
         {
             lock (_lock)
             {
-                IntPtr fg = NativeMethods.GetForegroundWindow();
+                IntPtr fg = _native.GetForegroundWindow();
                 if (fg != IntPtr.Zero) CheckWindow(fg);
             }
         }
 
         private void CheckWindow(IntPtr hwnd)
         {
-            NativeMethods.GetWindowThreadProcessId(hwnd, out uint pid);
+            _native.GetWindowThreadProcessId(hwnd, out uint pid);
             if (pid == 0) { IsTracking = false; return; }
 
             try
@@ -110,12 +122,12 @@ namespace RagnaController.Core
 
         private void UpdateGeometry()
         {
-            if (!NativeMethods.GetClientRect(_hwnd, out NativeMethods.RECT rect)) return;
+            if (!_native.GetClientRect(_hwnd, out RECT rect)) return;
 
-            NativeMethods.POINT pt = new NativeMethods.POINT { X = 0, Y = 0 };
-            NativeMethods.ClientToScreen(_hwnd, ref pt);
+            POINT pt = new POINT { X = 0, Y = 0 };
+            _native.ClientToScreen(_hwnd, ref pt);
 
-            uint dpi = GetDpiForWindow(_hwnd);
+            uint dpi = _native.GetDpiForWindow(_hwnd);
             float newScale = dpi > 0 ? dpi / 96.0f : 1.0f;
 
             int newW = rect.Right  - rect.Left;

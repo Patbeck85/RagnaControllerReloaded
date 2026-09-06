@@ -133,7 +133,7 @@ namespace RagnaController
                     Height = 34,
                     Padding = new Thickness(10, 0, 10, 0),
                     Margin = new Thickness(0, 0, 6, 6),
-                    Style = (Style)Application.Current.Resources["ConsoleGhostBtn"],
+                    Style = (Style)Application.Current.Resources["DarkComboBox"],
                     Tag = t
                 };
                 card.Click += (s, e) =>
@@ -189,6 +189,18 @@ namespace RagnaController
         {
             ChainPanel.Children.Clear();
 
+            // Get design system resources
+            var bgCard       = (Brush)FindResource("BgCard");
+            var bgBorder     = (Brush)FindResource("BgBorder");
+            var gold         = (Brush)FindResource("Gold");
+            var goldDim      = (Brush)FindResource("GoldDim");
+            var textPrimary  = (Brush)FindResource("TextPrimary");
+            var textSecondary= (Brush)FindResource("TextSecondary");
+            var textTertiary = (Brush)FindResource("TextTertiary");
+            var accentBlue   = (Brush)FindResource("AccentBlue");
+            var radiusMd     = (CornerRadius)FindResource("RadiusMd");
+            var radiusSm     = (CornerRadius)FindResource("RadiusSm");
+
             for (int i = 0; i < _steps.Count; i++)
             {
                 var step = _steps[i];
@@ -197,10 +209,10 @@ namespace RagnaController
                 // Step card
                 var card = new Border
                 {
-                    Background      = new SolidColorBrush(Color.FromRgb(22, 27, 34)),
-                    BorderBrush     = new SolidColorBrush(Color.FromRgb(33, 38, 45)),
+                    Background      = bgCard,
+                    BorderBrush     = bgBorder,
                     BorderThickness = new Thickness(1),
-                    CornerRadius    = new CornerRadius(8),
+                    CornerRadius    = radiusMd,
                     Padding         = new Thickness(12),
                     Margin          = new Thickness(0, 0, 0, 4),
                 };
@@ -215,12 +227,12 @@ namespace RagnaController
                 var badge = new Border
                 {
                     Width = 22, Height = 22, CornerRadius = new CornerRadius(11),
-                    Background = new SolidColorBrush(Color.FromRgb(212, 168, 50)),
+                    Background = gold,
                     HorizontalAlignment = HorizontalAlignment.Left,
                     VerticalAlignment   = VerticalAlignment.Center,
                     Child = new TextBlock
                     {
-                        Text = (i + 1).ToString(), Foreground = new SolidColorBrush(Color.FromRgb(13, 16, 23)),
+                        Text = (i + 1).ToString(), Foreground = (Brush)FindResource("BgPrimary"),
                         FontWeight = FontWeights.Bold, FontSize = 11,
                         HorizontalAlignment = HorizontalAlignment.Center,
                         VerticalAlignment   = VerticalAlignment.Center
@@ -232,8 +244,9 @@ namespace RagnaController
                 var nameBox = new TextBox
                 {
                     Text = step.SkillName,
-                    Background = new SolidColorBrush(Color.FromRgb(13, 16, 23)),
-                    Foreground = Brushes.White, BorderBrush = new SolidColorBrush(Color.FromRgb(33, 38, 45)),
+                    Background = (Brush)FindResource("BgPrimary"),
+                    Foreground = textPrimary,
+                    BorderBrush = bgBorder,
                     FontSize = 13, FontWeight = FontWeights.Bold,
                     Padding = new Thickness(6, 4, 6, 4),
                     VerticalContentAlignment = VerticalAlignment.Center,
@@ -254,10 +267,10 @@ namespace RagnaController
                         Margin = new Thickness(2, 1, 0, 1),
                         FontSize = 9,
                         Background = step.Key == key
-                            ? new SolidColorBrush(Color.FromRgb(0, 80, 80))
-                            : new SolidColorBrush(Color.FromRgb(26, 32, 48)),
-                        Foreground = step.Key == key ? Brushes.Cyan : new SolidColorBrush(Color.FromRgb(139, 148, 158)),
-                        BorderBrush = new SolidColorBrush(Color.FromRgb(33, 38, 45)),
+                            ? (Brush)FindResource("AccentPurple")
+                            : (Brush)FindResource("BgTertiary"),
+                        Foreground = step.Key == key ? accentBlue : textSecondary,
+                        BorderBrush = bgBorder,
                         BorderThickness = new Thickness(1),
                         Tag = key
                     };
@@ -271,9 +284,9 @@ namespace RagnaController
                             bool isThis = (VirtualKey)tb.Tag == capturedKey;
                             tb.IsChecked  = isThis;
                             tb.Background = isThis
-                                ? new SolidColorBrush(Color.FromRgb(0, 80, 80))
-                                : new SolidColorBrush(Color.FromRgb(26, 32, 48));
-                            tb.Foreground = isThis ? Brushes.Cyan : new SolidColorBrush(Color.FromRgb(139, 148, 158));
+                                ? (Brush)FindResource("AccentPurple")
+                                : (Brush)FindResource("BgTertiary");
+                            tb.Foreground = isThis ? accentBlue : textSecondary;
                         }
                     };
                     keyPanel.Children.Add(kBtn);
@@ -285,7 +298,7 @@ namespace RagnaController
                 var delayPanel = new StackPanel { VerticalAlignment = VerticalAlignment.Center };
                 var delayLabel = new TextBlock
                 {
-                    Foreground = new SolidColorBrush(Color.FromRgb(212, 168, 50)),
+                    Foreground = gold,
                     FontSize = 10, FontFamily = new FontFamily("Consolas"),
                     Text = $"⏱ {delay} ms"
                 };
@@ -314,7 +327,7 @@ namespace RagnaController
                     ChainPanel.Children.Add(new TextBlock
                     {
                         Text = "  ↓",
-                        Foreground = new SolidColorBrush(Color.FromRgb(85, 94, 106)),
+                        Foreground = textTertiary,
                         FontSize = 16, Margin = new Thickness(6, 0, 0, 4)
                     });
                 }
@@ -324,7 +337,7 @@ namespace RagnaController
                 ChainPanel.Children.Add(new TextBlock
                 {
                     Text = GetLocalizedString("ComboEditor_NoStepsDefined"),
-                    Foreground = new SolidColorBrush(Color.FromRgb(85, 94, 106)),
+                    Foreground = textTertiary,
                     FontSize = 11, Margin = new Thickness(4, 10, 0, 0), TextWrapping = TextWrapping.Wrap
                 });
         }
@@ -335,16 +348,16 @@ namespace RagnaController
         private void BtnTabPre_Click(object s, RoutedEventArgs e)
         {
             _showRenewal = false;
-            BtnTabPre.Style = (Style)Application.Current.Resources["ConsolePrimaryBtn"];
-            BtnTabRen.Style = (Style)Application.Current.Resources["ConsoleGhostBtn"];
+            BtnTabPre.Style = (Style)Application.Current.Resources["PrimaryButton"];
+            BtnTabRen.Style = (Style)Application.Current.Resources["GhostButton"];
             RefreshChain();
         }
 
         private void BtnTabRen_Click(object s, RoutedEventArgs e)
         {
             _showRenewal = true;
-            BtnTabRen.Style = (Style)Application.Current.Resources["ConsolePrimaryBtn"];
-            BtnTabPre.Style = (Style)Application.Current.Resources["ConsoleGhostBtn"];
+            BtnTabRen.Style = (Style)Application.Current.Resources["PrimaryButton"];
+            BtnTabPre.Style = (Style)Application.Current.Resources["GhostButton"];
             RefreshChain();
         }
 

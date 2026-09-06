@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using RagnaController.Core;
 using RagnaController.Profiles;
 
@@ -71,19 +72,18 @@ namespace RagnaController
         private string _activeLayer = "";
 
         private void ApplyLayer(string layerName)
-        {
-            _activeLayer = layerName;
-            // Highlight active layer button
-            foreach (var btn in new[] { BtnLayerBase, BtnLayerL1, BtnLayerR1, BtnLayerL2, BtnLayerR2 })
-            {
-                if (btn == null) continue;
-                string tag = btn.Tag?.ToString() ?? "";
-                btn.Background = tag == layerName
-                    ? new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(229, 184, 66))
-                    : System.Windows.Media.Brushes.Transparent;
-            }
-            UpdatePreview();
-        }
+                {
+                    _activeLayer = layerName;
+                    // Highlight active layer button
+                    var gold = (Brush)FindResource("Gold");
+                    foreach (var btn in new[] { BtnLayerBase, BtnLayerL1, BtnLayerR1, BtnLayerL2, BtnLayerR2 })
+                    {
+                        if (btn == null) continue;
+                        string tag = btn.Tag?.ToString() ?? "";
+                        btn.Background = tag == layerName ? gold : new SolidColorBrush(Colors.Transparent);
+                    }
+                    UpdatePreview();
+                }
 
         private void ResetAll()
         {

@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Core
 {
@@ -158,13 +159,13 @@ namespace RagnaController.Core
 
         // ── Background reader ─────────────────────────────────────────────
         private void ReadLoop()
-        {
-            float filtPitch = 0f, filtYaw = 0f;
+                {
+                    float filtPitch = 0f, filtYaw = 0f;
 
-            while (_cts?.IsCancellationRequested == false)
-            {
-                if (!NativeMethods.ReadFile(_handle, _buf, (uint)REPORT_SIZE,
-                        out uint read, IntPtr.Zero) || read < 19)
+                    while (_cts?.IsCancellationRequested == false)
+                    {
+                        if (!ReadFile(_handle, _buf, (uint)REPORT_SIZE,
+                                out uint read, IntPtr.Zero) || read < 19)
                 {
                     // ReadFile can return false on disconnect — brief sleep before retry
                     Thread.Sleep(16);
@@ -197,76 +198,76 @@ namespace RagnaController.Core
 
         // ── Device enumeration ────────────────────────────────────────────
         private void TryOpen()
-        {
-            try
-            {
-                NativeMethods.HidD_GetHidGuid(out Guid hidGuid);
-                IntPtr devInfo = NativeMethods.SetupDiGetClassDevs(
-                    ref hidGuid, IntPtr.Zero, IntPtr.Zero,
-                    NativeMethods.DIGCF_PRESENT | NativeMethods.DIGCF_DEVICEINTERFACE);
-
-                if (devInfo == IntPtr.Zero || devInfo == new IntPtr(-1)) return;
-
-                try
                 {
-                    var ifaceData = new NativeMethods.SP_DEVICE_INTERFACE_DATA();
-                    ifaceData.cbSize = (uint)Marshal.SizeOf<NativeMethods.SP_DEVICE_INTERFACE_DATA>();
-
-                    for (uint i = 0; ; i++)
+                    try
                     {
-                        if (!NativeMethods.SetupDiEnumDeviceInterfaces(
-                                devInfo, IntPtr.Zero, ref hidGuid, i, ref ifaceData))
-                            break;
+                        HidD_GetHidGuid(out Guid hidGuid);
+                        IntPtr devInfo = SetupDiGetClassDevs(
+                            ref hidGuid, IntPtr.Zero, IntPtr.Zero,
+                            DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
 
-                        NativeMethods.SetupDiGetDeviceInterfaceDetail(
-                            devInfo, ref ifaceData, IntPtr.Zero, 0, out uint needed, IntPtr.Zero);
+                        if (devInfo == IntPtr.Zero || devInfo == new IntPtr(-1)) return;
 
-                        if (needed == 0) continue;
-
-                        IntPtr detailBuf = Marshal.AllocHGlobal((int)needed);
                         try
                         {
-                            Marshal.WriteInt32(detailBuf, IntPtr.Size == 8 ? 8 : 6);
-                            if (!NativeMethods.SetupDiGetDeviceInterfaceDetail(
-                                    devInfo, ref ifaceData, detailBuf, needed, out _, IntPtr.Zero))
-                                continue;
+                            var ifaceData = new SP_DEVICE_INTERFACE_DATA();
+                            ifaceData.cbSize = (uint)Marshal.SizeOf<SP_DEVICE_INTERFACE_DATA>();
 
-                            string path = Marshal.PtrToStringAuto(detailBuf + 4) ?? "";
-
-                            bool isDualSense =
-                                path.IndexOf(DualSenseVid,  StringComparison.OrdinalIgnoreCase) >= 0 &&
-                               (path.IndexOf(DualSensePid1, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                path.IndexOf(DualSensePid2, StringComparison.OrdinalIgnoreCase) >= 0);
-
-                            if (!isDualSense) continue;
-
-                            // Open with READ+WRITE+SHARE so lightbar service can coexist
-                            IntPtr h = NativeMethods.CreateFile(
-                                path,
-                                NativeMethods.GENERIC_READ | NativeMethods.GENERIC_WRITE,
-                                NativeMethods.FILE_SHARE_READ | NativeMethods.FILE_SHARE_WRITE,
-                                IntPtr.Zero,
-                                NativeMethods.OPEN_EXISTING,
-                                NativeMethods.FILE_ATTRIBUTE_NORMAL,
-                                IntPtr.Zero);
-
-                            if (h != IntPtr.Zero && h != new IntPtr(-1))
+                            for (uint i = 0; ; i++)
                             {
-                                _handle     = h;
-                                IsAvailable = true;
-                                return;
+                                if (!SetupDiEnumDeviceInterfaces(
+                                        devInfo, IntPtr.Zero, ref hidGuid, i, ref ifaceData))
+                                    break;
+
+                                SetupDiGetDeviceInterfaceDetail(
+                                    devInfo, ref ifaceData, IntPtr.Zero, 0, out uint needed, IntPtr.Zero);
+
+                                if (needed == 0) continue;
+
+                                IntPtr detailBuf = Marshal.AllocHGlobal((int)needed);
+                                try
+                                {
+                                    Marshal.WriteInt32(detailBuf, IntPtr.Size == 8 ? 8 : 6);
+                                    if (!SetupDiGetDeviceInterfaceDetail(
+                                            devInfo, ref ifaceData, detailBuf, needed, out _, IntPtr.Zero))
+                                        continue;
+
+                                    string path = Marshal.PtrToStringAuto(detailBuf + 4) ?? "";
+
+                                    bool isDualSense =
+                                        path.IndexOf(DualSenseVid,  StringComparison.OrdinalIgnoreCase) >= 0 &&
+                                       (path.IndexOf(DualSensePid1, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                        path.IndexOf(DualSensePid2, StringComparison.OrdinalIgnoreCase) >= 0);
+
+                                    if (!isDualSense) continue;
+
+                                    // Open with READ+WRITE+SHARE so lightbar service can coexist
+                                    IntPtr h = CreateFile(
+                                        path,
+                                        GENERIC_READ | GENERIC_WRITE,
+                                        FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                        IntPtr.Zero,
+                                        OPEN_EXISTING,
+                                        FILE_ATTRIBUTE_NORMAL,
+                                        IntPtr.Zero);
+
+                                    if (h != IntPtr.Zero && h != new IntPtr(-1))
+                                    {
+                                        _handle     = h;
+                                        IsAvailable = true;
+                                        return;
+                                    }
+                                }
+                                finally { Marshal.FreeHGlobal(detailBuf); }
                             }
                         }
-                        finally { Marshal.FreeHGlobal(detailBuf); }
+                        finally { SetupDiDestroyDeviceInfoList(devInfo); }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[GyroService] Init failed: {ex.Message}");
                     }
                 }
-                finally { NativeMethods.SetupDiDestroyDeviceInfoList(devInfo); }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[GyroService] Init failed: {ex.Message}");
-            }
-        }
 
         public void Dispose()
         {

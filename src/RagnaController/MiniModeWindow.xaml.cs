@@ -34,45 +34,49 @@ namespace RagnaController
             Dispatcher.BeginInvoke(() =>
             {
                 // Update Profile & State
-                ProfileText.Text = profileName.ToUpperInvariant();
+                if (ProfileText != null) ProfileText.Text = profileName.ToUpperInvariant();
                 
+                var gold = (Brush)FindResource("Gold");
+                var live = (Brush)FindResource("Live");
+                var danger = (Brush)FindResource("Danger");
+                var textSecondary = (Brush)FindResource("TextSecondary");
+                var bgPrimary = (Brush)FindResource("BgPrimary");
+                var accentBlue = (Brush)FindResource("AccentBlue");
+
                 if (snap.FocusLocked)
                 {
-                    StateText.Text = "FOCUS LOCKED";
-                    StateText.Foreground = Brushes.OrangeRed;
-                    StatusDot.Fill = Brushes.OrangeRed;
-                    if (StatusDot.Effect is DropShadowEffect dse1) dse1.Color = Color.FromRgb(255, 69, 0);
-                    RootBorder.Opacity = 0.5; // Dim the widget if locked
+                    if (StateText != null) { StateText.Text = "FOCUS LOCKED"; StateText.Foreground = danger; }
+                    if (StatusDot != null) { StatusDot.Fill = danger; if (StatusDot.Effect is DropShadowEffect dse1) dse1.Color = ((SolidColorBrush)danger).Color; }
+                    if (RootBorder != null) RootBorder.Opacity = 0.5; // Dim the widget if locked
                 }
                 else if (!engineRunning)
                 {
-                    StateText.Text = "PAUSED";
-                    StateText.Foreground = Brushes.Gray;
-                    StatusDot.Fill = Brushes.Gray;
-                    if (StatusDot.Effect is DropShadowEffect _dse2) _dse2.Color = Colors.Gray;
-                    RootBorder.Opacity = 0.5;
+                    if (StateText != null) { StateText.Text = "PAUSED"; StateText.Foreground = textSecondary; }
+                    if (StatusDot != null) { StatusDot.Fill = textSecondary; if (StatusDot.Effect is DropShadowEffect _dse2) _dse2.Color = ((SolidColorBrush)textSecondary).Color; }
+                    if (RootBorder != null) RootBorder.Opacity = 0.5;
                 }
                 else
                 {
-                    StateText.Text = snap.StateLabel.ToUpper();
-                    StateText.Foreground = new SolidColorBrush(Color.FromRgb(229, 184, 66)); // Gold
-                    StatusDot.Fill = new SolidColorBrush(Color.FromRgb(61, 219, 110)); // Green
-                    if (StatusDot.Effect is DropShadowEffect _dse) _dse.Color = Color.FromRgb(61, 219, 110);
-                    RootBorder.Opacity = 1.0;
+                    if (StateText != null) { StateText.Text = snap.StateLabel.ToUpper(); StateText.Foreground = gold; }
+                    if (StatusDot != null) { StatusDot.Fill = live; if (StatusDot.Effect is DropShadowEffect _dse) _dse.Color = ((SolidColorBrush)live).Color; }
+                    if (RootBorder != null) RootBorder.Opacity = 1.0;
                 }
 
                 // Update Battery
-                BatteryText.Text = batteryLevel;
-                BatteryFill.Width = batteryLevel switch
+                if (BatteryText != null) BatteryText.Text = batteryLevel;
+                if (BatteryFill != null)
                 {
-                    "Full" => 20,
-                    "High" => 15,
-                    "Mid" => 10,
-                    "Low" => 4,
-                    "Empty" => 1,
-                    _ => 0
-                };
-                BatteryFill.Background = batteryLevel is "Low" or "Empty" ? Brushes.Red : Brushes.LimeGreen;
+                    BatteryFill.Width = batteryLevel switch
+                    {
+                        "Full" => 20,
+                        "High" => 15,
+                        "Mid" => 10,
+                        "Low" => 4,
+                        "Empty" => 1,
+                        _ => 0
+                    };
+                    BatteryFill.Background = batteryLevel is "Low" or "Empty" ? danger : live;
+                }
             });
         }
 
@@ -91,24 +95,27 @@ namespace RagnaController
             _clickThrough = !_clickThrough;
             UpdateClickThrough();
 
+            var accentBlue = (Brush)FindResource("AccentBlue");
+            var bgBorder = (Brush)FindResource("BgBorder");
+
             if (_clickThrough)
             {
-                RootBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(58, 142, 255)); // Blue
-                ClickThroughHint.Visibility = Visibility.Visible;
+                if (RootBorder != null) RootBorder.BorderBrush = accentBlue;
+                if (ClickThroughHint != null) ClickThroughHint.Visibility = Visibility.Visible;
                 
                 // Auto-hide the hint after 2 seconds so they can see the stats again
                 var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
                 timer.Tick += (s, args) => 
                 { 
-                    ClickThroughHint.Visibility = Visibility.Collapsed; 
+                    if (ClickThroughHint != null) ClickThroughHint.Visibility = Visibility.Collapsed; 
                     timer.Stop(); 
                 };
                 timer.Start();
             }
             else
             {
-                RootBorder.BorderBrush = new SolidColorBrush(Color.FromRgb(42, 50, 69)); // Default gray
-                ClickThroughHint.Visibility = Visibility.Collapsed;
+                if (RootBorder != null) RootBorder.BorderBrush = bgBorder;
+                if (ClickThroughHint != null) ClickThroughHint.Visibility = Visibility.Collapsed;
             }
         }
 

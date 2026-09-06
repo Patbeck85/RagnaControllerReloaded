@@ -12,6 +12,7 @@ using Microsoft.Win32;
 using RagnaController.Core;
 using RagnaController.Models;
 using RagnaController.Profiles;
+using RagnaController.ControllerTest;
 
 namespace RagnaController
 {
@@ -19,7 +20,7 @@ namespace RagnaController
     {
         private readonly HybridEngine   _engine;
         private readonly ProfileManager _manager;
-        private readonly Settings       _settings = Settings.Load();
+        private Settings       _settings = Settings.Load();
         private readonly System.Collections.Generic.List<IDisposable> _subs = new();
         private bool _isMiniMode = false, _actionRpgOn = true;
         private readonly List<string> _logBuffer = new();
@@ -30,13 +31,16 @@ namespace RagnaController
         private DiscordRpcService? _discordRpc;
         private TtsAnnouncerService? _ttsService;
         private InGameOverlayWindow? _gameOverlay;
+        private ControllerTestWindow? _controllerTestWindow;
 
 #pragma warning disable CS0649 // WPF: Fields initialized in XAML
-        private Button? BtnToggleMiniMode;
-        private Button? BtnToggleGameOverlay;
+        // Toast/Notifications (NOT in XAML - created dynamically)
+        private Border? ToastBorder;
+        private TextBlock? ToastText;
+        private SolidColorBrush? ToastBg;
+
+        // Controller canvas elements - NOT in XAML with x:Name (they're in a Canvas without names)
         private Ellipse? DeadzoneRing;
-        private Button? BtnScanController_ClickHandler;
-        private Button? BtnSettings_ClickHandler;
 #pragma warning restore CS0649
 
         public MainWindow(HybridEngine engine, ProfileManager manager, MainViewModel vm)
@@ -59,13 +63,7 @@ namespace RagnaController
 
             _engine.StatusChanged += (s) => Dispatcher.BeginInvoke(() =>
             {
-                if (StatusTextDisplay != null)
-                {
-                    StatusTextDisplay.Text       = s == EngineStatus.Running ? "RUNNING"
-                                             : s == EngineStatus.NoController ? "NO CONTROLLER"
-                                             : "PAUSED";
-                    StatusTextDisplay.Foreground = s == EngineStatus.Running ? Brushes.Lime : Brushes.OrangeRed;
-                }
+                // Status displayed in Health tab panel
                 _vm?.ApplyEngineStatus(s, _engine.ControllerName);
             });
 
@@ -74,9 +72,6 @@ namespace RagnaController
                 Dispatcher.BeginInvoke(() =>
                 {
                     _vm?.ApplySnapshot(msg.Snapshot);
-                    if (AutoStatusText != null) AutoStatusText.Text = _vm?.FocusLockHint?.Length > 0
-                        ? _vm?.FocusLockHint
-                        : _engine.ControllerName + " — active";
 
                     if (msg.Snapshot.FocusLocked && !_wasFocusLocked)
                     {
@@ -142,73 +137,42 @@ namespace RagnaController
                     ApplyLogFilter();
                     LogScrollViewer?.ScrollToEnd();
                 }
-            });
-
-            _engine.VoiceStatusChanged += msg => Dispatcher.BeginInvoke(() =>
-            {
-                if (VoiceStatusText1 != null)
+                if (LogTextBlock2 != null)
                 {
-                    VoiceStatusText1.Text       = msg;
-                    VoiceStatusText1.Foreground = msg.StartsWith("🎤")
-                        ? Brushes.Lime : new SolidColorBrush(Color.FromRgb(85, 94, 106));
+                    LogScrollViewer2?.ScrollToEnd();
                 }
             });
 
             _engine.BatteryChanged += level => Dispatcher.BeginInvoke(() =>
             {
-                if (BatteryFill == null || BatteryLevelText == null) return;
-                var (fillWidth, fillColor, label) = level switch
-                {
-                    "Full"  => (22.0, Color.FromRgb( 57, 255,  20), "Full"),
-                    "High"  => (18.0, Color.FromRgb( 57, 255,  20), "High"),
-                    "Mid"   => (12.0, Color.FromRgb(255, 184,   0), "Mid"),
-                    "Low"   => ( 5.0, Color.FromRgb(255,  58,  82), "Low!"),
-                    "Empty" => ( 2.0, Color.FromRgb(255,  58,  82), "Empty"),
-                    _       => ( 0.0, Color.FromRgb( 85,  94,106), "–")
-                };
-                BatteryFill.Width      = fillWidth;
-                BatteryFill.Background = new SolidColorBrush(fillColor);
-                BatteryLevelText.Text       = label;
-                // Sync secondary battery display (left panel)
-                if (BatteryFill2 != null)     { BatteryFill2.Width = fillWidth; BatteryFill2.Background = new SolidColorBrush(fillColor); }
-                if (BatteryLevelText2 != null)  BatteryLevelText2.Text = label;
-                BatteryLevelText.Foreground = new SolidColorBrush(fillColor);
+                // Battery level updated - could show in status or toast
             });
 
             _engine.ControllerConnected += name => Dispatcher.BeginInvoke(() =>
             {
-                if (ControllerNameText != null)
-                {
-                    ControllerNameText.Text       = name;
-                    ControllerNameText.Foreground = Brushes.Lime;
-                    ControllerNameText.Tag        = true;
-                }
-                if (ControllerNameText2 != null)
-                {
-                    ControllerNameText2.Text       = name;
-                    ControllerNameText2.Foreground = Brushes.Lime;
-                }
                 _ttsService?.Speak("Controller connected");
                 SetFooterButtonsEnabled(true);
+                
+                // Show controller test window when controller connects
+                ShowControllerTestWindow();
+                
+                // Refresh health tab if visible
+                if (_activeTabPanel == PanelHealth)
+                    PopulateTabPanel(PanelHealth);
             });
 
             _engine.ControllerDisconnected += () => Dispatcher.BeginInvoke(() =>
             {
-                if (ControllerNameText != null)
-                {
-                    ControllerNameText.Text       = GetLocalizedString("ControllerName_NoController");
-                    ControllerNameText.Foreground = new SolidColorBrush(Color.FromRgb(85, 94, 106));
-                    ControllerNameText.Tag        = false;
-                }
-                if (ControllerNameText2 != null)
-                {
-                    ControllerNameText2.Text       = GetLocalizedString("ControllerName_NoController");
-                    ControllerNameText2.Foreground = new SolidColorBrush(Color.FromRgb(85, 94, 106));
-                }
-                if (BatteryFill     != null) BatteryFill.Width = 0;
-                if (BatteryLevelText != null) BatteryLevelText.Text = GetLocalizedString("BatteryLevel_Empty");
                 _ttsService?.Speak("Controller disconnected");
                 SetFooterButtonsEnabled(false);
+                
+                // Close controller test window when controller disconnects
+                _controllerTestWindow?.Close();
+                _controllerTestWindow = null;
+                
+                // Refresh health tab if visible
+                if (_activeTabPanel == PanelHealth)
+                    PopulateTabPanel(PanelHealth);
             });
 
             _engine.RestoreMainWindowRequested += () => Dispatcher.BeginInvoke(() =>
@@ -228,18 +192,11 @@ namespace RagnaController
                 ApplyProfile(lastProfile);
             }
 
-            // Restore last game mode
-            if (GameModeCombo != null)
-            {
-                foreach (ComboBoxItem modeItem in GameModeCombo.Items)
-                {
-                    if (modeItem.Tag?.ToString() == _settings.LastGameMode)
-                    {
-                        GameModeCombo.SelectedItem = modeItem;
-                        break;
-                    }
-                }
-            }
+            // Initialize tab button mapping
+            InitTabBtnMap();
+            
+            // Select default tab (Base)
+            SelectTab(PanelBase, null);
         }
 
         public void SwitchFromMiniMode()
@@ -285,156 +242,11 @@ namespace RagnaController
             Close();
         }
 
-        private void DeadzoneSlider_ValueChanged(object s, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (DeadzoneValue != null) DeadzoneValue.Text = e.NewValue.ToString("F2");
-            UpdateDeadzoneRing((float)e.NewValue);
-            if (!_suppressSliderEvents) _engine.LiveUpdateDeadzone((float)e.NewValue);
-        }
-
-        private void DeadzoneReset_Click(object s, RoutedEventArgs e)
-        {
-            if (ProfileCombo?.SelectedItem is Profile p && DeadzoneSlider != null)
-            {
-                DeadzoneSlider.Value = p.Deadzone;
-                DeadzoneValue.Text = DeadzoneSlider.Value.ToString("F2");
-            }
-        }
-
-        private void CurveSlider_ValueChanged(object s, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (CurveValue != null) CurveValue.Text = e.NewValue.ToString("F2");
-            if (!_suppressSliderEvents) _engine.LiveUpdateCurve((float)e.NewValue);
-        }
-
-        private void CurveReset_Click(object s, RoutedEventArgs e)
-        {
-            if (ProfileCombo?.SelectedItem is Profile p && CurveSlider != null)
-            {
-                CurveSlider.Value = p.MovementCurve;
-                CurveValue.Text = CurveSlider.Value.ToString("F2");
-            }
-        }
-
-        private void ActionSpeedSlider_ValueChanged(object s, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (ActionSpeedValue != null) ActionSpeedValue.Text = e.NewValue.ToString("F2");
-            if (!_suppressSliderEvents) _engine.LiveUpdateActionSpeed((float)e.NewValue);
-        }
-
-        private void ActionSpeedReset_Click(object s, RoutedEventArgs e)
-        {
-            if (ProfileCombo?.SelectedItem is Profile p && ActionSpeedSlider != null)
-            {
-                ActionSpeedSlider.Value = p.ActionSpeed;
-                ActionSpeedValue.Text = ActionSpeedSlider.Value.ToString("F2");
-            }
-        }
-
-        private void SensitivitySlider_ValueChanged(object s, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (SensitivityValue != null) SensitivityValue.Text = e.NewValue.ToString();
-            if (!_suppressSliderEvents) _engine.LiveUpdateCursorSpeed((float)e.NewValue);
-        }
-
-        private void SensitivityReset_Click(object s, RoutedEventArgs e)
-        {
-            if (ProfileCombo?.SelectedItem is Profile p && SensitivitySlider != null)
-            {
-                SensitivitySlider.Value = p.CursorMaxSpeed;
-                SensitivityValue.Text = SensitivitySlider.Value.ToString();
-            }
-        }
-
-        private void MoveModeToggle_Click(object s, RoutedEventArgs e)
-        {
-            _actionRpgOn = !_actionRpgOn;
-            ToggleThumb.HorizontalAlignment = _actionRpgOn ? HorizontalAlignment.Left : HorizontalAlignment.Right;
-            _engine.LiveUpdateActionRpg(_actionRpgOn);
-        }
-        
-        private void ProfileCombo_SelectionChanged(object s, SelectionChangedEventArgs e)
-        {
-            if (ProfileCombo?.SelectedItem is not Profile p) return;
-            ApplyProfile(p);
-        }
-
-        private bool _suppressSliderEvents = false;
-
-        private void ApplyProfile(Profile p)
-        {
-            _manager.SetActive(p.Name);
-            _engine.LoadProfile(p);
-            _vm?.UpdateClassImage(p.Class);
-
-            // Class Badge aktualisieren
-            if (ClassBadgeText != null)
-            {
-                ClassBadgeText.Text = p.Class ?? p.Name;
-                ClassBadgeText.Foreground = new SolidColorBrush(Color.FromRgb(229, 184, 66));
-            }
-            if (ClassBadge != null)
-                ClassBadge.BorderBrush = new SolidColorBrush(Color.FromRgb(229, 184, 66));
-
-            // Sync sliders to new profile values (suppress ValueChanged → engine feedback loop)
-            _suppressSliderEvents = true;
-            try
-            {
-                if (DeadzoneSlider   != null) DeadzoneSlider.Value   = p.Deadzone;
-                if (SensitivitySlider!= null) SensitivitySlider.Value = p.CursorMaxSpeed;
-                if (CurveSlider      != null) CurveSlider.Value      = p.MovementCurve;
-                if (ActionSpeedSlider!= null) ActionSpeedSlider.Value = p.ActionSpeed;
-                if (DeadzoneValue    != null) DeadzoneValue.Text      = p.Deadzone.ToString("F2");
-                if (SensitivityValue != null) SensitivityValue.Text   = p.CursorMaxSpeed.ToString();
-                if (CurveValue       != null) CurveValue.Text         = p.MovementCurve.ToString("F2");
-                if (ActionSpeedValue != null) ActionSpeedValue.Text   = p.ActionSpeed.ToString("F2");
-                UpdateDeadzoneRing((float)p.Deadzone);
-            }
-            finally { _suppressSliderEvents = false; }
-
-            // Refresh active tab mapping display
-            if (_activeTabPanel != null) PopulateTabPanel(_activeTabPanel);
-
-            ShowToast($"Profil geladen: {p.Name} ({p.Class})");
-        }
-        
-        private void GameModeCombo_SelectionChanged(object s, SelectionChangedEventArgs e)
-        {
-            if (GameModeCombo?.SelectedItem is not ComboBoxItem item) return;
-            string mode = item.Tag?.ToString() ?? "Ren";
-            bool isRenewal = mode != "Pre";
-            _engine.ApplyGameMode(isRenewal);
-            _settings.LastGameMode = mode;
-            _settings.Save();
-            ShowToast($"Game Mode: {item.Content}");
-        }
-
         private void TabBase_Click(object s, RoutedEventArgs e) => SelectTab(PanelBase, null);
         private void TabL1_Click(object s, RoutedEventArgs e) => SelectTab(PanelL1, null);
         private void TabR1_Click(object s, RoutedEventArgs e) => SelectTab(PanelR1, null);
         private void TabL2_Click(object s, RoutedEventArgs e) => SelectTab(PanelL2, null);
         private void TabR2_Click(object s, RoutedEventArgs e) => SelectTab(PanelR2, null);
-        private void TabInfo_Click(object s, RoutedEventArgs e)
-        {
-            // Reset tab button styles
-            var allTabBtns = new[] { TabBtnBase, TabBtnL1, TabBtnR1, TabBtnL2, TabBtnR2, TabBtnInfo, TabBtnLog };
-            foreach (var btn in allTabBtns)
-                if (btn != null) btn.Style = (Style)FindResource("TabButton");
-            if (TabBtnInfo != null) TabBtnInfo.Style = (Style)FindResource("TabButtonActive");
-            // Show engine + controller info in a toast-style summary
-            var info = $"Engine: {(_engine.IsRunning ? "Running" : "Stopped")} | Controller: {_engine.ControllerName} | Profile: {(_manager.ActiveProfile?.Name ?? "None")}";
-            ShowToast(info);
-        }
-        private void TabLog_Click(object s, RoutedEventArgs e)
-        {
-            // Reset tab button styles
-            var allTabBtns = new[] { TabBtnBase, TabBtnL1, TabBtnR1, TabBtnL2, TabBtnR2, TabBtnInfo, TabBtnLog };
-            foreach (var btn in allTabBtns)
-                if (btn != null) btn.Style = (Style)FindResource("TabButton");
-            if (TabBtnLog != null) TabBtnLog.Style = (Style)FindResource("TabButtonActive");
-            // Refresh log display and scroll to bottom
-            ApplyLogFilter();
-        }
         private void TabHealth_Click(object s, RoutedEventArgs e) => SelectTab(PanelHealth, null);
 
         private Border? _activeTabPanel;
@@ -458,7 +270,7 @@ namespace RagnaController
                 if (p2 != null) p2.Visibility = Visibility.Collapsed;
 
             // Reset all tab button styles
-            var allTabBtns = new[] { TabBtnBase, TabBtnL1, TabBtnR1, TabBtnL2, TabBtnR2, TabBtnInfo, TabBtnLog, TabBtnHealth };
+            var allTabBtns = new[] { TabBtnBase, TabBtnL1, TabBtnR1, TabBtnL2, TabBtnR2, TabBtnHealth };
             foreach (var btn in allTabBtns)
                 if (btn != null) btn.Style = (Style)FindResource("TabButton");
 
@@ -471,7 +283,7 @@ namespace RagnaController
                 _ when panel == PanelL2   => TabBtnL2,
                 _ when panel == PanelR2   => TabBtnR2,
                 _ when panel == PanelHealth => TabBtnHealth,
-                _ => showInfo ? TabBtnInfo : TabBtnLog
+                _ => null
             };
             if (activeBtn != null) activeBtn.Style = (Style)FindResource("TabButtonActive");
 
@@ -700,7 +512,7 @@ namespace RagnaController
         {
             if (_gameOverlay == null)
             {
-                _gameOverlay = new InGameOverlayWindow(_engine.Messenger, _engine.WindowTracker);
+                _gameOverlay = new InGameOverlayWindow(_engine.Messenger, _engine.WindowTracker, _engine.ControllerManager, _settings);
                 _gameOverlay.Show();
             }
             else
@@ -712,8 +524,27 @@ namespace RagnaController
 
         private void SetFooterButtonsEnabled(bool enabled)
         {
-            if (BtnToggleMiniMode != null) BtnToggleMiniMode.IsEnabled = enabled;
-            if (BtnToggleGameOverlay != null) BtnToggleGameOverlay.IsEnabled = enabled;
+            if (BtnCalibrateQuick != null) BtnCalibrateQuick.IsEnabled = enabled;
+            if (BtnTestInput != null) BtnTestInput.IsEnabled = enabled;
+            if (BtnOpenRemap != null) BtnOpenRemap.IsEnabled = enabled;
+            if (BtnRadial != null) BtnRadial.IsEnabled = enabled;
+        }
+
+
+        private void ShowControllerTestWindow()
+        {
+            if (_controllerTestWindow == null && _engine?.ControllerSvc != null)
+            {
+                // Use the public ControllerSvc property instead of reflection
+                var sdlProvider = _engine.ControllerSvc;
+                
+                if (sdlProvider != null)
+                {
+                    _controllerTestWindow = new ControllerTestWindow(sdlProvider);
+                    _controllerTestWindow.Closed += (s, e) => _controllerTestWindow = null;
+                    _controllerTestWindow.Show();
+                }
+            }
         }
 
         private void Window_Closing(object s, EventArgs e)
@@ -737,35 +568,21 @@ namespace RagnaController
         {
             try
             {
-                var toast = new Border
-                {
-                    Background = isError ? Brushes.OrangeRed : Brushes.Blue,
-                    CornerRadius = new CornerRadius(8),
-                    Padding = new Thickness(16, 12, 16, 12),
-                    Margin = new Thickness(16, 16, 16, 16),
-                    Child = new TextBlock
-                    {
-                        Text = message,
-                        Foreground = Brushes.White,
-                        FontSize = 11,
-                        FontWeight = FontWeights.SemiBold
-                    }
-                };
+                if (ToastBorder == null || ToastText == null || ToastBg == null) return;
 
-                // Add toast to window
-                if (this.Content is Grid grid)
+                ToastText.Text = message;
+                ToastBg.Color = isError ? Color.FromRgb(255, 58, 82) : Color.FromRgb(57, 255, 20);
+                ToastBorder.Visibility = Visibility.Visible;
+
+                // Auto-hide after 3 seconds
+                var timer = new System.Windows.Threading.DispatcherTimer();
+                timer.Interval = TimeSpan.FromSeconds(3);
+                timer.Tick += (s, e) =>
                 {
-                    grid.Children.Add(toast);
-                    toast.Loaded += (s2, e2) =>
-                    {
-                        this.Dispatcher.BeginInvoke(
-                            new Action(() =>
-                            {
-                                this.Dispatcher.BeginInvoke(
-                                    () => grid.Children.Remove(toast));
-                            }));
-                    };
-                }
+                    timer.Stop();
+                    ToastBorder.Visibility = Visibility.Collapsed;
+                };
+                timer.Start();
             }
             catch { }
         }
@@ -779,20 +596,22 @@ namespace RagnaController
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             // Initialize event handlers after component loading
-            if (BtnToggleMiniMode != null) BtnToggleMiniMode.Click += BtnToggleMiniMode_Click;
-            if (BtnToggleGameOverlay != null) BtnToggleGameOverlay.Click += BtnToggleGameOverlay_Click;
-            if (BtnScanController_ClickHandler != null) BtnScanController_ClickHandler.Click += BtnScanController_Click;
-            if (BtnSettings_ClickHandler != null) BtnSettings_ClickHandler.Click += BtnSettings_Click;
         }
 
         private void BtnScanController_Click(object s, RoutedEventArgs e)
         {
             _engine?.Start();
+            ShowToast("Controller scan initiated");
         }
 
         private void BtnSettings_Click(object s, RoutedEventArgs e)
         {
-            var settings = new SettingsWindow(_engine, _manager, _settings);
+            var settings = new SettingsWindow(_engine, _manager, _settings, s =>
+            {
+                _engine.FocusLockEnabled = s.FocusLockEnabled;
+                _engine.FocusLockProcess = s.FocusLockProcess;
+                _settings = s; // Update local reference
+            });
             settings.Show();
         }
 
@@ -808,36 +627,140 @@ namespace RagnaController
 
 
 
-        private void BtnRemap_Click(object s, RoutedEventArgs e)
-        {
-            // Remap button click handler
-        }
+        
 
-
-        private void BtnRadial_Click(object s, RoutedEventArgs e)
+        // Missing event handlers for XAML
+        private void Window_StateChanged(object sender, EventArgs e)
         {
-            // Radial menu button click handler
-        }
-
-        private void BtnCombo_Click(object s, RoutedEventArgs e)
-        {
-            // Combo button click handler
-        }
-
-        private void UpdateDeadzoneRing(float deadzone)
-        {
-            try
+            if (WindowState == WindowState.Minimized && _settings.MinimizeToTray)
             {
-                if (DeadzoneRing != null)
+                Hide();
+                if (_miniWindow == null)
                 {
-                    double radius = Math.Min(DeadzoneRing.ActualWidth, DeadzoneRing.ActualHeight) / 2;
-                    double innerRadius = deadzone * radius;
-                    
-                    DeadzoneRing.Opacity = 1.0 - (deadzone / 100.0);
+                    SwitchToMiniMode();
                 }
             }
-            catch { }
         }
 
+        private void BtnMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        }
+
+        private void BtnCalibrateQuick_Click(object sender, RoutedEventArgs e)
+        {
+            _engine?.StartCalibration();
+            ShowToast("Calibration started");
+        }
+
+        private void BtnTestInput_Click(object sender, RoutedEventArgs e)
+        {
+            if (_engine?.ControllerSvc != null)
+            {
+                var testWindow = new ControllerTestWindow(_engine.ControllerSvc);
+                testWindow.Owner = this;
+                testWindow.Show();
+            }
+            else
+            {
+                ShowToast("No controller connected", isError: true);
+            }
+        }
+
+        private void BtnOpenRemap_Click(object sender, RoutedEventArgs e)
+        {
+            var w = new ButtonRemappingWindow(_engine, _manager);
+            w.Owner = this;
+            w.Show();
+        }
+
+        // Missing event handlers for XAML
+        private void ProfileCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ProfileCombo.SelectedItem is Profile profile)
+            {
+                ApplyProfile(profile);
+            }
+        }
+
+        private void BtnRadial_Click(object sender, RoutedEventArgs e)
+        {
+            var queue = _engine?.CommandQueue ?? new InputCommandQueue();
+            var w = new RadialMenuWindow(queue);
+            w.Owner = this;
+            w.Show();
+        }
+
+        private void ApplyProfile(Profile profile)
+        {
+            if (profile == null) return;
+            
+            _engine.LoadProfile(profile);
+            _settings.LastProfileName = profile.Name;
+            _settings.Save();
+            
+            // Update CurrentProfileText if it exists
+            if (ProfileCombo != null)
+            {
+                ProfileCombo.SelectedItem = profile;
+            }
+            
+            ShowToast($"Profile loaded: {profile.Name}");
+        }
+
+        // Reset click handlers for double-click on labels
+        private void DeadzoneReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (_engine?.CurrentProfile != null)
+            {
+                _engine.CurrentProfile.Deadzone = 0.15f;
+                _engine.LiveUpdateDeadzone(0.15f);
+                var pm = new ProfileManager();
+                pm.SaveProfile(_engine.CurrentProfile);
+                ShowToast("Deadzone reset to default (0.15)");
+            }
+        }
+
+        private void CurveReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (_engine?.CurrentProfile != null)
+            {
+                _engine.CurrentProfile.MovementCurve = 1.0f;
+                _engine.LiveUpdateCurve(1.0f);
+                var pm = new ProfileManager();
+                pm.SaveProfile(_engine.CurrentProfile);
+                ShowToast("Curve reset to default (1.0)");
+            }
+        }
+
+        private void ActionSpeedReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (_engine?.CurrentProfile != null)
+            {
+                _engine.LiveUpdateActionSpeed(5.0f); // Default mid-point
+                var pm = new ProfileManager();
+                pm.SaveProfile(_engine.CurrentProfile);
+                ShowToast("Action Speed reset to default (5)");
+            }
+        }
+
+        private void SensitivityReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (_engine?.CurrentProfile != null)
+            {
+                _engine.LiveUpdateCursorSpeed(1.0f);
+                var pm = new ProfileManager();
+                pm.SaveProfile(_engine.CurrentProfile);
+                ShowToast("Sensitivity reset to default (1.0)");
+            }
+        }
+
+        private void BtnClearLog_Click(object sender, RoutedEventArgs e)
+        {
+            _logBuffer.Clear();
+            if (LogTextBlock != null) LogTextBlock.Text = string.Empty;
+            if (LogTextBlock2 != null) LogTextBlock2.Text = string.Empty;
+            ShowToast("Log cleared");
+        }
     }
 }

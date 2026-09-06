@@ -1,5 +1,6 @@
 using System;
 using RagnaController.Models;
+using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Core
 {
@@ -68,7 +69,7 @@ namespace RagnaController.Core
             // FIX: Set Anchor when entering menu mode for absolute grid hopping
             if (IsMenuMode)
             {
-                if (NativeMethods.GetCursorPos(out NativeMethods.POINT pt))
+                if (GetCursorPos(out POINT pt))
                 {
                     _anchorX = pt.X;
                     _anchorY = pt.Y;

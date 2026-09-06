@@ -1,0 +1,116 @@
+<Window x:Class="RagnaController.ControllerTest.ControllerTestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RagnaController.ControllerTest"
+        mc:Ignorable="d"
+        Title="Controller Test" Height="450" Width="350"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        Topmost="True" ShowInTaskbar="False">
+    <Border Background="#CC080A0F" BorderBrush="#44E5B842" BorderThickness="1" CornerRadius="6"
+            Padding="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header: Profile Name -->
+            <TextBlock Grid.Row="0" Text="Controller Test" FontFamily="Consolas" FontSize="14"
+                       FontWeight="Bold" Foreground="#E5B842" Margin="0,0,0,8"/>
+
+            <!-- Thumbstick Visuals -->
+            <Grid Grid.Row="1" Margin="0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Thumbstick -->
+                <Border Grid.Column="0" Margin="0,0,12" Padding="5">
+                    <Border.Background>
+                        <SolidColorBrush Color="#22E5B842"/>
+                    </Border.Background>
+                    <Border.Clip>
+                        <EllipseGeometry Center="30,30" RadiusX="30" RadiusY="30"/>
+                    </Border.Clip>
+                    <Canvas Height="60" Width="60" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Ellipse x:Name="LeftStickCircle" Fill="#44FFFFFF" Width="30" Height="30"
+                                 Canvas.Left="-15" Canvas.Top="-15" Cursor="SizeAll"/>
+                        <Canvas.RenderTransform>
+                            <TranslateTransform x:Name="LeftStickPos"/>
+                        </Canvas.RenderTransform>
+                    </Canvas>
+                </Border>
+                <TextBlock Grid.Column="0" Text="L Thumbstick" FontFamily="Consolas" FontSize="10"
+                           Foreground="#88E5B842" VerticalAlignment="Bottom" Margin="0,0,0,4"/>
+
+                <!-- Right Thumbstick -->
+                <Border Grid.Column="2" Margin="12,0,0" Padding="5">
+                    <Border.Background>
+                        <SolidColorBrush Color="#22E5B842"/>
+                    </Border.Background>
+                    <Border.Clip>
+                        <EllipseGeometry Center="30,30" RadiusX="30" RadiusY="30"/>
+                    </Border.Clip>
+                    <Canvas Height="60" Width="60" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Ellipse x:Name="RightStickCircle" Fill="#44FFFFFF" Width="30" Height="30"
+                                 Canvas.Left="-15" Canvas.Top="-15" Cursor="SizeAll"/>
+                        <Canvas.RenderTransform>
+                            <TranslateTransform x:Name="RightStickPos"/>
+                        </Canvas.RenderTransform>
+                    </Canvas>
+                </Border>
+                <TextBlock Grid.Column="2" Text="R Thumbstick" FontFamily="Consolas" FontSize="10"
+                           Foreground="#88E5B842" VerticalAlignment="Bottom" Margin="0,0,0,4"/>
+            </Grid>
+
+            <!-- Button States -->
+            <UniformGrid Grid.Row="2" Rows="3" Columns="3" Margin="0,8">
+                <StackPanel>
+                    <TextBlock Text="A" FontFamily="Consolas" FontSize="12" Foreground="#E5B842" HorizontalAlignment="Center"/>
+                    <CheckBox x:Name="BtnAPressed" IsChecked="False" Width="30" Height="30" Margin="2"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="B" FontFamily="Consolas" FontSize="12" Foreground="#E5B842" HorizontalAlignment="Center"/>
+                    <CheckBox x:Name="BtnBPressed" IsChecked="False" Width="30" Height="30" Margin="2"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="X" FontFamily="Consolas" FontSize="12" Foreground="#E5B842" HorizontalAlignment="Center"/>
+                    <CheckBox x:Name="BtnXPressed" IsChecked="False" Width="30" Height="30" Margin="2"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Y" FontFamily="Consolas" FontSize="12" Foreground="#E5B842" HorizontalAlignment="Center"/>
+                    <CheckBox x:Name="BtnYPressed" IsChecked="False" Width="30" Height="30" Margin="2"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="L1" FontFamily="Consolas" FontSize="12" Foreground="#E5B842" HorizontalAlignment="Center"/>
+                    <CheckBox x:Name="BtnL1" IsChecked="False" Width="30" Height="30" Margin="2"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="R1" FontFamily="Consolas" FontSize="12" Foreground="#E5B842" HorizontalAlignment="Center"/>
+                    <CheckBox x:Name="BtnR1" IsChecked="False" Width="30" Height="30" Margin="2"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Start" FontFamily="Consolas" FontSize="12" Foreground="#E5B842" HorizontalAlignment="Center"/>
+                    <CheckBox x:Name="BtnStart" IsChecked="False" Width="30" Height="30" Margin="2"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="Back" FontFamily="Consolas" FontSize="12" Foreground="#E5B842" HorizontalAlignment="Center"/>
+                    <CheckBox x:Name="BtnBack" IsChecked="False" Width="30" Height="30" Margin="2"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="L3" FontFamily="Consolas" FontSize="12" Foreground="#E5B842" HorizontalAlignment="Center"/>
+                    <CheckBox x:Name="BtnL3" IsChecked="False" Width="30" Height="30" Margin="2"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBlock Text="R3" FontFamily="Consolas" FontSize="12" Foreground="#E5B842" HorizontalAlignment="Center"/>
+                    <CheckBox x:Name="BtnR3" IsChecked="False" Width="30" Height="30" Margin="2"/>
+                </StackPanel>
+            </UniformGrid>
+        </Grid>
+    </Border>
+</Window>

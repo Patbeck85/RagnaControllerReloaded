@@ -155,7 +155,7 @@ namespace RagnaController
                     // Toast-Feedback (kein blockierendes MessageBox)
                     // CS4014: Dispatcher.BeginInvoke ist synchron, kein Task - Warning ist falsch positiv
 #pragma warning disable CS4014
-                    Dispatcher.BeginInvoke(() => { if (StatusText != null) { StatusText.Text = $"✓ {profile.Name} downloaded"; StatusText.Foreground = System.Windows.Media.Brushes.Lime; } });
+                    Dispatcher.BeginInvoke(() => { if (StatusText != null) { StatusText.Text = $"✓ {profile.Name} downloaded"; StatusText.Foreground = (Brush)FindResource("Live"); } });
 #pragma warning restore CS4014
                 }
                 else

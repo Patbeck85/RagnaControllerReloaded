@@ -65,7 +65,7 @@ namespace RagnaController.Core
             if (action.Key == VirtualKey.None) return;
 
             // Save current cursor position (using Win32 API natively)
-            if (NativeMethods.GetCursorPos(out NativeMethods.POINT savedPos))
+            if (GetCursorPos(out POINT savedPos))
             {
                 // FIX: Safe access to tracker properties with null protection
                 int centerX = _tracker?.CenterX ?? 0;

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>RagnaController.Benchmarks.InputEmulationBenchmarks-20260905-010245</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26200.9168)
+AMD Ryzen 7 8745HS w/ Radeon 780M Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 10.0.301
+  [Host]     : .NET 8.0.26 (8.0.2626.16921), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+  Job-FSVFRZ : .NET 8.0.26 (8.0.2626.16921), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+</code></pre>
+<pre><code>Server=True  IterationCount=10  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                                </th><th>Mean  </th><th>Error</th><th>StdDev</th><th>Median</th><th>Ratio</th><th>RatioSD</th><th>Gen0</th><th>Code Size</th><th>Gen1</th><th>Allocated</th><th>Alloc Ratio</th>
+</tr>
+</thead><tbody><tr><td>&#39;Single keystroke emulation (KeyDown+KeyUp)&#39;</td><td>294.794 ns</td><td>266.842 ns</td><td>176.500 ns</td><td>234.02 ns</td><td>1.31</td><td>1.01</td><td>0.0002</td><td>4,566 B</td><td>-</td><td>145 B</td><td>1.00</td>
+</tr><tr><td>&#39;Key chord (Ctrl+Shift+A)&#39;</td><td>651.380 ns</td><td>335.461 ns</td><td>221.887 ns</td><td>541.55 ns</td><td>2.89</td><td>1.66</td><td>0.0010</td><td>4,779 B</td><td>-</td><td>448 B</td><td>3.09</td>
+</tr><tr><td>&#39;Mouse move + click (absolute coordinates)&#39;</td><td>364.594 ns</td><td>240.348 ns</td><td>125.707 ns</td><td>355.19 ns</td><td>1.62</td><td>0.93</td><td>0.0002</td><td>NA</td><td>0.0001</td><td>112 B</td><td>0.77</td>
+</tr><tr><td>&#39;10 rapid keystrokes (macro simulation)&#39;</td><td>2,213.545 ns</td><td>468.857 ns</td><td>310.120 ns</td><td>2,216.86 ns</td><td>9.82</td><td>4.66</td><td>-</td><td>NA</td><td>-</td><td>11535 B</td><td>79.55</td>
+</tr><tr><td>&#39;Unicode text input (chat message)&#39;</td><td>9.379 ns</td><td>3.272 ns</td><td>2.164 ns</td><td>10.09 ns</td><td>0.04</td><td>0.02</td><td>-</td><td>NA</td><td>-</td><td>-</td><td>0.00</td>
+</tr></tbody></table>
+</body>
+</html>

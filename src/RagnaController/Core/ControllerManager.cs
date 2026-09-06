@@ -10,9 +10,9 @@ namespace RagnaController.Core
     /// </summary>
     public class ControllerManager : IControllerProvider
     {
-        private readonly ControllerService _sdlProvider;
-        private readonly XInputFallbackService _xInputProvider;
-        private IControllerProvider _activeProvider;
+        private readonly ControllerService? _sdlProvider;
+                private readonly XInputFallbackService _xInputProvider;
+                private IControllerProvider _activeProvider;
         private readonly object _lock = new();
 
         // State tracking
@@ -24,17 +24,29 @@ namespace RagnaController.Core
         private string _batteryLevel = "Unknown";
 
         public ControllerManager()
-        {
-            // Initialize with SDL2 provider first
-            _sdlProvider = new ControllerService();
-            _xInputProvider = new XInputFallbackService();
+                {
+                    // Check for headless environment - skip SDL2 entirely
+                    if (ControllerService.IsHeadlessEnvironment)
+                    {
+                        System.Diagnostics.Debug.WriteLine(
+                            "[ControllerManager] Headless environment detected — using XInput only");
+                        _sdlProvider = null;
+                        _xInputProvider = new XInputFallbackService();
+                        _activeProvider = _xInputProvider;
+                        return;
+                    }
 
-            // Set active provider to SDL2 initially
-            _activeProvider = _sdlProvider;
+                    // Initialize with SDL2 provider first
+                    _sdlProvider = new ControllerService();
+                    _xInputProvider = new XInputFallbackService();
 
-            // Subscribe to SDL provider changes
-            _sdlProvider.ControllerDetected += OnSdlControllerDetected;
-        }
+                    // Set active provider to SDL2 initially
+                    _activeProvider = _sdlProvider;
+
+                    // Subscribe to SDL provider changes
+                    _sdlProvider.ControllerDetected += OnSdlControllerDetected;
+                    _sdlProvider.ControllerDisconnected += OnSdlControllerDisconnected;
+                }
 
         // ── IControllerProvider Implementation ──────────────────────
 
@@ -132,29 +144,46 @@ namespace RagnaController.Core
         }
 
         public void Dispose()
-        {
-            lock (_lock)
-            {
-                _sdlProvider.ControllerDetected -= OnSdlControllerDetected;
-                _sdlProvider?.Dispose();
-                _xInputProvider?.Dispose();
-            }
-        }
+                {
+                    lock (_lock)
+                    {
+                        if (_sdlProvider != null)
+                        {
+                            _sdlProvider.ControllerDetected -= OnSdlControllerDetected;
+                            _sdlProvider.ControllerDisconnected -= OnSdlControllerDisconnected;
+                            _sdlProvider?.Dispose();
+                        }
+                        _xInputProvider?.Dispose();
+                    }
+                }
 
         // ── Private Helpers ─────────────────────────────────────────
 
         private void OnSdlControllerDetected(object? sender, EventArgs e)
-        {
-            // SDL2 found a controller - update state from SDL provider
-            UpdateFromProvider(_sdlProvider);
+                {
+                    if (_sdlProvider == null) return;
+                    // SDL2 found a controller - update state from SDL provider
+                    UpdateFromProvider(_sdlProvider);
 
-            // Switch active provider to SDL2 if not already
-            if (_activeProvider != _sdlProvider)
-            {
-                _activeProvider = _sdlProvider;
-                ProviderChanged?.Invoke(this, EventArgs.Empty);
-            }
-        }
+                    // Switch active provider to SDL2 if not already
+                    if (_activeProvider != _sdlProvider)
+                    {
+                        _activeProvider = _sdlProvider;
+                        ProviderChanged?.Invoke(this, EventArgs.Empty);
+                    }
+                }
+
+                private void OnSdlControllerDisconnected(object? sender, EventArgs e)
+                {
+                    if (_sdlProvider == null) return;
+                    // SDL2 lost a controller - update state and fire disconnect
+                    UpdateFromProvider(_sdlProvider);
+
+                    if (!IsConnected)
+                    {
+                        ControllerDisconnected?.Invoke(this, EventArgs.Empty);
+                    }
+                }
 
         private void TryXInputFallback()
         {

@@ -72,6 +72,15 @@ namespace RagnaController
             _sectorPaths.Clear();
             _sectorBtns.Clear();
 
+            // Get design system brushes
+            var sectorFillBrush = (SolidColorBrush)FindResource("AccentPurple");
+            var sectorFillColor = sectorFillBrush.Color;
+            var sectorFillArgb = Color.FromArgb(40, sectorFillColor.R, sectorFillColor.G, sectorFillColor.B);
+            var sectorStrokeBrush = (SolidColorBrush)FindResource("BgBorder");
+            var goldBrush = (SolidColorBrush)FindResource("Gold");
+            var whiteBrush = (SolidColorBrush)FindResource("TextPrimary");
+            var cornerRadiusFull = (CornerRadius)FindResource("RadiusFull");
+
             for (int s = 0; s < 8; s++)
             {
                 // Korrektur: Winkel so setzen, dass Sektor 0 exakt OBEN ist
@@ -81,8 +90,8 @@ namespace RagnaController
                 double midAngle = (startAngle + endAngle) / 2.0;
 
                 var path = MakeSectorPath(startAngle, endAngle, InnerR, OuterR);
-                path.Fill = new SolidColorBrush(Color.FromArgb(40, 212, 168, 50));
-                path.Stroke = new SolidColorBrush(Color.FromRgb(33, 38, 45));
+                path.Fill = new SolidColorBrush(sectorFillArgb);
+                path.Stroke = sectorStrokeBrush;
                 path.StrokeThickness = 1.5;
                 WheelCanvas.Children.Add(path);
                 _sectorPaths.Add(path);
@@ -96,15 +105,27 @@ namespace RagnaController
                     double dotX = CenterX + Math.Cos(dotRad) * dotRadius - 14;
                     double dotY = CenterY + Math.Sin(dotRad) * dotRadius - 14;
 
-                    var dot = new Border {
-                        Width = 28, Height = 28, CornerRadius = new CornerRadius(14),
-                        Background = new SolidColorBrush(Color.FromArgb(40, BtnColors[b].R, BtnColors[b].G, BtnColors[b].B)),
-                        BorderBrush = new SolidColorBrush(Color.FromArgb(100, BtnColors[b].R, BtnColors[b].G, BtnColors[b].B)),
+                    var btnColor = BtnColors[b];
+                    var btnColorArgb40 = Color.FromArgb(40, btnColor.R, btnColor.G, btnColor.B);
+                    var btnColorArgb100 = Color.FromArgb(100, btnColor.R, btnColor.G, btnColor.B);
+                    var btnColorArgb180 = Color.FromArgb(180, btnColor.R, btnColor.G, btnColor.B);
+
+                    var dot = new Border
+                    {
+                        Width = 28,
+                        Height = 28,
+                        CornerRadius = cornerRadiusFull,
+                        Background = new SolidColorBrush(btnColorArgb40),
+                        BorderBrush = new SolidColorBrush(btnColorArgb100),
                         BorderThickness = new Thickness(1.5),
-                        Child = new TextBlock {
-                            Text = Sectors[s, b], Foreground = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255)),
-                            FontSize = 11, FontWeight = FontWeights.Bold,
-                            HorizontalAlignment = HorizontalAlignment.Center, VerticalAlignment = VerticalAlignment.Center
+                        Child = new TextBlock
+                        {
+                            Text = Sectors[s, b],
+                            Foreground = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255)),
+                            FontSize = 11,
+                            FontWeight = FontWeights.Bold,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            VerticalAlignment = VerticalAlignment.Center
                         }
                     };
                     Canvas.SetLeft(dot, dotX);
@@ -173,26 +194,41 @@ namespace RagnaController
             // Performance: EINEN Invoke für die gesamte UI-Änderung
             Dispatcher.BeginInvoke(() =>
             {
+                var goldBrush = (SolidColorBrush)FindResource("Gold");
+                var goldColor = goldBrush.Color;
+                var goldArgb140 = Color.FromArgb(140, goldColor.R, goldColor.G, goldColor.B);
+                var goldArgb40 = Color.FromArgb(40, goldColor.R, goldColor.G, goldColor.B);
+                var whiteBrush = (SolidColorBrush)FindResource("TextPrimary");
+                var sectorStrokeBrush = (SolidColorBrush)FindResource("BgBorder");
+                var sectorFillBrush = (SolidColorBrush)FindResource("AccentPurple");
+                var sectorFillColor = sectorFillBrush.Color;
+                var sectorFillArgb = Color.FromArgb(40, sectorFillColor.R, sectorFillColor.G, sectorFillColor.B);
+
                 for (int s = 0; s < 8; s++)
                 {
                     bool isSelected = (s == active);
-                    _sectorPaths[s].Fill = new SolidColorBrush(isSelected ? Color.FromArgb(140, 229, 184, 66) : Color.FromArgb(40, 212, 168, 50));
-                    _sectorPaths[s].Stroke = isSelected ? Brushes.White : new SolidColorBrush(Color.FromRgb(33, 38, 45));
+                    _sectorPaths[s].Fill = new SolidColorBrush(isSelected ? goldArgb140 : sectorFillArgb);
+                    _sectorPaths[s].Stroke = isSelected ? whiteBrush : sectorStrokeBrush;
 
                     for (int b = 0; b < 4; b++)
                     {
                         var dot = _sectorBtns[s][b];
                         var txt = (TextBlock)dot.Child;
+                        var btnColor = BtnColors[b];
+                        var btnColorArgb40 = Color.FromArgb(40, btnColor.R, btnColor.G, btnColor.B);
+                        var btnColorArgb100 = Color.FromArgb(100, btnColor.R, btnColor.G, btnColor.B);
+                        var btnColorArgb180 = Color.FromArgb(180, btnColor.R, btnColor.G, btnColor.B);
+
                         if (isSelected)
                         {
-                            dot.Background = new SolidColorBrush(Color.FromArgb(180, BtnColors[b].R, BtnColors[b].G, BtnColors[b].B));
-                            dot.BorderBrush = Brushes.White;
-                            txt.Foreground = Brushes.White;
+                            dot.Background = new SolidColorBrush(btnColorArgb180);
+                            dot.BorderBrush = whiteBrush;
+                            txt.Foreground = whiteBrush;
                         }
                         else
                         {
-                            dot.Background = new SolidColorBrush(Color.FromArgb(40, BtnColors[b].R, BtnColors[b].G, BtnColors[b].B));
-                            dot.BorderBrush = new SolidColorBrush(Color.FromArgb(100, BtnColors[b].R, BtnColors[b].G, BtnColors[b].B));
+                            dot.Background = new SolidColorBrush(btnColorArgb40);
+                            dot.BorderBrush = new SolidColorBrush(btnColorArgb100);
                             txt.Foreground = new SolidColorBrush(Color.FromArgb(120, 255, 255, 255));
                         }
                     }

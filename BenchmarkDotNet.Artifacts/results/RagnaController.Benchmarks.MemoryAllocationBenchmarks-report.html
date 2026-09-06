@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset='utf-8' />
+<title>RagnaController.Benchmarks.MemoryAllocationBenchmarks-20260905-015046</title>
+
+<style type="text/css">
+	table { border-collapse: collapse; display: block; width: 100%; overflow: auto; }
+	td, th { padding: 6px 13px; border: 1px solid #ddd; text-align: right; }
+	tr { background-color: #fff; border-top: 1px solid #ccc; }
+	tr:nth-child(even) { background: #f8f8f8; }
+</style>
+</head>
+<body>
+<pre><code>
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26200.9168)
+AMD Ryzen 7 8745HS w/ Radeon 780M Graphics, 1 CPU, 16 logical and 8 physical cores
+.NET SDK 10.0.301
+  [Host]     : .NET 8.0.26 (8.0.2626.16921), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+  Job-FSVFRZ : .NET 8.0.26 (8.0.2626.16921), X64 RyuJIT AVX-512F+CD+BW+DQ+VL+VBMI
+</code></pre>
+<pre><code>Server=True  IterationCount=10  LaunchCount=1  
+WarmupCount=3  
+</code></pre>
+
+<table>
+<thead><tr><th>Method                                     </th><th>Mean  </th><th>Error </th><th>StdDev</th><th>Ratio</th><th>RatioSD</th><th>Gen0</th><th>Gen1</th><th>Allocated</th><th>Alloc Ratio</th>
+</tr>
+</thead><tbody><tr><td>&#39;Struct allocation (no pooling)&#39;</td><td>165.59 ns</td><td>10.076 ns</td><td>5.270 ns</td><td>1.00</td><td>0.04</td><td>0.0021</td><td>-</td><td>376 B</td><td>1.00</td>
+</tr><tr><td>&#39;Object pool rent/return&#39;</td><td>50.97 ns</td><td>3.184 ns</td><td>2.106 ns</td><td>0.31</td><td>0.02</td><td>-</td><td>-</td><td>-</td><td>0.00</td>
+</tr><tr><td>&#39;List allocation + clear (100 items)&#39;</td><td>15,596.69 ns</td><td>1,154.466 ns</td><td>763.608 ns</td><td>94.28</td><td>5.32</td><td>0.2289</td><td>-</td><td>38456 B</td><td>102.28</td>
+</tr><tr><td>&#39;Array pool rent/return (100 ControllerSnapshot)&#39;</td><td>17,966.64 ns</td><td>1,451.867 ns</td><td>863.982 ns</td><td>108.60</td><td>6.03</td><td>0.2289</td><td>0.0153</td><td>37600 B</td><td>100.00</td>
+</tr></tbody></table>
+</body>
+</html>

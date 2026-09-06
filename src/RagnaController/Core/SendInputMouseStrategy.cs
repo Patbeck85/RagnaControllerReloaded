@@ -1,6 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using RagnaController.Models;
+using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Core
 {
@@ -10,7 +11,7 @@ namespace RagnaController.Core
     public sealed class SendInputMouseStrategy : IMouseEmulationStrategy
     {
         // Die Größe der INPUT-Struktur für die Win32 API
-        private static readonly int InputSize = Marshal.SizeOf<NativeMethods.INPUT>();
+        private static readonly int InputSize = Marshal.SizeOf<INPUT>();
         
         // Konstante für MOUSEEVENTF_MOVE_NOCOALESCE (0x2000)
         // Prevents Windows from coalescing multiple small mouse movements.
@@ -27,14 +28,14 @@ namespace RagnaController.Core
         {
             if (dx == 0 && dy == 0) return;
 
-            NativeMethods.INPUT input = new NativeMethods.INPUT();
-            input.type = NativeMethods.INPUT_MOUSE;
+            INPUT input = new INPUT();
+            input.type = INPUT_MOUSE;
             input.Data.mi.dx = dx;
             input.Data.mi.dy = dy;
-            input.Data.mi.dwFlags = NativeMethods.MOUSEEVENTF_MOVE | MOUSEEVENTF_MOVE_NOCOALESCE;
+            input.Data.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_MOVE_NOCOALESCE;
             
             // Behebt CS1503: Wir übergeben ein Array mit einem Element
-            NativeMethods.SendInput(1, new NativeMethods.INPUT[] { input }, InputSize);
+            SendInput(1, new INPUT[] { input }, InputSize);
         }
 
         /// <summary>
@@ -42,25 +43,25 @@ namespace RagnaController.Core
         /// </summary>
         public void MoveAbsolute(int x, int y)
         {
-            NativeMethods.SetCursorPos(x, y);
+            SetCursorPos(x, y);
         }
 
-        public void LeftDown()  => SendMouse(NativeMethods.MOUSEEVENTF_LEFTDOWN);
-        public void LeftUp()    => SendMouse(NativeMethods.MOUSEEVENTF_LEFTUP);
-        public void RightDown() => SendMouse(NativeMethods.MOUSEEVENTF_RIGHTDOWN);
-        public void RightUp()   => SendMouse(NativeMethods.MOUSEEVENTF_RIGHTUP);
+        public void LeftDown()  => SendMouse(MOUSEEVENTF_LEFTDOWN);
+        public void LeftUp()    => SendMouse(MOUSEEVENTF_LEFTUP);
+        public void RightDown() => SendMouse(MOUSEEVENTF_RIGHTDOWN);
+        public void RightUp()   => SendMouse(MOUSEEVENTF_RIGHTUP);
 
         /// <summary>
         /// Hilfsmethode zum Senden von Maustasten-Events.
         /// </summary>
         private void SendMouse(uint flags)
         {
-            NativeMethods.INPUT input = new NativeMethods.INPUT();
-            input.type = NativeMethods.INPUT_MOUSE;
+            INPUT input = new INPUT();
+            input.type = INPUT_MOUSE;
             input.Data.mi.dwFlags = flags;
             
             // Behebt CS1503
-            NativeMethods.SendInput(1, new NativeMethods.INPUT[] { input }, InputSize);
+            SendInput(1, new INPUT[] { input }, InputSize);
         }
     }
 

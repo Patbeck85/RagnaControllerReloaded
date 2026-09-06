@@ -3,7 +3,7 @@ using System.Diagnostics;
 using RagnaController.Models;
 using RagnaController.Controller;
 using RagnaController.Profiles;
-using RagnaController.Core; // FEAT-006: GroundSpellEngine
+using RagnaController.Core; // FEAT-006: GroundSpellEngine, PERF-005: InputLatencyTracker
 
 namespace RagnaController.Core
 {
@@ -50,16 +50,23 @@ namespace RagnaController.Core
                                 private readonly DefaultRotationProvider _rotationProvider;
 
                                 // FEAT-008: Buff/Debuff Tracking
-                                private readonly BuffManager _buffManager;
-                       
-                                // ProfileManager for auto-switching profiles based on controller
-                                private readonly ProfileManager _profileManager;
+                                                                private readonly BuffManager _buffManager;
+
+                                                                // PERF-004: Memory Allocation Tracking
+                                                                                                                                private readonly MemoryAllocationTracker _memoryTracker;
+                                                                                                                                                // PERF-005: Input Latency Tracking
+                                                                                                                                                private readonly InputLatencyTracker _latencyTracker;
+                     
+                                                                                                                                                                // ProfileManager for auto-switching profiles based on controller
+                                                                                                                                                                private readonly ProfileManager _profileManager;
 
         // ── Runtime ──
-        private volatile bool _isRunning;
-        public bool IsRunning { get => _isRunning; private set => _isRunning = value; }
-        private volatile bool _isPaused;
-        public bool IsPaused { get => _isPaused; private set => _isPaused = value; }
+                private volatile bool _isRunning;
+                public bool IsRunning { get => _isRunning; private set => _isRunning = value; }
+                private volatile bool _isPaused;
+                public bool IsPaused { get => _isPaused; private set => _isPaused = value; }
+
+                private readonly ControllerManager _controllerManager;
 
         public string ControllerName => _ctrl?.ControllerName ?? "Kein Controller";
         public string ControllerType => _ctrl?.ControllerType ?? "XBOX";
@@ -97,7 +104,32 @@ namespace RagnaController.Core
                     this.LogMessage += msg => _logger?.Info(msg);
 
                     _ctrl = new ControllerService();
-                    _profileManager = new ProfileManager();
+                                        // Subscribe to controller events for immediate UI sync
+                                        _ctrl.ControllerDetected += (_, __) =>
+                                        {
+                                            ControllerConnected?.Invoke(ControllerName);
+                                            _messenger.Publish(new EngineStatusMessage(EngineStatus.Running, ControllerName));
+                                        };
+                                        _ctrl.ControllerDisconnected += (_, __) =>
+                                        {
+                                            ControllerDisconnected?.Invoke();
+                                            _messenger.Publish(new EngineStatusMessage(EngineStatus.NoController, "Kein Controller"));
+                                        };
+                    
+                                        // Create unified ControllerManager (SDL2 + XInput fallback)
+                                        _controllerManager = new ControllerManager();
+                                        _controllerManager.ControllerConnected += (_, __) =>
+                                        {
+                                            ControllerConnected?.Invoke(_controllerManager.ControllerName);
+                                            _messenger.Publish(new EngineStatusMessage(EngineStatus.Running, _controllerManager.ControllerName));
+                                        };
+                                        _controllerManager.ControllerDisconnected += (_, __) =>
+                                        {
+                                            ControllerDisconnected?.Invoke();
+                                            _messenger.Publish(new EngineStatusMessage(EngineStatus.NoController, "Kein Controller"));
+                                        };
+                    
+                                        _profileManager = new ProfileManager();
                     _profileManager.Logger += msg => _logger?.Info(msg);
             
                     // Register default controller-to-profile mapping
@@ -115,7 +147,11 @@ namespace RagnaController.Core
                     _winTracker = new WindowTracker();
                     _inputReader = new InputReader(_ctrl);
 
-            var engineQueue = _queue ?? new InputCommandQueue();
+                                // PERF-005: Initialize Input Latency Tracker for end-to-end latency measurement
+                                _latencyTracker = InputLatencyRegistry.GetOrCreate("EngineOrchestrator");
+                                _logger?.Info("[EngineOrchestrator] InputLatencyTracker initialized — Target P99: 5ms");
+
+                                var engineQueue = _queue ?? new InputCommandQueue(_latencyTracker, _ctrl.ControllerGuid ?? "Default");
             _movement = new MovementEngine(engineQueue, _winTracker);
             _combat = new CombatEngine(_winTracker, engineQueue);
             _autoTarget = new AutoTargetEngine(engineQueue);
@@ -213,8 +249,11 @@ namespace RagnaController.Core
                                     _groundSpell = new GroundSpellEngine(engineQueue);
 
                                     // FEAT-008: Initialize Buff Manager
-                                    _buffManager = new BuffManager(engineQueue, _cooldownManager);
-                    }
+                                                                        _buffManager = new BuffManager(engineQueue, _cooldownManager);
+
+                                                                        // PERF-004: Initialize Memory Allocation Tracker
+                                                                        _memoryTracker = new MemoryAllocationTracker("EngineOrchestrator", _logger);
+                                                        }
 
         // These will be set via ProfileApplier
         private bool _soundEnabled = true;
@@ -228,25 +267,26 @@ namespace RagnaController.Core
         private readonly ProfileApplier _profileApplier;
 
         // Expose engines for ProfileApplier
-        public MovementEngine Movement => _movement;
-        public CombatEngine Combat => _combat;
-        public AutoTargetEngine AutoTarget => _autoTarget;
-        public MageEngine Mage => _mage;
-        public ComboEngine Combo => _combo;
-        public CursorEngine Cursor => _cursor;
-        public SmartCursorService SmartCursor => _smartCursor;
-        public KiteEngine Kite => _kite;
-        public SupportEngine Support => _support;
-        public IFeedbackProvider Feedback => _feedback;
-        public OverlayRouter OverlayRouter => _overlayRouter;
-        public MobSweepEngine MobSweep => _mobSweep;
-        public HandheldModeManager Handheld => _handheld;
-        public CooldownManager CooldownManager => _cooldownManager;
-        public DualSenseHardwareService DualSense => _dualSense;
-        public SystemMonitor SysMonitor => _sysMonitor;
-        public SnapshotBuilder Snapshot => _snapshot;
-        public ControllerService Controller => _ctrl;
-        public WindowTracker WinTracker => _winTracker;
+                public MovementEngine Movement => _movement;
+                public CombatEngine Combat => _combat;
+                public AutoTargetEngine AutoTarget => _autoTarget;
+                public MageEngine Mage => _mage;
+                public ComboEngine Combo => _combo;
+                public CursorEngine Cursor => _cursor;
+                public SmartCursorService SmartCursor => _smartCursor;
+                public KiteEngine Kite => _kite;
+                public SupportEngine Support => _support;
+                public IFeedbackProvider Feedback => _feedback;
+                public OverlayRouter OverlayRouter => _overlayRouter;
+                public MobSweepEngine MobSweep => _mobSweep;
+                public HandheldModeManager Handheld => _handheld;
+                public CooldownManager CooldownManager => _cooldownManager;
+                public DualSenseHardwareService DualSense => _dualSense;
+                public SystemMonitor SysMonitor => _sysMonitor;
+                public SnapshotBuilder Snapshot => _snapshot;
+                public ControllerService Controller => _ctrl;
+                public WindowTracker WinTracker => _winTracker;
+                public ControllerManager ControllerManager => _controllerManager;
 
         // Expose runtime flags for ProfileApplier
         public bool SoundEnabled { get => _soundEnabled; set => _soundEnabled = value; }
@@ -270,7 +310,13 @@ namespace RagnaController.Core
                                                 public DefaultRotationProvider RotationProvider => _rotationProvider;
 
                                                 // FEAT-008: Buff Manager
-                                                public BuffManager BuffManager => _buffManager;
+                                                                                                public BuffManager BuffManager => _buffManager;
+
+                                                                                                // PERF-005: Input Latency Tracker
+                                                                                                                                                                                                                                public InputLatencyTracker LatencyTracker => _latencyTracker;
+
+                                                                                                                                                                                                                                // PERF-004: Memory Allocation Tracker
+                                                                                                                                                                                                                                public MemoryAllocationTracker MemoryTracker => _memoryTracker;
 
                                 // Public method for external log subscription - takes a message and invokes the event
         public void SubscribeToLog(string message) => LogMessage?.Invoke(message);
@@ -340,19 +386,22 @@ namespace RagnaController.Core
 
                                                                 // FEAT-007: Update skill orchestrator (class-specific rotations)
                                                                                                                                 _skillOrchestrator?.Update(input, _actualDeltaMs, 
-                                                                                                                                    _autoTarget?.CurrentTarget != null,
-                                                                                                                                    _autoTarget?.CurrentTargetDistance ?? 0f,
-                                                                                                                                    _combat.CurrentSP,
-                                                                                                                                    _combat.CurrentHPPercent,
-                                                                                                                                    _movement.IsMoving,
-                                                                                                                                    _autoTarget?.IsFacingTarget ?? false,
-                                                                                                                                    _support?.ActiveBuffs ?? new(),
-                                                                                                                                    _support?.ActiveDebuffs ?? new(),
-                                                                                                                                    _autoTarget?.NearbyEnemyCount ?? 0,
-                                                                                                                                    _groundSpell?.GetActiveSpellNames() ?? new());
+                                                                                                                                                                                                    _autoTarget?.CurrentTarget != null,
+                                                                                                                                                                                                    _autoTarget?.CurrentTargetDistance ?? 0f,
+                                                                                                                                                                                                    _combat.CurrentSP,
+                                                                                                                                                                                                    _combat.CurrentHPPercent,
+                                                                                                                                                                                                    _movement.IsMoving,
+                                                                                                                                                                                                    _autoTarget?.IsFacingTarget ?? false,
+                                                                                                                                                                                                    _support?.ActiveBuffs ?? new(),
+                                                                                                                                                                                                    _support?.ActiveDebuffs ?? new(),
+                                                                                                                                                                                                    _autoTarget?.NearbyEnemyCount ?? 0,
+                                                                                                                                                                                                    _groundSpell?.GetActiveSpellNames() ?? new());
 
-                                                                                                                                // FEAT-008: Update buff/debuff tracking
-                                                                                                                                _buffManager?.Update(_actualDeltaMs);
+                                                                                                                                                                                                // FEAT-008: Update buff/debuff tracking
+                                                                                                                                                                                                _buffManager?.Update(_actualDeltaMs);
+
+                                                                                                                                                                                                // PERF-004: Record memory allocation stats
+                                                                                                                                                                                                _memoryTracker?.RecordTick();
 
                                 // UI Update
                 if (++_uiTick < UI_INTERVAL) return;
@@ -429,11 +478,12 @@ namespace RagnaController.Core
         }
 
         public void Start()
-        {
-            _tickProvider.Start();
-            IsRunning = true;
-            StatusChanged?.Invoke(EngineStatus.Running);
-        }
+                {
+                    _tickProvider.Start();
+                    IsRunning = true;
+                    StatusChanged?.Invoke(EngineStatus.Running);
+                    _queue?.Start(); // Ensure InputCommandQueue consumer is running
+                }
 
         public void Stop()
         {
@@ -456,15 +506,18 @@ namespace RagnaController.Core
         }
 
         public void Shutdown()
-        {
-            Stop();
-            _feedback.StopRumble();
-            _ctrl.Dispose();
-            _handheld.Dispose();
-            _voice.Dispose();
-            _logger?.Info("=== Engine Shutdown ===");
-            _logger?.Dispose();
-        }
+                                {
+                                    Stop();
+                                    _feedback.StopRumble();
+                                    _ctrl.Dispose();
+                                    _controllerManager?.Dispose();
+                                    _handheld.Dispose();
+                                    _voice.Dispose();
+                                    _memoryTracker?.Dispose();
+                                    _latencyTracker?.Dispose();
+                                    _logger?.Info("=== Engine Shutdown ===");
+                                    _logger?.Dispose();
+                                }
 
         public void Dispose()
         {

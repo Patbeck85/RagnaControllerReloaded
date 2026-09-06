@@ -48,8 +48,8 @@ namespace RagnaController
             BtnBack.IsEnabled = _step > 1;
             BtnNext.Content = _step == 4 ? "CREATE" : "NEXT →";
 
-            Brush gold = (Brush)FindResource("GoldBrush");
-            Brush dim = (Brush)FindResource("BorderBrush");
+            Brush gold = (Brush)FindResource("Gold");
+            Brush dim = (Brush)FindResource("BgBorder");
 
             if (Step1Dot != null) Step1Dot.Fill = _step >= 1 ? gold : dim;
             if (Step2Dot != null) Step2Dot.Fill = _step >= 2 ? gold : dim;

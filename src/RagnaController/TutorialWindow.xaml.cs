@@ -27,12 +27,14 @@ namespace RagnaController
         private void DrawDots()
         {
             DotPanel.Children.Clear();
+            var gold = (Brush)FindResource("Gold");
+            var bgBorder = (Brush)FindResource("BgBorder");
             for (int i = 0; i < TOTAL_SLIDES; i++)
             {
                 var dot = new Ellipse
                 {
                     Width = 8, Height = 8, Margin = new Thickness(0, 0, 8, 0),
-                    Fill = i == _currentSlide ? new SolidColorBrush(Color.FromRgb(229, 184, 66)) : new SolidColorBrush(Color.FromRgb(42, 50, 69))
+                    Fill = i == _currentSlide ? gold : bgBorder
                 };
                 DotPanel.Children.Add(dot);
             }
@@ -41,8 +43,8 @@ namespace RagnaController
         private void UpdateSlide()
         {
             // Bind texts dynamically using LocalizationManager
-            TxtTitle.Text = LocalizationManager.Instance[_titles[_currentSlide]];
-            TxtDesc.Text = LocalizationManager.Instance[_descs[_currentSlide]];
+            if (TxtTitle != null) TxtTitle.Text = LocalizationManager.Instance[_titles[_currentSlide]];
+            if (TxtDesc != null) TxtDesc.Text = LocalizationManager.Instance[_descs[_currentSlide]];
 
             // Try to load media (fails silently if file doesn't exist yet)
             try
@@ -50,28 +52,28 @@ namespace RagnaController
                 string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Tutorials", _mediaPaths[_currentSlide]);
                 if (System.IO.File.Exists(path))
                 {
-                    MediaPreview.Source = new Uri(path, UriKind.Absolute);
-                    MediaPreview.Play();
+                    if (MediaPreview != null) { MediaPreview.Source = new Uri(path, UriKind.Absolute); MediaPreview.Play(); }
                 }
                 else
                 {
-                    MediaPreview.Source = null;
+                    if (MediaPreview != null) MediaPreview.Source = null;
                 }
             }
             catch { }
 
             // Update UI Buttons
-            BtnPrev.IsEnabled = _currentSlide > 0;
-            
+            if (BtnPrev != null) BtnPrev.IsEnabled = _currentSlide > 0;
+
+            var live = (Brush)FindResource("Live");
+            var gold = (Brush)FindResource("Gold");
+
             if (_currentSlide == TOTAL_SLIDES - 1)
             {
-                BtnNext.Content = LocalizationManager.Instance["Tut_Btn_Finish"];
-                BtnNext.Foreground = new SolidColorBrush(Color.FromRgb(61, 219, 110)); // Green
+                if (BtnNext != null) { BtnNext.Content = LocalizationManager.Instance["Tut_Btn_Finish"]; BtnNext.Foreground = live; }
             }
             else
             {
-                BtnNext.Content = LocalizationManager.Instance["Tut_Btn_Next"];
-                BtnNext.Foreground = new SolidColorBrush(Color.FromRgb(229, 184, 66)); // Gold
+                if (BtnNext != null) { BtnNext.Content = LocalizationManager.Instance["Tut_Btn_Next"]; BtnNext.Foreground = gold; }
             }
 
             DrawDots();

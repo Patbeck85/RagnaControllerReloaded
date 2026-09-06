@@ -49,9 +49,23 @@
     <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
     <!-- v1.7.2: Hexa.NET.SDL2 for native gamepad support (Xbox, DualShock 4, DualSense, Switch Pro) with Lightbar/Rumble -->
     <PackageReference Include="Hexa.NET.SDL2" Version="1.2.17" />
-    <!-- SourceLink for Stryker mutation testing -->
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-  </ItemGroup>
+    <!-- Structured Logging (Serilog) for PERF-002 -->
+    <PackageReference Include="Serilog" Version="4.2.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
+    <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+    <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
+        <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+        <PackageReference Include="System.Management" Version="9.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
+        <!-- BenchmarkDotNet for PERF-007 -->
+        <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
+        <!-- SourceLink for Stryker mutation testing -->
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
+      </ItemGroup>
 
   <PropertyGroup>
       <!-- Disable debug symbols in Release to satisfy SOUL.md RULE-001 (Release Isolation) -->
@@ -77,6 +91,7 @@
     <Compile Include="ButtonRemappingWindow.xaml.cs" />
     <Compile Include="ComboEditorWindow.xaml.cs" />
     <Compile Include="CommunityBrowserWindow.xaml.cs" />
+    <Compile Include="ControllerTest\ControllerTestWindow.xaml.cs" />
     <Compile Include="Controller\ButtonState.cs" />
     <Compile Include="Controller\ControllerSnapshot.cs" />
     <Compile Include="Controller\DualSenseHardwareService.cs" />
@@ -104,8 +119,10 @@
         <Compile Include="Core\EngineOptimizationPool.cs" />
         <Compile Include="Core\EngineOrchestrator.cs" />
         <Compile Include="Core\EngineWatchdog.cs" />
-        <Compile Include="Core\FeedbackSystem.cs" />
-        <Compile Include="Core\IFeedbackProvider.cs" />
+                <Compile Include="Core\ETWProvider.cs" />
+                <Compile Include="Core\FeedbackSystem.cs" />
+                <Compile Include="Core\FrameBudgetMonitor.cs" />
+                <Compile Include="Core\IFeedbackProvider.cs" />
         <Compile Include="Core\IControllerProvider.cs" />
         <Compile Include="Core\NullFeedbackProvider.cs" />
         <Compile Include="Core\GamepadUiNavigator.cs" />
@@ -138,6 +155,9 @@
         <Compile Include="Core\MobSweepEngine.cs" />
         <Compile Include="Core\MovementEngine.cs" />
         <Compile Include="Core\NativeMethods.cs" />
+        <Compile Include="Core\INativeMethods.cs" />
+        <Compile Include="Core\NativeMethodsImpl.cs" />
+        <Compile Include="Core\NativeStructs.cs" />
         <Compile Include="Core\ObjectPools.cs" />
         <Compile Include="Core\OverlayRouter.cs" />
         <Compile Include="Core\Pools.cs" />
@@ -159,12 +179,18 @@
         <Compile Include="Core\BuffManager.cs" />
         <Compile Include="Core\SystemMonitor.cs" />
         <Compile Include="Core\TelemetryService.cs" />
-        <Compile Include="Core\TtsAnnouncerService.cs" />
-        <Compile Include="Core\UpdateChecker.cs" />
-        <Compile Include="Core\VoiceChatService.cs" />
-        <Compile Include="Core\WindowSwitcher.cs" />
-        <Compile Include="Core\WindowTracker.cs" />
-        <Compile Include="Core\WpfTickProvider.cs" />
+                <Compile Include="Core\RagnaControllerETW.cs" />
+                <Compile Include="Core\GpuOverlayProfiler.cs" />
+                        <Compile Include="Core\MemoryAllocationTracker.cs" />
+                        <Compile Include="Core\InputLatencyTracker.cs" />
+
+                <Compile Include="Core\TtsAnnouncerService.cs" />
+                <Compile Include="Core\UpdateChecker.cs" />
+                <Compile Include="Core\VoiceChatService.cs" />
+                <Compile Include="Core\WindowSwitcher.cs" />
+                <Compile Include="Core\WindowTracker.cs" />
+                <Compile Include="Core\WpfTickProvider.cs" />
+                <Compile Include="Core\Benchmarks\BenchmarkHarness.cs" />
     <Compile Include="DaisyWheelWindow.xaml.cs" />
     <Compile Include="DeveloperConsoleWindow.xaml.cs" />
     <Compile Include="HandheldWindow.xaml.cs" />

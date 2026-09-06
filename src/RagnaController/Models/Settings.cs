@@ -72,8 +72,23 @@ namespace RagnaController.Models
         public long LifetimeSavedClicks { get; set; } = 0;
         public long LifetimeSavedKeystrokes { get; set; } = 0;
 
-        // --- Speicher- & Lade-Logik ---
-        public static Settings Load()
+        /// <summary>
+                /// Overlay theme variants: Neon (bright cyberpunk), Soft (subtle), Dark (minimal)
+                /// </summary>
+                public enum OverlayThemeType
+                {
+                    Neon = 0,    // Bright cyberpunk colors with strong glows
+                    Soft = 1,    // Subtle colors with gentle glows 
+                    Dark = 2     // Minimal, high contrast, low glow
+                }
+
+                // Overlay customization settings
+                public OverlayThemeType OverlayTheme { get; set; } = OverlayThemeType.Neon;
+                public double OverlayOpacity { get; set; } = 0.9;
+                public double OverlayFontScale { get; set; } = 1.0;
+
+                // --- Speicher- & Lade-Logik ---
+                public static Settings Load()
         {
             try
             {
