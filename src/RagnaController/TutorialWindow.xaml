@@ -7,13 +7,7 @@
         Topmost="True" WindowStartupLocation="CenterOwner" ResizeMode="NoResize"
         MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/RagnaController;component/Resources/UI2026DesignSystem.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
+    
 
     <Border Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource Radius2Xl}" BorderBrush="{StaticResource BgBorder}" BorderThickness="1">
         <Border.Effect>

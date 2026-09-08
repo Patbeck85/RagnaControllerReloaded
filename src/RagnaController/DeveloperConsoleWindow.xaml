@@ -5,13 +5,7 @@
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Topmost="False" WindowStartupLocation="CenterOwner" ResizeMode="CanResizeWithGrip">
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/RagnaController;component/Resources/UI2026DesignSystem.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
+    
 
     <Border Style="{StaticResource GlassPanel}" BorderBrush="{StaticResource Gold}" BorderThickness="1" CornerRadius="{StaticResource Radius2Xl}">
         <Border.Effect>

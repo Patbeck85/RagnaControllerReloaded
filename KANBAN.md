@@ -132,11 +132,122 @@
 
 ---
 
+## Phase 10: Gameplay Depth, Robustness & UX (IN PLANNING → SPRINT A START)
+**Goal:** Die größten Gameplay-Lücken schließen (Items/Potions, Party, Targeting), Robustheit härten (Watchdog-Hang-Erkennung, Input-Failover, Fuzzing, Soak), Phase-9-Telemetrie in die UI bringen und Design-Token-Bug fixen.
+**Entstanden durch:** Team-Diskussion 2026-09-07 (Coder ROLE-003 + Designer ROLE-002 + QA/Researcher ROLE-004, moderiert von Architect ROLE-001).
+
+### 🟥 SPRINT A — HIGH Priority (sofort startklar)
+
+#### ROB-001: Watchdog-Härtung — Hang-Erkennung & Auto-Restart
+**Status:** OPEN | **Assigned:** @coder | **Priorität:** HIGH
+**Description:** `EngineWatchdog` überwacht heute nur Tick-Dauer (kein RecordTick mehr = kein Hang erkannt). Erweiterung um externen Timer (Task.Delay ~100ms) mit Last-Tick-Timestamp: >500ms ohne Tick → `EngineOrchestrator.Restart()` + Telemetrie-Event. Input-Loss-Metrik via InputLatencyTracker.
+**Dependencies:** TelemetryService, PERF-005 (beide existieren)
+**Files:** `Core/EngineWatchdog.cs`, `Core/EngineOrchestrator.cs`, `Core/TelemetryService.cs`
+**DoD:** Hang simuliert im Test → Orchestrator-Restart ohne App-Crash; Watchdog deterministisch stoppbar (IDisposable); Unit-Tests grün.
+
+#### FEAT-011: ItemManagerEngine — Auto-Potion & Item-Verwaltung *(merge Coder FEAT-011 + QA FEAT-020)*
+**Status:** OPEN | **Assigned:** @coder | **Priorität:** HIGH
+**Description:** Größte Gameplay-Lücke: kein Item-/Potion-Management vorhanden (nur `CombatEngine.CurrentHPPercent` ohne Konsument). Neue Engine überwacht HP/SP-Schwellwerte pro Profil und feuert Heil-/SP-Potion-Hotkeys, respektiert Cooldowns über `CooldownManager`, Zero-Allokation im Tick-Pfad.
+**Dependencies:** CooldownManager (existiert), SkillOrchestrator-Conditions als Muster
+**Files:** `Core/ItemManagerEngine.cs` (neu), `Core/EngineOrchestrator.cs`, `Models/Settings.cs`
+**DoD:** Items feuern bei unterschrittener Schwelle + Cooldown eingehalten; Settings-Model mit Defaults; Unit-Tests headless: Schwelle exakt/unter/über, Cooldown blockiert Re-Fire, kein Fire wenn disconnected.
+
+#### UI-010: BUG-FIX — undefiniertes Design-Token `WindowControlButton` *(aus Designer-Audit)*
+**Status:** OPEN | **Assigned:** @designer / @coder | **Priorität:** HIGH (S2 — 5 Fenster betroffen)
+**Description:** `StaticResource WindowControlButton` wird in `MainWindow.xaml`, `ComboEditorWindow.xaml`, `ButtonRemappingWindow.xaml`, `TutorialWindow.xaml`, `DeveloperConsoleWindow.xaml` referenziert, aber nirgends definiert (Audit: 0 Definitionen in `UI2026DesignSystem.xaml` + `App.xaml`). Fenster-Close/Minimize-Buttons fallen auf Default-Styling zurück bzw. brechen beim Resource-Lookup.
+**Files:** `Resources/UI2026DesignSystem.xaml`, betroffene XAMLs
+**DoD:** Token zentral definiert (konsistent mit Cyber-Gaming Design-Sprache), alle 5 Fenster verwenden es, Build 0 Errors/Warnings.
+
+#### TEST-010: Dedizierte Unit-Tests für ungetestete Engines
+**Status:** OPEN | **Assigned:** @qa / @coder | **Priorität:** HIGH
+**Description:** SkillOrchestrator (komplexeste Engine: RotationSteps, Conditions HPAbove/SPAbove/MissingBuff, Priority-Selection), BuffManager, CooldownManager, SupportEngine, MageEngine, MobSweepEngine haben KEINE eigenen Testdateien — nur indirekte Wiring-Prüfungen. Gefährdet die Stryker-80%-Schwelle.
+**Files:** `tests/RagnaController.Tests/SkillOrchestratorTests.cs` (neu), `BuffManagerTests.cs`, `CooldownManagerTests.cs`, `SupportEngineTests.cs`
+**DoD:** Min. 5 Facts pro Engine (Step-Auswahl, Condition-Grenzwerte, Loop vs. Single-Pass, Warnungs-Event exakt einmal, AutoRecast via Mock-Queue, Cooldown blockiert Re-Register); Stryker-Score der Dateien steigt messbar.
+
+#### TEST-011: Fuzzing / Robustness für InputCommandQueue & ParsedInput
+**Status:** OPEN | **Assigned:** @qa / @coder | **Priorität:** HIGH
+**Description:** Die Input-Queue ist das Herzstück (alle Engines enqueueen), aber nur 5 deterministische Tests. Fehlt: zufällige Command-Sequenzen, Enqueue während Stop/Shutdown-Race, Overflow bei vollem Queue, ParsedInput-Edge-Cases (256 Button-Kombinationen, extreme Stick-Werte).
+**Files:** `tests/RagnaController.Tests/InputFuzzTests.cs` (neu), `Core/InputCommandQueue.cs`, `Core/ParsedInput.cs`
+**DoD:** Seeded-RNG-Fuzz: 10.000 Commands deterministisch reproduzierbar ohne Exception/Deadlock; Race-Test Enqueue↔Stop() über 20 Zyklen verliert keine Konsistenz; Edge-Cases als Facts grün.
+
+### 🟨 SPRINT B — MEDIUM Priority (nach Sprint A)
+
+#### FEAT-012: PartyManager + Auto-Heal-Loop *(merge Coder FEAT-012 + QA FEAT-021)*
+**Status:** OPEN | **Assigned:** @coder | **Priorität:** MEDIUM
+**Description:** `PartyTargetingEnabled` existiert als Flag in `AutoTargetEngine` ohne Logik dahinter. Neue PartyManager-Engine: Party-Mitglieder (max. 5), Heilungs-/Buff-Aktionen bei HP-Schwelle des schwächsten Mitglieds, autonomer Heal-Loop (Tab + Heal zyklisch, konfigurierbares Intervall) — manuelles Verhalten (Y/R1) bleibt unverändert.
+**Dependencies:** FEAT-011 (Party-Heiltränke), BuffManager (existiert)
+**Files:** `Core/PartyManager.cs` (neu), `Core/AutoTargetEngine.cs`, `Core/SupportEngine.cs`, `Core/EngineOrchestrator.cs`
+**DoD:** Party-Mitglieder verwaltbar, Heil-Loop feuert bei Schwelle, Targeting kann auf Party umschalten; Unit-Tests headless für Zielwahl + Zyklus-Timing.
+
+#### FEAT-013: Target-Management — Tab-Cycling, Lock-Persistenz, Auto-Retarget *(merge Coder FEAT-013 + QA FEAT-022)*
+**Status:** OPEN | **Assigned:** @coder | **Priorität:** MEDIUM
+**Description:** `AutoTargetEngine` hat `IsTargetLocked`, aber kein echtes Tab-Cycling und keine Lock-Persistenz über Skill-Interrupts. Ergänzung: Tab-Zielwechsel im Radius (nur bei Lock, kein Seek-Reset), Lock-Timeout/Reichweitenverlust → Auto-Retarget mit LogMessage-Event, konfigurierbar sticky vs. nearest.
+**Dependencies:** FEAT-012 (Party als exkludierbare Ziele)
+**Files:** `Core/AutoTargetEngine.cs`, `Models/Settings.cs`
+**DoD:** Tab mit/ohne Lock, Lock übersteht Skill-Interrupt, Tod/Reichweitenverlust → Auto-Retarget; Unit-Tests für alle Zustandsübergänge.
+
+#### ROB-002: Input-Emulation-Failover (SendInput ↔ Kernel-Service)
+**Status:** OPEN | **Assigned:** @coder | **Priorität:** MEDIUM
+**Description:** `SendInputMouseStrategy` und `KernelInputService` existieren nebeneinander, Fallback ist statisch konfiguriert. Dynamisches Failover in `InputRouter`: N aufeinanderfolgende Kommandos außerhalb erwarteter Latenz (via InputLatencyTracker) → Auto-Switch + Telemetrie-Event + Recovery nach M erfolgreichen Kommandos.
+**Dependencies:** PERF-005, IMouseEmulationStrategy (existieren)
+**Files:** `Core/InputRouter.cs`, `Core/SendInputMouseStrategy.cs`, `Core/KernelInputService.cs`
+**DoD:** Failover-Logik in InputRouter (KISS, keine neue Klasse), Schwellwerte in Settings, Telemetrie-Event pro Switch, Unit-Test mit mockter Strategie.
+
+#### PERF-010: Zero-Allokation-Gate im Tick-Pfad (CI-erzwingend)
+**Status:** OPEN | **Assigned:** @qa / @coder | **Priorität:** MEDIUM
+**Description:** `MemoryAllocationTracker` (PERF-004) misst, aber es gibt kein hartes Gate. Test-Harness: 1000-Tick-Steady-State pro Engine mit Budget (≤2 Allokationen/Tick), Violation schlägt rot und benennt die allocating Engine per Stacktrace/ETW.
+**Dependencies:** PERF-004, BenchmarkHarness (existieren)
+**Files:** `tests/RagnaController.Tests/TickAllocationGateTest.cs` (neu), `Core/MemoryAllocationTracker.cs`
+**DoD:** Läuft headless, identifiziert violating Engine, bestehende Tests bleiben grün.
+
+#### UI-011: Live-Telemetrie-Dashboard *(aus Designer-Audit)*
+**Status:** OPEN | **Assigned:** @designer / @coder | **Priorität:** MEDIUM
+**Description:** Phase-9-Metriken (FrameBudgetMonitor, InputLatencyTracker, MemoryAllocationTracker, GpuOverlayProfiler) werden in KEINEM XAML referenziert — DeveloperConsoleWindow ist reines Text-Log. Neue Telemetrie-Ansicht: P50/P95/P99 Tick-Latency, Input-Latenz pro Stage, GC-Druck, GPU-Tier — als Card im MainWindow (Developer-Tab) und/oder kompakt in der Overlay-Mini-Anzeige.
+**Dependencies:** Phase 9 Tracker (existieren), UI-010
+**Files:** `MainWindow.xaml(.cs)`, neue `Controls/TelemetryPanel.xaml`
+**DoD:** Live-Werte <2Hz Refresh (kein Tick-Pfad-Zugriff, thread-sicher über Dispatcher), Design-Sprache konsistent, Build 0 Errors.
+
+#### FEAT-014: Session-Replay — Aufzeichnung & Wiedergabe
+**Status:** OPEN | **Assigned:** @coder | **Priorität:** MEDIUM
+**Description:** `ActionLogService` loggt nur Labels in In-Memory-Ringbuffer. Recorder zeichnet pro Session JSONL auf (Zeitstempel, Input-Snapshot, Engine-Zustand, gefeuerte Aktionen), <1ms Overhead via Pools, Rotation bei 50MB. Replay-Player im Test-Harness für deterministische Regressionstests + Bug-Report-Debugging.
+**Dependencies:** ActionLogService, ControllerSnapshot (existieren)
+**Files:** `Core/SessionRecorder.cs` (neu), `Core/ActionLogService.cs`, `Core/EngineOrchestrator.cs`
+**DoD:** Roundtrip-Test: aufzeichnen → abspielen → identische Aktionssequenz.
+
+#### TEST-012: Long-Run-Stability-Test (Soak) mit Memory-Leak-Guard
+**Status:** OPEN | **Assigned:** @qa / @coder | **Priorität:** MEDIUM
+**Description:** Bester Stabilitäts-Test hat nur 5 Start/Stop-Zyklen ohne Tick-Last. Soak: 10.000 Mock-Ticks (~8s bei 125Hz) durch komplette Engine-Kette mit GC.GetTotalMemory, Gen2-GC-Count und Handle-Zählung als Leak-Guard.
+**Dependencies:** TEST-010
+**Files:** `tests/RagnaController.Tests/LongRunStabilityTests.cs` (neu), `tests/PerformanceTests.cs`
+**DoD:** Soak headless ohne Exception; Gen2-Delta ≤2, Memory-Delta nach GC <5MB, HandleCount-Delta <100; stabil über 3 CI-Runs.
+
+### 🟩 SPRINT C / BACKLOG — LOW Priority (bewusst parkiert)
+
+| Task | Titel | Priorität | Notiz |
+|------|-------|-----------|-------|
+| FEAT-015 | Multi-Window / Multi-Client-Support (Alt-Char, Farming) | LOW | YAGNI: nur Input-Routing an aktives Fenster, kein paralleles Engine-Modell |
+| FEAT-023 | Auto-Item-Einlagerung (Storage-Drop bei vollem Inventar) | LOW | Basis vorhanden: RoUiMenuService + SmartCursorService Grid-Geometrie |
+| FEAT-024 | Multi-Character-Profil-Schnellwechsel (Name-basiert) | LOW | ProfileQuickSwitch existiert; fehlt nur Char-Namen-Erkennung → Profil-Zuordnung |
+| TEST-013 | Stryker-Scoping: pro-Datei Mutation-Score-Auswertung in CI | MEDIUM→C | Erst nach TEST-010/011 sinnvoll (dann Top-N Survivor-Dateien identifizieren) |
+| TEST-014 | PerformanceTests entflaken (flaky Timing-Assertions) | LOW | MemoryLatency + StringPooling-Test liefern falsche Signale; Median/p95 statt throw-pro-Iteration |
+| UX-012 | Accessibility: AutomationProperties + Gamepad-Fokus-Ring *(Designer-Audit)* | LOW | 0 AutomationProperties in allen 8 Fenstern; kein Gamepad-Fokus-Handling in MainWindow-Tabs |
+
+### PM-Moderation — Konfliktauflösung (2026-09-07)
+1. **Duplikat aufgelöst:** Coder FEAT-011 + QA FEAT-020 → **ein** Task FEAT-011 (ItemManagerEngine). QA hat den Code-Gap bestätigt, Coder das Design geliefert.
+2. **Duplikat aufgelöst:** Coder FEAT-012 + QA FEAT-021 → **ein** Task FEAT-012 (PartyManager inkl. Auto-Heal-Loop; SupportEngine bleibt manuell als Fallback).
+3. **Duplikat aufgelöst:** Coder FEAT-013 + QA FEAT-022 → **ein** Task FEAT-013 (Target-Management; Tab nur bei Lock, kein Seek-Reset).
+4. **Designer-Audit-Ergebnisse übernommen:** UI-010 (Token-Bug, S2) in Sprint A, UI-011 (Telemetrie unsichtbar) in Sprint B, UX-012 (Accessibility) in Backlog. Designer-Detailanalyse lieferte keine vollständige Taskliste (Schema-Fehler) — Audit-Zahlen sind verifiziert und maßgeblich.
+5. **Architektur-Entscheidungen:** Keine neuen Abstraktionsschichten für FEAT-012/013 (KISS): PartyManager als Engine, Targeting-Erweiterung direkt in AutoTargetEngine. Multi-Window (FEAT-015) bewusst YAGNI-gemäß nur als Routing.
+6. **Quest-Navigation:** von QA geprüft → ohne Memory-/Positionssystem nicht sauber umsetzbar, bewusst KEIN Ticket.
+
 ## Metriken
 - **Build:** 0 Errors / 0 Warnings ✅
 - **Tests:** 56/56 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅
 - **Phase 8 Completion:** 100% (9/9 Tasks) ✅
 - **Phase 9 Progress:** 9/9 Tasks (100%) — **ALL COMPLETE** ✅
+- **Phase 10 Planned:** 13 Tasks (5 Sprint A / 7 Sprint B / 6 Backlog inkl. 2 merges + 1 parkiert)
 
 ## Next Steps
-- **Phase 9 Complete** — ready for Release Prep oder Phase 10 (Platform Expansion: Linux/macOS, Web Dashboard, Mobile Companion)
+1. **Sprint A starten** (Reihenfolge): UI-010 (Bug, klein) → ROB-001 → FEAT-011 → TEST-010 → TEST-011
+2. Nach Sprint A: Build + Test-Gate (0 Errors, alle Tests grün), dann Sprint B
+3. Session-Replay (FEAT-014) erst nach ROB-001/ROB-002 — Replay soll Failover-Ereignisse mitloggen können

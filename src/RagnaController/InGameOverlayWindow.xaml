@@ -12,13 +12,7 @@
         ResizeMode="NoResize">
 
     <Window.Resources>
-        <!-- Use centralized UI2026DesignSystem from App.xaml -->
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/UI2026DesignSystem.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-            
-            <!-- Class Icon ImageBrush Resource -->
+        <ResourceDictionary><!-- Class Icon ImageBrush Resource -->
             <ImageBrush x:Key="ClassIconBrush" Stretch="Uniform"/>
         </ResourceDictionary>
     </Window.Resources>

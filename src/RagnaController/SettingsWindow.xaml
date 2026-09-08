@@ -6,14 +6,7 @@
         Background="Transparent" WindowStyle="None" AllowsTransparency="True"
         Topmost="True" Closing="Window_Closing">
 
-    <Window.Resources>
-        <!-- Use centralized UI2026DesignSystem from App.xaml -->
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/UI2026DesignSystem.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
+    
 
     <!-- ROOT with radial depth gradient + glassmorphism (using centralized design system) -->
         <Border CornerRadius="{StaticResource RadiusXl}" BorderThickness="1" BorderBrush="{StaticResource BgBorder}">

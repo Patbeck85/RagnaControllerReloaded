@@ -234,6 +234,35 @@ All changes committed and pushed to `origin/main`. Build: 0 errors, 0 warnings. 
 
 ---
 
+## 🚀 Phase 10: Gameplay Depth, Robustness & UX (PLANNED — Sprint A startklar)
+**Goal:** Die größten Gameplay-Lücken schließen (Items/Potions, Party, Targeting), Robustheit härten (Watchdog-Hang-Erkennung, Input-Failover, Fuzzing, Soak), Phase-9-Telemetrie in die UI bringen und Design-Token-Bug fixen.
+**Entstanden durch:** Team-Diskussion 2026-09-07 (Coder ROLE-003 + Designer ROLE-002 + QA/Researcher ROLE-004, moderiert von Architect ROLE-001). Details & DoD in `KANBAN.md`.
+
+| Task ID | Task | Priority | Dependencies | Status |
+|---------|------|----------|--------------|--------|
+| **ROB-001** | Watchdog-Härtung: Hang-Erkennung (externer Timer), Auto-Restart, Input-Loss-Metrik | HIGH | TelemetryService, PERF-005 | OPEN |
+| **FEAT-011** | ItemManagerEngine: Auto-Potion/Item bei HP/SP-Schwelle (merge FEAT-020) | HIGH | CooldownManager | OPEN |
+| **UI-010** | BUG-FIX: undefiniertes Design-Token `WindowControlButton` (5 Fenster, S2) | HIGH | — | OPEN |
+| **TEST-010** | Dedizierte Unit-Tests: SkillOrchestrator, BuffManager, CooldownManager, SupportEngine, MageEngine, MobSweepEngine | HIGH | — | OPEN |
+| **TEST-011** | Fuzzing/Robustness: InputCommandQueue & ParsedInput (RNG, Shutdown-Race, Edge-Cases) | HIGH | — | OPEN |
+| **FEAT-012** | PartyManager + Auto-Heal-Loop (merge FEAT-021) | MEDIUM | FEAT-011, BuffManager | OPEN |
+| **FEAT-013** | Target-Management: Tab-Cycling, Lock-Persistenz, Auto-Retarget (merge FEAT-022) | MEDIUM | FEAT-012 | OPEN |
+| **ROB-002** | Input-Emulation-Failover: SendInput ↔ Kernel-Service Auto-Switch | MEDIUM | PERF-005 | OPEN |
+| **PERF-010** | Zero-Allokation-Gate im Tick-Pfad (CI-erzwingend, ≤2 Allokationen/Tick) | MEDIUM | PERF-004 | OPEN |
+| **UI-011** | Live-Telemetrie-Dashboard (Phase-9-Metriken in UI sichtbar machen) | MEDIUM | Phase 9 Tracker, UI-010 | OPEN |
+| **FEAT-014** | Session-Replay: JSONL-Aufzeichnung + Replay-Player für Regressionstests | MEDIUM | ActionLogService | OPEN |
+| **TEST-012** | Long-Run-Stability-Test (Soak): 10k Ticks + Memory-Leak-Guard | MEDIUM | TEST-010 | OPEN |
+| FEAT-015 | Multi-Window / Multi-Client-Support (YAGNI: nur Routing) | LOW | WindowTracker | BACKLOG |
+| FEAT-023 | Auto-Item-Einlagerung (Storage-Drop bei vollem Inventar) | LOW | RoUiMenuService, SmartCursorService | BACKLOG |
+| FEAT-024 | Multi-Character-Profil-Schnellwechsel (Name-basiert) | LOW | ProfileApplier | BACKLOG |
+| TEST-013 | Stryker-Scoping: pro-Datei Mutation-Score in CI | MEDIUM→C | TEST-010, TEST-011 | BACKLOG |
+| TEST-014 | PerformanceTests entflaken (flaky Timing-Assertions) | LOW | — | BACKLOG |
+| UX-012 | Accessibility: AutomationProperties + Gamepad-Fokus-Ring | LOW | UI-010 | BACKLOG |
+
+**PM-Moderation (Konfliktauflösung):** Coder/QA-Duplikate FEAT-011+020, FEAT-012+021, FEAT-013+022 zu je einem Task zusammengeführt. Quest-Navigation bewusst kein Ticket (ohne Memory-/Positionssystem nicht sauber umsetzbar).
+**Sprint-Reihenfolge:** A: UI-010 → ROB-001 → FEAT-011 → TEST-010 → TEST-011 · B: FEAT-012 → FEAT-013 → ROB-002 → PERF-010 → UI-011 → FEAT-014 → TEST-012
+
+---
 ## 🎉 RELEASE SUMMARY — v2.0.3 (2026-08-24)
 
 All features and documentation now synchronized for v2.0.3:

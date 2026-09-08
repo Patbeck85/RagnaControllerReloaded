@@ -12,13 +12,7 @@
         Loaded="Window_Loaded" Closing="Window_Closing" StateChanged="Window_StateChanged"
         MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources/UI2026DesignSystem.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
+    
 
     <!-- ROOT with radial depth gradient + glassmorphism -->
     <Border CornerRadius="{StaticResource RadiusXl}" BorderThickness="1" BorderBrush="{StaticResource BgBorder}">

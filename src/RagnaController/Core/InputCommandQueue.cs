@@ -280,6 +280,10 @@ namespace RagnaController.Core
         {
             if (_consumerThread != null && _consumerThread.IsAlive) return;
 
+            // Nach Stop() ist der alte CTS disposed → für einen Restart neu erzeugen.
+            if (_cts == null || _cts.IsCancellationRequested)
+                _cts = new CancellationTokenSource();
+
             _queue = new BlockingCollection<InputCmd>();
             _consumerThread = new Thread(Process) { Name = "InputCommandQueue_Consumer", IsBackground = true };
             _consumerThread.Start();
@@ -287,11 +291,13 @@ namespace RagnaController.Core
 
         public void Stop()
         {
-            if (_cts != null)
+            // FIX (TEST-011 class / race): CTS erst NACH dem Join des Consumer-Threads
+            // disponieren. Der Consumer liest _cts.Token im Loop; ein frühes null!
+            // führte zu NullReferenceException in Process().
+            var cts = _cts;
+            if (cts != null)
             {
-                _cts.Cancel();
-                _cts.Dispose();
-                _cts = null!;
+                cts.Cancel();
             }
 
             if (_consumerThread != null)
@@ -299,6 +305,10 @@ namespace RagnaController.Core
                 _consumerThread.Join(1000);
                 _consumerThread = null;
             }
+
+            // Thread ist jetzt garantiert beendet → CTS sicher freigeben.
+            cts?.Dispose();
+            _cts = null!;
         }
 
         public void RequestShutdown()
@@ -309,11 +319,14 @@ namespace RagnaController.Core
 
         private void Process()
         {
-            var enumerator = _queue!.GetConsumingEnumerable(_cts.Token).GetEnumerator();
+            // Lokaler Token-Snapshot: bleibt gültig, selbst wenn _cts später
+            // von Stop() auf null gesetzt wird (Join-Garantie).
+            var token = _cts.Token;
+            var enumerator = _queue!.GetConsumingEnumerable(token).GetEnumerator();
 
             try
             {
-                while (!_cts.Token.IsCancellationRequested)
+                while (!token.IsCancellationRequested)
                 {
                     // Block until at least ONE command is available
                     if (enumerator.MoveNext())

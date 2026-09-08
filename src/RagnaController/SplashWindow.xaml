@@ -8,12 +8,7 @@
     <!-- Click anywhere = Skip Splash -->
 
     <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/RagnaController;component/Resources/UI2026DesignSystem.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
-            <Storyboard x:Key="FadeIn">
+        <ResourceDictionary><Storyboard x:Key="FadeIn">
                 <DoubleAnimation Storyboard.TargetName="Root" Storyboard.TargetProperty="Opacity" From="0" To="1" Duration="0:0:0.7">
                     <DoubleAnimation.EasingFunction><CubicEase EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
                 </DoubleAnimation>

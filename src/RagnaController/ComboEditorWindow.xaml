@@ -4,13 +4,7 @@
         Title="Combo Editor" Width="780" Height="720"
         Background="Transparent" WindowStyle="None" AllowsTransparency="True"
         WindowStartupLocation="CenterOwner" MouseLeftButtonDown="Window_MouseLeftButtonDown">
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/RagnaController;component/Resources/UI2026DesignSystem.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
+    
     <Border Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource Radius2Xl}" BorderBrush="{StaticResource BgBorder}" BorderThickness="1">
         <Grid>
             <Grid.RowDefinitions>

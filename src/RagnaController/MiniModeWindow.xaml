@@ -8,13 +8,7 @@
         MouseRightButtonDown="Window_MouseRightButtonDown"
         ToolTip="Drag to move. Right-click to toggle Click-Through mode. Start+Back to close.">
 
-    <Window.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/RagnaController;component/Resources/UI2026DesignSystem.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </Window.Resources>
+    
 
     <Border x:Name="RootBorder" Style="{StaticResource GlassPanel}" BorderBrush="{StaticResource BgBorder}" BorderThickness="1.5" CornerRadius="28">
         <Border.Effect>
