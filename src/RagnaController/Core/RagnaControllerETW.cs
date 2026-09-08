@@ -266,5 +266,23 @@ namespace RagnaController.Core
         }
 
         #endregion
+
+        #region Watchdog / Robustness Events (ROB-001)
+
+        [Event(80, Level = EventLevel.Warning, Keywords = Keywords.Error | Keywords.Performance,
+            Message = "Engine hang detected: {0} ms without tick (Threshold={1} ms)")]
+        public void EngineHangDetected(double msWithoutTick, int thresholdMs)
+        {
+            if (IsEnabled()) WriteEvent(80, msWithoutTick, thresholdMs);
+        }
+
+        [Event(81, Level = EventLevel.Informational, Keywords = Keywords.Error | Keywords.Performance,
+            Message = "Engine restarted by watchdog: {0} (RestartCount={1})")]
+        public void EngineWatchdogRestart(string reason, int restartCount)
+        {
+            if (IsEnabled()) WriteEvent(81, reason, restartCount);
+        }
+
+        #endregion
     }
 }

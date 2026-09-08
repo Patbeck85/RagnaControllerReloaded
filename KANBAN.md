@@ -139,7 +139,7 @@
 ### 🟥 SPRINT A — HIGH Priority (sofort startklar)
 
 #### ROB-001: Watchdog-Härtung — Hang-Erkennung & Auto-Restart
-**Status:** OPEN | **Assigned:** @coder | **Priorität:** HIGH
+**Status:** ✅ DONE | **Assigned:** @coder | **Priorität:** HIGH
 **Description:** `EngineWatchdog` überwacht heute nur Tick-Dauer (kein RecordTick mehr = kein Hang erkannt). Erweiterung um externen Timer (Task.Delay ~100ms) mit Last-Tick-Timestamp: >500ms ohne Tick → `EngineOrchestrator.Restart()` + Telemetrie-Event. Input-Loss-Metrik via InputLatencyTracker.
 **Dependencies:** TelemetryService, PERF-005 (beide existieren)
 **Files:** `Core/EngineWatchdog.cs`, `Core/EngineOrchestrator.cs`, `Core/TelemetryService.cs`
@@ -153,7 +153,7 @@
 **DoD:** Items feuern bei unterschrittener Schwelle + Cooldown eingehalten; Settings-Model mit Defaults; Unit-Tests headless: Schwelle exakt/unter/über, Cooldown blockiert Re-Fire, kein Fire wenn disconnected.
 
 #### UI-010: BUG-FIX — undefiniertes Design-Token `WindowControlButton` *(aus Designer-Audit)*
-**Status:** OPEN | **Assigned:** @designer / @coder | **Priorität:** HIGH (S2 — 5 Fenster betroffen)
+**Status:** ✅ DONE | **Assigned:** @designer / @coder | **Priorität:** HIGH (S2 — 5 Fenster betroffen)
 **Description:** `StaticResource WindowControlButton` wird in `MainWindow.xaml`, `ComboEditorWindow.xaml`, `ButtonRemappingWindow.xaml`, `TutorialWindow.xaml`, `DeveloperConsoleWindow.xaml` referenziert, aber nirgends definiert (Audit: 0 Definitionen in `UI2026DesignSystem.xaml` + `App.xaml`). Fenster-Close/Minimize-Buttons fallen auf Default-Styling zurück bzw. brechen beim Resource-Lookup.
 **Files:** `Resources/UI2026DesignSystem.xaml`, betroffene XAMLs
 **DoD:** Token zentral definiert (konsistent mit Cyber-Gaming Design-Sprache), alle 5 Fenster verwenden es, Build 0 Errors/Warnings.
@@ -242,12 +242,12 @@
 
 ## Metriken
 - **Build:** 0 Errors / 0 Warnings ✅
-- **Tests:** 56/56 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅
+- **Tests:** 69/69 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅
 - **Phase 8 Completion:** 100% (9/9 Tasks) ✅
 - **Phase 9 Progress:** 9/9 Tasks (100%) — **ALL COMPLETE** ✅
 - **Phase 10 Planned:** 13 Tasks (5 Sprint A / 7 Sprint B / 6 Backlog inkl. 2 merges + 1 parkiert)
 
 ## Next Steps
-1. **Sprint A starten** (Reihenfolge): UI-010 (Bug, klein) → ROB-001 → FEAT-011 → TEST-010 → TEST-011
+1. **Sprint A Fortsetzung:** ROB-001 ✅ → **FEAT-011 (ItemManagerEngine)** als nächstes → dann TEST-010 → TEST-011
 2. Nach Sprint A: Build + Test-Gate (0 Errors, alle Tests grün), dann Sprint B
 3. Session-Replay (FEAT-014) erst nach ROB-001/ROB-002 — Replay soll Failover-Ereignisse mitloggen können

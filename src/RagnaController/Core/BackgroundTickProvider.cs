@@ -21,13 +21,30 @@ namespace RagnaController.Core
             if (_loop != null) return;
             NativeMethods.timeBeginPeriod(1); // Windows-Scheduler auf 1ms Präzision
             _cts  = new CancellationTokenSource();
-            _loop = _ = Task.Run(() => RunLoop(_cts.Token));
+            var cts = _cts;
+            _loop = _ = Task.Run(() => RunLoop(cts.Token));
         }
 
         public void Stop()
         {
-            _cts?.Cancel();
-            _cts?.Dispose(); // WICHTIG: Vermeidet den Memory-Leak
+            // ROB-001: Loop deterministisch beenden BEVOR State nullt wird — sonst kann ein
+            // Watchdog-Restart (Stop→Start) zwei parallele Tick-Loops erzeugen.
+            var cts = _cts;
+            var loop = _loop;
+
+            cts?.Cancel();
+            try
+            {
+                // Bounded wait: Loop läuft nur Task.Delay/PeriodicTimer, bricht prompt ab.
+                if (loop != null) loop.Wait(500);
+            }
+            catch (AggregateException)
+            {
+                // Loop fängt intern alle Exceptions; Abbruch-Exceptions sind erwartet.
+            }
+
+            cts?.Dispose(); // erst NACH dem Wait: Token wird nicht mehr gebraucht
+            _cts = null;
             NativeMethods.timeEndPeriod(1);
             _loop = null;
         }

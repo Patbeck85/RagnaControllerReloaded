@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using RagnaController.Models;
 using RagnaController.Controller;
 using RagnaController.Profiles;
@@ -190,6 +192,19 @@ namespace RagnaController.Core
                             LogMessage?.Invoke(msg);
                         };
 
+                        // ROB-001: Hang-Erkennung → Auto-Restart des Engines.
+                        // WICHTIG: Restart läuft auf eigenem Task — der Handler feuert vom
+                        // Watchdog-Poll-Loop; ein direkter Stop() dort würde den eigenen
+                        // Poll-Task blockieren (Watchdog.Stop wartet auf den Loop).
+                        _watchdog.HangDetected += msWithoutTick =>
+                        {
+                            RagnaControllerETW.Log.EngineHangDetected(msWithoutTick, _watchdog.HangThresholdMs);
+                            string msg = $"⚠ Engine-Hang erkannt: {msWithoutTick:F0} ms ohne Tick — starte Engine neu.";
+                            _logger?.Warn(msg);
+                            LogMessage?.Invoke(msg);
+                            _ = Task.Run(() => Restart());
+                        };
+
                         _cooldownManager = new CooldownManager(_messenger, _feedback);
 
                         // FEAT-007: Initialize Skill Orchestrator
@@ -325,6 +340,10 @@ namespace RagnaController.Core
         {
             try
             {
+                // ROB-001: Heartbeat ZUERST — auch bei Disconnect/Pause/Focus-Lost muss der
+                // Watchdog sehen, dass die Tick-Schlebe lebt (sonst false-positive Hang).
+                _watchdog.MarkTick();
+
                 var sw = Stopwatch.StartNew();
                 var input = _inputReader.Read();
 
@@ -483,6 +502,7 @@ namespace RagnaController.Core
                     IsRunning = true;
                     StatusChanged?.Invoke(EngineStatus.Running);
                     _queue?.Start(); // Ensure InputCommandQueue consumer is running
+                    _watchdog.Start(); // ROB-001: Hang-Erkennung nur bei aktivem Engine
                 }
 
         public void Stop()
@@ -490,7 +510,37 @@ namespace RagnaController.Core
             _tickProvider.Stop();
             IsRunning = false;
             StatusChanged?.Invoke(EngineStatus.Stopped);
+            _watchdog.Stop(); // ROB-001: kein Hang-Check ohne aktive Tick-Schleife
         }
+
+        /// <summary>
+        /// ROB-001: Self-healing Restart des Engines (z. B. nach erkanntem Hang).
+        /// Stoppt die Tick-Schleife und startet sie sofort wieder; Input-Queue bleibt laufen,
+        /// damit keine Tasten "stecken bleiben". Thread-sicher gegen parallele Restarts.
+        /// </summary>
+        public void Restart()
+        {
+            if (_isRestarting) return;
+            _isRestarting = true;
+            try
+            {
+                Stop();
+                Start();
+                int count = Interlocked.Increment(ref _restartCount);
+                RagnaControllerETW.Log.EngineWatchdogRestart("hang-detected", count);
+                string msg = $"✓ Engine erfolgreich neu gestartet (Watchdog-Restart #{count}).";
+                _logger?.Info(msg);
+                LogMessage?.Invoke(msg);
+            }
+            finally
+            {
+                _isRestarting = false;
+            }
+        }
+
+        private volatile bool _isRestarting;
+        private int _restartCount;
+        private volatile bool _isShutDown;
 
         public void Pause()
         {
@@ -507,6 +557,8 @@ namespace RagnaController.Core
 
         public void Shutdown()
                                 {
+                                    if (_isShutDown) return; // idempotent: Dispose() ruft Shutdown() erneut auf
+                                    _isShutDown = true;
                                     Stop();
                                     _feedback.StopRumble();
                                     _ctrl.Dispose();
@@ -515,6 +567,7 @@ namespace RagnaController.Core
                                     _voice.Dispose();
                                     _memoryTracker?.Dispose();
                                     _latencyTracker?.Dispose();
+                                    _watchdog.Dispose(); // ROB-001: deterministisch stoppbar
                                     _logger?.Info("=== Engine Shutdown ===");
                                     _logger?.Dispose();
                                 }
