@@ -52,7 +52,10 @@ namespace RagnaController.Core
                                 private readonly DefaultRotationProvider _rotationProvider;
 
                                 // FEAT-008: Buff/Debuff Tracking
-                                                                private readonly BuffManager _buffManager;
+                                                                        private readonly BuffManager _buffManager;
+
+                                                                        // FEAT-011: Item Manager (Auto-Potion & Item-Verwaltung)
+                                                                        private readonly ItemManagerEngine _itemManager;
 
                                                                 // PERF-004: Memory Allocation Tracking
                                                                                                                                 private readonly MemoryAllocationTracker _memoryTracker;
@@ -264,7 +267,17 @@ namespace RagnaController.Core
                                     _groundSpell = new GroundSpellEngine(engineQueue);
 
                                     // FEAT-008: Initialize Buff Manager
-                                                                        _buffManager = new BuffManager(engineQueue, _cooldownManager);
+                                    _buffManager = new BuffManager(engineQueue, _cooldownManager);
+
+                                    // FEAT-011: Initialize Item Manager (Auto-Potion & Item-Verwaltung)
+                                    _itemManager = new ItemManagerEngine(engineQueue);
+                                    _itemManager.ItemFired += item =>
+                                    {
+                                        string msg = $"[Item] Auto-Item eingesetzt: {item.Name}";
+                                        _logger?.Info(msg);
+                                        LogMessage?.Invoke(msg);
+                                        _messenger.Publish(new ItemFiredMessage(item.Name));
+                                    };
 
                                                                         // PERF-004: Initialize Memory Allocation Tracker
                                                                         _memoryTracker = new MemoryAllocationTracker("EngineOrchestrator", _logger);
@@ -326,6 +339,9 @@ namespace RagnaController.Core
 
                                                 // FEAT-008: Buff Manager
                                                                                                 public BuffManager BuffManager => _buffManager;
+
+                                                                                                // FEAT-011: Item Manager (Auto-Potion & Item-Verwaltung)
+                                                                                                public ItemManagerEngine ItemManager => _itemManager;
 
                                                                                                 // PERF-005: Input Latency Tracker
                                                                                                                                                                                                                                 public InputLatencyTracker LatencyTracker => _latencyTracker;
@@ -417,7 +433,10 @@ namespace RagnaController.Core
                                                                                                                                                                                                     _groundSpell?.GetActiveSpellNames() ?? new());
 
                                                                                                                                                                                                 // FEAT-008: Update buff/debuff tracking
-                                                                                                                                                                                                _buffManager?.Update(_actualDeltaMs);
+                                                                                                                                                                                                                                                                                                                                _buffManager?.Update(_actualDeltaMs);
+
+                                                                                                                                                                                                // FEAT-011: Update item manager (Auto-Potion bei HP/SP-Schwelle)
+                                                                                                                                                                                                _itemManager.Update(_combat.CurrentHPPercent, _combat.CurrentSP, _actualDeltaMs);
 
                                                                                                                                                                                                 // PERF-004: Record memory allocation stats
                                                                                                                                                                                                 _memoryTracker?.RecordTick();
@@ -503,6 +522,7 @@ namespace RagnaController.Core
                     StatusChanged?.Invoke(EngineStatus.Running);
                     _queue?.Start(); // Ensure InputCommandQueue consumer is running
                     _watchdog.Start(); // ROB-001: Hang-Erkennung nur bei aktivem Engine
+                    _itemManager.Start(); // FEAT-011: Item-Prüfung nur bei aktivem Engine
                 }
 
         public void Stop()
@@ -511,6 +531,7 @@ namespace RagnaController.Core
             IsRunning = false;
             StatusChanged?.Invoke(EngineStatus.Stopped);
             _watchdog.Stop(); // ROB-001: kein Hang-Check ohne aktive Tick-Schleife
+            _itemManager.Stop(); // FEAT-011: keine Auto-Items ohne aktive Engine
         }
 
         /// <summary>
@@ -568,6 +589,7 @@ namespace RagnaController.Core
                                     _memoryTracker?.Dispose();
                                     _latencyTracker?.Dispose();
                                     _watchdog.Dispose(); // ROB-001: deterministisch stoppbar
+                                    _itemManager.Dispose(); // FEAT-011: Item-Prüfung endgültig stoppen
                                     _logger?.Info("=== Engine Shutdown ===");
                                     _logger?.Dispose();
                                 }

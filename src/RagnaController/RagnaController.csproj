@@ -183,6 +183,7 @@
                 <Compile Include="Core\GpuOverlayProfiler.cs" />
                         <Compile Include="Core\MemoryAllocationTracker.cs" />
                         <Compile Include="Core\InputLatencyTracker.cs" />
+        <Compile Include="Core\ItemManagerEngine.cs" />
 
                 <Compile Include="Core\TtsAnnouncerService.cs" />
                 <Compile Include="Core\UpdateChecker.cs" />
@@ -202,6 +203,7 @@
     <Compile Include="Models\ButtonAction.cs" />
         <Compile Include="Models\ButtonKey.cs" />
     <Compile Include="Models\CommunityEntry.cs" />
+    <Compile Include="Models\ItemConfig.cs" />
     <Compile Include="Models\ParsedInput.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\VirtualKey.cs" />

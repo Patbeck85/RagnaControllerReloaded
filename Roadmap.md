@@ -240,8 +240,8 @@ All changes committed and pushed to `origin/main`. Build: 0 errors, 0 warnings. 
 
 | Task ID | Task | Priority | Dependencies | Status |
 |---------|------|----------|--------------|--------|
-| **ROB-001** | Watchdog-Härtung: Hang-Erkennung (externer Timer), Auto-Restart, Input-Loss-Metrik | HIGH | TelemetryService, PERF-005 | OPEN |
-| **FEAT-011** | ItemManagerEngine: Auto-Potion/Item bei HP/SP-Schwelle (merge FEAT-020) | HIGH | CooldownManager | OPEN |
+| **ROB-001** | Watchdog-Härtung: Hang-Erkennung (externer Timer), Auto-Restart, Input-Loss-Metrik | HIGH | TelemetryService, PERF-005 | ✅ COMPLETE |
+| **FEAT-011** | ItemManagerEngine: Auto-Potion/Item bei HP/SP-Schwelle (merge FEAT-020) | HIGH | CooldownManager | ✅ COMPLETE |
 | **UI-010** | BUG-FIX: undefiniertes Design-Token `WindowControlButton` (5 Fenster, S2) | HIGH | — | OPEN |
 | **TEST-010** | Dedizierte Unit-Tests: SkillOrchestrator, BuffManager, CooldownManager, SupportEngine, MageEngine, MobSweepEngine | HIGH | — | OPEN |
 | **TEST-011** | Fuzzing/Robustness: InputCommandQueue & ParsedInput (RNG, Shutdown-Race, Edge-Cases) | HIGH | — | OPEN |
@@ -261,6 +261,18 @@ All changes committed and pushed to `origin/main`. Build: 0 errors, 0 warnings. 
 
 **PM-Moderation (Konfliktauflösung):** Coder/QA-Duplikate FEAT-011+020, FEAT-012+021, FEAT-013+022 zu je einem Task zusammengeführt. Quest-Navigation bewusst kein Ticket (ohne Memory-/Positionssystem nicht sauber umsetzbar).
 **Sprint-Reihenfolge:** A: UI-010 → ROB-001 → FEAT-011 → TEST-010 → TEST-011 · B: FEAT-012 → FEAT-013 → ROB-002 → PERF-010 → UI-011 → FEAT-014 → TEST-012
+
+### FEAT-011 Implementation Status (✅ COMPLETE)
+
+- ✅ `Core/ItemManagerEngine.cs` — Neue Engine: überwacht HP/SP-Schwellwerte pro konfiguriertem Item, feuert Hotkeys über `InputCommandQueue.TapKey`, per-item Cooldown + Check-Intervall (Parallel-Arrays, index-basiert → Zero-Allokation im Tick-Pfad), injizierbare Clock für deterministische Tests
+- ✅ `Models/ItemConfig.cs` — Konfigurationsmodell pro Item: Name, Key (VirtualKey), HpThresholdPercent (Default 70), MinSpRequired, CooldownMs (Default 3000), CheckIntervalMs (Default 1000), Enabled
+- ✅ `Profiles/Profile.cs` — `ItemManagerEnabled` (Default false) + `List<ItemConfig> ManagedItems` (pro Profil persistierbar)
+- ✅ `Profiles/AppJsonContext.cs` — JSON Source-Gen für `ItemConfig` / `List<ItemConfig>`
+- ✅ `Core/EngineOrchestrator.cs` — Engine in Tick-Pfad integriert (`Update(hpPercent, sp, deltaMs)` nach BuffManager), Start/Stop/Dispose mit Engine-Lifecycle gekoppelt, `ItemFiredMessage` via Messenger + LogMessage
+- ✅ `Core/ProfileApplier.cs` — `ApplyItemManager(p)` in beiden Load-Pfaden (Auto-Detect & manuell), `Reset()` beim Profil-Switch
+- ✅ `Core/Messages.cs` — `ItemFiredMessage` für UI-Telemetrie
+- ✅ Unit-Tests: 18 Facts (`tests/RagnaController.Tests/ItemManagerEngineTests.cs`) mit Fake-Clock — Schwelle exakt/unter/über, SP-Bedingung, Cooldown blockiert Re-Fire, Check-Intervall, Stop/Start-Lifecycle, Disabled Items, Configure/Reset, ItemFired-Event, unabhängige Cooldowns bei Multi-Items
+- ✅ Build: 0 errors | Tests: 87/87 passing (69 bestehend + 18 neu)
 
 ---
 ## 🎉 RELEASE SUMMARY — v2.0.3 (2026-08-24)

@@ -50,6 +50,7 @@ namespace RagnaController.Core
             _orchestrator.Support.Reset();
             _orchestrator.Combo.Reset();
             _orchestrator.MobSweep.Reset();
+            _orchestrator.ItemManager.Reset(); // FEAT-011: Item-Timer hart zurücksetzen
 
             // 3. Load profile configurations
             _orchestrator.CurrentProfile = p;
@@ -70,6 +71,9 @@ namespace RagnaController.Core
             {
                 ApplyProfileSettings(p);
             }
+
+            // FEAT-011: Item Manager — in beiden Pfaden (Auto-Detect & manuell) anwenden
+            ApplyItemManager(p);
 
             _orchestrator.SubscribeToLog($"[Engine] Profil geladen: {p.Name} ({p.Class})");
         }
@@ -143,6 +147,16 @@ namespace RagnaController.Core
             // Battery Throttle - check if tick provider is BackgroundTickProvider
             if (_orchestrator.TickProvider is BackgroundTickProvider btp)
                 btp.BatteryThrottle = p.BatteryThrottleEnabled;
+        }
+
+        private void ApplyItemManager(Profile p)
+        {
+            // FEAT-011: Items aus dem Profil laden und Engine aktivieren/deaktivieren.
+            _orchestrator.ItemManager.Configure(p.ManagedItems);
+            if (p.ItemManagerEnabled)
+                _orchestrator.ItemManager.Start();
+            else
+                _orchestrator.ItemManager.Stop();
         }
 
         private void ApplyRenewalTiming(Profile p, bool renewal)

@@ -60,6 +60,12 @@ namespace RagnaController.Profiles
         /// <summary>v1.7.2: Support Engine - Auto-heal party members. Default: false (disabled).</summary>
         public bool SupportEnabled { get; set; } = false;
         public int  SupportHealKeyVK     { get; set; } = 90;
+
+        // ── FEAT-011: Item Manager (Auto-Potion & Item-Verwaltung) ─────────
+        /// <summary>ItemManager aktiviert — verwaltet Items/Potions automatisch bei HP/SP-Schwelle. Default: false.</summary>
+        public bool ItemManagerEnabled { get; set; } = false;
+        /// <summary>Konfigurierte Items (Potions), die die ItemManagerEngine verwaltet.</summary>
+        public List<ItemConfig> ManagedItems { get; set; } = new();
         /// <summary>FIX #5: true = Ctrl+Tab (party cycle), false = Tab (mob target).</summary>
         public bool SupportPartyTabCycle { get; set; } = false;
 

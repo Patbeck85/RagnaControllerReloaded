@@ -54,4 +54,11 @@ namespace RagnaController.Core
         public string ProfileName { get; }
         public ProfileSwitchedMessage(string profileName) => ProfileName = profileName;
     }
+
+    // FEAT-011: Item Manager — ein verwaltetes Item (Potion/Trank) wurde eingesetzt
+    public sealed class ItemFiredMessage
+    {
+        public string ItemName { get; }
+        public ItemFiredMessage(string itemName) => ItemName = itemName;
+    }
 }

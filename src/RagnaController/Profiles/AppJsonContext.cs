@@ -15,6 +15,9 @@ namespace RagnaController
     [JsonSerializable(typeof(List<CommunityEntry>))]
     [JsonSerializable(typeof(ControllerConfig))]
     [JsonSerializable(typeof(Dictionary<string, ControllerConfig>))]
+    // FEAT-011: ItemManager — verwaltete Items (Potions)
+    [JsonSerializable(typeof(Models.ItemConfig))]
+    [JsonSerializable(typeof(List<Models.ItemConfig>))]
     [JsonSourceGenerationOptions(
         PropertyNameCaseInsensitive = true,
         UseStringEnumConverter = true,

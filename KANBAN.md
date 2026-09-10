@@ -146,11 +146,12 @@
 **DoD:** Hang simuliert im Test → Orchestrator-Restart ohne App-Crash; Watchdog deterministisch stoppbar (IDisposable); Unit-Tests grün.
 
 #### FEAT-011: ItemManagerEngine — Auto-Potion & Item-Verwaltung *(merge Coder FEAT-011 + QA FEAT-020)*
-**Status:** OPEN | **Assigned:** @coder | **Priorität:** HIGH
+**Status:** ✅ DONE | **Assigned:** @coder | **Priorität:** HIGH
 **Description:** Größte Gameplay-Lücke: kein Item-/Potion-Management vorhanden (nur `CombatEngine.CurrentHPPercent` ohne Konsument). Neue Engine überwacht HP/SP-Schwellwerte pro Profil und feuert Heil-/SP-Potion-Hotkeys, respektiert Cooldowns über `CooldownManager`, Zero-Allokation im Tick-Pfad.
 **Dependencies:** CooldownManager (existiert), SkillOrchestrator-Conditions als Muster
-**Files:** `Core/ItemManagerEngine.cs` (neu), `Core/EngineOrchestrator.cs`, `Models/Settings.cs`
-**DoD:** Items feuern bei unterschrittener Schwelle + Cooldown eingehalten; Settings-Model mit Defaults; Unit-Tests headless: Schwelle exakt/unter/über, Cooldown blockiert Re-Fire, kein Fire wenn disconnected.
+**Files:** `Core/ItemManagerEngine.cs` (neu), `Models/ItemConfig.cs` (neu), `Core/EngineOrchestrator.cs`, `Profiles/Profile.cs`, `Profiles/AppJsonContext.cs`, `Core/ProfileApplier.cs`, `Core/Messages.cs`
+**DoD:** ✅ Items feuern bei unterschrittener Schwelle + Cooldown eingehalten · ✅ Settings-Model mit Defaults (`ItemConfig`: HpThresholdPercent=70, CooldownMs=3000, CheckIntervalMs=1000) · ✅ Unit-Tests headless: 18 Facts — Schwelle exakt/unter/über, Cooldown blockiert Re-Fire, kein Fire wenn gestoppt (disconnected)
+**Implementation Notes:** Per-item Cooldown + Check-Intervall über Parallel-Arrays (`_nextCheck`/`_nextEligible`, index-basiert → Zero-Allokation im Tick-Pfad), injizierbare Clock für deterministische Tests. `ItemManagerEnabled` (Default false) + `ManagedItems` pro Profil persistierbar via JSON Source-Gen.
 
 #### UI-010: BUG-FIX — undefiniertes Design-Token `WindowControlButton` *(aus Designer-Audit)*
 **Status:** ✅ DONE | **Assigned:** @designer / @coder | **Priorität:** HIGH (S2 — 5 Fenster betroffen)
@@ -242,12 +243,12 @@
 
 ## Metriken
 - **Build:** 0 Errors / 0 Warnings ✅
-- **Tests:** 69/69 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅
+- **Tests:** 87/87 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅
 - **Phase 8 Completion:** 100% (9/9 Tasks) ✅
 - **Phase 9 Progress:** 9/9 Tasks (100%) — **ALL COMPLETE** ✅
 - **Phase 10 Planned:** 13 Tasks (5 Sprint A / 7 Sprint B / 6 Backlog inkl. 2 merges + 1 parkiert)
 
 ## Next Steps
-1. **Sprint A Fortsetzung:** ROB-001 ✅ → **FEAT-011 (ItemManagerEngine)** als nächstes → dann TEST-010 → TEST-011
+1. **Sprint A Fortsetzung:** ROB-001 ✅ → FEAT-011 ✅ → **TEST-010** als nächstes → dann TEST-011
 2. Nach Sprint A: Build + Test-Gate (0 Errors, alle Tests grün), dann Sprint B
 3. Session-Replay (FEAT-014) erst nach ROB-001/ROB-002 — Replay soll Failover-Ereignisse mitloggen können
