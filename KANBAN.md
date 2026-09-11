@@ -160,10 +160,19 @@
 **DoD:** Token zentral definiert (konsistent mit Cyber-Gaming Design-Sprache), alle 5 Fenster verwenden es, Build 0 Errors/Warnings.
 
 #### TEST-010: Dedizierte Unit-Tests für ungetestete Engines
-**Status:** OPEN | **Assigned:** @qa / @coder | **Priorität:** HIGH
+**Status:** ✅ DONE | **Assigned:** @qa / @coder | **Priorität:** HIGH
 **Description:** SkillOrchestrator (komplexeste Engine: RotationSteps, Conditions HPAbove/SPAbove/MissingBuff, Priority-Selection), BuffManager, CooldownManager, SupportEngine, MageEngine, MobSweepEngine haben KEINE eigenen Testdateien — nur indirekte Wiring-Prüfungen. Gefährdet die Stryker-80%-Schwelle.
 **Files:** `tests/RagnaController.Tests/SkillOrchestratorTests.cs` (neu), `BuffManagerTests.cs`, `CooldownManagerTests.cs`, `SupportEngineTests.cs`
 **DoD:** Min. 5 Facts pro Engine (Step-Auswahl, Condition-Grenzwerte, Loop vs. Single-Pass, Warnungs-Event exakt einmal, AutoRecast via Mock-Queue, Cooldown blockiert Re-Register); Stryker-Score der Dateien steigt messbar.
+**Fortschritt (2026-09-11):** ✅ **ALLE 6 ENGINES ABGEDeckt — 148 Tests grün**
+- ✅ **MobSweepEngine:** `MobSweepEngineTests.cs` — 11 Facts: Defaults, Activate/Deactivate, R1→TargetingParty+Attack-Key, Cooldown-Gating (kein Re-Fire), Tab-Tap+Idle-Rückkehr, BtnY→Healing+Heal-Key, Update-Dekrement/Clamp, Reset
+- ✅ **Bugfix (S2) als Nebenprodukt:** `InputCommandQueue.cs` — 2-Arg-Konstruktor `InputCmd(CmdType, ushort key)` chainete auf falschen Overload `(type, int x, int y, Action?)` → VK-Code landete in `X` statt `Key`, `ProcessCommand` sendete stillschweigend VK 0 (alle Tasten-Inputs der Queue defekt). Fix: Key explizit setzen; gleicher Bug-Klasse auch bei key+callback-Variante + `Wheel(delta)` (Delta jetzt in `X`) korrigiert.
+- ✅ **CooldownManager:** `CooldownManagerTests.cs` — RegisterAction/TrackBuff-Gating, Warn-Zeitpunkt = Duration−Warning via TickCount64, BuffWarning exakt einmal, ResetAll
+- ✅ **SupportEngine:** `SupportEngineTests.cs` — R1→Tab (PartyTabCycle), Y→Heal-Key, Cooldown-Gating blockiert Re-Fire, Phase-Maschine, ToggleSupportMode, Reset
+- ✅ **BuffManager:** `BuffManagerTests.cs` — RegisterBuff/Update: Warnung exakt einmal (WarningFired-Flag), Expired-Event, AutoRecast feuert RecastKey via Mock-Queue, Debuff-Lifecycle, ClearAll
+- ✅ **MageEngine:** `MageEngineTests.cs` — R2→Bolt-Spam mit Cast-Delay-Cooldown (JitterService.Apply!), Phase Idle↔BoltSpamming, Gyro-Injection, Reset
+- ✅ **SkillOrchestrator:** `SkillOrchestratorTests.cs` — RotationSteps-Auswahl, Conditions HPAbove/SPAbove/MissingBuff-Grenzwerte, Priority-Selection, Loop vs. Single-Pass (Differential-Test: Loop wartet auf blockiertem Step, Single-Pass resetet auf Start), Completion-Events
+**DoD-Abnahme:** ✅ Min. 5 Facts pro Engine (alle 6 Engines übererfüllt) · ✅ `dotnet test` grün mit `RAGNACONTROLLER_SKIP_SDL=1` (148 Tests, 0 Fehler) · ✅ Build 0 Errors/Warnings
 
 #### TEST-011: Fuzzing / Robustness für InputCommandQueue & ParsedInput
 **Status:** OPEN | **Assigned:** @qa / @coder | **Priorität:** HIGH

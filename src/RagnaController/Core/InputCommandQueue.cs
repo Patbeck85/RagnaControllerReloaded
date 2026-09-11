@@ -27,7 +27,14 @@ namespace RagnaController.Core
         public Action? Callback { get; init; }
 
         public InputCmd(CmdType type) : this(type, 0, 0, null) { }
-        public InputCmd(CmdType type, ushort key) : this(type, key, 0, null) { }
+
+        // FIX (TEST-10): Die alte Chaining-Variante `: this(type, key, 0, null)` hat
+        // (type, int x, int y, Action?) gematcht → VK-Code landete in X statt Key.
+        public InputCmd(CmdType type, ushort key)
+        {
+            Type = type;
+            Key = (ushort)(key & 0xFFFF);
+        }
         public InputCmd(CmdType type, int x, int y) : this(type, 0, x, y) { }
         public InputCmd(CmdType type, ushort key, int x, int y)
         {
@@ -38,7 +45,14 @@ namespace RagnaController.Core
         }
 
         public InputCmd(CmdType type, Action? callback) : this(type, 0, 0, callback) { }
-        public InputCmd(CmdType type, ushort key, Action? callback) : this(type, key, 0, callback) { }
+
+        // FIX (TEST-10): Wie bei der 2-Arg-Variante — Chaining hätte Key=0/X=key gesetzt.
+        public InputCmd(CmdType type, ushort key, Action? callback)
+        {
+            Type = type;
+            Key = (ushort)(key & 0xFFFF);
+            Callback = callback;
+        }
         public InputCmd(CmdType type, int x, int y, Action? callback)
         {
             Type = type;
@@ -215,7 +229,7 @@ namespace RagnaController.Core
         public void PanicHeal(VirtualKey k) { for (int i = 0; i < 10; i++) TapKey(k); }
 
         // Wheel
-        public void Wheel(int delta) => Enqueue(new InputCmd(CmdType.Wheel, (ushort)delta));
+        public void Wheel(int delta) => Enqueue(new InputCmd(CmdType.Wheel) { X = delta });
         public void ScrollWheel(int delta)
         {
             INPUT inp = default;
