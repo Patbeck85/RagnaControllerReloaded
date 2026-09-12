@@ -175,10 +175,16 @@
 **DoD-Abnahme:** ✅ Min. 5 Facts pro Engine (alle 6 Engines übererfüllt) · ✅ `dotnet test` grün mit `RAGNACONTROLLER_SKIP_SDL=1` (148 Tests, 0 Fehler) · ✅ Build 0 Errors/Warnings
 
 #### TEST-011: Fuzzing / Robustness für InputCommandQueue & ParsedInput
-**Status:** OPEN | **Assigned:** @qa / @coder | **Priorität:** HIGH
+**Status:** ✅ DONE | **Assigned:** @qa / @coder | **Priorität:** HIGH
 **Description:** Die Input-Queue ist das Herzstück (alle Engines enqueueen), aber nur 5 deterministische Tests. Fehlt: zufällige Command-Sequenzen, Enqueue während Stop/Shutdown-Race, Overflow bei vollem Queue, ParsedInput-Edge-Cases (256 Button-Kombinationen, extreme Stick-Werte).
 **Files:** `tests/RagnaController.Tests/InputFuzzTests.cs` (neu), `Core/InputCommandQueue.cs`, `Core/ParsedInput.cs`
 **DoD:** Seeded-RNG-Fuzz: 10.000 Commands deterministisch reproduzierbar ohne Exception/Deadlock; Race-Test Enqueue↔Stop() über 20 Zyklen verliert keine Konsistenz; Edge-Cases als Facts grün.
+**Fortschritt (2026-09-12):** ✅ **35 Fuzz-Facts grün — DoD erfüllt**
+- ✅ **Seeded-RNG-Fuzz (Seed 20260912):** 10.000 Commands (Key/VK 0..255, MouseRel, Wheel-Deltas, Wait, Atomic-Mouse, Action) — Determinismus per SHA256-Sequenz-Hash verifiziert; Consumer-Drain mit 30s-Deadlock-Guard; `QueueCount == 0` nach Drain (kein stilles Kommando-Verlust)
+- ✅ **Race-Test Enqueue↔Stop():** 20 Zyklen × 4 Producer-Threads (je 500 Commands, seeded) gegen Stop() mit randomisiertem Zeitpunkt (0..15ms); Invariante `executed ≤ enqueued`, keine Exception im Consumer
+- ✅ **Bugfix (S2) als Nebenprodukt:** `InputCommandQueue.RecordCommand` — ungesehütztes `List.Add` aus mehreren Enqueue-Threads → `ArgumentException` im Resize-Pfad. Fix: `_commandsLock` um `Commands.Add` (DEBUG-only Pfad, keine neuen Abhängigkeiten).
+- ✅ **ParsedInput-Edge-Cases:** 24 Flags × JustPressed/JustReleased-Transitionen (Theorie), 1.024 seeded zufällige Button-Kombinations-Paare gegen Referenz-Definition, extreme Stick-Werte (NaN/±Inf/Max/Min) bit-stabil durch `With()`, Trigger-Out-of-Range ohne Clamping, ButtonsPressed-Isolation
+**DoD-Abnahme:** ✅ 10.000 Commands deterministisch reproduzierbar, keine Exception/Deadlock · ✅ Race 20 Zyklen konsistent · ✅ Edge-Cases grün · ✅ `dotnet test` Full-Suite 183/183 (mit RAGNACONTROLLER_SKIP_SDL=1)
 
 ### 🟨 SPRINT B — MEDIUM Priority (nach Sprint A)
 
@@ -252,12 +258,12 @@
 
 ## Metriken
 - **Build:** 0 Errors / 0 Warnings ✅
-- **Tests:** 87/87 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅
+- **Tests:** 183/183 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅
 - **Phase 8 Completion:** 100% (9/9 Tasks) ✅
 - **Phase 9 Progress:** 9/9 Tasks (100%) — **ALL COMPLETE** ✅
 - **Phase 10 Planned:** 13 Tasks (5 Sprint A / 7 Sprint B / 6 Backlog inkl. 2 merges + 1 parkiert)
 
 ## Next Steps
-1. **Sprint A Fortsetzung:** ROB-001 ✅ → FEAT-011 ✅ → **TEST-010** als nächstes → dann TEST-011
-2. Nach Sprint A: Build + Test-Gate (0 Errors, alle Tests grün), dann Sprint B
+1. **Sprint A abgeschlossen:** ROB-001 ✅ → FEAT-011 ✅ → TEST-010 ✅ → TEST-011 ✅ (alle 4 HIGH-Tasks DONE)
+2. Nach Sprint A: Build + Test-Gate (0 Errors, alle Tests grün) ✅ — dann **Sprint B** (FEAT-012 PartyManager als nächstes)
 3. Session-Replay (FEAT-014) erst nach ROB-001/ROB-002 — Replay soll Failover-Ereignisse mitloggen können

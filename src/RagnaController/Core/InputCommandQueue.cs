@@ -157,7 +157,13 @@ namespace RagnaController.Core
         // Commands collection for testing and inspection (only populated in DEBUG builds)
         public List<InputCmd> Commands { get; } = new();
 #if DEBUG
-        private void RecordCommand(InputCmd cmd) => Commands.Add(cmd);
+        // FIX (TEST-011): RecordCommand wird von mehreren Enqueue-Threads aufgerufen —
+        // ungesehütztes List.Add wirft ArgumentException im Resize-Pfad.
+        private readonly object _commandsLock = new();
+        private void RecordCommand(InputCmd cmd)
+        {
+            lock (_commandsLock) { Commands.Add(cmd); }
+        }
 #else
         private void RecordCommand(InputCmd cmd) { }
 #endif
