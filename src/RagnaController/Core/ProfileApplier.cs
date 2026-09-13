@@ -51,6 +51,7 @@ namespace RagnaController.Core
             _orchestrator.Combo.Reset();
             _orchestrator.MobSweep.Reset();
             _orchestrator.ItemManager.Reset(); // FEAT-011: Item-Timer hart zurücksetzen
+            _orchestrator.PartyManager.Reset(); // FEAT-012: Party-Heal-Zustand hart zurücksetzen
 
             // 3. Load profile configurations
             _orchestrator.CurrentProfile = p;
@@ -74,6 +75,9 @@ namespace RagnaController.Core
 
             // FEAT-011: Item Manager — in beiden Pfaden (Auto-Detect & manuell) anwenden
             ApplyItemManager(p);
+
+            // FEAT-012: Party Manager — in beiden Pfaden (Auto-Detect & manuell) anwenden
+            ApplyPartyManager(p);
 
             _orchestrator.SubscribeToLog($"[Engine] Profil geladen: {p.Name} ({p.Class})");
         }
@@ -157,6 +161,20 @@ namespace RagnaController.Core
                 _orchestrator.ItemManager.Start();
             else
                 _orchestrator.ItemManager.Stop();
+        }
+
+        private void ApplyPartyManager(Profile p)
+        {
+            // FEAT-012: Party-Settings aus dem Profil laden und Auto-Heal-Loop aktivieren/deaktivieren.
+            var pm = _orchestrator.PartyManager;
+            pm.MemberCount = Math.Clamp(p.PartyMemberCount, 1, PartyManager.MaxMembers);
+            pm.HealThresholdPercent = Math.Clamp(p.PartyHealThresholdPercent, 0, 100);
+            pm.HealIntervalMs = Math.Max(1, p.PartyHealIntervalMs);
+            pm.HealKeyVK = (VirtualKey)p.PartyHealKeyVK;
+            if (p.PartyManagerEnabled)
+                pm.Start();
+            else
+                pm.Stop();
         }
 
         private void ApplyRenewalTiming(Profile p, bool renewal)

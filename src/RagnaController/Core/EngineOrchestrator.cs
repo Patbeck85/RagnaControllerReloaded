@@ -57,6 +57,9 @@ namespace RagnaController.Core
                                                                         // FEAT-011: Item Manager (Auto-Potion & Item-Verwaltung)
                                                                         private readonly ItemManagerEngine _itemManager;
 
+                                                                        // FEAT-012: Party Manager (Auto-Heal-Loop für Party-Mitglieder)
+                                                                        private readonly PartyManager _partyManager;
+
                                                                 // PERF-004: Memory Allocation Tracking
                                                                                                                                 private readonly MemoryAllocationTracker _memoryTracker;
                                                                                                                                                 // PERF-005: Input Latency Tracking
@@ -279,6 +282,15 @@ namespace RagnaController.Core
                                         _messenger.Publish(new ItemFiredMessage(item.Name));
                                     };
 
+                                    // FEAT-012: Initialize Party Manager (Auto-Heal-Loop)
+                                    _partyManager = new PartyManager(engineQueue);
+                                    _partyManager.MemberHealed += index =>
+                                    {
+                                        string msg = $"[Party] Auto-Heal: Mitglied #{index + 1} geheilt";
+                                        _logger?.Info(msg);
+                                        LogMessage?.Invoke(msg);
+                                    };
+
                                                                         // PERF-004: Initialize Memory Allocation Tracker
                                                                         _memoryTracker = new MemoryAllocationTracker("EngineOrchestrator", _logger);
                                                         }
@@ -342,6 +354,9 @@ namespace RagnaController.Core
 
                                                                                                 // FEAT-011: Item Manager (Auto-Potion & Item-Verwaltung)
                                                                                                 public ItemManagerEngine ItemManager => _itemManager;
+
+                                                                                                // FEAT-012: Party Manager (Auto-Heal-Loop)
+                                                                                                public PartyManager PartyManager => _partyManager;
 
                                                                                                 // PERF-005: Input Latency Tracker
                                                                                                                                                                                                                                 public InputLatencyTracker LatencyTracker => _latencyTracker;
@@ -438,6 +453,9 @@ namespace RagnaController.Core
                                                                                                                                                                                                 // FEAT-011: Update item manager (Auto-Potion bei HP/SP-Schwelle)
                                                                                                                                                                                                 _itemManager.Update(_combat.CurrentHPPercent, _combat.CurrentSP, _actualDeltaMs);
 
+                                                                                                                                                                                                // FEAT-012: Update party manager (Auto-Heal-Loop)
+                                                                                                                                                                                                _partyManager.Update();
+
                                                                                                                                                                                                 // PERF-004: Record memory allocation stats
                                                                                                                                                                                                 _memoryTracker?.RecordTick();
 
@@ -523,6 +541,7 @@ namespace RagnaController.Core
                     _queue?.Start(); // Ensure InputCommandQueue consumer is running
                     _watchdog.Start(); // ROB-001: Hang-Erkennung nur bei aktivem Engine
                     _itemManager.Start(); // FEAT-011: Item-Prüfung nur bei aktivem Engine
+                    _partyManager.Start(); // FEAT-012: Auto-Heal nur bei aktivem Engine
                 }
 
         public void Stop()
@@ -532,6 +551,7 @@ namespace RagnaController.Core
             StatusChanged?.Invoke(EngineStatus.Stopped);
             _watchdog.Stop(); // ROB-001: kein Hang-Check ohne aktive Tick-Schleife
             _itemManager.Stop(); // FEAT-011: keine Auto-Items ohne aktive Engine
+            _partyManager.Stop(); // FEAT-012: kein Auto-Heal ohne aktive Engine
         }
 
         /// <summary>
@@ -590,6 +610,7 @@ namespace RagnaController.Core
                                     _latencyTracker?.Dispose();
                                     _watchdog.Dispose(); // ROB-001: deterministisch stoppbar
                                     _itemManager.Dispose(); // FEAT-011: Item-Prüfung endgültig stoppen
+                                    _partyManager.Dispose(); // FEAT-012: Auto-Heal endgültig stoppen
                                     _logger?.Info("=== Engine Shutdown ===");
                                     _logger?.Dispose();
                                 }

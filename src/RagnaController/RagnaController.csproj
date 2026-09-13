@@ -184,6 +184,7 @@
                         <Compile Include="Core\MemoryAllocationTracker.cs" />
                         <Compile Include="Core\InputLatencyTracker.cs" />
         <Compile Include="Core\ItemManagerEngine.cs" />
+        <Compile Include="Core\PartyManager.cs" />
 
                 <Compile Include="Core\TtsAnnouncerService.cs" />
                 <Compile Include="Core\UpdateChecker.cs" />
