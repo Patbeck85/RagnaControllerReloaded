@@ -188,19 +188,20 @@
 
 ### 🟨 SPRINT B — MEDIUM Priority (nach Sprint A)
 
-#### FEAT-012: PartyManager + Auto-Heal-Loop *(merge Coder FEAT-012 + QA FEAT-021)*
-**Status:** OPEN | **Assigned:** @coder | **Priorität:** MEDIUM
+#### FEAT-012: PartyManager + Auto-Heal-Loop *(merge Coder FEAT-012 + QA FEAT-021)* ✅ DONE
+**Status:** CLOSED | **Assigned:** @coder | **Priorität:** MEDIUM
 **Description:** `PartyTargetingEnabled` existiert als Flag in `AutoTargetEngine` ohne Logik dahinter. Neue PartyManager-Engine: Party-Mitglieder (max. 5), Heilungs-/Buff-Aktionen bei HP-Schwelle des schwächsten Mitglieds, autonomer Heal-Loop (Tab + Heal zyklisch, konfigurierbares Intervall) — manuelles Verhalten (Y/R1) bleibt unverändert.
 **Dependencies:** FEAT-011 (Party-Heiltränke), BuffManager (existiert)
 **Files:** `Core/PartyManager.cs` (neu), `Core/AutoTargetEngine.cs`, `Core/SupportEngine.cs`, `Core/EngineOrchestrator.cs`
 **DoD:** Party-Mitglieder verwaltbar, Heil-Loop feuert bei Schwelle, Targeting kann auf Party umschalten; Unit-Tests headless für Zielwahl + Zyklus-Timing.
 
 #### FEAT-013: Target-Management — Tab-Cycling, Lock-Persistenz, Auto-Retarget *(merge Coder FEAT-013 + QA FEAT-022)*
-**Status:** OPEN | **Assigned:** @coder | **Priorität:** MEDIUM
+**Status:** ✅ CLOSED | **Assigned:** @coder | **Priorität:** MEDIUM
 **Description:** `AutoTargetEngine` hat `IsTargetLocked`, aber kein echtes Tab-Cycling und keine Lock-Persistenz über Skill-Interrupts. Ergänzung: Tab-Zielwechsel im Radius (nur bei Lock, kein Seek-Reset), Lock-Timeout/Reichweitenverlust → Auto-Retarget mit LogMessage-Event, konfigurierbar sticky vs. nearest.
 **Dependencies:** FEAT-012 (Party als exkludierbare Ziele)
 **Files:** `Core/AutoTargetEngine.cs`, `Models/Settings.cs`
-**DoD:** Tab mit/ohne Lock, Lock übersteht Skill-Interrupt, Tod/Reichweitenverlust → Auto-Retarget; Unit-Tests für alle Zustandsübergänge.
+**DoD:** ✅ Tab mit/ohne Lock · ✅ Lock übersteht Skill-Interrupt · ✅ Tod/Reichweitenverlust → Auto-Retarget (`LostTarget`-Event, an Orchestrator-LogMessage gekoppelt) · ✅ konfigurierbar sticky vs. nearest (`TargetingMode`) · ✅ Unit-Tests für alle Zustandsübergänge (9 Facts).
+**Erledigt 2026-09-14:** `TargetingMode`(Sticky/Nearest), `MaxTargetDistance`, `LostTarget`-Event, `CheckTargetValidity()`, `SetTarget/ClearTarget`-Feed mit False-Positive-Schutz. Suite: 209 Tests grün.
 
 #### ROB-002: Input-Emulation-Failover (SendInput ↔ Kernel-Service)
 **Status:** OPEN | **Assigned:** @coder | **Priorität:** MEDIUM

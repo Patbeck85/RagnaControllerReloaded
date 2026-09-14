@@ -291,6 +291,17 @@ namespace RagnaController.Core
                                         LogMessage?.Invoke(msg);
                                     };
 
+                                    // FEAT-013: Target-Management — Zielverlust (Tod/Reichweite) loggen.
+                                    // LostTarget feuert vom AutoTargetEngine.Update() auf dem Tick-Thread;
+                                    // nur Log + UI-Nachricht, keine Engine-Aktionen (KISS).
+                                    _autoTarget.LostTarget += reason =>
+                                    {
+                                        string label = reason == "dead" ? "Ziel tot" : "Ziel außerhalb der Reichweite";
+                                        string msg = $"[Target] Ziel verloren ({label}) — starte Auto-Retargeting.";
+                                        _logger?.Info(msg);
+                                        LogMessage?.Invoke(msg);
+                                    };
+
                                                                         // PERF-004: Initialize Memory Allocation Tracker
                                                                         _memoryTracker = new MemoryAllocationTracker("EngineOrchestrator", _logger);
                                                         }
