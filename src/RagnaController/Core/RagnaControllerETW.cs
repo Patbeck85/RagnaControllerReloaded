@@ -283,6 +283,13 @@ namespace RagnaController.Core
             if (IsEnabled()) WriteEvent(81, reason, restartCount);
         }
 
+        [Event(82, Level = EventLevel.Informational, Keywords = Keywords.Input | Keywords.Performance,
+            Message = "Input emulation failover: {0} -> {1} (ConsecutiveSlow={2})")]
+        public void InputFailoverSwitched(string fromStrategy, string toStrategy, int consecutiveSlow)
+        {
+            if (IsEnabled()) WriteEvent(82, fromStrategy, toStrategy, consecutiveSlow);
+        }
+
         #endregion
     }
 }

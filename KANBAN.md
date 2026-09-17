@@ -258,13 +258,14 @@
 6. **Quest-Navigation:** von QA geprüft → ohne Memory-/Positionssystem nicht sauber umsetzbar, bewusst KEIN Ticket.
 
 ## Metriken
-- **Build:** 0 Errors / 0 Warnings ✅
-- **Tests:** 183/183 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅
+- **Build:** 0 Errors ✅ (24 Vorwarnungen, keine neuen durch ROB-002)
+- **Tests:** 215/215 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅ — inkl. 6 neue ROB-002 Failover-Tests
 - **Phase 8 Completion:** 100% (9/9 Tasks) ✅
 - **Phase 9 Progress:** 9/9 Tasks (100%) — **ALL COMPLETE** ✅
 - **Phase 10 Planned:** 13 Tasks (5 Sprint A / 7 Sprint B / 6 Backlog inkl. 2 merges + 1 parkiert)
 
 ## Next Steps
 1. **Sprint A abgeschlossen:** ROB-001 ✅ → FEAT-011 ✅ → TEST-010 ✅ → TEST-011 ✅ (alle 4 HIGH-Tasks DONE)
-2. Nach Sprint A: Build + Test-Gate (0 Errors, alle Tests grün) ✅ — dann **Sprint B** (FEAT-012 PartyManager als nächstes)
-3. Session-Replay (FEAT-014) erst nach ROB-001/ROB-002 — Replay soll Failover-Ereignisse mitloggen können
+2. **ROB-002 abgeschlossen ✅** — Input-Emulation-Failover (SendInput ↔ Kernel): State-Machine in `InputRouter` (`InitializeFailover` + `RecordSendInputLatency`), Orchestrator-Wiring mit graceful Driver-Degradation, ETW Event 82, 6 Unit-Tests. Build 0 Errors, 215/215 grün.
+3. **Sprint B** → FEAT-012 PartyManager als nächstes
+4. Session-Replay (FEAT-014) erst nach ROB-001/ROB-002 — Replay soll Failover-Ereignisse mitloggen können

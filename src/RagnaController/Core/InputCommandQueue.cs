@@ -143,6 +143,13 @@ namespace RagnaController.Core
         public event Action<InputCmd>? OnCommandEnqueued;
         public event Action<InputCmd>? OnCommandExecuted;
 
+        /// <summary>
+        /// ROB-002: Feuert nach jedem SendInput-Flush mit der gemessenen API-Latenz in ms.
+        /// Wird vom Failover-Mechanismus (InputRouter) genutzt, um langsamere
+        /// Emulations-Pfade zu erkennen und auf die Kernel-Strategie zu wechseln.
+        /// </summary>
+        public event Action<double>? SendInputLatencyRecorded;
+
         public bool IsAddingCompleted => _queue!.IsAddingCompleted;
         public int QueueCount => _queue!.Count;
         public long SessionSavedClicks => Interlocked.Read(ref _savedClicks);
@@ -448,7 +455,11 @@ namespace RagnaController.Core
             SendInput((uint)batchCount, batch.ToArray(), InputSize);
             
             sendInputSw.Stop();
-            _latencyTracker?.RecordSendInputLatency(sendInputSw.Elapsed.TotalMilliseconds, batchCount, _controllerId);
+            double elapsedMs = sendInputSw.Elapsed.TotalMilliseconds;
+            _latencyTracker?.RecordSendInputLatency(elapsedMs, batchCount, _controllerId);
+
+            // ROB-002: Failover-Mechanismus bekommt die gemessene Flush-Latenz.
+            SendInputLatencyRecorded?.Invoke(elapsedMs);
 
             // Clear the batch for next accumulation
             batch.Clear();

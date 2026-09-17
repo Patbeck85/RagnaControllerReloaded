@@ -25,6 +25,10 @@ namespace RagnaController.Core
         private readonly SnapshotBuilder _snapshot;
         private readonly InputCommandQueue? _queue;
 
+        // ROB-002: Input-Emulation-Failover — Kernel-Strategie hält einen Interception-Kontext
+        // (P/Invoke-Handle) und muss beim Shutdown deterministisch freigegeben werden.
+        private InterceptionMouseStrategy? _mouseEmulationFallback;
+
         // ── Engines ──
                 private readonly MovementEngine _movement;
                 private readonly CombatEngine _combat;
@@ -233,6 +237,21 @@ namespace RagnaController.Core
                 _combat, _movement, _autoTarget, _mage, _combo, _cursor, _smartCursor,
                 _kite, _support, _overlayRouter, _mobSweep, _handheld, _feedback, _cooldownManager);
             _profileApplier = new ProfileApplier(this, _messenger);
+
+            // ROB-002: Input-Emulation-Failover (SendInput ↔ Kernel).
+            // Primär = SendInput (Standard); Fallback = Interception-Treiber, nur wenn er
+            // auf dieser Maschine verfügbar ist. Ohne Treiber bleibt alles bei SendInput —
+            // der Failover-Schalter wird dann nie ausgelöst (KISS: kein No-Op-Overhead).
+            var primaryStrategy = new SendInputMouseStrategy();
+            try { _mouseEmulationFallback = new InterceptionMouseStrategy(); }
+            catch { _mouseEmulationFallback = null; } // DLL/Treiber fehlt → bewusst ohne Fallback
+            if (_mouseEmulationFallback != null && !_mouseEmulationFallback.IsAvailable)
+            {
+                _mouseEmulationFallback.Dispose();
+                _mouseEmulationFallback = null;
+            }
+            _inputRouter.InitializeFailover(primaryStrategy, _mouseEmulationFallback, Models.Settings.Load());
+            engineQueue.SendInputLatencyRecorded += _inputRouter.RecordSendInputLatency;
 
             // NOW subscribe to events - _inputRouter is guaranteed non-null
                                     _combat.ActionFired += action =>
@@ -620,6 +639,7 @@ namespace RagnaController.Core
                                     _memoryTracker?.Dispose();
                                     _latencyTracker?.Dispose();
                                     _watchdog.Dispose(); // ROB-001: deterministisch stoppbar
+                                    _mouseEmulationFallback?.Dispose(); // ROB-002: Interception-Kontext freigeben
                                     _itemManager.Dispose(); // FEAT-011: Item-Prüfung endgültig stoppen
                                     _partyManager.Dispose(); // FEAT-012: Auto-Heal endgültig stoppen
                                     _logger?.Info("=== Engine Shutdown ===");

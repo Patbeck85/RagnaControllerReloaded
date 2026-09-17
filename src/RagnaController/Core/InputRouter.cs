@@ -10,20 +10,120 @@ namespace RagnaController.Core
     /// </summary>
     public class InputRouter
     {
-        private readonly CombatEngine _combat;
-        private readonly MovementEngine _movement;
-        private readonly AutoTargetEngine _autoTarget;
-        private readonly MageEngine _mage;
-        private readonly ComboEngine _combo;
-        private readonly CursorEngine _cursor;
-        private readonly SmartCursorService _smartCursor;
-        private readonly KiteEngine _kite;
-        private readonly SupportEngine _support;
-        private readonly OverlayRouter _overlayRouter;
-        private readonly MobSweepEngine _mobSweep;
-        private readonly HandheldModeManager _handheld;
-        private readonly IFeedbackProvider _feedback;
-        private readonly CooldownManager _cooldownManager;
+        // FIX (ROB-002): Engine-Felder bewusst nicht mehr `readonly`, damit der
+        // Failover-only-Konstruktor sie leer lassen kann (Failover toucht keine Engine).
+        // `= null!` = Deklarations-Init, damit CS8618 (TreatWarningsAsErrors) still ist;
+        // die Produktion nutzt ausschließlich den Voll-Konstruktor, der alle Engines setzt.
+        private CombatEngine _combat = null!;
+        private MovementEngine _movement = null!;
+        private AutoTargetEngine _autoTarget = null!;
+        private MageEngine _mage = null!;
+        private ComboEngine _combo = null!;
+        private CursorEngine _cursor = null!;
+        private SmartCursorService _smartCursor = null!;
+        private KiteEngine _kite = null!;
+        private SupportEngine _support = null!;
+        private OverlayRouter _overlayRouter = null!;
+        private MobSweepEngine _mobSweep = null!;
+        private HandheldModeManager _handheld = null!;
+        private IFeedbackProvider _feedback = null!;
+        private CooldownManager _cooldownManager = null!;
+
+        // ── ROB-002: Input-Emulation-Failover (SendInput ↔ Kernel) ─────────────
+        private IMouseEmulationStrategy? _failoverPrimary;
+        private IMouseEmulationStrategy? _failoverFallback;
+        private int _failoverThresholdMs;
+        private int _failoverTriggerCount;
+        private int _failoverRecoveryCount;
+        private int _consecutiveSlow;
+        private int _consecutiveStable;
+        private bool _usingFallback;
+        private readonly object _failoverLock = new();
+
+        /// <summary>Die aktuell aktive Emulations-Strategie (SendInput oder Kernel).</summary>
+        public IMouseEmulationStrategy? ActiveStrategy => _usingFallback ? _failoverFallback : _failoverPrimary;
+
+        /// <summary>ROB-002: Feuert bei jedem Failover-Switch (von, zu, Auslöser-Zähler). Für UI/Telemetrie.</summary>
+        public event Action<string, string, int>? FailoverSwitched;
+
+        /// <summary>
+        /// ROB-002: Initialisiert den Input-Emulation-Failover.
+        /// Primär = SendInput (Standard), Fallback = Kernel-Strategie (Interception).
+        /// </summary>
+        public void InitializeFailover(IMouseEmulationStrategy primary, IMouseEmulationStrategy? fallback, Models.Settings settings)
+        {
+            lock (_failoverLock)
+            {
+                _failoverPrimary = primary;
+                _failoverFallback = fallback;
+                _failoverThresholdMs = Math.Max(1, settings.FailoverLatencyThresholdMs);
+                _failoverTriggerCount = Math.Max(1, settings.FailoverTriggerCount);
+                _failoverRecoveryCount = Math.Max(1, settings.FailoverRecoveryCount);
+            }
+        }
+
+        /// <summary>
+        /// ROB-002: Failover-State-Machine. Wird von InputCommandQueue.SendInputLatencyRecorded
+        /// auf dem Consumer-Thread aufgerufen (kein UI-Zugriff → thread-sicher per Design).
+        /// N aufeinanderfolgende Flushes über der Latenz-Schwelle → Switch auf Kernel-Fallback.
+        /// M stabile Flushes danach → Recovery zurück zu SendInput.
+        /// </summary>
+        public void RecordSendInputLatency(double latencyMs)
+        {
+            IMouseEmulationStrategy? primary;
+            lock (_failoverLock)
+            {
+                primary = _failoverPrimary;
+                if (primary == null || _failoverFallback == null) return;
+
+                bool slow = latencyMs > _failoverThresholdMs;
+
+                if (!_usingFallback)
+                {
+                    // ── Normal-Betrieb: SendInput-Latenz beobachten ─────────────
+                    if (slow)
+                    {
+                        _consecutiveSlow++;
+                        _consecutiveStable = 0;
+                        if (_consecutiveSlow >= _failoverTriggerCount)
+                        {
+                            _usingFallback = true;
+                            _consecutiveSlow = 0;
+                            SwitchTo(primary.DisplayName, _failoverFallback.DisplayName, _failoverTriggerCount);
+                        }
+                    }
+                    else
+                    {
+                        _consecutiveSlow = 0;
+                    }
+                }
+                else
+                {
+                    // ── Fallback aktiv: auf stabile SendInput-Latenz warten ───────
+                    if (!slow)
+                    {
+                        _consecutiveStable++;
+                        _consecutiveSlow = 0;
+                        if (_consecutiveStable >= _failoverRecoveryCount)
+                        {
+                            _usingFallback = false;
+                            _consecutiveStable = 0;
+                            SwitchTo(_failoverFallback.DisplayName, primary.DisplayName, _failoverRecoveryCount);
+                        }
+                    }
+                    else
+                    {
+                        _consecutiveStable = 0;
+                    }
+                }
+            }
+        }
+
+        private void SwitchTo(string from, string to, int triggerCount)
+        {
+            RagnaControllerETW.Log.InputFailoverSwitched(from, to, triggerCount);
+            FailoverSwitched?.Invoke(from, to, triggerCount);
+        }
 
         public InputRouter(
             CombatEngine combat,
@@ -56,6 +156,13 @@ namespace RagnaController.Core
             _feedback = feedback;
             _cooldownManager = cooldownManager;
         }
+
+        /// <summary>
+        /// ROB-002: Failover-only-Konstruktor für Unit-Tests (keine Engines).
+        /// Nur die Failover-State-Machine ist in dieser Instanz aktiv;
+        /// RouteInput darf hier NICHT aufgerufen werden.
+        /// </summary>
+        internal InputRouter() { }
 
         /// <summary>
         /// Route input through the engine chain. Returns true if input was consumed.

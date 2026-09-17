@@ -61,6 +61,14 @@ namespace RagnaController.Models
         public bool EnableTelemetry { get; set; } = false;
         public bool HasAskedForTelemetry { get; set; } = false;
 
+        // ── ROB-002: Input-Emulation-Failover (SendInput ↔ Kernel-Service) ───
+        /// <summary>SendInput-Latenz-Schwelle in ms. Flushes darüber gelten als "langsam".</summary>
+        public int FailoverLatencyThresholdMs { get; set; } = 5;
+        /// <summary>N aufeinanderfolgende langsame Flushes → Auto-Switch auf Kernel-Strategie.</summary>
+        public int FailoverTriggerCount { get; set; } = 3;
+        /// <summary>M stabile (schnelle) Flushes nach Switch → Recovery zurück zu SendInput.</summary>
+        public int FailoverRecoveryCount { get; set; } = 2;
+
         // Fenster-Einstellungen (v1.6.0)
         public bool StartMinimized { get; set; } = false;
         public bool ShowControllerViz { get; set; } = true;
