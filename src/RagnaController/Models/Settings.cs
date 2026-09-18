@@ -69,6 +69,10 @@ namespace RagnaController.Models
         /// <summary>M stabile (schnelle) Flushes nach Switch → Recovery zurück zu SendInput.</summary>
         public int FailoverRecoveryCount { get; set; } = 2;
 
+        // ── FEAT-014: Session-Replay (JSONL-Aufzeichnung für deterministische Wiedergabe) ──
+        /// <summary>Session-Replay aktiviert? Aufzeichnung läuft pro Engine-Session, Rotation bei 50 MB.</summary>
+        public bool EnableSessionRecording { get; set; } = false;
+
         // Fenster-Einstellungen (v1.6.0)
         public bool StartMinimized { get; set; } = false;
         public bool ShowControllerViz { get; set; } = true;

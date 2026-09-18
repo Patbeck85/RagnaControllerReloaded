@@ -185,6 +185,7 @@
                         <Compile Include="Core\InputLatencyTracker.cs" />
         <Compile Include="Core\ItemManagerEngine.cs" />
         <Compile Include="Core\PartyManager.cs" />
+        <Compile Include="Core\SessionRecorder.cs" />
 
                 <Compile Include="Core\TtsAnnouncerService.cs" />
                 <Compile Include="Core\UpdateChecker.cs" />

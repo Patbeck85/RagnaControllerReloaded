@@ -204,7 +204,7 @@
 **Erledigt 2026-09-14:** `TargetingMode`(Sticky/Nearest), `MaxTargetDistance`, `LostTarget`-Event, `CheckTargetValidity()`, `SetTarget/ClearTarget`-Feed mit False-Positive-Schutz. Suite: 209 Tests grün.
 
 #### ROB-002: Input-Emulation-Failover (SendInput ↔ Kernel-Service)
-**Status:** OPEN | **Assigned:** @coder | **Priorität:** MEDIUM
+**Status:** ✅ CLOSED (2026-09-17, commit 0dc14e3) | **Assigned:** @coder | **Priorität:** MEDIUM
 **Description:** `SendInputMouseStrategy` und `KernelInputService` existieren nebeneinander, Fallback ist statisch konfiguriert. Dynamisches Failover in `InputRouter`: N aufeinanderfolgende Kommandos außerhalb erwarteter Latenz (via InputLatencyTracker) → Auto-Switch + Telemetrie-Event + Recovery nach M erfolgreichen Kommandos.
 **Dependencies:** PERF-005, IMouseEmulationStrategy (existieren)
 **Files:** `Core/InputRouter.cs`, `Core/SendInputMouseStrategy.cs`, `Core/KernelInputService.cs`
@@ -225,11 +225,11 @@
 **DoD:** Live-Werte <2Hz Refresh (kein Tick-Pfad-Zugriff, thread-sicher über Dispatcher), Design-Sprache konsistent, Build 0 Errors.
 
 #### FEAT-014: Session-Replay — Aufzeichnung & Wiedergabe
-**Status:** OPEN | **Assigned:** @coder | **Priorität:** MEDIUM
+**Status:** ✅ CLOSED (2026-09-18) | **Assigned:** @coder | **Priorität:** MEDIUM
 **Description:** `ActionLogService` loggt nur Labels in In-Memory-Ringbuffer. Recorder zeichnet pro Session JSONL auf (Zeitstempel, Input-Snapshot, Engine-Zustand, gefeuerte Aktionen), <1ms Overhead via Pools, Rotation bei 50MB. Replay-Player im Test-Harness für deterministische Regressionstests + Bug-Report-Debugging.
 **Dependencies:** ActionLogService, ControllerSnapshot (existieren)
-**Files:** `Core/SessionRecorder.cs` (neu), `Core/ActionLogService.cs`, `Core/EngineOrchestrator.cs`
-**DoD:** Roundtrip-Test: aufzeichnen → abspielen → identische Aktionssequenz.
+**Files:** `Core/SessionRecorder.cs` (neu), `Models/Settings.cs` (`EnableSessionRecording`), `EngineOrchestrator.cs`, `tests/RagnaController.Tests/SessionRecorderTests.cs` (neu)
+**DoD:** ✅ Roundtrip-Test: aufzeichnen → abspielen → identische Aktionssequenz — 6 Tests grün (Roundtrip, Rotation-Merge, Action-Sequenz, State-Throttle, JSON-Escaping, Header-Skip).
 
 #### TEST-012: Long-Run-Stability-Test (Soak) mit Memory-Leak-Guard
 **Status:** OPEN | **Assigned:** @qa / @coder | **Priorität:** MEDIUM
@@ -259,13 +259,13 @@
 
 ## Metriken
 - **Build:** 0 Errors ✅ (24 Vorwarnungen, keine neuen durch ROB-002)
-- **Tests:** 215/215 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅ — inkl. 6 neue ROB-002 Failover-Tests
+- **Tests:** 221/221 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅ — inkl. 6 FEAT-014 SessionRecorder-Tests
 - **Phase 8 Completion:** 100% (9/9 Tasks) ✅
 - **Phase 9 Progress:** 9/9 Tasks (100%) — **ALL COMPLETE** ✅
 - **Phase 10 Planned:** 13 Tasks (5 Sprint A / 7 Sprint B / 6 Backlog inkl. 2 merges + 1 parkiert)
 
 ## Next Steps
 1. **Sprint A abgeschlossen:** ROB-001 ✅ → FEAT-011 ✅ → TEST-010 ✅ → TEST-011 ✅ (alle 4 HIGH-Tasks DONE)
-2. **ROB-002 abgeschlossen ✅** — Input-Emulation-Failover (SendInput ↔ Kernel): State-Machine in `InputRouter` (`InitializeFailover` + `RecordSendInputLatency`), Orchestrator-Wiring mit graceful Driver-Degradation, ETW Event 82, 6 Unit-Tests. Build 0 Errors, 215/215 grün.
-3. **Sprint B** → FEAT-012 PartyManager als nächstes
-4. Session-Replay (FEAT-014) erst nach ROB-001/ROB-002 — Replay soll Failover-Ereignisse mitloggen können
+2. **ROB-002 abgeschlossen ✅** — Input-Emulation-Failover (SendInput ↔ Kernel): State-Machine in `InputRouter` (`InitializeFailover` + `RecordSendInputLatency`), Orchestrator-Wiring mit graceful Driver-Degradation, ETW Event 82, 6 Unit-Tests.
+3. **Sprint B Fortschritt:** FEAT-012 PartyManager ✅ → FEAT-013 Target-Management ✅ → ROB-002 ✅ → FEAT-014 Session-Replay ✅ (CLOSED 2026-09-18: JSONL-Recorder, 50MB-Rotation, Replay-Player, 6 Tests)
+4. **Nächster Punkt:** PERF-010 Zero-Allokation-Gate im Tick-Pfad (CI-erzwingend) — danach TEST-012 Soak, dann UI-011 Telemetrie-Dashboard

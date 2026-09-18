@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using RagnaController.Models;
@@ -28,6 +29,9 @@ namespace RagnaController.Core
         // ROB-002: Input-Emulation-Failover — Kernel-Strategie hält einen Interception-Kontext
         // (P/Invoke-Handle) und muss beim Shutdown deterministisch freigegeben werden.
         private InterceptionMouseStrategy? _mouseEmulationFallback;
+
+        // FEAT-014: Session-Replay — JSONL-Aufzeichnung pro Engine-Session (nur wenn in Settings aktiviert).
+        private SessionRecorder? _sessionRecorder;
 
         // ── Engines ──
                 private readonly MovementEngine _movement;
@@ -253,6 +257,19 @@ namespace RagnaController.Core
             _inputRouter.InitializeFailover(primaryStrategy, _mouseEmulationFallback, Models.Settings.Load());
             engineQueue.SendInputLatencyRecorded += _inputRouter.RecordSendInputLatency;
 
+            // FEAT-014: Session-Replay — JSONL-Aufzeichnung pro Engine-Session (opt-in via Settings).
+            // Overhead <1ms: wiederverwendeter StringBuilder, ein Lock, 50-MB-Rotation.
+            if (Models.Settings.Load().EnableSessionRecording)
+            {
+                string sessionDir = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "RagnaController", "Replays",
+                    $"session-{DateTime.Now:yyyyMMdd-HHmmss}");
+                _sessionRecorder = new SessionRecorder(sessionDir, "EngineOrchestrator");
+                _sessionRecorder.Start();
+                engineQueue.OnCommandEnqueued += _sessionRecorder.RecordInput;
+            }
+
             // NOW subscribe to events - _inputRouter is guaranteed non-null
                                     _combat.ActionFired += action =>
                                     {
@@ -261,6 +278,9 @@ namespace RagnaController.Core
                                         _cooldownManager.RegisterAction(action);
                                         // Also notify InputRouter
                                         _inputRouter.OnActionFired(action, _rumbleEnabled);
+
+                                        // FEAT-014: Session-Replay — gefeuerte Aktion aufzeichnen (deterministische Wiedergabe)
+                                        _sessionRecorder?.RecordAction(action.Label, ActionFiredKind.Skill);
 
                                         // FEAT-006: Register ground spell if applicable
                                                                     if (action.IsGroundSpell && _winTracker.IsTracking && _groundSpell != null)
@@ -496,6 +516,9 @@ namespace RagnaController.Core
                 var snap = _snapshot.Build(input, _sysMonitor.IsFocusLocked, sw.Elapsed.TotalMilliseconds);
                 SnapshotUpdated?.Invoke(snap);
                 _messenger.Publish(new SnapshotReadyMessage(snap));
+
+                // FEAT-014: Session-Replay — Engine-Zustand (intern 10 Hz gedrosselt)
+                _sessionRecorder?.RecordState(snap);
             }
             catch (Exception ex)
             {
@@ -640,6 +663,7 @@ namespace RagnaController.Core
                                     _latencyTracker?.Dispose();
                                     _watchdog.Dispose(); // ROB-001: deterministisch stoppbar
                                     _mouseEmulationFallback?.Dispose(); // ROB-002: Interception-Kontext freigeben
+                                    _sessionRecorder?.Dispose(); // FEAT-014: JSONL-Aufzeichnung flushen + Writer schließen
                                     _itemManager.Dispose(); // FEAT-011: Item-Prüfung endgültig stoppen
                                     _partyManager.Dispose(); // FEAT-012: Auto-Heal endgültig stoppen
                                     _logger?.Info("=== Engine Shutdown ===");
