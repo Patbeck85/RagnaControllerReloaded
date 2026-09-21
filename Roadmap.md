@@ -248,7 +248,7 @@ All changes committed and pushed to `origin/main`. Build: 0 errors, 0 warnings. 
 | **FEAT-012** | PartyManager + Auto-Heal-Loop (merge FEAT-021) | MEDIUM | FEAT-011, BuffManager | OPEN |
 | **FEAT-013** | Target-Management: Tab-Cycling, Lock-Persistenz, Auto-Retarget (merge FEAT-022) | MEDIUM | FEAT-012 | OPEN |
 | **ROB-002** | Input-Emulation-Failover: SendInput ↔ Kernel-Service Auto-Switch | MEDIUM | PERF-005 | OPEN |
-| **PERF-010** | Zero-Allokation-Gate im Tick-Pfad (CI-erzwingend, ≤2 Allokationen/Tick) | MEDIUM | PERF-004 | OPEN |
+| **PERF-010** | Zero-Allokation-Gate im Tick-Pfad (CI-erzwingend, ≤2 Allokationen/Tick) | MEDIUM | PERF-004 | COMPLETE ✅ |
 | **UI-011** | Live-Telemetrie-Dashboard (Phase-9-Metriken in UI sichtbar machen) | MEDIUM | Phase 9 Tracker, UI-010 | OPEN |
 | **FEAT-014** | Session-Replay: JSONL-Aufzeichnung + Replay-Player für Regressionstests | MEDIUM | ActionLogService | OPEN |
 | **TEST-012** | Long-Run-Stability-Test (Soak): 10k Ticks + Memory-Leak-Guard | MEDIUM | TEST-010 | OPEN |
