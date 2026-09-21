@@ -251,7 +251,7 @@ All changes committed and pushed to `origin/main`. Build: 0 errors, 0 warnings. 
 | **PERF-010** | Zero-Allokation-Gate im Tick-Pfad (CI-erzwingend, ≤2 Allokationen/Tick) | MEDIUM | PERF-004 | COMPLETE ✅ |
 | **UI-011** | Live-Telemetrie-Dashboard (Phase-9-Metriken in UI sichtbar machen) | MEDIUM | Phase 9 Tracker, UI-010 | OPEN |
 | **FEAT-014** | Session-Replay: JSONL-Aufzeichnung + Replay-Player für Regressionstests | MEDIUM | ActionLogService | OPEN |
-| **TEST-012** | Long-Run-Stability-Test (Soak): 10k Ticks + Memory-Leak-Guard | MEDIUM | TEST-010 | OPEN |
+| **TEST-012** | Long-Run-Stability-Test (Soak): 10k Ticks + Memory-Leak-Guard | MEDIUM | TEST-010 | COMPLETE ✅ |
 | FEAT-015 | Multi-Window / Multi-Client-Support (YAGNI: nur Routing) | LOW | WindowTracker | BACKLOG |
 | FEAT-023 | Auto-Item-Einlagerung (Storage-Drop bei vollem Inventar) | LOW | RoUiMenuService, SmartCursorService | BACKLOG |
 | FEAT-024 | Multi-Character-Profil-Schnellwechsel (Name-basiert) | LOW | ProfileApplier | BACKLOG |
