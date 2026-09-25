@@ -249,7 +249,7 @@ All changes committed and pushed to `origin/main`. Build: 0 errors, 0 warnings. 
 | **FEAT-013** | Target-Management: Tab-Cycling, Lock-Persistenz, Auto-Retarget (merge FEAT-022) | MEDIUM | FEAT-012 | OPEN |
 | **ROB-002** | Input-Emulation-Failover: SendInput ↔ Kernel-Service Auto-Switch | MEDIUM | PERF-005 | OPEN |
 | **PERF-010** | Zero-Allokation-Gate im Tick-Pfad (CI-erzwingend, ≤2 Allokationen/Tick) | MEDIUM | PERF-004 | COMPLETE ✅ |
-| **UI-011** | Live-Telemetrie-Dashboard (Phase-9-Metriken in UI sichtbar machen) | MEDIUM | Phase 9 Tracker, UI-010 | OPEN |
+| **UI-011** | Live-Telemetrie-Dashboard (Phase-9-Metriken in UI sichtbar machen) | MEDIUM | Phase 9 Tracker, UI-010 | COMPLETE ✅ |
 | **FEAT-014** | Session-Replay: JSONL-Aufzeichnung + Replay-Player für Regressionstests | MEDIUM | ActionLogService | OPEN |
 | **TEST-012** | Long-Run-Stability-Test (Soak): 10k Ticks + Memory-Leak-Guard | MEDIUM | TEST-010 | COMPLETE ✅ |
 | FEAT-015 | Multi-Window / Multi-Client-Support (YAGNI: nur Routing) | LOW | WindowTracker | BACKLOG |
@@ -261,6 +261,18 @@ All changes committed and pushed to `origin/main`. Build: 0 errors, 0 warnings. 
 
 **PM-Moderation (Konfliktauflösung):** Coder/QA-Duplikate FEAT-011+020, FEAT-012+021, FEAT-013+022 zu je einem Task zusammengeführt. Quest-Navigation bewusst kein Ticket (ohne Memory-/Positionssystem nicht sauber umsetzbar).
 **Sprint-Reihenfolge:** A: UI-010 → ROB-001 → FEAT-011 → TEST-010 → TEST-011 · B: FEAT-012 → FEAT-013 → ROB-002 → PERF-010 → UI-011 → FEAT-014 → TEST-012
+
+### UI-011 Implementation Status (✅ COMPLETE)
+
+Live-Telemetrie-Dashboard: macht die Phase-9-Metriken (Input-Latenz, Memory/GC-Pools) in der UI sichtbar.
+
+- ✅ `Core/HybridEngine.cs` — API-Delegation: öffentliche Read-only Properties `LatencyTracker` (`InputLatencyTracker`) und `MemoryTracker` (`MemoryAllocationTracker`), die an den internen `EngineOrchestrator` delegieren (Z.51–54). Damit kann das UI die thread-safenen, Interlocked-basierten Snapshots lesen, ohne Engine-Internals zu berühren.
+- ✅ `Controls/TelemetryPanel.xaml` + `.xaml.cs` — neues self-contained `UserControl`: `DispatcherTimer` (500 ms) liest `GetPercentiles()` / `GetAggregateStats()` / `GetPoolStats()` und rendert Karten für Input-Latenz (P50/P95/Max, Controller-Stats) und Memory/GC (WorkingSet, Gen2-Collections, Pools). FrameBudgetMonitor & GpuOverlayProfiler sind in Produktion nicht verdrahtet → werden als „nicht aktiv" angezeigt. `IsVisibleChanged` startet/stopp-t den Timer (kein Idle-Leak), robustes Unboxing von `e.NewValue`.
+- ✅ `MainWindow.xaml` — 7. Tab: `TabBtnTelemetry` + `ctrl:TelemetryPanel x:Name="TelemetryPanelControl"` im Developer-Bereich, `xmlns:ctrl` ergänzt.
+- ✅ `MainWindow.xaml.cs` — eigene Tab-Handhabung (`TabTelemetry_Click`, `_telemetryPanelControl`): das Panel ist **kein** Mapping-`Border` (darf nicht durch `PopulateTabPanel.Child=` überschrieben werden). Engine wird im Konstruktor per `SetEngine(_engine)` verdrahtet, Cleanup via `StopUpdates()` in `Window_Closing` (MEMORY-001: Timer stoppen).
+- ✅ `RagnaController.csproj` — `Controls\TelemetryPanel.xaml.cs` explizit zur `<Compile Include>`-Liste hinzugefügt (`EnableDefaultCompileItems=false`).
+- ✅ Unit-Tests: 5 Facts (`tests/RagnaController.Tests/TelemetryDashboardTests.cs`) — testen die neue `HybridEngine`-Delegation + Tracker-API (exakt das, was das Panel liest). Headless via `RAGNACONTROLLER_SKIP_SDL=1` (stat. Konstruktor, Pattern: LongRunStabilityTests) → kein SDL-Race; Logger inline übergeben, nur `engine.Dispose()` (kein Double-Dispose).
+- ✅ Build: 0 errors | Tests: 229/229 passing (224 bestehend + 5 neu)
 
 ### FEAT-011 Implementation Status (✅ COMPLETE)
 
