@@ -194,7 +194,11 @@ namespace RagnaController
 
             // Initialize tab button mapping
             InitTabBtnMap();
-            
+
+            // UI-011: Telemetrie-Panel mit Engine verdrahten (einmalig)
+            if (TelemetryPanelControl != null)
+                TelemetryPanelControl.SetEngine(_engine);
+
             // Select default tab (Base)
             SelectTab(PanelBase, null);
         }
@@ -248,6 +252,30 @@ namespace RagnaController
         private void TabL2_Click(object s, RoutedEventArgs e) => SelectTab(PanelL2, null);
         private void TabR2_Click(object s, RoutedEventArgs e) => SelectTab(PanelR2, null);
         private void TabHealth_Click(object s, RoutedEventArgs e) => SelectTab(PanelHealth, null);
+        private void TabTelemetry_Click(object s, RoutedEventArgs e) => SelectTelemetryTab();
+
+        /// <summary>UI-011: Telemetrie-Tab aktivieren (kein Mapping-Panel → eigener Pfad).</summary>
+        private void SelectTelemetryTab()
+        {
+            // Alle Mapping-Panels ausblenden
+            var allPanels = new[] { PanelBase, PanelL1, PanelR1, PanelL2, PanelR2, PanelHealth };
+            foreach (var p2 in allPanels)
+                if (p2 != null) p2.Visibility = Visibility.Collapsed;
+
+            // Reset aller Tab-Buttons inkl. Telemetrie
+            var allTabBtns = new[] { TabBtnBase, TabBtnL1, TabBtnR1, TabBtnL2, TabBtnR2, TabBtnHealth, TabBtnTelemetry };
+            foreach (var btn in allTabBtns)
+                if (btn != null) btn.Style = (Style)FindResource("TabButton");
+
+            if (TabBtnTelemetry != null) TabBtnTelemetry.Style = (Style)FindResource("TabButtonActive");
+
+            // Log-Panel ausblenden (konsistent mit Mapping-Tabs)
+            if (LogPanel != null)
+                LogPanel.Visibility = Visibility.Collapsed;
+
+            TelemetryPanelControl.Visibility = Visibility.Visible;
+            _activeTabPanel = null; // Telemetrie ist kein Profil-Mapping-Panel
+        }
 
         private Border? _activeTabPanel;
 
@@ -264,13 +292,17 @@ namespace RagnaController
 
         private void SelectTab(Border? panel, Border? mappings, bool showInfo = false)
         {
-            // Hide all mapping panels including Health
+            // Hide all mapping panels including Health + Telemetrie (UI-011)
             var allPanels = new[] { PanelBase, PanelL1, PanelR1, PanelL2, PanelR2, PanelHealth };
             foreach (var p2 in allPanels)
                 if (p2 != null) p2.Visibility = Visibility.Collapsed;
 
+            // Telemetrie-Panel ausblenden (eigener Tab-Pfad, UI-011)
+            if (TelemetryPanelControl != null)
+                TelemetryPanelControl.Visibility = Visibility.Collapsed;
+
             // Reset all tab button styles
-            var allTabBtns = new[] { TabBtnBase, TabBtnL1, TabBtnR1, TabBtnL2, TabBtnR2, TabBtnHealth };
+            var allTabBtns = new[] { TabBtnBase, TabBtnL1, TabBtnR1, TabBtnL2, TabBtnR2, TabBtnHealth, TabBtnTelemetry };
             foreach (var btn in allTabBtns)
                 if (btn != null) btn.Style = (Style)FindResource("TabButton");
 
@@ -549,6 +581,10 @@ namespace RagnaController
 
         private void Window_Closing(object s, EventArgs e)
         {
+            // UI-011: Telemetrie-Timer stoppen (MEMORY-001: keine hängenden DispatcherTimers)
+            if (TelemetryPanelControl != null)
+                TelemetryPanelControl.StopUpdates();
+
             // Cleanup subscriptions
             foreach (var sub in _subs)
                 try { sub.Dispose(); } catch { }

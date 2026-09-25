@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RagnaController"
+        xmlns:ctrl="clr-namespace:RagnaController.Controls"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
         Title="RagnaController" Height="800" Width="1200"
@@ -59,6 +60,7 @@
                             <Button x:Name="TabBtnL2" Content="L2+" Style="{StaticResource TabButton}" Click="TabL2_Click" Tag="L2+"/>
                             <Button x:Name="TabBtnR2" Content="R2+" Style="{StaticResource TabButton}" Click="TabR2_Click" Tag="R2+"/>
                             <Button x:Name="TabBtnHealth" Content="Health" Style="{StaticResource TabButton}" Click="TabHealth_Click" Tag="Health"/>
+                            <Button x:Name="TabBtnTelemetry" Content="Telemetrie" Style="{StaticResource TabButton}" Click="TabTelemetry_Click" Tag="Telemetry"/>
                         </StackPanel>
                     </Border>
 
@@ -238,6 +240,9 @@
                                 <StackPanel x:Name="HealthPanelContent"/>
                             </ScrollViewer>
                         </Border>
+
+                        <!-- Telemetrie-Panel (UI-011) -->
+                        <ctrl:TelemetryPanel x:Name="TelemetryPanelControl" Visibility="Collapsed" Panel.ZIndex="10"/>
 
                         <!-- Info/Log Panel -->
                         <StackPanel x:Name="LogPanel" Visibility="Collapsed">

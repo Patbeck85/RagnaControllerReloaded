@@ -220,11 +220,12 @@
 **DoD:** erfüllt — Gate läuft headless, identifiziert violating Engine (Stacktrace/Bytes/Tick), bestehende Tests bleiben grün. Suite 222/222 PASS mit `RAGNACONTROLLER_SKIP_SDL=1`.
 
 #### UI-011: Live-Telemetrie-Dashboard *(aus Designer-Audit)*
-**Status:** OPEN | **Assigned:** @designer / @coder | **Priorität:** MEDIUM
+**Status:** ✅ CLOSED (2026-09-24) | **Assigned:** @designer / @coder | **Priorität:** MEDIUM
 **Description:** Phase-9-Metriken (FrameBudgetMonitor, InputLatencyTracker, MemoryAllocationTracker, GpuOverlayProfiler) werden in KEINEM XAML referenziert — DeveloperConsoleWindow ist reines Text-Log. Neue Telemetrie-Ansicht: P50/P95/P99 Tick-Latency, Input-Latenz pro Stage, GC-Druck, GPU-Tier — als Card im MainWindow (Developer-Tab) und/oder kompakt in der Overlay-Mini-Anzeige.
 **Dependencies:** Phase 9 Tracker (existieren), UI-010
 **Files:** `MainWindow.xaml(.cs)`, neue `Controls/TelemetryPanel.xaml`
 **DoD:** Live-Werte <2Hz Refresh (kein Tick-Pfad-Zugriff, thread-sicher über Dispatcher), Design-Sprache konsistent, Build 0 Errors.
+**Implementation:** `Controls/TelemetryPanel.xaml(.cs)` — self-contained UserControl, DispatcherTimer 500 ms (2 Hz) liest nur thread-safene Interlocked-Snapshots (`GetPercentiles()`/`GetAggregateStats()`/`GetPoolStats()`), kein Tick-Pfad-Zugriff. Karten: Input-Latenz (P50/P95/Max, Controller-Stats) + Memory/GC (WorkingSet, Gen2-Collections, Pools); FrameBudgetMonitor & GpuOverlayProfiler sind in Produktion nicht verdrahtet → „nicht aktiv". `IsVisibleChanged` startet/stopp-t Timer (kein Idle-Leak). `MainWindow.xaml(.cs)`: 7. Tab im Developer-Bereich, eigene Handhabung (kein Mapping-`Border`, da `PopulateTabPanel.Child=` das Panel überschreiben würde), Engine via `SetEngine(_engine)` im Konstruktor, `StopUpdates()` in `Window_Closing`. `HybridEngine.cs`: öffentliche Read-only Properties `LatencyTracker`/`MemoryTracker` delegieren an den Orchestrator (UI-011-API). Tests: 5 Facts in `TelemetryDashboardTests.cs` (Delegation + Tracker-API, headless via `RAGNACONTROLLER_SKIP_SDL=1`). **Ergebnis:** Build 0 Errors, Suite 229/229 PASS.
 
 #### FEAT-014: Session-Replay — Aufzeichnung & Wiedergabe
 **Status:** ✅ CLOSED (2026-09-18) | **Assigned:** @coder | **Priorität:** MEDIUM
@@ -272,4 +273,5 @@
 1. **Sprint A abgeschlossen:** ROB-001 ✅ → FEAT-011 ✅ → TEST-010 ✅ → TEST-011 ✅ (alle 4 HIGH-Tasks DONE)
 2. **ROB-002 abgeschlossen ✅** — Input-Emulation-Failover (SendInput ↔ Kernel): State-Machine in `InputRouter` (`InitializeFailover` + `RecordSendInputLatency`), Orchestrator-Wiring mit graceful Driver-Degradation, ETW Event 82, 6 Unit-Tests.
 3. **Sprint B Fortschritt:** FEAT-012 PartyManager ✅ → FEAT-013 Target-Management ✅ → ROB-002 ✅ → FEAT-014 Session-Replay ✅ (CLOSED 2026-09-18: JSONL-Recorder, 50MB-Rotation, Replay-Player, 6 Tests)
-4. **PERF-010 ✅ + TEST-012 ✅** — Zero-Allokation-Gate (0 Bytes/Tick) UND Soak 10k Ticks mit Memory-Leak-Guard (Gen2≤1, Mem<512KB, Handles<32). Nächster Punkt: **UI-011 Telemetrie-Dashboard**
+4. **PERF-010 ✅ + TEST-012 ✅** — Zero-Allokation-Gate (0 Bytes/Tick) UND Soak 10k Ticks mit Memory-Leak-Guard (Gen2≤1, Mem<512KB, Handles<32).
+5. **UI-011 ✅** — Live-Telemetrie-Dashboard: TelemetryPanel (2 Hz, thread-safene Snapshots) + 7. Developer-Tab + HybridEngine-Delegation (`LatencyTracker`/`MemoryTracker`) + 5 Unit-Tests. Suite 229/229 PASS. Nächster Punkt: **FEAT-014** (Session-Replay steht bereits als CLOSED im Kanban — Rest-Sprint B prüfen)

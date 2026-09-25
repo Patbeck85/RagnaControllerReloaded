@@ -2,7 +2,7 @@
 
 ## Current Phase
 **Phase 10: Gameplay Depth, Robustness & UX — SPRINT B (IN PROGRESS)**
-Sprint-B-Reihenfolge: FEAT-012 ✅ → FEAT-013 ✅ → ROB-002 ✅ → PERF-010 ✅ → **TEST-012 ✅** → UI-011 (nächstes) → FEAT-014
+Sprint-B-Reihenfolge: FEAT-012 ✅ → FEAT-013 ✅ → ROB-002 ✅ → PERF-010 ✅ → **TEST-012 ✅** → **UI-011 ✅** → FEAT-014
 
 ## Completed Tasks (Sprint B, Phase 10)
 - **FEAT-012**: PartyManager + Auto-Heal-Loop ✅
@@ -19,11 +19,19 @@ Sprint-B-Reihenfolge: FEAT-012 ✅ → FEAT-013 ✅ → ROB-002 ✅ → PERF-010
   - `Soak_LeakGuard_DetectsInjectedHeapGrowth`: injiziert 20k×1KB in eine lokale Liste → beweist, dass der Guard echtes Heap-Wachstum fängt (kein Blind-Pass).
 
 ## In Progress
-(nichts — TEST-012 abgeschlossen)
+(nichts — UI-011 abgeschlossen)
 
 ## Next Actions
-1. Commit TEST-012 (LongRunStabilityTests.cs + ROADMAP.md + KANBAN.md + SESSION_STATE.md)
-2. Danach **UI-011**: Live-Telemetrie-Dashboard (Phase-9-Metriken in UI sichtbar machen) — benötigt Phase 9 Tracker, UI-010
+1. Commit UI-011 (TelemetryPanel + HybridEngine-Delegation + MainWindow-Integration + Tests + ROADMAP.md + KANBAN.md + SESSION_STATE.md)
+2. Danach **FEAT-014**: Session-Replay: JSONL-Aufzeichnung + Replay-Player
+
+## Completed (UI-011 — Live-Telemetrie-Dashboard, ✅ 2026-09-24)
+- `Core/HybridEngine.cs`: API-Delegation — öffentliche Read-only Properties `LatencyTracker`/`MemoryTracker` delegieren an den internen `EngineOrchestrator` (Z.51–54). UI liest thread-safene Interlocked-Snapshots, ohne Engine-Internals zu berühren.
+- `Controls/TelemetryPanel.xaml` + `.xaml.cs`: self-contained `UserControl`, `DispatcherTimer` (500 ms) liest `GetPercentiles()`/`GetAggregateStats()`/`GetPoolStats()`. Karten für Input-Latenz (P50/P95/Max, Controller-Stats) + Memory/GC (WorkingSet, Gen2, Pools). FrameBudgetMonitor & GpuOverlayProfiler nicht verdrahtet → „nicht aktiv". `IsVisibleChanged` startet/stopp-t Timer (kein Idle-Leak), robustes Unboxing von `e.NewValue`.
+- `MainWindow.xaml`: 7. Tab `TabBtnTelemetry` + `ctrl:TelemetryPanel x:Name="TelemetryPanelControl"`, `xmlns:ctrl` ergänzt.
+- `MainWindow.xaml.cs`: eigene Tab-Handhabung (kein Mapping-`Border`, sonst würde `PopulateTabPanel.Child=` das Panel überschreiben). Engine im Konstruktor per `SetEngine(_engine)`, Cleanup via `StopUpdates()` in `Window_Closing`.
+- `RagnaController.csproj`: `Controls\TelemetryPanel.xaml.cs` explizit zur `<Compile Include>`-Liste (`EnableDefaultCompileItems=false`).
+- Tests: 5 Facts in `tests/RagnaController.Tests/TelemetryDashboardTests.cs` — testen die neue Delegation + Tracker-API (exakt das, was das Panel liest). Headless via `RAGNACONTROLLER_SKIP_SDL=1` (stat. Konstruktor, Pattern LongRunStabilityTests) → kein SDL-Race; Logger inline, nur `engine.Dispose()` (kein Double-Dispose).
 
 ## Git State
 ```

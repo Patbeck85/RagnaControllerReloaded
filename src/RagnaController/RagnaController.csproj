@@ -194,6 +194,7 @@
                 <Compile Include="Core\WindowTracker.cs" />
                 <Compile Include="Core\WpfTickProvider.cs" />
                 <Compile Include="Core\Benchmarks\BenchmarkHarness.cs" />
+    <Compile Include="Controls\TelemetryPanel.xaml.cs" />
     <Compile Include="DaisyWheelWindow.xaml.cs" />
     <Compile Include="DeveloperConsoleWindow.xaml.cs" />
     <Compile Include="HandheldWindow.xaml.cs" />

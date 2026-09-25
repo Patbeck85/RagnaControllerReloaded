@@ -48,6 +48,11 @@ namespace RagnaController.Core
                         public Profile? CurrentProfile => _orchestrator.CurrentProfile;
                         public InputCommandQueue? CommandQueue => _orchestrator.CommandQueue;
 
+                        // UI-011: Telemetrie-Zugriff für das Live-Dashboard (Developer-Tab).
+                        // Delegiert an die Orchestrator-Properties — read-only, thread-safe Snapshots.
+                        public InputLatencyTracker? LatencyTracker => _orchestrator.LatencyTracker;
+                        public MemoryAllocationTracker? MemoryTracker => _orchestrator.MemoryTracker;
+
                 public bool FocusLockEnabled
         {
             get => _orchestrator.SysMonitor.FocusLockEnabled;
