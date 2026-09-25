@@ -18,7 +18,7 @@
             <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" Margin="16,16,16,0" CornerRadius="{StaticResource RadiusMd}">
                 <Grid Margin="20,0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center"><TextBlock Text="&#x1F3AE;" Foreground="{StaticResource Gold}" Margin="0,0,10,0" FontSize="18" Effect="{StaticResource NeonGlow}"/><TextBlock Text="BUTTON REMAPPING" Style="{StaticResource BrandWordmark}" FontSize="14"/></StackPanel>
-                    <Button Content="&#x2715;" Click="BtnCancel_Click" HorizontalAlignment="Right" Width="44" Height="44" Style="{StaticResource WindowControlButton}" ToolTip="Close window"/>
+                    <Button Content="&#xE8BB;" Click="BtnCancel_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close window"/>
                 </Grid>
             </Border>
             <Grid Grid.Row="1" Margin="16">

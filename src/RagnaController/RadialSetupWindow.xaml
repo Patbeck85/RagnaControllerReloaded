@@ -19,7 +19,7 @@
                         <TextBlock Text="🎯" Foreground="{StaticResource AccentGold}" Margin="0,0,10,0" FontSize="16" Effect="{StaticResource NeonGlow}"/>
                         <TextBlock Text="RADIAL MENU SETUP" Style="{StaticResource BrandWordmark}" FontSize="13" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <Button Content="✕" Click="BtnClose_Click" HorizontalAlignment="Right" Width="36" Height="36" Style="{StaticResource GhostButton}" ToolTip="Close radial setup window"/>
+                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close radial setup window"/>
                 </Grid>
             </Border>
             <Border Grid.Row="1" Style="{StaticResource GlassPanelCompact}" Margin="16,0,16,0" Padding="20">
