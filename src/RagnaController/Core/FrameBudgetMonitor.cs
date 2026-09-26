@@ -182,6 +182,15 @@ namespace RagnaController.Core
         public static IReadOnlyDictionary<string, FrameBudgetMonitor> GetAll() => _monitors;
 
         /// <summary>
+        /// Removes and disposes a single monitor (e.g. when an overlay window closes).
+        /// </summary>
+        public static void Remove(string componentName)
+        {
+            if (_monitors.TryRemove(componentName, out var monitor))
+                monitor.Dispose();
+        }
+
+        /// <summary>
         /// Generates a summary report of all monitors.
         /// </summary>
         public static string GenerateReport()

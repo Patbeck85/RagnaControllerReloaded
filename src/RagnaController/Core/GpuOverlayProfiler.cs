@@ -40,6 +40,12 @@ namespace RagnaController.Core
         private int _pixelShaderVersion = 0;
         private int _vertexShaderVersion = 0;
 
+        // Static WMI caches: GPU identity/adapter RAM are process-constant, so the
+        // (potentially slow) WMI query runs once per app run — never on the UI thread
+        // again after the first overlay opens (PERF-001: no UI blocking).
+        private static string? _cachedGpuDeviceName;
+        private static long? _cachedAdapterRamMb;
+
         // GPU memory tracking (via DXGI if available)
         private long _gpuDedicatedMb = 0;
         private long _gpuSharedMb = 0;
@@ -80,19 +86,25 @@ namespace RagnaController.Core
 
         private string GetGpuDeviceName()
         {
+            if (_cachedGpuDeviceName != null) return _cachedGpuDeviceName;
+
             try
             {
-                // Use System.Management to query Win32_VideoController
+                // Use System.Management to query Win32_VideoController (cached statically — WMI is slow)
                 using var searcher = new System.Management.ManagementObjectSearcher("SELECT Name FROM Win32_VideoController");
                 foreach (var obj in searcher.Get())
                 {
                     var name = obj["Name"]?.ToString();
                     if (!string.IsNullOrEmpty(name))
+                    {
+                        _cachedGpuDeviceName = name;
                         return name;
+                    }
                 }
             }
             catch { }
-            return "Unknown GPU";
+            _cachedGpuDeviceName = "Unknown GPU";
+            return _cachedGpuDeviceName;
         }
 
         private int GetShaderVersion(bool pixel)
@@ -131,7 +143,15 @@ namespace RagnaController.Core
         /// <summary>
         /// Call after composition/present. Completes the frame.
         /// </summary>
-        public void EndFrame()
+        public void EndFrame() => EndFrame(null);
+
+        /// <summary>
+        /// Call after composition/present with an externally measured frame time.
+        /// WPF exposes no layout/render/composition phase hooks, so callers on the
+        /// CompositionTarget.Rendering loop measure the real inter-frame delta and
+        /// pass it here; the internal stopwatches then stay at ~0 (no double counting).
+        /// </summary>
+        public void EndFrame(double? measuredFrameTimeMs)
         {
             _compositeStopwatch.Stop();
             _frameStopwatch.Stop();
@@ -139,16 +159,22 @@ namespace RagnaController.Core
             var layoutMs = _layoutStopwatch.Elapsed.TotalMilliseconds;
             var renderMs = _renderStopwatch.Elapsed.TotalMilliseconds;
             var compositeMs = _compositeStopwatch.Elapsed.TotalMilliseconds;
-            var totalMs = _frameStopwatch.Elapsed.TotalMilliseconds;
+            // Prefer the externally measured inter-frame delta (real wall time);
+            // fall back to the internal stopwatch when no measurement was provided.
+            var totalMs = measuredFrameTimeMs ?? _frameStopwatch.Elapsed.TotalMilliseconds;
 
             _frameCount++;
             _lastFrameTimeMs = totalMs;
 
-            // Track dropped frames (if frame time > 16.67ms for 60fps)
-            if (totalMs > 16.67)
+            // Dropped-frame detection: for measured inter-frame intervals a frame is
+            // only "dropped" if the interval exceeds ~2x the 60fps period (a real
+            // hitch/stall); steady 60Hz vsync (~16.7ms) is normal, not dropped.
+            double droppedThresholdMs = measuredFrameTimeMs.HasValue ? 33.0 : 16.67;
+            if (totalMs > droppedThresholdMs)
                 _droppedFrames++;
 
-            // Record in frame budget monitor
+            // Record in frame budget monitor (budget configured per overlay type;
+            // for frame-interval recording use a refresh-rate-appropriate budget)
             _frameMonitor?.RecordTick(totalMs);
 
             // Emit ETW frame timing event (verbose, sampled)
@@ -157,11 +183,9 @@ namespace RagnaController.Core
                 _etw.OverlayFrameTiming(_overlayType, layoutMs, renderMs, compositeMs, totalMs);
             }
 
-            // Check for budget exceedance
-            if (totalMs > 2.0) // Sub-2ms budget
-            {
-                _etw.OverlayFrameBudgetExceeded(_overlayType, totalMs, 2.0);
-            }
+            // NOTE: dropped-frame detection uses the 60fps threshold above;
+            // per-component budget exceedance is owned by FrameBudgetMonitor.RecordTick
+            // (its budget is configured at creation — e.g. ~16.7ms for frame intervals).
         }
 
         private void StartSampling()
@@ -210,23 +234,27 @@ namespace RagnaController.Core
         {
             try
             {
-                // Use DXGI via WMI or Performance Counters
-                // For now, estimate from process working set and GPU process
-                var process = Process.GetCurrentProcess();
-                var workingSetMb = process.WorkingSet64 / (1024 * 1024);
-
-                // Query GPU memory via WMI
-                using var searcher = new System.Management.ManagementObjectSearcher(
-                    "SELECT AdapterRAM, AdapterCompatibility FROM Win32_VideoController");
-                foreach (var obj in searcher.Get())
+                // Adapter RAM is process-constant: query WMI once (statically cached),
+                // then only refresh the cheap per-process working set each sample.
+                if (_cachedAdapterRamMb == null)
                 {
-                    var ram = obj["AdapterRAM"];
-                    if (ram != null && long.TryParse(ram.ToString(), out var adapterRam))
+                    _cachedAdapterRamMb = 0;
+                    using var searcher = new System.Management.ManagementObjectSearcher(
+                        "SELECT AdapterRAM FROM Win32_VideoController");
+                    foreach (var obj in searcher.Get())
                     {
-                        _gpuDedicatedMb = adapterRam / (1024 * 1024);
-                        break;
+                        var ram = obj["AdapterRAM"];
+                        if (ram != null && long.TryParse(ram.ToString(), out var adapterRam) && adapterRam > 0)
+                        {
+                            _cachedAdapterRamMb = adapterRam / (1024 * 1024);
+                            break;
+                        }
                     }
                 }
+
+                var process = Process.GetCurrentProcess();
+                var workingSetMb = process.WorkingSet64 / (1024 * 1024);
+                _gpuDedicatedMb = _cachedAdapterRamMb.Value;
 
                 // Estimate shared/ budget
                 _gpuSharedMb = workingSetMb;
@@ -323,6 +351,12 @@ namespace RagnaController.Core
         }
 
         public static System.Collections.Generic.IReadOnlyDictionary<string, GpuOverlayProfiler> GetAll() => _profilers;
+
+        public static void Remove(string overlayType)
+        {
+            if (_profilers.TryRemove(overlayType, out var profiler))
+                profiler.Dispose();
+        }
 
         public static string GenerateReport()
         {

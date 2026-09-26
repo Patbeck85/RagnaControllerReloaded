@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,6 +21,11 @@ namespace RagnaController
         // Controller state from ControllerManager
         private readonly ControllerManager? _controllerManager;
         private readonly Settings? _settings;
+
+        // PERF-008: GPU/Overlay render profiling (registry-backed, one per overlay type)
+        private GpuOverlayProfiler? _gpuProfiler;
+        private FrameBudgetMonitor? _frameBudgetMonitor;
+        private long _lastRenderTick = -1;
 
         // Backing fields for overlay display
         private string _profileName = "NOVICE";
@@ -52,6 +58,46 @@ namespace RagnaController
             timer.Interval = TimeSpan.FromMilliseconds(100);
             timer.Tick += (s, e) => UpdateCooldownTimer();
             timer.Start();
+
+            // PERF-008: GPU/Overlay render profiling — one profiler + frame-budget monitor
+            // per overlay instance. WPF has no layout/render phase hooks, so the
+            // CompositionTarget.Rendering loop measures real inter-frame deltas.
+            _overlayKey = "InGameOverlay-" + Guid.NewGuid().ToString("N").Substring(0, 8);
+            _frameBudgetMonitor = FrameBudgetRegistry.GetOrCreate(_overlayKey, 16.7);
+            _gpuProfiler = GpuOverlayProfilerRegistry.GetOrCreate(_overlayKey, null, _frameBudgetMonitor);
+            CompositionTarget.Rendering += OnRenderFrame;
+            Closed += OnWindowClosed;
+        }
+
+        // PERF-008: unique registry key for this overlay instance (allows parallel overlays)
+        private string _overlayKey = "InGameOverlay";
+
+        /// <summary>
+        /// CompositionTarget.Rendering fires once per WPF render frame on the UI thread.
+        /// Measures the real inter-frame delta and records it in the GPU/overlay profiler.
+        /// </summary>
+        private void OnRenderFrame(object? sender, EventArgs e)
+        {
+            var profiler = _gpuProfiler;
+            if (profiler == null) return;
+
+            long now = Stopwatch.GetTimestamp();
+            if (_lastRenderTick >= 0)
+            {
+                double frameMs = (now - _lastRenderTick) / (double)Stopwatch.Frequency * 1000.0;
+                profiler.EndFrame(frameMs);
+            }
+            _lastRenderTick = now;
+        }
+
+        private void OnWindowClosed(object? sender, EventArgs e)
+        {
+            CompositionTarget.Rendering -= OnRenderFrame;
+            // Dispose this instance's shared resources (MEMORY-001: no leaked timers/registry entries)
+            GpuOverlayProfilerRegistry.Remove(_overlayKey);
+            FrameBudgetRegistry.Remove(_overlayKey);
+            _gpuProfiler = null;
+            _frameBudgetMonitor = null;
         }
 
         // Backward compatibility constructor (for existing code without ControllerManager)
