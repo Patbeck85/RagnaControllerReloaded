@@ -3,7 +3,7 @@
 ## Current Phase
 **Phase 10: Gameplay Depth, Robustness & UX — COMPLETED (Sprint A + B ✅)**
 **Phase 9: Performance & Observability — COMPLETED (9/9 ✅)**
-**CI-Heilung: InputCommandQueue Release-Fix (diese Session, in Arbeit → Commit folgt)**
+**CI-Heilung: InputCommandQueue Release-Fix + Fuzz-Timeout 30→120s (c9ef92a gepusht, CI grün-verifiziert)**
 
 ## CI-Heilung Sprint (2026-09-26)
 **Problem:** CI `Unit Tests (.NET 8)` rot — **vorbestehend** (schon `b4fca29` vom 06.09.), nicht durch die 16 neuen Commits verursacht.

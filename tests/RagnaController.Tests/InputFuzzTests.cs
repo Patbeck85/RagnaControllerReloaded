@@ -118,14 +118,18 @@ namespace RagnaController.Tests
             foreach (var cmd in cmds)
                 queue.Enqueue(cmd);
 
-            // Consumer-Drain mit harter Deadlock-Guard: max. 30s für 10k Commands ist großzügig
+            // Consumer-Drain mit harter Deadlock-Guard.
+            // 120 s Budget: CI sammelt Coverage (--collect:"XPlat Code Coverage"), was jeden der
+            // 10k Consumer-Schritte instrumentiert (Stopwatch-Allokation, Latency-Tracking, ETW).
+            // Auf langsamer windows-latest-Hardware + Instrumentierung >30 s. Ein echter Deadlock
+            // hängt ewig — 120 s fängt ihn weiterhin ab, toleriert aber langsame CI. Lokal ~15 s.
             var drainTask = Task.Run(() =>
             {
                 while (Interlocked.Read(ref executed) < FuzzCommandCount)
                     Thread.Sleep(5);
             });
 
-            bool drained = await Task.WhenAny(drainTask, Task.Delay(TimeSpan.FromSeconds(30))) == drainTask;
+            bool drained = await Task.WhenAny(drainTask, Task.Delay(TimeSpan.FromSeconds(120))) == drainTask;
             Assert.True(drained, "Deadlock: Consumer hat 10.000 Commands nicht abgearbeitet");
             Assert.Equal(FuzzCommandCount, Interlocked.Read(ref executed));
 
