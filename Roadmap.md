@@ -234,7 +234,7 @@ All changes committed and pushed to `origin/main`. Build: 0 errors, 0 warnings. 
 
 ---
 
-## 🚀 Phase 10: Gameplay Depth, Robustness & UX (PLANNED — Sprint A startklar)
+## 🚀 Phase 10: Gameplay Depth, Robustness & UX (COMPLETED — Sprint A + B ✅)
 **Goal:** Die größten Gameplay-Lücken schließen (Items/Potions, Party, Targeting), Robustheit härten (Watchdog-Hang-Erkennung, Input-Failover, Fuzzing, Soak), Phase-9-Telemetrie in die UI bringen und Design-Token-Bug fixen.
 **Entstanden durch:** Team-Diskussion 2026-09-07 (Coder ROLE-003 + Designer ROLE-002 + QA/Researcher ROLE-004, moderiert von Architect ROLE-001). Details & DoD in `KANBAN.md`.
 
@@ -242,16 +242,16 @@ All changes committed and pushed to `origin/main`. Build: 0 errors, 0 warnings. 
 |---------|------|----------|--------------|--------|
 | **ROB-001** | Watchdog-Härtung: Hang-Erkennung (externer Timer), Auto-Restart, Input-Loss-Metrik | HIGH | TelemetryService, PERF-005 | ✅ COMPLETE |
 | **FEAT-011** | ItemManagerEngine: Auto-Potion/Item bei HP/SP-Schwelle (merge FEAT-020) | HIGH | CooldownManager | ✅ COMPLETE |
-| **UI-010** | BUG-FIX: undefiniertes Design-Token `WindowControlButton` (5 Fenster, S2) | HIGH | — | OPEN |
-| **TEST-010** | Dedizierte Unit-Tests: SkillOrchestrator, BuffManager, CooldownManager, SupportEngine, MageEngine, MobSweepEngine | HIGH | — | OPEN |
-| **TEST-011** | Fuzzing/Robustness: InputCommandQueue & ParsedInput (RNG, Shutdown-Race, Edge-Cases) | HIGH | — | OPEN |
-| **FEAT-012** | PartyManager + Auto-Heal-Loop (merge FEAT-021) | MEDIUM | FEAT-011, BuffManager | OPEN |
-| **FEAT-013** | Target-Management: Tab-Cycling, Lock-Persistenz, Auto-Retarget (merge FEAT-022) | MEDIUM | FEAT-012 | OPEN |
-| **ROB-002** | Input-Emulation-Failover: SendInput ↔ Kernel-Service Auto-Switch | MEDIUM | PERF-005 | OPEN |
-| **PERF-010** | Zero-Allokation-Gate im Tick-Pfad (CI-erzwingend, ≤2 Allokationen/Tick) | MEDIUM | PERF-004 | COMPLETE ✅ |
-| **UI-011** | Live-Telemetrie-Dashboard (Phase-9-Metriken in UI sichtbar machen) | MEDIUM | Phase 9 Tracker, UI-010 | COMPLETE ✅ |
-| **FEAT-014** | Session-Replay: JSONL-Aufzeichnung + Replay-Player für Regressionstests | MEDIUM | ActionLogService | OPEN |
-| **TEST-012** | Long-Run-Stability-Test (Soak): 10k Ticks + Memory-Leak-Guard | MEDIUM | TEST-010 | COMPLETE ✅ |
+| **UI-010** | BUG-FIX: undefiniertes Design-Token `WindowControlButton` (5 Fenster, S2) | HIGH | — | ✅ COMPLETE (commit `fbb7712`) |
+| **TEST-010** | Dedizierte Unit-Tests: SkillOrchestrator, BuffManager, CooldownManager, SupportEngine, MageEngine, MobSweepEngine | HIGH | — | ✅ COMPLETE (commit `86c1f3b`) |
+| **TEST-011** | Fuzzing/Robustness: InputCommandQueue & ParsedInput (RNG, Shutdown-Race, Edge-Cases) | HIGH | — | ✅ COMPLETE (commit `5f95f46`) |
+| **FEAT-012** | PartyManager + Auto-Heal-Loop (merge FEAT-021) | MEDIUM | FEAT-011, BuffManager | ✅ COMPLETE (commit `d7260a0`) |
+| **FEAT-013** | Target-Management: Tab-Cycling, Lock-Persistenz, Auto-Retarget (merge FEAT-022) | MEDIUM | FEAT-012 | ✅ COMPLETE (commit `6bcc662`) |
+| **ROB-002** | Input-Emulation-Failover: SendInput ↔ Kernel-Service Auto-Switch | MEDIUM | PERF-005 | ✅ COMPLETE (commit `0dc14e3`) |
+| **PERF-010** | Zero-Allokation-Gate im Tick-Pfad (CI-erzwingend, ≤2 Allokationen/Tick) | MEDIUM | PERF-004 | ✅ COMPLETE (commit `aef9183`) |
+| **UI-011** | Live-Telemetrie-Dashboard (Phase-9-Metriken in UI sichtbar machen) | MEDIUM | Phase 9 Tracker, UI-010 | ✅ COMPLETE (commit `dfdfe6a`) |
+| **FEAT-014** | Session-Replay: JSONL-Aufzeichnung + Replay-Player für Regressionstests | MEDIUM | ActionLogService | ✅ COMPLETE (commit `dacdd0c`) |
+| **TEST-012** | Long-Run-Stability-Test (Soak): 10k Ticks + Memory-Leak-Guard | MEDIUM | TEST-010 | ✅ COMPLETE (commit `be0e09b`) |
 | FEAT-015 | Multi-Window / Multi-Client-Support (YAGNI: nur Routing) | LOW | WindowTracker | BACKLOG |
 | FEAT-023 | Auto-Item-Einlagerung (Storage-Drop bei vollem Inventar) | LOW | RoUiMenuService, SmartCursorService | BACKLOG |
 | FEAT-024 | Multi-Character-Profil-Schnellwechsel (Name-basiert) | LOW | ProfileApplier | BACKLOG |
@@ -337,7 +337,7 @@ All features and documentation now synchronized for v2.0.3:
 
 ---
 
-## 🚀 Phase 9: Performance & Observability (IN PROGRESS)
+## ✅ Phase 9: Performance & Observability (COMPLETED)
 **Goal:** Sub-2ms tick budget, structured logging, ETW tracing, benchmark regression gates, and profiling infrastructure.
 
 | Task ID | Task | Priority | Dependencies | Definition of Done | Status |
@@ -345,12 +345,12 @@ All features and documentation now synchronized for v2.0.3:
 | **PERF-001** | ETW EventSource for tick loop | HIGH | — | `RagnaControllerEventSource` with TickStart/TickEnd, EngineStart/EngineEnd, InputEmitted events | **COMPLETED** |
 | **PERF-002** | Structured Logging (Serilog) | HIGH | — | Serilog configured with JSON output, correlation IDs, log levels per component | **COMPLETED** |
 || **PERF-003** | Frame-Time Budget Tracking | HIGH | PERF-001 | `FrameBudgetMonitor` tracks P50/P95/P99 tick latency, warns >2ms, exports ETW | **COMPLETED** |
-|| **PERF-004** | Memory Allocation Tracking | MEDIUM | PERF-002 | Track Gen0/1/2 collections per tick, large object heap pressure, object pool hit rates | **READY** |
+|| **PERF-004** | Memory Allocation Tracking | MEDIUM | PERF-002 | Track Gen0/1/2 collections per tick, large object heap pressure, object pool hit rates | ✅ COMPLETED — `MemoryAllocationTracker` in `EngineOrchestrator` verdrahtet (Z.345), via `MemoryTracker`-Property + TelemetryPanel exponiert |
 || **PERF-005** | Input Latency Measurement | HIGH | PERF-001 | End-to-end latency: hardware event → SendInput completion, P99 < 5ms | **COMPLETED** |
-| **PERF-006** | BenchmarkDotNet Regression Gate | HIGH | PERF-007 | CI gate: `BenchmarkGate.ValidateLatencyGate()` fails build if P99 > threshold | **READY** |
+| **PERF-006** | BenchmarkDotNet Regression Gate | HIGH | PERF-007 | CI gate: `BenchmarkGate.ValidateLatencyGate()` fails build if P99 > threshold | ✅ COMPLETED — `ValidateLatencyGate`/`ValidateInputLatencyGate` in `BenchmarkHarness.cs`, ci.yml `--input-latency-gate` + REGRESSION-Erkennung (exit 1) |
 | **PERF-007** | BenchmarkDotNet Integration | HIGH | — | `BenchmarkHarness.cs` in src/RagnaController.Core/Benchmarks/, 4 benchmark suites | **COMPLETED** |
-| **PERF-008** | GPU/Overlay Render Profiling | MEDIUM | PERF-001 | `InGameOverlayWindow` frame time, WPF render tier, composition engine metrics | **READY** |
-| **PERF-009** | CI Performance Dashboard | MEDIUM | PERF-006 | GitHub Actions artifact upload + markdown summary, trend charts over 30 runs | **READY** |
+| **PERF-008** | GPU/Overlay Render Profiling | MEDIUM | PERF-001 | `InGameOverlayWindow` frame time, WPF render tier, composition engine metrics | ✅ COMPLETED — `GpuOverlayProfiler` in `InGameOverlayWindow` verdrahtet (`CompositionTarget.Rendering` → echte Inter-Frame-Deltas via `EndFrame(double?)`), pro-Instanz-Registry-Key, WMI statisch gecacht, Cleanup via `Closed`; 7 Unit-Tests |
+| **PERF-009** | CI Performance Dashboard | MEDIUM | PERF-006 | GitHub Actions artifact upload + markdown summary, trend charts over 30 runs | ✅ COMPLETED — ci.yml: `upload-artifact@v4` (BenchmarkDotNet-Results) + Markdown-Dashboard-Tabelle (P50/P95/P99/Mean/Status) pro Run |
 
 ### Implementation Notes
 - All PERF tasks use the existing `BenchmarkHarness.cs` from `research/BenchmarkHarness.cs` (copy to `src/RagnaController.Core/Benchmarks/`)

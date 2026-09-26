@@ -161,19 +161,28 @@ namespace RagnaController.Core
         public long TotalInputsProcessed => Interlocked.Read(ref _inputCount);
         public double MaxInputLatencyMs => Interlocked.Read(ref _maxInputLatencyUs) / 1000.0;
 
-        // Commands collection for testing and inspection (only populated in DEBUG builds)
+        // Commands collection for testing and inspection (bounded; both configurations).
         public List<InputCmd> Commands { get; } = new();
-#if DEBUG
+
         // FIX (TEST-011): RecordCommand wird von mehreren Enqueue-Threads aufgerufen —
         // ungesehütztes List.Add wirft ArgumentException im Resize-Pfad.
         private readonly object _commandsLock = new();
+
+        // Bounded history in DEBUG und RELEASE: Replay/Inspection braucht sie in beiden,
+        // CI testet mit --configuration Release (2048→4096 Einträge ≈ 128 KB worst case, deterministisch).
+        private const int MaxRecordedCommands = 4096;
+
         private void RecordCommand(InputCmd cmd)
         {
-            lock (_commandsLock) { Commands.Add(cmd); }
+            lock (_commandsLock)
+            {
+                Commands.Add(cmd);
+                if (Commands.Count > MaxRecordedCommands)
+                {
+                    Commands.RemoveRange(0, Commands.Count - MaxRecordedCommands);
+                }
+            }
         }
-#else
-        private void RecordCommand(InputCmd cmd) { }
-#endif
 
         /// <summary>
         /// Creates a new InputCommandQueue with optional latency tracking.
