@@ -98,3 +98,9 @@ release_final/
 Locales/backup_*/
 src/RagnaController/Locales/backup_*/
 .publish_log.txt
+
+# Test coverage artifacts (SOUL.md RULE-002: no build/test artifacts in repo)
+coverage/
+
+# Workspace isolation (SOUL.md RULE-002)
+.workspace_temp/

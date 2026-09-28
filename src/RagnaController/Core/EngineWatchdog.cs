@@ -69,6 +69,14 @@ namespace RagnaController.Core
         private readonly object _hangLock = new();
 
         /// <summary>
+        /// Injizierbare Uhr (Stopwatch-Timestamp) für deterministische Tests. Default: Stopwatch.GetTimestamp().
+        /// ROB-001 CI-Härtung: Tests können die Zeit vorwärts treiben, statt Wall-Clock-Sleeps zu riskieren.
+        /// </summary>
+        public Func<long>? TimeSource { get; set; }
+
+        private long NowTicks() => TimeSource?.Invoke() ?? Stopwatch.GetTimestamp();
+
+        /// <summary>
         /// Call once per engine tick with the measured tick duration.
         /// Thread-safe via Interlocked (called from BackgroundTickProvider's thread).
         /// </summary>
@@ -111,7 +119,7 @@ namespace RagnaController.Core
         /// </summary>
         public void MarkTick()
         {
-            long now = Stopwatch.GetTimestamp();
+            long now = NowTicks();
             Interlocked.Exchange(ref _lastTickTicks, now);
 
             if (_isHung)
@@ -192,7 +200,7 @@ namespace RagnaController.Core
             long last = Interlocked.Read(ref _lastTickTicks);
             if (last == 0) return; // no tick recorded yet — nothing to judge
 
-            double msWithoutTick = (Stopwatch.GetTimestamp() - last) * 1000.0 / Stopwatch.Frequency;
+            double msWithoutTick = (NowTicks() - last) * 1000.0 / Stopwatch.Frequency;
             if (msWithoutTick <= HangThresholdMs) return;
 
             bool shouldFire = false;

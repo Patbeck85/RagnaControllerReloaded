@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Xunit;
 using RagnaController.Core;
@@ -33,8 +34,11 @@ namespace RagnaController.Tests
             bool fired = false;
             wd.HangDetected += ms => fired = true;
 
+            // Deterministisch via injizierbarer Uhr: +50 ms < 500 ms Threshold → kein Hang.
+            long fakeNow = Stopwatch.GetTimestamp();
+            wd.TimeSource = () => Interlocked.Read(ref fakeNow);
             wd.MarkTick();
-            Thread.Sleep(50); // well under threshold
+            Interlocked.Exchange(ref fakeNow, fakeNow + (long)(Stopwatch.Frequency * 0.05)); // +50 ms
 
             wd.CheckForHang();
 
