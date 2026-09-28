@@ -42,8 +42,11 @@
   - **7 neue Unit-Tests** (`GpuOverlayProfilerTests.cs`).
 - **PERF-009** CI Performance Dashboard → COMPLETED: ci.yml `upload-artifact@v4` + Markdown-Dashboard.
 
+## Completed Tasks (Sprint C, Phase 10)
+- **TEST-013**: Stryker-Scoping — pro-Datei Mutation-Score-Auswertung in CI ✅ (`scripts/StrykerReportAnalyzer.ps1` + Fixture + CI-Step „Analyze Per-File Mutation Scores" + Artifact `stryker-per-file-report`; Parser Fixture-validiert, Gate-Pfade Exit 0/1 verifiziert)
+
 ## In Progress
-- Push des CI-Fix-Commits + CI-Lauf abwarten (Build + Tests + Benchmark-Gate + Stryker).
+- Push des TEST-013-Commits + CI-Lauf abwarten (Stryker-Job erzeugt erstmals das per-file-Report-Artefact).
 
 ## Next Actions
 1. **CI-Lauf grüner verifizieren** (Unit Tests Job: 236/236 Release; Stryker muss nicht mehr skippen).

@@ -243,6 +243,14 @@
 **Implementation:** `LongRunStabilityTests.cs` — 10k Ticks durch `InputRouter.RouteInput` (komplette Engine-Kette) im Idle-Steady-State, seitenwirkungsfrei (kein SendInput). Drei Leak-Guards: `GC.GetTotalMemory(true)` + Gen2-`CollectionCount(2)` + `Process.HandleCount`, Triple-Full-GC vor/nach. **Kritische Korrektur:** Gen2 wird VOR dem Cleanup-Full-GC gemessen — sonst zählt der eigene `ForceFullGc()` (3× GC.Collect()) als Gen2-GCs und meldet einen Phantom-Leak (Design-Bug, gefixt). Zusätzlich `Soak_LeakGuard_DetectsInjectedHeapGrowth`: injiziert 20k×1KB in eine lokale Liste → beweist, dass der Guard echtes Heap-Wachstum fängt (kein Blind-Pass).
 **Ergebnis:** Gen2-Delta ≤1 (stärker als DoD ≤2), Mem-Delta <512KB (stärker als DoD <5MB), Handle-Delta <32 (stärker als DoD <100). Suite 224/224 PASS mit `RAGNACONTROLLER_SKIP_SDL=1`. **CI-Bestätigung:** Die „3 CI-Runs"-Stufe wird beim Push auf GitHub Actions validiert (lokal nicht reproduzierbar).
 
+#### TEST-013: Stryker-Scoping — pro-Datei Mutation-Score-Auswertung in CI
+**Status:** ✅ DONE | **Assigned:** @coder / @qa | **Priorität:** MEDIUM→C
+**Description:** Die CI prüft nur den globalen Mutation Score (≥70%). Fehlt: pro-Datei Auswertung, um die Top-N Survivor-Dateien als Hardening-Kandidaten zu identifizieren.
+**Files:** `scripts/StrykerReportAnalyzer.ps1` (neu), `scripts/test-fixtures/mutation-report.fixture.json` (neu), `.github/workflows/test.yml` (erweitert)
+**Implementation:** PowerShell-Skript gruppiert `mutation-report.json` pro Datei, berechnet Score je Datei (Killed/Total), erzeugt Markdown-Tabelle (alle Dateien, schlechtester Score zuerst) + Top-N Survivor-Liste (meiste Survivors zuerst). Optionaler `-FailBelow`-Floor-Gate (Exit 1 bei Verletzung). CI: neuer Step „Analyze Per-File Mutation Scores" + Artifact `stryker-per-file-report`.
+**DoD:** ✅ Parser validiert gegen schema-genaues Fixture (4 Dateien, 20 Mutanten: BuffManager 50%, Cooldown 60%, SkillOrchestrator 60%, EngineOrchestrator 75%) · ✅ Gate-Pfade verifiziert (Floor 70% → Exit 1, Floor 40% → Exit 0) · ✅ `dotnet test` grün: 236/236 PASS mit `RAGNACONTROLLER_SKIP_SDL=1`
+**Known-Issue:** Skript ist bewusst reines ASCII (Windows PowerShell 5.1 liest BOM-freie Dateien als ANSI/cp1252 — Em-Dashes/Umlaute in String-Literalen korruptieren den Parser: „ExpressionsMustBeFirstInPipeline" + „InvalidVariableReferenceWithDrive"). Live-Run lokal flaky (WPF `.g.cs` CS0229 bei Debug-Mutation); CI läuft Release mit Exclusions und ist der Referenz-Pfad.
+
 ### 🟩 SPRINT C / BACKLOG — LOW Priority (bewusst parkiert)
 
 | Task | Titel | Priorität | Notiz |
@@ -250,7 +258,7 @@
 | FEAT-015 | Multi-Window / Multi-Client-Support (Alt-Char, Farming) | LOW | YAGNI: nur Input-Routing an aktives Fenster, kein paralleles Engine-Modell |
 | FEAT-023 | Auto-Item-Einlagerung (Storage-Drop bei vollem Inventar) | LOW | Basis vorhanden: RoUiMenuService + SmartCursorService Grid-Geometrie |
 | FEAT-024 | Multi-Character-Profil-Schnellwechsel (Name-basiert) | LOW | ProfileQuickSwitch existiert; fehlt nur Char-Namen-Erkennung → Profil-Zuordnung |
-| TEST-013 | Stryker-Scoping: pro-Datei Mutation-Score-Auswertung in CI | MEDIUM→C | Erst nach TEST-010/011 sinnvoll (dann Top-N Survivor-Dateien identifizieren) |
+| TEST-013 | Stryker-Scoping: pro-Datei Mutation-Score-Auswertung in CI | MEDIUM→C | ✅ DONE 2026-09-28 (siehe Detailblock unten) |
 | TEST-014 | PerformanceTests entflaken (flaky Timing-Assertions) | LOW | MemoryLatency + StringPooling-Test liefern falsche Signale; Median/p95 statt throw-pro-Iteration |
 | UX-012 | Accessibility: AutomationProperties + Gamepad-Fokus-Ring *(Designer-Audit)* | LOW | 0 AutomationProperties in allen 8 Fenstern; kein Gamepad-Fokus-Handling in MainWindow-Tabs |
 

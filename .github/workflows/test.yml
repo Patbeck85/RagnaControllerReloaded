@@ -143,6 +143,26 @@ jobs:
           }
         shell: pwsh
 
+      - name: Analyze Per-File Mutation Scores (TEST-013)
+        if: always()
+        shell: pwsh
+        run: |
+          $jsonFiles = Get-ChildItem -Path "StrykerOutput/**/mutation-report.json" -ErrorAction SilentlyContinue
+          if ($jsonFiles.Count -gt 0) {
+            $topN = if ($env:STRYKER_TOP_N) { [int]$env:STRYKER_TOP_N } else { 10 }
+            & ./scripts/StrykerReportAnalyzer.ps1 -ReportPath $jsonFiles[0].FullName -TopN $topN
+          } else {
+            Write-Warning "Kein mutation-report.json gefunden — per-file Analyse (TEST-013) übersprungen."
+          }
+
+      - name: Upload Per-File Mutation Report (TEST-013)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stryker-per-file-report
+          path: StrykerOutput/**/stryker-per-file-report.md
+          retention-days: 14
+
   build-check:
     name: Build Check (Release)
     runs-on: windows-latest
