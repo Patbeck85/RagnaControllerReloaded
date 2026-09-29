@@ -44,9 +44,10 @@
 
 ## Completed Tasks (Sprint C, Phase 10)
 - **TEST-013**: Stryker-Scoping — pro-Datei Mutation-Score-Auswertung in CI ✅ (`scripts/StrykerReportAnalyzer.ps1` + Fixture + CI-Step „Analyze Per-File Mutation Scores" + Artifact `stryker-per-file-report`; Parser Fixture-validiert, Gate-Pfade Exit 0/1 verifiziert)
+- **TEST-014**: PerformanceTests entflaken ✅ (Phantom-Datei `tests/PerformanceTests.cs` außerhalb des Projekts entfernt; 2 Tests deterministisch gegen echte `EngineOptimizationPool`-API neu geschrieben: StringPooling→allokierte Bytes, MemoryLatency→Median/p95 über 1000 Samples. Suite 236→238, 5× Filter-Lauf grün)
 
 ## In Progress
-- Push des TEST-013-Commits + CI-Lauf abwarten (Stryker-Job erzeugt erstmals das per-file-Report-Artefact).
+- Push des TEST-014-Commits + CI-Lauf abwarten (Unit-Tests-Job muss jetzt 238/238 Release zeigen).
 
 ## Next Actions
 1. **CI-Lauf grüner verifizieren** (Unit Tests Job: 236/236 Release; Stryker muss nicht mehr skippen).

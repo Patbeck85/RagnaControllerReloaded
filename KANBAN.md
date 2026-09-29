@@ -251,6 +251,15 @@
 **DoD:** ✅ Parser validiert gegen schema-genaues Fixture (4 Dateien, 20 Mutanten: BuffManager 50%, Cooldown 60%, SkillOrchestrator 60%, EngineOrchestrator 75%) · ✅ Gate-Pfade verifiziert (Floor 70% → Exit 1, Floor 40% → Exit 0) · ✅ `dotnet test` grün: 236/236 PASS mit `RAGNACONTROLLER_SKIP_SDL=1`
 **Known-Issue:** Skript ist bewusst reines ASCII (Windows PowerShell 5.1 liest BOM-freie Dateien als ANSI/cp1252 — Em-Dashes/Umlaute in String-Literalen korruptieren den Parser: „ExpressionsMustBeFirstInPipeline" + „InvalidVariableReferenceWithDrive"). Live-Run lokal flaky (WPF `.g.cs` CS0229 bei Debug-Mutation); CI läuft Release mit Exclusions und ist der Referenz-Pfad.
 
+#### TEST-014: PerformanceTests entflaken — deterministische Timing-/Allokations-Assertions
+**Status:** ✅ DONE | **Assigned:** @coder / @qa | **Priorität:** LOW
+**Root-Cause (Fehldiagnose korrigiert):** `tests/PerformanceTests.cs` lag **außerhalb** des Test-Projektfalters (`tests/RagnaController.Tests/`) → wurde vom SDK-Glob nie kompiliert, lief also in CI gar nicht. Zusätzlich referenzierte sie nicht existierende APIs (`AutoTargetEngine.UpdateState`, `MovementEngine.ProcessInput/CalculatePosition`, `ComboEngine.ComboCount`, 4-Arg-Konstruktor, `Assert.Approximately`) = Phantom-/Dead-Code (verletzt RULE-004 No Broken State).
+**Files:** `tests/RagnaController.Tests/PerformanceTests.cs` (neu, im Projekt), `tests/PerformanceTests.cs` (Phantom-Datei entfernt)
+**Implementation:** Zwei Tests deterministisch gegen die echte, headless-sichere `EngineOptimizationPool.GetString`-API neu geschrieben:
+- `StringPooling_ShouldReduceAllocations`: statt Wall-Clock-Millisekunden-Vergleich (beide Loops sub-millisecond = reines Rauschen) jetzt **allokierte Bytes** via `GC.GetAllocatedBytesForCurrentThread()`. Non-pooled allokiert pro Iteration, pooled ≈ 0. `_sink`-Feld verhindert Dead-Code-Elimination.
+- `MemoryLatency_ShouldBeUnderThreshold`: statt throw-pro-einzelner-Iteration jetzt **Median/p95** über 1000 Samples (nach 100 Warmup) — eine GC-Pause trifft nur ein Sample, nicht die Verteilung.
+**DoD:** ✅ Datei ins Projekt verlegt (kompiliert, wird ausgeführt) · ✅ `dotnet test` grün: **238/238 PASS** mit `RAGNACONTROLLER_SKIP_SDL=1` (vorher 236 — die 2 neuen Tests laufen jetzt erstmals) · ✅ Determinismus verifiziert: 5× Filter-Lauf `PerformanceTests` = 5× 2/2 PASS, 0 Fehler
+
 ### 🟩 SPRINT C / BACKLOG — LOW Priority (bewusst parkiert)
 
 | Task | Titel | Priorität | Notiz |
@@ -259,7 +268,7 @@
 | FEAT-023 | Auto-Item-Einlagerung (Storage-Drop bei vollem Inventar) | LOW | Basis vorhanden: RoUiMenuService + SmartCursorService Grid-Geometrie |
 | FEAT-024 | Multi-Character-Profil-Schnellwechsel (Name-basiert) | LOW | ProfileQuickSwitch existiert; fehlt nur Char-Namen-Erkennung → Profil-Zuordnung |
 | TEST-013 | Stryker-Scoping: pro-Datei Mutation-Score-Auswertung in CI | MEDIUM→C | ✅ DONE 2026-09-28 (siehe Detailblock unten) |
-| TEST-014 | PerformanceTests entflaken (flaky Timing-Assertions) | LOW | MemoryLatency + StringPooling-Test liefern falsche Signale; Median/p95 statt throw-pro-Iteration |
+| TEST-014 | PerformanceTests entflaken (flaky Timing-Assertions) | LOW | ✅ DONE 2026-09-29 (siehe Detailblock oben) |
 | UX-012 | Accessibility: AutomationProperties + Gamepad-Fokus-Ring *(Designer-Audit)* | LOW | 0 AutomationProperties in allen 8 Fenstern; kein Gamepad-Fokus-Handling in MainWindow-Tabs |
 
 ### PM-Moderation — Konfliktauflösung (2026-09-07)
