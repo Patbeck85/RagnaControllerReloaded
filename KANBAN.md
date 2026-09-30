@@ -186,6 +186,27 @@
 - ✅ **ParsedInput-Edge-Cases:** 24 Flags × JustPressed/JustReleased-Transitionen (Theorie), 1.024 seeded zufällige Button-Kombinations-Paare gegen Referenz-Definition, extreme Stick-Werte (NaN/±Inf/Max/Min) bit-stabil durch `With()`, Trigger-Out-of-Range ohne Clamping, ButtonsPressed-Isolation
 **DoD-Abnahme:** ✅ 10.000 Commands deterministisch reproduzierbar, keine Exception/Deadlock · ✅ Race 20 Zyklen konsistent · ✅ Edge-Cases grün · ✅ `dotnet test` Full-Suite 183/183 (mit RAGNACONTROLLER_SKIP_SDL=1)
 
+#### TEST-015: Controller-Eingaben-Testharness — FakeControllerProvider + Pipeline-Goldtests
+**Status:** OPEN | **Assigned:** @qa / @coder | **Priorität:** HIGH
+**Description:** Die Input-Pipeline (Roh-State → `ButtonState` → `ParsedInput` → `SnapshotBuilder.Build`) wird heute nur stückweise getestet (`ParsedInputTests`, `InputFuzzTests`, `InputCommandQueueTests`). Es fehlt der **end-to-end-Test ohne Hardware**: Ein injizierbares `FakeControllerProvider` (implementiert `IControllerProvider`, synthetische deterministische Frames) erlaubt es, exakte Button-/Stick-/Trigger-Sequenzen in die echte Pipeline zu speisen und das resultierende `ControllerSnapshot` gegen Erwartungswerte abzugleichen. Damit ist jede Stufe der Eingabe-Kette (Mapping, JustPressed/JustReleased-Transitionen, Cooldown-Gating im Snapshot) reproduzierbar verifizierbar — auch headless in CI (`RAGNACONTROLLER_SKIP_SDL=1`).
+**Dependencies:** `IControllerProvider` (existiert), `SnapshotBuilder` (existiert, P/Invoke-frei → direkt testbar), `InternalsVisibleTo` (seit FEAT-015 vorhanden)
+**Files:** `tests/RagnaController.Tests/FakeControllerProvider.cs` (neu), `tests/RagnaController.Tests/ControllerPipelineTests.cs` (neu), ggf. `Core/SnapshotBuilder.cs` (nur wenn Testbarkeit erfordert)
+**DoD:** ≥ 10 Facts: (1) exaktes Button-Drücken → korrekter Snapshot mit JustPressed, (2) Release → JustReleased genau ein Frame später, (3) Stick/Trigger-Werte landen bit-exakt im Snapshot, (4) Disconnect → `Disconnected`-State, (5) Reconnect → saubere Transition ohne Ghost-Buttons, (6) XInput-Fallback-Pfad mit Fake identisch mappbar. Suite grün headless.
+
+#### TEST-016: Controller-Replay — Aufgezeichnete Sessions als CI-Golden-Master
+**Status:** OPEN | **Assigned:** @qa / @coder | **Priorität:** HIGH
+**Description:** Antwort auf „läuft das alles einwandfrei?" mit echter Hardware-Datenlage: `ControllerTestWindow` (oder ein CLI-Tool) zeichnet eine Controller-Session als deterministisches JSON-Fixtur auf (Timestamp + Roh-State pro Frame). Die Fixtur wird ins Repo committet und in der CI **replayed** durch die echte Pipeline (`FakeControllerProvider` aus TEST-015 speist die Frames, `SnapshotBuilder` baut die Snapshots) — Abweichung gegen den aufgezeichneten Snapshot-Verlauf = Regression. Einmal aufgezeichnet (mit echtem DualSense/XInput), für immer CI-verifizierbar. Deckt Mapping-Drift ab, der nur an echter Hardware sichtbar wäre.
+**Dependencies:** TEST-015 (`FakeControllerProvider`)
+**Files:** `tests/RagnaController.Tests/fixtures/controller-session.golden.json` (neu), `tests/RagnaController.Tests/ControllerReplayTests.cs` (neu), `ControllerTest/ControllerTestWindow.xaml.cs` (Aufnahmefunktion, opt. CLI-Export)
+**DoD:** ≥ 1 Session-Fixtur (≥ 500 Frames, mehrere Buttons + Sticks + Disconnect/Reconnect) committet; Replay-Test vergleicht Frame-für-Frame (JustPressed/JustReleased + Stick-Werte) und schlägt bei jeder Abweichung fehl; Aufnahmefunktion in ControllerTestWindow mit Export nach JSON. Suite grün headless.
+
+#### TEST-017: Controller-Diagnose — Eingabe-Selbsttest im ControllerTestWindow
+**Status:** OPEN | **Assigned:** @designer / @coder | **Priorität:** HIGH
+**Description:** Manuelle Verifikationsebene für den Endnutzer („einfach prüfen, ob mein Controller alles kann"): Neuer Tab/Modus „Eingabe-Check" in `ControllerTestWindow` — führt eine geführte Prüfung durch: nacheinander jedes Button/Stick/Trigger wird aufgefordert („Drücke □", „Stick links nach oben"), pro Kontrolle wird gemessen **ob** das Event ankommt, **wie schnell** (Input-Latenz via PERF-005 `LatencyTracker`) und ob die erwartete Mapping-Kette stimmt. Ergebnis: Pass/Fail pro Kontrolle + Gesamtstatus, optional als Report exportierbar (JSON/Text). Damit hat der Nutzer ein verifizierbares „einwandfrei"-Statement statt nur Live-Anzeige.
+**Dependencies:** `ControllerTestWindow` (existiert), PERF-005 LatencyTracker (existiert)
+**Files:** `ControllerTest/ControllerTestWindow.xaml(.cs)` (Diagnose-Modus + Report), ggf. `Core/InputLatencyTracker.cs` (Read-API)
+**DoD:** ≥ 12 geprüfte Eingaben (alle Buttons, beide Sticks, beide Triggers, DPad) mit je Pass/Fail; Latenz pro Kontrolle angezeigt (p50/p95); Export-Report als JSON; UI folgt 2026-Design-System; Build + Suite grün.
+
 ### 🟨 SPRINT B — MEDIUM Priority (nach Sprint A)
 
 #### FEAT-012: PartyManager + Auto-Heal-Loop *(merge Coder FEAT-012 + QA FEAT-021)* ✅ DONE
@@ -316,4 +337,5 @@
 4. **PERF-010 ✅ + TEST-012 ✅** — Zero-Allokation-Gate (0 Bytes/Tick) UND Soak 10k Ticks mit Memory-Leak-Guard (Gen2≤1, Mem<512KB, Handles<32).
 5. **UI-011 ✅** — Live-Telemetrie-Dashboard: TelemetryPanel (2 Hz, thread-sichere Snapshots) + 7. Developer-Tab + HybridEngine-Delegation (`LatencyTracker`/`MemoryTracker`) + 5 Unit-Tests. Suite 229/229 PASS.
 6. **UX-012 ✅** — Accessibility: 22 icon-only Buttons mit `AutomationProperties.Name`, thematisierter Fokus-Ring in alle 4 Button-Templates, GamepadUiNavigator in MainWindow verdrahtet (DPad/Tab). Suite 238/238 PASS.
-7. **FEAT-015 ✅** — Multi-Client-Routing: `PreferredClientHwnd`-Override + reine `SelectTargetHwnd`-Funktion (YAGNI, ohne UI) → Alt-Char/Farming kann jetzt exakt einen Client adressieren statt „erstes Enum-Fenster". Backward-kompatibel. Suite 243/243 PASS. Nächster Punkt SPRINT C: FEAT-023 / FEAT-024 (alle LOW/parkiert — bewusst zurückgestellt, kein Drängen).
+7. **FEAT-015 ✅** — Multi-Client-Routing: `PreferredClientHwnd`-Override + reine `SelectTargetHwnd`-Funktion (YAGNI, ohne UI) → Alt-Char/Farming kann jetzt exakt einen Client adressieren statt „erstes Enum-Fenster". Backward-kompatibel. Suite 243/243 PASS.
+8. **TEST-015/016/017 eingeplant (HIGH, SPRINT A)** — Controller-Eingaben-Verifikation: TEST-015 FakeControllerProvider + Pipeline-Goldtests (end-to-end ohne Hardware), TEST-016 Controller-Replay als CI-Golden-Master (aufgezeichnete Session), TEST-017 Eingabe-Selbsttest im ControllerTestWindow (geführte Pass/Fail-Diagnose mit Latenz). Nächste Ausführung: **TEST-015** (Grundlage für 016/017). Danach SPRINT C: FEAT-023 / FEAT-024 (LOW/parkiert).
