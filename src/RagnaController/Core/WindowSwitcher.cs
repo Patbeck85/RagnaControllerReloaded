@@ -16,13 +16,25 @@ namespace RagnaController.Core
         private static readonly Dictionary<string, (IntPtr hwnd, long tick)> _cache = new();
         private const long CACHE_TTL_MS = 10_000; // alle 10s verifizieren
 
+        /// <summary>
+        /// FEAT-015: Explizites Ziel-Fenster für Multi-Client-Betrieb (Alt-Char, Farming).
+        /// Wenn gesetzt und das Fenster noch existiert, werden alle SwitchWindow-Aktionen an
+        /// genau dieses HWND geroutet; sonst Fallback auf die Prozessname-Auflösung (Legacy).
+        /// YAGNI: Override-Punkt für einen späteren Client-Selector — bewusst ohne UI/Settings.
+        /// Thread-Hinweis: wird vom UI-Thread gesetzt, vom Switch-Task gelesen (benigne Race).
+        /// </summary>
+        public static IntPtr? PreferredClientHwnd { get; set; }
+
         public static async Task ToggleAsync(string processName)
+            => await ToggleAsync(processName, PreferredClientHwnd ?? IntPtr.Zero);
+
+        public static async Task ToggleAsync(string processName, IntPtr preferredHwnd)
         {
             // FIX: Atomare Window-Switching mit Retry-Logik gegen Race Conditions
             const int maxRetries = 3;
             for (int retry = 0; retry < maxRetries; retry++)
             {
-                IntPtr hwnd = GetCachedHwnd(processName);
+                IntPtr hwnd = SelectTargetHwnd(processName, preferredHwnd, IsWindow);
                 if (hwnd == IntPtr.Zero) return;
 
                 // FIX: Always restore window first to ensure consistent state
@@ -62,6 +74,20 @@ namespace RagnaController.Core
             }
         }
 
+        /// <summary>
+        /// FEAT-015: Reine Ziel-Auswahl (testbar ohne Win32-Seitenwirkung).
+        /// 1) PreferredHwnd existiert noch → wird verwendet (Multi-Client-Routing).
+        /// 2) Sonst Legacy: gecachte Prozessname-Auflösung.
+        /// </summary>
+        internal static IntPtr SelectTargetHwnd(string processName, IntPtr preferredHwnd, Func<IntPtr, bool>? aliveCheck = null)
+        {
+            if (preferredHwnd != IntPtr.Zero && (aliveCheck == null || aliveCheck(preferredHwnd)))
+                return preferredHwnd;
+
+            // Legacy-Pfad: Prozessname-Auflösung (gewollt auch bei ungültigem PreferredHwnd)
+            return GetCachedHwnd(processName);
+        }
+
         private static IntPtr GetCachedHwnd(string name)
         {
             long now = Environment.TickCount64;
@@ -96,6 +122,7 @@ namespace RagnaController.Core
         }
 
         [DllImport("user32.dll")] private static extern bool SetForegroundWindow(IntPtr hWnd);
+        [DllImport("user32.dll")] private static extern bool IsWindow(IntPtr hWnd);
         [DllImport("user32.dll")] private static extern bool IsIconic(IntPtr hWnd);
         [DllImport("user32.dll")] private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
         [DllImport("user32.dll")] private static extern IntPtr GetForegroundWindow();

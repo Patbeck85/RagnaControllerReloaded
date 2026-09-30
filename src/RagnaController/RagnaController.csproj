@@ -88,6 +88,7 @@
 
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ButtonRemappingWindow.xaml.cs" />
     <Compile Include="ComboEditorWindow.xaml.cs" />
     <Compile Include="CommunityBrowserWindow.xaml.cs" />

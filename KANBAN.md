@@ -270,11 +270,24 @@
 **DoD:** ✅ Build 0 Errors / 24 Vorwarnungen (keine neuen) · ✅ `dotnet test` grün: **238/238 PASS** mit `RAGNACONTROLLER_SKIP_SDL=1` · ✅ Alle 8 Fenster + MainWindow verdrahtet, Handler-Integrität verifiziert (ComboEditor/CommunityBrowser → `BtnClose_Click`)
 **Known-Issue:** Fuzzy-Patch-Risiko bei icon-only Buttons: Patch-Tool hat in ComboEditor/CommunityBrowser versehentlich `Click="BtnClose_Click"`→`BtnCancel_Click` + ToolTip „Close window" umgeschrieben (Handler existiert dort nicht → Laufzeit-Break). Sofort korrigiert auf Original-Handler + Original-ToolTip. Lektion: Bei XAML-Patches mit `replace_all`/Fuzzy-Matching immer den exakten `Click=`-Handler im `.xaml.cs` gegenprüfen, bevor der Patch gilt.
 
+#### FEAT-015: Multi-Client-Routing — Preferred-HWND (AltChar, Farming)
+**Status:** ✅ DONE | **Assigned:** @coder | **Priorität:** LOW (Backlog → SPRINT C)
+**Root-Cause:** `WindowSwitcher.ToggleAsync` löste pro Prozessname immer das **erste** Enum-Fenster auf (`EnumWindows`-Reihenfolge). Bei 2 parallelen RO-Clients (gleicher Exe-Name) war der Ziel-Client zufällig fest — Alt-Char/Farming konnte Client 2 nicht adressieren.
+**Files:** `Core/WindowSwitcher.cs`, `Properties/AssemblyInfo.cs` (neu, `InternalsVisibleTo`), `RagnaController.csproj` (Compile-Eintrag), `tests/RagnaController.Tests/WindowSwitcherTests.cs` (neu)
+**Implementation (YAGNI-Override-Punkt, bewusst ohne UI/Settings):**
+- `public static IntPtr? PreferredClientHwnd { get; set; }` — Override-Punkt: wenn gesetzt **und** das Fenster lebt (`IsWindow`), werden alle Switch-Aktionen an genau dieses HWND geroutet.
+- `ToggleAsync(processName)` (Legacy-Signatur, unverändert) delegiert an `ToggleAsync(processName, PreferredClientHwnd ?? IntPtr.Zero)` → 100% Backward-Kompatibel, einziger Aufrufer (`CombatEngine`) untouched.
+- Reine Auswahl-Funktion `internal static IntPtr SelectTargetHwnd(processName, preferredHwnd, aliveCheck)`: (1) lebt Preferred → Preferred; (2) sonst Legacy-Prozessname-Auflösung (auch bei ungültigem/totem Preferred — z.B. Client neu gestartet). `aliveCheck` injiziert → unit-testbar ohne Win32-Seitenwirkung.
+- Retry-Logik (3×) bleibt erhalten; `IsWindow`-Import ergänzt.
+**Tests:** 5 neue `WindowSwitcherTests` (Preferred-llebt→gewinnt, Preferred-tot→Legacy-Fallback, null-aliveCheck→vertraut, ZeroPreferred→nie akzeptiert, aliveCheck-wird-konsultiert). Alle rein/deterministisch, CI-sicher headless.
+**DoD:** ✅ Build 0 Errors / 24 Vorwarnungen (keine neue) · ✅ `dotnet test` grün: **243/243 PASS** (`RAGNACONTROLLER_SKIP_SDL=1`) · ✅ Backward-kompatibel (Legacy-Signatur + einziger Aufrufer unverändert)
+**Known-Issue / Scope-Entscheidung:** Bewusst **kein** paralleles Engine-Modell, keine UI/Settings, kein Client-Selector — nur der Routing-Override-Punkt (YAGNI gemäß PM-Moderation). Ein späterer FEAT-Punkt kann `PreferredClientHwnd` an einen Client-Selector/Alt-Char-Profil binden; die API ist dafür vorbereitet.
+
 ### 🟩 SPRINT C / BACKLOG — LOW Priority (bewusst parkiert)
 
 | Task | Titel | Priorität | Notiz |
 |------|-------|-----------|-------|
-| FEAT-015 | Multi-Window / Multi-Client-Support (Alt-Char, Farming) | LOW | YAGNI: nur Input-Routing an aktives Fenster, kein paralleles Engine-Modell |
+| FEAT-015 | Multi-Window / Multi-Client (AltChar, Farming) | LOW | ✅ DONE 2026-09-30 (siehe Detailblock unten) |
 | FEAT-023 | Auto-Item-Einlagerung (Storage-Drop bei vollem Inventar) | LOW | Basis vorhanden: RoUiMenuService + SmartCursorService Grid-Geometrie |
 | FEAT-024 | Multi-Character-Profil-Schnellwechsel (Name-basiert) | LOW | ProfileQuickSwitch existiert; fehlt nur Char-Namen-Erkennung → Profil-Zuordnung |
 | TEST-013 | Stryker-Scoping: pro-Datei Mutation-Score-Auswertung in CI | MEDIUM→C | ✅ DONE 2026-09-28 (siehe Detailblock unten) |
@@ -291,7 +304,7 @@
 
 ## Metriken
 - **Build:** 0 Errors ✅ (24 Vorwarnungen, keine neuen durch ROB-002)
-- **Tests:** 238/238 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅ — inkl. 6 FEAT-014 SessionRecorder-Tests + 2 PerformanceTests (TEST-014)
+- **Tests:** 243/243 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅ — inkl. 6 FEAT-014 SessionRecorder-Tests, 2 PerformanceTests (TEST-014), 5 WindowSwitcher-Tests (FEAT-015)
 - **Phase 8 Completion:** 100% (9/9 Tasks) ✅
 - **Phase 9 Progress:** 9/9 Tasks (100%) — **ALL COMPLETE** ✅
 - **Phase 10 Planned:** 13 Tasks (5 Sprint A / 7 Sprint B / 6 Backlog inkl. 2 merges + 1 parkiert)
@@ -302,4 +315,5 @@
 3. **Sprint B Fortschritt:** FEAT-012 PartyManager ✅ → FEAT-013 Target-Management ✅ → ROB-002 ✅ → FEAT-014 Session-Replay ✅ (CLOSED 2026-09-18: JSONL-Recorder, 50MB-Rotation, Replay-Player, 6 Tests)
 4. **PERF-010 ✅ + TEST-012 ✅** — Zero-Allokation-Gate (0 Bytes/Tick) UND Soak 10k Ticks mit Memory-Leak-Guard (Gen2≤1, Mem<512KB, Handles<32).
 5. **UI-011 ✅** — Live-Telemetrie-Dashboard: TelemetryPanel (2 Hz, thread-sichere Snapshots) + 7. Developer-Tab + HybridEngine-Delegation (`LatencyTracker`/`MemoryTracker`) + 5 Unit-Tests. Suite 229/229 PASS.
-6. **UX-012 ✅** — Accessibility: 22 icon-only Buttons mit `AutomationProperties.Name`, thematisierter Fokus-Ring in alle 4 Button-Templates, GamepadUiNavigator in MainWindow verdrahtet (DPad/Tab). Suite 238/238 PASS. Nächster Punkt SPRINT C: FEAT-015 / FEAT-023 / FEAT-024 (alle LOW/parkiert — bewusst zurückgestellt, kein Drängen).
+6. **UX-012 ✅** — Accessibility: 22 icon-only Buttons mit `AutomationProperties.Name`, thematisierter Fokus-Ring in alle 4 Button-Templates, GamepadUiNavigator in MainWindow verdrahtet (DPad/Tab). Suite 238/238 PASS.
+7. **FEAT-015 ✅** — Multi-Client-Routing: `PreferredClientHwnd`-Override + reine `SelectTargetHwnd`-Funktion (YAGNI, ohne UI) → Alt-Char/Farming kann jetzt exakt einen Client adressieren statt „erstes Enum-Fenster". Backward-kompatibel. Suite 243/243 PASS. Nächster Punkt SPRINT C: FEAT-023 / FEAT-024 (alle LOW/parkiert — bewusst zurückgestellt, kein Drängen).
