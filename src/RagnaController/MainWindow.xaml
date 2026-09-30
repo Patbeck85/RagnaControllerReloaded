@@ -79,9 +79,9 @@
                             </Grid>
                         </Border>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Button x:Name="BtnMinimize" Content="&#xE921;" Style="{StaticResource WindowControlButton}" Click="BtnMinimize_Click" ToolTip="Minimize" Width="36" Height="36"/>
-                            <Button x:Name="BtnMaximize" Content="&#xE922;" Style="{StaticResource WindowControlButton}" Click="BtnMaximize_Click" ToolTip="Maximize" Width="36" Height="36"/>
-                            <Button x:Name="BtnClose" Content="&#xE8BB;" Style="{StaticResource WindowControlButtonClose}" Click="BtnClose_Click" ToolTip="Close" Width="36" Height="36"/>
+                            <Button x:Name="BtnMinimize" Content="&#xE921;" Style="{StaticResource WindowControlButton}" Click="BtnMinimize_Click" ToolTip="Minimize" AutomationProperties.Name="Minimize" Width="36" Height="36"/>
+                            <Button x:Name="BtnMaximize" Content="&#xE922;" Style="{StaticResource WindowControlButton}" Click="BtnMaximize_Click" ToolTip="Maximize" AutomationProperties.Name="Maximize" Width="36" Height="36"/>
+                            <Button x:Name="BtnClose" Content="&#xE8BB;" Style="{StaticResource WindowControlButtonClose}" Click="BtnClose_Click" ToolTip="Close" AutomationProperties.Name="Close" Width="36" Height="36"/>
                         </StackPanel>
                     </StackPanel>
                 </Grid>

@@ -18,7 +18,7 @@
                         <Border Width="4" Height="28" Background="{StaticResource AccentGold}" Effect="{StaticResource GoldGlow}" Margin="0,0,12,0" CornerRadius="2"/>
                         <TextBlock Text="PROFILE WIZARD" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <Button Content="✕" Click="BtnCancel_Click" HorizontalAlignment="Right" Width="36" Height="36" Style="{StaticResource GhostButton}" ToolTip="Cancel wizard"/>
+                    <Button Content="✕" Click="BtnCancel_Click" HorizontalAlignment="Right" Width="36" Height="36" Style="{StaticResource GhostButton}" ToolTip="Cancel wizard" AutomationProperties.Name="Cancel wizard"/>
                 </Grid>
             </Border>
             

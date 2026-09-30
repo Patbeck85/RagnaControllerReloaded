@@ -260,6 +260,16 @@
 - `MemoryLatency_ShouldBeUnderThreshold`: statt throw-pro-einzelner-Iteration jetzt **Median/p95** über 1000 Samples (nach 100 Warmup) — eine GC-Pause trifft nur ein Sample, nicht die Verteilung.
 **DoD:** ✅ Datei ins Projekt verlegt (kompiliert, wird ausgeführt) · ✅ `dotnet test` grün: **238/238 PASS** mit `RAGNACONTROLLER_SKIP_SDL=1` (vorher 236 — die 2 neuen Tests laufen jetzt erstmals) · ✅ Determinismus verifiziert: 5× Filter-Lauf `PerformanceTests` = 5× 2/2 PASS, 0 Fehler
 
+#### UX-012: Accessibility — AutomationProperties + Gamepad-Fokus-Ring *(Designer-Audit)*
+**Status:** ✅ DONE | **Assigned:** @designer / @coder | **Priorität:** LOW (Backlog → SPRINT C)
+**Root-Cause (Designer-Audit):** 0 `AutomationProperties.Name` in allen 8 Fenstern — Screenreader/Assistive Tech können icon-only Buttons nicht benennen. Kein Gamepad-Fokus-Handling in MainWindow-Tabs: Handheld-Navigation existierte nur in `HandheldWindow`, Hauptfenster ohne DPad/Tab-Fokus-Ring.
+**Files:** 10 XAML-Fenster (MainWindow, ButtonRemapping, ComboEditor, CommunityBrowser, DeveloperConsole, ProfileLibrary, ProfileWizard, RadialSetup×2, Tutorial) + `Resources/UI2026DesignSystem.xaml` + `MainWindow.xaml.cs`
+**Implementation — WP1 (AutomationProperties):** Alle 22 icon-only Buttons (`&#xE8BB;` Close, `&#xE921;/E922` Min/Max, `&#x21BA;` Reset×10, `✕` Wizard/Gallery) mit `AutomationProperties.Name` versehen. Screenreader liest jetzt z.B. „Close window" statt leeren Glyphs.
+**Implementation — WP2 (Fokus-Ring):** Thematisierter `IsKeyboardFocused`-Trigger in alle 4 Button-Templates (`PrimaryButton`, `GhostButton`, `WindowControlButton`, `WindowControlButtonClose`) → AccentBlue-Border + `BlueGlowSubtle`-Glow. Konsistent mit dem bestehenden TextBox-Fokus-Pattern (L401). Via BasedOn erbt TabButton/DangerButton automatisch.
+**Implementation — WP3 (Gamepad-Navigator in MainWindow):** `MainWindow.xaml.cs` initialisiert `GamepadUiNavigator(_engine.ControllerSvc) { ActiveWindow = this }` im Ctor, `Start()` in `Window_Loaded`, `Stop()+Dispose()` in `Window_Closing` (MEMORY-001: Timer sauber freigegeben). Handheld-DPad navigiert jetzt auch durch Hauptfenster-Tabs.
+**DoD:** ✅ Build 0 Errors / 24 Vorwarnungen (keine neuen) · ✅ `dotnet test` grün: **238/238 PASS** mit `RAGNACONTROLLER_SKIP_SDL=1` · ✅ Alle 8 Fenster + MainWindow verdrahtet, Handler-Integrität verifiziert (ComboEditor/CommunityBrowser → `BtnClose_Click`)
+**Known-Issue:** Fuzzy-Patch-Risiko bei icon-only Buttons: Patch-Tool hat in ComboEditor/CommunityBrowser versehentlich `Click="BtnClose_Click"`→`BtnCancel_Click` + ToolTip „Close window" umgeschrieben (Handler existiert dort nicht → Laufzeit-Break). Sofort korrigiert auf Original-Handler + Original-ToolTip. Lektion: Bei XAML-Patches mit `replace_all`/Fuzzy-Matching immer den exakten `Click=`-Handler im `.xaml.cs` gegenprüfen, bevor der Patch gilt.
+
 ### 🟩 SPRINT C / BACKLOG — LOW Priority (bewusst parkiert)
 
 | Task | Titel | Priorität | Notiz |
@@ -269,7 +279,7 @@
 | FEAT-024 | Multi-Character-Profil-Schnellwechsel (Name-basiert) | LOW | ProfileQuickSwitch existiert; fehlt nur Char-Namen-Erkennung → Profil-Zuordnung |
 | TEST-013 | Stryker-Scoping: pro-Datei Mutation-Score-Auswertung in CI | MEDIUM→C | ✅ DONE 2026-09-28 (siehe Detailblock unten) |
 | TEST-014 | PerformanceTests entflaken (flaky Timing-Assertions) | LOW | ✅ DONE 2026-09-29 (siehe Detailblock oben) |
-| UX-012 | Accessibility: AutomationProperties + Gamepad-Fokus-Ring *(Designer-Audit)* | LOW | 0 AutomationProperties in allen 8 Fenstern; kein Gamepad-Fokus-Handling in MainWindow-Tabs |
+| UX-012 | Accessibility: AutomationProperties + Gamepad-Fokus-Ring *(Designer-Audit)* | LOW | ✅ DONE 2026-09-30 (siehe Detailblock unten) |
 
 ### PM-Moderation — Konfliktauflösung (2026-09-07)
 1. **Duplikat aufgelöst:** Coder FEAT-011 + QA FEAT-020 → **ein** Task FEAT-011 (ItemManagerEngine). QA hat den Code-Gap bestätigt, Coder das Design geliefert.
@@ -281,7 +291,7 @@
 
 ## Metriken
 - **Build:** 0 Errors ✅ (24 Vorwarnungen, keine neuen durch ROB-002)
-- **Tests:** 221/221 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅ — inkl. 6 FEAT-014 SessionRecorder-Tests
+- **Tests:** 238/238 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅ — inkl. 6 FEAT-014 SessionRecorder-Tests + 2 PerformanceTests (TEST-014)
 - **Phase 8 Completion:** 100% (9/9 Tasks) ✅
 - **Phase 9 Progress:** 9/9 Tasks (100%) — **ALL COMPLETE** ✅
 - **Phase 10 Planned:** 13 Tasks (5 Sprint A / 7 Sprint B / 6 Backlog inkl. 2 merges + 1 parkiert)
@@ -291,4 +301,5 @@
 2. **ROB-002 abgeschlossen ✅** — Input-Emulation-Failover (SendInput ↔ Kernel): State-Machine in `InputRouter` (`InitializeFailover` + `RecordSendInputLatency`), Orchestrator-Wiring mit graceful Driver-Degradation, ETW Event 82, 6 Unit-Tests.
 3. **Sprint B Fortschritt:** FEAT-012 PartyManager ✅ → FEAT-013 Target-Management ✅ → ROB-002 ✅ → FEAT-014 Session-Replay ✅ (CLOSED 2026-09-18: JSONL-Recorder, 50MB-Rotation, Replay-Player, 6 Tests)
 4. **PERF-010 ✅ + TEST-012 ✅** — Zero-Allokation-Gate (0 Bytes/Tick) UND Soak 10k Ticks mit Memory-Leak-Guard (Gen2≤1, Mem<512KB, Handles<32).
-5. **UI-011 ✅** — Live-Telemetrie-Dashboard: TelemetryPanel (2 Hz, thread-safene Snapshots) + 7. Developer-Tab + HybridEngine-Delegation (`LatencyTracker`/`MemoryTracker`) + 5 Unit-Tests. Suite 229/229 PASS. Nächster Punkt: **FEAT-014** (Session-Replay steht bereits als CLOSED im Kanban — Rest-Sprint B prüfen)
+5. **UI-011 ✅** — Live-Telemetrie-Dashboard: TelemetryPanel (2 Hz, thread-sichere Snapshots) + 7. Developer-Tab + HybridEngine-Delegation (`LatencyTracker`/`MemoryTracker`) + 5 Unit-Tests. Suite 229/229 PASS.
+6. **UX-012 ✅** — Accessibility: 22 icon-only Buttons mit `AutomationProperties.Name`, thematisierter Fokus-Ring in alle 4 Button-Templates, GamepadUiNavigator in MainWindow verdrahtet (DPad/Tab). Suite 238/238 PASS. Nächster Punkt SPRINT C: FEAT-015 / FEAT-023 / FEAT-024 (alle LOW/parkiert — bewusst zurückgestellt, kein Drängen).

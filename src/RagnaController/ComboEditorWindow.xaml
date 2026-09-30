@@ -22,7 +22,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                         <CheckBox x:Name="ChkEnabled" Content="Combo Active" Foreground="{StaticResource Green}" FontWeight="Bold" Margin="0,0,20,0" VerticalAlignment="Center" Padding="8,6" FontFamily="Segoe UI Variable, Segoe UI"/>
-                        <Button Content="&#xE8BB;" Click="BtnClose_Click" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close combo editor window"/>
+                        <Button Content="&#xE8BB;" Click="BtnClose_Click" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close combo editor window" AutomationProperties.Name="Close combo editor window"/>
                     </StackPanel>
                 </Grid>
             </Border>

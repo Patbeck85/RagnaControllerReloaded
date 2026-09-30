@@ -220,6 +220,10 @@
                             <Setter TargetName="bd" Property="Background" Value="{StaticResource AccentPurple}"/>
                             <Setter TargetName="bd" Property="Effect" Value="{StaticResource PurpleGlow}"/>
                         </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="bd" Property="BorderBrush" Value="{StaticResource AccentBlue}"/>
+                            <Setter TargetName="bd" Property="Effect" Value="{StaticResource BlueGlowSubtle}"/>
+                        </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="bd" Property="Opacity" Value="0.5"/>
                         </Trigger>
@@ -275,6 +279,10 @@
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="bd" Property="Background" Value="#4A4A55"/>
                             <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="bd" Property="BorderBrush" Value="{StaticResource AccentBlue}"/>
+                            <Setter TargetName="bd" Property="Effect" Value="{StaticResource BlueGlowSubtle}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="bd" Property="Opacity" Value="0.35"/>
@@ -340,6 +348,11 @@
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="bd" Property="Background" Value="{StaticResource BgRaised}"/>
                         </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="#2A2A35"/>
+                            <Setter TargetName="bd" Property="Effect" Value="{StaticResource BlueGlowSubtle}"/>
+                            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
+                        </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="bd" Property="Opacity" Value="0.4"/>
                         </Trigger>
@@ -365,6 +378,11 @@
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
                             <Setter TargetName="bd" Property="Background" Value="#F1707A"/>
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="bd" Property="Background" Value="#2A2A35"/>
+                            <Setter TargetName="bd" Property="Effect" Value="{StaticResource BlueGlowSubtle}"/>
+                            <Setter Property="Foreground" Value="{StaticResource TextPrimary}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="bd" Property="Opacity" Value="0.4"/>

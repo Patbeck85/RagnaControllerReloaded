@@ -32,6 +32,8 @@ namespace RagnaController
         private TtsAnnouncerService? _ttsService;
         private InGameOverlayWindow? _gameOverlay;
         private ControllerTestWindow? _controllerTestWindow;
+        // UX-012: Gamepad-Navigation in der Hauptfenster (DPad/Tab-Fokus)
+        private GamepadUiNavigator? _navigator;
 
 #pragma warning disable CS0649 // WPF: Fields initialized in XAML
         // Toast/Notifications (NOT in XAML - created dynamically)
@@ -50,6 +52,10 @@ namespace RagnaController
             _vm     = vm; // Assign the passed ViewModel
             InitializeComponent();
             DataContext = vm;
+
+            // UX-012: Gamepad-Navigation (DPad/Tab) — vor der VM-Guard-Klausel initialisieren,
+            // damit auch bei early return der Navigator sauber in Window_Closing disposed wird.
+            _navigator = new GamepadUiNavigator(_engine.ControllerSvc) { ActiveWindow = this };
 
             // Initialize ViewModel first before setting up services
             if (vm == null)
@@ -581,6 +587,10 @@ namespace RagnaController
 
         private void Window_Closing(object s, EventArgs e)
         {
+            // UX-012: Gamepad-Navigation stoppen (MEMORY-001: Timer sauber freigeben)
+            _navigator?.Stop();
+            _navigator?.Dispose();
+
             // UI-011: Telemetrie-Timer stoppen (MEMORY-001: keine hängenden DispatcherTimers)
             if (TelemetryPanelControl != null)
                 TelemetryPanelControl.StopUpdates();
@@ -632,6 +642,8 @@ namespace RagnaController
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             // Initialize event handlers after component loading
+            // UX-012: Gamepad-Navigation starten (DPad/Tab-Fokus in Hauptfenster)
+            _navigator?.Start();
         }
 
         private void BtnScanController_Click(object s, RoutedEventArgs e)

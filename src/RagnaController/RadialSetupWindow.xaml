@@ -19,7 +19,7 @@
                         <TextBlock Text="🎯" Foreground="{StaticResource AccentGold}" Margin="0,0,10,0" FontSize="16" Effect="{StaticResource NeonGlow}"/>
                         <TextBlock Text="RADIAL MENU SETUP" Style="{StaticResource BrandWordmark}" FontSize="13" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close radial setup window"/>
+                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close radial setup window" AutomationProperties.Name="Close radial setup window"/>
                 </Grid>
             </Border>
             <Border Grid.Row="1" Style="{StaticResource GlassPanelCompact}" Margin="16,0,16,0" Padding="20">
@@ -78,7 +78,7 @@
                         <!-- Header -->
                         <Grid Grid.Row="0" Margin="0,0,0,10">
                             <TextBlock Text="SELECT EMOTE" Style="{StaticResource BrandWordmark}" FontSize="16" VerticalAlignment="Center"/>
-                            <Button Content="✕" Click="BtnCloseGallery_Click" HorizontalAlignment="Right" Width="36" Height="36" Style="{StaticResource GhostButton}" ToolTip="Close emote gallery"/>
+                            <Button Content="✕" Click="BtnCloseGallery_Click" HorizontalAlignment="Right" Width="36" Height="36" Style="{StaticResource GhostButton}" ToolTip="Close emote gallery" AutomationProperties.Name="Close emote gallery"/>
                         </Grid>
 
                         <!-- Status + Buttons -->

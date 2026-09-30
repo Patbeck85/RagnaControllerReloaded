@@ -23,7 +23,7 @@
                 <TextBlock Text=">_ RAGNA_CONTROLLER LIVE DEBUG" FontFamily="JetBrains Mono, Consolas" FontSize="15" FontWeight="Bold" Foreground="{StaticResource Gold}" VerticalAlignment="Center" Effect="{StaticResource NeonGlow}"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                     <Button Content="Clear" Click="BtnClear_Click" Foreground="{StaticResource Gold}" Background="Transparent" BorderThickness="1" BorderBrush="{StaticResource Gold}" Padding="14,4" Margin="0,0,10,0" FontFamily="JetBrains Mono, Consolas" FontSize="12" Cursor="Hand" Style="{StaticResource GhostButton}"/>
-                    <Button Content="&#xE8BB;" Click="BtnClose_Click" Style="{StaticResource WindowControlButtonClose}"/>
+                    <Button Content="&#xE8BB;" Click="BtnClose_Click" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close developer console" AutomationProperties.Name="Close developer console"/>
                 </StackPanel>
             </Grid>
 

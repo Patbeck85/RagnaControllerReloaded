@@ -18,7 +18,7 @@
             <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" Margin="16,16,16,0" CornerRadius="{StaticResource RadiusMd}">
                 <Grid Margin="20,0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center"><TextBlock Text="&#x1F3AE;" Foreground="{StaticResource Gold}" Margin="0,0,10,0" FontSize="18" Effect="{StaticResource NeonGlow}"/><TextBlock Text="BUTTON REMAPPING" Style="{StaticResource BrandWordmark}" FontSize="14"/></StackPanel>
-                    <Button Content="&#xE8BB;" Click="BtnCancel_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close window"/>
+                    <Button Content="&#xE8BB;" Click="BtnCancel_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close window" AutomationProperties.Name="Close window"/>
                 </Grid>
             </Border>
             <Grid Grid.Row="1" Margin="16">
@@ -54,7 +54,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
                                         <TextBlock Text="D-Pad" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
-                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" AutomationProperties.Name="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
                                         <Slider x:Name="SldDpad" Minimum="-100" Maximum="100" Value="0" ValueChanged="DpadSlider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
                                         <TextBlock Grid.Column="1" x:Name="TxtDpadValue" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                                     </Grid>
@@ -65,7 +65,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
                                         <TextBlock Text="Left Stick" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
-                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" AutomationProperties.Name="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
                                         <Slider x:Name="SldLStick" Minimum="-100" Maximum="100" Value="0" ValueChanged="LStickSlider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
                                         <TextBlock Grid.Column="1" x:Name="TxtLStickValue" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                                     </Grid>
@@ -76,7 +76,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
                                         <TextBlock Text="Right Stick" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
-                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" AutomationProperties.Name="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
                                         <Slider x:Name="SldRStick" Minimum="-100" Maximum="100" Value="0" ValueChanged="RStickSlider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
                                         <TextBlock Grid.Column="1" x:Name="TxtRStickValue" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                                     </Grid>
@@ -87,7 +87,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
                                         <TextBlock Text="L1/R1" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
-                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" AutomationProperties.Name="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
                                         <Slider x:Name="SldL1R1" Minimum="-100" Maximum="100" Value="0" ValueChanged="L1R1Slider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
                                         <TextBlock Grid.Column="1" x:Name="TxtL1R1Value" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                                     </Grid>
@@ -98,7 +98,7 @@
                                     <Grid>
                                         <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
                                         <TextBlock Text="L2/R2" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
-                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                        <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" AutomationProperties.Name="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
                                         <Slider x:Name="SldL2R2" Minimum="-100" Maximum="100" Value="0" ValueChanged="L2R2Slider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
                                         <TextBlock Grid.Column="1" x:Name="TxtL2R2Value" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                                     </Grid>
@@ -128,7 +128,7 @@
                             <Grid>
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
                                 <TextBlock Text="D-Pad" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
-                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" AutomationProperties.Name="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
                                 <Slider x:Name="SldPreviewDpad" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewDpadSlider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
                                 <TextBlock Grid.Column="1" x:Name="TxtPreviewDpadValue" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                             </Grid>
@@ -139,7 +139,7 @@
                             <Grid>
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
                                 <TextBlock Text="Left Stick" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
-                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" AutomationProperties.Name="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
                                 <Slider x:Name="SldPreviewLStick" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewLStickSlider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
                                 <TextBlock Grid.Column="1" x:Name="TxtPreviewLStickValue" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                             </Grid>
@@ -150,7 +150,7 @@
                             <Grid>
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
                                 <TextBlock Text="Right Stick" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
-                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" AutomationProperties.Name="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
                                 <Slider x:Name="SldPreviewRStick" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewRStickSlider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
                                 <TextBlock Grid.Column="1" x:Name="TxtPreviewRStickValue" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                             </Grid>
@@ -161,7 +161,7 @@
                             <Grid>
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
                                 <TextBlock Text="L1/R1" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
-                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" AutomationProperties.Name="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
                                 <Slider x:Name="SldPreviewL1R1" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewL1R1Slider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
                                 <TextBlock Grid.Column="1" x:Name="TxtPreviewL1R1Value" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                             </Grid>
@@ -172,7 +172,7 @@
                             <Grid>
                                 <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="60"/></Grid.ColumnDefinitions>
                                 <TextBlock Text="L2/R2" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
-                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
+                                <Button Content="&#x21BA;" Click="ResetBtn_Click" Padding="0" Style="{StaticResource GhostButton}" FontSize="12" Cursor="Hand" ToolTip="Reset to default" AutomationProperties.Name="Reset to default" MinWidth="32" MinHeight="32" HorizontalAlignment="Right"/>
                                 <Slider x:Name="SldPreviewL2R2" Minimum="-100" Maximum="100" Value="0" ValueChanged="PreviewL2R2Slider_ValueChanged" VerticalAlignment="Center" Style="{StaticResource GlassSlider}" Margin="0,0,10,0"/>
                                 <TextBlock Grid.Column="1" x:Name="TxtPreviewL2R2Value" Text="0.00" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" FontFamily="JetBrains Mono, Consolas" FontSize="12"/>
                             </Grid>
