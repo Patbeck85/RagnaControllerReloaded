@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RagnaController.ControllerTest"
         mc:Ignorable="d"
-        Title="Controller Test" Height="450" Width="350"
+        Title="Controller Test" Height="620" Width="380"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Topmost="True" ShowInTaskbar="False">
     <Border Background="#CC080A0F" BorderBrush="#44E5B842" BorderThickness="1" CornerRadius="6"
@@ -14,6 +14,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -129,6 +130,42 @@
                             FontFamily="Consolas" FontSize="11"/>
                     <TextBlock x:Name="RecordingStatus" Text="bereit" VerticalAlignment="Center"
                                Foreground="#FFB300" FontFamily="Consolas" FontSize="11" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+
+            <!-- TEST-017: Eingabe-Selbsttest (geführte Pass/Fail-Diagnose + Latenz p50/p95) -->
+            <Border Grid.Row="4" Margin="0,8,0,0" Padding="10,8" CornerRadius="6"
+                    Background="#1AFFFFFF">
+                <StackPanel>
+                    <TextBlock Text="Eingabe-Selbsttest" FontFamily="Consolas" FontSize="12"
+                               FontWeight="Bold" Foreground="#E5B842" Margin="0,0,0,6"/>
+
+                    <!-- Steuerung -->
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="BtnDiagStart" Content="▶ Selbsttest starten"
+                                Width="132" Height="28" Margin="0,0,8,0"
+                                Click="BtnDiagStart_Click"
+                                Background="#2E7D32" Foreground="White" BorderThickness="0"
+                                FontFamily="Consolas" FontSize="11"/>
+                        <Button x:Name="BtnDiagExport" Content="⤓ JSON-Report"
+                                Width="112" Height="28" Margin="0,0,8,0" IsEnabled="False"
+                                Click="BtnDiagExport_Click"
+                                Background="#37474F" Foreground="White" BorderThickness="0"
+                                FontFamily="Consolas" FontSize="11"/>
+                    </StackPanel>
+
+                    <!-- Aktiver Prompt (geführter Test) -->
+                    <Border Margin="0,8,0,0" Padding="8,6" CornerRadius="4"
+                            Background="#22E5B842">
+                        <TextBlock x:Name="DiagPrompt" Text="Drücke Selbsttest starten"
+                                   FontFamily="Consolas" FontSize="11" Foreground="#FFFFFF"
+                                   TextWrapping="Wrap"/>
+                    </Border>
+
+                    <!-- Status / Ergebnis -->
+                    <TextBlock x:Name="DiagStatus" Text="bereit" Margin="0,6,0,0"
+                               FontFamily="Consolas" FontSize="11" FontWeight="Bold"
+                               Foreground="#FFB300"/>
                 </StackPanel>
             </Border>
         </Grid>

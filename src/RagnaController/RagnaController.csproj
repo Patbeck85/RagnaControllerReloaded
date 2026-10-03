@@ -94,6 +94,7 @@
     <Compile Include="CommunityBrowserWindow.xaml.cs" />
     <Compile Include="ControllerTest\ControllerTestWindow.xaml.cs" />
     <Compile Include="ControllerTest\ControllerSessionRecorder.cs" />
+    <Compile Include="ControllerTest\ControllerDiagnosticRunner.cs" />
     <Compile Include="Controller\ButtonState.cs" />
     <Compile Include="Controller\ControllerSnapshot.cs" />
     <Compile Include="Controller\DualSenseHardwareService.cs" />

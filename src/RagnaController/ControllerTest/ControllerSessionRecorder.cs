@@ -49,6 +49,30 @@ namespace RagnaController.ControllerTest
             return new RecordingSample((uint)mask, lx, ly, rx, ry, lt, rt, true);
         }
 
+        /// <summary>
+        /// Prüft, ob das benannte Buttons-Bit gesetzt ist (für Diagnose/Replay). Die Namen
+        /// entsprechen <see cref="ButtonState"/>; L2/R2 sind analoge Trigger und NICHT Teil der Mask.
+        /// Single Source of Truth für die Buttons-Bits — keine Kopie in anderen Klassen.
+        /// </summary>
+        public bool HasButton(string name) => name switch
+        {
+            "A"         => (Buttons & BtnA) != 0,
+            "B"         => (Buttons & BtnB) != 0,
+            "X"         => (Buttons & BtnX) != 0,
+            "Y"         => (Buttons & BtnY) != 0,
+            "L1"        => (Buttons & L1) != 0,
+            "R1"        => (Buttons & R1) != 0,
+            "L3"        => (Buttons & L3) != 0,
+            "R3"        => (Buttons & R3) != 0,
+            "DPadUp"    => (Buttons & DPadUp) != 0,
+            "DPadDown"  => (Buttons & DPadDown) != 0,
+            "DPadLeft"  => (Buttons & DPadLeft) != 0,
+            "DPadRight" => (Buttons & DPadRight) != 0,
+            "Start"     => (Buttons & Start) != 0,
+            "Back"      => (Buttons & Back) != 0,
+            _           => false
+        };
+
         /// <summary>Disconnect-Frame: alle Buttons cleared, Analogwerte null, connected=false.</summary>
         public static readonly RecordingSample Disconnected =
             new(0, 0f, 0f, 0f, 0f, 0f, 0f, false);
