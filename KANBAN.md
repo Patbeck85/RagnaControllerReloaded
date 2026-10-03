@@ -313,10 +313,19 @@
 |------|-------|-----------|-------|
 | FEAT-015 | Multi-Window / Multi-Client (AltChar, Farming) | LOW | ✅ DONE 2026-09-30 (siehe Detailblock unten) |
 | FEAT-023 | Auto-Item-Einlagerung (Storage-Drop bei vollem Inventar) | LOW | Basis vorhanden: RoUiMenuService + SmartCursorService Grid-Geometrie |
-| FEAT-024 | Multi-Character-Profil-Schnellwechsel (Name-basiert) | LOW | ProfileQuickSwitch existiert; fehlt nur Char-Namen-Erkennung → Profil-Zuordnung |
+| FEAT-024 | Multi-Character-Profil-Schnellwechsel (Name-basiert) | LOW | ✅ DONE 2026-10-03 — `CharacterProfileResolver` + Persistenz über Neustart + Auto-Switch (siehe Detailblock unten) |
 | TEST-013 | Stryker-Scoping: pro-Datei Mutation-Score-Auswertung in CI | MEDIUM→C | ✅ DONE 2026-09-28 (siehe Detailblock unten) |
 | TEST-014 | PerformanceTests entflaken (flaky Timing-Assertions) | LOW | ✅ DONE 2026-09-29 (siehe Detailblock oben) |
 | UX-012 | Accessibility: AutomationProperties + Gamepad-Fokus-Ring *(Designer-Audit)* | LOW | ✅ DONE 2026-09-30 (siehe Detailblock unten) |
+
+### FEAT-024: Multi-Character-Profil-Schnellwechsel (Name-basiert) ✅ DONE 2026-10-03
+**Scope:** Name-basierte Char→Profil-Zuordnung mit Persistenz über Neustart und automatischem Profil-Switch bei Charakter-Erkennung. Bewusst **kein** OCR/Window-Lesung im Scope (separater Integrationspunkt, braucht echtes RO-Client-Fenster) — analog FEAT-015 (Routing-only/YAGNI).
+**Implementierung:**
+- `CharacterProfileResolver` (rein, unit-testbar): Normalisierung (Trim + Leerzeichen-Lauf-Zusammenfassung), case-insensitive Lookup (`OrdinalIgnoreCase`), Register/Unregister/Snapshot/LoadFrom.
+- `ProfileManager`: `RegisterCharacterMapping` / `UnregisterCharacterMapping` / `GetProfileForCharacter` / `OnCharacterDetected` (Auto-Switch nur bei existierendem Profil) + Persistenz in `<dir>/character_mappings.json` (Konstruktor lädt nach Neustart).
+**Tests:** 18 neue Facts (`CharacterProfileResolverTests`: Normalisierung, Case-Insensitivity, Unregister, Snapshot-Roundtrip; `ProfileManagerCharacterMappingTests`: Persistenz über Neustart, Auto-Switch, Unbekannt-Profil-Negativfälle, Unregister-Persistenz). Alle headless/CI-sicher (Temp-Dirs).
+**DoD:** ✅ Build 0 Errors · ✅ `dotnet test` grün: **290/290 PASS** · ✅ Persistenz über Neustart verifiziert (Neue-Instanz-Test) · ✅ Auto-Switch nur bei existierendem Profil (Negativfall getestet)
+**Known-Issue / Scope-Entscheidung:** Die eigentliche Char-Namen-Erkennung (OCR-/Fenster-Lesung des Game-Fensters) ist bewusst **nicht** im Scope — sie ruft `ProfileManager.OnCharacterDetected(characterName)` als Integrationspunkt auf. UI für Mapping-Verwaltung folgt mit einem späteren FEAT-Punkt (YAGNI).
 
 ### PM-Moderation — Konfliktauflösung (2026-09-07)
 1. **Duplikat aufgelöst:** Coder FEAT-011 + QA FEAT-020 → **ein** Task FEAT-011 (ItemManagerEngine). QA hat den Code-Gap bestätigt, Coder das Design geliefert.
@@ -342,4 +351,5 @@
 6. **UX-012 ✅** — Accessibility: 22 icon-only Buttons mit `AutomationProperties.Name`, thematisierter Fokus-Ring in alle 4 Button-Templates, GamepadUiNavigator in MainWindow verdrahtet (DPad/Tab). Suite 238/238 PASS.
 7. **FEAT-015 ✅** — Multi-Client-Routing: `PreferredClientHwnd`-Override + reine `SelectTargetHwnd`-Funktion (YAGNI, ohne UI) → Alt-Char/Farming kann jetzt exakt einen Client adressieren statt „erstes Enum-Fenster". Backward-kompatibel. Suite 243/243 PASS.
 8. **TEST-015 ✅** — Controller-Eingaben-Testharness: `FakeControllerProvider` (skriptbare `IControllerProvider`, hardware-frei) + 10 Pipeline-Goldtests auf der echten `ParsedInput.JustPressed/JustReleased`-Maschine, inkl. End-to-End bis `SnapshotBuilder.Build` → korrekter `ControllerSnapshot`. Suite 253/253 PASS headless.
-9. **TEST-015/016/017 COMPLETE (HIGH, SPRINT A)** — Controller-Eingaben-Verifikation: TEST-015 Pipeline-Goldtests (253→255), TEST-016 Controller-Replay als CI-Golden-Master (720-Frame-Fixtur + Replay-Tests + Aufnahmefunktion im ControllerTestWindow, Suite 260/260), TEST-017 Eingabe-Selbsttest im ControllerTestWindow (`ControllerDiagnosticRunner`: 20 geprüfte Eingaben mit Pass/Fail + Reaktionszeit p50/p95 pro Kontrolle, Timeout-Logik, JSON-Report-Export, 2026-Design-UI; Suite 272/272). Nächste Ausführung: **SPRINT C** FEAT-023 / FEAT-024 (LOW/parkiert) — SPRINT A damit vollständig abgeschlossen.
+9. **TEST-015/016/017 COMPLETE (HIGH, SPRINT A)** — Controller-Eingaben-Verifikation: TEST-015 Pipeline-Goldtests (253→255), TEST-016 Controller-Replay als CI-Golden-Master (720-Frame-Fixtur + Replay-Tests + Aufnahmefunktion im ControllerTestWindow, Suite 260/260), TEST-017 Eingabe-Selbsttest im ControllerTestWindow (`ControllerDiagnosticRunner`: 20 geprüfte Eingaben mit Pass/Fail + Reaktionszeit p50/p95 pro Kontrolle, Timeout-Logik, JSON-Report-Export, 2026-Design-UI; Suite 272/272). SPRINT A damit vollständig abgeschlossen.
+10. **FEAT-024 ✅ (SPRINT C)** — Multi-Character-Profil-Schnellwechsel (Name-basiert): `CharacterProfileResolver` (Normalisierung + case-insensitive Lookup) + `ProfileManager`-Integration (`RegisterCharacterMapping`, `OnCharacterDetected` Auto-Switch, Persistenz in `character_mappings.json` über Neustart). 18 neue Facts, Suite **290/290** PASS. OCR-/Fenster-Lesung als separater Integrationspunkt (`OnCharacterDetected`) dokumentiert. Nächste Ausführung: FEAT-023 (Auto-Item-Einlagerung) oder UI-Verwaltung für Char-Mappings (neuer FEAT-Punkt).

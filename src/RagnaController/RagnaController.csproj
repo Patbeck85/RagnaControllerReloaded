@@ -216,6 +216,7 @@
     <Compile Include="Models\WindowTracker.cs" />
     <Compile Include="ProfileLibraryWindow.xaml.cs" />
     <Compile Include="Profiles\AppJsonContext.cs" />
+    <Compile Include="Profiles\CharacterProfileResolver.cs" />
     <Compile Include="Profiles\Profile.cs" />
     <Compile Include="Profiles\ProfileManager.cs" />
     <Compile Include="ProfileWizardWindow.xaml.cs" />

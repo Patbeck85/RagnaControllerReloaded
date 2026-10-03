@@ -32,6 +32,13 @@ namespace RagnaController.Profiles
         /// </summary>
         public string CurrentControllerGuid { get; private set; } = "";
 
+        // FEAT-024: Name-basierte Char→Profil-Zuordnung (Charakter-Namen-Erkennung → Profil-Switch).
+        // Persistiert in <dir>/character_mappings.json, übersteht damit Neustarts.
+        private readonly CharacterProfileResolver _charResolver = new();
+
+        /// <summary>FEAT-024: Schnappschuss aller Char→Profil-Zuordnungen (normalisierte Schlüssel).</summary>
+        public IReadOnlyDictionary<string, string> CharacterToProfileMap => _charResolver.Snapshot();
+
         /// <summary>v1.7.2: FIX #7 - Safe access to active profile with null protection.</summary>
         public Profile? ActiveProfile => Profiles.Find(p => p.Name == ActiveProfileName) ?? new Profile { Name = "Novice", Class = "Melee" };
 
@@ -62,6 +69,80 @@ namespace RagnaController.Profiles
                 return null;
             
             return ControllerToProfileMap.TryGetValue(controllerGuid, out var profileName) ? profileName : null;
+        }
+
+        // ── FEAT-024: Name-basierte Char→Profil-Zuordnung ───────────────────────
+        // Die eigentliche Erkennung (OCR-/Fenster-Lesung des Game-Fensters) ist ein
+        // separater Integrationspunkt und ruft OnCharacterDetected(characterName) auf.
+        // Hier liegt der testbare Kern: Zuordnung + Persistenz über Neustart + Auto-Switch.
+
+        /// <summary>FEAT-024: Registriert eine Zuordnung Charakter-Name → Profil-Name (persistiert).</summary>
+        public void RegisterCharacterMapping(string characterName, string profileName)
+        {
+            _charResolver.RegisterMapping(characterName, profileName);
+            SaveCharacterMappings();
+            Logger?.Invoke($"[ProfileManager] Registered character mapping: '{characterName}' -> '{profileName}'");
+        }
+
+        /// <summary>FEAT-024: Entfernt eine Char-Zuordnung (persistiert).</summary>
+        public void UnregisterCharacterMapping(string characterName)
+        {
+            if (_charResolver.Unregister(characterName))
+                SaveCharacterMappings();
+        }
+
+        /// <summary>FEAT-024: Liefert den Profil-Namen für einen Charakter-Namen, oder null.</summary>
+        public string? GetProfileForCharacter(string characterName) => _charResolver.Resolve(characterName);
+
+        /// <summary>
+        /// FEAT-024: Wird aufgerufen, wenn ein Charakter erkannt wurde (z. B. via OCR-/Fenster-Lesung).
+        /// Schaltet automatisch das zugeordnete Profil, falls eines existiert. Gibt true zurück,
+        /// wenn gewechselt wurde.
+        /// </summary>
+        public bool OnCharacterDetected(string characterName)
+        {
+            var mappedProfile = _charResolver.Resolve(characterName);
+            if (!string.IsNullOrEmpty(mappedProfile) && Profiles.Any(p => p.Name == mappedProfile))
+            {
+                SetActive(mappedProfile);
+                Logger?.Invoke($"[ProfileManager] Auto-switched to profile '{mappedProfile}' for character '{characterName}'");
+                return true;
+            }
+            return false;
+        }
+
+        private string CharMappingsPath => Path.Combine(_dir, "character_mappings.json");
+
+        /// <summary>FEAT-024: Lädt die persistierten Char-Zuordnungen (nach Neustart).</summary>
+        public void LoadCharacterMappings()
+        {
+            _charResolver.Clear();
+            if (!File.Exists(CharMappingsPath)) return;
+            try
+            {
+                var json = File.ReadAllText(CharMappingsPath);
+                var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(json) ?? new Dictionary<string, string>();
+                _charResolver.LoadFrom(dict);
+            }
+            catch (Exception ex)
+            {
+                Logger?.Invoke($"[ProfileManager] Failed to load character mappings: {ex.Message}");
+            }
+        }
+
+        /// <summary>FEAT-024: Persistiert die Char-Zuordnungen auf Disk.</summary>
+        public void SaveCharacterMappings()
+        {
+            try
+            {
+                var dict = _charResolver.Snapshot();
+                var opts = new JsonSerializerOptions { WriteIndented = true };
+                File.WriteAllText(CharMappingsPath, JsonSerializer.Serialize(dict, opts));
+            }
+            catch (Exception ex)
+            {
+                Logger?.Invoke($"[ProfileManager] Failed to save character mappings: {ex.Message}");
+            }
         }
 
         /// <summary>
@@ -139,7 +220,7 @@ namespace RagnaController.Profiles
         private const int DEBOUNCE_MS = 500;
 
         public ProfileManager() : this(DefaultDir) { }
-        public ProfileManager(string dir) { _dir = dir; Directory.CreateDirectory(_dir); Load(); }
+        public ProfileManager(string dir) { _dir = dir; Directory.CreateDirectory(_dir); Load(); LoadCharacterMappings(); }
 
         public void Load()
         {
