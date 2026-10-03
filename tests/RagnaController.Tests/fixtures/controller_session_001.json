@@ -1,0 +1,7206 @@
+{
+  "id": "session-001",
+  "description": "Aufgezeichnete Controller-Sitzung (720 Frames @ 50ms-Tick), deterministisch generiert in dem exakten Format eines Recordings aus dem ControllerTestWindow (TEST-016). Buttons sind GamepadButtonFlags-Bitmasks. Analogwerte reichen roh durch (KEIN Deadzone/Normalisierung - das ist Aufgabe der Backend-Layer InputReader/XInputFallbackService und liegt auerhalb des Replay-Skops). Frames 405..409 = Disconnect (L1+BtnY davor gehalten -> Ghost-Release-Waehrtest). Generator: tools/generate_session_001.py",
+  "frames": [
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.5,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.4375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.4375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.3125,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.3125,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.25,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.25,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.1875,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.1875,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.125,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0625,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0625,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.0625,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.0625,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.125,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.125,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.1875,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.1875,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.25,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.25,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.3125,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.4375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.4375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.5,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.5,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.4375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.4375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.3125,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.25,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.25,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.1875,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.1875,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.125,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.125,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.0625,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": -0.0625,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0625,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0625,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.125,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.1875,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.1875,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.25,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.25,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.3125,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.3125,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.4375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.4375,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.5,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0625,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.125,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.1875,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.25,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.3125,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.375,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.4375,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.5625,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.625,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.6875,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.75,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.8125,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.875,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.9375,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 1.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 6,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 1024,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 2048,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 4096,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 8192,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 16384,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 16384,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 16384,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 16384,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 16384,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 49152,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": false
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": false
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": false
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": false
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": false
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 24,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0625,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.125,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.1875,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.25,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.3125,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.375,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.4375,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.5625,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.625,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.6875,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.75,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.8125,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.875,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.9375,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 32,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 1.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 256,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 512,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 768,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    },
+    {
+      "buttons": 0,
+      "lx": 0.0,
+      "ly": 0.0,
+      "rx": 0.0,
+      "ry": 0.0,
+      "lt": 0.0,
+      "rt": 0.0,
+      "connected": true
+    }
+  ]
+}

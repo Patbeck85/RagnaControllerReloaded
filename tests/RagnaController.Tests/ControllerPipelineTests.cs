@@ -16,31 +16,9 @@ namespace RagnaController.Tests
     /// </summary>
     public class ControllerPipelineTests
     {
-        /// <summary>
-        /// Repliziert exakt die Prev-Tracking-Maschine aus <c>InputReader.Read()</c>:
-        /// das Ergebnis-Frame erhält <c>PrevRawButtons</c> = Vorframe, danach wird der
-        /// aktuelle RawButtons-Mask als neuer Prev übernommen.
-        /// </summary>
-        private sealed class PipelineStep
-        {
-            private GamepadButtonFlags _prev = GamepadButtonFlags.None;
-
-            public ParsedInput Step(FakeControllerProvider provider)
-            {
-                var frame = provider.CurrentFrame();
-                if (!frame.IsConnected)
-                {
-                    _prev = GamepadButtonFlags.None; // Disconnect reset: kein Ghost auf Reconnect
-                    provider.Advance();               // ein Tick = ein konsumiertes Hardware-Sample
-                    return frame;
-                }
-
-                var chained = frame.With(prevRawButtons: _prev);
-                _prev = frame.RawButtons;
-                provider.Advance();
-                return chained;
-            }
-        }
+        // Die geteilte State-Maschine (TEST-015/016) liegt in PipelineStep.cs —
+        /// <see cref="PipelineStep"/>. Damit Replay und Pipeline-Goldtests dieselbe
+        /// Semantik wie Produktion (<c>Core/InputReader.Read()</c>) nutzen (DRY).
 
         [Fact]
         public void Press_JustPressed_FiresExactlyOnce_OnPressFrame()

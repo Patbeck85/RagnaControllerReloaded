@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Threading;
 using RagnaController.Controller;
@@ -14,6 +15,7 @@ namespace RagnaController.ControllerTest
     public unsafe partial class ControllerTestWindow : Window
     {
         private readonly IControllerProvider _controllerProvider;
+        private readonly ControllerSessionRecorder _recorder = new();
         private DispatcherTimer? _updateTimer;
         private ButtonState _lastButtonState;
         private bool _isInitialized;
@@ -61,6 +63,10 @@ namespace RagnaController.ControllerTest
         private void UpdateControllerState(object? sender, EventArgs e)
         {
             if (!_isInitialized || _controllerProvider == null) return;
+
+            // TEST-016: jeden Tick (50ms) aufnehmen — unabhängig vom Button-Change-Guard,
+            // da Sticks/Trigger sich ändern können ohne Button-Wechsel.
+            if (_recorder.IsRecording) RecordFrame();
 
             // Get current button state
             var currentState = _controllerProvider.ButtonStates;
@@ -123,6 +129,87 @@ namespace RagnaController.ControllerTest
             catch
             {
                 // Ignore errors reading raw snapshot
+            }
+        }
+
+        // ------------------------------------------------------------------ TEST-016: Aufnahme
+
+        private void BtnRecordStart_Click(object sender, RoutedEventArgs e)
+        {
+            _recorder.Start();
+            RecordingStatus.Text = "läuft… (0 Frames)";
+            RecordingStatus.Foreground = System.Windows.Media.Brushes.Orange;
+        }
+
+        private void BtnRecordStopSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (!_recorder.IsRecording)
+            {
+                RecordingStatus.Text = "nichts aktiv";
+                return;
+            }
+            _recorder.Stop();
+
+            string dir = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "RagnaController", "recordings");
+            string path = Path.Combine(dir, $"session-{DateTime.Now:yyyyMMdd-HHmmss}.json");
+            try
+            {
+                _recorder.Save(path);
+                RecordingStatus.Text = $"gespeichert: {_recorder.FrameCount} Frames";
+                RecordingStatus.Foreground = System.Windows.Media.Brushes.LimeGreen;
+            }
+            catch (Exception ex)
+            {
+                // ERROR-001: kein stiller Fehler — Meldung im Status.
+                RecordingStatus.Text = $"Fehler: {ex.Message}";
+                RecordingStatus.Foreground = System.Windows.Media.Brushes.Red;
+            }
+        }
+
+        /// <summary>
+        /// Nimmt einen Frame auf: Button-Maske aus dem vereinheitlichten ButtonState + ROH-Achsen/Trigger
+        /// (kein Deadzone, keine Normalisierung — exakt das Format der CI-Replay-Fixtures).
+        /// </summary>
+        private unsafe void RecordFrame()
+        {
+            try
+            {
+                bool connected = _controllerProvider.IsConnected;
+                if (!connected)
+                {
+                    _recorder.RecordFrame(RecordingSample.Disconnected);
+                    return;
+                }
+
+                float lx = 0, ly = 0, rx = 0, ry = 0, lt = 0, rt = 0;
+                if (_controllerProvider is ControllerService cs)
+                {
+                    var pad = cs.GetControllerSnapshot();
+                    if (pad != null)
+                    {
+                        // Gleiche Rohwerte wie InputReader vor dem Deadzone: SDL -32768..32767 / 0..32767.
+                        lx = SDL.GameControllerGetAxis(pad, SDLGameControllerAxis.Leftx) / 32768f;
+                        ly = SDL.GameControllerGetAxis(pad, SDLGameControllerAxis.Lefty) / -32768f; // Y invertiert (Up positiv)
+                        rx = SDL.GameControllerGetAxis(pad, SDLGameControllerAxis.Rightx) / 32768f;
+                        ry = SDL.GameControllerGetAxis(pad, SDLGameControllerAxis.Righty) / -32768f;
+                        lt = SDL.GameControllerGetAxis(pad, SDLGameControllerAxis.Triggerleft) / 32767f;
+                        rt = SDL.GameControllerGetAxis(pad, SDLGameControllerAxis.Triggerright) / 32767f;
+                    }
+                }
+
+                var bs = _controllerProvider.ButtonStates;
+                _recorder.RecordFrame(RecordingSample.FromButtonState(bs, lx, ly, rx, ry, lt, rt));
+            }
+            catch
+            {
+                // Aufnahme darf die UI nicht stören (kein stiller Fehler: UI bleibt funktionsfähig).
+            }
+
+            if (_recorder.IsRecording)
+            {
+                RecordingStatus.Text = $"läuft… ({_recorder.FrameCount} Frames)";
             }
         }
 

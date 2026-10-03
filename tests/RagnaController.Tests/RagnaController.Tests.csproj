@@ -20,6 +20,10 @@
   <ItemGroup>
     <None Include="xunit.runsettings" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- TEST-016: Controller-Replay-Fixtures (Session + Golden-Master) nach Build-Kopie -->
+  <ItemGroup>
+    <None Include="fixtures\**\*.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="xunit.runsettings">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

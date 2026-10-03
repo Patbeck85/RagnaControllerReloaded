@@ -15,6 +15,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- Header: Profile Name -->
@@ -111,6 +112,25 @@
                     <CheckBox x:Name="BtnR3" IsChecked="False" Width="30" Height="30" Margin="2"/>
                 </StackPanel>
             </UniformGrid>
+
+            <!-- TEST-016: Aufnahme (Controller-Sitzung als CI-Replay-Fixture) -->
+            <Border Grid.Row="3" Margin="0,8,0,0" Padding="10,8" CornerRadius="6"
+                    Background="#1AFFFFFF">
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="BtnRecordStart" Content="● Aufnahme"
+                            Width="92" Height="28" Margin="0,0,8,0"
+                            Click="BtnRecordStart_Click"
+                            Background="#2E7D32" Foreground="White" BorderThickness="0"
+                            FontFamily="Consolas" FontSize="11"/>
+                    <Button x:Name="BtnRecordStopSave" Content="■ Stop &amp; speichern"
+                            Width="120" Height="28" Margin="0,0,8,0"
+                            Click="BtnRecordStopSave_Click"
+                            Background="#C62828" Foreground="White" BorderThickness="0"
+                            FontFamily="Consolas" FontSize="11"/>
+                    <TextBlock x:Name="RecordingStatus" Text="bereit" VerticalAlignment="Center"
+                               Foreground="#FFB300" FontFamily="Consolas" FontSize="11" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
         </Grid>
     </Border>
 </Window>
