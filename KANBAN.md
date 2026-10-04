@@ -527,7 +527,7 @@ private static bool IsSkillAction(ButtonAction action)
 **Fundament:** `classScores.OrderByDescending(kvp => kvp.Value).First().Key` allokiert Enumerator + Delegate pro Aufruf. Wird bei jedem Profil-Wechsel / Class-Detect aufgerufen.
 **Impact:** Geringe Allokation, aber in Hot Path vermeidbar.
 **Suggested Fix:** Manuelles Max-Tracking statt LINQ (Dictionary < 20 Einträge → O(n) trivial).
-**Status:** offen
+**Status:** ✅ ERLEDIGT (2026-10-04) — Manuelles Max-Tracking mit foreach-Schleife statt LINQ OrderByDescending implementiert.
 
 ### 🟨 TECH-010: FindResource ohne Try-Catch (S3)
 **Files:** 15+ Code-behind Dateien (ButtonRemappingWindow, ComboEditorWindow, CommunityBrowserWindow, DaisyWheelWindow, HandheldWindow, TelemetryPanel, etc.)
@@ -546,7 +546,7 @@ private static bool IsSkillAction(ButtonAction action)
 **Files:** WindowTracker.cs, WindowSwitcher.cs
 **Fundament:** `Process.GetProcessesByName()` allokiert Array bei jedem Call. In Tick-Pfad oder häufigen Switches kostenintensiv.
 **Suggested Fix:** Caching mit TTL (z.B. 500ms), oder `Process.GetProcessesByName` nur on-demand.
-**Status:** offen
+**Status:** ✅ BEREITS ERLEDIGT — WindowSwitcher nutzt bereits 10s TTL-Cache in `_cache` (Dictionary<string, (IntPtr hwnd, long tick)>). FindWindowByProcessName nutzt EnumWindows mit Process.GetProcessById nur für gefundene HWNDs (nicht für alle Prozesse).
 
 ### 🟨 TECH-013: ControllerTestWindow — Timer läuft nach Close weiter (S3)
 **File:** src/RagnaController/ControllerTest/ControllerTestWindow.xaml.cs

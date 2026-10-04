@@ -249,9 +249,18 @@ namespace RagnaController.Core
                     if (classScores.Count == 0)
                         return profile.Class; // Keep existing if no skills mapped
 
-                    // Return class with highest weighted score
-                    var detected = classScores.OrderByDescending(kvp => kvp.Value).First().Key;
-                    return detected;
+                    // Return class with highest weighted score - manual max tracking instead of LINQ (zero allocation)
+                    string bestClass = "";
+                    int bestScore = int.MinValue;
+                    foreach (var kvp in classScores)
+                    {
+                        if (kvp.Value > bestScore)
+                        {
+                            bestScore = kvp.Value;
+                            bestClass = kvp.Key;
+                        }
+                    }
+                    return bestClass;
                 }
 
         /// <summary>
