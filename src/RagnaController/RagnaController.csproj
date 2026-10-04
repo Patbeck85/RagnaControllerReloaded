@@ -212,6 +212,7 @@
     <Compile Include="Models\ItemConfig.cs" />
     <Compile Include="Models\ParsedInput.cs" />
     <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\StorageDropPlanner.cs" />
     <Compile Include="Models\VirtualKey.cs" />
     <Compile Include="Models\WindowTracker.cs" />
     <Compile Include="ProfileLibraryWindow.xaml.cs" />

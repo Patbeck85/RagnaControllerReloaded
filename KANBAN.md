@@ -312,7 +312,7 @@
 | Task | Titel | Priorität | Notiz |
 |------|-------|-----------|-------|
 | FEAT-015 | Multi-Window / Multi-Client (AltChar, Farming) | LOW | ✅ DONE 2026-09-30 (siehe Detailblock unten) |
-| FEAT-023 | Auto-Item-Einlagerung (Storage-Drop bei vollem Inventar) | LOW | Basis vorhanden: RoUiMenuService + SmartCursorService Grid-Geometrie |
+| FEAT-023 | Auto-Item-Einlagerung (Storage-Drop bei vollem Inventar) | LOW | ✅ DONE 2026-10-04 — `StorageDropPlanner` (reine Planungslogik, headless-testbar; siehe Detailblock unten) |
 | FEAT-024 | Multi-Character-Profil-Schnellwechsel (Name-basiert) | LOW | ✅ DONE 2026-10-03 — `CharacterProfileResolver` + Persistenz über Neustart + Auto-Switch (siehe Detailblock unten) |
 | TEST-013 | Stryker-Scoping: pro-Datei Mutation-Score-Auswertung in CI | MEDIUM→C | ✅ DONE 2026-09-28 (siehe Detailblock unten) |
 | TEST-014 | PerformanceTests entflaken (flaky Timing-Assertions) | LOW | ✅ DONE 2026-09-29 (siehe Detailblock oben) |
@@ -326,6 +326,16 @@
 **Tests:** 18 neue Facts (`CharacterProfileResolverTests`: Normalisierung, Case-Insensitivity, Unregister, Snapshot-Roundtrip; `ProfileManagerCharacterMappingTests`: Persistenz über Neustart, Auto-Switch, Unbekannt-Profil-Negativfälle, Unregister-Persistenz). Alle headless/CI-sicher (Temp-Dirs).
 **DoD:** ✅ Build 0 Errors · ✅ `dotnet test` grün: **290/290 PASS** · ✅ Persistenz über Neustart verifiziert (Neue-Instanz-Test) · ✅ Auto-Switch nur bei existierendem Profil (Negativfall getestet)
 **Known-Issue / Scope-Entscheidung:** Die eigentliche Char-Namen-Erkennung (OCR-/Fenster-Lesung des Game-Fensters) ist bewusst **nicht** im Scope — sie ruft `ProfileManager.OnCharacterDetected(characterName)` als Integrationspunkt auf. UI für Mapping-Verwaltung folgt mit einem späteren FEAT-Punkt (YAGNI).
+
+### FEAT-023: Auto-Item-Einlagerung (Storage-Drop bei vollem Inventar) ✅ DONE 2026-10-04
+**Scope:** Reine, deterministische Planungslogik für die Auto-Item-Einlagerung: Welche Inventar-Slots werden befreit, wenn das Inventar voll ist — Consumables → Storage-Drop (Stash), Buff-Items → Drop, QuestItems/Equipment → Keep (niemals automatisch freigeben). Bewusst **kein** OCR/Window-Lesung und kein Cursor-Zugriff im Scope (separater Integrationspunkt über RoUiMenuService/SmartCursorService, braucht echtes RO-Client-Fenster) — analog FEAT-015/FEAT-024 (Routing-only/YAGNI).
+**Implementierung:**
+- `StorageDropPlanner` (statisch, rein, unit-testbar): `Plan(capacity, usedSlots, slots)` liefert pro Slot ein `StorageDropIntent` (SlotIndex + Item + Aktion + Begründung) in Slot-Reihenfolge; leer bei nicht vollem Inventar.
+- Datenmodell: `InventorySlotItem` (Name, Rarity, StackCount), `StorageDropPriority` (Consumable/BuffItem/QuestItem/Equipment), `StorageDropAction` (Stash/Drop/Keep).
+- Hilfs-APIs: `PlanDefault` (Standard-Kapazität 24 = Classic-RO-Inventar), `CountReleasingActions`, `FreesEnough(plan, neededSlots=1)`.
+**Tests:** 11 neue Facts (`StorageDropPlannerTests`): Nicht-voll→leerer Plan, Stash/Drop/Keep-Zuordnung, Slot-Reihenfolge, null/leere Slots, nicht-positive Kapazität, Standard-Kapazität 24, CountReleasingActions, FreesEnough-Positiv/Negativ. Alle headless/CI-sicher (reine Daten).
+**DoD:** ✅ Build 0 Errors · ✅ `dotnet test` grün: **301/301 PASS** · ✅ Planungslogik deterministisch + unit-testbar · ✅ Schutzklassen (Quest/Ausrüstung) explizit getestet
+**Known-Issue / Scope-Entscheidung:** Die eigentliche Ausführung (OCR-Erkennung „Inventar voll" → Cursor zur Storage-UI navigieren → Items physisch verschieben/dropen) ist bewusst **nicht** im Scope — sie ruft `StorageDropPlanner.Plan` als Integrationspunkt auf und nutzt die vorhandene Basis RoUiMenuService + SmartCursorService (Grid-Geometrie).
 
 ### PM-Moderation — Konfliktauflösung (2026-09-07)
 1. **Duplikat aufgelöst:** Coder FEAT-011 + QA FEAT-020 → **ein** Task FEAT-011 (ItemManagerEngine). QA hat den Code-Gap bestätigt, Coder das Design geliefert.
@@ -352,4 +362,5 @@
 7. **FEAT-015 ✅** — Multi-Client-Routing: `PreferredClientHwnd`-Override + reine `SelectTargetHwnd`-Funktion (YAGNI, ohne UI) → Alt-Char/Farming kann jetzt exakt einen Client adressieren statt „erstes Enum-Fenster". Backward-kompatibel. Suite 243/243 PASS.
 8. **TEST-015 ✅** — Controller-Eingaben-Testharness: `FakeControllerProvider` (skriptbare `IControllerProvider`, hardware-frei) + 10 Pipeline-Goldtests auf der echten `ParsedInput.JustPressed/JustReleased`-Maschine, inkl. End-to-End bis `SnapshotBuilder.Build` → korrekter `ControllerSnapshot`. Suite 253/253 PASS headless.
 9. **TEST-015/016/017 COMPLETE (HIGH, SPRINT A)** — Controller-Eingaben-Verifikation: TEST-015 Pipeline-Goldtests (253→255), TEST-016 Controller-Replay als CI-Golden-Master (720-Frame-Fixtur + Replay-Tests + Aufnahmefunktion im ControllerTestWindow, Suite 260/260), TEST-017 Eingabe-Selbsttest im ControllerTestWindow (`ControllerDiagnosticRunner`: 20 geprüfte Eingaben mit Pass/Fail + Reaktionszeit p50/p95 pro Kontrolle, Timeout-Logik, JSON-Report-Export, 2026-Design-UI; Suite 272/272). SPRINT A damit vollständig abgeschlossen.
-10. **FEAT-024 ✅ (SPRINT C)** — Multi-Character-Profil-Schnellwechsel (Name-basiert): `CharacterProfileResolver` (Normalisierung + case-insensitive Lookup) + `ProfileManager`-Integration (`RegisterCharacterMapping`, `OnCharacterDetected` Auto-Switch, Persistenz in `character_mappings.json` über Neustart). 18 neue Facts, Suite **290/290** PASS. OCR-/Fenster-Lesung als separater Integrationspunkt (`OnCharacterDetected`) dokumentiert. Nächste Ausführung: FEAT-023 (Auto-Item-Einlagerung) oder UI-Verwaltung für Char-Mappings (neuer FEAT-Punkt).
+10. **FEAT-024 ✅ (SPRINT C)** — Multi-Character-Profil-Schnellwechsel (Name-basiert): `CharacterProfileResolver` (Normalisierung + case-insensitive Lookup) + `ProfileManager`-Integration (`RegisterCharacterMapping`, `OnCharacterDetected` Auto-Switch, Persistenz in `character_mappings.json` über Neustart). 18 neue Facts, Suite **290/290** PASS. OCR-/Fenster-Lesung als separater Integrationspunkt (`OnCharacterDetected`) dokumentiert.
+11. **FEAT-023 ✅ (SPRINT C)** — Auto-Item-Einlagerung (Storage-Drop bei vollem Inventar): `StorageDropPlanner` (reine Planungslogik: Consumables→Stash, Buffs→Drop, Quest/Ausrüstung→Keep; Standard-Kapazität 24). 11 neue Facts, Suite **301/301** PASS. OCR-/Cursor-Ausführung als separater Integrationspunkt (`StorageDropPlanner.Plan` + RoUiMenuService/SmartCursorService) dokumentiert. **SPRINT C damit vollständig abgeschlossen** ✅ (FEAT-015, FEAT-023, FEAT-024).
