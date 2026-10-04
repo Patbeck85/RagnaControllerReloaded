@@ -345,6 +345,83 @@
 5. **Architektur-Entscheidungen:** Keine neuen Abstraktionsschichten für FEAT-012/013 (KISS): PartyManager als Engine, Targeting-Erweiterung direkt in AutoTargetEngine. Multi-Window (FEAT-015) bewusst YAGNI-gemäß nur als Routing.
 6. **Quest-Navigation:** von QA geprüft → ohne Memory-/Positionssystem nicht sauber umsetzbar, bewusst KEIN Ticket.
 
+## Audit-Findings / Known Issues (Comprehensive App Review)
+
+### 🟥 UI-001: CheckBox-Handler-Missing in SettingsWindow (S3)
+**Date:** 2026-10-04 | **Severity:** S3 — Funktionalität eingeschränkt | **Status:** bekannt
+**File:** src/RagnaController/SettingsWindow.xaml (Zeilen 66-122)
+**Fundament:** 13 CheckBox-Elemente existieren im UI, aber es sind keine Click- oder Checked-Handler zugeordnet. Die CheckBoxes sind sichtbar, aber funktionslos.
+- `ChkMinimizeToTray` (Minimize to tray on close) — kein Handler
+- `ChkShowLatency` (Show latency) — kein Handler  
+- `ChkAutoStart` (Enable Auto-Start) — kein Handler
+- `ChkSound` (Enable Sound) — kein Handler
+- `ChkRumble` (Enable Rumble Feedback) — kein Handler
+- `ChkHapticMetronome` (Enable Haptic Metronome) — kein Handler
+- `ChkStartInMiniMode` (Start in Mini Mode) — kein Handler
+- `ChkSmartStandby` (Enable Smart Standby / AFK Battery Saver) — kein Handler
+- `ChkFocusLock` (Enable Focus Lock) — kein Handler
+- `ChkDiscordRPC` (Enable Discord Rich Presence) — kein Handler
+- `ChkVoiceAnnouncements` (Enable Voice Announcements) — kein Handler
+- `ChkTelemetry` (Enable Anonymous Telemetry) — kein Handler
+**Impact:** User kann diese Einstellungen im UI nicht steuern; Derstellungen werden vermutlich anderswo oder per Code verwaltet.
+**Confidence:** hoch (direkter Code-Check)
+**Suggested Fix:** Handler hinzufügen oder Bindung an ViewModel-Eigenschaften herstellen.
+
+### 🟥 UI-002: ClassDetector.cs Doppelte Dictionary-Keys (S2)
+**Date:** 2026-10-04 | **Severity:** S2 — Klassenderkennung unzuverlässig | **Status:** ✅ ERLEDIGT (2026-10-04)
+**File:** src/RagnaController/Core/ClassDetector.cs (Zeilen 69-166)
+**Fundament:** Der `SkillToClassMap`-Dictionary-Initialisierer enthielt mehrfach gleiche `VirtualKey`-Keys, die in C# stumm überschrieben wurden. Die programmatische Neubau-Methode `BuildSkillToClassMap()` akkumuliert jetzt Einträge pro Key statt zu überschreiben.
+**Behobene Beispiele:**
+- `[VirtualKey.F7]`: War Lord Knight/Paladin UND Mage/Wizard/Sage/Professor — jetzt werden beide Einträge in der Liste akkumuliert
+- `[VirtualKey.F1]`: War Swordsman/Knight/Crusader UND High Wizard — jetzt beide vorhanden
+- `[VirtualKey.D5]`: War Sniper/Clown/Gypsy UND Thief/Assassin/Rogue/Stalker — jetzt beide vorhanden
+- `[VirtualKey.D6]`: War Sniper/Gypsy UND Assassin/Stalker — jetzt beide vorhanden
+- `[VirtualKey.D9]`: War Assassin Cross UND Merchant/Blacksmith/Alchemist — jetzt beide vorhanden
+- `[VirtualKey.D0]`: War Stalker/Blacksmith/weitere — jetzt akkumuliert
+- `[VirtualKey.E]`: War Whitesmith UND Priest/Monk — jetzt beide vorhanden
+- `[VirtualKey.R]`: War Creator UND Monk UND Gunslinger/Rebellion — jetzt alle drei vorhanden
+- `[VirtualKey.I]`: War Champion UND Soul Linker UND Gunslinger/Rebellion — jetzt alle drei vorhanden
+- `[VirtualKey.Y]`: War Taekwon/Star Gladiator UND Priest (Resurrection) — jetzt beide vorhanden
+**Impact:** Class Detection weist Skills jetzt korrekt allen passenden Klassen zu — die Klassifizierung ist bei gleichzeitiger Nutzung mehrerer Klassen mit gleichen Tasten nun brauchbar.
+**Lösung:** Dictionary wurde von Collection-Initializer auf programmatische `BuildSkillToClassMap()`-Methode umgebildet, die bei gleichen Keys die Liste erweitert (`List.Add`) statt zu überschreiben.
+**Confidence:** hoch
+**Verifiziert:** Build 0 Fehler, 301/301 Tests PASS.
+
+### 🟥 UI-001: CheckBox-Handler-Missing in SettingsWindow (S3)
+**Date:** 2026-10-04 | **Severity:** S3 — Funktionalität eingeschränkt | **Status:** bekannt
+**File:** src/RagnaController/SettingsWindow.xaml (Zeilen 66-122)
+**Fundament:** 13 CheckBox-Elemente existieren im UI, aber es sind keine Click- oder Checked-Handler zugeordnet.
+
+### 🟥 UI-003: Profile JSON Class/Name Inkonsequenz (S3)
+**Date:** 2026-10-04 | **Severity:** S3 — Auto-Klassenzuweisung möglicherweise fehlerhaft | **Status:** bekannt
+**File:** src/RagnaController/DefaultProfiles/*.json (58 Dateien)
+**Fundament:** Das `Class-Feld` in vielen Profil-JSON-Dateien stimmt nicht mit dem `Name-Feld` überein und existiert nicht in der `ClassToPreset`-Dictionary in ClassDetector.cs.
+**Problematische Profile (Beispiele):**
+- `archbishop.json`: Name=Archbishop, Class="Support Healer" (nicht in ClassToPreset)
+- `assassin.json`: Name=Assassin, Class="Melee DPS" (nicht in ClassToPreset)
+- `assassin_cross.json`: Name=Assassin Cross, Class="Melee DPS" (nicht in ClassToPreset)
+- `bard.json`: Name=Bard, Class="Support Musician" (Bard IST in ClassToPreset als Ranged, aber Class-Wert inkonsequent)
+- `bard_dancer.json`: Name=Bard Dancer, Class="Support Musician" (ähnlich inkonsequent)
+- `creator.json`: Name=Creator, Class="Merchant" (nicht in ClassToPreset)
+- `genetic.json`: Name=Genetic, Class="Merchant" (nicht in ClassToPreset)
+- `kagerou_oboro.json`: Name=Kagerou Oboro, Class="Ninja Class" (doppelte " Class"-Textung)
+- `minstrel.json`: Name=Minstrel, Class="Musician" (nicht in ClassToPreset)
+- `minstrel_wanderer.json`: Name=Minstrel Wanderer, Class="Support Musician" (nicht in ClassToPreset)
+- `royal_guard.json`: Name=Royal Guard, Class="Melee Tank" (nicht in ClassToPreset — nur Knight/Rune Knight vorhanden)
+- `sura.json`: Name=Sura, Class="Combo Fighter" (nicht in ClassToPreset)
+- `wanderer.json`: Name=Wanderer, Class="Bard" (würde fälschlich nach Bard/Ranged mappen, ist aber anderes Job)
+**Impact:** Auto-Klassendetektion weist diesen Profilen fälschlicherweise den Standard-Melee-Preset zu oder ordnet falsche Engine-Konfiguration zu.
+**Confidence:** hoch (58 Profile geprüft)
+**Suggested Fix:** Class-Felder in Profilen an die ClassToPreset-Schlüssel anpassen (z.B. "Support", "Ranged", "Melee", "Hybrid", "Caster") oder Dictionary erweitern.
+
+### 🟥 UI-004: IsSkillAction zu breite Definition (S3)
+**Date:** 2026-10-04 | **Severity:** S3 — Könnte nicht-skill Keys als Skills zählen | **Status:** bekannt
+**File:** src/RagnaController/Core/ClassDetector.cs (Zeilen 260-273)
+**Fundament:** Die Methode `IsSkillAction` gibt `true` für **jede** Key-Type-Action zurück (Zeile 272: `return action.Type == ActionType.Key;`). Bewegungsschlüssel, Grundangriff etc. würden damit als Skill Aktionen gewertet.
+**Auswirkung:** Könnte die Gewichtungs-Zählung in `DetectClass` beeinflussen, wenn nicht-skill Keys versehentlich mitgezählt werden.
+**Confidence:** mittel
+**Suggested Feinjustierung:** Explizitere Prüfung, welche Key-Typen tatsächlich Skills sind (z.B. nur bestimmte Buchstaben/Nummern-Schlüssel, keine Richtungstasten).
+
 ## Metriken
 - **Build:** 0 Errors ✅ (24 Vorwarnungen, keine neuen durch ROB-002)
 - **Tests:** 243/243 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅ — inkl. 6 FEAT-014 SessionRecorder-Tests, 2 PerformanceTests (TEST-014), 5 WindowSwitcher-Tests (FEAT-015)

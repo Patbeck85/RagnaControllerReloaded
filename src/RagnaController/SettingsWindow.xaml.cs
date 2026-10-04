@@ -212,11 +212,71 @@ namespace RagnaController
         }
 
         private void ChkShowLatency_Click(object sender, RoutedEventArgs e)
-        {
-            // Show latency feature removed in v1.7.0
-        }
+                {
+                    // Show latency feature removed in v1.7.0
+                }
 
-        private void BtnCancel_Click(object sender, RoutedEventArgs e) => Close();
+                private void ChkAutoStart_Click(object sender, RoutedEventArgs e)
+                {
+                    _s.AutoStart = ChkAutoStart.IsChecked == true;
+                    _s.Save();
+                }
+
+                private void ChkSound_Click(object sender, RoutedEventArgs e)
+                {
+                    _s.SoundEnabled = ChkSound.IsChecked == true;
+                    _s.Save();
+                }
+
+                private void ChkRumble_Click(object sender, RoutedEventArgs e)
+                {
+                    _s.RumbleEnabled = ChkRumble.IsChecked == true;
+                    _s.Save();
+                }
+
+                private void ChkHapticMetronome_Click(object sender, RoutedEventArgs e)
+                {
+                    // Haptic metronome feature - saves to settings
+                    _s.Save();
+                }
+
+                private void ChkStartInMiniMode_Click(object sender, RoutedEventArgs e)
+                {
+                    _s.StartInMiniMode = ChkStartInMiniMode.IsChecked == true;
+                    _s.Save();
+                }
+
+                private void ChkSmartStandby_Click(object sender, RoutedEventArgs e)
+                {
+                    _s.EnableSmartStandby = ChkSmartStandby.IsChecked == true;
+                    _s.Save();
+                }
+
+                private void ChkFocusLock_Click(object sender, RoutedEventArgs e)
+                {
+                    _s.FocusLockEnabled = ChkFocusLock.IsChecked == true;
+                    _s.Save();
+                }
+
+                private void ChkDiscordRPC_Click(object sender, RoutedEventArgs e)
+                {
+                    _s.EnableDiscordRPC = ChkDiscordRPC.IsChecked == true;
+                    _s.Save();
+                }
+
+                private void ChkVoiceAnnouncements_Click(object sender, RoutedEventArgs e)
+                {
+                    _s.EnableVoiceAnnouncements = ChkVoiceAnnouncements.IsChecked == true;
+                    _s.Save();
+                }
+
+                private void ChkTelemetry_Click(object sender, RoutedEventArgs e)
+                {
+                    _s.EnableTelemetry = ChkTelemetry.IsChecked == true;
+                    _s.Save();
+                }
+
+                private void BtnCancel_Click(object sender, RoutedEventArgs e) => Close();
 
         private void BtnApply_Click(object sender, RoutedEventArgs e)
         {

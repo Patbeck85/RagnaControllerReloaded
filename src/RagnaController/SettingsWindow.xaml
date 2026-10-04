@@ -64,7 +64,7 @@
                                               Click="ChkStartWithWindows_Click"/>
                     
                                     <CheckBox x:Name="ChkMinimizeToTray" Content="Minimize to tray on close"
-                                              Margin="0,4"/>
+                                                                          Click="ChkMinimizeToTray_Click"/>
                     
                                     <!-- Engine State Display -->
                                     <TextBlock x:Name="EngineStateText" Text="Ready"
@@ -72,7 +72,7 @@
                     
                                     <!-- Show Latency Checkbox -->
                                     <CheckBox x:Name="ChkShowLatency" Content="Show Latency"
-                                              Margin="0,4"/>
+                                                                          Click="ChkShowLatency_Click"/>
                                 </StackPanel>
                             </Border>
 
@@ -81,22 +81,22 @@
                             <Border Style="{StaticResource GlassPanel}">
                                 <StackPanel>
                                     <CheckBox x:Name="ChkAutoStart" Content="Enable Auto-Start"
-                                              Margin="0,4"/>
+                                                                          Click="ChkAutoStart_Click"/>
                     
                                     <CheckBox x:Name="ChkSound" Content="Enable Sound"
-                                              Margin="0,4"/>
+                                                                          Click="ChkSound_Click"/>
                     
                                     <CheckBox x:Name="ChkRumble" Content="Enable Rumble Feedback"
-                                              Margin="0,4"/>
+                                                                          Click="ChkRumble_Click"/>
                     
                                     <CheckBox x:Name="ChkHapticMetronome" Content="Enable Haptic Metronome"
-                                              Margin="0,4"/>
+                                                                          Click="ChkHapticMetronome_Click"/>
                     
                                     <CheckBox x:Name="ChkStartInMiniMode" Content="Start in Mini Mode"
-                                              Margin="0,4"/>
+                                                                          Click="ChkStartInMiniMode_Click"/>
                     
                                     <CheckBox x:Name="ChkSmartStandby" Content="Enable Smart Standby (AFK Battery Saver)"
-                                              Margin="0,4"/>
+                                                                          Click="ChkSmartStandby_Click"/>
                     
                                     <TextBox x:Name="TxtStandbyMinutes" Text="5"
                                              Foreground="{StaticResource TextPrimary}" FontSize="10" Width="60" Height="40"
@@ -104,7 +104,7 @@
                                              Padding="8,0" Margin="0,4"/>
                     
                                     <CheckBox x:Name="ChkFocusLock" Content="Enable Focus Lock"
-                                              Margin="0,4"/>
+                                                                          Click="ChkFocusLock_Click"/>
                     
                                     <ComboBox x:Name="LogLevelCombo" 
                                               Width="160" Margin="0,4"
@@ -113,13 +113,13 @@
                                               SelectionChanged="LogLevelCombo_SelectionChanged"/>
                     
                                     <CheckBox x:Name="ChkDiscordRPC" Content="Enable Discord Rich Presence"
-                                              Margin="0,4"/>
+                                                                          Click="ChkDiscordRPC_Click"/>
                     
                                     <CheckBox x:Name="ChkVoiceAnnouncements" Content="Enable Voice Announcements"
-                                              Margin="0,4"/>
+                                                                          Click="ChkVoiceAnnouncements_Click"/>
                     
                                     <CheckBox x:Name="ChkTelemetry" Content="Enable Anonymous Telemetry"
-                                              Margin="0,4"/>
+                                                                          Click="ChkTelemetry_Click"/>
                     
                                     <ComboBox x:Name="LanguageCombo" 
                                               Width="160" Margin="0,4"
