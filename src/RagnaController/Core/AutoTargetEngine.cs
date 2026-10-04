@@ -18,7 +18,7 @@ namespace RagnaController.Core
         Nearest = 1
     }
 
-    public class AutoTargetEngine : IInputHandler
+    public class AutoTargetEngine : IInputHandler, IDisposable
         {
             public bool AutoAttackEnabled { get; set; } = true;
             public bool AutoRetargetEnabled { get; set; } = true;
@@ -257,6 +257,12 @@ namespace RagnaController.Core
             _wac = 0;
             _prevR3 = false;
             _lockPosValid = false;
+        }
+
+        public void Dispose()
+        {
+            LostTarget = null;
+            _skillSem?.Dispose();
         }
     }
 }

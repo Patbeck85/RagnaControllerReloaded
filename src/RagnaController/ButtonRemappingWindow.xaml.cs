@@ -72,18 +72,18 @@ namespace RagnaController
         private string _activeLayer = "";
 
         private void ApplyLayer(string layerName)
-                {
-                    _activeLayer = layerName;
-                    // Highlight active layer button
-                    var gold = (Brush)FindResource("Gold");
-                    foreach (var btn in new[] { BtnLayerBase, BtnLayerL1, BtnLayerR1, BtnLayerL2, BtnLayerR2 })
-                    {
-                        if (btn == null) continue;
-                        string tag = btn.Tag?.ToString() ?? "";
-                        btn.Background = tag == layerName ? gold : new SolidColorBrush(Colors.Transparent);
-                    }
-                    UpdatePreview();
-                }
+                        {
+                            _activeLayer = layerName;
+                            // Highlight active layer button
+                            var gold = TryFindResource("Gold") as Brush ?? Brushes.Gold;
+                            foreach (var btn in new[] { BtnLayerBase, BtnLayerL1, BtnLayerR1, BtnLayerL2, BtnLayerR2 })
+                            {
+                                if (btn == null) continue;
+                                string tag = btn.Tag?.ToString() ?? "";
+                                btn.Background = tag == layerName ? gold : new SolidColorBrush(Colors.Transparent);
+                            }
+                            UpdatePreview();
+                        }
 
         private void ResetAll()
         {

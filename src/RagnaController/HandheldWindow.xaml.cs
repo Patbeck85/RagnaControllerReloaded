@@ -154,13 +154,13 @@ namespace RagnaController
 
                     if (connected)
                     {
-                        ControllerStatusText.Foreground = (SolidColorBrush)FindResource("Live");
-                        ControllerDot.Fill = (SolidColorBrush)FindResource("Live");
+                        ControllerStatusText.Foreground = TryFindResource("Live") as SolidColorBrush ?? new SolidColorBrush(Colors.LimeGreen);
+                        ControllerDot.Fill = TryFindResource("Live") as SolidColorBrush ?? new SolidColorBrush(Colors.LimeGreen);
                     }
                     else
                     {
-                        ControllerStatusText.Foreground = (SolidColorBrush)FindResource("Danger");
-                        ControllerDot.Fill = (SolidColorBrush)FindResource("Danger");
+                        ControllerStatusText.Foreground = TryFindResource("Danger") as SolidColorBrush ?? new SolidColorBrush(Colors.Red);
+                        ControllerDot.Fill = TryFindResource("Danger") as SolidColorBrush ?? new SolidColorBrush(Colors.Red);
                     }
                 }
 

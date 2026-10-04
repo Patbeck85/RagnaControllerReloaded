@@ -4,7 +4,7 @@ using RagnaController.Models;
 
 namespace RagnaController.Core
 {
-    public class ComboEngine
+    public class ComboEngine : IDisposable
     {
         public bool           Enabled       { get; set; }
         public List<VirtualKey> Sequence    { get; set; } = new();
@@ -101,6 +101,11 @@ namespace RagnaController.Core
             // FIX: JitterService is a static class - call Apply directly without null check
             _timer = JitterService.Apply(baseDelay, 15);
             _stepIndex++;
+        }
+
+        public void Dispose()
+        {
+            ComboStepFired = null;
         }
     }
 }

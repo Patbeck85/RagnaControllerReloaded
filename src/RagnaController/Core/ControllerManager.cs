@@ -155,6 +155,12 @@ namespace RagnaController.Core
                         }
                         _xInputProvider?.Dispose();
                     }
+                    
+                    // Unsubscribe all public events to prevent memory leaks
+                    ControllerConnected = null;
+                    ControllerDisconnected = null;
+                    ProviderChanged = null;
+                    IsConnectedChanged = null;
                 }
 
         // ── Private Helpers ─────────────────────────────────────────

@@ -85,6 +85,9 @@ namespace RagnaController.Core
             _cts.Cancel();
             try { _consumer.Wait(TimeSpan.FromSeconds(2)); } catch { }
             _cts.Dispose();
+            
+            // Unsubscribe event to prevent memory leaks
+            LiveLogReceived = null;
         }
     }
 }

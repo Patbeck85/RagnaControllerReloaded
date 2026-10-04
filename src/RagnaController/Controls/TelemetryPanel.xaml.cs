@@ -223,7 +223,7 @@ namespace RagnaController.Controls
 
             var card = new Border
             {
-                Style = (Style)FindResource("TelemetryCard"),
+                Style = TryFindResource("TelemetryCard") as Style,
                 Child = stack
             };
             return (card, stack);

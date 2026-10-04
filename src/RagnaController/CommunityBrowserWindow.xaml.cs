@@ -115,7 +115,7 @@ namespace RagnaController
                         _manager.AddAndSave(result.Profile);
                         
                         btn.Content = GetLocalizedString("CommunityBrowser_Installed");
-                        btn.Foreground = (Brush)FindResource("Live");
+                        btn.Foreground = TryFindResource("Live") as Brush ?? Brushes.LimeGreen;
                     }
                     else
                     {

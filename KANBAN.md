@@ -515,7 +515,7 @@ private static bool IsSkillAction(ButtonAction action)
 - ControllerService.cs (2 Events) — hat Dispose
 **Fundament:** Event-Subscriber können nicht sauber unsubscriben → Memory Leaks wenn Instanzen kurzlebig sind (Tests, Window-Open/Close).
 **Suggested Fix:** `IDisposable` implementieren + Events in `Dispose()` auf null setzen (`event = null`).
-**Status:** offen
+**Status:** ✅ ERLEDIGT (2026-10-04) — Alle 8 Klassen haben jetzt `IDisposable` implementiert und setzen Events in `Dispose()` auf null. AdvancedLogger, ControllerManager, ControllerService hatten bereits Dispose, jetzt mit Event-Nulling.
 
 ### 🟨 TECH-008: XAML — Missing AutomationProperties bei weiteren Fenstern (S4)
 **Fundament:** UX-012 hat 22 Buttons in 8 Fenstern gefixt. Prüfen: DeveloperConsoleWindow, MiniModeWindow, RadialMenuWindow, DaisyWheelWindow, HandheldWindow, InGameOverlayWindow, ProfileWizardWindow, TutorialWindow, SettingsWindow.
@@ -534,7 +534,7 @@ private static bool IsSkillAction(ButtonAction action)
 **Fundament:** `FindResource("Key")` wirft `ResourceReferenceKeyNotFoundException` wenn Key fehlt → App-Crash.
 **Impact:** Runtime-Crash bei Tippfehlern in Resource-Keys oder fehlendem Design-System.
 **Suggested Fix:** `TryFindResource` + Null-Check, oder Fallback-Brush. Oder Design-System-Validierung beim Start.
-**Status:** offen
+**Status:** ✅ ERLEDIGT (2026-10-04) — Alle `FindResource()` Aufrufe in Code-behind durch `TryFindResource()` mit Fallbacks ersetzt (z.B. `TryFindResource("Gold") as Brush ?? Brushes.Gold`, `TryFindResource("RadiusMd") as CornerRadius? ?? new CornerRadius(6)`, etc.).
 
 ### 🟨 TECH-011: Hardcoded Strings in UI (Lokalisierung) (S4)
 **Fundament:** 500+ hardcoded Strings in .cs Dateien (MessageBox, Tooltips, Log-Messages, UI-Labels). Deutsche Locale hardcoded.

@@ -190,16 +190,16 @@ namespace RagnaController
             ChainPanel.Children.Clear();
 
             // Get design system resources
-            var bgCard       = (Brush)FindResource("BgCard");
-            var bgBorder     = (Brush)FindResource("BgBorder");
-            var gold         = (Brush)FindResource("Gold");
-            var goldDim      = (Brush)FindResource("GoldDim");
-            var textPrimary  = (Brush)FindResource("TextPrimary");
-            var textSecondary= (Brush)FindResource("TextSecondary");
-            var textTertiary = (Brush)FindResource("TextTertiary");
-            var accentBlue   = (Brush)FindResource("AccentBlue");
-            var radiusMd     = (CornerRadius)FindResource("RadiusMd");
-            var radiusSm     = (CornerRadius)FindResource("RadiusSm");
+            var bgCard       = TryFindResource("BgCard") as Brush ?? Brushes.DarkSlateGray;
+            var bgBorder     = TryFindResource("BgBorder") as Brush ?? Brushes.Gray;
+            var gold         = TryFindResource("Gold") as Brush ?? Brushes.Gold;
+            var goldDim      = TryFindResource("GoldDim") as Brush ?? Brushes.DarkGoldenrod;
+            var textPrimary  = TryFindResource("TextPrimary") as Brush ?? Brushes.White;
+            var textSecondary= TryFindResource("TextSecondary") as Brush ?? Brushes.Gray;
+            var textTertiary = TryFindResource("TextTertiary") as Brush ?? Brushes.DarkGray;
+            var accentBlue   = TryFindResource("AccentBlue") as Brush ?? Brushes.DodgerBlue;
+            var radiusMd     = TryFindResource("RadiusMd") as CornerRadius? ?? new CornerRadius(6);
+            var radiusSm     = TryFindResource("RadiusSm") as CornerRadius? ?? new CornerRadius(4);
 
             for (int i = 0; i < _steps.Count; i++)
             {
@@ -232,7 +232,7 @@ namespace RagnaController
                     VerticalAlignment   = VerticalAlignment.Center,
                     Child = new TextBlock
                     {
-                        Text = (i + 1).ToString(), Foreground = (Brush)FindResource("BgPrimary"),
+                        Text = (i + 1).ToString(), Foreground = TryFindResource("BgPrimary") as Brush ?? Brushes.Black,
                         FontWeight = FontWeights.Bold, FontSize = 11,
                         HorizontalAlignment = HorizontalAlignment.Center,
                         VerticalAlignment   = VerticalAlignment.Center
@@ -244,7 +244,7 @@ namespace RagnaController
                 var nameBox = new TextBox
                 {
                     Text = step.SkillName,
-                    Background = (Brush)FindResource("BgPrimary"),
+                    Background = TryFindResource("BgPrimary") as Brush ?? Brushes.Black,
                     Foreground = textPrimary,
                     BorderBrush = bgBorder,
                     FontSize = 13, FontWeight = FontWeights.Bold,
@@ -267,8 +267,8 @@ namespace RagnaController
                         Margin = new Thickness(2, 1, 0, 1),
                         FontSize = 9,
                         Background = step.Key == key
-                            ? (Brush)FindResource("AccentPurple")
-                            : (Brush)FindResource("BgTertiary"),
+                            ? TryFindResource("AccentPurple") as Brush ?? Brushes.MediumPurple
+                            : TryFindResource("BgTertiary") as Brush ?? Brushes.DarkGray,
                         Foreground = step.Key == key ? accentBlue : textSecondary,
                         BorderBrush = bgBorder,
                         BorderThickness = new Thickness(1),
@@ -284,8 +284,8 @@ namespace RagnaController
                             bool isThis = (VirtualKey)tb.Tag == capturedKey;
                             tb.IsChecked  = isThis;
                             tb.Background = isThis
-                                ? (Brush)FindResource("AccentPurple")
-                                : (Brush)FindResource("BgTertiary");
+                                ? TryFindResource("AccentPurple") as Brush ?? Brushes.MediumPurple
+                                : TryFindResource("BgTertiary") as Brush ?? Brushes.DarkGray;
                             tb.Foreground = isThis ? accentBlue : textSecondary;
                         }
                     };

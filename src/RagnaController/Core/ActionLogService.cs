@@ -4,7 +4,7 @@ using RagnaController.Models; // WICHTIG für ActionFiredKind
 
 namespace RagnaController.Core
 {
-    public sealed class ActionLogService
+    public sealed class ActionLogService : IDisposable
     {
         private readonly object _lock = new();
         private readonly LinkedList<ActionEntry> _entries = new();
@@ -34,6 +34,12 @@ namespace RagnaController.Core
 
         public event Action<ActionEntry>? EntryAdded;
         public void Clear() { lock (_lock) _entries.Clear(); }
+
+        public void Dispose()
+        {
+            EntryAdded = null;
+            lock (_lock) _entries.Clear();
+        }
     }
 
     public sealed record ActionEntry(string Label, ActionFiredKind Kind, DateTime Time)

@@ -201,6 +201,10 @@ namespace RagnaController.Core
                     }
                     _deviceNotificationWindow?.Dispose();
                     _deviceNotificationWindow = null;
+                    
+                    // Unsubscribe all public events to prevent memory leaks
+                    ControllerDetected = null;
+                    ControllerDisconnected = null;
                 }
 
         // ── SDL thread body (ALL SDL calls live here) ──────────────────────

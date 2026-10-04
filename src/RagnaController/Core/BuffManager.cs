@@ -10,7 +10,7 @@ namespace RagnaController.Core
     /// and supports auto-recast when configured.
     /// Optimized: Zero allocations in hot path (Update called every tick).
     /// </summary>
-    public class BuffManager
+    public class BuffManager : IDisposable
     {
         private readonly InputCommandQueue _queue;
         private readonly CooldownManager _cooldownManager;
@@ -240,6 +240,14 @@ namespace RagnaController.Core
             public bool AutoRecast { get; set; }
             public VirtualKey RecastKey { get; set; }
             public bool WarningFired { get; set; }
+        }
+
+        public void Dispose()
+        {
+            BuffExpiringWarning = null;
+            BuffExpired = null;
+            DebuffApplied = null;
+            DebuffExpired = null;
         }
     }
 }

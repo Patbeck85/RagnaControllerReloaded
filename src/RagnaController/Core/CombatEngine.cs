@@ -7,7 +7,7 @@ using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Core
 {
-    public class CombatEngine
+    public class CombatEngine : IDisposable
     {
         private Profile? _profile;
         private string _prefix = "";
@@ -207,6 +207,11 @@ namespace RagnaController.Core
         {
             _activeGroundLayer = "";
             _activeBaseGroundButton = "";
+        }
+
+        public void Dispose()
+        {
+            ActionFired = null;
         }
     }
 }

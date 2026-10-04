@@ -73,13 +73,13 @@ namespace RagnaController
             _sectorBtns.Clear();
 
             // Get design system brushes
-            var sectorFillBrush = (SolidColorBrush)FindResource("AccentPurple");
+            var sectorFillBrush = TryFindResource("AccentPurple") as SolidColorBrush ?? new SolidColorBrush(Colors.MediumPurple);
             var sectorFillColor = sectorFillBrush.Color;
             var sectorFillArgb = Color.FromArgb(40, sectorFillColor.R, sectorFillColor.G, sectorFillColor.B);
-            var sectorStrokeBrush = (SolidColorBrush)FindResource("BgBorder");
-            var goldBrush = (SolidColorBrush)FindResource("Gold");
-            var whiteBrush = (SolidColorBrush)FindResource("TextPrimary");
-            var cornerRadiusFull = (CornerRadius)FindResource("RadiusFull");
+            var sectorStrokeBrush = TryFindResource("BgBorder") as SolidColorBrush ?? new SolidColorBrush(Colors.Gray);
+            var goldBrush = TryFindResource("Gold") as SolidColorBrush ?? new SolidColorBrush(Colors.Gold);
+            var whiteBrush = TryFindResource("TextPrimary") as SolidColorBrush ?? new SolidColorBrush(Colors.White);
+            var cornerRadiusFull = TryFindResource("RadiusFull") as CornerRadius? ?? new CornerRadius(100);
 
             for (int s = 0; s < 8; s++)
             {
@@ -194,13 +194,13 @@ namespace RagnaController
             // Performance: EINEN Invoke für die gesamte UI-Änderung
             Dispatcher.BeginInvoke(() =>
             {
-                var goldBrush = (SolidColorBrush)FindResource("Gold");
+                var goldBrush = TryFindResource("Gold") as SolidColorBrush ?? new SolidColorBrush(Colors.Gold);
                 var goldColor = goldBrush.Color;
                 var goldArgb140 = Color.FromArgb(140, goldColor.R, goldColor.G, goldColor.B);
                 var goldArgb40 = Color.FromArgb(40, goldColor.R, goldColor.G, goldColor.B);
-                var whiteBrush = (SolidColorBrush)FindResource("TextPrimary");
-                var sectorStrokeBrush = (SolidColorBrush)FindResource("BgBorder");
-                var sectorFillBrush = (SolidColorBrush)FindResource("AccentPurple");
+                var whiteBrush = TryFindResource("TextPrimary") as SolidColorBrush ?? new SolidColorBrush(Colors.White);
+                var sectorStrokeBrush = TryFindResource("BgBorder") as SolidColorBrush ?? new SolidColorBrush(Colors.Gray);
+                var sectorFillBrush = TryFindResource("AccentPurple") as SolidColorBrush ?? new SolidColorBrush(Colors.MediumPurple);
                 var sectorFillColor = sectorFillBrush.Color;
                 var sectorFillArgb = Color.FromArgb(40, sectorFillColor.R, sectorFillColor.G, sectorFillColor.B);
 
