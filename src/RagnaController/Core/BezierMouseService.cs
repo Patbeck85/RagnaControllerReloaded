@@ -8,8 +8,11 @@ namespace RagnaController.Core
         {
             if (x0 == x1 && y0 == y1) return;
 
+            // Guard: durationMs must be positive to avoid divide-by-zero and negative stepDelay
+            if (durationMs <= 0) durationMs = 1;
+
             int steps = Math.Max(5, durationMs / 8);
-            int stepDelay = durationMs / steps;
+            int stepDelay = Math.Max(1, durationMs / steps); // Clamp to min 1ms to avoid busy-wait
 
             // Kontrollpunkte für eine natürliche Kurve
             float ctrlX = x0 + (x1 - x0) * 0.5f + Random.Shared.Next(-20, 20);

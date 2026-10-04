@@ -138,7 +138,7 @@ namespace RagnaController.Core
         public int LastTickMs { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public float RemainingPercent => 1f - (float)ElapsedMs / DurationMs;
+        public float RemainingPercent => DurationMs <= 0 ? 1f : 1f - (float)ElapsedMs / DurationMs;
         public bool IsExpired => ElapsedMs >= DurationMs;
     }
 }

@@ -387,11 +387,6 @@
 **Confidence:** hoch
 **Verifiziert:** Build 0 Fehler, 301/301 Tests PASS.
 
-### 🟥 UI-001: CheckBox-Handler-Missing in SettingsWindow (S3)
-**Date:** 2026-10-04 | **Severity:** S3 — Funktionalität eingeschränkt | **Status:** bekannt
-**File:** src/RagnaController/SettingsWindow.xaml (Zeilen 66-122)
-**Fundament:** 13 CheckBox-Elemente existieren im UI, aber es sind keine Click- oder Checked-Handler zugeordnet.
-
 ### 🟥 UI-003: Profile JSON Class/Name Inkonsequenz (S3)
 **Date:** 2026-10-04 | **Severity:** S3 — Auto-Klassenzuweisung möglicherweise fehlerhaft | **Status:** ✅ ERLEDIGT (2026-10-04)
 **File:** src/RagnaController/DefaultProfiles/*.json (58 Dateien)
@@ -467,28 +462,28 @@ private static bool IsSkillAction(ButtonAction action)
 **Fundament:** `int stepDelay = durationMs / steps;` wobei `steps = Math.Max(5, durationMs / 8)`. Wenn `durationMs = 0`, dann `steps = 5`, `stepDelay = 0`. `queue.Wait(0)` könnte zu busy-wait führen. Wenn `durationMs < 0`, `steps = 5`, `stepDelay < 0`.
 **Impact:** Potentieller busy-wait oder negatives Wait-Timeout.
 **Suggested Fix:** `durationMs` validieren (min 1ms), `stepDelay` auf min 1 clampen.
-**Status:** offen
+**Status:** ✅ ERLEDIGT (2026-10-04) — Guard für durationMs <= 0 (min 1ms) + stepDelay clamp auf min 1ms hinzugefügt.
 
 ### 🟨 TECH-002: GroundSpellEngine — Divide by Zero (S3)
 **File:** src/RagnaController/Core/GroundSpellEngine.cs (Zeile 141)
 **Fundament:** `public float RemainingPercent => 1f - (float)ElapsedMs / DurationMs;` — wenn `DurationMs = 0`, Division durch Null → NaN/Exception.
 **Impact:** Runtime Exception bei ungültiger Spell-Konfiguration.
 **Suggested Fix:** Guard: `DurationMs <= 0 ? 1f : ...` oder Constructor-Validierung.
-**Status:** offen
+**Status:** ✅ ERLEDIGT (2026-10-04) — Guard `DurationMs <= 0 ? 1f : ...` hinzugefügt.
 
 ### 🟨 TECH-003: KiteStates — Divide by Zero (S3)
 **File:** src/RagnaController/Core/KiteStates.cs (Zeilen 21-22)
 **Fundament:** `ctx.LastAimX = input.RightX / mag * norm;` — `mag = MathF.Sqrt(input.RightX^2 + input.RightY^2)`. Wenn beide 0, Division durch Null.
 **Impact:** Exception bei neutralem Stick während Kite-State aktiv.
 **Suggested Fix:** `if (mag <= float.Epsilon) return;` vor Division.
-**Status:** offen
+**Status:** ✅ ERLEDIGT (2026-10-04) — Guard `if (mag <= float.Epsilon) return;` hinzugefügt.
 
 ### 🟨 TECH-004: Async void in SplashWindow (S4)
 **File:** src/RagnaController/SplashWindow.xaml.cs (Zeile 52)
 **Fundament:** `private async void StartAnimations()` — async void ohne Try/Catch. Unbehandelte Exceptions crashen die App still.
 **Impact:** Crash-Risiko bei Animations-Fehlern (z.B. fehlende Ressourcen).
 **Suggested Fix:** `private async Task StartAnimationsAsync()` + Caller awaitet oder `.ContinueWith` mit Error-Handling.
-**Status:** offen
+**Status:** ✅ ERLEDIGT (2026-10-04) — In `async Task StartAnimationsAsync()` umgeändert, Caller `ContentRendered += async (s,e) => await StartAnimationsAsync().ConfigureAwait(false)`.
 
 ### 🟨 TECH-005: Static ConcurrentDictionary Registries ohne Cleanup (S3)
 **Files:** 
@@ -558,7 +553,7 @@ private static bool IsSkillAction(ButtonAction action)
 **Fundament:** `_updateTimer` wird in `Window_Closing` nicht gestoppt (kein Closing-Handler sichtbar).
 **Impact:** Timer tickt weiter → Access zu disposed Window → Exception/Leak.
 **Suggested Fix:** `Closing += (s,e) => _updateTimer.Stop();` oder `Unloaded` Handler.
-**Status:** offen
+**Status:** ✅ BEREITS ERLEDIGT — `OnClosed` Override vorhanden (Zeilen 308-320) stoppt Timer und unsubscribt Events.
 
 ### 🟨 TECH-014: Duplicate UI-001 Entry in KANBAN (Cleanup)
 **Fundament:** UI-001 (CheckBox-Handler) steht doppelt in KANBAN (Zeilen 350-368 und 390-394).

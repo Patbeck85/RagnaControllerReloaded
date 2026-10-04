@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace RagnaController
 {
@@ -22,7 +23,7 @@ namespace RagnaController
             InitializeComponent();
             SplashVersionLabel.Text = $"v{Core.AppVersion.Current}";
             PrepareVoice();
-            ContentRendered += (s, e) => StartAnimations();
+            ContentRendered += async (s, e) => await StartAnimationsAsync().ConfigureAwait(false);
         }
 
         private void SplashWindow_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -49,12 +50,12 @@ namespace RagnaController
             } catch { }
         }
 
-        private async void StartAnimations()
+        private async Task StartAnimationsAsync()
         {
             try
             {
                 Play("FadeIn");
-                await System.Threading.Tasks.Task.Delay(700);
+                await Task.Delay(700);
                 Play("GoldPulse");
                 Play("LogoIn");
                 Play("ProgressAnim");

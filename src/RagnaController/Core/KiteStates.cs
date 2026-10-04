@@ -17,6 +17,8 @@ namespace RagnaController.Core
             float sq = input.RightX * input.RightX + input.RightY * input.RightY;
             if (sq <= ctx.AimDeadzone * ctx.AimDeadzone) return;
             float mag  = MathF.Sqrt(sq);
+            // Guard: avoid division by zero if mag is extremely small
+            if (mag <= float.Epsilon) return;
             float norm = (mag - ctx.AimDeadzone) / (1f - ctx.AimDeadzone);
             ctx.LastAimX     = input.RightX / mag * norm;
             ctx.LastAimY     = input.RightY / mag * norm;
