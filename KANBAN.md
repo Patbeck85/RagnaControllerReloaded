@@ -494,14 +494,14 @@ private static bool IsSkillAction(ButtonAction action)
 **Fundament:** Statische Registries wachsen unbegrenzt bei wiederholter Erstellung (Tests, Restarts, Session-Wechsel). Keine `Remove/Unregister/Clear`-Methode.
 **Impact:** Memory Leak bei langen Sessions / vielen Test-Runs / Engine-Restarts.
 **Suggested Fix:** `public static void Unregister(string name)` + `Clear()` Methoden hinzufügen; in EngineOrchestrator.Shutdown() Cleanup aufrufen.
-**Status:** offen
+**Status:** ✅ ERLEDIGT (2026-10-04) — Alle 4 Registries hatten bereits `Remove` und `DisposeAll` Methoden. `EngineOrchestrator.Shutdown()` ruft jetzt `FrameBudgetRegistry.DisposeAll()`, `GpuOverlayProfilerRegistry.DisposeAll()`, `InputLatencyRegistry.DisposeAll()`, `MemoryAllocationRegistry.DisposeAll()` auf.
 
 ### 🟨 TECH-006: ProfileShareService Static Map ohne Reload (S4)
 **File:** src/RagnaController/Core/ProfileShareService.cs (Zeile 219)
 **Fundament:** `private static Dictionary<string, string> _map = Load();` — einmalig beim Class-Load. Änderungen an der JSON-Datei werden nicht erkannt.
 **Impact:** Profile-Sharing zeigt veraltete Daten bis App-Restart.
 **Suggested Fix:** `public static void Reload()` Methode + FileSystemWatcher optional.
-**Status:** offen
+**Status:** ✅ ERLEDIGT (2026-10-04) — `public static void Reload()` Methode hinzugefügt, die `_map = Load()` aufruft.
 
 ### 🟨 TECH-007: Classes mit Events aber ohne IDisposable (S3)
 **Files:**

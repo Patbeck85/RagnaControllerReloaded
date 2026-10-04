@@ -227,6 +227,14 @@ namespace RagnaController.Core
         public static string Resolve(string suffix) =>
             _map.TryGetValue(suffix.ToLowerInvariant(), out var id) ? id : string.Empty;
 
+        /// <summary>
+        /// Reloads the share code cache from disk. Useful if the JSON file was modified externally.
+        /// </summary>
+        public static void Reload()
+        {
+            _map = Load();
+        }
+
         private static System.Collections.Generic.Dictionary<string, string> Load()
         {
             try

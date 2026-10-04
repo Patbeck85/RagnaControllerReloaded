@@ -650,25 +650,32 @@ namespace RagnaController.Core
         }
 
         public void Shutdown()
-                                {
-                                    if (_isShutDown) return; // idempotent: Dispose() ruft Shutdown() erneut auf
-                                    _isShutDown = true;
-                                    Stop();
-                                    _feedback.StopRumble();
-                                    _ctrl.Dispose();
-                                    _controllerManager?.Dispose();
-                                    _handheld.Dispose();
-                                    _voice.Dispose();
-                                    _memoryTracker?.Dispose();
-                                    _latencyTracker?.Dispose();
-                                    _watchdog.Dispose(); // ROB-001: deterministisch stoppbar
-                                    _mouseEmulationFallback?.Dispose(); // ROB-002: Interception-Kontext freigeben
-                                    _sessionRecorder?.Dispose(); // FEAT-014: JSONL-Aufzeichnung flushen + Writer schließen
-                                    _itemManager.Dispose(); // FEAT-011: Item-Prüfung endgültig stoppen
-                                    _partyManager.Dispose(); // FEAT-012: Auto-Heal endgültig stoppen
-                                    _logger?.Info("=== Engine Shutdown ===");
-                                    _logger?.Dispose();
-                                }
+                                        {
+                                            if (_isShutDown) return; // idempotent: Dispose() ruft Shutdown() erneut auf
+                                            _isShutDown = true;
+                                            Stop();
+                                            _feedback.StopRumble();
+                                            _ctrl.Dispose();
+                                            _controllerManager?.Dispose();
+                                            _handheld.Dispose();
+                                            _voice.Dispose();
+                                            _memoryTracker?.Dispose();
+                                            _latencyTracker?.Dispose();
+                                            _watchdog.Dispose(); // ROB-001: deterministisch stoppbar
+                                            _mouseEmulationFallback?.Dispose(); // ROB-002: Interception-Kontext freigeben
+                                            _sessionRecorder?.Dispose(); // FEAT-014: JSONL-Aufzeichnung flushen + Writer schließen
+                                            _itemManager.Dispose(); // FEAT-011: Item-Prüfung endgültig stoppen
+                                            _partyManager.Dispose(); // FEAT-012: Auto-Heal endgültig stoppen
+
+                                            // TECH-005: Clean up static registries to prevent memory leaks on restart
+                                            FrameBudgetRegistry.DisposeAll();
+                                            GpuOverlayProfilerRegistry.DisposeAll();
+                                            InputLatencyRegistry.DisposeAll();
+                                            MemoryAllocationRegistry.DisposeAll();
+
+                                            _logger?.Info("=== Engine Shutdown ===");
+                                            _logger?.Dispose();
+                                        }
 
         public void Dispose()
         {
