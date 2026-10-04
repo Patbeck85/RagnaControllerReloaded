@@ -457,3 +457,110 @@ private static bool IsSkillAction(ButtonAction action)
 9. **TEST-015/016/017 COMPLETE (HIGH, SPRINT A)** — Controller-Eingaben-Verifikation: TEST-015 Pipeline-Goldtests (253→255), TEST-016 Controller-Replay als CI-Golden-Master (720-Frame-Fixtur + Replay-Tests + Aufnahmefunktion im ControllerTestWindow, Suite 260/260), TEST-017 Eingabe-Selbsttest im ControllerTestWindow (`ControllerDiagnosticRunner`: 20 geprüfte Eingaben mit Pass/Fail + Reaktionszeit p50/p95 pro Kontrolle, Timeout-Logik, JSON-Report-Export, 2026-Design-UI; Suite 272/272). SPRINT A damit vollständig abgeschlossen.
 10. **FEAT-024 ✅ (SPRINT C)** — Multi-Character-Profil-Schnellwechsel (Name-basiert): `CharacterProfileResolver` (Normalisierung + case-insensitive Lookup) + `ProfileManager`-Integration (`RegisterCharacterMapping`, `OnCharacterDetected` Auto-Switch, Persistenz in `character_mappings.json` über Neustart). 18 neue Facts, Suite **290/290** PASS. OCR-/Fenster-Lesung als separater Integrationspunkt (`OnCharacterDetected`) dokumentiert.
 11. **FEAT-023 ✅ (SPRINT C)** — Auto-Item-Einlagerung (Storage-Drop bei vollem Inventar): `StorageDropPlanner` (reine Planungslogik: Consumables→Stash, Buffs→Drop, Quest/Ausrüstung→Keep; Standard-Kapazität 24). 11 neue Facts, Suite **301/301** PASS. OCR-/Cursor-Ausführung als separater Integrationspunkt (`StorageDropPlanner.Plan` + RoUiMenuService/SmartCursorService) dokumentiert. **SPRINT C damit vollständig abgeschlossen** ✅ (FEAT-015, FEAT-023, FEAT-024).
+
+---
+
+## Audit-Findings / Comprehensive Code Review (2026-10-04)
+
+### 🟨 TECH-001: BezierMouseService — Divide by Zero Risk (S3)
+**File:** src/RagnaController/Core/BezierMouseService.cs (Zeile 12)
+**Fundament:** `int stepDelay = durationMs / steps;` wobei `steps = Math.Max(5, durationMs / 8)`. Wenn `durationMs = 0`, dann `steps = 5`, `stepDelay = 0`. `queue.Wait(0)` könnte zu busy-wait führen. Wenn `durationMs < 0`, `steps = 5`, `stepDelay < 0`.
+**Impact:** Potentieller busy-wait oder negatives Wait-Timeout.
+**Suggested Fix:** `durationMs` validieren (min 1ms), `stepDelay` auf min 1 clampen.
+**Status:** offen
+
+### 🟨 TECH-002: GroundSpellEngine — Divide by Zero (S3)
+**File:** src/RagnaController/Core/GroundSpellEngine.cs (Zeile 141)
+**Fundament:** `public float RemainingPercent => 1f - (float)ElapsedMs / DurationMs;` — wenn `DurationMs = 0`, Division durch Null → NaN/Exception.
+**Impact:** Runtime Exception bei ungültiger Spell-Konfiguration.
+**Suggested Fix:** Guard: `DurationMs <= 0 ? 1f : ...` oder Constructor-Validierung.
+**Status:** offen
+
+### 🟨 TECH-003: KiteStates — Divide by Zero (S3)
+**File:** src/RagnaController/Core/KiteStates.cs (Zeilen 21-22)
+**Fundament:** `ctx.LastAimX = input.RightX / mag * norm;` — `mag = MathF.Sqrt(input.RightX^2 + input.RightY^2)`. Wenn beide 0, Division durch Null.
+**Impact:** Exception bei neutralem Stick während Kite-State aktiv.
+**Suggested Fix:** `if (mag <= float.Epsilon) return;` vor Division.
+**Status:** offen
+
+### 🟨 TECH-004: Async void in SplashWindow (S4)
+**File:** src/RagnaController/SplashWindow.xaml.cs (Zeile 52)
+**Fundament:** `private async void StartAnimations()` — async void ohne Try/Catch. Unbehandelte Exceptions crashen die App still.
+**Impact:** Crash-Risiko bei Animations-Fehlern (z.B. fehlende Ressourcen).
+**Suggested Fix:** `private async Task StartAnimationsAsync()` + Caller awaitet oder `.ContinueWith` mit Error-Handling.
+**Status:** offen
+
+### 🟨 TECH-005: Static ConcurrentDictionary Registries ohne Cleanup (S3)
+**Files:** 
+- FrameBudgetMonitor.cs (_monitors, Zeile 163)
+- GpuOverlayProfiler.cs (_profilers, Zeile 334)
+- InputLatencyTracker.cs (_trackers, Zeile 454)
+- MemoryAllocationTracker.cs (_trackers, Zeile 395)
+**Fundament:** Statische Registries wachsen unbegrenzt bei wiederholter Erstellung (Tests, Restarts, Session-Wechsel). Keine `Remove/Unregister/Clear`-Methode.
+**Impact:** Memory Leak bei langen Sessions / vielen Test-Runs / Engine-Restarts.
+**Suggested Fix:** `public static void Unregister(string name)` + `Clear()` Methoden hinzufügen; in EngineOrchestrator.Shutdown() Cleanup aufrufen.
+**Status:** offen
+
+### 🟨 TECH-006: ProfileShareService Static Map ohne Reload (S4)
+**File:** src/RagnaController/Core/ProfileShareService.cs (Zeile 219)
+**Fundament:** `private static Dictionary<string, string> _map = Load();` — einmalig beim Class-Load. Änderungen an der JSON-Datei werden nicht erkannt.
+**Impact:** Profile-Sharing zeigt veraltete Daten bis App-Restart.
+**Suggested Fix:** `public static void Reload()` Methode + FileSystemWatcher optional.
+**Status:** offen
+
+### 🟨 TECH-007: Classes mit Events aber ohne IDisposable (S3)
+**Files:**
+- ActionLogService.cs (Event: EntryAdded) — kein IDisposable
+- AdvancedLogger.cs (Event: LiveLogReceived) — hat Dispose aber unsubscribt nicht Events
+- AutoTargetEngine.cs (Event: LostTarget) — kein IDisposable
+- BuffManager.cs (Events: BuffExpiringWarning, BuffExpired, DebuffApplied, DebuffExpired) — kein IDisposable
+- CombatEngine.cs (Event: ActionFired) — kein IDisposable
+- ComboEngine.cs (Event: ComboStepFired) — kein IDisposable
+- ControllerManager.cs (4 Events) — kein IDisposable
+- ControllerService.cs (2 Events) — hat Dispose
+**Fundament:** Event-Subscriber können nicht sauber unsubscriben → Memory Leaks wenn Instanzen kurzlebig sind (Tests, Window-Open/Close).
+**Suggested Fix:** `IDisposable` implementieren + Events in `Dispose()` auf null setzen (`event = null`).
+**Status:** offen
+
+### 🟨 TECH-008: XAML — Missing AutomationProperties bei weiteren Fenstern (S4)
+**Fundament:** UX-012 hat 22 Buttons in 8 Fenstern gefixt. Prüfen: DeveloperConsoleWindow, MiniModeWindow, RadialMenuWindow, DaisyWheelWindow, HandheldWindow, InGameOverlayWindow, ProfileWizardWindow, TutorialWindow, SettingsWindow.
+**Suggested Fix:** Audit aller icon-only Buttons + `AutomationProperties.Name` nachpflegen.
+**Status:** teilweise erledigt (UX-012), Rest offen
+
+### 🟨 TECH-009: LINQ in Hot Path — ClassDetector.OrderByDescending (S4)
+**File:** src/RagnaController/Core/ClassDetector.cs (Zeile 253)
+**Fundament:** `classScores.OrderByDescending(kvp => kvp.Value).First().Key` allokiert Enumerator + Delegate pro Aufruf. Wird bei jedem Profil-Wechsel / Class-Detect aufgerufen.
+**Impact:** Geringe Allokation, aber in Hot Path vermeidbar.
+**Suggested Fix:** Manuelles Max-Tracking statt LINQ (Dictionary < 20 Einträge → O(n) trivial).
+**Status:** offen
+
+### 🟨 TECH-010: FindResource ohne Try-Catch (S3)
+**Files:** 15+ Code-behind Dateien (ButtonRemappingWindow, ComboEditorWindow, CommunityBrowserWindow, DaisyWheelWindow, HandheldWindow, TelemetryPanel, etc.)
+**Fundament:** `FindResource("Key")` wirft `ResourceReferenceKeyNotFoundException` wenn Key fehlt → App-Crash.
+**Impact:** Runtime-Crash bei Tippfehlern in Resource-Keys oder fehlendem Design-System.
+**Suggested Fix:** `TryFindResource` + Null-Check, oder Fallback-Brush. Oder Design-System-Validierung beim Start.
+**Status:** offen
+
+### 🟨 TECH-011: Hardcoded Strings in UI (Lokalisierung) (S4)
+**Fundament:** 500+ hardcoded Strings in .cs Dateien (MessageBox, Tooltips, Log-Messages, UI-Labels). Deutsche Locale hardcoded.
+**Impact:** Keine Mehrsprachigkeit möglich. Wartung aufwendig.
+**Suggested Fix:** Resource-Dateien (.resx) oder JSON-Localization für UI-Texte. Log-Messages können englisch bleiben.
+**Status:** bekannt, bewusst (User bevorzugt Deutsch)
+
+### 🟨 TECH-012: WindowTracker / WindowSwitcher — Process.GetProcesses() Allokationen (S4)
+**Files:** WindowTracker.cs, WindowSwitcher.cs
+**Fundament:** `Process.GetProcessesByName()` allokiert Array bei jedem Call. In Tick-Pfad oder häufigen Switches kostenintensiv.
+**Suggested Fix:** Caching mit TTL (z.B. 500ms), oder `Process.GetProcessesByName` nur on-demand.
+**Status:** offen
+
+### 🟨 TECH-013: ControllerTestWindow — Timer läuft nach Close weiter (S3)
+**File:** src/RagnaController/ControllerTest/ControllerTestWindow.xaml.cs
+**Fundament:** `_updateTimer` wird in `Window_Closing` nicht gestoppt (kein Closing-Handler sichtbar).
+**Impact:** Timer tickt weiter → Access zu disposed Window → Exception/Leak.
+**Suggested Fix:** `Closing += (s,e) => _updateTimer.Stop();` oder `Unloaded` Handler.
+**Status:** offen
+
+### 🟨 TECH-014: Duplicate UI-001 Entry in KANBAN (Cleanup)
+**Fundament:** UI-001 (CheckBox-Handler) steht doppelt in KANBAN (Zeilen 350-368 und 390-394).
+**Suggested Fix:** Doppelte Sektion entfernen.
+**Status:** offen
