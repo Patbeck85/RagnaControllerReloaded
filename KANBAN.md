@@ -393,26 +393,30 @@
 **Fundament:** 13 CheckBox-Elemente existieren im UI, aber es sind keine Click- oder Checked-Handler zugeordnet.
 
 ### 🟥 UI-003: Profile JSON Class/Name Inkonsequenz (S3)
-**Date:** 2026-10-04 | **Severity:** S3 — Auto-Klassenzuweisung möglicherweise fehlerhaft | **Status:** bekannt
+**Date:** 2026-10-04 | **Severity:** S3 — Auto-Klassenzuweisung möglicherweise fehlerhaft | **Status:** ✅ ERLEDIGT (2026-10-04)
 **File:** src/RagnaController/DefaultProfiles/*.json (58 Dateien)
-**Fundament:** Das `Class-Feld` in vielen Profil-JSON-Dateien stimmt nicht mit dem `Name-Feld` überein und existiert nicht in der `ClassToPreset`-Dictionary in ClassDetector.cs.
-**Problematische Profile (Beispiele):**
-- `archbishop.json`: Name=Archbishop, Class="Support Healer" (nicht in ClassToPreset)
-- `assassin.json`: Name=Assassin, Class="Melee DPS" (nicht in ClassToPreset)
-- `assassin_cross.json`: Name=Assassin Cross, Class="Melee DPS" (nicht in ClassToPreset)
-- `bard.json`: Name=Bard, Class="Support Musician" (Bard IST in ClassToPreset als Ranged, aber Class-Wert inkonsequent)
-- `bard_dancer.json`: Name=Bard Dancer, Class="Support Musician" (ähnlich inkonsequent)
-- `creator.json`: Name=Creator, Class="Merchant" (nicht in ClassToPreset)
-- `genetic.json`: Name=Genetic, Class="Merchant" (nicht in ClassToPreset)
-- `kagerou_oboro.json`: Name=Kagerou Oboro, Class="Ninja Class" (doppelte " Class"-Textung)
-- `minstrel.json`: Name=Minstrel, Class="Musician" (nicht in ClassToPreset)
-- `minstrel_wanderer.json`: Name=Minstrel Wanderer, Class="Support Musician" (nicht in ClassToPreset)
-- `royal_guard.json`: Name=Royal Guard, Class="Melee Tank" (nicht in ClassToPreset — nur Knight/Rune Knight vorhanden)
-- `sura.json`: Name=Sura, Class="Combo Fighter" (nicht in ClassToPreset)
-- `wanderer.json`: Name=Wanderer, Class="Bard" (würde fälschlich nach Bard/Ranged mappen, ist aber anderes Job)
-**Impact:** Auto-Klassendetektion weist diesen Profilen fälschlicherweise den Standard-Melee-Preset zu oder ordnet falsche Engine-Konfiguration zu.
-**Confidence:** hoch (58 Profile geprüft)
-**Suggested Fix:** Class-Felder in Profilen an die ClassToPreset-Schlüssel anpassen (z.B. "Support", "Ranged", "Melee", "Hybrid", "Caster") oder Dictionary erweitern.
+**Fundament:** Das `Class-Feld` in vielen Profil-JSON-Dateien stimmte nicht mit dem `Name-Feld` überein und existierte nicht in der `ClassToPreset`-Dictionary in ClassDetector.cs.
+**Lösung:** Alle 58 JSON-Dateien auf gültige ClassToPreset-Keys aktualisiert via automatisiertem Script.
+**Aktualisierte Profile (Beispiele):**
+- `archbishop.json`: Class "Support Healer" → "Priest" (Support preset)
+- `assassin.json` / `assassin_cross.json` / `guillotine_cross.json`: "Melee DPS" → "Assassin" (Hybrid preset)
+- `bard.json` / `bard_dancer.json` / `minstrel.json` / `minstrel_wanderer.json` / `clown.json`: "Support Musician"/"Musician"/"Archer" → "Bard" (Ranged preset)
+- `creator.json` / `genetic.json` / `alchemist.json`: "Merchant" → "Alchemist" (Caster preset)
+- `crusader.json` / `paladin.json` / `knight.json` / `lord_knight.json` / `royal_guard.json` / `rune_knight.json` / `blacksmith.json` / `whitesmith.json` / `mechanic.json` / `merchant.json`: "Melee Tank"/"Merchant" → "Knight"/"Crusader"/"Blacksmith" (Melee preset)
+- `dancer.json` / `wanderer.json`: "Archer"/"Bard" → "Dancer" (Ranged preset)
+- `high_wizard.json` / `sorcerer.json` / `warlock.json` / `wizard.json`: "Magic DPS" → "Wizard" (Caster preset)
+- `professor.json`: "Magic Support" → "Professor" (Caster preset)
+- `sage.json`: "Magic Support" → "Sage" (Caster preset)
+- `shadow_chaser.json` / `stalker.json`: "Assassin"/"Thief" → "Stalker" (Hybrid preset)
+- `ninja.json` / `kagerou_oboro.json` / `shinkiro_shiranui.json`: "Ninja Class" → "Ninja"/"Kagerou" (Hybrid preset)
+- `star_emperor.json` / `taekwon.json`: "Taekwon Class" → "Taekwon" (Hybrid preset)
+- `star_gladiator.json`: "Taekwon Class" → "Star Gladiator" (Hybrid preset)
+- `soul_linker.json` / `soul_reaper.json`: "Soul Linker Class" → "Soul Linker" (Support preset)
+- `rogue.json`: "Thief" → "Rogue" (Hybrid preset)
+- `ranger.json` / `sniper.json`: "Ranged DPS" → "Hunter" (Ranged preset)
+- `novice.json` / `super_novice.json`: "Novice Class" → "Swordsman"/"Super Novice" (Melee preset)
+**Impact:** Auto-Klassendetektion weist Profilen jetzt korrekte Engine-Presets zu.
+**Verifiziert:** Build 0 Fehler, 301/301 Tests PASS.
 
 ### 🟥 UI-004: IsSkillAction zu breite Definition (S3)
 **Date:** 2026-10-04 | **Severity:** S3 — Könnte nicht-skill Keys als Skills zählen | **Status:** bekannt

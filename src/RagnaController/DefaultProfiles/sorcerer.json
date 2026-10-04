@@ -1,6 +1,6 @@
 {
   "Name": "Sorcerer",
-  "Class": "Magic DPS",
+  "Class": "Wizard",
   "ActionRpgMode": false,
   "MouseSensitivity": 1.2,
   "Deadzone": 0.12,
@@ -28,7 +28,7 @@
   "SmartSkillEnabled": true,
   "TabCycleMs": 80,
   "AimSensitivity": 22,
-  "AimDeadzone": 0.20,
+  "AimDeadzone": 0.2,
   "MageEnabled": true,
   "MageBoltKeyVK": 86,
   "MageBoltCastDelayMs": 1200,
@@ -36,10 +36,26 @@
   "SupportHealKeyVK": 90,
   "SupportPartyTabCycle": false,
   "ComboEnabled": true,
-  "ComboSkillNames": ["Storm Gust", "Meteor Storm", "Lord of Vermilion"],
-  "ComboSequenceVK": [90, 90, 90],
-  "PreRenewalComboDelays": [100, 50, 50],
-  "RenewalComboDelays": [60, 40, 40],
+  "ComboSkillNames": [
+    "Storm Gust",
+    "Meteor Storm",
+    "Lord of Vermilion"
+  ],
+  "ComboSequenceVK": [
+    90,
+    90,
+    90
+  ],
+  "PreRenewalComboDelays": [
+    100,
+    50,
+    50
+  ],
+  "RenewalComboDelays": [
+    60,
+    40,
+    40
+  ],
   "SmartCursorSlotSizeX": 32,
   "SmartCursorSlotSizeY": 32,
   "HandheldModeEnabled": false,

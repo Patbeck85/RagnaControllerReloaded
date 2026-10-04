@@ -1,6 +1,6 @@
 {
   "Name": "Merchant",
-  "Class": "Merchant",
+  "Class": "Blacksmith",
   "MouseSensitivity": 1.1,
   "Deadzone": 0.16,
   "MovementCurve": 1.4,
@@ -12,15 +12,56 @@
   "PreRenewalAttackIntervalMs": 100,
   "RenewalAttackIntervalMs": 60,
   "ClassTips": "A = Mammonite Hauptschaden. B = Cart Revolution AoE-Knockback. X = Discount/Overcharge (Shop). Y = Enlarge Weight Limit. L1+A = Loud Exclamation Buff.",
-  "SkillRecommendations": ["Mammonite", "Cart Revolution", "Discount", "Overcharge", "Pushcart", "Vending"],
+  "SkillRecommendations": [
+    "Mammonite",
+    "Cart Revolution",
+    "Discount",
+    "Overcharge",
+    "Pushcart",
+    "Vending"
+  ],
   "ButtonMappings": {
-    "A": { "Type": "Key", "Key": "F1", "Label": "Mammonite", "TurboEnabled": true, "Mode": "Standard", "TurboIntervalMs": 60 },
-    "B": { "Type": "Key", "Key": "F2", "Label": "Cart Revolution" },
-    "X": { "Type": "Key", "Key": "F3", "Label": "Discount" },
-    "Y": { "Type": "Key", "Key": "F4", "Label": "Loud Exclamation" },
-    "L1+A": { "Type": "Key", "Key": "F5", "Label": "Overcharge" },
-    "L1+B": { "Type": "Key", "Key": "F6", "Label": "Pushcart" },
-    "R1+A": { "Type": "Key", "Key": "F9", "Label": "White Potion", "TurboEnabled": true, "Mode": "Burst", "TurboIntervalMs": 90 }
+    "A": {
+      "Type": "Key",
+      "Key": "F1",
+      "Label": "Mammonite",
+      "TurboEnabled": true,
+      "Mode": "Standard",
+      "TurboIntervalMs": 60
+    },
+    "B": {
+      "Type": "Key",
+      "Key": "F2",
+      "Label": "Cart Revolution"
+    },
+    "X": {
+      "Type": "Key",
+      "Key": "F3",
+      "Label": "Discount"
+    },
+    "Y": {
+      "Type": "Key",
+      "Key": "F4",
+      "Label": "Loud Exclamation"
+    },
+    "L1+A": {
+      "Type": "Key",
+      "Key": "F5",
+      "Label": "Overcharge"
+    },
+    "L1+B": {
+      "Type": "Key",
+      "Key": "F6",
+      "Label": "Pushcart"
+    },
+    "R1+A": {
+      "Type": "Key",
+      "Key": "F9",
+      "Label": "White Potion",
+      "TurboEnabled": true,
+      "Mode": "Burst",
+      "TurboIntervalMs": 90
+    }
   },
   "RenewalSkillInterruptMs": 400,
   "PreRenewalSkillInterruptMs": 700

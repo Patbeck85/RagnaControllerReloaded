@@ -1,6 +1,6 @@
 {
   "Name": "Minstrel",
-  "Class": "Musician",
+  "Class": "Bard",
   "MouseSensitivity": 1.0,
   "Deadzone": 0.12,
   "MovementCurve": 1.4,

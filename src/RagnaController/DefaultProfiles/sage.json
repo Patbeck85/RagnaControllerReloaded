@@ -1,6 +1,6 @@
 {
   "Name": "Sage",
-  "Class": "Magic Support",
+  "Class": "Sage",
   "ActionRpgMode": false,
   "MouseSensitivity": 1.2,
   "Deadzone": 0.12,
@@ -28,7 +28,7 @@
   "SmartSkillEnabled": true,
   "TabCycleMs": 80,
   "AimSensitivity": 22,
-  "AimDeadzone": 0.20,
+  "AimDeadzone": 0.2,
   "MageEnabled": true,
   "MageBoltKeyVK": 86,
   "MageBoltCastDelayMs": 1200,

@@ -1,6 +1,6 @@
 {
   "Name": "Stalker",
-  "Class": "Thief",
+  "Class": "Stalker",
   "MouseSensitivity": 1.4,
   "Deadzone": 0.15,
   "MovementCurve": 1.8,
