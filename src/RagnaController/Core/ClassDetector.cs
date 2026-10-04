@@ -255,22 +255,20 @@ namespace RagnaController.Core
                 }
 
         /// <summary>
-        /// Determines if a ButtonAction represents a class-specific skill.
-        /// </summary>
-        private static bool IsSkillAction(ButtonAction action)
-        {
-            // Movement, basic attack, potion, etc. are not class-specific
-            if (action.Type == ActionType.Key ||
-                action.Type == ActionType.LeftClick ||
-                action.Type == ActionType.RightClick ||
-                action.Type == ActionType.Scroll ||
-                action.Type == ActionType.Combo ||
-                action.Type == ActionType.SwitchWindow ||
-                action.Type == ActionType.RoFeature)
-                return false;
+                /// Determines if a ButtonAction represents a class-specific skill.
+                /// </summary>
+                private static bool IsSkillAction(ButtonAction action)
+                {
+                    // Only Key-type actions can be skills
+                    if (action.Type != ActionType.Key)
+                        return false;
 
-            return action.Type == ActionType.Key; // Skills are mapped as Key type
-        }
+                    // Movement, basic attack, potion, etc. are not class-specific skills.
+                    // A skill is a Key action whose VirtualKey appears in SkillToClassMap.
+                    // This ensures only mapped skill keys (F-keys, number keys, letter keys for skills)
+                    // are counted, not movement keys (arrows, WASD) or basic attack.
+                    return action.Key != VirtualKey.None && SkillToClassMap.ContainsKey(action.Key);
+                }
 
         /// <summary>
         /// Gets the recommended EnginePreset for a detected class.

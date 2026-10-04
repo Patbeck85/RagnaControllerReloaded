@@ -419,12 +419,24 @@
 **Verifiziert:** Build 0 Fehler, 301/301 Tests PASS.
 
 ### 🟥 UI-004: IsSkillAction zu breite Definition (S3)
-**Date:** 2026-10-04 | **Severity:** S3 — Könnte nicht-skill Keys als Skills zählen | **Status:** bekannt
+**Date:** 2026-10-04 | **Severity:** S3 — Konnte nicht-skill Keys als Skills zählen | **Status:** ✅ ERLEDIGT (2026-10-04)
 **File:** src/RagnaController/Core/ClassDetector.cs (Zeilen 260-273)
-**Fundament:** Die Methode `IsSkillAction` gibt `true` für **jede** Key-Type-Action zurück (Zeile 272: `return action.Type == ActionType.Key;`). Bewegungsschlüssel, Grundangriff etc. würden damit als Skill Aktionen gewertet.
-**Auswirkung:** Könnte die Gewichtungs-Zählung in `DetectClass` beeinflussen, wenn nicht-skill Keys versehentlich mitgezählt werden.
-**Confidence:** mittel
-**Suggested Feinjustierung:** Explizitere Prüfung, welche Key-Typen tatsächlich Skills sind (z.B. nur bestimmte Buchstaben/Nummern-Schlüssel, keine Richtungstasten).
+**Fundament:** Die Methode `IsSkillAction` hatte einen logischen Widerspruch: Sie gab für `ActionType.Key` zuerst `false` zurück, dann versuchte am Ende `action.Type == ActionType.Key` was immer `false` war. Resultat: **Keine Skills wurden je für Klassenerkennung gezählt**.
+**Lösung:** Logik korrigiert auf:
+1. Nur `ActionType.Key` können Skills sein
+2. Zusätzlich muss der `VirtualKey` im `SkillToClassMap` existieren
+3. `VirtualKey.None` wird ausgeschlossen
+**Code:**
+```csharp
+private static bool IsSkillAction(ButtonAction action)
+{
+    if (action.Type != ActionType.Key)
+        return false;
+    return action.Key != VirtualKey.None && SkillToClassMap.ContainsKey(action.Key);
+}
+```
+**Impact:** Klassenerkennung zählt jetzt nur tatsächlich gemappte Skill-Keys (F-Keys, Nummern-Keys, Buchstaben-Keys für Skills), keine Bewegungstasten (Pfeile, WASD) oder Grundangriff.
+**Verifiziert:** Build 0 Fehler, 301/301 Tests PASS.
 
 ## Metriken
 - **Build:** 0 Errors ✅ (24 Vorwarnungen, keine neuen durch ROB-002)
