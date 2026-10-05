@@ -1,6 +1,7 @@
 <Window x:Class="RagnaController.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:RagnaController.Core"
         Title="Settings" Width="560" Height="680"
         MinWidth="520" MinHeight="620" ResizeMode="CanResize"
         Background="Transparent" WindowStyle="None" AllowsTransparency="True"
@@ -28,11 +29,7 @@
                     <!-- Header -->
                     <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
                         <Border Width="4" Height="22" Background="{StaticResource AccentBlue}" Effect="{StaticResource BlueGlow}" Margin="0,0,10,0"/>
-                        <TextBlock Text="RAGNACONTROLLER" Style="{StaticResource BrandWordmark}"/>
-                        <Border Background="{StaticResource BgTertiary}" BorderBrush="{StaticResource BgBorder}" BorderThickness="1"
-                                CornerRadius="{StaticResource RadiusSm}" Padding="6,2" Margin="10,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Text="SETTINGS" Foreground="{StaticResource TextTertiary}" FontSize="9" FontFamily="Consolas" FontWeight="Bold"/>
-                        </Border>
+                        <TextBlock Text="{core:Loc SettingsWindow_Header}" Style="{StaticResource BrandWordmark}"/>
                     </StackPanel>
 
                     <!-- Content -->
@@ -44,128 +41,128 @@
                             <Border Style="{StaticResource GlassPanel}">
                                 <StackPanel>
                                     <ComboBox x:Name="ProfileCombo" ItemsSource="{Binding}" SelectedIndex="-1"
-                                              Style="{StaticResource DarkComboBox}"
-                                              ToolTip="Active profile"/>
+                                                                                  Style="{StaticResource DarkComboBox}"
+                                                                                  ToolTip="{core:Loc Settings_ActiveProfile_Tooltip}"/>
                     
-                                    <CheckBox x:Name="ChkAutoLoadProfile" Content="Auto-load last profile"
-                                              Click="ChkAutoLoadProfile_Click"/>
+                                    <CheckBox x:Name="ChkAutoLoadProfile" Content="{core:Loc Settings_AutoLoadProfile}"
+                                                                                  Click="ChkAutoLoadProfile_Click"/>
                     
-                                    <TextBlock Text="Save current profile on close" Style="{StaticResource BodyText}" Margin="0,10,0,6"/>
-                                    <TextBlock x:Name="CurrentProfileText" Text="No profile loaded"
-                                               Foreground="{StaticResource TextTertiary}" FontSize="9" FontFamily="Consolas" Margin="0,0,0,8"/>
+                                    <TextBlock Text="{core:Loc Settings_SaveProfileOnClose}" Style="{StaticResource BodyText}" Margin="0,10,0,6"/>
+                                                                        <TextBlock x:Name="CurrentProfileText" Text="{core:Loc Settings_NoProfileLoaded}"
+                                                                                   Foreground="{StaticResource TextTertiary}" FontSize="9" FontFamily="Consolas" Margin="0,0,0,8"/>
                                 </StackPanel>
                             </Border>
 
                             <!-- Engine Settings -->
-                            <TextBlock Text="ENGINE" Style="{StaticResource Eyebrow}"/>
-                            <Border Style="{StaticResource GlassPanel}">
-                                <StackPanel>
-                                    <CheckBox x:Name="ChkStartWithWindows" Content="Start with Windows"
-                                              Click="ChkStartWithWindows_Click"/>
+                            <TextBlock Text="{core:Loc Settings_Engine}" Style="{StaticResource Eyebrow}"/>
+                                                        <Border Style="{StaticResource GlassPanel}">
+                                                            <StackPanel>
+                                                                <CheckBox x:Name="ChkStartWithWindows" Content="{core:Loc Settings_StartWithWindows}"
+                                                                          Click="ChkStartWithWindows_Click"/>
                     
-                                    <CheckBox x:Name="ChkMinimizeToTray" Content="Minimize to tray on close"
-                                                                          Click="ChkMinimizeToTray_Click"/>
-                    
-                                    <!-- Engine State Display -->
-                                    <TextBlock x:Name="EngineStateText" Text="Ready"
-                                               Foreground="{StaticResource TextSecondary}" FontSize="9" FontFamily="Consolas" Margin="0,10,0,6"/>
-                    
-                                    <!-- Show Latency Checkbox -->
-                                    <CheckBox x:Name="ChkShowLatency" Content="Show Latency"
-                                                                          Click="ChkShowLatency_Click"/>
+                                    <CheckBox x:Name="ChkMinimizeToTray" Content="{core:Loc Settings_MinimizeToTray}"
+                                                                                                              Click="ChkMinimizeToTray_Click"/>
+
+                                                                        <!-- Engine State Display -->
+                                                                        <TextBlock x:Name="EngineStateText" Text="{core:Loc Settings_EngineState_Ready}"
+                                                                                   Foreground="{StaticResource TextSecondary}" FontSize="9" FontFamily="Consolas" Margin="0,10,0,6"/>
+
+                                                                        <!-- Show Latency Checkbox -->
+                                                                        <CheckBox x:Name="ChkShowLatency" Content="{core:Loc Settings_ShowLatency}"
+                                                                                                              Click="ChkShowLatency_Click"/>
                                 </StackPanel>
                             </Border>
 
                             <!-- Advanced Settings -->
-                            <TextBlock Text="ADVANCED" Style="{StaticResource Eyebrow}"/>
-                            <Border Style="{StaticResource GlassPanel}">
-                                <StackPanel>
-                                    <CheckBox x:Name="ChkAutoStart" Content="Enable Auto-Start"
-                                                                          Click="ChkAutoStart_Click"/>
-                    
-                                    <CheckBox x:Name="ChkSound" Content="Enable Sound"
-                                                                          Click="ChkSound_Click"/>
-                    
-                                    <CheckBox x:Name="ChkRumble" Content="Enable Rumble Feedback"
-                                                                          Click="ChkRumble_Click"/>
-                    
-                                    <CheckBox x:Name="ChkHapticMetronome" Content="Enable Haptic Metronome"
-                                                                          Click="ChkHapticMetronome_Click"/>
-                    
-                                    <CheckBox x:Name="ChkStartInMiniMode" Content="Start in Mini Mode"
-                                                                          Click="ChkStartInMiniMode_Click"/>
-                    
-                                    <CheckBox x:Name="ChkSmartStandby" Content="Enable Smart Standby (AFK Battery Saver)"
-                                                                          Click="ChkSmartStandby_Click"/>
-                    
-                                    <TextBox x:Name="TxtStandbyMinutes" Text="5"
-                                             Foreground="{StaticResource TextPrimary}" FontSize="10" Width="60" Height="40"
-                                             BorderBrush="{StaticResource BgBorder}" BorderThickness="1"
-                                             Padding="8,0" Margin="0,4"/>
-                    
-                                    <CheckBox x:Name="ChkFocusLock" Content="Enable Focus Lock"
-                                                                          Click="ChkFocusLock_Click"/>
-                    
-                                    <ComboBox x:Name="LogLevelCombo" 
-                                              Width="160" Margin="0,4"
-                                              Style="{StaticResource DarkComboBox}"
-                                              ToolTip="Set the minimum log level for file output"
-                                              SelectionChanged="LogLevelCombo_SelectionChanged"/>
-                    
-                                    <CheckBox x:Name="ChkDiscordRPC" Content="Enable Discord Rich Presence"
-                                                                          Click="ChkDiscordRPC_Click"/>
-                    
-                                    <CheckBox x:Name="ChkVoiceAnnouncements" Content="Enable Voice Announcements"
-                                                                          Click="ChkVoiceAnnouncements_Click"/>
-                    
-                                    <CheckBox x:Name="ChkTelemetry" Content="Enable Anonymous Telemetry"
-                                                                          Click="ChkTelemetry_Click"/>
-                    
-                                    <ComboBox x:Name="LanguageCombo" 
-                                              Width="160" Margin="0,4"
-                                              Style="{StaticResource DarkComboBox}"
-                                              ToolTip="Select the application language"
-                                              SelectionChanged="LanguageCombo_SelectionChanged"/>
+                            <TextBlock Text="{core:Loc Settings_Advanced}" Style="{StaticResource Eyebrow}"/>
+                                                        <Border Style="{StaticResource GlassPanel}">
+                                                            <StackPanel>
+                                                                <CheckBox x:Name="ChkAutoStart" Content="{core:Loc Settings_EnableAutoStart}"
+                                                                                                      Click="ChkAutoStart_Click"/>
 
-                                    <!-- Overlay Customization Settings -->
-                                                                <TextBlock Text="OVERLAY CUSTOMIZATION" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
-                                                                <Border Style="{StaticResource GlassPanel}">
-                                                                    <StackPanel>
-                                                                        <TextBlock Text="Theme" Style="{StaticResource BodyText}" Margin="0,0,0,4"/>
-                                                                        <ComboBox x:Name="OverlayThemeCombo" 
-                                                                                  Width="160" Margin="0,0,0,4"
+                                                                <CheckBox x:Name="ChkSound" Content="{core:Loc Settings_EnableSound}"
+                                                                                                      Click="ChkSound_Click"/>
+
+                                                                <CheckBox x:Name="ChkRumble" Content="{core:Loc Settings_EnableRumble}"
+                                                                                                      Click="ChkRumble_Click"/>
+
+                                                                <CheckBox x:Name="ChkHapticMetronome" Content="{core:Loc Settings_EnableHapticMetronome}"
+                                                                                                      Click="ChkHapticMetronome_Click"/>
+
+                                                                <CheckBox x:Name="ChkStartInMiniMode" Content="{core:Loc Settings_StartInMiniMode}"
+                                                                                                      Click="ChkStartInMiniMode_Click"/>
+
+                                                                <CheckBox x:Name="ChkSmartStandby" Content="{core:Loc Settings_EnableSmartStandby}"
+                                                                                                      Click="ChkSmartStandby_Click"/>
+
+                                                                <TextBox x:Name="TxtStandbyMinutes" Text="5"
+                                                                         Foreground="{StaticResource TextPrimary}" FontSize="10" Width="60" Height="40"
+                                                                         BorderBrush="{StaticResource BgBorder}" BorderThickness="1"
+                                                                         Padding="8,0" Margin="0,4"/>
+
+                                                                <CheckBox x:Name="ChkFocusLock" Content="{core:Loc Settings_EnableFocusLock}"
+                                                                                                      Click="ChkFocusLock_Click"/>
+
+                                                                <ComboBox x:Name="LogLevelCombo" 
+                                                                          Width="160" Margin="0,4"
+                                                                          Style="{StaticResource DarkComboBox}"
+                                                                          ToolTip="{core:Loc Settings_LogLevel_Tooltip}"
+                                                                          SelectionChanged="LogLevelCombo_SelectionChanged"/>
+                    
+                                    <CheckBox x:Name="ChkDiscordRPC" Content="{core:Loc Settings_EnableDiscordRPC}"
+                                                                                                              Click="ChkDiscordRPC_Click"/>
+
+                                                                        <CheckBox x:Name="ChkVoiceAnnouncements" Content="{core:Loc Settings_EnableVoiceAnnouncements}"
+                                                                                                              Click="ChkVoiceAnnouncements_Click"/>
+
+                                                                        <CheckBox x:Name="ChkTelemetry" Content="{core:Loc Settings_EnableTelemetry}"
+                                                                                                              Click="ChkTelemetry_Click"/>
+
+                                                                        <ComboBox x:Name="LanguageCombo" 
+                                                                                  Width="160" Margin="0,4"
                                                                                   Style="{StaticResource DarkComboBox}"
-                                                                                  ToolTip="Select the overlay visual theme (Neon/Soft/Dark)"
-                                                                                  SelectionChanged="OverlayThemeCombo_SelectionChanged"/>
-                                    
-                                                                        <TextBlock Text="Opacity" Style="{StaticResource BodyText}" Margin="0,10,0,4"/>
-                                                                        <Slider x:Name="OverlayOpacitySlider" Minimum="0.3" Maximum="1.0" Value="0.9" 
-                                                                                SmallChange="0.05" LargeChange="0.1" IsSnapToTickEnabled="True" TickFrequency="0.05"
-                                                                                Margin="0,0,0,4" ValueChanged="OverlayOpacitySlider_ValueChanged"/>
-                                                                        <TextBlock x:Name="OverlayOpacityValue" Text="90%" Style="{StaticResource MutedText}" FontFamily="Consolas"/>
-                                    
-                                                                        <TextBlock Text="Font Scale" Style="{StaticResource BodyText}" Margin="0,10,0,4"/>
-                                                                        <Slider x:Name="OverlayFontScaleSlider" Minimum="0.7" Maximum="1.5" Value="1.0" 
-                                                                                SmallChange="0.05" LargeChange="0.1" IsSnapToTickEnabled="True" TickFrequency="0.05"
-                                                                                Margin="0,0,0,4" ValueChanged="OverlayFontScaleSlider_ValueChanged"/>
-                                                                        <TextBlock x:Name="OverlayFontScaleValue" Text="100%" Style="{StaticResource MutedText}" FontFamily="Consolas"/>
-                                                                    </StackPanel>
-                                                                </Border>
+                                                                                  ToolTip="{core:Loc Settings_Language_Tooltip}"
+                                                                                  SelectionChanged="LanguageCombo_SelectionChanged"/>
 
-                            <!-- Ragnarok Online Path Selector -->
-                                    <TextBlock Text="Ragnarok Online Setup" Style="{StaticResource BodyText}" Margin="0,14,0,4"/>
-                                    <ComboBox x:Name="RoExePathCombo" 
-                                              Width="400" Margin="0,0,0,4"
-                                              Style="{StaticResource DarkComboBox}"
-                                              ToolTip="Select or browse for the Ragnarok Online executable"
-                                              SelectionChanged="RoExePathCombo_SelectionChanged"/>
-                                    <TextBlock x:Name="LblRoExeStatus" Text=""
-                                             Foreground="{StaticResource TextTertiary}" FontSize="9" FontFamily="Consolas" Margin="0,0,0,10"/>
+                                                                        <!-- Overlay Customization Settings -->
+                                                                        <TextBlock Text="{core:Loc Settings_OverlayCustomization}" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
+                                                                        <Border Style="{StaticResource GlassPanel}">
+                                                                            <StackPanel>
+                                                                                <TextBlock Text="{core:Loc Settings_OverlayTheme_Label}" Style="{StaticResource BodyText}" Margin="0,0,0,4"/>
+                                                                                <ComboBox x:Name="OverlayThemeCombo" 
+                                                                                          Width="160" Margin="0,0,0,4"
+                                                                                          Style="{StaticResource DarkComboBox}"
+                                                                                          ToolTip="{core:Loc Settings_OverlayTheme_Tooltip}"
+                                                                                          SelectionChanged="OverlayThemeCombo_SelectionChanged"/>
+                                    
+                                                                        <TextBlock Text="{core:Loc Settings_OverlayOpacity_Label}" Style="{StaticResource BodyText}" Margin="0,10,0,4"/>
+                                                                                                                                                <Slider x:Name="OverlayOpacitySlider" Minimum="0.3" Maximum="1.0" Value="0.9" 
+                                                                                                                                                        SmallChange="0.05" LargeChange="0.1" IsSnapToTickEnabled="True" TickFrequency="0.05"
+                                                                                                                                                        Margin="0,0,0,4" ValueChanged="OverlayOpacitySlider_ValueChanged"/>
+                                                                                                                                                <TextBlock x:Name="OverlayOpacityValue" Text="90%" Style="{StaticResource MutedText}" FontFamily="Consolas"/>
 
-                                    <!-- Calibrate Button -->
-                                    <Button x:Name="BtnCalibrate" Content="Calibrate Gamepad"
-                                            Style="{StaticResource GhostButton}" Height="40" Padding="16,0"
-                                            Margin="0,0,0,10" Click="BtnCalibrate_Click"/>
+                                                                                                                                                <TextBlock Text="{core:Loc Settings_OverlayFontScale_Label}" Style="{StaticResource BodyText}" Margin="0,10,0,4"/>
+                                                                                                                                                <Slider x:Name="OverlayFontScaleSlider" Minimum="0.7" Maximum="1.5" Value="1.0" 
+                                                                                                                                                        SmallChange="0.05" LargeChange="0.1" IsSnapToTickEnabled="True" TickFrequency="0.05"
+                                                                                                                                                        Margin="0,0,0,4" ValueChanged="OverlayFontScaleSlider_ValueChanged"/>
+                                                                                                                                                <TextBlock x:Name="OverlayFontScaleValue" Text="100%" Style="{StaticResource MutedText}" FontFamily="Consolas"/>
+                                                                                                                                            </StackPanel>
+                                                                                                                                        </Border>
+
+                                                                                                    <!-- Ragnarok Online Path Selector -->
+                                                                                                            <TextBlock Text="{core:Loc Settings_RoExePath_Description}" Style="{StaticResource BodyText}" Margin="0,14,0,4"/>
+                                                                                                            <ComboBox x:Name="RoExePathCombo" 
+                                                                                                                      Width="400" Margin="0,0,0,4"
+                                                                                                                      Style="{StaticResource DarkComboBox}"
+                                                                                                                      ToolTip="{core:Loc Settings_RoExePath_Tooltip}"
+                                                                                                                      SelectionChanged="RoExePathCombo_SelectionChanged"/>
+                                                                                                            <TextBlock x:Name="LblRoExeStatus" Text=""
+                                                                                                                     Foreground="{StaticResource TextTertiary}" FontSize="9" FontFamily="Consolas" Margin="0,0,0,10"/>
+
+                                                                                                            <!-- Calibrate Button -->
+                                                                                                            <Button x:Name="BtnCalibrate" Content="{core:Loc Settings_Btn_Calibrate}"
+                                                                                                                    Style="{StaticResource GhostButton}" Height="40" Padding="16,0"
+                                                                                                                    Margin="0,0,0,10" Click="BtnCalibrate_Click"/>
 
                                     <!-- Version and Path Info -->
                                     <TextBlock x:Name="LblVersion" Text=""
@@ -180,12 +177,12 @@
                     <!-- Footer -->
                                         <StackPanel Grid.Row="2" Orientation="Horizontal"
                                                     HorizontalAlignment="Right" VerticalAlignment="Center">
-                                            <Button Content="Cancel" Click="BtnCancel_Click"
-                                                    Style="{StaticResource GhostButton}" Height="40" Padding="20,0" Margin="0,0,8,0"
-                                                    ToolTip="Cancel changes" AutomationProperties.Name="Cancel"/>
-                                            <Button Content="Apply" Click="BtnApply_Click"
-                                                    Style="{StaticResource PrimaryButton}" Height="40" Padding="20,0"
-                                                    ToolTip="Apply settings" AutomationProperties.Name="Apply"/>
+                                            <Button Content="{core:Loc Settings_Btn_Cancel}" Click="BtnCancel_Click"
+                                                                                                Style="{StaticResource GhostButton}" Height="40" Padding="20,0" Margin="0,0,8,0"
+                                                                                                ToolTip="{core:Loc Settings_Btn_Cancel_Tooltip}" AutomationProperties.Name="{core:Loc Settings_Btn_Cancel}"/>
+                                                                                        <Button Content="{core:Loc Settings_Btn_Apply}" Click="BtnApply_Click"
+                                                                                                Style="{StaticResource PrimaryButton}" Height="40" Padding="20,0"
+                                                                                                ToolTip="{core:Loc Settings_Btn_Apply_Tooltip}" AutomationProperties.Name="{core:Loc Settings_Btn_Apply}"/>
                                         </StackPanel>
                 </Grid>
             </Border>

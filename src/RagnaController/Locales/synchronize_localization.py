@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 
 # Pfad zum Locales-Verzeichnis
-locales_dir = Path("/mnt/c/RagnaController/src/RagnaController/Locales")
+locales_dir = Path("C:/Hermes/RagnaController/src/RagnaController/Locales")
 
 # en.json laden
 en_path = locales_dir / "en.json"

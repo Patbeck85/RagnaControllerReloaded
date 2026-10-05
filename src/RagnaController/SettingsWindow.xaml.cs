@@ -305,17 +305,12 @@ namespace RagnaController
         private void BtnClose_Click(object sender, RoutedEventArgs e) => Close();
 
         private void BtnTelemetryInfo_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show(
-                "Anonymous Telemetry Information\n\n" +
-                "This feature sends anonymous data to help improve RagnaController:\n\n" +
-                "• App version and operating system\n" +
-                "• Crash reports with stack traces\n" +
-                "• Basic usage statistics (no personal data)\n\n" +
-                "No sensitive information like usernames, passwords, or game progress is collected.\n\n" +
-                "Data is sent via Discord Webhook for easy monitoring.",
-                "Telemetry Info", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
+                {
+                    MessageBox.Show(
+                        LocalizationManager.GetLocalizedString("Settings_TelemetryInfo_Message"),
+                        LocalizationManager.GetLocalizedString("Settings_TelemetryInfo_Title"),
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -331,11 +326,11 @@ namespace RagnaController
             await Task.Delay(800);
            
             if (!controllerSvc.IsConnected)
-            {
-                EngineStateText.Text = "No gamepad connected";
-                EngineStateText.Foreground = Brushes.OrangeRed;
-                return;
-            }
+                        {
+                            EngineStateText.Text = LocalizationManager.GetLocalizedString("Settings_CalibNoGamepad");
+                            EngineStateText.Foreground = Brushes.OrangeRed;
+                            return;
+                        }
 
             BtnCalibrate.IsEnabled = false;
             ChkStartWithWindows.IsEnabled = false;
@@ -346,8 +341,8 @@ namespace RagnaController
 
             // 3-Second countdown — run async so UI thread stays responsive
             for (int i = 3; i > 0; i--)
-            {
-                EngineStateText.Text = string.Format("Calibrating... ({i})", i);
+                        {
+                            EngineStateText.Text = string.Format(LocalizationManager.GetLocalizedString("Settings_Calibrating"), i);
                
                 // Sample multiple times per second for accuracy
                 for (int sample = 0; sample < 10; sample++)
@@ -381,28 +376,28 @@ namespace RagnaController
             }
 
             EngineStateText.Foreground = Brushes.LimeGreen;
-            EngineStateText.Text = $"Calibration complete: {finalDeadzone} deadzone";
+                        EngineStateText.Text = string.Format(LocalizationManager.GetLocalizedString("Settings_CalibDone"), finalDeadzone);
            
             BtnCalibrate.IsEnabled = true;
             ChkStartWithWindows.IsEnabled = true;
         }
 
         private void BtnReportBug_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var psi = new ProcessStartInfo
                 {
-                    FileName = "https://github.com/Patbeck85/RagnaController/issues",
-                    UseShellExecute = true // CRITICAL for .NET 8 to open URLs
-                };
-                Process.Start(psi);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Could not open the browser:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
+                    try
+                    {
+                        var psi = new ProcessStartInfo
+                        {
+                            FileName = "https://github.com/Patbeck85/RagnaController/issues",
+                            UseShellExecute = true // CRITICAL for .NET 8 to open URLs
+                        };
+                        Process.Start(psi);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(string.Format(LocalizationManager.GetLocalizedString("Settings_DriverInstall_LaunchFailed"), ex.Message), LocalizationManager.GetLocalizedString("Settings_DriverInstallError_Message"), MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
 
         private void BtnTutorial_Click(object sender, RoutedEventArgs e)
         {
@@ -411,47 +406,46 @@ namespace RagnaController
         }
 
         private void BtnInstallDriver_Click(object sender, RoutedEventArgs e)
-        {
-            string installerPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AntiCheat", "install-interception.exe");
-
-            if (!File.Exists(installerPath))
-            {
-                MessageBox.Show("Installer not found! Please ensure that the AntiCheat folder has been extracted correctly.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
-
-            var result = MessageBox.Show(
-                "This process installs the Interception kernel driver.\n\n" +
-                "Administrator rights are required. After installation, the PC MUST be restarted.\n\n" +
-                "Install now?", 
-                "Driver Installation", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                try
                 {
-                    // Starts the installation "silent" (without annoying CMD window)
-                    var processInfo = new ProcessStartInfo
+                    string installerPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AntiCheat", "install-interception.exe");
+
+                    if (!File.Exists(installerPath))
                     {
-                        FileName = installerPath,
-                        Arguments = "/install",
-                        UseShellExecute = true,
-                        Verb = "runas", // Zwingt UAC (Admin-Abfrage)
-                        WindowStyle = ProcessWindowStyle.Hidden
-                    };
+                        MessageBox.Show(LocalizationManager.GetLocalizedString("Settings_DriverInstallError_Title"), LocalizationManager.GetLocalizedString("Settings_DriverInstallError_Message"), MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
 
-                    System.Diagnostics.Process? process = null;
-                    try { process = Process.Start(processInfo); } catch (Exception ex) { MessageBox.Show($"Launch failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error); return; }
-                    process?.WaitForExit();
+                    var result = MessageBox.Show(
+                        LocalizationManager.GetLocalizedString("Settings_DriverInstall_Confirm_Message"),
+                        LocalizationManager.GetLocalizedString("Settings_DriverInstall_Confirm_Title"),
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning);
 
-                    MessageBox.Show("Installation completed!\n\nPlease restart your PC now for the bypass to work.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        try
+                        {
+                            // Starts the installation "silent" (without annoying CMD window)
+                            var processInfo = new ProcessStartInfo
+                            {
+                                FileName = installerPath,
+                                Arguments = "/install",
+                                UseShellExecute = true,
+                                Verb = "runas", // Zwingt UAC (Admin-Abfrage)
+                                WindowStyle = ProcessWindowStyle.Hidden
+                            };
+
+                            System.Diagnostics.Process? process = null;
+                            try { process = Process.Start(processInfo); } catch (Exception ex) { MessageBox.Show(string.Format(LocalizationManager.GetLocalizedString("Settings_DriverInstall_LaunchFailed"), ex.Message), LocalizationManager.GetLocalizedString("Settings_DriverInstallError_Message"), MessageBoxButton.OK, MessageBoxImage.Error); return; }
+                            process?.WaitForExit();
+
+                            MessageBox.Show(LocalizationManager.GetLocalizedString("Settings_DriverInstall_Success_Message"), LocalizationManager.GetLocalizedString("Settings_DriverInstall_Success_Title"), MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(string.Format(LocalizationManager.GetLocalizedString("Settings_DriverInstall_Failed_Message"), ex.Message), LocalizationManager.GetLocalizedString("Settings_DriverInstall_Failed_Title"), MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Installation aborted or failed:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-        }
 
         private void BtnBrowseRoExe_Click(object sender, RoutedEventArgs e)
         {

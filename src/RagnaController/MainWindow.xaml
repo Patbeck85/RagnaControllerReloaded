@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:RagnaController"
         xmlns:ctrl="clr-namespace:RagnaController.Controls"
         xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:core="clr-namespace:RagnaController.Core"
         mc:Ignorable="d"
         Title="RagnaController" Height="800" Width="1200"
         MinHeight="600" MinWidth="900"
@@ -72,7 +73,7 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <ComboBox x:Name="ProfileCombo" Width="200" Style="{StaticResource DarkComboBox}" SelectionChanged="ProfileCombo_SelectionChanged" ToolTip="Active Profile" Grid.Column="0" Margin="8,4,0,4" VerticalAlignment="Center"/>
+                                <ComboBox x:Name="ProfileCombo" Width="200" Style="{StaticResource DarkComboBox}" SelectionChanged="ProfileCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_ProfileCombo_Tooltip}" Grid.Column="0" Margin="8,4,0,4" VerticalAlignment="Center"/>
                                 <Border Grid.Column="1" Width="36" Height="36" Background="{StaticResource AccentBlue}" CornerRadius="0,{StaticResource RadiusMd},{StaticResource RadiusMd},0" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Right" Effect="{StaticResource BlueGlow}">
                                     <Path Data="M0,0 L4,4 L8,0" Stroke="{StaticResource TextPrimary}" StrokeThickness="1.8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
