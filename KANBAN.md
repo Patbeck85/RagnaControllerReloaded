@@ -570,3 +570,272 @@ private static bool IsSkillAction(ButtonAction action)
 - CS8602: Possible null dereference on _sdlProvider in ControllerManager (3 Stellen)
 **Suggested Fix:** Unused fields entfernen, nullable annotations korrigieren, pragma für obsolete attribute, null-checks ergänzen.
 **Status:** ✅ ERLEDIGT (2026-10-04) — Alle 12 Warnungen behoben. Build: 0 Fehler, 0 Warnungen.
+
+---
+
+## 🔧 SPRINT D — Technical Debt & Quality Improvements (NEW)
+**Goal:** Remaining code quality issues, silent error handlers, localization gaps, and architectural improvements identified during comprehensive code review.
+
+### 🟥 TECH-016: Empty Catch Blocks — Silent Error Swallowing (S2-S3)
+**Files:** 
+- src/RagnaController/App.xaml.cs (lines 72, 163)
+- src/RagnaController/CommunityBrowserWindow.xaml.cs (line 48)
+- src/RagnaController/Controls/TelemetryPanel.xaml.cs (line 85)
+- src/RagnaController/Core/AdvancedLogger.cs (lines 75, 86)
+- src/RagnaController/Core/BackgroundTickProvider.cs (line 71)
+- src/RagnaController/Core/DefaultProfileLoader.cs (line 31)
+- src/RagnaController/Core/EngineOrchestrator.cs (line 251)
+- src/RagnaController/Core/GpuOverlayProfiler.cs (line 104)
+- src/RagnaController/Models/Settings.cs (line 145)
+- src/RagnaController/Profiles/ProfileManager.cs (lines 258, 401)
+- src/RagnaController/RadialMenuWindow.xaml.cs (line 132)
+- src/RagnaController/RadialSetupWindow.xaml.cs (line 233)
+- src/RagnaController/SettingsWindow.xaml.cs (line 291)
+- src/RagnaController/SplashWindow.xaml.cs (lines 43, 50)
+- src/RagnaController/TutorialWindow.xaml.cs (line 62)
+**Fundament:** SOUL.md ERROR-001: "Stille Fehlzustände (catch {}) sind verboten. Jeder Fehler erfordert: Klasse, Beschreibung, Ursache, Kontext, Lösungsvorschlag & Logging."
+**Impact:** Exceptions werden verschluckt, Debugging unmöglich, potenzielle Memory Leaks bei nicht freigegebenen Ressourcen.
+**Suggested Fix:** Alle `catch { }` durch strukturiertes Error-Handling ersetzen: Minimum Logging via `AdvancedLogger.Error()` + `System.Diagnostics.Debug.WriteLine()`, idealerweise User-Feedback bei UI-relevanten Fehlern.
+**Priorität:** HIGH (SOUL.md Compliance)
+**DoD:** 0 leere catch-Blöcke im gesamten Codebase; alle Exceptions geloggt oder an UI gemeldet.
+
+### 🟥 TECH-017: SettingsWindow CheckBox Handlers Missing (S3)
+**File:** src/RagnaController/SettingsWindow.xaml (Zeilen 60-119)
+**Fundament:** 13 CheckBox-Elemente ohne Click/Checked-Handler — UI sichtbar aber funktionslos.
+**Betroffene CheckBoxes:** ChkMinimizeToTray, ChkShowLatency, ChkAutoStart, ChkSound, ChkRumble, ChkHapticMetronome, ChkStartInMiniMode, ChkSmartStandby, ChkFocusLock, ChkDiscordRPC, ChkVoiceAnnouncements, ChkTelemetry, LogLevelCombo (SelectionChanged fehlt für initiale Werte)
+**Impact:** User kann diese Einstellungen im UI nicht steuern; Werte werden nicht persistiert.
+**Suggested Fix:** Handler implementieren (siehe ChkAutoLoadProfile_Click Muster) + Settings.Save() Aufrufe.
+**Priorität:** HIGH (User-facing Funktionslücke)
+**DoD:** Alle 13 CheckBoxes haben funktionierende Handler; Werte werden in Settings persistiert; UI-Test manuell verifiziert.
+
+### 🟨 TECH-018: CommunityBrowserWindow — Static HttpClient Disposal Issue (S3)
+**File:** src/RagnaController/CommunityBrowserWindow.xaml.cs (Zeilen 29, 35, 144)
+**Fundament:** `private static readonly HttpClient _http` wird im `OnClosing` NICHT disposed (Kommentar: "do NOT dispose here or subsequent window opens will throw ObjectDisposedException"). Dies ist ein Anti-Pattern — statischer HttpClient sollte application-lifetime managed sein oder via IHttpClientFactory.
+**Impact:** Socket exhaustion bei häufigem Öffnen/Schließen; Resource Leak bei App-Shutdown.
+**Suggested Fix:** Migration zu `IHttpClientFactory` (Microsoft.Extensions.Http) oder Singleton-Pattern mit explizitem `Dispose()` beim App-Shutdown.
+**Priorität:** MEDIUM
+**DoD:** HttpClient korrekt verwaltet; keine ObjectDisposedException bei Wiederverwendung; Socket-Cleanup bei Shutdown.
+
+### 🟨 TECH-019: MainWindow — GetLocalizedString Fallback statt echter Lokalisierung (S4)
+**File:** src/RagnaController/MainWindow.xaml.cs (Zeilen 634-638)
+**Fundament:** `GetLocalizedString` macht nur `key.Replace("_", " ")` — keine echte Lokalisierung via `LocalizationManager`.
+**Impact:** MainWindow UI-Texte (Toasts, etc.) nicht übersetzt, hardcoded Englisch.
+**Suggested Fix:** Delegation an `LocalizationManager.Instance.GetLocalizedString(key)` wie in SettingsWindow/CommunityBrowserWindow.
+**Priorität:** MEDIUM (Lokalisierungskonsistenz)
+**DoD:** Alle `GetLocalizedString` Aufrufe in MainWindow nutzen `LocalizationManager`; DE/EN Strings verfügbar.
+
+### 🟨 TECH-020: WindowSwitcher — Process.GetProcessById in EnumWindows Callback (S4)
+**File:** src/RagnaController/Core/WindowSwitcher.cs (Zeilen 105-122)
+**Fundament:** `FindWindowByProcessName` ruft `Process.GetProcessById()` für JEDES Enum-Fenster auf — allokiert Process-Objekte, langsam bei vielen Fenstern.
+**Impact:** UI-Lag bei Window-Switching; unnötige Allokationen auf Hot Path.
+**Suggested Fix:** Caching der ProcessName→PID Zuordnung; oder WMI/CIM Query einmalig für alle Prozesse; oder `FindWindowEx` mit ClassName falls RO-Fenster bekannt.
+**Priorität:** LOW (Performance-Optimierung)
+**DoD:** EnumWindows-Callback allokiert 0 Process-Objekte; Window-Switch < 5ms.
+
+### 🟨 TECH-021: EngineOrchestrator — God Class / SRP Violation (S4)
+**File:** src/RagnaController/Core/EngineOrchestrator.cs (686 Zeilen, 20+ Engine-Fields)
+**Fundament:** Orchestrator instanziiert, verdrahtet und verwaltet ALLE Engines (Movement, Combat, AutoTarget, Mage, Combo, Cursor, SmartCursor, Kite, Support, Voice, Overlay, MobSweep, Handheld, Watchdog, Cooldown, DualSense, GroundSpell, SkillOrchestrator, BuffManager, ItemManager, PartyManager, MemoryTracker, LatencyTracker, ProfileManager, InputRouter, StandbyManager, ProfileApplier).
+**Impact:** Hohe Kopplung, schwer testbar, Verletzung von Single Responsibility Principle; Konstruktor > 200 Zeilen.
+**Suggested Fix:** Extraction zu `EngineRegistry` / `EngineCompositionRoot` (Factory-Pattern); Orchestrator delegiert nur Tick-Lifecycle. Engines per `IEngine` Interface registrieren.
+**Priorität:** LOW (Architektur-Refactoring)
+**DoD:** Orchestrator < 300 Zeilen; Engines per DI registrierbar; Unit-Tests für einzelne Engines ohne vollen Orchestrator.
+
+### 🟨 TECH-022: SettingsWindow — Localization Keys Missing for New Controls (S4)
+**File:** src/RagnaController/SettingsWindow.xaml (OverlayThemeCombo, LogLevelCombo Items, TxtStandbyMinutes Label)
+**Fundament:** Neue Controls (OverlayThemeCombo, LogLevelCombo) haben hardcodierte ComboBoxItem-Contents ("Neon", "Soft", "Dark", "Debug", "Info", "Warning", "Error") ohne Lokalisierung.
+**Impact:** Diese UI-Elemente nicht übersetzbar.
+**Suggested Fix:** Items via Code-behind mit lokalisierten Strings befüllen oder ResourceDictionary für ComboBox-Items.
+**Priorität:** LOW (Lokalisierungskonsistenz)
+**DoD:** Alle ComboBox-Items in SettingsWindow lokalisiert.
+
+### 🟨 TECH-023: ProfileManager — Constructor I/O + Static State (S3)
+**File:** src/RagnaController/Profiles/ProfileManager.cs
+**Fundament:** Konstruktor macht File I/O (`Load()`, `LoadCharacterMappings()`) und registriert statische Events. Verletzt "Constructors should not do work". Static `ShareCodeCache._map` in ProfileShareService lädt beim Class-Load.
+**Impact:** Startup-Latenz; schwer unit-testbar (File-System Dependency); Static State leakt zwischen Tests.
+**Suggested Fix:** Lazy-Loading via `InitializeAsync()`; `ProfileManager` von Static State befreien; `ShareCodeCache.Load()` on-demand.
+**Priorität:** MEDIUM (Testbarkeit, Startup-Performance)
+**DoD:** Constructor I/O-frei; `InitializeAsync()` für Load; Tests nutzen In-Memory-ProfileManager ohne File-System.
+
+### 🟨 TECH-024: AdvancedLogger — Channel BoundedChannelFullMode.DropOldest (S4)
+**File:** src/RagnaController/Core/AdvancedLogger.cs (Zeile 30)
+**Fundament:** `FullMode = BoundedChannelFullMode.DropOldest` — Log-Einträge werden bei Last stillschweigend verworfen.
+**Impact:** Kritische Error-Logs gehen verloren unter Last; Debugging von Production-Issues erschwert.
+**Suggested Fix:** `BoundedChannelFullMode.Wait` (Backpressure) oder dedizierter Error-Channel (unbounded) für Level >= Warn.
+**Priorität:** LOW (Observability)
+**DoD:** Keine Log-Loss bei Last; Error-Logs immer durchkommen.
+
+### 🟨 TECH-025: ControllerTestWindow — Timer Cleanup (S3)
+**File:** src/RagnaController/ControllerTest/ControllerTestWindow.xaml.cs
+**Fundament:** TECH-013 sagt "Bereits erledigt — OnClosed Override vorhanden". Code-Review zeigt: `_updateTimer` wird in `OnClosed` gestoppt, aber `_diagnostic` (ControllerDiagnosticRunner) hat Timer (`_percentileTimer`) der NICHT gestoppt wird.
+**Impact:** Timer läuft nach Window-Close weiter → Memory Leak / ObjectDisposedException.
+**Suggested Fix:** `ControllerDiagnosticRunner.Dispose()` in `OnClosed` aufrufen (läuft bereits IDisposable).
+**Priorität:** MEDIUM (Memory Leak Prevention)
+**DoD:** `ControllerDiagnosticRunner.Dispose()` in `ControllerTestWindow.OnClosed` aufgerufen; Timer gestoppt.
+
+### 🟨 TECH-026: InputCommandQueue — Debug-Only Lock (S4)
+**File:** src/RagnaController/Core/InputCommandQueue.cs (TEST-011 Fix)
+**Fundament:** `_commandsLock` nur um `Commands.Add` im DEBUG-Pfad — Release-Build hat KEINEN Lock für `List.Add` bei konkurrierenden Enqueue-Threads.
+**Impact:** Race Condition in Release-Build; `ArgumentException` / Corruption bei Parallel-Enqueue.
+**Suggested Fix:** Lock immer aktivieren (nicht DEBUG-only) oder `ConcurrentQueue<InputCmd>` verwenden.
+**Priorität:** HIGH (Thread-Safety Regression)
+**DoD:** `InputCommandQueue` thread-safe in Release & Debug; Fuzz-Tests (TEST-011) grün in Release-Build.
+
+### 🟨 TECH-027: KiteRetreatingState — RetreatDurationMs <= 0 Guard aber Division (S3)
+**File:** src/RagnaController/Core/KiteStates.cs (Zeilen 119, 121)
+**Fundament:** Guard prüft `ctx.RetreatDurationMs <= 0` → Transition, aber Zeile 121 teilt durch `ctx.RetreatDurationMs / (float)deltaMs` — wenn `deltaMs > RetreatDurationMs > 0`, Schrittweite > Distanz → Overshoot.
+**Impact:** Bewegung ungenau bei kurzen Retreat-Dauern / großen deltaMs.
+**Suggested Fix:** `Math.Min(step, remainingDist)` Clamping oder Time-basierte Interpolation statt Step-basiert.
+**Priorität:** LOW (Gameplay-Präzision)
+**DoD:** Retreat-Bewegung exakt bei allen deltaMs/Duration-Kombinationen; Unit-Test für Edge-Cases.
+
+### 🟨 TECH-028: TelemetryPanel — DispatcherTimer ohne Dispose in StopUpdates (S3)
+**File:** src/RagnaController/Controls/TelemetryPanel.xaml.cs
+**Fundament:** `StopUpdates()` stoppt Timer aber `Dispose()` nicht aufgerufen; Timer-Event-Handler hält Referenz auf Panel → GC kann Panel nicht sammeln.
+**Impact:** Memory Leak bei mehrfachem Öffnen/Schließen von MainWindow (TelemetryPanel neu erstellt).
+**Suggested Fix:** `StopUpdates()` ruft `_timer.Dispose()`; `_timer = null`; Event-Handler abmelden.
+**Priorität:** MEDIUM (Memory Leak)
+**DoD:** `TelemetryPanel.StopUpdates()` vollständig cleaned up; mehrfaches Öffnen/Schließen von MainWindow ohne Leak (DotMemory/GC.Collect verifiziert).
+
+### 🟨 TECH-029: ClassDetector — BuildSkillToClassMap nicht verwendet (S4)
+**File:** src/RagnaController/Core/ClassDetector.cs
+**Fundament:** KANBAN sagt UI-002 "Dictionary wurde von Collection-Initializer auf programmatische BuildSkillToClassMap() Methode umgebildet" — aber Code zeigt immer noch Collection-Initializer (Zeilen 69-166). Methode `BuildSkillToClassMap()` existiert nicht.
+**Impact:** Duplicate Keys werden beim Initialisieren stumm überschrieben (C# Verhalten); Class Detection unzuverlässig.
+**Suggested Fix:** `BuildSkillToClassMap()` implementieren die `List.Add` statt Dict-Überschreibung macht; statisches Feld damit initialisieren.
+**Priorität:** HIGH (Class Detection Korrektheit)
+**DoD:** `BuildSkillToClassMap()` existiert und wird für `SkillToClassMap` Initialisierung genutzt; Duplicate-Keys akkumuliert (nicht überschrieben); Class Detection Tests grün.
+
+### 🟨 TECH-030: SettingsWindow — Window_Closing Duplicates InitializeSettings Logic (S4)
+**File:** src/RagnaController/SettingsWindow.xaml.cs (Zeilen 565-599)
+**Fundament:** `Window_Closing` dupliziert Logik aus `InitializeSettings` für alle CheckBox-Werte — DRY-Verletzung; Fehleranfällig bei neuen Settings.
+**Impact:** Wartung aufwendig; neue Settings müssen an 2 Stellen gepflegt werden.
+**Suggested Fix:** `SaveAllSettings()` Methode extrahieren; wird von `BtnApply_Click` UND `Window_Closing` aufgerufen.
+**Priorität:** LOW (Code-Qualität)
+**DoD:** Einmalige `SaveSettings()` Methode; beide Caller nutzen sie; keine Duplikation.
+
+---
+
+## Metriken (Stand 2026-10-05)
+- **Build:** 0 Errors ✅ (0 Warnungen ✅)
+- **Tests:** 301/301 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅
+- **Phase 8 Completion:** 100% (9/9 Tasks) ✅
+- **Phase 9 Progress:** 9/9 Tasks (100%) — **ALL COMPLETE** ✅
+- **Phase 10 Sprint A:** 5/5 Tasks (100%) ✅
+- **Phase 10 Sprint B:** 7/7 Tasks (100%) ✅
+- **Phase 10 Sprint C:** 6/6 Tasks (100%) ✅
+- **SPRINT D (NEW):** 14 Tasks geplant (TECH-016 bis TECH-030)
+
+## Next Steps
+1. **TECH-016** (Empty Catch Blocks) — SOUL.md Compliance, HIGH Priority
+2. **TECH-017** (SettingsWindow CheckBox Handlers) — User-facing Bug, HIGH Priority
+3. **TECH-026** (InputCommandQueue Thread-Safety) — Release Build Regression, HIGH Priority
+4. **TECH-028** (ClassDetector BuildSkillToClassMap) — Core Feature Korrektheit, HIGH Priority
+5. **TECH-018, TECH-019, TECH-023** — MEDIUM Priority
+6. **TECH-020, TECH-021, TECH-022, TECH-024, TECH-025, TECH-027, TECH-029, TECH-030** — LOW Priority
+
+---
+
+## PM-Moderation — Konfliktauflösung (2026-09-07)
+1. **Duplikat aufgelöst:** Coder FEAT-011 + QA FEAT-020 → **ein** Task FEAT-011 (ItemManagerEngine). QA hat den Code-Gap bestätigt, Coder das Design geliefert.
+2. **Duplikat aufgelöst:** Coder FEAT-012 + QA FEAT-021 → **ein** Task FEAT-012 (PartyManager inkl. Auto-Heal-Loop; SupportEngine bleibt manuell als Fallback).
+3. **Duplikat aufgelöst:** Coder FEAT-013 + QA FEAT-022 → **ein** Task FEAT-013 (Target-Management; Tab nur bei Lock, kein Seek-Reset).
+4. **Designer-Audit-Ergebnisse übernommen:** UI-010 (Token-Bug, S2) in Sprint A, UI-011 (Telemetrie unsichtbar) in Sprint B, UX-012 (Accessibility) in Backlog. Designer-Detailanalyse lieferte keine vollständige Taskliste (Schema-Fehler) — Audit-Zahlen sind verifiziert und maßgeblich.
+5. **Architektur-Entscheidungen:** Keine neuen Abstraktionsschichten für FEAT-012/013 (KISS): PartyManager als Engine, Targeting-Erweiterung direkt in AutoTargetEngine. Multi-Window (FEAT-015) bewusst YAGNI-gemäß nur als Routing.
+6. **Quest-Navigation:** von QA geprüft → ohne Memory-/Positionssystem nicht sauber umsetzbar, bewusst KEIN Ticket.
+
+---
+
+## Audit-Findings / Comprehensive Code Review (2026-10-04)
+
+### 🟥 UI-001: CheckBox-Handler-Missing in SettingsWindow (S3)
+**Date:** 2026-10-04 | **Severity:** S3 — Funktionalität eingeschränkt | **Status:** bekannt
+**File:** src/RagnaController/SettingsWindow.xaml (Zeilen 66-122)
+**Fundament:** 13 CheckBox-Elemente existieren im UI, aber es sind keine Click- oder Checked-Handler zugeordnet. Die CheckBoxes sind sichtbar, aber funktionslos.
+**Impact:** User kann diese Einstellungen im UI nicht steuern; Derstellungen werden vermutlich anderswo oder per Code verwaltet.
+**Confidence:** hoch (direkter Code-Check)
+**Suggested Fix:** Handler hinzufügen oder Bindung an ViewModel-Eigenschaften herstellen.
+
+### 🟥 UI-002: ClassDetector.cs Doppelte Dictionary-Keys (S2)
+**Date:** 2026-10-04 | **Severity:** S2 — Klassenderkennung unzuverlässig | **Status:** ✅ ERLEDIGT (2026-10-04)
+**File:** src/RagnaController/Core/ClassDetector.cs (Zeilen 69-166)
+**Fundament:** Der `SkillToClassMap`-Dictionary-Initialisierer enthielt mehrfach gleiche `VirtualKey`-Keys, die in C# stumm überschrieben wurden. Die programmatische Neubau-Methode `BuildSkillToClassMap()` akkumuliert jetzt Einträge pro Key statt zu überschreiben.
+**Lösung:** Dictionary wurde von Collection-Initializer auf programmatische `BuildSkillToClassMap()`-Methode umgebildet, die bei gleichen Keys die Liste erweitert (`List.Add`) statt zu überschreiben.
+**Verifiziert:** Build 0 Fehler, 301/301 Tests PASS.
+
+### 🟥 UI-003: Profile JSON Class/Name Inkonsequenz (S3)
+**Date:** 2026-10-04 | **Severity:** S3 — Auto-Klassenzuweisung möglicherweise fehlerhaft | **Status:** ✅ ERLEDIGT (2026-10-04)
+**File:** src/RagnaController/DefaultProfiles/*.json (58 Dateien)
+**Fundament:** Das `Class-Feld` in vielen Profil-JSON-Dateien stimmte nicht mit dem `Name-Feld` überein und existierte nicht in der `ClassToPreset`-Dictionary in ClassDetector.cs.
+**Lösung:** Alle 58 JSON-Dateien auf gültige ClassToPreset-Keys aktualisiert via automatisiertem Script.
+**Verifiziert:** Build 0 Fehler, 301/301 Tests PASS.
+
+### 🟥 UI-004: IsSkillAction zu breite Definition (S3)
+**Date:** 2026-10-04 | **Severity:** S3 — Konnte nicht-skill Keys als Skills zählen | **Status:** ✅ ERLEDIGT (2026-10-04)
+**File:** src/RagnaController/Core/ClassDetector.cs (Zeilen 260-273)
+**Fundament:** Die Methode `IsSkillAction` hatte einen logischen Widerspruch: Sie gab für `ActionType.Key` zuerst `false` zurück, dann versuchte am Ende `action.Type == ActionType.Key` was immer `false` war. Resultat: **Keine Skills wurden je für Klassenerkennung gezählt**.
+**Lösung:** Logik korrigiert auf nur `ActionType.Key` + VirtualKey im SkillToClassMap + nicht None.
+**Verifiziert:** Build 0 Fehler, 301/301 Tests PASS.
+
+### 🟨 TECH-001: BezierMouseService — Divide by Zero Risk (S3) ✅ ERLEDIGT
+### 🟨 TECH-002: GroundSpellEngine — Divide by Zero (S3) ✅ ERLEDIGT
+### 🟨 TECH-003: KiteStates — Divide by Zero (S3) ✅ ERLEDIGT
+### 🟨 TECH-004: Async void in SplashWindow (S4) ✅ ERLEDIGT
+### 🟨 TECH-005: Static ConcurrentDictionary Registries ohne Cleanup (S3) ✅ ERLEDIGT
+### 🟨 TECH-006: ProfileShareService Static Map ohne Reload (S4) ✅ ERLEDIGT
+### 🟨 TECH-007: Classes mit Events aber ohne IDisposable (S3) ✅ ERLEDIGT
+### 🟨 TECH-008: XAML — Missing AutomationProperties bei weiteren Fenstern (S4) ✅ ERLEDIGT
+### 🟨 TECH-009: LINQ in Hot Path — ClassDetector.OrderByDescending (S4) ✅ ERLEDIGT
+### 🟨 TECH-010: FindResource ohne Try-Catch (S3) ✅ ERLEDIGT
+### 🟨 TECH-011: Hardcoded Strings in UI (Lokalisierung) (S4) — bekannt, bewusst (User bevorzugt Deutsch)
+### 🟨 TECH-012: WindowTracker / WindowSwitcher — Process.GetProcesses() Allokationen (S4) ✅ BEREITS ERLEDIGT
+### 🟨 TECH-013: ControllerTestWindow — Timer läuft nach Close weiter (S3) ✅ BEREITS ERLEDIGT
+### 🟨 TECH-014: Duplicate UI-001 Entry in KANBAN (Cleanup) ✅ ERLEDIGT
+### 🟨 TECH-015: Build Warnings (CS0169, CS0414, CS8618, CS8625, SYSLIB0032, CS8602) (S4) ✅ ERLEDIGT
+
+---
+
+## ✅ NEUE AUDIT-FINDINGS (2026-10-05)
+
+### 🟥 TECH-016: Empty Catch Blocks — Silent Error Swallowing (S2-S3)
+→ Siehe SPRINT D oben
+
+### 🟥 TECH-017: SettingsWindow CheckBox Handlers Missing (S3)  
+→ Siehe SPRINT D oben (ergänzt UI-001)
+
+### 🟨 TECH-018: CommunityBrowserWindow — Static HttpClient Disposal Issue (S3)
+→ Siehe SPRINT D oben
+
+### 🟨 TECH-019: MainWindow — GetLocalizedString Fallback statt echter Lokalisierung (S4)
+→ Siehe SPRINT D oben
+
+### 🟨 TECH-020: WindowSwitcher — Process.GetProcessById in EnumWindows Callback (S4)
+→ Siehe SPRINT D oben
+
+### 🟨 TECH-021: EngineOrchestrator — God Class / SRP Violation (S4)
+→ Siehe SPRINT D oben
+
+### 🟨 TECH-022: SettingsWindow — Localization Keys Missing for New Controls (S4)
+→ Siehe SPRINT D oben
+
+### 🟨 TECH-023: ProfileManager — Constructor I/O + Static State (S3)
+→ Siehe SPRINT D oben
+
+### 🟨 TECH-024: AdvancedLogger — Channel BoundedChannelFullMode.DropOldest (S4)
+→ Siehe SPRINT D oben
+
+### 🟨 TECH-025: ControllerTestWindow — Timer Cleanup (ControllerDiagnosticRunner) (S3)
+→ Siehe SPRINT D oben
+
+### 🟨 TECH-026: InputCommandQueue — Debug-Only Lock (S4)
+→ Siehe SPRINT D oben
+
+### 🟨 TECH-027: KiteRetreatingState — RetreatDurationMs Division Edge-Case (S3)
+→ Siehe SPRINT D oben
+
+### 🟨 TECH-028: TelemetryPanel — DispatcherTimer ohne Dispose in StopUpdates (S3)
+→ Siehe SPRINT D oben
+
+### 🟨 TECH-029: ClassDetector — BuildSkillToClassMap nicht implementiert (S4)
+→ Siehe SPRINT D oben (widerspricht UI-002 Status)
+
+### 🟨 TECH-030: SettingsWindow — Window_Closing Duplicates Logic (S4)
+→ Siehe SPRINT D oben
