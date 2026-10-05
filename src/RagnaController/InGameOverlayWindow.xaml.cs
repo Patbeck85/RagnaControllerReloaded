@@ -35,7 +35,9 @@ namespace RagnaController
         private string _currentLayer = "BASE";
 
         // Constructor with ControllerManager (for new code using unified abstraction)
-        public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker, ControllerManager controllerManager, Settings settings = null) : base()
+                #pragma warning disable CS8625
+                public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker, ControllerManager? controllerManager, Settings settings = null) : base()
+                #pragma warning restore CS8625
         {
             InitializeComponent();
             _controllerManager = controllerManager;
@@ -101,9 +103,11 @@ namespace RagnaController
         }
 
         // Backward compatibility constructor (for existing code without ControllerManager)
-        public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker, Settings settings = null) : this(messenger, tracker, null!, settings)
-        {
-        }
+                #pragma warning disable CS8625
+                public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker, Settings settings = null) : this(messenger, tracker, null, settings)
+                #pragma warning restore CS8625
+                {
+                }
 
         private void InitializeOverlayState()
         {

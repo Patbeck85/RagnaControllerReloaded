@@ -22,7 +22,7 @@ namespace RagnaController
         private readonly ProfileManager _manager;
         private Settings       _settings = Settings.Load();
         private readonly System.Collections.Generic.List<IDisposable> _subs = new();
-        private bool _isMiniMode = false, _actionRpgOn = true;
+        private bool _isMiniMode = false;
         private readonly List<string> _logBuffer = new();
         private MiniModeWindow? _miniWindow;
         private bool _wasFocusLocked;
@@ -41,8 +41,6 @@ namespace RagnaController
         private TextBlock? ToastText;
         private SolidColorBrush? ToastBg;
 
-        // Controller canvas elements - NOT in XAML with x:Name (they're in a Canvas without names)
-        private Ellipse? DeadzoneRing;
 #pragma warning restore CS0649
 
         public MainWindow(HybridEngine engine, ProfileManager manager, MainViewModel vm)

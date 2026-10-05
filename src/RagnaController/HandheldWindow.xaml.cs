@@ -19,7 +19,7 @@ namespace RagnaController
         private SettingsWindow?              _settingsWin;
         private readonly Settings            _settings;
 
-        public HandheldWindow(HybridEngine engine, ProfileManager manager, Settings settings = null)
+        public HandheldWindow(HybridEngine engine, ProfileManager manager, Settings? settings = null)
         {
             InitializeComponent();
             _engine    = engine;

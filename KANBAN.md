@@ -520,7 +520,7 @@ private static bool IsSkillAction(ButtonAction action)
 ### 🟨 TECH-008: XAML — Missing AutomationProperties bei weiteren Fenstern (S4)
 **Fundament:** UX-012 hat 22 Buttons in 8 Fenstern gefixt. Prüfen: DeveloperConsoleWindow, MiniModeWindow, RadialMenuWindow, DaisyWheelWindow, HandheldWindow, InGameOverlayWindow, ProfileWizardWindow, TutorialWindow, SettingsWindow.
 **Suggested Fix:** Audit aller icon-only Buttons + `AutomationProperties.Name` nachpflegen.
-**Status:** teilweise erledigt (UX-012), Rest offen
+**Status:** ✅ ERLEDIGT (2026-10-04) — SettingsWindow Cancel/Apply Buttons: AutomationProperties.Name + ToolTip hinzugefügt. ComboEditorWindow Save/Cancel Buttons: AutomationProperties.Name + ToolTip hinzugefügt. Weitere Fenster hatten bereits AutomationProperties (MainWindow, ButtonRemappingWindow, ComboEditorWindow Close, CommunityBrowserWindow, DeveloperConsoleWindow, ProfileLibraryWindow, ProfileWizardWindow, RadialSetupWindow, TutorialWindow).
 
 ### 🟨 TECH-009: LINQ in Hot Path — ClassDetector.OrderByDescending (S4)
 **File:** src/RagnaController/Core/ClassDetector.cs (Zeile 253)
@@ -558,4 +558,15 @@ private static bool IsSkillAction(ButtonAction action)
 ### 🟨 TECH-014: Duplicate UI-001 Entry in KANBAN (Cleanup)
 **Fundament:** UI-001 (CheckBox-Handler) steht doppelt in KANBAN (Zeilen 350-368 und 390-394).
 **Suggested Fix:** Doppelte Sektion entfernen.
-**Status:** offen
+**Status:** ✅ ERLEDIGT (2026-10-04) — Duplikat entfernt.
+
+### 🟨 TECH-015: Build Warnings (CS0169, CS0414, CS8618, CS8625, SYSLIB0032, CS8602) (S4)
+**Files:** MainWindow.xaml.cs, InGameOverlayWindow.xaml.cs, HandheldWindow.xaml.cs, GpuOverlayProfiler.cs, FrameBudgetMonitor.cs, EngineOrchestrator.cs, ControllerService.cs, ControllerManager.cs
+**Fundament:** 12 eindeutige Compiler-Warnungen (je 2x für Haupt- und WPFTMP-Projekt):
+- CS0169/CS0414: Unused fields (DeadzoneRing, _actionRpgOn, _lastPresentTime, _logger in FrameBudgetRegistry, _lastFrameTimeMs)
+- CS8618: Non-nullable field _logger in EngineOrchestrator nicht initialisiert
+- CS8625: Null literal passed to non-nullable parameter in InGameOverlayWindow chained constructors
+- SYSLIB0032: Obsolete HandleProcessCorruptedStateExceptionsAttribute in ControllerService
+- CS8602: Possible null dereference on _sdlProvider in ControllerManager (3 Stellen)
+**Suggested Fix:** Unused fields entfernen, nullable annotations korrigieren, pragma für obsolete attribute, null-checks ergänzen.
+**Status:** ✅ ERLEDIGT (2026-10-04) — Alle 12 Warnungen behoben. Build: 0 Fehler, 0 Warnungen.

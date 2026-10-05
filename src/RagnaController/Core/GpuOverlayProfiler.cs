@@ -32,7 +32,6 @@ namespace RagnaController.Core
         private int _frameCount = 0;
         private int _droppedFrames = 0;
         private double _lastFrameTimeMs = 0;
-        private long _lastPresentTime = 0;
 
         // Render tier info (cached)
         private int _wpfRenderTier = -1;

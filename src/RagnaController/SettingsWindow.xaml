@@ -178,13 +178,15 @@
                     </ScrollViewer>
 
                     <!-- Footer -->
-                    <StackPanel Grid.Row="2" Orientation="Horizontal"
-                                HorizontalAlignment="Right" VerticalAlignment="Center">
-                        <Button Content="Cancel" Click="BtnCancel_Click"
-                                Style="{StaticResource GhostButton}" Height="40" Padding="20,0" Margin="0,0,8,0"/>
-                        <Button Content="Apply" Click="BtnApply_Click"
-                                Style="{StaticResource PrimaryButton}" Height="40" Padding="20,0"/>
-                    </StackPanel>
+                                        <StackPanel Grid.Row="2" Orientation="Horizontal"
+                                                    HorizontalAlignment="Right" VerticalAlignment="Center">
+                                            <Button Content="Cancel" Click="BtnCancel_Click"
+                                                    Style="{StaticResource GhostButton}" Height="40" Padding="20,0" Margin="0,0,8,0"
+                                                    ToolTip="Cancel changes" AutomationProperties.Name="Cancel"/>
+                                            <Button Content="Apply" Click="BtnApply_Click"
+                                                    Style="{StaticResource PrimaryButton}" Height="40" Padding="20,0"
+                                                    ToolTip="Apply settings" AutomationProperties.Name="Apply"/>
+                                        </StackPanel>
                 </Grid>
             </Border>
         </Border>

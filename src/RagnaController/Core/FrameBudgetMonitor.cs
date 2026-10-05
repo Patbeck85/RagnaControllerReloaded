@@ -161,7 +161,6 @@ namespace RagnaController.Core
     public static class FrameBudgetRegistry
     {
         private static readonly ConcurrentDictionary<string, FrameBudgetMonitor> _monitors = new();
-        private static readonly AdvancedLogger? _logger = null; // Set via Initialize
 
         public static void Initialize(AdvancedLogger? logger = null)
         {

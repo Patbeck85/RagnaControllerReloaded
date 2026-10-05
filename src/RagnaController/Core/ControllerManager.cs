@@ -121,11 +121,11 @@ namespace RagnaController.Core
         public event EventHandler? IsConnectedChanged;
 
         public void DetectController()
-        {
-            _sdlProvider.DetectController();
-            // Also trigger XInput fallback check
-            TryXInputFallback();
-        }
+                {
+                    _sdlProvider?.DetectController();
+                    // Also trigger XInput fallback check
+                    TryXInputFallback();
+                }
 
         public void SetRumble(float left, float right)
         {
@@ -209,20 +209,20 @@ namespace RagnaController.Core
                         BatteryLevel = _xInputProvider.GetBatteryLevel() ?? "Unknown";
 
                         // Switch active provider to XInput if SDL isn't connected
-                        if (!_sdlProvider.IsConnected && _activeProvider != _xInputProvider)
-                        {
-                            _activeProvider = _xInputProvider;
-                            ProviderChanged?.Invoke(this, EventArgs.Empty);
-                        }
+                                                if ((_sdlProvider?.IsConnected ?? false) == false && _activeProvider != _xInputProvider)
+                                                {
+                                                    _activeProvider = _xInputProvider;
+                                                    ProviderChanged?.Invoke(this, EventArgs.Empty);
+                                                }
                         return;
                     }
                 }
             }
 
             // No XInput controller found
-            if (!_sdlProvider.IsConnected)
-            {
-                IsConnected = false;
+                        if (!(_sdlProvider?.IsConnected ?? false))
+                        {
+                            IsConnected = false;
                 ControllerName = "No Controller";
                 ControllerType = "Unknown";
                 ControllerGuid = "";

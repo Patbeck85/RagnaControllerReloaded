@@ -209,7 +209,9 @@ namespace RagnaController.Core
 
         // ── SDL thread body (ALL SDL calls live here) ──────────────────────
 
+                #pragma warning disable SYSLIB0032
                 [System.Runtime.ExceptionServices.HandleProcessCorruptedStateExceptions]
+                #pragma warning restore SYSLIB0032
                 [System.Security.SecurityCritical]
                 private void SdlThreadLoop()
                 {

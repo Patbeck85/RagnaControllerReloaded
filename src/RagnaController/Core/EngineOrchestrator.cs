@@ -18,7 +18,7 @@ namespace RagnaController.Core
     {
         private readonly ITickProvider _tickProvider;
         private readonly IMessenger _messenger;
-        private readonly AdvancedLogger _logger;
+        private readonly AdvancedLogger _logger = null!;
         private readonly ControllerService _ctrl;
         private readonly WindowTracker _winTracker;
         private readonly InputReader _inputReader;
