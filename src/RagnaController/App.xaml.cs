@@ -42,7 +42,12 @@ namespace RagnaController
             };
 
             // Nuclear exit handler — if WPF gets stuck with no windows, kill the process
-            Application.Current.Exit += (s, ev) => Environment.Exit(0);
+            Application.Current.Exit += (s, ev) =>
+            {
+                // TECH-018: Singleton HttpClient beim App-Shutdown disposten (Socket-Cleanup)
+                CommunityBrowserWindow.DisposeRegistryClient();
+                Environment.Exit(0);
+            };
 
             base.OnStartup(e);
             StartWorkflow();

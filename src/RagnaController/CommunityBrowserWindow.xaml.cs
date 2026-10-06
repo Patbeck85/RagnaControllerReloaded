@@ -30,6 +30,18 @@ namespace RagnaController
         private List<CommunityEntry> _allEntries = new();
         private readonly object _lock = new(); // Thread-Safety für _allEntries
 
+        /// <summary>
+        /// Singleton-HttpClient (application lifetime) — public read-only für Unit-Tests (TECH-018).
+        /// WICHTIG: NIE per Instanz/OnClosing disposten — nur via <see cref="DisposeRegistryClient"/> beim App-Shutdown.
+        /// </summary>
+        public static HttpClient RegistryHttpClient => _http;
+
+        /// <summary>
+        /// Dispose des Singleton-Clients beim App-Shutdown (Socket-Cleanup, TECH-018).
+        /// Wird von App.OnExit aufgerufen — danach ist die App beendet, keine Wiederverwendung möglich.
+        /// </summary>
+        public static void DisposeRegistryClient() => _http.Dispose();
+
         static CommunityBrowserWindow()
         {
             _http = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
@@ -146,7 +158,9 @@ namespace RagnaController
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             base.OnClosing(e);
-            // _http is static and shared — do NOT dispose here or subsequent window opens will throw ObjectDisposedException
+            // _http ist static/shared (application lifetime) — NICHT hier disposten,
+            // sonst ObjectDisposedException bei Wiederveröffnung. Cleanup erfolgt beim
+            // App-Shutdown via CommunityBrowserWindow.DisposeRegistryClient() (TECH-018).
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e) => Close();

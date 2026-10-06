@@ -608,7 +608,7 @@ private static bool IsSkillAction(ButtonAction action)
 **Priorität:** HIGH (User-facing Funktionslücke)
 **DoD:** Alle 13 CheckBoxes haben funktionierende Handler; Werte werden in Settings persistiert; UI-Test manuell verifiziert.
 
-### 🟨 TECH-018: CommunityBrowserWindow — Static HttpClient Disposal Issue (S3)
+### 🟨 TECH-018: CommunityBrowserWindow — Static HttpClient Disposal Issue (S3) ✅ ERLEDIGT (2026-10-06)
 **File:** src/RagnaController/CommunityBrowserWindow.xaml.cs (Zeilen 29, 35, 144)
 **Fundament:** `private static readonly HttpClient _http` wird im `OnClosing` NICHT disposed (Kommentar: "do NOT dispose here or subsequent window opens will throw ObjectDisposedException"). Dies ist ein Anti-Pattern — statischer HttpClient sollte application-lifetime managed sein oder via IHttpClientFactory.
 **Impact:** Socket exhaustion bei häufigem Öffnen/Schließen; Resource Leak bei App-Shutdown.
@@ -801,7 +801,7 @@ private static bool IsSkillAction(ButtonAction action)
 ### 🟥 TECH-017: SettingsWindow CheckBox Handlers Missing (S3)  ✅ ERLEDIGT (2026-10-06)
 → Siehe SPRINT D oben (ergänzt UI-001)
 
-### 🟨 TECH-018: CommunityBrowserWindow — Static HttpClient Disposal Issue (S3)
+### 🟨 TECH-018: CommunityBrowserWindow — Static HttpClient Disposal Issue (S3) ✅ ERLEDIGT (2026-10-06)
 → Siehe SPRINT D oben
 
 ### 🟨 TECH-019: MainWindow — GetLocalizedString Fallback statt echter Lokalisierung (S4)
