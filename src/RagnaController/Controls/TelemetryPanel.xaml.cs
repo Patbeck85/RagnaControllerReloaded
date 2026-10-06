@@ -31,20 +31,25 @@ namespace RagnaController.Controls
 
         private readonly DispatcherTimer _timer;
         private HybridEngine? _engine;
+        private bool _updatesStopped;
 
         public TelemetryPanel()
         {
             InitializeComponent();
 
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(RefreshIntervalMs) };
-            _timer.Tick += (_, _) => RefreshNow();
+            _timer.Tick += OnTimerTick;
 
             // Timer nur laufen lassen, wenn Panel sichtbar ist (PERF-001: keine UI-Blockaden im Hintergrund).
-            IsVisibleChanged += (_, e) =>
-            {
-                bool visible = e.NewValue is bool b && b;
-                if (visible) _timer.Start(); else _timer.Stop();
-            };
+            IsVisibleChanged += OnIsVisibleChanged;
+        }
+
+        private void OnTimerTick(object? sender, EventArgs e) => RefreshNow();
+
+        private void OnIsVisibleChanged(object? sender, DependencyPropertyChangedEventArgs e)
+        {
+            bool visible = e.NewValue is bool b && b;
+            if (visible) _timer.Start(); else _timer.Stop();
         }
 
         /// <summary>
@@ -57,8 +62,17 @@ namespace RagnaController.Controls
             if (engine != null) RefreshNow();
         }
 
-        /// <summary>Stoppt den Timer explizit (Window_Closing, MEMORY-001).</summary>
-        public void StopUpdates() => _timer.Stop();
+        /// <summary>Stoppt den Timer explizit und räumt Ressourcen auf (Window_Closing, MEMORY-001).</summary>
+        public void StopUpdates()
+        {
+            if (_updatesStopped) return;
+            _updatesStopped = true;
+
+            _timer.Stop();
+            _timer.Tick -= OnTimerTick;
+            IsVisibleChanged -= OnIsVisibleChanged;
+            _engine = null;
+        }
 
         private void RefreshNow()
         {
