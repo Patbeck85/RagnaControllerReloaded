@@ -704,7 +704,7 @@ private static bool IsSkillAction(ButtonAction action)
 **Priorität:** HIGH (Class Detection Korrektheit)
 **DoD:** `BuildSkillToClassMap()` existiert und wird für `SkillToClassMap` Initialisierung genutzt; Duplicate-Keys akkumuliert (nicht überschrieben); Class Detection Tests grün.
 
-### 🟨 TECH-030: SettingsWindow — Window_Closing Duplicates InitializeSettings Logic (S4)
+### 🟨 TECH-030: SettingsWindow — Window_Closing Duplicates InitializeSettings Logic (S4) ✅ ERLEDIGT (2026-10-06)
 **File:** src/RagnaController/SettingsWindow.xaml.cs (Zeilen 565-599)
 **Fundament:** `Window_Closing` dupliziert Logik aus `InitializeSettings` für alle CheckBox-Werte — DRY-Verletzung; Fehleranfällig bei neuen Settings.
 **Impact:** Wartung aufwendig; neue Settings müssen an 2 Stellen gepflegt werden.
@@ -837,5 +837,5 @@ private static bool IsSkillAction(ButtonAction action)
 ### 🟨 TECH-029: ClassDetector — BuildSkillToClassMap nicht implementiert (S4) ✅ ERLEDIGT (2026-10-06)
 → Siehe SPRINT D oben (widerspricht UI-002 Status)
 
-### 🟨 TECH-030: SettingsWindow — Window_Closing Duplicates Logic (S4)
+### 🟨 TECH-030: SettingsWindow — Window_Closing Duplicates Logic (S4) ✅ ERLEDIGT (2026-10-06)
 → Siehe SPRINT D oben

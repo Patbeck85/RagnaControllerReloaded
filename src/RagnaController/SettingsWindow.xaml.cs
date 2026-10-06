@@ -280,11 +280,49 @@ namespace RagnaController
 
                 private void BtnCancel_Click(object sender, RoutedEventArgs e) => Close();
 
-        private void BtnApply_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Kopiert alle aktuellen UI-Kontrollwerte in das Settings-Modell, persistiert und benachrichtigt den Caller.
+        /// Einzige Speicherpfad (DRY) — wird von BtnApply_Click UND Window_Closing aufgerufen (TECH-030).
+        /// </summary>
+        private void SaveAllSettings()
         {
-            // Apply settings
+            _s.AutoStart = ChkAutoStart.IsChecked == true;
+            _s.SoundEnabled = ChkSound.IsChecked == true;
+            _s.RumbleEnabled = ChkRumble.IsChecked == true;
+            _s.StartInMiniMode = ChkStartInMiniMode.IsChecked == true;
+
+            // Smart Standby (AFK Battery Saver)
+            _s.EnableSmartStandby = ChkSmartStandby.IsChecked == true;
+            _s.EnableHapticMetronome = ChkHapticMetronome.IsChecked == true;
+            _s.ShowLatency = ChkShowLatency.IsChecked == true;
+            if (int.TryParse(TxtStandbyMinutes.Text, out int mins))
+                _s.StandbyTimeoutMinutes = Math.Max(1, mins);
+
+            // v1.7.0: Silent Mode Settings
+            _s.MinimizeToTray = ChkMinimizeToTray.IsChecked == true;
+            bool autoStart = ChkStartWithWindows.IsChecked == true;
+            _s.StartWithWindows = autoStart;
+            Core.AutoStartManager.SetAutoStart(autoStart);
+
+            _s.FocusLockEnabled = ChkFocusLock.IsChecked == true;
+
+            // Discord Rich Presence
+            _s.EnableDiscordRPC = ChkDiscordRPC.IsChecked == true;
+
+            // Voice Announcements
+            _s.EnableVoiceAnnouncements = ChkVoiceAnnouncements.IsChecked == true;
+
+            // Anonymous Telemetry
+            _s.EnableTelemetry = ChkTelemetry.IsChecked == true;
+
             _s.Save();
             _onSave?.Invoke(_s);
+        }
+
+        private void BtnApply_Click(object sender, RoutedEventArgs e)
+        {
+            // Apply settings (einzig Speicherpfad — siehe SaveAllSettings)
+            SaveAllSettings();
             Close();
         }
 
@@ -574,41 +612,9 @@ namespace RagnaController
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            // Save settings when window is closing
-                    if (_onSave != null)
-                    {
-                        _s.AutoStart = ChkAutoStart.IsChecked == true;
-                        _s.SoundEnabled = ChkSound.IsChecked == true;
-                        _s.RumbleEnabled = ChkRumble.IsChecked == true;
-                        _s.StartInMiniMode = ChkStartInMiniMode.IsChecked == true;
-
-                        // Smart Standby (AFK Battery Saver)
-                        _s.EnableSmartStandby = ChkSmartStandby.IsChecked == true;
-                        _s.EnableHapticMetronome = ChkHapticMetronome.IsChecked == true;
-                        _s.ShowLatency = ChkShowLatency.IsChecked == true;
-                        if (int.TryParse(TxtStandbyMinutes.Text, out int mins)) 
-                            _s.StandbyTimeoutMinutes = Math.Max(1, mins);
-
-                        // v1.7.0: Silent Mode Settings
-                        _s.MinimizeToTray = ChkMinimizeToTray.IsChecked == true;
-                        bool autoStart = ChkStartWithWindows.IsChecked == true;
-                        _s.StartWithWindows = autoStart;
-                        Core.AutoStartManager.SetAutoStart(autoStart);
-
-                        _s.FocusLockEnabled = ChkFocusLock.IsChecked == true;
-
-                        // Discord Rich Presence
-                        _s.EnableDiscordRPC = ChkDiscordRPC.IsChecked == true;
-
-                        // Voice Announcements
-                        _s.EnableVoiceAnnouncements = ChkVoiceAnnouncements.IsChecked == true;
-
-                        // Anonymous Telemetry
-                        _s.EnableTelemetry = ChkTelemetry.IsChecked == true;
-
-                        _s.Save();
-                        _onSave?.Invoke(_s);
-                    }
+            // Save settings when window is closing (einzig Speicherpfad — siehe SaveAllSettings)
+            if (_onSave != null)
+                SaveAllSettings();
         }
     }
 }
