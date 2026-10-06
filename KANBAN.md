@@ -570,6 +570,10 @@ private static bool IsSkillAction(ButtonAction action)
 - CS8602: Possible null dereference on _sdlProvider in ControllerManager (3 Stellen)
 **Suggested Fix:** Unused fields entfernen, nullable annotations korrigieren, pragma für obsolete attribute, null-checks ergänzen.
 **Status:** ✅ ERLEDIGT (2026-10-04) — Alle 12 Warnungen behoben. Build: 0 Fehler, 0 Warnungen.
+**Follow-up (2026-10-06):** Solution-Build (inkl. Testprojekt) zeigte zusätzlich CS0067 im
+`TelemetryDashboardTests.MockTickProvider` (Event `Tick` deklariert, nie ausgelöst — vorbestehend seit UI-011).
+Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_Start_RaisesTickEvent`.
+**Verifikation:** Full Solution Build: 0 Fehler, **0 Warnungen** (Hauptprojekt + Testprojekt). Tests: 312/312 PASS.
 
 ---
 

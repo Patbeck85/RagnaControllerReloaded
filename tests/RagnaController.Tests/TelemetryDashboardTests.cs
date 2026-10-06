@@ -29,7 +29,13 @@ namespace RagnaController.Tests
             public bool IsRunning { get; private set; }
             public event EventHandler? Tick;
 
-            public void Start() => IsRunning = true;
+            public void Start()
+            {
+                IsRunning = true;
+                // Simuliert einen Tick-Puls (Event wird genutzt → kein CS0067).
+                // Harmless: HybridEngine abonniert in diesen Tests nicht auf Tick.
+                Tick?.Invoke(this, EventArgs.Empty);
+            }
             public void Stop() => IsRunning = false;
             public void Dispose() { }
         }
@@ -117,9 +123,24 @@ namespace RagnaController.Tests
             Assert.NotNull(tracker);
 
             var agg = tracker.GetAggregateStats();
-
             Assert.True(agg.CurrentWorkingSetMb >= 0, "Working set must be non-negative");
             Assert.True(agg.TotalAllocatedMb >= 0, "Total allocated must be non-negative");
+        }
+
+        [Fact]
+        public void MockTickProvider_Start_RaisesTickEvent()
+        {
+            // TECH-015 follow-up: MockTickProvider.Start() muss Tick auslösen (CS0067-Fix).
+            // Verifiziert, dass das Interface-Member nicht nur deklariert, sondern genutzt wird.
+            var provider = new MockTickProvider();
+
+            bool raised = false;
+            provider.Tick += (s, e) => raised = true;
+
+            provider.Start();
+
+            Assert.True(raised, "Start() muss das Tick-Event auslösen");
+            Assert.True(provider.IsRunning);
         }
     }
 }
