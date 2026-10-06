@@ -667,13 +667,13 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Priorität:** LOW (Observability)
 **DoD:** Keine Log-Loss bei Last; Error-Logs immer durchkommen.
 
-### 🟨 TECH-025: ControllerTestWindow — Timer Cleanup (S3)
+### 🟨 TECH-025: ControllerTestWindow — Timer Cleanup (S3) ✅ ERLEDIGT (2026-10-06)
 **File:** src/RagnaController/ControllerTest/ControllerTestWindow.xaml.cs
-**Fundament:** TECH-013 sagt "Bereits erledigt — OnClosed Override vorhanden". Code-Review zeigt: `_updateTimer` wird in `OnClosed` gestoppt, aber `_diagnostic` (ControllerDiagnosticRunner) hat Timer (`_percentileTimer`) der NICHT gestoppt wird.
-**Impact:** Timer läuft nach Window-Close weiter → Memory Leak / ObjectDisposedException.
-**Suggested Fix:** `ControllerDiagnosticRunner.Dispose()` in `OnClosed` aufrufen (läuft bereits IDisposable).
+**Fundament:** Code-Review zeigt: `_updateTimer` wird in `OnClosed` korrekt gestoppt. WICHTIGE KORREKTUR der ursprünglichen Annahme: `ControllerDiagnosticRunner` hat KEINEN eigenen Timer (`_percentileTimer` existiert nicht) — die Klasse ist eine reine Zustandsmaschine, nur durch `FeedSample()` aus dem Window-Timer angetrieben. Der eigentliche Leak-Punkt: Event-Delegates (`ControlCompleted`, `Completed`) halten per Referenz auf ihre Subscriber → ein laufendes Fenster hält den Runner indirekt am Leben.
+**Impact:** Event-Referenzen bleiben nach Window-Close bestehen (indirekter Leak); kein echter Timer-Leak wie ursprünglich angenommen.
+**Suggested Fix:** `ControllerDiagnosticRunner` implementiert `IDisposable`: gibt Subscriber-Referenzen frei, markiert Runner als beendet (`IsDisposed`), macht `Start()`/`FeedSample()` danach inert. `OnClosed` ruft `_diagnostic?.Dispose()` auf.
 **Priorität:** MEDIUM (Memory Leak Prevention)
-**DoD:** `ControllerDiagnosticRunner.Dispose()` in `ControllerTestWindow.OnClosed` aufgerufen; Timer gestoppt.
+**DoD:** ✅ `ControllerDiagnosticRunner.Dispose()` in `ControllerTestWindow.OnClosed` aufgerufen; Runner wird nach Dispose inert (Start/FeedSample ignoriert); 5 neue Unit-Tests (IsDisposed, Idempotenz, Start-inert, FeedSample-inert, laufender Test beendet).
 
 ### 🟨 TECH-026: InputCommandQueue — Debug-Only Lock (S4)
 **File:** src/RagnaController/Core/InputCommandQueue.cs (TEST-011 Fix)
@@ -825,7 +825,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 ### 🟨 TECH-024: AdvancedLogger — Channel BoundedChannelFullMode.DropOldest (S4) ✅ ERLEDIGT (2026-10-06)
 → Siehe SPRINT D oben
 
-### 🟨 TECH-025: ControllerTestWindow — Timer Cleanup (ControllerDiagnosticRunner) (S3)
+### 🟨 TECH-025: ControllerTestWindow — Timer Cleanup (ControllerDiagnosticRunner) (S3) ✅ ERLEDIGT (2026-10-06)
 → Siehe SPRINT D oben
 
 ### 🟨 TECH-026: InputCommandQueue — Debug-Only Lock (S4)

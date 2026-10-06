@@ -87,7 +87,7 @@ namespace RagnaController.ControllerTest
     /// Hardware-/UI-frei: Samples werden injiziert, Zeit wird über <c>nowMs</c> übergeben (default
     /// <see cref="Environment.TickCount64"/>), daher vollständig unit-testbar.
     /// </summary>
-    public sealed class ControllerDiagnosticRunner
+    public sealed class ControllerDiagnosticRunner : IDisposable
     {
         /// <summary>Timeout pro Kontrolle: danach gilt sie als fehlgeschlagen, wenn nie detektiert.</summary>
         public const int DefaultTimeoutMs = 15000;
@@ -146,6 +146,7 @@ namespace RagnaController.ControllerTest
         /// <param name="startMs">Optionale Startzeit (für deterministische Tests); default: jetzt.</param>
         public void Start(long? startMs = null)
         {
+            if (IsDisposed) return; // TECH-025: nach Dispose ist der Runner inert.
             _results.Clear();
             _currentIndex = 0;
             _activeSinceMs = startMs ?? Environment.TickCount64;
@@ -288,5 +289,30 @@ namespace RagnaController.ControllerTest
             DiagnosticStatus.Failed => "failed",
             _ => "pending"
         };
+
+        // ---------------------------------------------------------------------
+        // IDisposable (TECH-025): Die Klasse ist eine reine Zustandsmaschine ohne
+        // eigenen Timer/Thread, aber sie HÄLT per Event-Delegates auf ihre
+        // Subscriber (z. B. das Window) → ein laufendes Fenster hält den Runner
+        // indirekt am Leben. Dispose() bricht die Referenzen und markiert den
+        // Runner als beendet: danach sind Start()/FeedSample() inert.
+        // ---------------------------------------------------------------------
+
+        /// <summary>Runner ist disposed — keine weiteren Aktionen mehr möglich.</summary>
+        public bool IsDisposed { get; private set; }
+
+        /// <summary>
+        /// Gibt Subscriber-Referenzen frei und deaktiviert den Runner (idempotent).
+        /// Danach sind <see cref="Start"/> und <see cref="FeedSample"/> inert.
+        /// </summary>
+        public void Dispose()
+        {
+            if (IsDisposed) return;
+            IsDisposed = true;
+            _running = false;
+            // Subscriber-Referenzen freigeben → kein indirekter Leak über Events mehr.
+            ControlCompleted = null;
+            Completed = null;
+        }
     }
 }

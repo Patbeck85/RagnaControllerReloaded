@@ -194,6 +194,59 @@ namespace RagnaController.Tests
             Assert.Single(runner.Results);
         }
 
+        // ---------------------------------------------------------------------
+        // TECH-025: Dispose() — Subscriber-Referenzen werden freigegeben, Runner wird inert.
+        // (Window.OnClosed ruft _diagnostic.Dispose() auf; hier wird der Kontrakt getestet.)
+        // ---------------------------------------------------------------------
+
+        [Fact]
+        public void Dispose_SetztIsDisposed_AufTrue()
+        {
+            var r = new ControllerDiagnosticRunner();
+            Assert.False(r.IsDisposed);
+            r.Dispose();
+            Assert.True(r.IsDisposed);
+        }
+
+        [Fact]
+        public void Dispose_IstIdempotent()
+        {
+            var r = new ControllerDiagnosticRunner();
+            r.Dispose();
+            r.Dispose(); // Zweites Dispose darf nicht werfen.
+            Assert.True(r.IsDisposed);
+        }
+
+        [Fact]
+        public void Start_NachDispose_BleibtInert()
+        {
+            var r = new ControllerDiagnosticRunner();
+            r.Dispose();
+            r.Start(0);
+            Assert.False(r.IsRunning, "Start() nach Dispose darf den Runner nicht wieder aktivieren");
+        }
+
+        [Fact]
+        public void FeedSample_NachDispose_WirdIgnoriert()
+        {
+            var r = new ControllerDiagnosticRunner(TwoButtons(), 1000);
+            r.Dispose();
+            // Sample nach Dispose muss still ignoriert werden (kein Index-Overrun).
+            r.FeedSample(Press("A"), nowMs: 500);
+            Assert.False(r.IsRunning);
+            Assert.Empty(r.Results);
+        }
+
+        [Fact]
+        public void Dispose_BeiLaufendemTest_SetztIsRunningAufFalse()
+        {
+            var r = new ControllerDiagnosticRunner(TwoButtons(), 1000);
+            r.Start(startMs: 0);
+            Assert.True(r.IsRunning);
+            r.Dispose();
+            Assert.False(r.IsRunning, "Dispose muss eine laufende Kontrolle beenden");
+        }
+
         [Fact]
         public void Start_ResetsPreviousRun()
         {

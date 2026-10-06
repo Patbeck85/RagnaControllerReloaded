@@ -316,6 +316,9 @@ namespace RagnaController.ControllerTest
                 cs.ControllerDisconnected -= OnControllerDisconnected;
             }
 
+            // TECH-025: Runner freigeben (Subscriber-Referenzen + inert).
+            _diagnostic?.Dispose();
+
             base.OnClosed(e);
         }
     }
