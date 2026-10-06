@@ -660,8 +660,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Priorität:** MEDIUM (Testbarkeit, Startup-Performance)
 **DoD:** Constructor I/O-frei; `InitializeAsync()` für Load; Tests nutzen In-Memory-ProfileManager ohne File-System.
 
-### 🟨 TECH-024: AdvancedLogger — Channel BoundedChannelFullMode.DropOldest (S4)
-**File:** src/RagnaController/Core/AdvancedLogger.cs (Zeile 30)
+### 🟨 TECH-024: AdvancedLogger — Channel BoundedChannelFullMode.DropOldest (S4) ✅ ERLEDIGT (2026-10-06)
 **Fundament:** `FullMode = BoundedChannelFullMode.DropOldest` — Log-Einträge werden bei Last stillschweigend verworfen.
 **Impact:** Kritische Error-Logs gehen verloren unter Last; Debugging von Production-Issues erschwert.
 **Suggested Fix:** `BoundedChannelFullMode.Wait` (Backpressure) oder dedizierter Error-Channel (unbounded) für Level >= Warn.
@@ -823,7 +822,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 ### 🟨 TECH-023: ProfileManager — Constructor I/O + Static State (S3)
 → Siehe SPRINT D oben
 
-### 🟨 TECH-024: AdvancedLogger — Channel BoundedChannelFullMode.DropOldest (S4)
+### 🟨 TECH-024: AdvancedLogger — Channel BoundedChannelFullMode.DropOldest (S4) ✅ ERLEDIGT (2026-10-06)
 → Siehe SPRINT D oben
 
 ### 🟨 TECH-025: ControllerTestWindow — Timer Cleanup (ControllerDiagnosticRunner) (S3)
