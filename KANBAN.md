@@ -576,7 +576,7 @@ private static bool IsSkillAction(ButtonAction action)
 ## 🔧 SPRINT D — Technical Debt & Quality Improvements (NEW)
 **Goal:** Remaining code quality issues, silent error handlers, localization gaps, and architectural improvements identified during comprehensive code review.
 
-### 🟥 TECH-016: Empty Catch Blocks — Silent Error Swallowing (S2-S3)
+### 🟥 TECH-016: Empty Catch Blocks — Silent Error Swallowing (S2-S3) ✅ ERLEDIGT (2026-10-06)
 **Files:** 
 - src/RagnaController/App.xaml.cs (lines 72, 163)
 - src/RagnaController/CommunityBrowserWindow.xaml.cs (line 48)
@@ -599,7 +599,7 @@ private static bool IsSkillAction(ButtonAction action)
 **Priorität:** HIGH (SOUL.md Compliance)
 **DoD:** 0 leere catch-Blöcke im gesamten Codebase; alle Exceptions geloggt oder an UI gemeldet.
 
-### 🟥 TECH-017: SettingsWindow CheckBox Handlers Missing (S3)
+### 🟥 TECH-017: SettingsWindow CheckBox Handlers Missing (S3) ✅ ERLEDIGT (2026-10-06)
 **File:** src/RagnaController/SettingsWindow.xaml (Zeilen 60-119)
 **Fundament:** 13 CheckBox-Elemente ohne Click/Checked-Handler — UI sichtbar aber funktionslos.
 **Betroffene CheckBoxes:** ChkMinimizeToTray, ChkShowLatency, ChkAutoStart, ChkSound, ChkRumble, ChkHapticMetronome, ChkStartInMiniMode, ChkSmartStandby, ChkFocusLock, ChkDiscordRPC, ChkVoiceAnnouncements, ChkTelemetry, LogLevelCombo (SelectionChanged fehlt für initiale Werte)
@@ -688,7 +688,7 @@ private static bool IsSkillAction(ButtonAction action)
 **Priorität:** LOW (Gameplay-Präzision)
 **DoD:** Retreat-Bewegung exakt bei allen deltaMs/Duration-Kombinationen; Unit-Test für Edge-Cases.
 
-### 🟨 TECH-028: TelemetryPanel — DispatcherTimer ohne Dispose in StopUpdates (S3)
+### 🟨 TECH-028: TelemetryPanel — DispatcherTimer ohne Dispose in StopUpdates (S3) ✅ ERLEDIGT (2026-10-06)
 **File:** src/RagnaController/Controls/TelemetryPanel.xaml.cs
 **Fundament:** `StopUpdates()` stoppt Timer aber `Dispose()` nicht aufgerufen; Timer-Event-Handler hält Referenz auf Panel → GC kann Panel nicht sammeln.
 **Impact:** Memory Leak bei mehrfachem Öffnen/Schließen von MainWindow (TelemetryPanel neu erstellt).
@@ -696,7 +696,7 @@ private static bool IsSkillAction(ButtonAction action)
 **Priorität:** MEDIUM (Memory Leak)
 **DoD:** `TelemetryPanel.StopUpdates()` vollständig cleaned up; mehrfaches Öffnen/Schließen von MainWindow ohne Leak (DotMemory/GC.Collect verifiziert).
 
-### 🟨 TECH-029: ClassDetector — BuildSkillToClassMap nicht verwendet (S4)
+### 🟨 TECH-029: ClassDetector — BuildSkillToClassMap nicht verwendet (S4) ✅ ERLEDIGT (2026-10-06)
 **File:** src/RagnaController/Core/ClassDetector.cs
 **Fundament:** KANBAN sagt UI-002 "Dictionary wurde von Collection-Initializer auf programmatische BuildSkillToClassMap() Methode umgebildet" — aber Code zeigt immer noch Collection-Initializer (Zeilen 69-166). Methode `BuildSkillToClassMap()` existiert nicht.
 **Impact:** Duplicate Keys werden beim Initialisieren stumm überschrieben (C# Verhalten); Class Detection unzuverlässig.
@@ -795,10 +795,10 @@ private static bool IsSkillAction(ButtonAction action)
 
 ## ✅ NEUE AUDIT-FINDINGS (2026-10-05)
 
-### 🟥 TECH-016: Empty Catch Blocks — Silent Error Swallowing (S2-S3)
+### 🟥 TECH-016: Empty Catch Blocks — Silent Error Swallowing (S2-S3) ✅ ERLEDIGT (2026-10-06)
 → Siehe SPRINT D oben
 
-### 🟥 TECH-017: SettingsWindow CheckBox Handlers Missing (S3)  
+### 🟥 TECH-017: SettingsWindow CheckBox Handlers Missing (S3)  ✅ ERLEDIGT (2026-10-06)
 → Siehe SPRINT D oben (ergänzt UI-001)
 
 ### 🟨 TECH-018: CommunityBrowserWindow — Static HttpClient Disposal Issue (S3)
@@ -831,10 +831,10 @@ private static bool IsSkillAction(ButtonAction action)
 ### 🟨 TECH-027: KiteRetreatingState — RetreatDurationMs Division Edge-Case (S3)
 → Siehe SPRINT D oben
 
-### 🟨 TECH-028: TelemetryPanel — DispatcherTimer ohne Dispose in StopUpdates (S3)
+### 🟨 TECH-028: TelemetryPanel — DispatcherTimer ohne Dispose in StopUpdates (S3) ✅ ERLEDIGT (2026-10-06)
 → Siehe SPRINT D oben
 
-### 🟨 TECH-029: ClassDetector — BuildSkillToClassMap nicht implementiert (S4)
+### 🟨 TECH-029: ClassDetector — BuildSkillToClassMap nicht implementiert (S4) ✅ ERLEDIGT (2026-10-06)
 → Siehe SPRINT D oben (widerspricht UI-002 Status)
 
 ### 🟨 TECH-030: SettingsWindow — Window_Closing Duplicates Logic (S4)

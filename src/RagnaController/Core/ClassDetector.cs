@@ -66,104 +66,202 @@ namespace RagnaController.Core
                 // Format: VirtualKey -> List of (ClassName, Weight, SkillCategory)
                 // Weight: 3 = signature skill (unique to class), 2 = class-specific, 1 = shared across category
                 // SkillCategory: "weapon", "offensive", "defensive", "support", "utility", "signature"
-                private static readonly Dictionary<VirtualKey, List<(string Class, int Weight, string Category)>> SkillToClassMap = new()
-                {
-                    // Swordsman / Knight / Crusader
-                    [VirtualKey.F1] = new() { ("Swordsman", 2, "offensive"), ("Knight", 2, "offensive"), ("Crusader", 1, "offensive") },        // Bash
-                    [VirtualKey.F2] = new() { ("Swordsman", 2, "offensive"), ("Knight", 2, "offensive"), ("Crusader", 1, "offensive") },        // Magnum Break
-                    [VirtualKey.F3] = new() { ("Knight", 3, "signature"), ("Crusader", 2, "offensive") },                     // Bowling Bash (Knight signature)
-                    [VirtualKey.F4] = new() { ("Knight", 3, "signature") },                                 // Brandish Spear (Knight signature)
-                    [VirtualKey.F5] = new() { ("Crusader", 3, "signature") },                               // Holy Cross (Crusader signature)
-                    [VirtualKey.F6] = new() { ("Crusader", 3, "signature") },                               // Grand Cross (Crusader signature)
+                private static readonly Dictionary<VirtualKey, List<(string Class, int Weight, string Category)>> SkillToClassMap = BuildSkillToClassMap();
 
-                    // Lord Knight / Paladin (Transcendent)
-                    [VirtualKey.F7] = new() { ("Lord Knight", 3, "signature"), ("Paladin", 2, "offensive") }, // Spiral Pierce / Shield Boomerang
-                    [VirtualKey.F8] = new() { ("Paladin", 3, "signature") },                                // Martyr's Reckoning / Shield Chain
+        /// <summary>
+        /// Builds the skill-to-class map programmatically so that multiple classes sharing a single
+        /// keybind (e.g. F1 = Swordsman Bash AND High Wizard) accumulate in one list instead of
+        /// silently overwriting each other via duplicate keyed collection-initializer entries (TECH-030).
+        /// </summary>
+        private static Dictionary<VirtualKey, List<(string Class, int Weight, string Category)>> BuildSkillToClassMap()
+        {
+            var map = new Dictionary<VirtualKey, List<(string Class, int Weight, string Category)>>();
 
-                    // Mage / Wizard / Sage / Professor
-                    [VirtualKey.F7] = new() { ("Mage", 2, "offensive"), ("Wizard", 2, "offensive"), ("Sage", 1, "offensive"), ("Professor", 1, "offensive") },    // Fire Bolt
-                    [VirtualKey.F8] = new() { ("Mage", 2, "offensive"), ("Wizard", 2, "offensive"), ("Sage", 1, "offensive"), ("Professor", 1, "offensive") },    // Cold Bolt
-                    [VirtualKey.F9] = new() { ("Mage", 2, "offensive"), ("Wizard", 2, "offensive"), ("Sage", 1, "offensive"), ("Professor", 1, "offensive") },    // Lightning Bolt
-                    [VirtualKey.F10] = new() { ("Wizard", 3, "signature"), ("Professor", 2, "offensive") },                   // Fire Wall / Meteor Storm
-                    [VirtualKey.F11] = new() { ("Wizard", 3, "signature") },                                // Storm Gust (Wizard signature)
-                    [VirtualKey.F12] = new() { ("Sage", 3, "signature"), ("Professor", 2, "support") },                     // Magic Rod / Abracadabra
+            void AddEntry(VirtualKey vk, string className, int weight, string category)
+            {
+                if (map.TryGetValue(vk, out var entries))
+                    entries.Add((className, weight, category));
+                else
+                    map[vk] = new List<(string Class, int Weight, string Category)> { (className, weight, category) };
+            }
 
-                    // High Wizard / Professor (Transcendent)
-                    [VirtualKey.F1] = new() { ("High Wizard", 3, "signature") },                             // Meteor Storm
-                    [VirtualKey.F2] = new() { ("Professor", 3, "signature") },                               // Double Bolt
+            // F1
+            AddEntry(VirtualKey.F1, "Swordsman", 2, "offensive");
+            AddEntry(VirtualKey.F1, "Knight", 2, "offensive");
+            AddEntry(VirtualKey.F1, "Crusader", 1, "offensive");
+            // F2
+            AddEntry(VirtualKey.F2, "Swordsman", 2, "offensive");
+            AddEntry(VirtualKey.F2, "Knight", 2, "offensive");
+            AddEntry(VirtualKey.F2, "Crusader", 1, "offensive");
+            // F3
+            AddEntry(VirtualKey.F3, "Knight", 3, "signature");
+            AddEntry(VirtualKey.F3, "Crusader", 2, "offensive");
+            // F4
+            AddEntry(VirtualKey.F4, "Knight", 3, "signature");
+            // F5
+            AddEntry(VirtualKey.F5, "Crusader", 3, "signature");
+            // F6
+            AddEntry(VirtualKey.F6, "Crusader", 3, "signature");
+            // F7
+            AddEntry(VirtualKey.F7, "Lord Knight", 3, "signature");
+            AddEntry(VirtualKey.F7, "Paladin", 2, "offensive");
+            // F8
+            AddEntry(VirtualKey.F8, "Paladin", 3, "signature");
+            // F7
+            AddEntry(VirtualKey.F7, "Mage", 2, "offensive");
+            AddEntry(VirtualKey.F7, "Wizard", 2, "offensive");
+            AddEntry(VirtualKey.F7, "Sage", 1, "offensive");
+            AddEntry(VirtualKey.F7, "Professor", 1, "offensive");
+            // F8
+            AddEntry(VirtualKey.F8, "Mage", 2, "offensive");
+            AddEntry(VirtualKey.F8, "Wizard", 2, "offensive");
+            AddEntry(VirtualKey.F8, "Sage", 1, "offensive");
+            AddEntry(VirtualKey.F8, "Professor", 1, "offensive");
+            // F9
+            AddEntry(VirtualKey.F9, "Mage", 2, "offensive");
+            AddEntry(VirtualKey.F9, "Wizard", 2, "offensive");
+            AddEntry(VirtualKey.F9, "Sage", 1, "offensive");
+            AddEntry(VirtualKey.F9, "Professor", 1, "offensive");
+            // F10
+            AddEntry(VirtualKey.F10, "Wizard", 3, "signature");
+            AddEntry(VirtualKey.F10, "Professor", 2, "offensive");
+            // F11
+            AddEntry(VirtualKey.F11, "Wizard", 3, "signature");
+            // F12
+            AddEntry(VirtualKey.F12, "Sage", 3, "signature");
+            AddEntry(VirtualKey.F12, "Professor", 2, "support");
+            // F1
+            AddEntry(VirtualKey.F1, "High Wizard", 3, "signature");
+            // F2
+            AddEntry(VirtualKey.F2, "Professor", 3, "signature");
+            // D1
+            AddEntry(VirtualKey.D1, "Archer", 2, "offensive");
+            AddEntry(VirtualKey.D1, "Hunter", 2, "offensive");
+            AddEntry(VirtualKey.D1, "Bard", 1, "offensive");
+            AddEntry(VirtualKey.D1, "Dancer", 1, "offensive");
+            // D2
+            AddEntry(VirtualKey.D2, "Hunter", 3, "signature");
+            AddEntry(VirtualKey.D2, "Bard", 2, "offensive");
+            // D3
+            AddEntry(VirtualKey.D3, "Bard", 3, "signature");
+            AddEntry(VirtualKey.D3, "Dancer", 2, "offensive");
+            // D4
+            AddEntry(VirtualKey.D4, "Hunter", 3, "signature");
+            // D5
+            AddEntry(VirtualKey.D5, "Sniper", 3, "signature");
+            AddEntry(VirtualKey.D5, "Clown", 2, "offensive");
+            // D6
+            AddEntry(VirtualKey.D6, "Sniper", 2, "offensive");
+            AddEntry(VirtualKey.D6, "Gypsy", 2, "offensive");
+            // D5
+            AddEntry(VirtualKey.D5, "Thief", 2, "offensive");
+            AddEntry(VirtualKey.D5, "Assassin", 2, "offensive");
+            AddEntry(VirtualKey.D5, "Rogue", 2, "offensive");
+            AddEntry(VirtualKey.D5, "Stalker", 1, "offensive");
+            // D6
+            AddEntry(VirtualKey.D6, "Assassin", 3, "signature");
+            AddEntry(VirtualKey.D6, "Stalker", 2, "offensive");
+            // D7
+            AddEntry(VirtualKey.D7, "Rogue", 3, "signature");
+            AddEntry(VirtualKey.D7, "Stalker", 2, "offensive");
+            // D8
+            AddEntry(VirtualKey.D8, "Stalker", 3, "signature");
+            // D9
+            AddEntry(VirtualKey.D9, "Assassin Cross", 3, "signature");
+            // D0
+            AddEntry(VirtualKey.D0, "Stalker", 3, "signature");
+            // D9
+            AddEntry(VirtualKey.D9, "Merchant", 2, "offensive");
+            AddEntry(VirtualKey.D9, "Blacksmith", 2, "offensive");
+            AddEntry(VirtualKey.D9, "Alchemist", 1, "offensive");
+            // D0
+            AddEntry(VirtualKey.D0, "Blacksmith", 3, "signature");
+            // Q
+            AddEntry(VirtualKey.Q, "Alchemist", 3, "signature");
+            // W
+            AddEntry(VirtualKey.W, "Alchemist", 2, "support");
+            // E
+            AddEntry(VirtualKey.E, "Whitesmith", 3, "signature");
+            // R
+            AddEntry(VirtualKey.R, "Creator", 3, "signature");
+            // W
+            AddEntry(VirtualKey.W, "Acolyte", 2, "support");
+            AddEntry(VirtualKey.W, "Priest", 2, "support");
+            AddEntry(VirtualKey.W, "Monk", 1, "support");
+            // E
+            AddEntry(VirtualKey.E, "Priest", 3, "signature");
+            AddEntry(VirtualKey.E, "Monk", 2, "support");
+            // R
+            AddEntry(VirtualKey.R, "Monk", 3, "signature");
+            // T
+            AddEntry(VirtualKey.T, "Monk", 2, "offensive");
+            // Y
+            AddEntry(VirtualKey.Y, "Priest", 3, "signature");
+            // U
+            AddEntry(VirtualKey.U, "High Priest", 3, "signature");
+            // I
+            AddEntry(VirtualKey.I, "Champion", 3, "signature");
+            // Y
+            AddEntry(VirtualKey.Y, "Taekwon", 3, "signature");
+            AddEntry(VirtualKey.Y, "Star Gladiator", 2, "offensive");
+            // U
+            AddEntry(VirtualKey.U, "Star Gladiator", 3, "signature");
+            // I
+            AddEntry(VirtualKey.I, "Soul Linker", 3, "signature");
+            AddEntry(VirtualKey.I, "Gunslinger", 3, "signature");
+            AddEntry(VirtualKey.I, "Rebellion", 2, "offensive");
+            // O
+            AddEntry(VirtualKey.O, "Rebellion", 3, "signature");
+            // P
+            AddEntry(VirtualKey.P, "Gunslinger", 2, "offensive");
+            AddEntry(VirtualKey.P, "Rebellion", 2, "offensive");
+            AddEntry(VirtualKey.P, "Ninja", 3, "signature");
+            AddEntry(VirtualKey.P, "Kagerou", 2, "offensive");
+            AddEntry(VirtualKey.P, "Oboro", 2, "offensive");
+            // A
+            AddEntry(VirtualKey.A, "Kagerou", 3, "signature");
+            // S
+            AddEntry(VirtualKey.S, "Oboro", 3, "signature");
+            // H
+            AddEntry(VirtualKey.H, "Super Novice", 3, "signature");
+            // J
+            AddEntry(VirtualKey.J, "Super Novice", 2, "support");
+            // D1
+            AddEntry(VirtualKey.D1, "Archer", 2, "offensive");
+            AddEntry(VirtualKey.D1, "Hunter", 2, "offensive");
+            AddEntry(VirtualKey.D1, "Bard", 1, "offensive");
+            AddEntry(VirtualKey.D1, "Dancer", 1, "offensive");
+            // D2
+            AddEntry(VirtualKey.D2, "Hunter", 3, "signature");
+            AddEntry(VirtualKey.D2, "Bard", 2, "offensive");
+            // D3
+            AddEntry(VirtualKey.D3, "Bard", 3, "signature");
+            AddEntry(VirtualKey.D3, "Dancer", 2, "offensive");
+            // D4
+            AddEntry(VirtualKey.D4, "Hunter", 3, "signature");
+            // D5
+            AddEntry(VirtualKey.D5, "Thief", 2, "offensive");
+            AddEntry(VirtualKey.D5, "Assassin", 2, "offensive");
+            AddEntry(VirtualKey.D5, "Rogue", 2, "offensive");
+            AddEntry(VirtualKey.D5, "Stalker", 1, "offensive");
+            // D6
+            AddEntry(VirtualKey.D6, "Assassin", 3, "signature");
+            AddEntry(VirtualKey.D6, "Stalker", 2, "offensive");
+            // D7
+            AddEntry(VirtualKey.D7, "Rogue", 3, "signature");
+            AddEntry(VirtualKey.D7, "Stalker", 2, "offensive");
+            // D8
+            AddEntry(VirtualKey.D8, "Stalker", 3, "signature");
+            // D9
+            AddEntry(VirtualKey.D9, "Merchant", 2, "offensive");
+            AddEntry(VirtualKey.D9, "Blacksmith", 2, "offensive");
+            AddEntry(VirtualKey.D9, "Alchemist", 1, "offensive");
+            // D0
+            AddEntry(VirtualKey.D0, "Blacksmith", 3, "signature");
 
-                    // Archer / Hunter / Bard / Dancer
-                    [VirtualKey.D1] = new() { ("Archer", 2, "offensive"), ("Hunter", 2, "offensive"), ("Bard", 1, "offensive"), ("Dancer", 1, "offensive") },     // Double Strafe
-                    [VirtualKey.D2] = new() { ("Hunter", 3, "signature"), ("Bard", 2, "offensive") },                         // Arrow Shower (Hunter signature)
-                    [VirtualKey.D3] = new() { ("Bard", 3, "signature"), ("Dancer", 2, "offensive") },                         // Arrow Vulcan (Bard signature)
-                    [VirtualKey.D4] = new() { ("Hunter", 3, "signature") },                                 // Blitz Beat (Hunter signature)
+            return map;
+        }
 
-                    // Sniper / Clown / Gypsy (Transcendent)
-                    [VirtualKey.D5] = new() { ("Sniper", 3, "signature"), ("Clown", 2, "offensive") },      // Sharp Shooting / Arrow Vulcan
-                    [VirtualKey.D6] = new() { ("Sniper", 2, "offensive"), ("Gypsy", 2, "offensive") },      // Focused Arrow Strike
-
-                    // Thief / Assassin / Rogue / Stalker
-                    [VirtualKey.D5] = new() { ("Thief", 2, "offensive"), ("Assassin", 2, "offensive"), ("Rogue", 2, "offensive"), ("Stalker", 1, "offensive") },  // Double Attack
-                    [VirtualKey.D6] = new() { ("Assassin", 3, "signature"), ("Stalker", 2, "offensive") },                    // Sonic Blow (Assassin signature)
-                    [VirtualKey.D7] = new() { ("Rogue", 3, "signature"), ("Stalker", 2, "offensive") },                       // Back Stab (Rogue signature)
-                    [VirtualKey.D8] = new() { ("Stalker", 3, "signature") },                                // Chase Walk (Stalker signature)
-
-                    // Assassin Cross / Stalker (Transcendent)
-                    [VirtualKey.D9] = new() { ("Assassin Cross", 3, "signature") },                          // Meteor Assault
-                    [VirtualKey.D0] = new() { ("Stalker", 3, "signature") },                                 // Shadow Spell
-
-                    // Merchant / Blacksmith / Alchemist
-                    [VirtualKey.D9] = new() { ("Merchant", 2, "offensive"), ("Blacksmith", 2, "offensive"), ("Alchemist", 1, "offensive") },    // Mammonite
-                    [VirtualKey.D0] = new() { ("Blacksmith", 3, "signature") },                             // Cart Revolution (Blacksmith signature)
-                    [VirtualKey.Q] = new() { ("Alchemist", 3, "signature") },                               // Acid Terror (Alchemist signature)
-                    [VirtualKey.W] = new() { ("Alchemist", 2, "support") },                                 // Homunculus skills
-
-                    // Whitesmith / Creator (Transcendent)
-                    [VirtualKey.E] = new() { ("Whitesmith", 3, "signature") },                              // Cart Boost
-                    [VirtualKey.R] = new() { ("Creator", 3, "signature") },                                 // Homunculus Call
-
-                    // Acolyte / Priest / Monk
-                    [VirtualKey.W] = new() { ("Acolyte", 2, "support"), ("Priest", 2, "support"), ("Monk", 1, "support") },               // Heal
-                    [VirtualKey.E] = new() { ("Priest", 3, "signature"), ("Monk", 2, "support") },                          // Blessing (Priest signature)
-                    [VirtualKey.R] = new() { ("Monk", 3, "signature") },                                    // Asura Strike (Monk signature)
-                    [VirtualKey.T] = new() { ("Monk", 2, "offensive") },                                    // Snap
-                    [VirtualKey.Y] = new() { ("Priest", 3, "signature") },                                  // Resurrection / Sanctuary
-
-                    // High Priest / Champion (Transcendent)
-                    [VirtualKey.U] = new() { ("High Priest", 3, "signature") },                             // Magnus Exorcismus
-                    [VirtualKey.I] = new() { ("Champion", 3, "signature") },                                // Asura Strike (Champion)
-
-                    // Taekwon / Soul Linker / Star Gladiator
-                    [VirtualKey.Y] = new() { ("Taekwon", 3, "signature"), ("Star Gladiator", 2, "offensive") },               // Flying Kick
-                    [VirtualKey.U] = new() { ("Star Gladiator", 3, "signature") },                          // Demon of the Sun
-                    [VirtualKey.I] = new() { ("Soul Linker", 3, "signature") },                             // Soul Link skills
-
-                    // Gunslinger / Rebellion
-                    [VirtualKey.I] = new() { ("Gunslinger", 3, "signature"), ("Rebellion", 2, "offensive") },                 // Desperado
-                    [VirtualKey.O] = new() { ("Rebellion", 3, "signature") },                               // Eternal Chain
-                    [VirtualKey.P] = new() { ("Gunslinger", 2, "offensive"), ("Rebellion", 2, "offensive") }, // Triple Action
-
-                    // Ninja / Kagerou / Oboro
-                    [VirtualKey.P] = new() { ("Ninja", 3, "signature"), ("Kagerou", 2, "offensive"), ("Oboro", 2, "offensive") },               // Throw Shuriken
-                    [VirtualKey.A] = new() { ("Kagerou", 3, "signature") },                                 // Kunai Splash
-                    [VirtualKey.S] = new() { ("Oboro", 3, "signature") },                                   // Shadow Slash
-
-                    // Super Novice
-                    [VirtualKey.H] = new() { ("Super Novice", 3, "signature") },                            // Heal (Super Novice) - unique
-                    [VirtualKey.J] = new() { ("Super Novice", 2, "support") },                              // Various mimic skills
-
-                    // Additional common skills mapped to number keys / letters
-                    [VirtualKey.D1] = new() { ("Archer", 2, "offensive"), ("Hunter", 2, "offensive"), ("Bard", 1, "offensive"), ("Dancer", 1, "offensive") },     // Double Strafe (duplicate for num keys)
-                    [VirtualKey.D2] = new() { ("Hunter", 3, "signature"), ("Bard", 2, "offensive") },
-                    [VirtualKey.D3] = new() { ("Bard", 3, "signature"), ("Dancer", 2, "offensive") },
-                    [VirtualKey.D4] = new() { ("Hunter", 3, "signature") },
-                    [VirtualKey.D5] = new() { ("Thief", 2, "offensive"), ("Assassin", 2, "offensive"), ("Rogue", 2, "offensive"), ("Stalker", 1, "offensive") },
-                    [VirtualKey.D6] = new() { ("Assassin", 3, "signature"), ("Stalker", 2, "offensive") },
-                    [VirtualKey.D7] = new() { ("Rogue", 3, "signature"), ("Stalker", 2, "offensive") },
-                    [VirtualKey.D8] = new() { ("Stalker", 3, "signature") },
-                    [VirtualKey.D9] = new() { ("Merchant", 2, "offensive"), ("Blacksmith", 2, "offensive"), ("Alchemist", 1, "offensive") },
-                    [VirtualKey.D0] = new() { ("Blacksmith", 3, "signature") },
-                };
 
         // Class to engine preset mapping
         private static readonly Dictionary<string, EnginePreset> ClassToPreset = new(StringComparer.OrdinalIgnoreCase)
