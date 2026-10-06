@@ -72,18 +72,25 @@ namespace RagnaController.Core
                 // FIX: Batch-Flush beim Ende der Schleife (Queue ist jetzt leer)
                 await writer.FlushAsync();
             }
-            catch (OperationCanceledException) { }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[Logger] Consumer-Fehler: {ex.Message}");
-            }
+            catch (OperationCanceledException)
+                        {
+                            // Expected on shutdown — normal cancellation
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"[Logger] Consumer-Fehler: {ex.Message}");
+                        }
         }
 
         public void Dispose()
         {
             _channel.Writer.TryComplete();
             _cts.Cancel();
-            try { _consumer.Wait(TimeSpan.FromSeconds(2)); } catch { }
+            try { _consumer.Wait(TimeSpan.FromSeconds(2)); }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Logger] Dispose wait failed: {ex.Message}");
+            }
             _cts.Dispose();
             
             // Unsubscribe event to prevent memory leaks

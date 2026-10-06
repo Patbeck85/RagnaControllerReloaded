@@ -69,7 +69,11 @@ namespace RagnaController
                 await Task.Delay(1000).ConfigureAwait(true);
                 splash.PlayVoice();
                 try { await Task.WhenAll(warmupTask, Task.Delay(2500, skipToken)); }
-                catch (TaskCanceledException) { } // Klick = Splash überspringen
+                                catch (TaskCanceledException)
+                                {
+                                    // Klick = Splash überspringen — erwartet, kein Fehler
+                                    System.Diagnostics.Debug.WriteLine("[App] Splash skipped via click");
+                                }
 
                 // Settings laden
                 var settings = Models.Settings.Load();
@@ -160,7 +164,11 @@ namespace RagnaController
                 File.AppendAllText(CrashLog,
                     $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [{source}]\n{msg}\n\n");
             }
-            catch { }
+            catch (Exception ex)
+            {
+                // Log-Fehler darf App nicht crashen 2014 Debug-Output als Fallback
+                System.Diagnostics.Debug.WriteLine($"[App] LogFatal failed: {ex.Message}");
+            }
         }
     }
 }

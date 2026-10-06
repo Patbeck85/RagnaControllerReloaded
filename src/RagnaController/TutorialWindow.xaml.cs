@@ -59,7 +59,10 @@ namespace RagnaController
                     if (MediaPreview != null) MediaPreview.Source = null;
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[TutorialWindow] Media load failed: {ex.Message}");
+            }
 
             // Update UI Buttons
             if (BtnPrev != null) BtnPrev.IsEnabled = _currentSlide > 0;

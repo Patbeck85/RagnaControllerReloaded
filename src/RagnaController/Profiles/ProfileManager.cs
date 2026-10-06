@@ -255,7 +255,10 @@ namespace RagnaController.Profiles
                             if (i >= 0) Profiles[i] = pBak; else Profiles.Add(pBak);
                         }
                     }
-                    catch { }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[ProfileManager] Backup restore failed for {bak}: {ex.Message}");
+                    }
                 }
             }
             if (Profiles.Count == 0)
@@ -398,11 +401,13 @@ namespace RagnaController.Profiles
                 try {
                     File.Replace(tmpPath, path, null);
                 }
-                catch {
-                    // Fallback: Delete old file and copy new one
-                    if (File.Exists(path)) File.Delete(path);
-                    File.Copy(tmpPath, path, overwrite: true);
-                }
+                catch (Exception ex)
+                    {
+                        // Fallback: Delete old file and copy new one
+                        System.Diagnostics.Debug.WriteLine($"[ProfileManager] File.Replace failed, using fallback: {ex.Message}");
+                        if (File.Exists(path)) File.Delete(path);
+                        File.Copy(tmpPath, path, overwrite: true);
+                    }
                 
                 pCopy.IsBuiltIn = wasBuiltIn;
                 ProfileSaved?.Invoke(pCopy.Name);

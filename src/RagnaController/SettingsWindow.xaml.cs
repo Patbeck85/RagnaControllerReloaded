@@ -287,9 +287,17 @@ namespace RagnaController
         }
 
         private void LblSettingsPath_Click(object sender, MouseButtonEventArgs e)
-        {
-            try { Process.Start("explorer.exe", $"\"\"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\RagnaController\"\""); } catch { }
-        }
+                {
+                    try 
+                    { 
+                        var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RagnaController");
+                        Process.Start("explorer.exe", path); 
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[SettingsWindow] Open settings folder failed: {ex.Message}");
+                    }
+                }
 
         private void BtnDevConsole_Click(object sender, RoutedEventArgs e)
         {

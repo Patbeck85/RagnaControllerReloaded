@@ -129,7 +129,10 @@ namespace RagnaController
                                 RenderOptions.SetBitmapScalingMode(img, BitmapScalingMode.NearestNeighbor);
                                 stack.Children.Add(img);
                             }
-                            catch { }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"[RadialMenuWindow] Image load failed: {ex.Message}");
+                            }
                         }
 
                         stack.Children.Add(new TextBlock

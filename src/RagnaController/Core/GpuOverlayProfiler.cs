@@ -101,7 +101,10 @@ namespace RagnaController.Core
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[GpuOverlayProfiler] GetGpuDeviceName WMI query failed: {ex.Message}");
+            }
             _cachedGpuDeviceName = "Unknown GPU";
             return _cachedGpuDeviceName;
         }

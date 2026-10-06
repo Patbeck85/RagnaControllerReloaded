@@ -32,23 +32,33 @@ namespace RagnaController
         }
 
         private void PrepareVoice()
-        {
-            try {
-                string baseDir = AppDomain.CurrentDomain.BaseDirectory;
-                string mp3Path = Path.Combine(baseDir, "startup_voice.mp3");
-                string wavPath = Path.Combine(baseDir, "startup_voice.wav");
+                {
+                    try 
+                    {
+                        string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                        string mp3Path = Path.Combine(baseDir, "startup_voice.mp3");
+                        string wavPath = Path.Combine(baseDir, "startup_voice.wav");
                 
-                if (File.Exists(mp3Path)) VoicePlayer.Source = new Uri(mp3Path, UriKind.Absolute);
-                else if (File.Exists(wavPath)) VoicePlayer.Source = new Uri(wavPath, UriKind.Absolute);
-            } catch { }
-        }
+                        if (File.Exists(mp3Path)) VoicePlayer.Source = new Uri(mp3Path, UriKind.Absolute);
+                        else if (File.Exists(wavPath)) VoicePlayer.Source = new Uri(wavPath, UriKind.Absolute);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[SplashWindow] PrepareVoice failed: {ex.Message}");
+                    }
+                }
 
         public void PlayVoice()
-        {
-            try {
-                if (VoicePlayer.Source != null) VoicePlayer.Play();
-            } catch { }
-        }
+                {
+                    try
+                    {
+                        if (VoicePlayer.Source != null) VoicePlayer.Play();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[SplashWindow] PlayVoice failed: {ex.Message}");
+                    }
+                }
 
         private async Task StartAnimationsAsync()
         {

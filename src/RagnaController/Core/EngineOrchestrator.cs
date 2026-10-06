@@ -248,7 +248,11 @@ namespace RagnaController.Core
             // der Failover-Schalter wird dann nie ausgelöst (KISS: kein No-Op-Overhead).
             var primaryStrategy = new SendInputMouseStrategy();
             try { _mouseEmulationFallback = new InterceptionMouseStrategy(); }
-            catch { _mouseEmulationFallback = null; } // DLL/Treiber fehlt → bewusst ohne Fallback
+                        catch (Exception ex)
+                        {
+                            _mouseEmulationFallback = null; // DLL/Treiber fehlt → bewusst ohne Fallback
+                            System.Diagnostics.Debug.WriteLine($"[EngineOrchestrator] InterceptionMouseStrategy init failed: {ex.Message}");
+                        }
             if (_mouseEmulationFallback != null && !_mouseEmulationFallback.IsAvailable)
             {
                 _mouseEmulationFallback.Dispose();

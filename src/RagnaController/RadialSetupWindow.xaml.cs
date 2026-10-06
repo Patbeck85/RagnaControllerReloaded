@@ -230,7 +230,11 @@ namespace RagnaController
                     if (!File.Exists(cmdTarget)) File.Copy(target, cmdTarget, overwrite: false);
                     ok++;
                 }
-                catch { fail++; }
+                catch (Exception ex)
+                {
+                    fail++;
+                    System.Diagnostics.Debug.WriteLine($"[RadialSetupWindow] Emote copy failed: {ex.Message}");
+                }
 
                 EmoteStatusText.Text = $"⏳ {ok}/{_roEmotes.Count}...";
                 await Task.Delay(80); // Brief delay — polite to the server

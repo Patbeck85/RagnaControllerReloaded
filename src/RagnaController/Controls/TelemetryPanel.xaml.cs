@@ -82,7 +82,11 @@ namespace RagnaController.Controls
                     };
                     CardStack.Children.Add(err);
                 }
-                catch { /* Panel-Rendering-Fehler dürfen den Timer nicht killen */ }
+                catch (Exception renderEx)
+                {
+                    // Panel-Rendering-Fehler dürfen den Timer nicht killen — aber loggen
+                    System.Diagnostics.Debug.WriteLine($"[TelemetryPanel] Render error: {renderEx.Message}");
+                }
             }
         }
 

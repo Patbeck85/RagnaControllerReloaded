@@ -68,13 +68,16 @@ namespace RagnaController.Core
                     Tick?.Invoke(this, EventArgs.Empty);
                 }
             }
-            catch (OperationCanceledException) { }
-            catch (Exception ex)
-            {
-                // CRITICAL: Alle Exceptions fangen, damit ein einzelner Bug in einem Makro oder Profil
-                // niemals den kompletten 125Hz-Thread tötet. Loggen und weiterlaufen.
-                System.Diagnostics.Debug.WriteLine($"[BackgroundTickProvider] Exception im Tick-Loop: {ex.GetType().Name}: {ex.Message}");
-            }
+            catch (OperationCanceledException)
+                        {
+                            // Expected on shutdown — normal cancellation
+                        }
+                        catch (Exception ex)
+                        {
+                            // CRITICAL: Alle Exceptions fangen, damit ein einzelner Bug in einem Makro oder Profil
+                            // niemals den kompletten 125Hz-Thread tötet. Loggen und weiterlaufen.
+                            System.Diagnostics.Debug.WriteLine($"[BackgroundTickProvider] Exception im Tick-Loop: {ex.GetType().Name}: {ex.Message}");
+                        }
         }
 
         public void Dispose() => Stop();

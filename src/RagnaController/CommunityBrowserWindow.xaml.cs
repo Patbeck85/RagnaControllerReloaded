@@ -43,10 +43,15 @@ namespace RagnaController
         }
 
         private async void BtnRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            try { await LoadRegistryAsync(); }
-            catch (Exception ex) { ErrorText.Text = ex.Message; ErrorOverlay.Visibility = Visibility.Visible; }
-        }
+                {
+                    try { await LoadRegistryAsync(); }
+                    catch (Exception ex)
+                    {
+                        ErrorText.Text = ex.Message;
+                        ErrorOverlay.Visibility = Visibility.Visible;
+                        System.Diagnostics.Debug.WriteLine($"[CommunityBrowserWindow] Refresh failed: {ex.Message}");
+                    }
+                }
 
         private async Task LoadRegistryAsync()
         {
