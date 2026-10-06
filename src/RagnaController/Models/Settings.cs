@@ -24,10 +24,11 @@ namespace RagnaController.Models
         public bool AutoStart { get; set; } = false;
 
         // ── Tray and Auto-Start Settings (v1.7.0) ──────────────────────────
-        public bool MinimizeToTray { get; set; } = false;
-        public bool StartWithWindows { get; set; } = false;
+                public bool MinimizeToTray { get; set; } = false;
+                public bool StartWithWindows { get; set; } = false;
+                public bool ShowLatency { get; set; } = false;
 
-        /// <summary>
+                /// <summary>
         /// Erzwingt Handheld-Modus unabhängig vom erkannten Gerät.
         /// Nützlich für Desktop-Nutzer mit Controller die das Big-Picture-UI bevorzugen.
         /// </summary>
@@ -50,11 +51,13 @@ namespace RagnaController.Models
         public bool EnableDiscordRPC { get; set; } = true;
        
         // NEW: TTS Voice Announcements
-        public bool EnableVoiceAnnouncements { get; set; } = true;
-       
-       
-        // NEW: Smart Standby (AFK Battery Saver)
-        public bool EnableSmartStandby { get; set; } = true;
+                public bool EnableVoiceAnnouncements { get; set; } = true;
+      
+                // NEW: Haptic Metronome
+                public bool EnableHapticMetronome { get; set; } = false;
+      
+                // NEW: Smart Standby (AFK Battery Saver)
+                public bool EnableSmartStandby { get; set; } = true;
         public int StandbyTimeoutMinutes { get; set; } = 5;
 
         // NEW: Anonymous Telemetry & Crash Reporting (GDPR compliant, opt-in)

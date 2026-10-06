@@ -51,10 +51,11 @@ namespace RagnaController
                 : $"Current: {_s.LastProfileName}";
 
             // Engine Settings
-            ChkStartWithWindows.IsChecked = _s.StartWithWindows;
-            ChkMinimizeToTray.IsChecked = _s.MinimizeToTray;
+                        ChkStartWithWindows.IsChecked = _s.StartWithWindows;
+                        ChkMinimizeToTray.IsChecked = _s.MinimizeToTray;
+                        ChkShowLatency.IsChecked = _s.ShowLatency;
 
-            // Initialize LogLevelCombo
+                        // Initialize LogLevelCombo
             InitializeLogLevelCombo();
 
             // Initialize LanguageCombo
@@ -212,9 +213,10 @@ namespace RagnaController
         }
 
         private void ChkShowLatency_Click(object sender, RoutedEventArgs e)
-                {
-                    // Show latency feature removed in v1.7.0
-                }
+                        {
+                            _s.ShowLatency = ChkShowLatency.IsChecked == true;
+                            _s.Save();
+                        }
 
                 private void ChkAutoStart_Click(object sender, RoutedEventArgs e)
                 {
@@ -235,10 +237,10 @@ namespace RagnaController
                 }
 
                 private void ChkHapticMetronome_Click(object sender, RoutedEventArgs e)
-                {
-                    // Haptic metronome feature - saves to settings
-                    _s.Save();
-                }
+                                {
+                                    _s.EnableHapticMetronome = ChkHapticMetronome.IsChecked == true;
+                                    _s.Save();
+                                }
 
                 private void ChkStartInMiniMode_Click(object sender, RoutedEventArgs e)
                 {
@@ -573,38 +575,40 @@ namespace RagnaController
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // Save settings when window is closing
-            if (_onSave != null)
-            {
-                _s.AutoStart = ChkAutoStart.IsChecked == true;
-                _s.SoundEnabled = ChkSound.IsChecked == true;
-                _s.RumbleEnabled = ChkRumble.IsChecked == true;
-                _s.StartInMiniMode = ChkStartInMiniMode.IsChecked == true;
+                    if (_onSave != null)
+                    {
+                        _s.AutoStart = ChkAutoStart.IsChecked == true;
+                        _s.SoundEnabled = ChkSound.IsChecked == true;
+                        _s.RumbleEnabled = ChkRumble.IsChecked == true;
+                        _s.StartInMiniMode = ChkStartInMiniMode.IsChecked == true;
 
-                // Smart Standby (AFK Battery Saver)
-                _s.EnableSmartStandby = ChkSmartStandby.IsChecked == true;
-                if (int.TryParse(TxtStandbyMinutes.Text, out int mins)) 
-                    _s.StandbyTimeoutMinutes = Math.Max(1, mins);
+                        // Smart Standby (AFK Battery Saver)
+                        _s.EnableSmartStandby = ChkSmartStandby.IsChecked == true;
+                        _s.EnableHapticMetronome = ChkHapticMetronome.IsChecked == true;
+                        _s.ShowLatency = ChkShowLatency.IsChecked == true;
+                        if (int.TryParse(TxtStandbyMinutes.Text, out int mins)) 
+                            _s.StandbyTimeoutMinutes = Math.Max(1, mins);
 
-                // v1.7.0: Silent Mode Settings
-                _s.MinimizeToTray = ChkMinimizeToTray.IsChecked == true;
-                bool autoStart = ChkStartWithWindows.IsChecked == true;
-                _s.StartWithWindows = autoStart;
-                Core.AutoStartManager.SetAutoStart(autoStart);
+                        // v1.7.0: Silent Mode Settings
+                        _s.MinimizeToTray = ChkMinimizeToTray.IsChecked == true;
+                        bool autoStart = ChkStartWithWindows.IsChecked == true;
+                        _s.StartWithWindows = autoStart;
+                        Core.AutoStartManager.SetAutoStart(autoStart);
 
-                _s.FocusLockEnabled = ChkFocusLock.IsChecked == true;
+                        _s.FocusLockEnabled = ChkFocusLock.IsChecked == true;
 
-                // Discord Rich Presence
-                _s.EnableDiscordRPC = ChkDiscordRPC.IsChecked == true;
+                        // Discord Rich Presence
+                        _s.EnableDiscordRPC = ChkDiscordRPC.IsChecked == true;
 
-                // Voice Announcements
-                _s.EnableVoiceAnnouncements = ChkVoiceAnnouncements.IsChecked == true;
+                        // Voice Announcements
+                        _s.EnableVoiceAnnouncements = ChkVoiceAnnouncements.IsChecked == true;
 
-                // Anonymous Telemetry
-                _s.EnableTelemetry = ChkTelemetry.IsChecked == true;
+                        // Anonymous Telemetry
+                        _s.EnableTelemetry = ChkTelemetry.IsChecked == true;
 
-                _s.Save();
-                _onSave?.Invoke(_s);
-            }
+                        _s.Save();
+                        _onSave?.Invoke(_s);
+                    }
         }
     }
 }
