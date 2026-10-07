@@ -69,44 +69,44 @@ namespace RagnaController
         }
 
         private void InitializeOverlayCustomization()
-        {
-            // OverlayThemeCombo
-            var themes = new[]
-            {
-                new ComboBoxItem { Content = "Neon", Tag = Settings.OverlayThemeType.Neon },
-                new ComboBoxItem { Content = "Soft", Tag = Settings.OverlayThemeType.Soft },
-                new ComboBoxItem { Content = "Dark", Tag = Settings.OverlayThemeType.Dark }
-            };
-            OverlayThemeCombo.ItemsSource = themes;
-            OverlayThemeCombo.SelectedItem = themes.FirstOrDefault(item => (Settings.OverlayThemeType?)item.Tag == _s.OverlayTheme) ?? themes[0];
+                {
+                    // OverlayThemeCombo — mit lokalisierten Strings
+                    var themes = new[]
+                    {
+                        new ComboBoxItem { Content = LocalizationManager.GetLocalizedString("Settings_OverlayTheme_Neon"), Tag = Settings.OverlayThemeType.Neon },
+                        new ComboBoxItem { Content = LocalizationManager.GetLocalizedString("Settings_OverlayTheme_Soft"), Tag = Settings.OverlayThemeType.Soft },
+                        new ComboBoxItem { Content = LocalizationManager.GetLocalizedString("Settings_OverlayTheme_Dark"), Tag = Settings.OverlayThemeType.Dark }
+                    };
+                    OverlayThemeCombo.ItemsSource = themes;
+                    OverlayThemeCombo.SelectedItem = themes.FirstOrDefault(item => (Settings.OverlayThemeType?)item.Tag == _s.OverlayTheme) ?? themes[0];
 
-            // OverlayOpacitySlider
-            OverlayOpacitySlider.Value = _s.OverlayOpacity;
-            OverlayOpacityValue.Text = $"{_s.OverlayOpacity:P0}";
+                    // OverlayOpacitySlider
+                    OverlayOpacitySlider.Value = _s.OverlayOpacity;
+                    OverlayOpacityValue.Text = $"{_s.OverlayOpacity:P0}";
 
-            // OverlayFontScaleSlider
-            OverlayFontScaleSlider.Value = _s.OverlayFontScale;
-            OverlayFontScaleValue.Text = $"{_s.OverlayFontScale:P0}";
-        }
+                    // OverlayFontScaleSlider
+                    OverlayFontScaleSlider.Value = _s.OverlayFontScale;
+                    OverlayFontScaleValue.Text = $"{_s.OverlayFontScale:P0}";
+                }
 
-        private void ChkAutoLoadProfile_Click(object sender, RoutedEventArgs e)
-        {
-            // Auto-load profile feature removed in v1.7.0
-        }
+                private void ChkAutoLoadProfile_Click(object sender, RoutedEventArgs e)
+                {
+                    // Auto-load profile feature removed in v1.7.0
+                }
 
-        private void InitializeLogLevelCombo()
-        {
-            // Log levels matching Settings.LogLevel: 0=Debug, 1=Info, 2=Warning, 3=Error
-            var logLevels = new[]
-            {
-                new ComboBoxItem { Content = "Debug", Tag = 0 },
-                new ComboBoxItem { Content = "Info", Tag = 1 },
-                new ComboBoxItem { Content = "Warning", Tag = 2 },
-                new ComboBoxItem { Content = "Error", Tag = 3 }
-            };
-            LogLevelCombo.ItemsSource = logLevels;
-            LogLevelCombo.SelectedItem = logLevels.FirstOrDefault(item => (int?)item.Tag == _s.LogLevel) ?? logLevels[1];
-        }
+                private void InitializeLogLevelCombo()
+                {
+                    // Log levels matching Settings.LogLevel: 0=Debug, 1=Info, 2=Warning, 3=Error
+                    var logLevels = new[]
+                    {
+                        new ComboBoxItem { Content = LocalizationManager.GetLocalizedString("LogLevel_Debug"), Tag = 0 },
+                        new ComboBoxItem { Content = LocalizationManager.GetLocalizedString("LogLevel_Info"), Tag = 1 },
+                        new ComboBoxItem { Content = LocalizationManager.GetLocalizedString("LogLevel_Warning"), Tag = 2 },
+                        new ComboBoxItem { Content = LocalizationManager.GetLocalizedString("LogLevel_Error"), Tag = 3 }
+                    };
+                    LogLevelCombo.ItemsSource = logLevels;
+                    LogLevelCombo.SelectedItem = logLevels.FirstOrDefault(item => (int?)item.Tag == _s.LogLevel) ?? logLevels[1];
+                }
 
         private void InitializeLanguageCombo()
         {

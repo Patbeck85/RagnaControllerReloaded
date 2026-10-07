@@ -93,14 +93,15 @@
                                                                                                       Click="ChkStartInMiniMode_Click"/>
 
                                                                 <CheckBox x:Name="ChkSmartStandby" Content="{core:Loc Settings_EnableSmartStandby}"
-                                                                                                      Click="ChkSmartStandby_Click"/>
+                                                                                                                                                                      Click="ChkSmartStandby_Click"/>
 
-                                                                <TextBox x:Name="TxtStandbyMinutes" Text="5"
-                                                                         Foreground="{StaticResource TextPrimary}" FontSize="10" Width="60" Height="40"
-                                                                         BorderBrush="{StaticResource BgBorder}" BorderThickness="1"
-                                                                         Padding="8,0" Margin="0,4"/>
+                                                                                                                                <TextBlock Text="{core:Loc Settings_StandbyMinutes}" Style="{StaticResource BodyText}" Margin="0,0,0,4"/>
+                                                                                                                                <TextBox x:Name="TxtStandbyMinutes" Text="5"
+                                                                                                                                         Foreground="{StaticResource TextPrimary}" FontSize="10" Width="60" Height="40"
+                                                                                                                                         BorderBrush="{StaticResource BgBorder}" BorderThickness="1"
+                                                                                                                                         Padding="8,0" Margin="0,4"/>
 
-                                                                <CheckBox x:Name="ChkFocusLock" Content="{core:Loc Settings_EnableFocusLock}"
+                                                                                                                                <CheckBox x:Name="ChkFocusLock" Content="{core:Loc Settings_EnableFocusLock}"
                                                                                                       Click="ChkFocusLock_Click"/>
 
                                                                 <ComboBox x:Name="LogLevelCombo" 

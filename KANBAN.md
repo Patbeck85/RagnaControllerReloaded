@@ -644,13 +644,17 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Priorität:** LOW (Architektur-Refactoring)
 **DoD:** Orchestrator < 300 Zeilen; Engines per DI registrierbar; Unit-Tests für einzelne Engines ohne vollen Orchestrator.
 
-### 🟨 TECH-022: SettingsWindow — Localization Keys Missing for New Controls (S4)
-**File:** src/RagnaController/SettingsWindow.xaml (OverlayThemeCombo, LogLevelCombo Items, TxtStandbyMinutes Label)
-**Fundament:** Neue Controls (OverlayThemeCombo, LogLevelCombo) haben hardcodierte ComboBoxItem-Contents ("Neon", "Soft", "Dark", "Debug", "Info", "Warning", "Error") ohne Lokalisierung.
-**Impact:** Diese UI-Elemente nicht übersetzbar.
-**Suggested Fix:** Items via Code-behind mit lokalisierten Strings befüllen oder ResourceDictionary für ComboBox-Items.
+### 🟨 TECH-022: SettingsWindow — Localization Keys Missing for New Controls (S4) ✅ ERLEDIGT (2026-10-07)
+**File:** src/RagnaController/SettingsWindow.xaml + .xaml.cs (OverlayThemeCombo, LogLevelCombo Items, TxtStandbyMinutes Label)
+**Fundament:** Neue Controls (OverlayThemeCombo, LogLevelCombo) hatten hardcodierte ComboBoxItem-Contents ("Neon", "Soft", "Dark", "Debug", "Info", "Warning", "Error") ohne Lokalisierung.
+**Fix:** 
+- `InitializeOverlayCustomization()`: `LocalizationManager.GetLocalizedString("Settings_OverlayTheme_Neon/Soft/Dark")` für ComboBox-Items
+- `InitializeLogLevelCombo()`: `LocalizationManager.GetLocalizedString("LogLevel_Debug/Info/Warning/Error")` für ComboBox-Items
+- XAML: `<TextBlock Text="{core:Loc Settings_StandbyMinutes}">` Label für TxtStandbyMinutes hinzugefügt
+- Bestehende Keys in en.json/de.json genutzt (LogLevel_*, Settings_OverlayTheme_*, Settings_StandbyMinutes)
+**Impact:** Alle ComboBox-Items in SettingsWindow jetzt übersetzbar (DE/EN).
 **Priorität:** LOW (Lokalisierungskonsistenz)
-**DoD:** Alle ComboBox-Items in SettingsWindow lokalisiert.
+**DoD:** ✅ Alle ComboBox-Items in SettingsWindow lokalisiert; Build 0 Errors/0 Warnings; 325/325 Tests PASS.
 
 ### 🟨 TECH-023: ProfileManager — Constructor I/O + Static State (S3) ❌ WONT_FIX (2026-10-07)
 **File:** src/RagnaController/Profiles/ProfileManager.cs
@@ -732,7 +736,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 3. **TECH-026** (InputCommandQueue Thread-Safety) — Release Build Regression, HIGH Priority
 4. **TECH-028** (ClassDetector BuildSkillToClassMap) — Core Feature Korrektheit, HIGH Priority
 5. **TECH-018, TECH-019** — MEDIUM Priority
-6. **TECH-021, TECH-022** — LOW Priority
+6. **TECH-021** — LOW Priority
 
 ---
 
@@ -815,7 +819,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 ### 🟨 TECH-021: EngineOrchestrator — God Class / SRP Violation (S4)
 → Siehe SPRINT D oben
 
-### 🟨 TECH-022: SettingsWindow — Localization Keys Missing for New Controls (S4)
+### 🟨 TECH-022: SettingsWindow — Localization Keys Missing for New Controls (S4) ✅ ERLEDIGT (2026-10-07)
 → Siehe SPRINT D oben
 
 ### 🟨 TECH-023: ProfileManager — Constructor I/O + Static State (S3) ❌ WONT_FIX (2026-10-07)
