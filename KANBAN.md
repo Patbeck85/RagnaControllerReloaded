@@ -636,13 +636,13 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Priorität:** LOW (Performance-Optimierung)
 **DoD:** ✅ EnumWindows-Callback allokiert 0 Process-Objekte; Window-Switch < 5ms; Build 0 Errors/0 Warnings; 325/325 Tests PASS.
 
-### 🟨 TECH-021: EngineOrchestrator — God Class / SRP Violation (S4)
+### 🟨 TECH-021: EngineOrchestrator — God Class / SRP Violation (S4) ❌ WONT_FIX (2026-10-07)
 **File:** src/RagnaController/Core/EngineOrchestrator.cs (686 Zeilen, 20+ Engine-Fields)
 **Fundament:** Orchestrator instanziiert, verdrahtet und verwaltet ALLE Engines (Movement, Combat, AutoTarget, Mage, Combo, Cursor, SmartCursor, Kite, Support, Voice, Overlay, MobSweep, Handheld, Watchdog, Cooldown, DualSense, GroundSpell, SkillOrchestrator, BuffManager, ItemManager, PartyManager, MemoryTracker, LatencyTracker, ProfileManager, InputRouter, StandbyManager, ProfileApplier).
 **Impact:** Hohe Kopplung, schwer testbar, Verletzung von Single Responsibility Principle; Konstruktor > 200 Zeilen.
-**Suggested Fix:** Extraction zu `EngineRegistry` / `EngineCompositionRoot` (Factory-Pattern); Orchestrator delegiert nur Tick-Lifecycle. Engines per `IEngine` Interface registrieren.
-**Priorität:** LOW (Architektur-Refactoring)
-**DoD:** Orchestrator < 300 Zeilen; Engines per DI registrierbar; Unit-Tests für einzelne Engines ohne vollen Orchestrator.
+**ENTSCHEIDUNG (2026-10-07):** **WONT_FIX** — LOW Priority (Architektur-Refactoring ohne User-Facing-Bug). Bestehender Code ist stabil (Build 0 Warnings, 325/325 Tests PASS), Refactoring-Risiko (Regressions) > Nutzen für Hobby-Projekt. Muster `IEngine` + `EngineRegistry` prototypisiert aber nicht integriert (Datei `EngineRegistry.cs` existiert nicht im Build).
+**Priorität:** LOW → **ENTFALLEN**
+**DoD:** N/A — bewusst nicht angegangen.
 
 ### 🟨 TECH-022: SettingsWindow — Localization Keys Missing for New Controls (S4) ✅ ERLEDIGT (2026-10-07)
 **File:** src/RagnaController/SettingsWindow.xaml + .xaml.cs (OverlayThemeCombo, LogLevelCombo Items, TxtStandbyMinutes Label)
@@ -816,7 +816,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 ### 🟨 TECH-020: WindowSwitcher — Process.GetProcessById in EnumWindows Callback (S4) ✅ ERLEDIGT (2026-10-07)
 → Siehe SPRINT D oben
 
-### 🟨 TECH-021: EngineOrchestrator — God Class / SRP Violation (S4)
+### 🟨 TECH-021: EngineOrchestrator — God Class / SRP Violation (S4) ❌ WONT_FIX (2026-10-07)
 → Siehe SPRINT D oben
 
 ### 🟨 TECH-022: SettingsWindow — Localization Keys Missing for New Controls (S4) ✅ ERLEDIGT (2026-10-07)
