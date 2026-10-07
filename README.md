@@ -1,6 +1,6 @@
 # RagnaController v2.2.0 — Autonomous Multi-Agent Development
 
-**Version:** 2.2.0 | **Release:** 2026-09-04 | **Build:** 0 errors, 0 warnings | **Tests:** 56/56 passing
+**Version:** 2.2.0 | **Release:** 2026-10-07 | **Build:** 0 errors, 0 warnings | **Tests:** 325/325 (Debug) + 40/40 (Release Fuzz) passing
 
 ## 🤖 Autonomous Development Summary
 
@@ -19,7 +19,7 @@ This release represents a complete autonomous development cycle executed per **S
 
 ---
 
-## ✨ Key Features (v2.1.0)
+## ✨ Key Features (v2.2.0)
 
 | Feature | Description |
 |---|---|
@@ -213,7 +213,7 @@ src/RagnaController/
 │   └── VirtualKey.cs                       # Enum matching Win32 VK codes
 │
 ├── Profiles/
-│   ├── Profile.cs                          # JSON structure of character class profile
+│   ├── Profile.cs                          # JSON structure of character profile
 │   ├── ProfileManager.cs                   # Load/Save/Import/Export/Backup
 │   └── AppJsonContext.cs                   # AOT-friendly System.Text.Json context
 │
@@ -239,14 +239,14 @@ Located in `tests/RagnaController.Tests/`:
 - No Win32 calls during tests (isolated from OS)
 - xUnit framework with NSubstitute and FluentAssertions
 
-**Current Test Suite:** 56 tests passing across all core engines and integration tests.
+**Current Test Suite:** 325 tests passing across all core engines and integration tests.
 
 ### Build Verification
 
 Before any deployment:
 
 1. **Compile** project (`dotnet build`) — **0 errors, 0 warnings** ✅
-2. **Run tests** (`dotnet test`) — **56/56 passing** ✅
+2. **Run tests** (`dotnet test`) — **325/325 passing** ✅
 3. **Manual Windows testing** (VS Code / Visual Studio)
 4. **Verify release isolation** — `release_final/` contains only end products ✅
 
@@ -377,4 +377,4 @@ Automated checks for all 7 golden rules — all satisfied in v2.0.3.
 
 ---
 
-*Last updated: 2026-08-24 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 56/56 passing*
+*Last updated: 2026-10-07 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 325/325 (Debug) + 40/40 (Release Fuzz) | SOUL.md: All 7 golden rules satisfied*
