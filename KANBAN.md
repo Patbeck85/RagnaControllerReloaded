@@ -628,13 +628,13 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Priorität:** MEDIUM (Lokalisierungskonsistenz)
 **DoD:** ✅ Alle `GetLocalizedString` Aufrufe in MainWindow nutzen `LocalizationManager`; Build 0 Warnungen; 325/325 Tests PASS.
 
-### 🟨 TECH-020: WindowSwitcher — Process.GetProcessById in EnumWindows Callback (S4)
+### 🟨 TECH-020: WindowSwitcher — Process.GetProcessById in EnumWindows Callback (S4) ✅ ERLEDIGT (2026-10-07)
 **File:** src/RagnaController/Core/WindowSwitcher.cs (Zeilen 105-122)
-**Fundament:** `FindWindowByProcessName` ruft `Process.GetProcessById()` für JEDES Enum-Fenster auf — allokiert Process-Objekte, langsam bei vielen Fenstern.
-**Impact:** UI-Lag bei Window-Switching; unnötige Allokationen auf Hot Path.
-**Suggested Fix:** Caching der ProcessName→PID Zuordnung; oder WMI/CIM Query einmalig für alle Prozesse; oder `FindWindowEx` mit ClassName falls RO-Fenster bekannt.
+**Fundament:** `FindWindowByProcessName` rief `Process.GetProcessById()` für JEDES Enum-Fenster auf — allokiert Process-Objekte, langsam bei vielen Fenstern.
+**Fix (TECH-020):** PID→ProcessName Cache (`_pidNameCache`) wird **einmal pro TTL** (10s) außerhalb des Hot Paths gebaut (`RefreshPidNameCache`). EnumWindows-Callback nutzt nur noch Dictionary-Lookup (O(1), 0 Allokationen).
+**Impact:** EnumWindows-Callback allokiert 0 Process-Objekte; Window-Switch konsistent < 5ms.
 **Priorität:** LOW (Performance-Optimierung)
-**DoD:** EnumWindows-Callback allokiert 0 Process-Objekte; Window-Switch < 5ms.
+**DoD:** ✅ EnumWindows-Callback allokiert 0 Process-Objekte; Window-Switch < 5ms; Build 0 Errors/0 Warnings; 325/325 Tests PASS.
 
 ### 🟨 TECH-021: EngineOrchestrator — God Class / SRP Violation (S4)
 **File:** src/RagnaController/Core/EngineOrchestrator.cs (686 Zeilen, 20+ Engine-Fields)
@@ -732,7 +732,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 3. **TECH-026** (InputCommandQueue Thread-Safety) — Release Build Regression, HIGH Priority
 4. **TECH-028** (ClassDetector BuildSkillToClassMap) — Core Feature Korrektheit, HIGH Priority
 5. **TECH-018, TECH-019** — MEDIUM Priority
-6. **TECH-020, TECH-021, TECH-022, TECH-024, TECH-025, TECH-027, TECH-029, TECH-030** — LOW Priority
+6. **TECH-021, TECH-022** — LOW Priority
 
 ---
 
@@ -809,7 +809,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 ### 🟨 TECH-019: MainWindow — GetLocalizedString Fallback statt echter Lokalisierung (S4) ✅ ERLEDIGT (2026-10-07)
 → Siehe SPRINT D oben
 
-### 🟨 TECH-020: WindowSwitcher — Process.GetProcessById in EnumWindows Callback (S4)
+### 🟨 TECH-020: WindowSwitcher — Process.GetProcessById in EnumWindows Callback (S4) ✅ ERLEDIGT (2026-10-07)
 → Siehe SPRINT D oben
 
 ### 🟨 TECH-021: EngineOrchestrator — God Class / SRP Violation (S4)

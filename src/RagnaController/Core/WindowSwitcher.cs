@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace RagnaController.Core
@@ -7,6 +8,7 @@ namespace RagnaController.Core
     /// <summary>
     /// Fokussiert ein Fenster per Prozessname.
     /// Gecachte Prozess-HWND — kein GetProcessesByName() bei jedem Aufruf.
+    /// TECH-020 Fix: PID→ProcessName Cache wird einmal pro TTL gebaut (keine Allokationen im EnumWindows-Callback).
     /// </summary>
     public static class WindowSwitcher
     {
@@ -15,6 +17,11 @@ namespace RagnaController.Core
         // HWND-Cache: ProcessName → (hwnd, lastChecked)
         private static readonly Dictionary<string, (IntPtr hwnd, long tick)> _cache = new();
         private const long CACHE_TTL_MS = 10_000; // alle 10s verifizieren
+
+        // TECH-020: PID → ProcessName Cache (einmal pro TTL, nicht pro EnumWindow-Callback)
+        private static readonly Dictionary<int, string> _pidNameCache = new();
+        private static long _pidNameCacheTick = 0;
+        private const long PID_NAME_CACHE_TTL_MS = 10_000; // synchron mit HWND-Cache
 
         /// <summary>
         /// FEAT-015: Explizites Ziel-Fenster für Multi-Client-Betrieb (Alt-Char, Farming).
@@ -94,12 +101,44 @@ namespace RagnaController.Core
             if (_cache.TryGetValue(name, out var entry) && (now - entry.tick) < CACHE_TTL_MS)
                 return entry.hwnd;
 
+            // TECH-020: PID→Name Cache einmalig aufbauen (nicht pro Callback)
+            RefreshPidNameCache(now);
+
             // Teuer — aber nur alle 10s
             IntPtr found = FindWindow(null, null);
-            // FindWindowByProcName via Enumeration (vermeidet GetProcessesByName)
             IntPtr hwnd = FindWindowByProcessName(name);
             _cache[name] = (hwnd, now);
             return hwnd;
+        }
+
+        /// <summary>
+        /// TECH-020: Baut PID→ProcessName Mapping einmal pro TTL auf.
+        /// Vermeidet Process.GetProcessById() Allokationen im EnumWindows-Callback.
+        /// </summary>
+        private static void RefreshPidNameCache(long now)
+        {
+            if ((now - _pidNameCacheTick) < PID_NAME_CACHE_TTL_MS && _pidNameCache.Count > 0)
+                return;
+
+            _pidNameCache.Clear();
+            try
+            {
+                // Einmalig alle Prozesse laden — außerhalb des Hot Paths
+                foreach (var p in Process.GetProcesses())
+                {
+                    try
+                    {
+                        _pidNameCache[p.Id] = p.ProcessName;
+                    }
+                    catch { /* Access denied — ignorieren */ }
+                    finally
+                    {
+                        p.Dispose();
+                    }
+                }
+                _pidNameCacheTick = now;
+            }
+            catch { /* System.Diagnostics nicht verfügbar — Fallback leer lassen */ }
         }
 
         private static IntPtr FindWindowByProcessName(string procName)
@@ -109,13 +148,14 @@ namespace RagnaController.Core
             {
                 GetWindowThreadProcessId(hwnd, out uint pid);
                 if (pid == 0) return true;
-                try
+
+                // TECH-020: Lookup im vorgefertigten Cache (keine Allokation!)
+                if (_pidNameCache.TryGetValue((int)pid, out var cachedName) &&
+                    string.Equals(cachedName, procName, StringComparison.OrdinalIgnoreCase))
                 {
-                    using var p = System.Diagnostics.Process.GetProcessById((int)pid);
-                    if (string.Equals(p.ProcessName, procName, StringComparison.OrdinalIgnoreCase))
-                    { result = hwnd; return false; }
+                    result = hwnd;
+                    return false; // Enum stoppen
                 }
-                catch { }
                 return true;
             }, IntPtr.Zero);
             return result;
