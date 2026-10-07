@@ -683,13 +683,13 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Priorität:** HIGH (Thread-Safety Regression)
 **DoD:** `InputCommandQueue` thread-safe in Release & Debug; Fuzz-Tests (TEST-011) grün in Release-Build.
 
-### 🟨 TECH-027: KiteRetreatingState — RetreatDurationMs <= 0 Guard aber Division (S3)
+### 🟨 TECH-027: KiteRetreatingState — RetreatDurationMs <= 0 Guard aber Division (S3) ✅ ERLEDIGT (2026-10-07)
 **File:** src/RagnaController/Core/KiteStates.cs (Zeilen 119, 121)
-**Fundament:** Guard prüft `ctx.RetreatDurationMs <= 0` → Transition, aber Zeile 121 teilt durch `ctx.RetreatDurationMs / (float)deltaMs` — wenn `deltaMs > RetreatDurationMs > 0`, Schrittweite > Distanz → Overshoot.
-**Impact:** Bewegung ungenau bei kurzen Retreat-Dauern / großen deltaMs.
-**Suggested Fix:** `Math.Min(step, remainingDist)` Clamping oder Time-basierte Interpolation statt Step-basiert.
+**Fundament:** Guard prüft `ctx.RetreatDurationMs <= 0` → Transition (bereits vorhanden, Division-by-Zero **schon behoben**). ECHTER verbleibender Edge-Case in derselben Formel: `step = RetreatCursorDist / (RetreatDurationMs / (float)deltaMs)` = `RetreatCursorDist * deltaMs / RetreatDurationMs`. Bei `deltaMs >= RetreatDurationMs` wird `step > RetreatCursorDist` → **Overshoot**: ein EINZELNER Frame bewegt mehr als die gesamte Rückzugsdistanz.
+**Fix (minimal-invasiv):** `_rem` (verbleibende Gesamtdistanz) in `Enter()` initialisieren; in `Update()` `step = Math.Min(…, _rem)` clampen → Summe ist exakt `RetreatCursorDist` über alle deltaMs/Duration-Kombinationen. Normales Verhalten bit-exakt erhalten, nur Overshoot eliminiert.
+**Impact:** Bewegung exakt bei ALLEN deltaMs/Duration-Kombinationen (auch Frame-Hänger / lange Frames).
 **Priorität:** LOW (Gameplay-Präzision)
-**DoD:** Retreat-Bewegung exakt bei allen deltaMs/Duration-Kombinationen; Unit-Test für Edge-Cases.
+**DoD:** ✅ 3 neue Unit-Tests (`KiteRetreatOvershootTests`): `GrosserDeltaMs_KeinOvershoot`, `NormalerBetrieb_GesamtdistanzUngeschaeumt`, `Null_Duration_SofortPivoting`. Build: 0 Errors, 0 Warnings. Tests: 325/325 PASS.
 
 ### 🟨 TECH-028: TelemetryPanel — DispatcherTimer ohne Dispose in StopUpdates (S3) ✅ ERLEDIGT (2026-10-06)
 **File:** src/RagnaController/Controls/TelemetryPanel.xaml.cs
@@ -831,7 +831,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 ### 🟨 TECH-026: InputCommandQueue — Debug-Only Lock (S4)
 → Siehe SPRINT D oben
 
-### 🟨 TECH-027: KiteRetreatingState — RetreatDurationMs Division Edge-Case (S3)
+### 🟨 TECH-027: KiteRetreatingState — RetreatDurationMs Division Edge-Case (S3) ✅ ERLEDIGT (2026-10-07)
 → Siehe SPRINT D oben
 
 ### 🟨 TECH-028: TelemetryPanel — DispatcherTimer ohne Dispose in StopUpdates (S3) ✅ ERLEDIGT (2026-10-06)

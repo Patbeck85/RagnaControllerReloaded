@@ -101,7 +101,7 @@ namespace RagnaController.Core
     public sealed class KiteRetreatingState : KiteStateBase
     {
         private int   _t, _clickT;
-        private float _ax, _ay, _dx, _dy;
+        private float _ax, _ay, _dx, _dy, _rem;
         public override string Label => "RETREATING";
         public override void Enter(CombatContext ctx)
         {
@@ -109,6 +109,7 @@ namespace RagnaController.Core
             _dx = ctx.AimValidated ? -ctx.LastAimX : -0.707f;
             _dy = ctx.AimValidated ? -ctx.LastAimY : -0.707f;
             _ax = _ay = 0f;
+            _rem = ctx.RetreatCursorDist; // TECH-027: verbleibende Gesamtdistanz (Overshoot-Schutz)
         }
         public override ICombatState Update(ParsedInput input, int deltaMs, CombatContext ctx)
         {
@@ -118,8 +119,12 @@ namespace RagnaController.Core
             // um den Rückzug zu deaktivieren. Wenn Duration <= 0, springen wir direkt zum Pivoting-Status.
             if (ctx.RetreatDurationMs <= 0) return Transition(KiteStatePool.Pivoting, ctx);
             
-            float step = ctx.RetreatCursorDist / (ctx.RetreatDurationMs / (float)deltaMs);
+            // TECH-027: Overshoot-Schutz — step darf nicht die verbleibende Gesamtdistanz überschreiten.
+            // Ohne Clamp springt bei deltaMs >= RetreatDurationMs ein einzelner Frame über das Ziel hinaus
+            // (step > RetreatCursorDist). Mit Clamp summiert sich der Cursor exakt auf RetreatCursorDist.
+            float step = Math.Min(ctx.RetreatCursorDist / (ctx.RetreatDurationMs / (float)deltaMs), _rem);
             _ax += _dx * step; _ay += _dy * step;
+            _rem -= step;
             int mx = (int)_ax; int my = (int)_ay; _ax -= mx; _ay -= my;
             if ((_clickT -= deltaMs) <= 0) { ctx.MouseClick?.Invoke(0, 0); _clickT = 180; }
             if (mx != 0 || my != 0) ctx.MouseMove?.Invoke(mx, my);
