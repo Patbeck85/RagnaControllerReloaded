@@ -631,11 +631,7 @@ namespace RagnaController
             catch { }
         }
 
-        private string GetLocalizedString(string key)
-        {
-            // Simple fallback - in production this would use a localization system
-            return key.Replace("_", " ");
-        }
+        private static string GetLocalizedString(string key) => LocalizationManager.GetLocalizedString(key);
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

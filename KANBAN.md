@@ -620,13 +620,13 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Priorität:** MEDIUM
 **DoD:** HttpClient korrekt verwaltet; keine ObjectDisposedException bei Wiederverwendung; Socket-Cleanup bei Shutdown.
 
-### 🟨 TECH-019: MainWindow — GetLocalizedString Fallback statt echter Lokalisierung (S4)
-**File:** src/RagnaController/MainWindow.xaml.cs (Zeilen 634-638)
-**Fundament:** `GetLocalizedString` macht nur `key.Replace("_", " ")` — keine echte Lokalisierung via `LocalizationManager`.
-**Impact:** MainWindow UI-Texte (Toasts, etc.) nicht übersetzt, hardcoded Englisch.
-**Suggested Fix:** Delegation an `LocalizationManager.Instance.GetLocalizedString(key)` wie in SettingsWindow/CommunityBrowserWindow.
+### 🟨 TECH-019: MainWindow — GetLocalizedString Fallback statt echter Lokalisierung (S4) ✅ ERLEDIGT (2026-10-07)
+**File:** src/RagnaController/MainWindow.xaml.cs (Zeilen 447, 486, 634-638)
+**Fundament:** Lokale `GetLocalizedString` machte nur `key.Replace("_", " ")` — keine echte Lokalisierung via `LocalizationManager`.
+**Fix:** Durch `private static string GetLocalizedString(string key) => LocalizationManager.GetLocalizedString(key);` ersetzt (Delegation wie in SettingsWindow/CommunityBrowserWindow). Beide Aufrufstellen (Tab_NoMappings) nutzen jetzt echte i18n.
+**Impact:** MainWindow UI-Texte (Toasts, etc.) jetzt über Lokalisierungssystem; DE/EN Strings verfügbar.
 **Priorität:** MEDIUM (Lokalisierungskonsistenz)
-**DoD:** Alle `GetLocalizedString` Aufrufe in MainWindow nutzen `LocalizationManager`; DE/EN Strings verfügbar.
+**DoD:** ✅ Alle `GetLocalizedString` Aufrufe in MainWindow nutzen `LocalizationManager`; Build 0 Warnungen; 325/325 Tests PASS.
 
 ### 🟨 TECH-020: WindowSwitcher — Process.GetProcessById in EnumWindows Callback (S4)
 **File:** src/RagnaController/Core/WindowSwitcher.cs (Zeilen 105-122)
@@ -806,7 +806,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 ### 🟨 TECH-018: CommunityBrowserWindow — Static HttpClient Disposal Issue (S3) ✅ ERLEDIGT (2026-10-06)
 → Siehe SPRINT D oben
 
-### 🟨 TECH-019: MainWindow — GetLocalizedString Fallback statt echter Lokalisierung (S4)
+### 🟨 TECH-019: MainWindow — GetLocalizedString Fallback statt echter Lokalisierung (S4) ✅ ERLEDIGT (2026-10-07)
 → Siehe SPRINT D oben
 
 ### 🟨 TECH-020: WindowSwitcher — Process.GetProcessById in EnumWindows Callback (S4)
