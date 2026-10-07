@@ -652,13 +652,13 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Priorität:** LOW (Lokalisierungskonsistenz)
 **DoD:** Alle ComboBox-Items in SettingsWindow lokalisiert.
 
-### 🟨 TECH-023: ProfileManager — Constructor I/O + Static State (S3)
+### 🟨 TECH-023: ProfileManager — Constructor I/O + Static State (S3) ❌ WONT_FIX (2026-10-07)
 **File:** src/RagnaController/Profiles/ProfileManager.cs
 **Fundament:** Konstruktor macht File I/O (`Load()`, `LoadCharacterMappings()`) und registriert statische Events. Verletzt "Constructors should not do work". Static `ShareCodeCache._map` in ProfileShareService lädt beim Class-Load.
 **Impact:** Startup-Latenz; schwer unit-testbar (File-System Dependency); Static State leakt zwischen Tests.
-**Suggested Fix:** Lazy-Loading via `InitializeAsync()`; `ProfileManager` von Static State befreien; `ShareCodeCache.Load()` on-demand.
-**Priorität:** MEDIUM (Testbarkeit, Startup-Performance)
-**DoD:** Constructor I/O-frei; `InitializeAsync()` für Load; Tests nutzen In-Memory-ProfileManager ohne File-System.
+**ENTSCHEIDUNG (User-Direktive, 2026-10-07):** **WONT_FIX** — 9 Produktions-Aufrufe + 8 Test-Aufrufe; **S1 Datenverlust-Risiko** bei Refactoring (SaveProfile serialisiert komplette Profile-Liste → Überschreibt `profiles.json` bei falscher Initialisierung). Risiko > Nutzen für Hobby-Projekt. Bestehende Architektur stabil, Tests grün.
+**Priorität:** MEDIUM → **ENTFALLEN**
+**DoD:** N/A — bewusst nicht angegangen.
 
 ### 🟨 TECH-024: AdvancedLogger — Channel BoundedChannelFullMode.DropOldest (S4) ✅ ERLEDIGT (2026-10-06)
 **Fundament:** `FullMode = BoundedChannelFullMode.DropOldest` — Log-Einträge werden bei Last stillschweigend verworfen.
@@ -731,7 +731,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 2. **TECH-017** (SettingsWindow CheckBox Handlers) — User-facing Bug, HIGH Priority
 3. **TECH-026** (InputCommandQueue Thread-Safety) — Release Build Regression, HIGH Priority
 4. **TECH-028** (ClassDetector BuildSkillToClassMap) — Core Feature Korrektheit, HIGH Priority
-5. **TECH-018, TECH-019, TECH-023** — MEDIUM Priority
+5. **TECH-018, TECH-019** — MEDIUM Priority
 6. **TECH-020, TECH-021, TECH-022, TECH-024, TECH-025, TECH-027, TECH-029, TECH-030** — LOW Priority
 
 ---
@@ -818,7 +818,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 ### 🟨 TECH-022: SettingsWindow — Localization Keys Missing for New Controls (S4)
 → Siehe SPRINT D oben
 
-### 🟨 TECH-023: ProfileManager — Constructor I/O + Static State (S3)
+### 🟨 TECH-023: ProfileManager — Constructor I/O + Static State (S3) ❌ WONT_FIX (2026-10-07)
 → Siehe SPRINT D oben
 
 ### 🟨 TECH-024: AdvancedLogger — Channel BoundedChannelFullMode.DropOldest (S4) ✅ ERLEDIGT (2026-10-06)
