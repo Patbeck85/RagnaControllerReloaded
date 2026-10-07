@@ -11,6 +11,9 @@ jobs:
     name: Unit Tests (.NET 8)
     runs-on: windows-latest
 
+    env:
+      RAGNACONTROLLER_SKIP_SDL: "1"
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -71,6 +74,9 @@ jobs:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     timeout-minutes: 60
+
+    env:
+      RAGNACONTROLLER_SKIP_SDL: "1"
 
     steps:
       - name: Checkout
@@ -166,6 +172,10 @@ jobs:
   build-check:
     name: Build Check (Release)
     runs-on: windows-latest
+
+    env:
+      RAGNACONTROLLER_SKIP_SDL: "1"
+
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4

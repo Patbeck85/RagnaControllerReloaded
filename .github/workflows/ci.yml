@@ -10,6 +10,9 @@ jobs:
   build:
     runs-on: windows-latest
 
+    env:
+      RAGNACONTROLLER_SKIP_SDL: "1"
+
     steps:
     - uses: actions/checkout@v4
 
