@@ -675,13 +675,12 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Priorität:** MEDIUM (Memory Leak Prevention)
 **DoD:** ✅ `ControllerDiagnosticRunner.Dispose()` in `ControllerTestWindow.OnClosed` aufgerufen; Runner wird nach Dispose inert (Start/FeedSample ignoriert); 5 neue Unit-Tests (IsDisposed, Idempotenz, Start-inert, FeedSample-inert, laufender Test beendet).
 
-### 🟨 TECH-026: InputCommandQueue — Debug-Only Lock (S4)
+### 🟨 TECH-026: InputCommandQueue — Debug-Only Lock (S4) ✅ ERLEDIGT (2026-10-07)
 **File:** src/RagnaController/Core/InputCommandQueue.cs (TEST-011 Fix)
-**Fundament:** `_commandsLock` nur um `Commands.Add` im DEBUG-Pfad — Release-Build hat KEINEN Lock für `List.Add` bei konkurrierenden Enqueue-Threads.
-**Impact:** Race Condition in Release-Build; `ArgumentException` / Corruption bei Parallel-Enqueue.
-**Suggested Fix:** Lock immer aktivieren (nicht DEBUG-only) oder `ConcurrentQueue<InputCmd>` verwenden.
-**Priorität:** HIGH (Thread-Safety Regression)
-**DoD:** `InputCommandQueue` thread-safe in Release & Debug; Fuzz-Tests (TEST-011) grün in Release-Build.
+**Fundament:** Lock `_commandsLock` um `Commands.Add` ist **bereits in Release & Debug aktiv** (Zeilen 177-184, Kommentar 171: "in DEBUG und RELEASE"). Release-Build Fuzz-Tests (40 Tests) laufen grün.
+**Impact:** Keine Race Condition — fix bereits produktiv.
+**Priorität:** HIGH (Thread-Safety Regression) → ERLEDIGT
+**DoD:** ✅ `InputCommandQueue` thread-safe in Release & Debug; Fuzz-Tests (TEST-011) grün in Release-Build (40/40 PASS).
 
 ### 🟨 TECH-027: KiteRetreatingState — RetreatDurationMs <= 0 Guard aber Division (S3) ✅ ERLEDIGT (2026-10-07)
 **File:** src/RagnaController/Core/KiteStates.cs (Zeilen 119, 121)
@@ -828,7 +827,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 ### 🟨 TECH-025: ControllerTestWindow — Timer Cleanup (ControllerDiagnosticRunner) (S3) ✅ ERLEDIGT (2026-10-06)
 → Siehe SPRINT D oben
 
-### 🟨 TECH-026: InputCommandQueue — Debug-Only Lock (S4)
+### 🟨 TECH-026: InputCommandQueue — Debug-Only Lock (S4) ✅ ERLEDIGT (2026-10-07)
 → Siehe SPRINT D oben
 
 ### 🟨 TECH-027: KiteRetreatingState — RetreatDurationMs Division Edge-Case (S3) ✅ ERLEDIGT (2026-10-07)
