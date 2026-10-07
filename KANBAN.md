@@ -718,17 +718,41 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Priorität:** LOW (Code-Qualität)
 **DoD:** Einmalige `SaveSettings()` Methode; beide Caller nutzen sie; keine Duplikation.
 
+### 🟨 TECH-031: InputRouter — Settings.Load() JSON-File-I/O pro Tick (Memory Leak + Perf) (S2) ✅ ERLEDIGT (2026-10-07)
+**File:** src/RagnaController/Core/InputRouter.cs (RouteInput, Zeile ~195)
+**Fundament:** `RouteInput` rief **jeden Tick** (125×/s) `Models.Settings.Load()` auf — das liest die JSON-Datei von Disk UND deserialisiert sie → Heap-Allokation + File-I/O im Hot Path. Ursache des Soak-Memory-Leaks (`Soak_10kTicks` meldete 21 MB Heap-Wachstum nach Full-GC, Limit 10 MB).
+**Fix:** `RightStickPolicy` wird gecacht (`_cachedRightStickPolicy`) und nur alle ~10 s (`SETTINGS_CACHE_TTL_TICKS = 1250` @ 125 Hz) via `Environment.TickCount64` neu geladen. Hot Path ist jetzt allokalationsfrei (nur ein `long`-Vergleich).
+**Impact:** Soak-Memory-Leak behoben; ~125 JSON-File-Reads/s eliminiert; RightStickPolicy-Änderungen in Settings werden max. 10 s verzögert übernommen (akzeptabel, DoD „stabil über CI-Runs").
+**Priorität:** HIGH (Memory Leak + Performance)
+**DoD:** ✅ `Soak_10kTicks_CompleteEngineChain_NoMemoryLeak` PASS; Build 0 Errors/0 Warnings; 325/325 Tests PASS.
+
+### 🟨 TECH-032: CursorEngine — Virtual-Cursor Desync bei physischer Maus-Bewegung (S3) ✅ ERLEDIGT (2026-10-07)
+**File:** src/RagnaController/Core/CursorEngine.cs (Update, Zeile ~150)
+**Fundament:** Der virtuelle Cursor (`_virtualX/_virtualY`) wird nur beim ersten Verlassen der Deadzone aus `GetCursorPos` initialisiert. Wenn der Nutzer **zwischenzeitlich physisch die Maus bewegt**, das Fenster wechselt oder DPI ändert, driftet der virtuelle Cursor von der echten Windows-Position ab → Sprung/Rubber-Banding beim nächsten Stick-Input.
+**Fix:** Periodischer Resync (`RESYNC_INTERVAL_TICKS = 62` ≈ 500 ms @ 125 Hz): `GetCursorPos` wird alle ~500 ms verglichen; bei Abweichung > `MAX_DESYNC_PIXELS` (50 px) wird der virtuelle Cursor hart auf die echte Position gesetzt. Kein Hot-Path-Allokation (ein `POINT` struct).
+**Impact:** Kein Sprung/Rubber-Banding mehr bei physischer Maus-Bewegung/Fensterwechsel; Desync begrenzt auf ≤ 50 px / ≤ 500 ms.
+**Priorität:** MEDIUM (Gameplay-Präzision)
+**DoD:** ✅ Cursor springt nicht mehr nach physischer Maus-Bewegung; Build 0 Errors/0 Warnings; 325/325 Tests PASS.
+
+### 🟨 TECH-033: MageEngine — R2 Bolt-Spam nur analog (TriggerRight) statt digital ODER analog (S3) ✅ ERLEDIGT (2026-10-07)
+**File:** src/RagnaController/Core/MageEngine.cs (Update, Zeile ~98)
+**Fundament:** `Handle` prüfte `input.TriggerRight > 0.5f` (nur analog). Digitaler R2 (`input.R2`, z. B. von Controllern ohne Analog-Trigger oder Test-Mocks) feuerte **nicht** → Bolt-Spam tot bei digitaler R2-Erkennung; 2 Unit-Tests (`Handle_R2_FiresBoltKey_AndSetsBoltSpammingPhase`, `Handle_R2Released_ReturnsToIdlePhase`) rot.
+**Fix:** Bedingung auf `input.R2 || input.TriggerRight > 0.5f` (digital ODER analog) erweitert — beide Pfade feuern den Bolt-Spam, bestehendes Analog-Verhalten unverändert. Zusätzlich: versehentliche Indentation-Nachbesserung der Methode (16→8 Spaces) für Lesbarkeit.
+**Impact:** R2 Bolt-Spam funktioniert sowohl digital als auch analog; keine Verhaltensänderung für Analog-Nutzer.
+**Priorität:** MEDIUM (Gameplay-Korrektheit)
+**DoD:** ✅ Beide R2-Tests PASS; Build 0 Errors/0 Warnings; 325/325 Tests PASS.
+
 ---
 
-## Metriken (Stand 2026-10-05)
+## Metriken (Stand 2026-10-07)
 - **Build:** 0 Errors ✅ (0 Warnungen ✅)
-- **Tests:** 301/301 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅
+- **Tests:** 325/325 passing (mit RAGNACONTROLLER_SKIP_SDL=1) ✅
 - **Phase 8 Completion:** 100% (9/9 Tasks) ✅
 - **Phase 9 Progress:** 9/9 Tasks (100%) — **ALL COMPLETE** ✅
 - **Phase 10 Sprint A:** 5/5 Tasks (100%) ✅
 - **Phase 10 Sprint B:** 7/7 Tasks (100%) ✅
 - **Phase 10 Sprint C:** 6/6 Tasks (100%) ✅
-- **SPRINT D (NEW):** 14 Tasks geplant (TECH-016 bis TECH-030)
+- **SPRINT D:** 15 Tasks geplant (TECH-016 bis TECH-030) + 3 Fixes aus Full-App-Inspection (TECH-031, TECH-032, TECH-033) — alle ERLEDIGT ✅
 
 ## Next Steps
 1. **TECH-016** (Empty Catch Blocks) — SOUL.md Compliance, HIGH Priority

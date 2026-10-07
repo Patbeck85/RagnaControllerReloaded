@@ -30,37 +30,42 @@ namespace RagnaController.Core
         private CooldownManager _cooldownManager = null!;
 
         // ── ROB-002: Input-Emulation-Failover (SendInput ↔ Kernel) ─────────────
-        private IMouseEmulationStrategy? _failoverPrimary;
-        private IMouseEmulationStrategy? _failoverFallback;
-        private int _failoverThresholdMs;
-        private int _failoverTriggerCount;
-        private int _failoverRecoveryCount;
-        private int _consecutiveSlow;
-        private int _consecutiveStable;
-        private bool _usingFallback;
-        private readonly object _failoverLock = new();
+                private IMouseEmulationStrategy? _failoverPrimary;
+                private IMouseEmulationStrategy? _failoverFallback;
+                private int _failoverThresholdMs;
+                private int _failoverTriggerCount;
+                private int _failoverRecoveryCount;
+                private int _consecutiveSlow;
+                private int _consecutiveStable;
+                private bool _usingFallback;
+                private readonly object _failoverLock = new();
 
-        /// <summary>Die aktuell aktive Emulations-Strategie (SendInput oder Kernel).</summary>
-        public IMouseEmulationStrategy? ActiveStrategy => _usingFallback ? _failoverFallback : _failoverPrimary;
+                // Cached settings for hot path (avoid Settings.Load() allocation every tick)
+                private RightStickPolicy _cachedRightStickPolicy = RightStickPolicy.Hybrid;
+                private long _settingsCacheTick = 0;
+                private const long SETTINGS_CACHE_TTL_TICKS = 1250; // ~10s bei 125Hz
 
-        /// <summary>ROB-002: Feuert bei jedem Failover-Switch (von, zu, Auslöser-Zähler). Für UI/Telemetrie.</summary>
-        public event Action<string, string, int>? FailoverSwitched;
+                /// <summary>Die aktuell aktive Emulations-Strategie (SendInput oder Kernel).</summary>
+                public IMouseEmulationStrategy? ActiveStrategy => _usingFallback ? _failoverFallback : _failoverPrimary;
 
-        /// <summary>
-        /// ROB-002: Initialisiert den Input-Emulation-Failover.
-        /// Primär = SendInput (Standard), Fallback = Kernel-Strategie (Interception).
-        /// </summary>
-        public void InitializeFailover(IMouseEmulationStrategy primary, IMouseEmulationStrategy? fallback, Models.Settings settings)
-        {
-            lock (_failoverLock)
-            {
-                _failoverPrimary = primary;
-                _failoverFallback = fallback;
-                _failoverThresholdMs = Math.Max(1, settings.FailoverLatencyThresholdMs);
-                _failoverTriggerCount = Math.Max(1, settings.FailoverTriggerCount);
-                _failoverRecoveryCount = Math.Max(1, settings.FailoverRecoveryCount);
-            }
-        }
+                /// <summary>ROB-002: Feuert bei jedem Failover-Switch (von, zu, Auslöser-Zähler). Für UI/Telemetrie.</summary>
+                public event Action<string, string, int>? FailoverSwitched;
+
+                /// <summary>
+                /// ROB-002: Initialisiert den Input-Emulation-Failover.
+                /// Primär = SendInput (Standard), Fallback = Kernel-Strategie (Interception).
+                /// </summary>
+                public void InitializeFailover(IMouseEmulationStrategy primary, IMouseEmulationStrategy? fallback, Models.Settings settings)
+                {
+                    lock (_failoverLock)
+                    {
+                        _failoverPrimary = primary;
+                        _failoverFallback = fallback;
+                        _failoverThresholdMs = Math.Max(1, settings.FailoverLatencyThresholdMs);
+                        _failoverTriggerCount = Math.Max(1, settings.FailoverTriggerCount);
+                        _failoverRecoveryCount = Math.Max(1, settings.FailoverRecoveryCount);
+                    }
+                }
 
         /// <summary>
         /// ROB-002: Failover-State-Machine. Wird von InputCommandQueue.SendInputLatencyRecorded
@@ -165,53 +170,71 @@ namespace RagnaController.Core
         internal InputRouter() { }
 
         /// <summary>
-        /// Route input through the engine chain. Returns true if input was consumed.
-        /// </summary>
-        public bool RouteInput(ParsedInput input, int actualDeltaMs, bool rumbleEnabled)
-        {
-            // Update combat layers (L1, R1, L2, R2)
-            _combat.UpdateLayers(input.L1, input.R1, input.L2, input.R2);
+                /// Route input through the engine chain. Returns true if input was consumed.
+                /// </summary>
+                public bool RouteInput(ParsedInput input, int actualDeltaMs, bool rumbleEnabled)
+                {
+                    // Update combat layers (L1, R1, L2, R2)
+                    _combat.UpdateLayers(input.L1, input.R1, input.L2, input.R2);
 
-            // Update movement (left stick)
-            _movement.Update(input.LeftX, input.LeftY);
+                    // Update movement (left stick)
+                    _movement.Update(input.LeftX, input.LeftY);
 
-            // OverlayRouter has priority (Start+DPad shortcuts, Mini-Button)
-            if (_overlayRouter.TryHandleInput(input)) return true;
+                    // OverlayRouter has priority (Start+DPad shortcuts, Mini-Button)
+                    if (_overlayRouter.TryHandleInput(input)) return true;
 
-            // SmartCursor: D-Pad Grid-Hopping + Precision-Aiming in menus
-            if (_smartCursor.Tick(input)) return true; // Menu input consumed → skip combat
+                    // SmartCursor: D-Pad Grid-Hopping + Precision-Aiming in menus
+                    if (_smartCursor.Tick(input)) return true; // Menu input consumed → skip combat
 
-            // Cursor (right stick) only when:
-            // a) no target-lock active AND
-            // b) movement (left stick) not active
-            if (!_autoTarget.IsTargetLocked && !_movement.IsWalking)
-            {
-                _cursor.Handle(input, actualDeltaMs);
-            }
+                    // Cursor (right stick) — controlled by RightStickPolicy setting
+                    // Camera: always use right stick for camera
+                    // Aim: only use right stick when target locked
+                    // Hybrid: target locked → aim, otherwise camera
+                    // Use cached settings (refresh every ~10s to avoid allocation every tick)
+                    long currentTick = Environment.TickCount64;
+                    if ((currentTick - _settingsCacheTick) >= SETTINGS_CACHE_TTL_TICKS)
+                    {
+                        var fresh = Models.Settings.Load();
+                        _cachedRightStickPolicy = fresh.RightStickPolicy;
+                        _settingsCacheTick = currentTick;
+                    }
 
-            // Engine chain: first engine returning true consumes the input
-            if (!_kite.Handle(input, actualDeltaMs))
-                if (!_autoTarget.Handle(input, actualDeltaMs))
-                    if (!_mage.Handle(input, actualDeltaMs))
-                        _support.Handle(input, actualDeltaMs);
+                    bool useRightStickForCursor = _cachedRightStickPolicy switch
+                    {
+                        RightStickPolicy.Camera => true,
+                        RightStickPolicy.Aim => _autoTarget.IsTargetLocked,
+                        RightStickPolicy.Hybrid => _autoTarget.IsTargetLocked || !_movement.IsWalking, // Lock=Aim, else Camera
+                        _ => !_autoTarget.IsTargetLocked && !_movement.IsWalking // fallback = old behavior
+                    };
 
-            // Combo engine (Y button hold)
-            _combo.Update(input.BtnY, actualDeltaMs);
+                    if (useRightStickForCursor)
+                    {
+                        _cursor.Handle(input, actualDeltaMs);
+                    }
 
-            // Cooldown tracking
-            _cooldownManager.Tick();
+                    // Engine chain: first engine returning true consumes the input
+                    if (!_kite.Handle(input, actualDeltaMs))
+                        if (!_autoTarget.Handle(input, actualDeltaMs))
+                            if (!_mage.Handle(input, actualDeltaMs))
+                                _support.Handle(input, actualDeltaMs);
 
-            // Mob sweep
-            _mobSweep.Update(actualDeltaMs);
+                    // Combo engine (Y button hold)
+                    _combo.Update(input.BtnY, actualDeltaMs);
 
-            // Handheld mode
-            _handheld.Tick(input, actualDeltaMs);
+                    // Cooldown tracking
+                    _cooldownManager.Tick();
 
-            // Feedback tick (rumble stop via timestamp)
-            _feedback.Tick();
+                    // Mob sweep
+                    _mobSweep.Update(actualDeltaMs);
 
-            return false; // Input not consumed by router (processed by engines)
-        }
+                    // Handheld mode
+                    _handheld.Tick(input, actualDeltaMs);
+
+                    // Feedback tick (rumble stop via timestamp)
+                    _feedback.Tick();
+
+                    return false; // Input not consumed by router (processed by engines)
+                }
 
         /// <summary>
         /// Handle combat action fired event - triggers feedback and cooldown tracking

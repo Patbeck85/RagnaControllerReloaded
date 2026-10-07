@@ -5,6 +5,16 @@ using System.Text.Json;
 
 namespace RagnaController.Models
 {
+    public enum RightStickPolicy
+    {
+        /// <summary>Right Stick steuert Maus/Cursor (Action Combat)</summary>
+        Camera,
+        /// <summary>Right Stick zielt (Target Lock / Aim Assist)</summary>
+        Aim,
+        /// <summary>Hybrid: Target Lock aktiv → Aim, sonst Camera</summary>
+        Hybrid
+    }
+
     public class Settings
     {
         // Path to settings.json in the AppData folder
@@ -12,7 +22,7 @@ namespace RagnaController.Models
         private static readonly string SettingsPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "RagnaController", "settings.json");
-       
+
         // FIX: Flag to mark if loading settings failed
         private static bool _loadFailed = false;
 
@@ -34,30 +44,30 @@ namespace RagnaController.Models
         /// </summary>
         public bool ForceHandheldMode { get; set; } = false;
         public bool StartInMiniMode { get; set; } = false;
-       
+
         // i18n: User's selected language (default: English)
         public string AppLanguage { get; set; } = "en";
-       
+
         // NEW: Ragnarok Online .exe Path Selector
         public string RoExePath { get; set; } = "";
-       
+
         // Focus Lock Einstellungen
         public bool FocusLockEnabled { get; set; } = true;
         public string FocusLockProcess { get; set; } = "ragexe"; // Standard RO Name
-       
+
         public int LogLevel { get; set; } = 1; // 0=Debug, 1=Info, 2=Warning, 3=Error
 
         // NEW: Discord RPC
         public bool EnableDiscordRPC { get; set; } = true;
-       
+
         // NEW: TTS Voice Announcements
-                public bool EnableVoiceAnnouncements { get; set; } = true;
-      
-                // NEW: Haptic Metronome
-                public bool EnableHapticMetronome { get; set; } = false;
-      
-                // NEW: Smart Standby (AFK Battery Saver)
-                public bool EnableSmartStandby { get; set; } = true;
+        public bool EnableVoiceAnnouncements { get; set; } = true;
+
+        // NEW: Haptic Metronome
+        public bool EnableHapticMetronome { get; set; } = false;
+
+        // NEW: Smart Standby (AFK Battery Saver)
+        public bool EnableSmartStandby { get; set; } = true;
         public int StandbyTimeoutMinutes { get; set; } = 5;
 
         // NEW: Anonymous Telemetry & Crash Reporting (GDPR compliant, opt-in)
@@ -90,20 +100,24 @@ namespace RagnaController.Models
         /// <summary>
                 /// Overlay theme variants: Neon (bright cyberpunk), Soft (subtle), Dark (minimal)
                 /// </summary>
-                public enum OverlayThemeType
-                {
-                    Neon = 0,    // Bright cyberpunk colors with strong glows
-                    Soft = 1,    // Subtle colors with gentle glows 
-                    Dark = 2     // Minimal, high contrast, low glow
-                }
+        public enum OverlayThemeType
+        {
+            Neon = 0,    // Bright cyberpunk colors with strong glows
+            Soft = 1,    // Subtle colors with gentle glows
+            Dark = 2     // Minimal, high contrast, low glow
+        }
 
-                // Overlay customization settings
-                public OverlayThemeType OverlayTheme { get; set; } = OverlayThemeType.Neon;
-                public double OverlayOpacity { get; set; } = 0.9;
-                public double OverlayFontScale { get; set; } = 1.0;
+        // Overlay customization settings
+        public OverlayThemeType OverlayTheme { get; set; } = OverlayThemeType.Neon;
+        public double OverlayOpacity { get; set; } = 0.9;
+        public double OverlayFontScale { get; set; } = 1.0;
 
-                // --- Speicher- & Lade-Logik ---
-                public static Settings Load()
+        // ── Right Stick Policy (Action Combat) ──────────────────────────────
+        /// <summary>Right Stick Policy: Camera (Action Combat), Aim (Target Lock), Hybrid (Lock=Aim, else Camera)</summary>
+        public RightStickPolicy RightStickPolicy { get; set; } = RightStickPolicy.Hybrid;
+
+        // --- Speicher- & Lade-Logik ---
+        public static Settings Load()
         {
             try
             {

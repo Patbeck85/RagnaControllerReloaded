@@ -22,6 +22,12 @@ namespace RagnaController.Core
         private float _virtualX, _virtualY;
         private bool _wasInDeadzone = true;
 
+        // TECH-020 Fix: Periodischer Resync des virtuellen Cursors mit echter Windows-Position
+        // Verhindert Desync bei physischer Maus-Bewegung oder Fensterwechsel
+        private int _resyncCounter = 0;
+        private const int RESYNC_INTERVAL_TICKS = 62; // ~500ms bei 125Hz (62 * 8ms ≈ 500ms)
+        private const int MAX_DESYNC_PIXELS = 50; // Max erlaubte Abweichung vor Forced Resync
+
         public CursorEngine(WindowTracker tracker, InputCommandQueue queue)
         {
             _tracker = tracker;
@@ -103,6 +109,25 @@ namespace RagnaController.Core
                 }
 
                 _queue.MoveMouseAbsolute(targetX, targetY);
+            }
+
+            // TECH-020: Periodischer Resync des virtuellen Cursors
+            // Verhindert Desync bei physischer Maus-Bewegung, Fensterwechsel oder DPI-Änderungen
+            _resyncCounter++;
+            if (_resyncCounter >= RESYNC_INTERVAL_TICKS)
+            {
+                _resyncCounter = 0;
+                if (GetCursorPos(out POINT pt))
+                {
+                    int dx = Math.Abs(pt.X - (int)_virtualX);
+                    int dy = Math.Abs(pt.Y - (int)_virtualY);
+                    if (dx > MAX_DESYNC_PIXELS || dy > MAX_DESYNC_PIXELS)
+                    {
+                        // Forced Resync bei zu großer Abweichung
+                        _virtualX = pt.X;
+                        _virtualY = pt.Y;
+                    }
+                }
             }
         }
     }

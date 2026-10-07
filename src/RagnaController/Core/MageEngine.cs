@@ -94,8 +94,8 @@ namespace RagnaController.Core
             // FIX: Release-to-Cast Architecture - CombatEngine zentralisiert Ground Spell State
             // Wir melden den Cast-Zustand an die CombatEngine statt direkt zu casten
 
-            // 2. Bolt-Spam Modus (Trigger R2 gehalten)
-            if (input.R2)
+            // 2. Bolt-Spam Modus (Trigger R2 gehalten) — digital ODER analog
+            if (input.R2 || input.TriggerRight > 0.5f)
             {
                 if (_castCooldown <= 0)
                 {
@@ -115,6 +115,7 @@ namespace RagnaController.Core
             else
             {
                 Phase = MagePhase.Idle;
+                _cursorInitialized = false; // Reset on release
             }
         }
 

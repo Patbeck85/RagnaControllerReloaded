@@ -127,161 +127,165 @@ namespace RagnaController.Core
         public bool IsDragging => _isDragging;
 
         /// <summary>
-        /// Main tick function - processes input and advances smart cursor state
-        /// </summary>
-        public bool Tick(ParsedInput input)
-        {
-            // Toggle via L3 + Start
-            if (input.L3 && input.Start)
-            {
-                ToggleMenuMode();
-                return true;
-            }
-
-            // Exit menu mode via B Button or Escape key (Back button)
-            if (input.Back) // Back button is pressed (Escape key)
-            {
-                DisableMenuMode();
-                return true;
-            }
-
-            if (!IsMenuMode) return false;
-
-            // ── Smart Grid Detection & Snap-to-Center ───────────────────────
-            // Calculate exact physical pixels based on monitor DPI
-            int jumpDistance = (int)(SLOT_SIZE * _tracker.DpiScale);
-
-            // D-Pad grid-hop (Absolute Anchor-based) - prevents desync from physical mouse bumps
-            bool moved = false;
-
-            if (input.DPadRight) { _gridX++; moved = true; }
-            else if (input.DPadLeft) { _gridX--; moved = true; }
-            else if (input.DPadDown) { _gridY++; moved = true; }
-            else if (input.DPadUp) { _gridY--; moved = true; }
-
-            if (moved)
-            {
-                int slotSize = (int)(SLOT_SIZE * _tracker.DpiScale);
-                int targetX = _anchorX + (_gridX * slotSize);
-                int targetY = _anchorY + (_gridY * slotSize);
-                
-                // Keep inside screen/tracker bounds
-                if (_tracker.IsTracking)
+                /// Main tick function - processes input and advances smart cursor state
+                /// </summary>
+                public bool Tick(ParsedInput input)
                 {
-                    int limitX = _tracker.ClientW / 2;
-                    int limitY = _tracker.ClientH / 2;
-                    targetX = Math.Clamp(targetX, _tracker.CenterX - limitX, _tracker.CenterX + limitX);
-                    targetY = Math.Clamp(targetY, _tracker.CenterY - limitY, _tracker.CenterY + limitY);
-                }
-
-                _queue.MouseMoveAbsolute(targetX, targetY);
-            }
-
-            // ── Precision Aiming Mode (Hold Right Stick Click) ───────────────
-            // Note: Right stick click detection not available in current ParsedInput implementation
-            // Precision aiming can be implemented when RightStickClicked property is added to ParsedInput
-
-            // ── Auto-Equip Logic (A Button) ──────────────────────────────────
-            if (input.BtnA)
-            {
-                // Double-click for equip/use item
-                _queue.DoubleClick();
-                
-                // Optional: Auto-equip nearest item if in precision mode
-                if (_precisionOffsetX == 0f && _precisionOffsetY == 0f)
-                {
-                    _feedback.Trigger(FeedbackType.PrecisionModeOn);
-                }
-            }
-
-            // ── Context-Aware Actions (X Button) ──────────────────────────────
-            if (input.BtnX)
-            {
-                // Right-click for item info or split stack
-                _queue.RightClick();
-                
-                // Optional: Toggle between left/right click modes
-                // _feedback.Trigger(FeedbackType.RightClickMode);
-            }
-
-            // ── Multi-Selection Logic (Shift + D-Pad) ────────────────────────
-            if (_isShiftDown && GridModeEnabled)
-            {
-                if (input.DPadRight) 
-                {
-                    int slotIndex = CalculateSlotIndex(_currentSlotX, _currentSlotY);
-                    if (!_selectedSlots.Contains(slotIndex))
+                    // Toggle via L3 + Start
+                    if (input.L3 && input.Start)
                     {
-                        _selectedSlots.Add(slotIndex);
-                        // Multi-select feedback not implemented - use Warning as placeholder
-                        // _feedback.Trigger(FeedbackType.MultiSelectAdded);
+                        ToggleMenuMode();
+                        return true;
                     }
-                }
-                else if (input.DPadLeft) 
-                {
-                    int slotIndex = CalculateSlotIndex(_currentSlotX, _currentSlotY);
-                    if (_selectedSlots.Contains(slotIndex))
+
+                    // Exit menu mode via B Button or Escape key (Back button)
+                    if (input.Back) // Back button is pressed (Escape key)
                     {
-                        _selectedSlots.Remove(slotIndex);
-                        // Multi-select removal feedback not implemented - use Warning as placeholder
-                        // _feedback.Trigger(FeedbackType.MultiSelectRemoved);
+                        DisableMenuMode();
+                        return true;
                     }
-                }
-            }
 
-            // ── Drag & Drop Support (Hold A + Move) ───────────────────────────
-            if (input.BtnA)
-            {
-                if (!_isDragging)
-                {
-                    // Start drag from current slot
-                    _dragStartX = _currentSlotX;
-                    _dragStartY = _currentSlotY;
-                    _dragItemSlotX = _currentSlotX;
-                    _dragItemSlotY = _currentSlotY;
-                    _isDragging = true;
-                    // Drag started feedback not implemented - use Warning as placeholder
-                    // _feedback.Trigger(FeedbackType.DragStarted);
-                }
-                else
-                {
-                    // Update drag position
-                    int deltaX = _currentSlotX - _dragStartX;
-                    int deltaY = _currentSlotY - _dragStartY;
-                    
-                    if (Math.Abs(deltaX) > 1 || Math.Abs(deltaY) > 1)
+                    if (!IsMenuMode) return false;
+
+                    // ── Smart Grid Detection & Snap-to-Center ───────────────────────
+                    // Calculate exact physical pixels based on monitor DPI
+                    int jumpDistance = (int)(SLOT_SIZE * _tracker.DpiScale);
+
+                    // D-Pad grid-hop (Absolute Anchor-based) - prevents desync from physical mouse bumps
+                    bool moved = false;
+
+                    if (input.DPadRight) { _gridX++; moved = true; }
+                    else if (input.DPadLeft) { _gridX--; moved = true; }
+                    else if (input.DPadDown) { _gridY++; moved = true; }
+                    else if (input.DPadUp) { _gridY--; moved = true; }
+
+                    if (moved)
                     {
-                        _queue.MouseMove(deltaX * SLOT_SIZE, deltaY * SLOT_SIZE);
+                        int slotSize = (int)(SLOT_SIZE * _tracker.DpiScale);
+                        int targetX = _anchorX + (_gridX * slotSize);
+                        int targetY = _anchorY + (_gridY * slotSize);
+
+                        // Keep inside screen/tracker bounds
+                        if (_tracker.IsTracking)
+                        {
+                            int limitX = _tracker.ClientW / 2;
+                            int limitY = _tracker.ClientH / 2;
+                            targetX = Math.Clamp(targetX, _tracker.CenterX - limitX, _tracker.CenterX + limitX);
+                            targetY = Math.Clamp(targetY, _tracker.CenterY - limitY, _tracker.CenterY + limitY);
+                        }
+
+                        _queue.MouseMoveAbsolute(targetX, targetY);
                     }
+
+                    // ── Precision Aiming Mode (Hold Right Stick Click / R3) ─────────────
+                    if (input.R3)
+                    {
+                        // R3 held: precision mode - fine cursor adjustment via right stick
+                        float precisionSpeed = 2.0f * _tracker.DpiScale;
+                        _queue.MoveMouseRelative((int)(input.RightX * precisionSpeed), (int)(input.RightY * precisionSpeed));
+                        return true; // Consume input
+                    }
+
+                    // ── Auto-Equip Logic (A Button) ──────────────────────────────────
+                    if (input.BtnA)
+                    {
+                        // Double-click for equip/use item
+                        _queue.DoubleClick();
+
+                        // Optional: Auto-equip nearest item if in precision mode
+                        if (_precisionOffsetX == 0f && _precisionOffsetY == 0f)
+                        {
+                            _feedback.Trigger(FeedbackType.PrecisionModeOn);
+                        }
+                        return true; // Consume input
+                    }
+
+                    // ── Context-Aware Actions (X Button) ──────────────────────────────
+                    if (input.BtnX)
+                    {
+                        // Right-click for item info or split stack
+                        _queue.RightClick();
+                        return true; // Consume input
+                    }
+
+                    // ── Multi-Selection Logic (Shift + D-Pad) ────────────────────────
+                    if (_isShiftDown && GridModeEnabled)
+                    {
+                        if (input.DPadRight) 
+                        {
+                            int slotIndex = CalculateSlotIndex(_currentSlotX, _currentSlotY);
+                            if (!_selectedSlots.Contains(slotIndex))
+                            {
+                                _selectedSlots.Add(slotIndex);
+                                // Multi-select feedback not implemented - use Warning as placeholder
+                                // _feedback.Trigger(FeedbackType.MultiSelectAdded);
+                            }
+                        }
+                        else if (input.DPadLeft) 
+                        {
+                            int slotIndex = CalculateSlotIndex(_currentSlotX, _currentSlotY);
+                            if (_selectedSlots.Contains(slotIndex))
+                            {
+                                _selectedSlots.Remove(slotIndex);
+                                // Multi-select removal feedback not implemented - use Warning as placeholder
+                                // _feedback.Trigger(FeedbackType.MultiSelectRemoved);
+                            }
+                        }
+                    }
+
+                    // ── Drag & Drop Support (Hold A + Move) ───────────────────────────
+                    if (input.BtnA)
+                    {
+                        if (!_isDragging)
+                        {
+                            // Start drag from current slot
+                            _dragStartX = _currentSlotX;
+                            _dragStartY = _currentSlotY;
+                            _dragItemSlotX = _currentSlotX;
+                            _dragItemSlotY = _currentSlotY;
+                            _isDragging = true;
+                            // Drag started feedback not implemented - use Warning as placeholder
+                            // _feedback.Trigger(FeedbackType.DragStarted);
+                        }
+                        else
+                        {
+                            // Update drag position
+                            int deltaX = _currentSlotX - _dragStartX;
+                            int deltaY = _currentSlotY - _dragStartY;
+
+                            if (Math.Abs(deltaX) > 1 || Math.Abs(deltaY) > 1)
+                            {
+                                _queue.MouseMove(deltaX * SLOT_SIZE, deltaY * SLOT_SIZE);
+                            }
+                        }
+                    }
+                    else if (_isDragging)
+                    {
+                        // End drag operation
+                        _isDragging = false;
+                        _dragStartX = 0;
+                        _dragStartY = 0;
+                        _dragItemSlotX = -1;
+                        _dragItemSlotY = -1;
+                    }
+
+                    // ── Consume Face Buttons to prevent CombatEngine interference ─────
+                    if (input.BtnA || input.BtnB || input.BtnX || input.BtnY || 
+                        input.DPadUp || input.DPadDown || input.DPadLeft || input.DPadRight)
+                    {
+                        return true;
+                    }
+
+                    // Release Shift key (track state manually)
+                    if (input.Back && !_isShiftDown)
+                    {
+                        _isShiftDown = false;
+                        _isMultiSelecting = false;
+                        _selectedSlots.Clear();
+                    }
+
+                    return false; // Let sticks and triggers pass through
                 }
-            }
-            else if (!_isDragging)
-            {
-                // End drag operation
-                _isDragging = false;
-                _dragStartX = 0;
-                _dragStartY = 0;
-                _dragItemSlotX = -1;
-                _dragItemSlotY = -1;
-            }
-
-            // ── Consume Face Buttons to prevent CombatEngine interference ─────
-            if (input.BtnA || input.BtnB || input.BtnX || input.BtnY || 
-                input.DPadUp || input.DPadDown || input.DPadLeft || input.DPadRight)
-            {
-                return true;
-            }
-
-            // Release Shift key (track state manually)
-            if (input.Back && !_isShiftDown)
-            {
-                _isShiftDown = false;
-                _isMultiSelecting = false;
-                _selectedSlots.Clear();
-            }
-
-            return false; // Let sticks and triggers pass through
-        }
 
         /// <summary>
         /// Calculate slot index from grid coordinates (for multi-selection)

@@ -19,8 +19,9 @@ namespace RagnaController.Models
         // Shoulder buttons
         L1 = 1 << 4,     // L1 / L1
         R1 = 1 << 5,     // R1 / R1
-        L2 = 1 << 6,     // L2 / L2 (analog trigger)
-        R2 = 1 << 7,     // R2 / R2 (analog trigger)
+        // L2/R2 are now ANALOG TRIGGERS (float TriggerLeft/Right), kept for digital compat
+        L2 = 1 << 6,     // L2 / L2 (digital fallback)
+        R2 = 1 << 7,     // R2 / R2 (digital fallback)
 
         // Stick buttons
         L3 = 1 << 8,     // Left stick press
@@ -63,6 +64,7 @@ namespace RagnaController.Models
         // Digital buttons
         public bool L1 { get; init; }
         public bool R1 { get; init; }
+        // L2/R2 are now ANALOG TRIGGERS (float). Kept for digital fallback/compat.
         public bool L2 { get; init; }
         public bool R2 { get; init; }
         public bool L3 { get; init; }
@@ -79,7 +81,7 @@ namespace RagnaController.Models
         public bool Start { get; init; }
         public bool Back { get; init; }
 
-        // Triggers (0.0 to 1.0)
+        // Triggers (0.0 to 1.0) — ANALOG
         public float TriggerLeft { get; init; }
         public float TriggerRight { get; init; }
 

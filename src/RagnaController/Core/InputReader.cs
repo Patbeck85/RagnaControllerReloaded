@@ -52,7 +52,7 @@ namespace RagnaController.Core
                 float lx = SDL.GameControllerGetAxis(pad, SDLGameControllerAxis.Leftx) / 32768f;
                 float ly = SDL.GameControllerGetAxis(pad, SDLGameControllerAxis.Lefty) / -32768f; // Invert Y so Up is positive
                 float rx = SDL.GameControllerGetAxis(pad, SDLGameControllerAxis.Rightx) / 32768f;
-                float ry = SDL.GameControllerGetAxis(pad, SDLGameControllerAxis.Righty) / -32768f;
+                float ry = SDL.GameControllerGetAxis(pad, SDLGameControllerAxis.Righty) / -32768f; // Invert Y so Up is positive
 
                 // Apply deadzone and normalization for RO compatibility
                 float leftStickDeadzone = _lastStickDeadzone;
@@ -89,7 +89,7 @@ namespace RagnaController.Core
                 bool btnB = SDL.GameControllerGetButton(pad, SDLGameControllerButton.B) == 1;
                 bool btnX = SDL.GameControllerGetButton(pad, SDLGameControllerButton.X) == 1;
                 bool btnY = SDL.GameControllerGetButton(pad, SDLGameControllerButton.Y) == 1;
-                
+
                 bool l1 = SDL.GameControllerGetButton(pad, SDLGameControllerButton.Leftshoulder) == 1;
                 bool r1 = SDL.GameControllerGetButton(pad, SDLGameControllerButton.Rightshoulder) == 1;
                 bool l3 = SDL.GameControllerGetButton(pad, SDLGameControllerButton.Leftstick) == 1;
@@ -102,6 +102,10 @@ namespace RagnaController.Core
                 bool dpadDown = SDL.GameControllerGetButton(pad, SDLGameControllerButton.DpadDown) == 1;
                 bool dpadLeft = SDL.GameControllerGetButton(pad, SDLGameControllerButton.DpadLeft) == 1;
                 bool dpadRight = SDL.GameControllerGetButton(pad, SDLGameControllerButton.DpadRight) == 1;
+
+                // Digital L2/R2 fallback (for code using bool L2/R2)
+                bool l2Digital = lt > 0.15f;
+                bool r2Digital = rt > 0.15f;
 
                 // Create GamepadButtonFlags bitmask for JustPressed/JustReleased logic
                 GamepadButtonFlags currentButtons = GamepadButtonFlags.None;
@@ -128,8 +132,8 @@ namespace RagnaController.Core
                     LeftY = ly,
                     RightX = rx,
                     RightY = ry,
-                    L2 = lt > 0.15f,
-                    R2 = rt > 0.15f,
+                    L2 = l2Digital,
+                    R2 = r2Digital,
                     TriggerLeft = lt,
                     TriggerRight = rt,
                     L1 = l1,
@@ -151,29 +155,29 @@ namespace RagnaController.Core
                 };
 
                 _prevRawButtons = currentButtons;
-                                return input;
-                            }
-                            catch (Exception ex)
-                            {
-                                System.Diagnostics.Debug.WriteLine($"[InputReader] Read error: {ex.Message}");
-                                return ParsedInput.Disconnected;
-                            }
-                        }
+                return input;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[InputReader] Read error: {ex.Message}");
+                return ParsedInput.Disconnected;
+            }
+        }
 
-                        /// <summary>
-                        /// Apply deadzone filtering to analog stick/trigger values.
-                        /// Values within ±deadzone are zeroed; values outside are scaled to maintain range.
-                        /// </summary>
-                        private static float ApplyDeadzone(float value, float deadzone)
-                        {
-                            if (deadzone <= 0f) return value;
-                            if (deadzone >= 1f) return 0f;
-            
-                            float abs = Math.Abs(value);
-                            if (abs <= deadzone) return 0f;
-            
-                            // Scale the remaining range back to 0..1
-                            return (abs - deadzone) / (1f - deadzone) * Math.Sign(value);
-                        }
-                    }
-                }
+        /// <summary>
+        /// Apply deadzone filtering to analog stick/trigger values.
+        /// Values within ±deadzone are zeroed; values outside are scaled to maintain range.
+        /// </summary>
+        private static float ApplyDeadzone(float value, float deadzone)
+        {
+            if (deadzone <= 0f) return value;
+            if (deadzone >= 1f) return 0f;
+
+            float abs = Math.Abs(value);
+            if (abs <= deadzone) return 0f;
+
+            // Scale the remaining range back to 0..1
+            return (abs - deadzone) / (1f - deadzone) * Math.Sign(value);
+        }
+    }
+}
