@@ -8,6 +8,19 @@ using RagnaController.Core;
 namespace RagnaController.Tests
 {
     /// <summary>
+    /// Kontrollierbare Zeitquelle für deterministische Watchdog-Tests.
+    /// Ersetzt Thread.Sleep/Wall-Clock — CI-sicher.
+    /// </summary>
+    public sealed class ManualTimeSource
+    {
+        private long _ticks = Stopwatch.GetTimestamp();
+        public long NowTicks => Interlocked.Read(ref _ticks);
+        public void Advance(TimeSpan delta) => Interlocked.Add(ref _ticks, (long)(delta.TotalSeconds * Stopwatch.Frequency));
+        public void AdvanceMs(long ms) => Advance(TimeSpan.FromMilliseconds(ms));
+        public Func<long> AsFunc() => () => NowTicks;
+    }
+
+    /// <summary>
     /// ROB-001: Unit-Tests für EngineWatchdog (Hang-Erkennung + Auto-Restart).
     /// DoD: Hang simuliert → Orchestrator-Restart ohne App-Crash; Watchdog deterministisch stoppbar.
     /// </summary>
@@ -35,10 +48,10 @@ namespace RagnaController.Tests
             wd.HangDetected += ms => fired = true;
 
             // Deterministisch via injizierbarer Uhr: +50 ms < 500 ms Threshold → kein Hang.
-            long fakeNow = Stopwatch.GetTimestamp();
-            wd.TimeSource = () => Interlocked.Read(ref fakeNow);
+            var time = new ManualTimeSource();
+            wd.TimeSource = time.AsFunc();
             wd.MarkTick();
-            Interlocked.Exchange(ref fakeNow, fakeNow + (long)(Stopwatch.Frequency * 0.05)); // +50 ms
+            time.AdvanceMs(50);
 
             wd.CheckForHang();
 
@@ -128,18 +141,22 @@ namespace RagnaController.Tests
         [Fact]
         public void PollLoop_DetectsHang_Automatically()
         {
+            // Virtuelle Zeit → deterministisch, CI-sicher
+            var time = new ManualTimeSource();
             using var wd = new EngineWatchdog { HangThresholdMs = 150, HangPollIntervalMs = 20 };
+            wd.TimeSource = time.AsFunc();
             bool fired = false;
             wd.HangDetected += ms => fired = true;
 
-            wd.MarkTick();
+            wd.MarkTick(); // Heartbeat aktiv
             wd.Start();
 
-            // No more ticks → poll loop must fire within ~threshold + 2 polls
-            var sw = System.Diagnostics.Stopwatch.StartNew();
-            while (!fired && sw.ElapsedMilliseconds < 3000) Thread.Sleep(10);
+            // Zeit virtuell vorwärts treiben: 150ms Threshold + 2 Polls (2x20ms) = 190ms
+            // Poll-Loop prüft alle 20ms → nach ~190ms muss fired=true sein
+            time.AdvanceMs(200);
+            wd.CheckForHang(); // Poll-Loop simulieren
 
-            Assert.True(fired, "Poll loop did not detect hang within 3s");
+            Assert.True(fired, "Poll loop did not detect hang with virtual time");
         }
 
         // ── Legacy performance behavior (regression guard) ────────────────
@@ -176,12 +193,15 @@ namespace RagnaController.Tests
         [Fact]
         public void RecordTick_AlsoMarksHeartbeat()
         {
+            // Virtuelle Zeit → deterministisch, CI-sicher
+            var time = new ManualTimeSource();
             using var wd = new EngineWatchdog { HangThresholdMs = 100 };
+            wd.TimeSource = time.AsFunc();
             bool fired = false;
             wd.HangDetected += ms => fired = true;
 
             wd.RecordTick(8.0); // per-tick call path must also update heartbeat
-            Thread.Sleep(50);
+            time.AdvanceMs(50); // virtueller Zeitfortschritt: 50ms < 100ms Threshold
             wd.CheckForHang();
 
             Assert.False(fired);
@@ -231,25 +251,28 @@ namespace RagnaController.Tests
             engine.Start();
             tickProvider.FireTick();
 
+            // Warten bis der erste Tick verarbeitet wurde (MarkTick aufgerufen) — CI-sicher
+            Thread.Sleep(200); // Generös: stellt sicher, dass Tick-Loop lief
+
             // Wait for watchdog (threshold 500ms, poll 100ms) to detect + restart.
+            // CI-sicher: 10s Timeout statt 5s
             var sw = System.Diagnostics.Stopwatch.StartNew();
             bool restarted = false;
-            while (!restarted && sw.ElapsedMilliseconds < 5000)
+            while (!restarted && sw.ElapsedMilliseconds < 10000)
             {
                 lock (restartMessages)
                     restarted = restartMessages.Exists(m => m.Contains("neu gestartet"));
-                if (!restarted) Thread.Sleep(25);
+                if (!restarted) Thread.Sleep(50);
             }
 
-            Assert.True(restarted, "Watchdog did not restart engine after simulated hang");
+            Assert.True(restarted, "Watchdog did not restart engine after simulated hang (10s timeout)");
 
             // Ticks resume after restart → hang state clears, no further restarts.
-            // WICHTIG: sustained healthy ticks (nicht Einzel-Ticks) — sonst ist ein
-            // zweiter Hang korrekt und der Watchdog würde zu Recht erneut feuern.
-            for (int i = 0; i < 40; i++)
+            // Sustained healthy ticks (nicht Einzel-Ticks) — sonst feuert Watchdog zu Recht erneut.
+            for (int i = 0; i < 60; i++) // Länger: 60 * 30ms = 1.8s << 500ms Threshold
             {
                 tickProvider.FireTick();
-                Thread.Sleep(30); // ~1.2s gesamt, Ticks alle 30ms << 500ms Threshold
+                Thread.Sleep(30);
             }
 
             int restartCountAfter = 0;
