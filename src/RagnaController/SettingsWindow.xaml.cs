@@ -38,35 +38,47 @@ namespace RagnaController
                 }
 
         private void InitializeSettings()
-        {
-            // Profile Settings - populate with available profiles
-            ProfileCombo.ItemsSource = _manager.Profiles;
-            var lastProfile = _manager.Profiles.FirstOrDefault(p => p.Name == _s.LastProfileName);
-            if (lastProfile != null)
-            {
-                ProfileCombo.SelectedItem = lastProfile;
-            }
-            CurrentProfileText.Text = string.IsNullOrEmpty(_s.LastProfileName) 
-                ? "No profile loaded" 
-                : $"Current: {_s.LastProfileName}";
+                {
+                    // Profile Settings - populate with available profiles
+                    ProfileCombo.ItemsSource = _manager.Profiles;
+                    var lastProfile = _manager.Profiles.FirstOrDefault(p => p.Name == _s.LastProfileName);
+                    if (lastProfile != null)
+                    {
+                        ProfileCombo.SelectedItem = lastProfile;
+                    }
+                    CurrentProfileText.Text = string.IsNullOrEmpty(_s.LastProfileName) 
+                        ? "No profile loaded" 
+                        : $"Current: {_s.LastProfileName}";
 
-            // Engine Settings
-                        ChkStartWithWindows.IsChecked = _s.StartWithWindows;
-                        ChkMinimizeToTray.IsChecked = _s.MinimizeToTray;
-                        ChkShowLatency.IsChecked = _s.ShowLatency;
+                    // Engine Settings
+                    ChkStartWithWindows.IsChecked = _s.StartWithWindows;
+                    ChkMinimizeToTray.IsChecked = _s.MinimizeToTray;
+                    ChkShowLatency.IsChecked = _s.ShowLatency;
 
-                        // Initialize LogLevelCombo
-            InitializeLogLevelCombo();
+                    // Advanced Settings - Initialize all checkboxes from saved settings
+                    ChkAutoStart.IsChecked = _s.AutoStart;
+                    ChkSound.IsChecked = _s.SoundEnabled;
+                    ChkRumble.IsChecked = _s.RumbleEnabled;
+                    ChkHapticMetronome.IsChecked = _s.EnableHapticMetronome;
+                    ChkStartInMiniMode.IsChecked = _s.StartInMiniMode;
+                    ChkSmartStandby.IsChecked = _s.EnableSmartStandby;
+                    ChkFocusLock.IsChecked = _s.FocusLockEnabled;
+                    ChkDiscordRPC.IsChecked = _s.EnableDiscordRPC;
+                    ChkVoiceAnnouncements.IsChecked = _s.EnableVoiceAnnouncements;
+                    ChkTelemetry.IsChecked = _s.EnableTelemetry;
 
-            // Initialize LanguageCombo
-            InitializeLanguageCombo();
+                    // Initialize LogLevelCombo
+                    InitializeLogLevelCombo();
 
-            // Initialize RoExePathCombo
-            InitializeRoExePathCombo();
+                    // Initialize LanguageCombo
+                    InitializeLanguageCombo();
 
-            // Initialize Overlay Customization Settings
-            InitializeOverlayCustomization();
-        }
+                    // Initialize RoExePathCombo
+                    InitializeRoExePathCombo();
+
+                    // Initialize Overlay Customization Settings
+                    InitializeOverlayCustomization();
+                }
 
         private void InitializeOverlayCustomization()
                 {

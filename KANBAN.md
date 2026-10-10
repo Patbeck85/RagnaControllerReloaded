@@ -1292,6 +1292,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Suggested Fix:** Implement `Checked/Unchecked` handlers for all 13 CheckBoxes calling `Settings.Save()`; bind initial state in `InitializeSettings()`.
 **Priorität:** HIGH (Core settings broken)
 **DoD:** All 13 CheckBoxes persist state; manual verification on reopen.
+**Status:** ✅ DONE (2026-10-10) — All 13 CheckBoxes now initialized from saved settings in `InitializeSettings()`; existing Click handlers persist changes.
 
 #### UX-004: SettingsWindow ComboBox Initial Values Not Loaded (S3)
 **File:** `SettingsWindow.xaml.cs` (`LanguageCombo`, `LogLevelCombo`, `OverlayThemeCombo`, `RoExePathCombo`)
@@ -1300,6 +1301,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Suggested Fix:** Bind `SelectedIndex`/`SelectedItem` to current Settings values in `InitializeSettings()`; ensure `SelectionChanged` fires after binding.
 **Priorität:** HIGH (Settings visibility)
 **DoD:** All 4 ComboBoxes show current values on open; changes persist.
+**Status:** ✅ DONE (2026-10-10) — All 4 ComboBoxes already had initialization methods (`InitializeLogLevelCombo`, `InitializeLanguageCombo`, `InitializeOverlayCustomization`, `InitializeRoExePathCombo`) that were being called; they now properly set initial values from saved settings.
 
 ### 🟨 SPRINT B — Usability & Discoverability (High Value)
 
