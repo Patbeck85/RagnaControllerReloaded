@@ -6,7 +6,9 @@
         Topmost="True" WindowStartupLocation="Manual" ShowInTaskbar="False"
         MouseLeftButtonDown="Window_MouseLeftButtonDown"
         MouseRightButtonDown="Window_MouseRightButtonDown"
-        ToolTip="Drag to move. Right-click to toggle Click-Through mode. Start+Back to close.">
+        PreviewKeyDown="Window_PreviewKeyDown"
+        Focusable="True"
+        ToolTip="Drag to move. Right-click to toggle Click-Through mode (Esc exits).">
 
     
 
@@ -48,9 +50,16 @@
                 </Viewbox>
             </StackPanel>
 
-            <!-- Click-Through Indicator Overlay -->
+            <!-- Persistent Click-Through Mode Indicator (bottom accent line) -->
+            <Border x:Name="ClickThroughIndicator" Grid.ColumnSpan="3" Height="3" VerticalAlignment="Bottom" Background="{StaticResource Blue}" CornerRadius="1.5" Visibility="Collapsed">
+                <Border.Effect>
+                    <DropShadowEffect Color="{StaticResource Blue}" BlurRadius="8" ShadowDepth="0" Opacity="0.9"/>
+                </Border.Effect>
+            </Border>
+
+            <!-- Click-Through Indicator Overlay (transient label on toggle) -->
             <Border x:Name="ClickThroughHint" Grid.ColumnSpan="3" Style="{StaticResource GlassPanel}" Background="{StaticResource Blue}" CornerRadius="24" Visibility="Collapsed" Opacity="0.95">
-                <TextBlock Text="🔵 CLICK-THROUGH" Foreground="{StaticResource Blue}" FontSize="10" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{StaticResource NeonGlow}"/>
+                <TextBlock Text="🔵 CLICK-THROUGH · Esc exits" Foreground="{StaticResource Blue}" FontSize="10" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Effect="{StaticResource NeonGlow}"/>
             </Border>
         </Grid>
     </Border>

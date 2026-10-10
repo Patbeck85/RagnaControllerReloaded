@@ -1377,6 +1377,22 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Suggested Fix:** Add persistent hint: "Start+Back to exit click-through" inside overlay; keyboard Escape also exits.
 **Priorität:** LOW (Escape hatch)
 **DoD:** Click-through overlay shows exit instructions; Escape key works.
+**Status:** ✅ DONE (2026-10-10)
+
+**Kritischer Befund:** Die originale ToolTip bewarb „Start+Back to close" — aber `OverlayRouter.RestoreMainWindowRequested` wird **nie gefeuert** (`#pragma CS0067 never used`). Die Kette `MainWindow → HybridEngine → EngineOrchestrator → OverlayRouter` ist verdrahtet, aber die Quelle feuert nie. „Start+Back" war eine **tote Endstelle** — genau der „Trap". Zusätzlich blockiert `WS_EX_TRANSPARENT` Maus-Hit-Tests: im Click-Through-Modus fällt der Rechtsklick *durch* das Fenster.
+
+**Umsetzung:**
+1. **Persistenter Indikator:** `ClickThroughIndicator` — durchgehende blaue Akzentlinie am unteren Rand (immer sichtbar während aktiv), mit NeonGlow-Effekt.
+2. **Transientes Banner:** `ClickThroughHint` — „🔵 CLICK-THROUGH · Esc exits" (GlassPanel, Blue-Hintergrund), auto-hides nach 2 Sekunden.
+3. **Border-Farbwchsel:** `RootBorder.BorderBrush` wechselt von `BgBorder` zu `Blue` (deutlich erkennbar).
+4. **Escape-Hatch (Esc):** `Window_PreviewKeyDown`-Handler:
+   - 1. Esc → beendet Click-Through-Modus (Maus wird interaktiv)
+   - 2. Esc → schließt das MiniModeWindow (`Close()` → MainWindow `SwitchFromMiniMode()`)
+5. **Fokus-Grab:** Beim Aktivieren von Click-Through: `this.Activate(); this.Focus();` — notwendig, weil `WS_EX_TRANSPARENT` Maus-Hit-Tests blockiert und der User sonst keinen Exit hätte.
+6. **ToolTip-Korrektur:** „Start+Back to close" entfernt (tote Endstelle), ersetzt durch „Drag to move. Right-click to toggle Click-Through mode (Esc exits)."
+
+**Betroffene Dateien:** `MiniModeWindow.xaml` + `MiniModeWindow.xaml.cs`
+**Build:** 0 Fehler, 0 Warnings | **Tests:** 325/325 PASS ✅
 
 #### UX-013: ProfileLibraryWindow Share Code Input No Format Hint (S4)
 **File:** `ProfileLibraryWindow.xaml` (`TxtShareCode` TextBox)

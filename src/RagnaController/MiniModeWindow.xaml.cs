@@ -105,9 +105,15 @@ namespace RagnaController
             if (_clickThrough)
             {
                 if (RootBorder != null) RootBorder.BorderBrush = accentBlue;
+                if (ClickThroughIndicator != null) ClickThroughIndicator.Visibility = Visibility.Visible;
                 if (ClickThroughHint != null) ClickThroughHint.Visibility = Visibility.Visible;
-                
-                // Auto-hide the hint after 2 seconds so they can see the stats again
+
+                // Grab keyboard focus so the Esc escape-hatch is immediately available,
+                // even though WS_EX_TRANSPARENT now blocks mouse hit-testing.
+                this.Activate();
+                this.Focus();
+
+                // Auto-hide the transient hint after 2 seconds; keep the persistent indicator line
                 var timer = new System.Windows.Threading.DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
                 timer.Tick += (s, args) => 
                 { 
@@ -119,6 +125,7 @@ namespace RagnaController
             else
             {
                 if (RootBorder != null) RootBorder.BorderBrush = bgBorder;
+                if (ClickThroughIndicator != null) ClickThroughIndicator.Visibility = Visibility.Collapsed;
                 if (ClickThroughHint != null) ClickThroughHint.Visibility = Visibility.Collapsed;
             }
         }
@@ -134,6 +141,27 @@ namespace RagnaController
                 : currentStyle & ~NativeMethods.WS_EX_TRANSPARENT;
 
             NativeMethods.SetWindowLongPtr(hwnd, NativeMethods.GWL_EXSTYLE, new IntPtr(newStyle));
+        }
+
+        // ── Keyboard Escape Hatch (works even when click-through is active) ──
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                if (_clickThrough)
+                {
+                    // First Esc exits click-through mode (mouse becomes interactive again)
+                    _clickThrough = false;
+                    UpdateClickThrough();
+                    e.Handled = true;
+                }
+                else
+                {
+                    // Second Esc closes the mini widget entirely
+                    Close();
+                    e.Handled = true;
+                }
+            }
         }
     }
 }
