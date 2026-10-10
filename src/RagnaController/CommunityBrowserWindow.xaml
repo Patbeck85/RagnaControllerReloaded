@@ -79,11 +79,20 @@
 
                 <!-- Error State -->
                 <Border x:Name="ErrorOverlay" Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusLg}" Visibility="Collapsed">
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock x:Name="ErrorText" Text="Failed to load." Foreground="{StaticResource Danger}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="400" FontFamily="Segoe UI Variable, Segoe UI"/>
-                        <Button Content="Retry" Click="BtnRefresh_Click" Style="{StaticResource GhostButton}" Width="110" Height="40" Margin="0,20,0,0" FontSize="14"/>
-                    </StackPanel>
-                </Border>
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock x:Name="ErrorText" Text="Failed to load." Foreground="{StaticResource Danger}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="400" FontFamily="Segoe UI Variable, Segoe UI"/>
+                                        <Button Content="Retry" Click="BtnRefresh_Click" Style="{StaticResource GhostButton}" Width="110" Height="40" Margin="0,20,0,0" FontSize="14"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Empty State (no search results) -->
+                                <Border x:Name="EmptyOverlay" Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusLg}" Visibility="Collapsed">
+                                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock Text="🔍" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                                        <TextBlock x:Name="EmptyText" Text="No community profiles found." Foreground="{StaticResource TextSecondary}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="400" FontFamily="Segoe UI Variable, Segoe UI"/>
+                                        <Button Content="Clear Search" Click="BtnClearSearch_Click" Style="{StaticResource GhostButton}" Width="140" Height="40" Margin="0,20,0,0" FontSize="14"/>
+                                    </StackPanel>
+                                </Border>
             </Grid>
         </Grid>
     </Border>

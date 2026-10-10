@@ -103,6 +103,13 @@ namespace RagnaController
             ApplyFilter();
         }
 
+        private void BtnClearSearch_Click(object sender, RoutedEventArgs e)
+        {
+            SearchBox.Text = "";
+            EmptyOverlay.Visibility = Visibility.Collapsed;
+            CommunityList.Visibility = Visibility.Visible;
+        }
+
         private void ApplyFilter()
         {
             string query = SearchBox.Text.ToLowerInvariant();
@@ -118,6 +125,21 @@ namespace RagnaController
                     (!string.IsNullOrEmpty(x.Author) && x.Author.ToLowerInvariant().Contains(query))).ToList();
 
             CommunityList.ItemsSource = filtered;
+
+            // Show empty state if search has query but no results
+            bool hasQuery = !string.IsNullOrWhiteSpace(query);
+            bool hasResults = filtered.Count > 0;
+
+            if (hasQuery && !hasResults)
+            {
+                CommunityList.Visibility = Visibility.Collapsed;
+                EmptyOverlay.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                CommunityList.Visibility = Visibility.Visible;
+                EmptyOverlay.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void BtnDownload_Click(object sender, RoutedEventArgs e)

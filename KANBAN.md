@@ -1339,6 +1339,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Suggested Fix:** Add empty state: "No community profiles match your search" with "Browse all" action; error overlay shows specific error + retry with exponential backoff.
 **Priorität:** MEDIUM (Empty state UX)
 **DoD:** Empty search shows helpful message; errors show details + retry works.
+**Status:** ✅ DONE (2026-10-10) — Added EmptyOverlay with icon, descriptive text, and "Clear Search" button. ApplyFilter() now shows/hides EmptyOverlay based on search query vs results. Error overlay still shows specific error + retry.
 
 #### UX-009: ButtonRemappingWindow No Unsaved Changes Warning (S3)
 **File:** `ButtonRemappingWindow.xaml.cs` (`BtnCancel_Click`, `BtnSave_Click`, `Window_Closing`)
