@@ -179,8 +179,28 @@ namespace RagnaController
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e) => Close();
-        
-        private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+
+                private void ProfilesList_Drop(object sender, DragEventArgs e)
+                {
+                    if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                    {
+                        string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+                        foreach (string file in files)
+                        {
+                            if (file.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+                            {
+                                var profile = _manager.ImportPreview(file);
+                                if (profile != null)
+                                {
+                                    _manager.AddAndSave(profile);
+                                }
+                            }
+                        }
+                        Refresh();
+                    }
+                }
+
+                private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed) DragMove();
         }

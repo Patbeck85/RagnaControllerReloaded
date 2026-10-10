@@ -1321,6 +1321,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Suggested Fix:** Add `AllowDrop="True"` + `Drop` handler to profile list area; parse dropped `.json` files.
 **Priorität:** MEDIUM (Workflow efficiency)
 **DoD:** Drag .json file onto list → imports and refreshes.
+**Status:** ✅ DONE (2026-10-10) — Added `AllowDrop="True"` and `Drop="ProfilesList_Drop"` to ScrollViewer. Implemented `ProfilesList_Drop` handler that processes dropped `.json` files via `ImportPreview` and `AddAndSave`. Multiple files supported.
 
 #### UX-007: ProfileWizardWindow No Validation Feedback (S3)
 **File:** `ProfileWizardWindow.xaml` (`ProfileNameText`, `ClassCombo`, `AButtonCombo`..`YButtonCombo`)
