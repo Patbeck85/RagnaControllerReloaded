@@ -343,7 +343,60 @@ namespace RagnaController
 
         private void PopulateTabPanel(Border panel)
         {
-            if (ProfileCombo?.SelectedItem is not Profiles.Profile p) return;
+            if (ProfileCombo?.SelectedItem is not Profiles.Profile p)
+            {
+                // Show empty-state with CTA to Profile Library when no profile selected
+                var emptyStack = new StackPanel { Margin = new Thickness(16), VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
+
+                var icon = new TextBlock
+                {
+                    Text = "📋",
+                    FontSize = 48,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Margin = new Thickness(0, 0, 0, 16)
+                };
+                emptyStack.Children.Add(icon);
+
+                var title = new TextBlock
+                {
+                    Text = GetLocalizedString("Tab_NoProfileLoaded"),
+                    FontSize = 18,
+                    FontWeight = FontWeights.SemiBold,
+                    Foreground = new SolidColorBrush(Color.FromRgb(201, 209, 217)),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    TextAlignment = TextAlignment.Center,
+                    Margin = new Thickness(0, 0, 0, 8)
+                };
+                emptyStack.Children.Add(title);
+
+                var desc = new TextBlock
+                {
+                    Text = GetLocalizedString("Tab_NoProfileLoaded_Desc"),
+                    FontSize = 13,
+                    Foreground = new SolidColorBrush(Color.FromRgb(136, 144, 156)),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    TextAlignment = TextAlignment.Center,
+                    TextWrapping = TextWrapping.Wrap,
+                    MaxWidth = 300,
+                    Margin = new Thickness(0, 0, 0, 24)
+                };
+                emptyStack.Children.Add(desc);
+
+                var ctaBtn = new Button
+                {
+                    Content = GetLocalizedString("Tab_OpenProfileLibrary"),
+                    Style = (Style)FindResource("PrimaryButton"),
+                    Width = 200,
+                    Height = 44,
+                    FontSize = 14,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                ctaBtn.Click += (s, e) => OpenProfileLibrary();
+                emptyStack.Children.Add(ctaBtn);
+
+                panel.Child = new ScrollViewer { Content = emptyStack, VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+                return;
+            }
 
             // Determine which button group this panel represents
             string layerKey = panel == PanelBase ? "" : panel == PanelL1 ? "L1+" :
@@ -738,14 +791,20 @@ namespace RagnaController
         }
 
         private void BtnRadial_Click(object sender, RoutedEventArgs e)
-        {
-            var queue = _engine?.CommandQueue ?? new InputCommandQueue();
-            var w = new RadialMenuWindow(queue);
-            w.Owner = this;
-            w.Show();
-        }
+                {
+                    var queue = _engine?.CommandQueue ?? new InputCommandQueue();
+                    var w = new RadialMenuWindow(queue);
+                    w.Owner = this;
+                    w.Show();
+                }
 
-        private void ApplyProfile(Profile profile)
+                private void OpenProfileLibrary()
+                {
+                    var w = new ProfileLibraryWindow(_manager) { Owner = this };
+                    w.ShowDialog();
+                }
+
+                private void ApplyProfile(Profile profile)
         {
             if (profile == null) return;
             

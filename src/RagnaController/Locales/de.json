@@ -766,5 +766,8 @@
   "Settings_Calibrating": "Kalibriere... ({0})",
   "Settings_CalibNoGamepad": "Kein Gamepad verbunden!",
   "Settings_CalibDone": "Kalibrierung abgeschlossen: {0} Deadzone",
-  "MainWindow_ProfileCombo_Tooltip": "Aktives Profil"
-}
+  "MainWindow_ProfileCombo_Tooltip": "Aktives Profil",
+    "Tab_NoProfileLoaded": "Kein Profil geladen",
+    "Tab_NoProfileLoaded_Desc": "Ein Profil laden, um Tastenbelegungen für diesen Layer anzuzeigen.",
+    "Tab_OpenProfileLibrary": "Profilbibliothek öffnen"
+  }

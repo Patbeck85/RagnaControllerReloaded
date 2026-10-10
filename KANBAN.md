@@ -1283,6 +1283,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Suggested Fix:** Show contextual empty-state message in each panel when no profile: "Load a profile to see [engine name] settings" with button to Profile Library.
 **Priorität:** HIGH (First-run experience)
 **DoD:** All 7 panels show helpful empty-state with CTA button; clicking CTA opens ProfileLibraryWindow.
+**Status:** ✅ DONE (2026-10-10) — Added empty-state with icon, title, description, and CTA button to open ProfileLibraryWindow. Added `OpenProfileLibrary()` method.
 
 #### UX-003: SettingsWindow CheckBox State Not Persisted (S3)
 **File:** `SettingsWindow.xaml.cs` (13 CheckBoxes without handlers)

@@ -766,5 +766,8 @@
   "Settings_Calibrating": "Calibrating... ({0})",
   "Settings_CalibNoGamepad": "No gamepad connected!",
   "Settings_CalibDone": "Calibration complete: {0} deadzone",
-  "MainWindow_ProfileCombo_Tooltip": "Active Profile"
-}
+  "MainWindow_ProfileCombo_Tooltip": "Active Profile",
+    "Tab_NoProfileLoaded": "No Profile Loaded",
+    "Tab_NoProfileLoaded_Desc": "Load a profile to see button mappings for this layer.",
+    "Tab_OpenProfileLibrary": "Open Profile Library"
+  }
