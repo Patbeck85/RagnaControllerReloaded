@@ -1258,3 +1258,136 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Priorität:** LOW (Hygiene)
 **DoD:** `.gitignore` deckt `obj/`, `bin/`, `*.g.cs`, `*.g.i.cs` ab; Repo sauber.
 **Status:** ✅ DONE (2026-10-10) — Added `*.g.cs` and `*.g.i.cs` to `.gitignore`. Verified: no generated files in Git.
+
+---
+
+## 🎨 Phase 12: UX Polish & Accessibility Improvements (NEW — 2026-10-10)
+
+**Goal:** Systematic UX improvements across all 21 windows based on comprehensive audit — accessibility, discoverability, consistency, and user feedback.
+
+### 🟥 SPRINT A — Critical UX Gaps (Immediate Impact)
+
+#### UX-001: Missing `AutomationProperties.Name` on Icon-Only Buttons (S4)
+**Files:** `ControllerVisualization.xaml` (8 Path/FontIcon buttons), `ButtonRemappingWindow.xaml` (10 reset buttons), `ComboEditorWindow.xaml` (close), `CommunityBrowserWindow.xaml` (close), `DeveloperConsoleWindow.xaml` (close + clear), `MainWindow.xaml` (min/max/close), `ProfileLibraryWindow.xaml` (close + 4 footer buttons), `ProfileWizardWindow.xaml` (cancel), `RadialSetupWindow.xaml` (2 closes), `TutorialWindow.xaml` (close)
+**Fundament:** Glyph scan reveals 28 icon-only buttons missing `AutomationProperties.Name`. Screen readers cannot identify these buttons — accessibility violation.
+**Impact:** Users with assistive tech cannot navigate 10 windows properly.
+**Suggested Fix:** Add `AutomationProperties.Name` with descriptive text (e.g., "Close window", "Reset to default", "Cancel wizard").
+**Priorität:** HIGH (Accessibility compliance)
+**DoD:** All icon-only buttons have `AutomationProperties.Name`; screen reader verification passes.
+**Status:** ✅ DONE (2026-10-10) — Added `AutomationProperties.Name` to all icon-only buttons across 10 windows.
+
+#### UX-002: MainWindow Tab Panels Empty Without Profile Selection (S3)
+**File:** `MainWindow.xaml` (Panels Base/L1+/R1+/L2+/R2+/Health/Telemetry)
+**Fundament:** Tab navigation switches panels correctly (`SelectTab`), but `PopulateTabPanel` only generates content when a Profile is loaded. Without profile, all panels show empty white space — confusing "phantom feature" UX.
+**Impact:** New users see empty tabs and think features are broken.
+**Suggested Fix:** Show contextual empty-state message in each panel when no profile: "Load a profile to see [engine name] settings" with button to Profile Library.
+**Priorität:** HIGH (First-run experience)
+**DoD:** All 7 panels show helpful empty-state with CTA button; clicking CTA opens ProfileLibraryWindow.
+
+#### UX-003: SettingsWindow CheckBox State Not Persisted (S3)
+**File:** `SettingsWindow.xaml.cs` (13 CheckBoxes without handlers)
+**Fundament:** Audit UI-001 confirmed 13 CheckBoxes lack handlers — visible but non-functional. User changes are lost on close.
+**Impact:** Critical settings (Sound, Rumble, Focus Lock, Smart Standby, etc.) cannot be toggled via UI.
+**Suggested Fix:** Implement `Checked/Unchecked` handlers for all 13 CheckBoxes calling `Settings.Save()`; bind initial state in `InitializeSettings()`.
+**Priorität:** HIGH (Core settings broken)
+**DoD:** All 13 CheckBoxes persist state; manual verification on reopen.
+
+#### UX-004: SettingsWindow ComboBox Initial Values Not Loaded (S3)
+**File:** `SettingsWindow.xaml.cs` (`LanguageCombo`, `LogLevelCombo`, `OverlayThemeCombo`, `RoExePathCombo`)
+**Fundament:** ComboBoxes show blank/first item instead of current setting. `SelectionChanged` handlers exist but no initial `SelectedIndex` binding.
+**Impact:** User cannot see current language/log level/theme/RO path.
+**Suggested Fix:** Bind `SelectedIndex`/`SelectedItem` to current Settings values in `InitializeSettings()`; ensure `SelectionChanged` fires after binding.
+**Priorität:** HIGH (Settings visibility)
+**DoD:** All 4 ComboBoxes show current values on open; changes persist.
+
+### 🟨 SPRINT B — Usability & Discoverability (High Value)
+
+#### UX-005: InGameOverlayWindow No Empty State for Disconnected Controller (S3)
+**File:** `InGameOverlayWindow.xaml` (`ProfileText`, `LayerText`, `StateText`, `BatteryText`, `CooldownText`)
+**Fundament:** Overlay shows "NOVICE", "BASE", "IDLE", "100%", "0s" even when no controller connected — misleading "phantom connected" state.
+**Impact:** User thinks controller is working when it's not.
+**Suggested Fix:** Bind visibility to `EngineOrchestrator.IsRunning` / controller connection state; show "No Controller" with reconnect hint when disconnected.
+**Priorität:** MEDIUM (Status accuracy)
+**DoD:** Overlay shows disconnected state clearly; reconnects automatically update UI.
+
+#### UX-006: ProfileLibraryWindow No Drag-Drop Import (S4)
+**File:** `ProfileLibraryWindow.xaml` (`BtnImport_Click` only)
+**Fundament:** Import requires file dialog click — no drag-drop support for JSON profile files.
+**Impact:** Slower workflow for power users managing many profiles.
+**Suggested Fix:** Add `AllowDrop="True"` + `Drop` handler to profile list area; parse dropped `.json` files.
+**Priorität:** MEDIUM (Workflow efficiency)
+**DoD:** Drag .json file onto list → imports and refreshes.
+
+#### UX-007: ProfileWizardWindow No Validation Feedback (S3)
+**File:** `ProfileWizardWindow.xaml` (`ProfileNameText`, `ClassCombo`, `AButtonCombo`..`YButtonCombo`)
+**Fundament:** "Next" button enables regardless of empty name or unselected class/buttons. No inline validation — user hits review with empty profile.
+**Impact:** Creates invalid profiles; user confusion at review step.
+**Suggested Fix:** Disable "Next" until required fields valid; show red border/tooltip on empty required fields; validate combos have selection.
+**Priorität:** MEDIUM (Data integrity)
+**DoD:** "Next" disabled until Step 1 (name+class) and Step 3 (A/B/X/Y) complete; validation visible.
+
+#### UX-008: CommunityBrowserWindow No Offline/Empty State Handling (S3)
+**File:** `CommunityBrowserWindow.xaml` (`LoadingOverlay`, `ErrorOverlay`, `CommunityList`)
+**Fundament:** No empty state for "no profiles found" after search; error overlay only shows generic "Failed to load".
+**Impact:** User sees blank list or generic error — no actionable guidance.
+**Suggested Fix:** Add empty state: "No community profiles match your search" with "Browse all" action; error overlay shows specific error + retry with exponential backoff.
+**Priorität:** MEDIUM (Empty state UX)
+**DoD:** Empty search shows helpful message; errors show details + retry works.
+
+#### UX-009: ButtonRemappingWindow No Unsaved Changes Warning (S3)
+**File:** `ButtonRemappingWindow.xaml.cs` (`BtnCancel_Click`, `BtnSave_Click`, `Window_Closing`)
+**Fundament:** User can close window with unsaved remapping changes — no confirmation dialog.
+**Impact:** Accidental data loss when clicking ✕ or pressing Escape.
+**Suggested Fix:** Track dirty state on any slider/checkbox change; show `MessageBox` on close with unsaved changes (Save / Discard / Cancel).
+**Priorität:** MEDIUM (Data loss prevention)
+**DoD:** Closing with unsaved changes shows confirmation; Save/Discard/Cancel work correctly.
+
+#### UX-010: RadialSetupWindow Emote Gallery No Search/Filter (S4)
+**File:** `RadialSetupWindow.xaml` (`EmoteGalleryOverlay`, `EmoteList` WrapPanel)
+**Fundament:** 100+ emotes rendered in WrapPanel with no search — user must scroll endlessly.
+**Impact:** Emote selection slow for large galleries.
+**Suggested Fix:** Add search box above gallery filtering by name/command; category tabs (Emotes, Commands, Custom).
+**Priorität:** MEDIUM (Discoverability)
+**DoD:** Search filters emotes in real-time; categories work.
+
+### 🟩 SPRINT C — Polish & Consistency (Refinement)
+
+#### UX-011: Consistent Tooltip Placement & Delay (S4)
+**Files:** All 21 windows
+**Fundament:** Tooltips use default placement (often clipped at screen edge) and default delay (too slow for gaming UI).
+**Impact:** Tooltips appear off-screen or too late during fast gaming interactions.
+**Suggested Fix:** Centralize in `UI2026DesignSystem.xaml`: `ToolTipService.Placement="Mouse"` + `InitialShowDelay="300"` + `BetweenShowDelay="100"`; ensure all tooltips use `Style="{StaticResource GlassPanel}"`.
+**Priorität:** LOW (Polish)
+**DoD:** All tooltips appear at mouse position, 300ms delay, consistent glassmorphism style.
+
+#### UX-012: MiniModeWindow Click-Through Indicator Unclear (S4)
+**File:** `MiniModeWindow.xaml` (`ClickThroughHint` border)
+**Fundament:** Click-through mode shows blue overlay "🔵 CLICK-THROUGH" but no clear way to exit — user trapped.
+**Impact:** User cannot escape click-through mode without knowing Start+Back combo.
+**Suggested Fix:** Add persistent hint: "Start+Back to exit click-through" inside overlay; keyboard Escape also exits.
+**Priorität:** LOW (Escape hatch)
+**DoD:** Click-through overlay shows exit instructions; Escape key works.
+
+#### UX-013: ProfileLibraryWindow Share Code Input No Format Hint (S4)
+**File:** `ProfileLibraryWindow.xaml` (`TxtShareCode` TextBox)
+**Fundament:** Share code input expects "XX-XXXX" format but no placeholder/format hint.
+**Impact:** User enters invalid codes; download fails silently.
+**Suggested Fix:** Add `TextBox` watermark/placeholder "GX-A3F9" via attached property; validate format on input (regex `^[A-Z]{2}-[0-9A-Fa-f]{4}$`).
+**Priorität:** LOW (Input guidance)
+**DoD:** Placeholder visible; invalid format shows red border + tooltip; valid enables Download button.
+
+#### UX-014: TutorialWindow Content Not Localized (S4)
+**File:** `TutorialWindow.xaml` (not reviewed but likely hardcoded English)
+**Fundament:** Tutorial is first-run experience — must be fully localized.
+**Impact:** Non-English users cannot understand tutorial.
+**Suggested Fix:** Audit all TextBlocks; replace hardcoded strings with `{core:Loc Key}`; add missing keys to 41 locale files.
+**Priorität:** LOW (Localization completeness)
+**DoD:** All tutorial text uses localization; 41 locales updated.
+
+#### UX-015: SplashWindow No Skip/Cancel Option (S4)
+**File:** `SplashWindow.xaml` (animated startup)
+**Fundament:** Splash shows for fixed duration with no way to skip — annoying on fast machines / repeated launches.
+**Impact:** Wasted time for power users.
+**Suggested Fix:** Add "Skip" button (bottom-right) + keyboard Escape to close early; remember preference in Settings.
+**Priorität:** LOW (Power user respect)
+**DoD:** Skip button works; Escape closes; preference persists.

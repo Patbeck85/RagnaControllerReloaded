@@ -154,16 +154,16 @@
     <Grid>
         <!-- D-Pad -->
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,30">
-            <Button Style="{StaticResource DpadButton}" Width="70" Height="70">
+            <Button Style="{StaticResource DpadButton}" Width="70" Height="70" AutomationProperties.Name="D-Pad Up">
                 <Grid>
                     <Path Data="M 35,5 L 35,65" Stroke="#8A95AC" StrokeThickness="2" StrokeLineJoin="Round"/>
                 </Grid>
             </Button>
             <StackPanel HorizontalAlignment="Center">
-                <Button Style="{StaticResource DpadButton}" Width="70" Height="70">
+                <Button Style="{StaticResource DpadButton}" Width="70" Height="70" AutomationProperties.Name="D-Pad Left">
                     <Path Data="M 15,35 L 65,35" Stroke="#8A95AC" StrokeThickness="2" StrokeLineJoin="Round"/>
                 </Button>
-                <Button Style="{StaticResource DpadButton}" Width="70" Height="70">
+                <Button Style="{StaticResource DpadButton}" Width="70" Height="70" AutomationProperties.Name="D-Pad Right">
                     <Path Data="M 15,35 L 65,35" Stroke="#8A95AC" StrokeThickness="2" StrokeLineJoin="Round"/>
                 </Button>
             </StackPanel>
@@ -172,18 +172,18 @@
         <!-- Action Buttons ABXY -->
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="30,30">
             <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnAColor}">
+                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnAColor}" AutomationProperties.Name="Button A">
                     <TextBlock Text="A" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF"/>
                 </Button>
-                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnBColor}">
+                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnBColor}" AutomationProperties.Name="Button B">
                     <TextBlock Text="B" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF"/>
                 </Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnXColor}">
+                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnXColor}" AutomationProperties.Name="Button X">
                     <TextBlock Text="X" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF"/>
                 </Button>
-                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnYColor}">
+                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnYColor}" AutomationProperties.Name="Button Y">
                     <TextBlock Text="Y" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF"/>
                 </Button>
             </StackPanel>
@@ -202,21 +202,21 @@
 
         <!-- Sticky Buttons -->
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,20">
-            <Button Style="{StaticResource StickyButton}" Width="45" Height="45">
+            <Button Style="{StaticResource StickyButton}" Width="45" Height="45" AutomationProperties.Name="Left Stick Button">
                 <Path Data="M 15,15 L 25,25 M 25,15 L 15,25" 
                       Stroke="#FFFFFF" 
                       StrokeThickness="2" 
                       HorizontalAlignment="Center" 
                       VerticalAlignment="Center"/>
             </Button>
-            <Button Style="{StaticResource StickyButton}" Width="45" Height="45">
+            <Button Style="{StaticResource StickyButton}" Width="45" Height="45" AutomationProperties.Name="Right Stick Button">
                 <Path Data="M 15,15 L 25,25 M 25,15 L 15,25" 
                       Stroke="#FFFFFF" 
                       StrokeThickness="2" 
                       HorizontalAlignment="Center" 
                       VerticalAlignment="Center"/>
             </Button>
-            <Button Style="{StaticResource StickyButton}" Width="45" Height="45">
+            <Button Style="{StaticResource StickyButton}" Width="45" Height="45" AutomationProperties.Name="Touchpad Button">
                 <Path Data="M 18,15 L 22,15 M 18,18 L 18,22" 
                       Stroke="#FFFFFF" 
                       StrokeThickness="2" 
@@ -227,14 +227,14 @@
 
         <!-- Start/Select -->
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,20">
-            <Button Style="{StaticResource StartSelectButton}" Width="50" Height="50">
+            <Button Style="{StaticResource StartSelectButton}" Width="50" Height="50" AutomationProperties.Name="Share Button">
                 <Path Data="M 15,15 L 35,15 M 15,18 L 35,18" 
                       Stroke="#FFFFFF" 
                       StrokeThickness="2" 
                       HorizontalAlignment="Center" 
                       VerticalAlignment="Center"/>
             </Button>
-            <Button Style="{StaticResource StartSelectButton}" Width="50" Height="50">
+            <Button Style="{StaticResource StartSelectButton}" Width="50" Height="50" AutomationProperties.Name="Options Button">
                 <Path Data="M 18,15 L 22,15 M 18,18 L 18,22" 
                       Stroke="#FFFFFF" 
                       StrokeThickness="2" 

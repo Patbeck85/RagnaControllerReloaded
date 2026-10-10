@@ -101,13 +101,13 @@
                 <Grid Margin="20,0">
                     <TextBlock x:Name="StatusText" Style="{StaticResource BodyText}" FontSize="12" FontFamily="JetBrains Mono, Consolas" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0">
-                        <Button Content="New Profile" Style="{StaticResource PrimaryButton}" Width="120" Height="40" Margin="0,0,12,0" Click="BtnNew_Click" ToolTip="Create a new profile from scratch" FontSize="14"/>
-                        <Button Content="Import" Style="{StaticResource GhostButton}" Width="90" Height="40" Margin="0,0,12,0" Click="BtnImport_Click" ToolTip="Import profile from JSON file" FontSize="14"/>
-                        <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}" Height="40" Margin="0,0,8,0">
-                            <TextBox x:Name="TxtShareCode" Width="100" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" Padding="10,0" FontFamily="JetBrains Mono, Consolas" FontSize="14" VerticalContentAlignment="Center" ToolTip="Enter a share code (e.g. GX-A3F9) and click ↓ Download"/>
-                        </Border>
-                        <Button Content="↓ Download" Style="{StaticResource GhostButton}" Width="110" Height="40" Margin="0,0,12,0" Click="BtnDownload_Click" ToolTip="Download profile by share code" FontSize="14"/>
-                        <Button Content="Close" Style="{StaticResource GhostButton}" Width="85" Height="40" Click="BtnClose_Click" ToolTip="Close profile library window" FontSize="14"/>
+                        <Button Content="New Profile" Style="{StaticResource PrimaryButton}" Width="120" Height="40" Margin="0,0,12,0" Click="BtnNew_Click" ToolTip="Create a new profile from scratch" FontSize="14" AutomationProperties.Name="Create new profile"/>
+                                                <Button Content="Import" Style="{StaticResource GhostButton}" Width="90" Height="40" Margin="0,0,12,0" Click="BtnImport_Click" ToolTip="Import profile from JSON file" FontSize="14" AutomationProperties.Name="Import profile from file"/>
+                                                <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}" Height="40" Margin="0,0,8,0">
+                                                    <TextBox x:Name="TxtShareCode" Width="100" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" Padding="10,0" FontFamily="JetBrains Mono, Consolas" FontSize="14" VerticalContentAlignment="Center" ToolTip="Enter a share code (e.g. GX-A3F9) and click ↓ Download"/>
+                                                </Border>
+                                                <Button Content="↓ Download" Style="{StaticResource GhostButton}" Width="110" Height="40" Margin="0,0,12,0" Click="BtnDownload_Click" ToolTip="Download profile by share code" FontSize="14" AutomationProperties.Name="Download profile by share code"/>
+                                                <Button Content="Close" Style="{StaticResource GhostButton}" Width="85" Height="40" Click="BtnClose_Click" ToolTip="Close profile library window" FontSize="14" AutomationProperties.Name="Close profile library window"/>
                     </StackPanel>
                 </Grid>
             </Border>
