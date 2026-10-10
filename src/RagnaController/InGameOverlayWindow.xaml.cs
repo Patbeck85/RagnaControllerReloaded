@@ -110,17 +110,20 @@ namespace RagnaController
                 }
 
         private void InitializeOverlayState()
-        {
-            // Load default profile state - try to get from ProfileManager
-            _profileName = "NOVICE";
-            _classType = "Novice";
-            _batteryLevel = "100%";
+                {
+                    // Load default profile state - try to get from ProfileManager
+                    _profileName = "NOVICE";
+                    _classType = "Novice";
+                    _batteryLevel = "100%";
             
-            // Apply theme settings
-            ApplyThemeSettings();
+                    // Apply theme settings
+                    ApplyThemeSettings();
             
-            UpdateDisplay();
-        }
+                    // Check initial controller connection state
+                    UpdateControllerInfo();
+            
+                    UpdateDisplay();
+                }
         
         private void ApplyThemeSettings()
                 {
@@ -190,12 +193,14 @@ namespace RagnaController
         }
 
         private void OnControllerDisconnected(object? sender, EventArgs e)
-        {
-            // Reset controller info when disconnected
-            _batteryLevel = "Unknown";
-            _cooldownRemaining = 0;
-            UpdateDisplay();
-        }
+                {
+                    // Reset controller info when disconnected - show disconnected state
+                    _profileName = "DISCONNECTED";
+                    _classType = "No Controller";
+                    _batteryLevel = "N/A";
+                    _currentLayer = "—";
+                    UpdateDisplay();
+                }
 
         private void OnProviderChanged(object? sender, EventArgs e)
         {
@@ -204,26 +209,28 @@ namespace RagnaController
         }
 
         private void OnIsConnectedChanged(object? sender, EventArgs e)
-        {
-            UpdateDisplay();
-        }
+                {
+                    UpdateControllerInfo();
+                    UpdateDisplay();
+                }
 
         private void UpdateControllerInfo()
-        {
-            if (_controllerManager != null && _controllerManager.IsConnected)
-            {
-                _profileName = _controllerManager.ControllerName ?? "NOVICE";
-                _classType = _controllerManager.ControllerType ?? "Unknown";
-                _batteryLevel = _controllerManager.BatteryLevel ?? "Unknown";
-                _currentLayer = GetCurrentLayerFromController();
-            }
-            else
-            {
-                _profileName = "NOVICE";
-                _classType = "Unknown";
-                _batteryLevel = "Unknown";
-            }
-        }
+                {
+                    if (_controllerManager != null && _controllerManager.IsConnected)
+                    {
+                        _profileName = _controllerManager.ControllerName ?? "NOVICE";
+                        _classType = _controllerManager.ControllerType ?? "Unknown";
+                        _batteryLevel = _controllerManager.BatteryLevel ?? "Unknown";
+                        _currentLayer = GetCurrentLayerFromController();
+                    }
+                    else
+                    {
+                        _profileName = "DISCONNECTED";
+                        _classType = "No Controller";
+                        _batteryLevel = "N/A";
+                        _currentLayer = "—";
+                    }
+                }
 
         private string GetCurrentLayerFromController()
         {

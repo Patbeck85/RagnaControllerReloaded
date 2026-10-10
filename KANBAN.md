@@ -1312,6 +1312,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Suggested Fix:** Bind visibility to `EngineOrchestrator.IsRunning` / controller connection state; show "No Controller" with reconnect hint when disconnected.
 **Priorität:** MEDIUM (Status accuracy)
 **DoD:** Overlay shows disconnected state clearly; reconnects automatically update UI.
+**Status:** ✅ DONE (2026-10-10) — Added proper disconnected state handling: shows "DISCONNECTED", "No Controller", "N/A", "—" when controller disconnected. `OnControllerDisconnected`, `OnIsConnectedChanged`, `UpdateControllerInfo()` all handle disconnected state. Initial state checked in `InitializeOverlayState()`.
 
 #### UX-006: ProfileLibraryWindow No Drag-Drop Import (S4)
 **File:** `ProfileLibraryWindow.xaml` (`BtnImport_Click` only)
