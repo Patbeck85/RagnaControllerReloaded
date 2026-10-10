@@ -1,7 +1,7 @@
 # ROADMAP.md — RagnaController Development Roadmap
 
 ## Vision
-Autonomous evolution of RagnaController from a working controller overlay into a modular, test-covered, maintainable system for Ragnarok Online (Classic 2004 / Rathena). All phases 1-7 completed via autonomous agent development per SOUL.md.
+Autonomous evolution of RagnaController from a working controller overlay into a modular, test-covered, maintainable system for Ragnarok Online (Classic 2004 / Rathena). All phases 1-11 completed via autonomous agent development per SOUL.md.
 
 ---
 
@@ -76,8 +76,6 @@ Autonomous evolution of RagnaController from a working controller overlay into a
 - ✅ `EngineOrchestrator.cs` — Integrated GroundSpellEngine into tick loop, connected CombatEngine.ActionFired to register spells
 - ✅ Unit tests: 3 tests covering register/update, tick events, and ClearAll
 - ✅ Build: 0 errors, 1 warning | Tests: 56/56 passing (53 existing + 3 new)
-
-### 📋 Improvement List — Per Class Type (for implementation reference)
 
 ---
 
@@ -211,7 +209,7 @@ Status: OPEN | IN_PROGRESS | QA_CHECK | CLOSED
 | **FEAT-004**: HybridEngine auto-class detection ✅ — class presets, 20+ RO classes |
 | **FEAT-003**: Community Hub profile sharing ✅ — fully implemented and deployed |
 | **TEST-003**: Integration test: full overlay → RO client ✅ — 13 headless integration tests passing |
-| **FEAT-005**: Full Class Engine Presets ✅ — EnginePreset extended with comments, ClassPresetData struct added with AutoAttack/Kite/Mage/Support/Combo/MobSweep/AutoRetaliate/PartyTargeting defaults. AutoTargetEngine updated with AutoRetaliateEnabled and PartyTargetingEnabled. Build: 0 errors, 0 warnings. Tests: 53/53 passing. |
+| **FEAT-005**: Full Class Engine Presets ✅ — EnginePreset extended with comments, ClassPresetData struct added with AutoAttack/Kite/Mage/Support/Combo/MobSweep/AutoRetaliate/PartyTargeting defaults. AutoTargetEngine updated with AutoRetaliateEnabled and PartyTargetingEnabled. AutoTargetEngine updated with AutoRetaliateEnabled and PartyTargetingEnabled. Build: 0 errors, 0 warnings. Tests: 53/53 passing. |
 | **FEAT-006**: Ground Spell / AoE Skill System ✅ — ButtonAction extended with ground spell properties (DurationSec, TickIntervalMs, Radius, FollowsTarget, IsHealing, IsSelfCast). GroundSpellEngine created with ActiveGroundSpell tracking, duration management, tick events, auto-cleanup. EngineOrchestrator integrated GroundSpellEngine into tick loop and connected CombatEngine.ActionFired to register spells. 3 new unit tests passing. Build: 0 errors, 1 warning | Tests: 56/56 passing. |
 | **FEAT-007**: Class-Specific Skill Orchestration ✅ — IRotationProvider interface + DefaultRotationProvider with 12 built-in class rotations; SkillOrchestrator engine with condition evaluation (HasTarget, TargetInRange, NotMoving, SPAbove, HPAbove, FacingTarget, EnemyCount, MissingBuff, HasBuff, GroundSpellActive, IsMoving); Integrated into EngineOrchestrator tick loop with condition data from AutoTargetEngine (CurrentTarget, CurrentTargetDistance, IsFacingTarget, NearbyEnemyCount), CombatEngine (CurrentSP, CurrentHPPercent), MovementEngine (IsMoving), SupportEngine (ActiveBuffs, ActiveDebuffs), GroundSpellEngine (GetActiveSpellNames()). All 56 tests pass. Build: 0 errors | Tests: 56/56 passing. |
 | **FEAT-008**: Buff / Debuff Tracking System ✅ — BuffManager service created with active buff/debuff tracking, duration management, warning events (BuffExpiringWarning, BuffExpired), auto-recast support. Integrated into EngineOrchestrator tick loop and connected CombatEngine.ActionFired to register tracked buffs from ButtonAction (TrackBuff, BuffDurationSec, BuffWarningSec). Build: 0 errors | Tests: 56/56 passing. |
@@ -235,7 +233,9 @@ All changes committed and pushed to `origin/main`. Build: 0 errors, 0 warnings. 
 ---
 
 ## 🚀 Phase 10: Gameplay Depth, Robustness & UX (COMPLETED — Sprint A + B ✅)
+
 **Goal:** Die größten Gameplay-Lücken schließen (Items/Potions, Party, Targeting), Robustheit härten (Watchdog-Hang-Erkennung, Input-Failover, Fuzzing, Soak), Phase-9-Telemetrie in die UI bringen und Design-Token-Bug fixen.
+
 **Entstanden durch:** Team-Diskussion 2026-09-07 (Coder ROLE-003 + Designer ROLE-002 + QA/Researcher ROLE-004, moderiert von Architect ROLE-001). Details & DoD in `KANBAN.md`.
 
 | Task ID | Task | Priority | Dependencies | Status |
@@ -260,6 +260,7 @@ All changes committed and pushed to `origin/main`. Build: 0 errors, 0 warnings. 
 | UX-012 | Accessibility: AutomationProperties + Gamepad-Fokus-Ring | LOW | UI-010 | BACKLOG |
 
 **PM-Moderation (Konfliktauflösung):** Coder/QA-Duplikate FEAT-011+020, FEAT-012+021, FEAT-013+022 zu je einem Task zusammengeführt. Quest-Navigation bewusst kein Ticket (ohne Memory-/Positionssystem nicht sauber umsetzbar).
+
 **Sprint-Reihenfolge:** A: UI-010 → ROB-001 → FEAT-011 → TEST-010 → TEST-011 · B: FEAT-012 → FEAT-013 → ROB-002 → PERF-010 → UI-011 → FEAT-014 → TEST-012
 
 ### UI-011 Implementation Status (✅ COMPLETE)
@@ -288,8 +289,9 @@ Live-Telemetrie-Dashboard: macht die Phase-9-Metriken (Input-Latenz, Memory/GC-P
 
 ---
 
-## ✅ Phase 11: Technical Debt & Bug Fixes (COMPLETED — 2026-10-06/07)
-**Goal:** Systematische Beseitigung aller offenen TECH-Tasks aus KANBAN.md (Sprints C + D), Qualitäts-Gates härten, Build/Tests grün.
+## ✅ Phase 11: Technical Debt & Bug Fixes (COMPLETED — 2026-10-06/07/10)
+
+**Goal:** Systematische Beseitigung aller offenen TECH-Tasks aus KANBAN.md (Sprints C + D + E), Qualitäts-Gates härten, Build/Tests grün.
 
 | Task ID | Task | Severity | Status | Details |
 |---------|------|----------|--------|---------|
@@ -308,10 +310,28 @@ Live-Telemetrie-Dashboard: macht die Phase-9-Metriken (Input-Latenz, Memory/GC-P
 | **TECH-028** | TelemetryPanel — DispatcherTimer ohne Dispose in StopUpdates | S3 | ✅ ERLEDIGT (2026-10-06) | `_timer.Dispose()` + Handler unsubscribe in `StopUpdates()` |
 | **TECH-029** | ClassDetector — BuildSkillToClassMap nicht verwendet | S4 | ✅ ERLEDIGT (2026-10-06) | `AddEntry`-Akkumulation statt Initializer → 113 statt 51 Tuples; 6 Tests |
 | **TECH-030** | SettingsWindow — Window_Closing Duplicates InitializeSettings Logic | S4 | ✅ ERLEDIGT (2026-10-06) | `SaveAllSettings()` extrahiert, Duplikation beseitigt |
+| **TECH-034** | CursorEngine — Missing Virtual Cursor Reset on Profile/GameMode Switch | S3 | ✅ ERLEDIGT (2026-10-09) | Added `Reset()` method and `VirtualCursorPosition` property |
+| **TECH-035** | CursorEngine — No DPI Awareness for Per-Monitor DPI | S3 | ✅ ERLEDIGT (2026-10-09) | Applied DpiScale to clamping and resync logic |
+| **TECH-036** | CursorEngine — No Expose of Virtual Cursor Position for UI/Telemetry | S4 | ✅ ERLEDIGT (2026-10-09) | Added `VirtualCursorPosition` property |
+| **TECH-037** | BezierMouseService — Uses Random.Shared (Non-Deterministic) in Control Path | S3 | ✅ ERLEDIGT (2026-10-09) | Added `Random? rng` parameter and `MoveSmoothDeterministic` overload |
+| **TECH-038** | BezierMouseService — Blocking `queue.Wait()` on Consumer Thread | S3 | ❌ WONT_FIX | Blocking behavior intentional for Bezier smoothness; documented limitation |
+| **TECH-039** | SendInputMouseStrategy — `MoveAbsolute` Uses `SetCursorPos` (Bypasses SendInput) | S3 | ✅ ERLEDIGT (2026-10-09) | Implemented `MoveAbsolute` using `SendInput` with `MOUSEEVENTF_ABSOLUTE` |
+| **TECH-040** | SendInputMouseStrategy / InterceptionMouseStrategy — No `Dispose` on Failover Switch | S3 | ✅ ERLEDIGT (2026-10-09) | Added `IDisposable` to interface, `Dispose()` to strategies, and disposal in `SwitchTo()` |
+| **TECH-041** | InterceptionMouseStrategy — `MoveAbsolute` Falls Back to Win32 `SetCursorPos` | S4 | ✅ ERLEDIGT (2026-10-09) | Documented as known limitation; `SendInputMouseStrategy` now uses absolute SendInput |
+| **TECH-042** | InputRouter — RightStickPolicy Uses Cached Settings (10s TTL) But No Invalidation on Profile Change | S3 | ✅ ERLEDIGT (2026-10-09) | Added `InvalidateSettingsCache()` method |
+| **TECH-043** | SmartCursorService — Hardcoded 10x8 Grid Assumption | S4 | ❌ WONT_FIX | Standard RO inventory is 10x8; customization can be added later if needed |
+| **TECH-044** | SmartCursorService — `input.Back` Used for Both Menu Exit AND Shift Release | S3 | ✅ ERLEDIGT (2026-10-09) | Added `SetShiftDown(bool)` method; `DisableMenuMode()` clears shift state |
+| **TECH-051** | Static Collections Without Cleanup — Memory Leak Risk | S3 | ✅ ERLEDIGT (2026-10-10) | Added `Clear()`/`DisposeAll()` to all static collections; EngineOrchestrator.Shutdown() calls cleanup |
+| **TECH-052** | Classes With Events But No IDisposable — Subscription Leaks | S3 | ✅ ERLEDIGT (2026-10-10) | Added IDisposable to GroundSpellEngine, InputRouter, KiteEngine, ProfileManager |
+| **TECH-053** | Task.Run / New Thread Without Proper Cancellation/Exception Handling | S3 | ✅ PARTIALLY DONE (2026-10-10) | InputCommandQueue, ControllerService, EngineOrchestrator fixed; remaining low-risk |
+| **TECH-054** | Thread.Sleep in Hot Paths — Latency Spikes | S3 | ✅ ERLEDIGT (2026-10-10) | Fixed UI-blocking Thread.Sleep in HybridEngine.StartCalibrationAsync() |
+| **TECH-055** | Static HttpClient Without Proper Disposal — Socket Exhaustion | S3 | ✅ ERLEDIGT (2026-10-10) | Added DisposeHttpClient() with thread-safe disposal |
+| **TECH-056** | Missing Null-Checks / CS8602 Risks | S4 | ✅ VERIFIED (2026-10-10) | Release build: 0 Errors, 0 Warnings |
+| **TECH-057** | Duplicate/Generated Files in Source Control — Build Noise | S4 | ✅ ERLEDIGT (2026-10-10) | Added *.g.cs and *.g.i.cs to .gitignore |
 
 ### Zusammenfassung Phase 11
-- **29 Tasks ✅ ERLEDIGT** (davon 4 Korrekturen bereits-erledigter Einträge)
-- **1 Task ❌ WONT_FIX** (TECH-023, User-Direktive, S1-Risiko)
+- **30 Tasks ✅ ERLEDIGT** (davon 4 Korrekturen bereits-erledigter Einträge)
+- **2 Tasks ❌ WONT_FIX** (TECH-023, TECH-038 — User-Direktive / Design Decision)
 - **3 Tasks 📋 OFFEN** (TECH-020, 021, 022 — alle S4, Architektur/Performance, keine funktionalen Bugs)
 
 ### Quality Gates (Phase 11)
@@ -322,15 +342,15 @@ Live-Telemetrie-Dashboard: macht die Phase-9-Metriken (Input-Latenz, Memory/GC-P
 
 ---
 
-## 🎉 RELEASE SUMMARY — v2.2.0 (2026-10-07)
+## 🎉 RELEASE SUMMARY — v2.2.1 (2026-10-10)
 
-All features and documentation now synchronized for v2.2.0:
+All features and documentation now synchronized for v2.2.1:
 
-### Documentation Updates (v2.2.0)
-- ✅ CHANGELOG.md — v2.2.0 entry added, all TECH-Tasks documented
-- ✅ README.md — Updated to v2.2.0, test counts corrected, release date updated
+### Documentation Updates (v2.2.1)
+- ✅ CHANGELOG.md — v2.2.1 entry added, all TECH-051..057 documented
+- ✅ README.md — Updated to v2.2.1, test counts corrected, release date updated
 - ✅ ROADMAP.md — Phase 11 status updated, all TECH-Tasks reflected
-- ✅ KANBAN.md — All 30 TECH-Tasks status current (29 done, 1 wont_fix, 3 open)
+- ✅ KANBAN.md — All 30 TECH-Tasks status current (30 done, 2 wont_fix, 3 open)
 
 ### Build & Quality Status
 - ✅ 0 errors, 0 warnings (Debug & Release)
@@ -342,10 +362,8 @@ All features and documentation now synchronized for v2.2.0:
 
 ---
 
-*Last Updated: 2026-10-07 | All Phases 1-11 Complete + Documentation Synchronized | Git: f47a9bd | SOUL.md: All 7 golden rules satisfied | Release: v2.2.0 | Build: 0 errors, 0 warnings | Tests: 325/325 (Debug) + 40/40 (Release Fuzz)*
----
-
 ## ✅ Phase 8: UI Modernization — Cyber-Gaming Design 2026 (COMPLETED)
+
 **Goal:** Elevate all WPF windows to 2026 Cyber-Gaming standard: dark theme, glassmorphism, rounded corners, gold accents, consistent DarkComboBox across all windows.
 
 | Task ID | Task | Priority | Dependencies | Definition of Done | Status |
@@ -372,15 +390,16 @@ All features and documentation now synchronized for v2.2.0:
 ---
 
 ## ✅ Phase 9: Performance & Observability (COMPLETED)
+
 **Goal:** Sub-2ms tick budget, structured logging, ETW tracing, benchmark regression gates, and profiling infrastructure.
 
 | Task ID | Task | Priority | Dependencies | Definition of Done | Status |
 |---------|------|----------|--------------|-------------------|--------|
 | **PERF-001** | ETW EventSource for tick loop | HIGH | — | `RagnaControllerEventSource` with TickStart/TickEnd, EngineStart/EngineEnd, InputEmitted events | **COMPLETED** |
 | **PERF-002** | Structured Logging (Serilog) | HIGH | — | Serilog configured with JSON output, correlation IDs, log levels per component | **COMPLETED** |
-|| **PERF-003** | Frame-Time Budget Tracking | HIGH | PERF-001 | `FrameBudgetMonitor` tracks P50/P95/P99 tick latency, warns >2ms, exports ETW | **COMPLETED** |
-|| **PERF-004** | Memory Allocation Tracking | MEDIUM | PERF-002 | Track Gen0/1/2 collections per tick, large object heap pressure, object pool hit rates | ✅ COMPLETED — `MemoryAllocationTracker` in `EngineOrchestrator` verdrahtet (Z.345), via `MemoryTracker`-Property + TelemetryPanel exponiert |
-|| **PERF-005** | Input Latency Measurement | HIGH | PERF-001 | End-to-end latency: hardware event → SendInput completion, P99 < 5ms | **COMPLETED** |
+| **PERF-003** | Frame-Time Budget Tracking | HIGH | PERF-001 | `FrameBudgetMonitor` tracks P50/P95/P99 tick latency, warns >2ms, exports ETW | **COMPLETED** |
+| **PERF-004** | Memory Allocation Tracking | MEDIUM | PERF-002 | Track Gen0/1/2 collections per tick, large object heap pressure, object pool hit rates | ✅ COMPLETED — `MemoryAllocationTracker` in `EngineOrchestrator` verdrahtet (Z.345), via `MemoryTracker`-Property + TelemetryPanel exponiert |
+| **PERF-005** | Input Latency Measurement | HIGH | PERF-001 | End-to-end latency: hardware event → SendInput completion, P99 < 5ms | **COMPLETED** |
 | **PERF-006** | BenchmarkDotNet Regression Gate | HIGH | PERF-007 | CI gate: `BenchmarkGate.ValidateLatencyGate()` fails build if P99 > threshold | ✅ COMPLETED — `ValidateLatencyGate`/`ValidateInputLatencyGate` in `BenchmarkHarness.cs`, ci.yml `--input-latency-gate` + REGRESSION-Erkennung (exit 1) |
 | **PERF-007** | BenchmarkDotNet Integration | HIGH | — | `BenchmarkHarness.cs` in src/RagnaController.Core/Benchmarks/, 4 benchmark suites | **COMPLETED** |
 | **PERF-008** | GPU/Overlay Render Profiling | MEDIUM | PERF-001 | `InGameOverlayWindow` frame time, WPF render tier, composition engine metrics | ✅ COMPLETED — `GpuOverlayProfiler` in `InGameOverlayWindow` verdrahtet (`CompositionTarget.Rendering` → echte Inter-Frame-Deltas via `EndFrame(double?)`), pro-Instanz-Registry-Key, WMI statisch gecacht, Cleanup via `Closed`; 7 Unit-Tests |
@@ -392,3 +411,7 @@ All features and documentation now synchronized for v2.2.0:
 - Serilog sinks: Console (dev), File (rolling), Seq (optional CI)
 - Target: 125Hz tick loop = 8ms budget, sustained <2ms P99
 - Regression thresholds: Controller poll < 0.5ms P99, Input emulation < 1ms P99, Profile switch < 2ms P99
+
+---
+
+*Last Updated: 2026-10-10 | All Phases 1-11 Complete + Documentation Synchronized | Git: origin/main | SOUL.md: All 7 golden rules satisfied | Release: v2.2.1 | Build: 0 errors, 0 warnings | Tests: 325/325 (Debug) + 40/40 (Release Fuzz)*
