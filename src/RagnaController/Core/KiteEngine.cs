@@ -3,7 +3,7 @@ using RagnaController.Models;
 
 namespace RagnaController.Core
 {
-    public class KiteEngine : IInputHandler
+    public class KiteEngine : IInputHandler, IDisposable
     {
         public int  Priority        => 30;
         public bool KiteEnabled     { get; set; }
@@ -112,6 +112,12 @@ namespace RagnaController.Core
             RelockDelayMs = 100;
             AimDeadzone = 0.25f;
             AimSensitivity = 14f;
+            _state = KiteStatePool.Idle;
+        }
+
+        public void Dispose()
+        {
+            PhaseChanged = null;
             _state = KiteStatePool.Idle;
         }
     }

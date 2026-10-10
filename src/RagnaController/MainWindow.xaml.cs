@@ -208,16 +208,20 @@ namespace RagnaController
         }
 
         public void SwitchFromMiniMode()
-        {
-            _isMiniMode = false;
-            Show(); WindowState = WindowState.Normal; Activate();
-            if (_miniWindow != null)
-            {
-                var w = _miniWindow;
-                _miniWindow = null;
-                try { w.Close(); } catch { }
-            }
-        }
+                {
+                    _isMiniMode = false;
+                    Show(); WindowState = WindowState.Normal; Activate();
+                    if (_miniWindow != null)
+                    {
+                        var w = _miniWindow;
+                        _miniWindow = null;
+                        try { w.Close(); } 
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"[MainWindow] SwitchFromMiniMode Close failed: {ex.Message}");
+                        }
+                    }
+                }
 
         private void RestoreWindow()
         {
@@ -594,9 +598,13 @@ namespace RagnaController
                 TelemetryPanelControl.StopUpdates();
 
             // Cleanup subscriptions
-            foreach (var sub in _subs)
-                try { sub.Dispose(); } catch { }
-            _subs.Clear();
+                        foreach (var sub in _subs)
+                            try { sub.Dispose(); } 
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"[MainWindow] Subscription dispose failed: {ex.Message}");
+                            }
+                        _subs.Clear();
 
             // Save settings
             if (_manager.ActiveProfile != null)
@@ -609,27 +617,30 @@ namespace RagnaController
 
         // Helper methods to fix missing methods
         private void ShowToast(string message, bool isError = false)
-        {
-            try
-            {
-                if (ToastBorder == null || ToastText == null || ToastBg == null) return;
-
-                ToastText.Text = message;
-                ToastBg.Color = isError ? Color.FromRgb(255, 58, 82) : Color.FromRgb(57, 255, 20);
-                ToastBorder.Visibility = Visibility.Visible;
-
-                // Auto-hide after 3 seconds
-                var timer = new System.Windows.Threading.DispatcherTimer();
-                timer.Interval = TimeSpan.FromSeconds(3);
-                timer.Tick += (s, e) =>
                 {
-                    timer.Stop();
-                    ToastBorder.Visibility = Visibility.Collapsed;
-                };
-                timer.Start();
-            }
-            catch { }
-        }
+                    try
+                    {
+                        if (ToastBorder == null || ToastText == null || ToastBg == null) return;
+
+                        ToastText.Text = message;
+                        ToastBg.Color = isError ? Color.FromRgb(255, 58, 82) : Color.FromRgb(57, 255, 20);
+                        ToastBorder.Visibility = Visibility.Visible;
+
+                        // Auto-hide after 3 seconds
+                        var timer = new System.Windows.Threading.DispatcherTimer();
+                        timer.Interval = TimeSpan.FromSeconds(3);
+                        timer.Tick += (s, e) =>
+                        {
+                            timer.Stop();
+                            ToastBorder.Visibility = Visibility.Collapsed;
+                        };
+                        timer.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[MainWindow] ShowToast failed: {ex.Message}");
+                    }
+                }
 
         private static string GetLocalizedString(string key) => LocalizationManager.GetLocalizedString(key);
 
@@ -689,11 +700,12 @@ namespace RagnaController
             WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
         }
 
-        private void BtnCalibrateQuick_Click(object sender, RoutedEventArgs e)
-        {
-            _engine?.StartCalibration();
-            ShowToast("Calibration started");
-        }
+        private async void BtnCalibrateQuick_Click(object sender, RoutedEventArgs e)
+                {
+                    if (_engine != null)
+                        await _engine.StartCalibrationAsync();
+                    ShowToast("Calibration started");
+                }
 
         private void BtnTestInput_Click(object sender, RoutedEventArgs e)
         {

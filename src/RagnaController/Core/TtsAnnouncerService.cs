@@ -39,7 +39,10 @@ namespace RagnaController.Core
                     // System.Speech wurde entfernt - implementiere hier die neue TTS-Logik
                     // Beispiel: Hexa.NET.TTS oder andere TTS-Bibliothek
                 }
-                catch { } // Ignore if audio device disconnects mid-speech
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[TtsAnnouncerService] Speak failed: {ex.Message}");
+                }
             });
         }
 

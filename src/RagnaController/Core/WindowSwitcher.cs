@@ -173,5 +173,15 @@ namespace RagnaController.Core
         [DllImport("user32.dll")] private static extern IntPtr SetFocus(IntPtr hWnd);
         [DllImport("user32.dll")] private static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
         private delegate bool EnumWindowsProc(IntPtr hwnd, IntPtr lParam);
+
+        /// <summary>
+        /// Clears all internal caches. Call from EngineOrchestrator.Shutdown() for clean test runs.
+        /// </summary>
+        public static void Clear()
+        {
+            _cache.Clear();
+            _pidNameCache.Clear();
+            _pidNameCacheTick = 0;
+        }
     }
 }

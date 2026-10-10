@@ -127,6 +127,12 @@ namespace RagnaController
                     MessageBox.Show($"Upload failed:\n{result.Error}", "Share Failed", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
+            catch (Exception ex)
+            {
+                // ERROR-001: Upload-Fehler sichtbar machen statt stillen Crash.
+                System.Diagnostics.Debug.WriteLine($"[ProfileLibrary] Share failed: {ex.Message}");
+                MessageBox.Show($"Upload error:\n{ex.Message}", "Share Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
             finally { btn.IsEnabled = true; btn.Content = GetLocalizedString("ProfileLibrary_ShareButton"); }
         }
 
@@ -162,6 +168,12 @@ namespace RagnaController
                 {
                     MessageBox.Show($"Download failed:\n{result.Error}", "Download Failed", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
+            }
+            catch (Exception ex)
+            {
+                // ERROR-001: Download-Fehler sichtbar machen statt stillen Crash.
+                System.Diagnostics.Debug.WriteLine($"[ProfileLibrary] Download failed: {ex.Message}");
+                MessageBox.Show($"Download error:\n{ex.Message}", "Download Failed", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally { btn.IsEnabled = true; btn.Content = "↓ Download"; }
         }

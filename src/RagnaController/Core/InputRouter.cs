@@ -237,13 +237,17 @@ namespace RagnaController.Core
                 }
 
         /// <summary>
-        /// Handle combat action fired event - triggers feedback and cooldown tracking
-        /// </summary>
-        public void OnActionFired(ButtonAction action, bool rumbleEnabled)
-        {
-            if (rumbleEnabled) _feedback.TriggerSkillFired();
-            _cooldownManager.RegisterAction(action);
-        }
+                /// Handle combat action fired event - triggers feedback and cooldown tracking
+                /// </summary>
+                public void OnActionFired(ButtonAction action, bool rumbleEnabled)
+                {
+                    if (rumbleEnabled) _feedback.TriggerSkillFired();
+                    _cooldownManager.RegisterAction(action);
+                }
 
-    }
-}
+                public void Dispose()
+                {
+                    FailoverSwitched = null;
+                }
+            }
+        }

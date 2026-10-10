@@ -35,15 +35,17 @@ namespace RagnaController.Core
             _typingTask = Task.Run(ProcessChatQueueAsync);
 
             // Auto-Timeout nach 8 Sekunden — bewusst fire-and-forget
-            _ = Task.Run(async () => {
-                try {
-                    await Task.Delay(8000);
-                    if (_isListening && sessionId == _currentSessionId) {
-                        StopListening();
-                        StatusChanged?.Invoke("Timeout - No voice detected");
-                    }
-                } catch { } // ObjectDisposedException beim App-Beenden ignorieren
-            });
+                        _ = Task.Run(async () => {
+                            try {
+                                await Task.Delay(8000);
+                                if (_isListening && sessionId == _currentSessionId) {
+                                    StopListening();
+                                    StatusChanged?.Invoke("Timeout - No voice detected");
+                                }
+                            } catch (Exception ex) {
+                                System.Diagnostics.Debug.WriteLine($"[VoiceChatService] Auto-stop timeout failed: {ex.Message}");
+                            }
+                        });
         }
 
         public void StopListening()

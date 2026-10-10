@@ -86,7 +86,11 @@ namespace RagnaController
         {
             if (!_clickThrough) 
             {
-                try { this.DragMove(); } catch { }
+                try { this.DragMove(); } 
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[MiniModeWindow] DragMove failed: {ex.Message}");
+                }
             }
         }
 

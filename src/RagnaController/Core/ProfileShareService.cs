@@ -23,11 +23,15 @@ namespace RagnaController.Core
     /// </summary>
     public static class ProfileShareService
     {
-        private const string GistApiUrl  = "https://api.github.com/gists";
-        private const string UserAgent   = "RagnaController-ProfileShare/1.2";
+        private const string GistApiUrl = "https://api.github.com/gists";
+        private const string UserAgent = "RagnaController-ProfileShare/1.2";
 
         // Shared read-only HTTP client (no auth — for downloads)
         private static readonly HttpClient _anonHttp = BuildClient(token: null);
+
+        // Lock for thread-safe disposal
+        private static readonly object _disposeLock = new();
+        private static bool _isDisposed = false;
 
         // ── Public API ─────────────────────────────────────────────────────────────
 
@@ -41,7 +45,7 @@ namespace RagnaController.Core
             try
             {
                 string jsonContent = JsonSerializer.Serialize(profile, AppJsonContext.Default.Profile);
-                string filename    = SanitizeFilename(profile.Name) + ".ragnaprofile.json";
+                string filename = SanitizeFilename(profile.Name) + ".ragnaprofile.json";
 
                 // Raw JSON string — anonymous types sind nicht AOT-kompatibel
                 string safeContent = jsonContent
@@ -68,7 +72,7 @@ namespace RagnaController.Core
 
                 // Use static _anonHttp for anonymous calls; create+dispose for authenticated
                 using var authHttp = token != null ? BuildClient(token) : null;
-                var http           = authHttp ?? _anonHttp;
+                var http = authHttp ?? _anonHttp;
                 var response = await http.SendAsync(request);
                 if (!response.IsSuccessStatusCode)
                     return ShareResult.Fail($"GitHub API error: {(int)response.StatusCode}");
@@ -80,6 +84,10 @@ namespace RagnaController.Core
                     return ShareResult.Fail("Invalid response from GitHub");
 
                 string code = GenerateCode(profile.Class, gistId);
+
+                // Register the share code for resolution
+                ShareCodeCache.Register(code.Split('-')[1].ToLowerInvariant(), gistId);
+
                 return ShareResult.Ok(code, gistId, $"https://gist.github.com/{gistId}");
             }
             catch (Exception ex)
@@ -151,6 +159,30 @@ namespace RagnaController.Core
             }
         }
 
+        /// <summary>
+        /// Disposes the static HttpClient to prevent socket exhaustion.
+        /// Call from EngineOrchestrator.Shutdown().
+        /// </summary>
+        public static void DisposeHttpClient()
+        {
+            lock (_disposeLock)
+            {
+                if (!_isDisposed)
+                {
+                    _anonHttp?.Dispose();
+                    _isDisposed = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clears the share code cache. Call from EngineOrchestrator.Shutdown() for clean test runs.
+        /// </summary>
+        public static void ClearShareCodeCache()
+        {
+            ShareCodeCache.Clear();
+        }
+
         // ── Code generation & resolution ───────────────────────────────────────────
 
         // "Guillotine Cross" → "GX", "High Priest" → "HP", "Sniper" → "SN"
@@ -194,7 +226,7 @@ namespace RagnaController.Core
             var handler = new SocketsHttpHandler
             {
                 PooledConnectionLifetime = TimeSpan.FromMinutes(5),
-                ConnectTimeout           = TimeSpan.FromSeconds(8),
+                ConnectTimeout = TimeSpan.FromSeconds(8),
             };
             var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(15) };
             client.DefaultRequestHeaders.UserAgent.ParseAdd(UserAgent);
@@ -235,6 +267,14 @@ namespace RagnaController.Core
             _map = Load();
         }
 
+        /// <summary>
+        /// Clears the in-memory cache. Call from EngineOrchestrator.Shutdown() for clean test runs.
+        /// </summary>
+        public static void Clear()
+        {
+            _map.Clear();
+        }
+
         private static System.Collections.Generic.Dictionary<string, string> Load()
         {
             try
@@ -262,11 +302,11 @@ namespace RagnaController.Core
     // ── Result types ───────────────────────────────────────────────────────────────
     public class ShareResult
     {
-        public bool    Success  { get; private set; }
-        public string  Code     { get; private set; } = "";
-        public string  GistId   { get; private set; } = "";
-        public string  Url      { get; private set; } = "";
-        public string  Error    { get; private set; } = "";
+        public bool Success { get; private set; }
+        public string Code { get; private set; } = "";
+        public string GistId { get; private set; } = "";
+        public string Url { get; private set; } = "";
+        public string Error { get; private set; } = "";
 
         public static ShareResult Ok(string code, string gistId, string url) =>
             new() { Success = true, Code = code, GistId = gistId, Url = url };
@@ -276,9 +316,9 @@ namespace RagnaController.Core
 
     public class DownloadResult
     {
-        public bool     Success { get; private set; }
+        public bool Success { get; private set; }
         public Profile? Profile { get; private set; }
-        public string   Error   { get; private set; } = "";
+        public string Error { get; private set; } = "";
 
         public static DownloadResult Ok(Profile p) =>
             new() { Success = true, Profile = p };

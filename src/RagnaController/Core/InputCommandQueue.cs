@@ -251,16 +251,8 @@ namespace RagnaController.Core
         public void PanicHeal(VirtualKey k) { for (int i = 0; i < 10; i++) TapKey(k); }
 
         // Wheel
-        public void Wheel(int delta) => Enqueue(new InputCmd(CmdType.Wheel) { X = delta });
-        public void ScrollWheel(int delta)
-        {
-            INPUT inp = default;
-            inp.type               = INPUT_MOUSE;
-            inp.Data.mi.mouseData  = (uint)delta;
-            inp.Data.mi.dwFlags    = 0x0800; // MOUSEEVENTF_WHEEL
-            uint sent1 = SendInput(1, ref inp, InputSize);
-            if (sent1 == 0) System.Diagnostics.Debug.WriteLine("[Win32Input] ScrollWheel blocked — run as admin?");
-        }
+                public void Wheel(int delta) => Enqueue(new InputCmd(CmdType.Wheel) { X = delta });
+                public void ScrollWheel(int delta) => Enqueue(new InputCmd(CmdType.Wheel) { X = delta });
 
         // Chat
         public async Task SendChatString(string text)
@@ -386,7 +378,8 @@ namespace RagnaController.Core
                     }
                 }
             }
-            catch (OperationCanceledException) { }
+            // Intentional: sauberer Shutdown des Consumer-Threads — kein Fehler, nur Logging-Kommentar (ERROR-001).
+            catch (OperationCanceledException) { System.Diagnostics.Debug.WriteLine("[InputQueue] Consumer loop stopped (cancellation)."); }
             finally { enumerator.Dispose(); }
         }
 
@@ -439,8 +432,16 @@ namespace RagnaController.Core
                     cmd.Callback?.Invoke();
                     break;
                 case CmdType.MouseAbs:
-                    SetCursorPos(cmd.X, cmd.Y);
-                    break;
+                                    // Use SendInput with absolute coordinates for consistency with batching and failover
+                                    {
+                                        int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+                                        int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+                                        int absX = (int)((65535.0 * cmd.X) / screenWidth);
+                                        int absY = (int)((65535.0 * cmd.Y) / screenHeight);
+                                        batch.Add(CreateMouseInput(absX, absY, 0, MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE_NOCOALESCE));
+                                        batchCount++;
+                                    }
+                                    break;
             }
 
             // PERF-005: Record latency after command execution

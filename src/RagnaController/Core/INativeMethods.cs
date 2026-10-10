@@ -62,6 +62,8 @@ namespace RagnaController.Core
         uint MOUSEEVENTF_RIGHTDOWN { get; }
         uint MOUSEEVENTF_RIGHTUP { get; }
         uint MOUSEEVENTF_MOVE_NOCOALESCE { get; }
+        uint MOUSEEVENTF_ABSOLUTE { get; }
+        uint MOUSEEVENTF_WHEEL { get; }
         uint KEYEVENTF_KEYDOWN { get; }
         uint KEYEVENTF_KEYUP { get; }
         int GWL_EXSTYLE { get; }

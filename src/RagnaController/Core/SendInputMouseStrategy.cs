@@ -9,19 +9,21 @@ namespace RagnaController.Core
     /// Standard-Maus-Emulation über die Win32 SendInput API.
     /// </summary>
     public sealed class SendInputMouseStrategy : IMouseEmulationStrategy
-    {
-        // Die Größe der INPUT-Struktur für die Win32 API
-        private static readonly int InputSize = Marshal.SizeOf<INPUT>();
+        {
+            // Die Größe der INPUT-Struktur für die Win32 API
+            private static readonly int InputSize = Marshal.SizeOf<INPUT>();
         
-        // Konstante für MOUSEEVENTF_MOVE_NOCOALESCE (0x2000)
-        // Prevents Windows from coalescing multiple small mouse movements.
-        // Wichtig für flüssige Kreise/Bezier-Kurven.
-        private const uint MOUSEEVENTF_MOVE_NOCOALESCE = 0x2000;
+            // Konstante für MOUSEEVENTF_MOVE_NOCOALESCE (0x2000)
+            // Prevents Windows from coalescing multiple small mouse movements.
+            // Wichtig für flüssige Kreise/Bezier-Kurven.
+            private const uint MOUSEEVENTF_MOVE_NOCOALESCE = 0x2000;
 
-        public bool IsAvailable => true;
-        public string DisplayName => "SendInput (Standard)";
+            public bool IsAvailable => true;
+            public string DisplayName => "SendInput (Standard)";
 
-        /// <summary>
+            public void Dispose() { } // Stateless, nothing to dispose
+
+            /// <summary>
         /// Bewegt die Maus relativ zur aktuellen Position.
         /// </summary>
         public void MoveRelative(int dx, int dy)
@@ -39,12 +41,25 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Setzt die Maus auf eine absolute Bildschirmkoordinate.
-        /// </summary>
-        public void MoveAbsolute(int x, int y)
-        {
-            SetCursorPos(x, y);
-        }
+                /// Setzt die Maus auf eine absolute Bildschirmkoordinate.
+                /// Uses SendInput with MOUSEEVENTF_ABSOLUTE for consistency with batching, latency tracking, and failover.
+                /// </summary>
+                public void MoveAbsolute(int x, int y)
+                {
+                    // Convert to absolute coordinates (0-65535 range)
+                    int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+                    int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+                    int absX = (int)((65535.0 * x) / screenWidth);
+                    int absY = (int)((65535.0 * y) / screenHeight);
+
+                    INPUT input = new INPUT();
+                    input.type = INPUT_MOUSE;
+                    input.Data.mi.dx = absX;
+                    input.Data.mi.dy = absY;
+                    input.Data.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE_NOCOALESCE;
+
+                    SendInput(1, new INPUT[] { input }, InputSize);
+                }
 
         public void LeftDown()  => SendMouse(MOUSEEVENTF_LEFTDOWN);
         public void LeftUp()    => SendMouse(MOUSEEVENTF_LEFTUP);

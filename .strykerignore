@@ -14,3 +14,7 @@
 **/DaisyWheelWindow.*
 **/RadialMenuWindow.*
 **/*.xaml
+**/obj/**/*.cs
+**/obj/**/*.g.cs
+**/obj/**/*.xaml.cs
+**/obj/**/*

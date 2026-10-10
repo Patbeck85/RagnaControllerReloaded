@@ -54,6 +54,8 @@ namespace RagnaController.Core
         public uint MOUSEEVENTF_RIGHTDOWN => NativeMethods.MOUSEEVENTF_RIGHTDOWN;
         public uint MOUSEEVENTF_RIGHTUP => NativeMethods.MOUSEEVENTF_RIGHTUP;
         public uint MOUSEEVENTF_MOVE_NOCOALESCE => NativeMethods.MOUSEEVENTF_MOVE_NOCOALESCE;
+        public uint MOUSEEVENTF_ABSOLUTE => NativeMethods.MOUSEEVENTF_ABSOLUTE;
+        public uint MOUSEEVENTF_WHEEL => NativeMethods.MOUSEEVENTF_WHEEL;
         public uint KEYEVENTF_KEYDOWN => NativeMethods.KEYEVENTF_KEYDOWN;
         public uint KEYEVENTF_KEYUP => NativeMethods.KEYEVENTF_KEYUP;
         public int GWL_EXSTYLE => NativeMethods.GWL_EXSTYLE;

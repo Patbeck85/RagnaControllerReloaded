@@ -672,10 +672,18 @@ namespace RagnaController.Core
                                             _partyManager.Dispose(); // FEAT-012: Auto-Heal endgültig stoppen
 
                                             // TECH-005: Clean up static registries to prevent memory leaks on restart
-                                            FrameBudgetRegistry.DisposeAll();
-                                            GpuOverlayProfilerRegistry.DisposeAll();
-                                            InputLatencyRegistry.DisposeAll();
-                                            MemoryAllocationRegistry.DisposeAll();
+                                                                                        FrameBudgetRegistry.DisposeAll();
+                                                                                        GpuOverlayProfilerRegistry.DisposeAll();
+                                                                                        InputLatencyRegistry.DisposeAll();
+                                                                                        MemoryAllocationRegistry.DisposeAll();
+
+                                                                                        // TECH-051: Clean up static collections
+                                                                                        ProfileShareService.DisposeHttpClient();
+                                                                                        ProfileShareService.ClearShareCodeCache();
+                                                                                        WindowSwitcher.Clear();
+
+                                                                                        // TECH-053: Dispose InputCommandQueue to join consumer thread
+                                                                                        _queue?.Dispose();
 
                                             _logger?.Info("=== Engine Shutdown ===");
                                             _logger?.Dispose();

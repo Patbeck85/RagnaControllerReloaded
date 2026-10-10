@@ -31,6 +31,8 @@ namespace RagnaController.Tests
             public void LeftUp() { }
             public void RightDown() { }
             public void RightUp() { }
+
+            public void Dispose() { } // Nothing to dispose for mock
         }
 
         private static (InputRouter router, FakeStrategy primary, FakeStrategy fallback) CreateRouter(

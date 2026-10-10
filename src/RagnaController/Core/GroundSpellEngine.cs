@@ -11,7 +11,7 @@ namespace RagnaController.Core
     /// Tracks position, duration, tick intervals, and auto-cleanup.
     /// Optimized: Zero allocations in hot path (GetActiveSpellNames reuses list).
     /// </summary>
-    public class GroundSpellEngine : IInputHandler
+    public class GroundSpellEngine : IInputHandler, IDisposable
     {
         private readonly InputCommandQueue _queue;
         private readonly List<ActiveGroundSpell> _activeSpells = new();
@@ -121,6 +121,13 @@ namespace RagnaController.Core
                 _activeSpellNamesReusable.Add(spell.SkillName);
             }
             return _activeSpellNamesReusable;
+        }
+
+        public void Dispose()
+        {
+            GroundSpellTick = null;
+            GroundSpellExpired = null;
+            _activeSpells.Clear();
         }
     }
 

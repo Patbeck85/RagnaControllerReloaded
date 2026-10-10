@@ -1,6 +1,8 @@
 ## .NET / C#
 bin/
 obj/
+*.g.cs
+*.g.i.cs
 *.user
 *.suo
 *.vs/

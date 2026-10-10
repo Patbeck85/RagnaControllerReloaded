@@ -104,29 +104,29 @@ namespace RagnaController.Core
                 public void Dispose() => _orchestrator.Dispose();
 
                 // ── Calibration (Delegiert an InputReader via Orchestrator) ────────────
-                public void StartCalibration()
-                {
-                    // Calibration is handled by InputReader - delegate to SettingsWindow approach
-                    // We'll run a short calibration directly on the controller
-                    var controller = _orchestrator.Controller;
-                    if (controller == null) return;
-            
-                    // Create a temporary InputReader for calibration
-                    var inputReader = new InputReader(controller);
-                    float maxDrift = 0f;
-            
-                    // Sample for 3 seconds
-                    for (int i = 0; i < 30; i++)
-                    {
-                        var input = inputReader.Read();
-                        if (input.IsConnected)
-                        {
-                            float highest = Math.Max(Math.Max(Math.Abs(input.LeftX), Math.Abs(input.LeftY)),
-                                                     Math.Max(Math.Abs(input.RightX), Math.Abs(input.RightY)));
-                            if (highest > maxDrift) maxDrift = highest;
-                        }
-                        System.Threading.Thread.Sleep(100);
-                    }
+                                public async Task StartCalibrationAsync()
+                                {
+                                    // Calibration is handled by InputReader - delegate to SettingsWindow approach
+                                    // We'll run a short calibration directly on the controller
+                                    var controller = _orchestrator.Controller;
+                                    if (controller == null) return;
+           
+                                    // Create a temporary InputReader for calibration
+                                    var inputReader = new InputReader(controller);
+                                    float maxDrift = 0f;
+           
+                                    // Sample for 3 seconds
+                                    for (int i = 0; i < 30; i++)
+                                    {
+                                        var input = inputReader.Read();
+                                        if (input.IsConnected)
+                                        {
+                                            float highest = Math.Max(Math.Max(Math.Abs(input.LeftX), Math.Abs(input.LeftY)),
+                                                                     Math.Max(Math.Abs(input.RightX), Math.Abs(input.RightY)));
+                                            if (highest > maxDrift) maxDrift = highest;
+                                        }
+                                        await Task.Delay(100);
+                                    }
             
                     // Add safety buffer and clamp
                     float finalDeadzone = (float)Math.Round(maxDrift + 0.02f, 2);

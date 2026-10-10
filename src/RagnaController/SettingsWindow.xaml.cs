@@ -384,6 +384,8 @@ namespace RagnaController
             ChkStartWithWindows.IsEnabled = false;
             EngineStateText.Foreground = Brushes.Yellow;
 
+            try
+            {
             float maxDrift = 0f;
             var inputReader = new InputReader(controllerSvc);
 
@@ -426,8 +428,20 @@ namespace RagnaController
             EngineStateText.Foreground = Brushes.LimeGreen;
                         EngineStateText.Text = string.Format(LocalizationManager.GetLocalizedString("Settings_CalibDone"), finalDeadzone);
            
-            BtnCalibrate.IsEnabled = true;
-            ChkStartWithWindows.IsEnabled = true;
+            }
+            catch (Exception ex)
+            {
+                // ERROR-001: kein stiller Fehler — Kalibrierung abbrechen, UI wieder freischalten.
+                System.Diagnostics.Debug.WriteLine($"[SettingsWindow] Calibration failed: {ex.Message}");
+                EngineStateText.Foreground = Brushes.OrangeRed;
+                EngineStateText.Text = "Calibration failed";
+            }
+            finally
+            {
+                // TECH-050: UI-Zustand immer wiederherstellen, auch bei Exception (Button war sonst dauerhaft disabled).
+                BtnCalibrate.IsEnabled = true;
+                ChkStartWithWindows.IsEnabled = true;
+            }
         }
 
         private void BtnReportBug_Click(object sender, RoutedEventArgs e)

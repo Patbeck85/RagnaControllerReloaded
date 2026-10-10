@@ -518,5 +518,17 @@ namespace RagnaController.Profiles
 
         /// <summary>Check if the active profile is enabled.</summary>
         public bool ProfileEnabled => Profiles.Any(p => p.Name == ActiveProfileName && p.IsEnabled);
+
+        public void Dispose()
+        {
+            ProfileSaved = null;
+            
+            // Dispose all pending timers
+            foreach (var kvp in _pending)
+            {
+                kvp.Value.timer?.Dispose();
+            }
+            _pending.Clear();
+        }
     }
 }

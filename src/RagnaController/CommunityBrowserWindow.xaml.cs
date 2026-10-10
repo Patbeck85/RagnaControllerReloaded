@@ -24,7 +24,7 @@ namespace RagnaController
         // Upload profiles via ProfileLibraryWindow.BtnShare_Click to generate share codes
         // Gist ID: 56042cbefe3dd5381186d43c3a38af0e
         private const string RegistryUrl = "https://gist.githubusercontent.com/Patbeck85/56042cbefe3dd5381186d43c3a38af0e/raw/registry.json";
-        
+
         private readonly ProfileManager _manager;
         private static readonly HttpClient _http;
         private List<CommunityEntry> _allEntries = new();
@@ -54,16 +54,21 @@ namespace RagnaController
             Loaded += (_, _) => _ = LoadRegistryAsync();
         }
 
-        private async void BtnRefresh_Click(object sender, RoutedEventArgs e)
-                {
-                    try { await LoadRegistryAsync(); }
-                    catch (Exception ex)
-                    {
-                        ErrorText.Text = ex.Message;
-                        ErrorOverlay.Visibility = Visibility.Visible;
-                        System.Diagnostics.Debug.WriteLine($"[CommunityBrowserWindow] Refresh failed: {ex.Message}");
-                    }
-                }
+        private void BtnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            _ = BtnRefresh_ClickAsync(e);
+        }
+
+        private async Task BtnRefresh_ClickAsync(RoutedEventArgs e)
+        {
+            try { await LoadRegistryAsync(); }
+            catch (Exception ex)
+            {
+                ErrorText.Text = ex.Message;
+                ErrorOverlay.Visibility = Visibility.Visible;
+                System.Diagnostics.Debug.WriteLine($"[CommunityBrowserWindow] Refresh failed: {ex.Message}");
+            }
+        }
 
         private async Task LoadRegistryAsync()
         {
@@ -77,10 +82,10 @@ namespace RagnaController
                 string json = await _http.GetStringAsync(urlWithCacheBust);
 
                 var entries = JsonSerializer.Deserialize<List<CommunityEntry>>(json, AppJsonContext.Default.ListCommunityEntry);
-                
+
                 if (entries != null)
                 {
-                    _allEntries = entries;
+                    lock (_lock) { _allEntries = entries; }
                     ApplyFilter();
                     LoadingOverlay.Visibility = Visibility.Collapsed;
                 }
@@ -101,53 +106,61 @@ namespace RagnaController
         private void ApplyFilter()
         {
             string query = SearchBox.Text.ToLowerInvariant();
-            
-            var filtered = string.IsNullOrWhiteSpace(query) 
-                ? _allEntries 
-                : _allEntries.Where(x => 
-                    !string.IsNullOrEmpty(x.Name) && x.Name.ToLowerInvariant().Contains(query) || 
-                    !string.IsNullOrEmpty(x.Class) && x.Class.ToLowerInvariant().Contains(query) || 
-                    !string.IsNullOrEmpty(x.Author) && x.Author.ToLowerInvariant().Contains(query)).ToList();
+
+            List<CommunityEntry> snapshot;
+            lock (_lock) { snapshot = _allEntries; }
+
+            var filtered = string.IsNullOrWhiteSpace(query)
+                ? snapshot
+                : snapshot.Where(x =>
+                    (!string.IsNullOrEmpty(x.Name) && x.Name.ToLowerInvariant().Contains(query)) ||
+                    (!string.IsNullOrEmpty(x.Class) && x.Class.ToLowerInvariant().Contains(query)) ||
+                    (!string.IsNullOrEmpty(x.Author) && x.Author.ToLowerInvariant().Contains(query))).ToList();
 
             CommunityList.ItemsSource = filtered;
         }
 
-        private async void BtnDownload_Click(object sender, RoutedEventArgs e)
+        private void BtnDownload_Click(object sender, RoutedEventArgs e)
+        {
+            _ = BtnDownload_ClickAsync(sender);
+        }
+
+        private async Task BtnDownload_ClickAsync(object sender)
         {
             try
             {
-            if (sender is Button btn && btn.Tag is string shareCode)
-            {
-                btn.IsEnabled = false;
-                btn.Content = GetLocalizedString("CommunityBrowser_Downloading");
-
-                try
+                if (sender is Button btn && btn.Tag is string shareCode)
                 {
-                    // Uses the existing ProfileShareService logic!
-                    var result = await ProfileShareService.DownloadAsync(shareCode);
-                    
-                    if (result.Success && result.Profile != null)
+                    btn.IsEnabled = false;
+                    btn.Content = GetLocalizedString("CommunityBrowser_Downloading");
+
+                    try
                     {
-                        // Overwrite existing profile if name matches, or create new
-                        _manager.AddAndSave(result.Profile);
-                        
-                        btn.Content = GetLocalizedString("CommunityBrowser_Installed");
-                        btn.Foreground = TryFindResource("Live") as Brush ?? Brushes.LimeGreen;
+                        // Uses the existing ProfileShareService logic!
+                        var result = await ProfileShareService.DownloadAsync(shareCode);
+
+                        if (result.Success && result.Profile != null)
+                        {
+                            // Overwrite existing profile if name matches, or create new
+                            _manager.AddAndSave(result.Profile);
+
+                            btn.Content = GetLocalizedString("CommunityBrowser_Installed");
+                            btn.Foreground = TryFindResource("Live") as Brush ?? Brushes.LimeGreen;
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Download failed:\n{result.Error}", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                            btn.Content = GetLocalizedString("CommunityBrowser_DownloadButton");
+                            btn.IsEnabled = true;
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        MessageBox.Show($"Download failed:\n{result.Error}", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        MessageBox.Show($"Unexpected error:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                         btn.Content = GetLocalizedString("CommunityBrowser_DownloadButton");
                         btn.IsEnabled = true;
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Unexpected error:\n{ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    btn.Content = GetLocalizedString("CommunityBrowser_DownloadButton");
-                    btn.IsEnabled = true;
-                }
-            }
             }
             catch (Exception outerEx)
             {

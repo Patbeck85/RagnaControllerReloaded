@@ -115,13 +115,18 @@ namespace RagnaController.Core
         internal const uint INPUT_MOUSE = 0;
         internal const uint INPUT_KEYBOARD = 1;
         internal const uint MOUSEEVENTF_MOVE = 0x0001;
-        internal const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
-        internal const uint MOUSEEVENTF_LEFTUP = 0x0004;
-        internal const uint MOUSEEVENTF_RIGHTDOWN = 0x0008;
-        internal const uint MOUSEEVENTF_RIGHTUP = 0x0010;
-        internal const uint MOUSEEVENTF_MOVE_NOCOALESCE = 0x2000;
-        internal const uint KEYEVENTF_KEYDOWN = 0x0000;
-        internal const uint KEYEVENTF_KEYUP = 0x0002;
+                internal const uint MOUSEEVENTF_LEFTDOWN = 0x0002;
+                internal const uint MOUSEEVENTF_LEFTUP = 0x0004;
+                internal const uint MOUSEEVENTF_RIGHTDOWN = 0x0008;
+                internal const uint MOUSEEVENTF_RIGHTUP = 0x0010;
+                internal const uint MOUSEEVENTF_MOVE_NOCOALESCE = 0x2000;
+                internal const uint MOUSEEVENTF_ABSOLUTE = 0x8000;
+                internal const uint MOUSEEVENTF_WHEEL = 0x0800;
+                internal const uint KEYEVENTF_KEYDOWN = 0x0000;
+                internal const uint KEYEVENTF_KEYUP = 0x0002;
+
+                internal const int SM_CXSCREEN = 0;
+                internal const int SM_CYSCREEN = 1;
 
         internal static readonly int InputSize = System.Runtime.InteropServices.Marshal.SizeOf<INPUT>();
 

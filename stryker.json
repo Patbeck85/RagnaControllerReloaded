@@ -1,0 +1,23 @@
+{
+  "stryker-config": {
+    "reporters": ["Html", "Json", "Progress"],
+    "verbosity": "trace",
+    "mutate": [
+      "src/RagnaController/Core/InputCommandQueue.cs",
+      "src/RagnaController/Core/EngineWatchdog.cs",
+      "src/RagnaController/Core/FrameBudgetMonitor.cs",
+      "src/RagnaController/Core/InputLatencyTracker.cs",
+      "src/RagnaController/Core/MemoryAllocationTracker.cs"
+    ],
+    "test-runner": "vstest",
+    "test-projects": ["tests/RagnaController.Tests/RagnaController.Tests.csproj"],
+    "project": "src/RagnaController/RagnaController.csproj",
+    "additional-timeout": 5000,
+    "concurrency": 4,
+    "thresholds": {
+      "break": 70,
+      "high": 80,
+      "low": 70
+    }
+  }
+}

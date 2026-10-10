@@ -39,39 +39,52 @@ namespace RagnaController.Core
             SystemEvents.PowerModeChanged += OnPowerModeChanged;
         }
 
-        private async void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e)
-        {
-            switch (e.Mode)
-            {
-                case PowerModes.Suspend:
-                    // ── Going to sleep ─────────────────────────────────────
-                    SleepStateChanged?.Invoke(true);
-                    // Stop engine cleanly: drains queue, releases Alt, stops rumble
-                    if (_engine.IsRunning || _engine.IsPaused)
-                        _resumeCts.Cancel();
-                    _resumeCts = new System.Threading.CancellationTokenSource();
-                    _engine.Pause();
-                    System.Diagnostics.Debug.WriteLine("[PowerMode] Suspended — engine paused.");
-                    break;
+        private async Task OnPowerModeChangedAsync(object sender, PowerModeChangedEventArgs e)
+                {
+                    try
+                    {
+                        switch (e.Mode)
+                        {
+                            case PowerModes.Suspend:
+                                // ── Going to sleep ─────────────────────────────────────
+                                SleepStateChanged?.Invoke(true);
+                                // Stop engine cleanly: drains queue, releases Alt, stops rumble
+                                if (_engine.IsRunning || _engine.IsPaused)
+                                    _resumeCts.Cancel();
+                                _resumeCts = new System.Threading.CancellationTokenSource();
+                                _engine.Pause();
+                                System.Diagnostics.Debug.WriteLine("[PowerMode] Suspended — engine paused.");
+                                break;
 
-                case PowerModes.Resume:
-                    // ── Waking up — hardware needs time to re-enumerate ────
-                    // 2500ms: empirically the minimum for USB HID re-init on most BIOSes
-                    try { await System.Threading.Tasks.Task.Delay(2500, _resumeCts.Token); }
-                    catch (System.Threading.Tasks.TaskCanceledException) { break; }
+                            case PowerModes.Resume:
+                                // ── Waking up — hardware needs time to re-enumerate ────
+                                // 2500ms: empirically the minimum for USB HID re-init on most BIOSes
+                                try { await System.Threading.Tasks.Task.Delay(2500, _resumeCts.Token); }
+                                catch (System.Threading.Tasks.TaskCanceledException) { break; }
 
-                    // Force WindowTracker to re-detect the RO window
-                    _tracker.StopHook();
-                    _tracker.StartHook();
+                                // Force WindowTracker to re-detect the RO window
+                                _tracker.StopHook();
+                                _tracker.StartHook();
 
-                    // Re-detect controller (USB may have re-enumerated with a new handle)
-                    _ctrl.DetectController();
+                                // Re-detect controller (USB may have re-enumerated with a new handle)
+                                _ctrl.DetectController();
 
-                    SleepStateChanged?.Invoke(false);
-                    System.Diagnostics.Debug.WriteLine("[PowerMode] Resumed — controller re-detected.");
-                    break;
-            }
-        }
+                                SleepStateChanged?.Invoke(false);
+                                System.Diagnostics.Debug.WriteLine("[PowerMode] Resumed — controller re-detected.");
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[PowerModeService] OnPowerModeChanged failed: {ex.Message}");
+                    }
+                }
+
+                private void OnPowerModeChanged(object sender, PowerModeChangedEventArgs e)
+                {
+                    // Fire-and-forget wrapper to satisfy SystemEvents signature
+                    _ = OnPowerModeChangedAsync(sender, e);
+                }
 
         public void Dispose()
         {

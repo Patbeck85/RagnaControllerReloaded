@@ -85,16 +85,38 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Disable Smart Cursor Menu Mode (B Button / Escape key)
-        /// </summary>
-        public void DisableMenuMode()
-        {
-            if (IsMenuMode)
-            {
-                IsMenuMode = false;
-                _feedback.Trigger(FeedbackType.CombatModeOff);
-            }
-        }
+                /// Disable Smart Cursor Menu Mode (Back button / Escape key)
+                /// </summary>
+                public void DisableMenuMode()
+                {
+                    if (IsMenuMode)
+                    {
+                        IsMenuMode = false;
+                        _feedback.Trigger(FeedbackType.CombatModeOff);
+                        // Clear shift state on menu exit
+                        _isShiftDown = false;
+                        _isMultiSelecting = false;
+                        _selectedSlots.Clear();
+                    }
+                }
+
+                /// <summary>
+                /// Set shift modifier state (called from InputReader when shift key pressed/released)
+                /// </summary>
+                public void SetShiftDown(bool isDown)
+                {
+                    if (!_isShiftDown && isDown)
+                    {
+                        _isMultiSelecting = true;
+                    }
+                    else if (_isShiftDown && !isDown)
+                    {
+                        _isShiftDown = false;
+                        _isMultiSelecting = false;
+                        _selectedSlots.Clear();
+                    }
+                    _isShiftDown = isDown;
+                }
 
         /// <summary>
         /// Check if cursor is currently snapping to grid
@@ -233,8 +255,8 @@ namespace RagnaController.Core
                         }
                     }
 
-                    // ── Drag & Drop Support (Hold A + Move) ───────────────────────────
-                    if (input.BtnA)
+                    // ── Drag & Drop Support (L1 + A Button Hold) ───────────────────────────
+                                        if (input.L1 && input.BtnA)
                     {
                         if (!_isDragging)
                         {

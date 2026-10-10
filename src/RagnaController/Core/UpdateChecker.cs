@@ -77,7 +77,11 @@ namespace RagnaController.Core
                     IsDirectDownload = downloadUrl != null
                 };
             }
-            catch { return null; }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[UpdateChecker] CheckAsync failed: {ex.Message}");
+                return null;
+            }
         }
 
         public static async Task CheckAndNotifyAsync(Window owner)
@@ -102,7 +106,8 @@ namespace RagnaController.Core
                 string path = Path.Combine(Path.GetTempPath(), info.AssetName);
                 var bytes = await _http.GetByteArrayAsync(info.DownloadUrl);
                 await File.WriteAllBytesAsync(path, bytes);
-                try { Process.Start("explorer.exe", $"/select,\"{path}\""); } catch { }
+                try { Process.Start("explorer.exe", $"/select,\"{path}\""); }
+                catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[UpdateChecker] Explorer-Select failed: {ex.Message}"); }
             }
             catch (Exception ex) { MessageBox.Show("Download failed: " + ex.Message); }
         }
