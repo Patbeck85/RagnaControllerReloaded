@@ -15,6 +15,7 @@ namespace RagnaController
     {
         private readonly HybridEngine _engine;
         private ProfileManager _manager;
+        private bool _hasUnsavedChanges = false;
 
         public ButtonRemappingWindow(HybridEngine engine, ProfileManager manager)
         {
@@ -46,6 +47,28 @@ namespace RagnaController
 
         // Event Handler für Buttons und Slider
         private void BtnCancel_Click(object sender, RoutedEventArgs e) => this.Close();
+
+        private void Window_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (_hasUnsavedChanges)
+            {
+                var result = MessageBox.Show(
+                    "You have unsaved changes. Do you want to save them?",
+                    "Unsaved Changes",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    e.Cancel = true;
+                    SaveProfile();
+                }
+                else if (result == MessageBoxResult.Cancel)
+                {
+                    e.Cancel = true;
+                }
+            }
+        }
         private void LayerBtn_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
@@ -56,11 +79,11 @@ namespace RagnaController
             }
         }
         private void ResetBtn_Click(object sender, RoutedEventArgs e) => ResetAll();
-        private void DpadSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void LStickSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void RStickSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void L1R1Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
-        private void L2R2Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
+        private void DpadSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) { MarkDirty(); UpdatePreview(); }
+        private void LStickSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) { MarkDirty(); UpdatePreview(); }
+        private void RStickSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) { MarkDirty(); UpdatePreview(); }
+        private void L1R1Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) { MarkDirty(); UpdatePreview(); }
+        private void L2R2Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) { MarkDirty(); UpdatePreview(); }
         private void SpellCheckbox_Changed(object sender, RoutedEventArgs e) => UpdateSpellConfig();
         private void BtnSave_Click(object sender, RoutedEventArgs e) => SaveProfile();
         private void PreviewDpadSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) => UpdatePreview();
@@ -94,8 +117,11 @@ namespace RagnaController
             SldL2R2.Value   = 0;
             if (ChkGroundSpell   != null) ChkGroundSpell.IsChecked    = false;
             if (ChkSelfCast      != null) ChkSelfCast.IsChecked       = false;
+            MarkDirty();
             UpdatePreview();
         }
+
+        private void MarkDirty() => _hasUnsavedChanges = true;
 
         private void UpdatePreview()
         {
@@ -133,6 +159,7 @@ namespace RagnaController
 
                 _manager.SetActive(profile.Name);
                 _engine.LoadProfile(profile);
+                _hasUnsavedChanges = false;
                 System.Windows.MessageBox.Show(
                     $"Profile '{profile.Name}' saved.",
                     "Saved", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);

@@ -1348,6 +1348,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Suggested Fix:** Track dirty state on any slider/checkbox change; show `MessageBox` on close with unsaved changes (Save / Discard / Cancel).
 **Priorität:** MEDIUM (Data loss prevention)
 **DoD:** Closing with unsaved changes shows confirmation; Save/Discard/Cancel work correctly.
+**Status:** ✅ DONE (2026-10-10) — Added `_hasUnsavedChanges` flag + `MarkDirty()` helper. All 5 sliders, ResetAll and checkboxes mark dirty on change. `Window_Closing` shows Yes/No/Cancel dialog when unsaved changes exist: Yes→SaveProfile+Close, No→discard+Close, Cancel→stay open. SaveProfile clears the dirty flag after successful save.
 
 #### UX-010: RadialSetupWindow Emote Gallery No Search/Filter (S4)
 **File:** `RadialSetupWindow.xaml` (`EmoteGalleryOverlay`, `EmoteList` WrapPanel)
