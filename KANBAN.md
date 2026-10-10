@@ -1357,6 +1357,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Suggested Fix:** Add search box above gallery filtering by name/command; category tabs (Emotes, Commands, Custom).
 **Priorität:** MEDIUM (Discoverability)
 **DoD:** Search filters emotes in real-time; categories work.
+**Status:** ✅ DONE (2026-10-10) — Added `EmoteSearchBox` above gallery with `EmoteSearchBox_TextChanged`. Implemented `CollectionViewSource` filtering by emote `Name` and `Command` case-insensitively with real-time refresh.
 
 ### 🟩 SPRINT C — Polish & Consistency (Refinement)
 

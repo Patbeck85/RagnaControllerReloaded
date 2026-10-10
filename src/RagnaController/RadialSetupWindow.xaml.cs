@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -40,6 +41,7 @@ namespace RagnaController
         private readonly string[]         _selectedImages = new string[8]; // merkt Bildpfad pro Slot
         private int           _currentRowEditing = -1;
         private List<RoEmote> _roEmotes          = new();
+        private System.Windows.Data.CollectionViewSource? _emoteViewSource;
 
         private static readonly HttpClient _http;
 
@@ -138,8 +140,33 @@ namespace RagnaController
             for (int i = 0; i < 8 && i < currentItems.Count; i++)
                 _selectedImages[i] = currentItems[i].ImagePath ?? "";
             LoadEmoteDatabase();
-            EmoteList.ItemsSource = _roEmotes;
+            _emoteViewSource = new CollectionViewSource { Source = _roEmotes };
+            _emoteViewSource.Filter += EmoteFilter;
+            EmoteList.ItemsSource = _emoteViewSource.View;
             BuildUI();
+        }
+
+        private void EmoteSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            _emoteViewSource?.View?.Refresh();
+        }
+
+        private void EmoteFilter(object sender, FilterEventArgs e)
+        {
+            if (e.Item is not RoEmote emote)
+            {
+                e.Accepted = true;
+                return;
+            }
+            string query = EmoteSearchBox?.Text?.Trim() ?? "";
+            if (string.IsNullOrEmpty(query))
+            {
+                e.Accepted = true;
+                return;
+            }
+            query = query.ToLowerInvariant();
+            e.Accepted = (emote.Name != null && emote.Name.ToLowerInvariant().Contains(query)) ||
+                         (emote.Command != null && emote.Command.ToLowerInvariant().Contains(query));
         }
 
         // ─── Emote-Datenbank ────────────────────────────────────────────────
@@ -150,7 +177,7 @@ namespace RagnaController
             string emoteFolder = Path.Combine(baseDir, "Assets", "Emotes");
             Directory.CreateDirectory(emoteFolder);
 
-            _roEmotes = new List<RoEmote>();
+            _roEmotes.Clear();
 
             foreach (var (cmd, name, emoji, wikiGif) in EmoteTable)
             {
@@ -167,6 +194,7 @@ namespace RagnaController
             }
 
             UpdateEmoteStatus();
+            _emoteViewSource?.View?.Refresh();
         }
 
         private static string? FindEmoteLocal(string folder, string cmd, string wikiUrl)
@@ -241,8 +269,7 @@ namespace RagnaController
             }
 
             LoadEmoteDatabase();
-            EmoteList.ItemsSource = null;
-            EmoteList.ItemsSource = _roEmotes;
+            _emoteViewSource?.View?.Refresh();
 
             if (sender is Button b) b.IsEnabled = true;
             EmoteStatusText.Text = fail == 0
