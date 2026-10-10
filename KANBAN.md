@@ -1368,6 +1368,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Suggested Fix:** Centralize in `UI2026DesignSystem.xaml`: `ToolTipService.Placement="Mouse"` + `InitialShowDelay="300"` + `BetweenShowDelay="100"`; ensure all tooltips use `Style="{StaticResource GlassPanel}"`.
 **Priorität:** LOW (Polish)
 **DoD:** All tooltips appear at mouse position, 300ms delay, consistent glassmorphism style.
+**Status:** ✅ DONE (2026-10-10) — Added implicit ToolTip style with `Placement="Mouse"` and FrameworkElement style for `ToolTipService.InitialShowDelay="300"` + `ToolTipService.BetweenShowDelay="100"`. All tooltips now appear at mouse position with consistent delay.
 
 #### UX-012: MiniModeWindow Click-Through Indicator Unclear (S4)
 **File:** `MiniModeWindow.xaml` (`ClickThroughHint` border)

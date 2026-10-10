@@ -742,6 +742,13 @@
         <Setter Property="FontFamily" Value="Segoe UI Variable, Segoe UI"/>
         <Setter Property="Padding" Value="8,4"/>
         <Setter Property="HasDropShadow" Value="True"/>
+        <Setter Property="Placement" Value="Mouse"/>
+    </Style>
+
+    <!-- ToolTipService defaults for all elements -->
+    <Style TargetType="FrameworkElement">
+        <Setter Property="ToolTipService.InitialShowDelay" Value="300"/>
+        <Setter Property="ToolTipService.BetweenShowDelay" Value="100"/>
     </Style>
 
     <!-- ============================================================
