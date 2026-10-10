@@ -25,18 +25,18 @@
             <!-- Content Area -->
             <Grid Grid.Row="1" Margin="24,16">
                 <StackPanel x:Name="Step1Panel">
-                    <TextBlock Text="PROFILE NAME" Style="{StaticResource Eyebrow}"/>
-                    <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}" Height="44" Margin="0,6,0,20">
-                        <TextBox x:Name="ProfileNameText" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" Padding="14,10" VerticalContentAlignment="Center" FontSize="15" FontFamily="Segoe UI Variable, Segoe UI"/>
-                    </Border>
-                    <TextBlock Text="CLASS" Style="{StaticResource Eyebrow}"/>
-                    <ComboBox x:Name="ClassCombo" Style="{StaticResource DarkComboBox}" Height="44" FontSize="15" SelectionChanged="ClassCombo_SelectionChanged" FontFamily="Segoe UI Variable, Segoe UI">
-                        <ComboBoxItem Content="Melee" Tag="Melee"/>
-                        <ComboBoxItem Content="Mage" Tag="Mage"/>
-                        <ComboBoxItem Content="Ranged" Tag="Ranged"/>
-                        <ComboBoxItem Content="Support" Tag="Support"/>
-                    </ComboBox>
-                </StackPanel>
+                                    <TextBlock Text="PROFILE NAME" Style="{StaticResource Eyebrow}"/>
+                                    <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}" Height="44" Margin="0,6,0,20">
+                                        <TextBox x:Name="ProfileNameText" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" Padding="14,10" VerticalContentAlignment="Center" FontSize="15" FontFamily="Segoe UI Variable, Segoe UI" TextChanged="ProfileNameText_TextChanged"/>
+                                    </Border>
+                                    <TextBlock Text="CLASS" Style="{StaticResource Eyebrow}"/>
+                                    <ComboBox x:Name="ClassCombo" Style="{StaticResource DarkComboBox}" Height="44" FontSize="15" SelectionChanged="ClassCombo_SelectionChanged" FontFamily="Segoe UI Variable, Segoe UI">
+                                        <ComboBoxItem Content="Melee" Tag="Melee"/>
+                                        <ComboBoxItem Content="Mage" Tag="Mage"/>
+                                        <ComboBoxItem Content="Ranged" Tag="Ranged"/>
+                                        <ComboBoxItem Content="Support" Tag="Support"/>
+                                    </ComboBox>
+                                </StackPanel>
                 <StackPanel x:Name="Step2Panel" Visibility="Collapsed">
                     <TextBlock Text="COMBAT ENGINES" Style="{StaticResource Eyebrow}"/>
                     <StackPanel Margin="0,10">
@@ -47,28 +47,28 @@
                     </StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="Step3Panel" Visibility="Collapsed">
-                    <TextBlock Text="QUICK KEYS" Style="{StaticResource Eyebrow}"/>
-                    <Grid Margin="0,10">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Text="A:" Foreground="{StaticResource AccentGold}" FontWeight="Black" FontSize="16" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" Grid.Row="0" Grid.Column="0"/>
-                        <ComboBox x:Name="AButtonCombo" Grid.Row="0" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="44" FontFamily="Segoe UI Variable, Segoe UI"/>
-                        <TextBlock Text="B:" Foreground="{StaticResource Danger}" FontWeight="Black" FontSize="16" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" Grid.Row="1" Grid.Column="0" Margin="0,10,0,0"/>
-                        <ComboBox x:Name="BButtonCombo" Grid.Row="1" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="44" Margin="0,10,0,0" FontFamily="Segoe UI Variable, Segoe UI"/>
-                        <TextBlock Text="X:" Foreground="{StaticResource AccentBlue}" FontWeight="Black" FontSize="16" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" Grid.Row="2" Grid.Column="0" Margin="0,10,0,0"/>
-                        <ComboBox x:Name="XButtonCombo" Grid.Row="2" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="44" Margin="0,10,0,0" FontFamily="Segoe UI Variable, Segoe UI"/>
-                        <TextBlock Text="Y:" Foreground="{StaticResource AccentGold}" FontWeight="Black" FontSize="16" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" Grid.Row="3" Grid.Column="0" Margin="0,10,0,0"/>
-                        <ComboBox x:Name="YButtonCombo" Grid.Row="3" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="44" Margin="0,10,0,0" FontFamily="Segoe UI Variable, Segoe UI"/>
-                    </Grid>
-                </StackPanel>
+                                    <TextBlock Text="QUICK KEYS" Style="{StaticResource Eyebrow}"/>
+                                    <Grid Margin="0,10">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="A:" Foreground="{StaticResource AccentGold}" FontWeight="Black" FontSize="16" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" Grid.Row="0" Grid.Column="0"/>
+                                        <ComboBox x:Name="AButtonCombo" Grid.Row="0" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="44" FontFamily="Segoe UI Variable, Segoe UI" SelectionChanged="ButtonCombo_SelectionChanged"/>
+                                        <TextBlock Text="B:" Foreground="{StaticResource Danger}" FontWeight="Black" FontSize="16" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" Grid.Row="1" Grid.Column="0" Margin="0,10,0,0"/>
+                                        <ComboBox x:Name="BButtonCombo" Grid.Row="1" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="44" Margin="0,10,0,0" FontFamily="Segoe UI Variable, Segoe UI" SelectionChanged="ButtonCombo_SelectionChanged"/>
+                                        <TextBlock Text="X:" Foreground="{StaticResource AccentBlue}" FontWeight="Black" FontSize="16" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" Grid.Row="2" Grid.Column="0" Margin="0,10,0,0"/>
+                                        <ComboBox x:Name="XButtonCombo" Grid.Row="2" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="44" Margin="0,10,0,0" FontFamily="Segoe UI Variable, Segoe UI" SelectionChanged="ButtonCombo_SelectionChanged"/>
+                                        <TextBlock Text="Y:" Foreground="{StaticResource AccentGold}" FontWeight="Black" FontSize="16" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" Grid.Row="3" Grid.Column="0" Margin="0,10,0,0"/>
+                                        <ComboBox x:Name="YButtonCombo" Grid.Row="3" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="44" Margin="0,10,0,0" FontFamily="Segoe UI Variable, Segoe UI" SelectionChanged="ButtonCombo_SelectionChanged"/>
+                                    </Grid>
+                                </StackPanel>
                 <StackPanel x:Name="Step4Panel" Visibility="Collapsed">
                     <TextBlock Text="REVIEW" Style="{StaticResource Eyebrow}"/>
                     <Border Style="{StaticResource GlassPanel}" Padding="24" CornerRadius="{StaticResource RadiusLg}" Margin="0,10">

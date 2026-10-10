@@ -1330,6 +1330,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Suggested Fix:** Disable "Next" until required fields valid; show red border/tooltip on empty required fields; validate combos have selection.
 **Priorität:** MEDIUM (Data integrity)
 **DoD:** "Next" disabled until Step 1 (name+class) and Step 3 (A/B/X/Y) complete; validation visible.
+**Status:** ✅ DONE (2026-10-10) — Added `ValidateCurrentStep()`, `ValidateField()`, `ValidateCombo()`, and `UpdateUI()` enables/disables Next button based on validation. Added `TextChanged` handler for ProfileNameText and `SelectionChanged` handlers for ClassCombo and all 4 ButtonCombos. Red border + tooltip shown on invalid fields.
 
 #### UX-008: CommunityBrowserWindow No Offline/Empty State Handling (S3)
 **File:** `CommunityBrowserWindow.xaml` (`LoadingOverlay`, `ErrorOverlay`, `CommunityList`)

@@ -48,6 +48,10 @@ namespace RagnaController
             BtnBack.IsEnabled = _step > 1;
             BtnNext.Content = _step == 4 ? "CREATE" : "NEXT →";
 
+            // Validate current step before enabling Next
+            bool canProceed = ValidateCurrentStep();
+            BtnNext.IsEnabled = canProceed;
+
             Brush gold = (Brush)FindResource("Gold");
             Brush dim = (Brush)FindResource("BgBorder");
 
@@ -65,9 +69,77 @@ namespace RagnaController
             }
         }
 
+        private bool ValidateCurrentStep()
+        {
+            switch (_step)
+            {
+                case 1:
+                    // Step 1: Name and Class required
+                    return !string.IsNullOrWhiteSpace(ProfileNameText.Text) && ClassCombo.SelectedIndex >= 0;
+                case 2:
+                    // Step 2: Always valid (optional checkboxes)
+                    return true;
+                case 3:
+                    // Step 3: All four key combos must have selection
+                    return AButtonCombo.SelectedIndex >= 0 && 
+                           BButtonCombo.SelectedIndex >= 0 && 
+                           XButtonCombo.SelectedIndex >= 0 && 
+                           YButtonCombo.SelectedIndex >= 0;
+                case 4:
+                    // Step 4: Always valid (review step)
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        private void ValidateField(TextBox textBox, bool isValid)
+        {
+            textBox.BorderBrush = isValid ? (Brush)FindResource("BgBorder") : Brushes.Red;
+            textBox.ToolTip = isValid ? null : "This field is required";
+        }
+
+        private void ValidateCombo(ComboBox combo, bool isValid)
+        {
+            combo.BorderBrush = isValid ? (Brush)FindResource("BgBorder") : Brushes.Red;
+            combo.ToolTip = isValid ? null : "Please select a value";
+        }
+
+        private void ProfileNameText_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var tb = (TextBox)sender;
+            bool valid = !string.IsNullOrWhiteSpace(tb.Text);
+            ValidateField(tb, valid);
+            UpdateUI();
+        }
+
+        private void ClassCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (EnableMeleeCheck == null) return;
+            string tag = (ClassCombo.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "";
+            EnableMeleeCheck.IsChecked = tag == "Melee";
+            EnableKiteCheck.IsChecked = tag == "Ranged";
+            EnableMageCheck.IsChecked = tag == "Mage";
+            EnableSupportCheck.IsChecked = tag == "Support";
+            
+            var combo = (ComboBox)sender;
+            bool valid = combo.SelectedIndex >= 0;
+            ValidateCombo(combo, valid);
+            UpdateUI();
+        }
+
+        private void ButtonCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var combo = (ComboBox)sender;
+            bool valid = combo.SelectedIndex >= 0;
+            ValidateCombo(combo, valid);
+            UpdateUI();
+        }
+
         private void BtnNext_Click(object sender, RoutedEventArgs e)
         {
-            if (_step == 1 && string.IsNullOrWhiteSpace(ProfileNameText.Text)) return;
+            if (!ValidateCurrentStep()) return;
+            
             if (_step < 4) { _step++; UpdateUI(); }
             else Finish();
         }
@@ -78,16 +150,6 @@ namespace RagnaController
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e) => Close();
-
-        private void ClassCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (EnableMeleeCheck == null) return;
-            string tag = (ClassCombo.SelectedItem as ComboBoxItem)?.Tag?.ToString() ?? "";
-            EnableMeleeCheck.IsChecked = tag == "Melee";
-            EnableKiteCheck.IsChecked = tag == "Ranged";
-            EnableMageCheck.IsChecked = tag == "Mage";
-            EnableSupportCheck.IsChecked = tag == "Support";
-        }
 
         private void Finish()
         {
@@ -101,7 +163,7 @@ namespace RagnaController
             string safeName = string.Concat(name.Split(Path.GetInvalidFileNameChars())).Trim();
             if (string.IsNullOrWhiteSpace(safeName))
             {
-                MessageBox.Show("Profile name contains only invalid characters.\nUse letters, numbers or spaces.", "Invalid Name", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Profile name contains only invalid characters.\\nUse letters, numbers or spaces.", "Invalid Name", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
