@@ -1,13 +1,50 @@
-﻿# Changelog
+# Changelog
 
 All notable changes to RagnaController will be documented in this file.
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [2.2.1] - 2026-10-10
+
+### Added
+- **TECH-051: Static Collections Cleanup** — Added `Clear()`/`DisposeAll()` to all static collections (ProfileShareService HttpClient & ShareCodeCache, WindowSwitcher caches, FrameBudgetRegistry, GpuOverlayProfilerRegistry, InputLatencyRegistry, MemoryAllocationRegistry). `EngineOrchestrator.Shutdown()` now calls cleanup for all registries.
+- **TECH-052: IDisposable for Event-Emitting Classes** — Implemented `IDisposable` + `Dispose()` nulling events for `GroundSpellEngine`, `InputRouter`, `KiteEngine`, `ProfileManager`. AutoTargetEngine, ControllerManager, ControllerService, EngineOrchestrator, InputCommandQueue, HybridEngine already had Dispose.
+- **TECH-053: Background Thread Cleanup** — `InputCommandQueue.Dispose()` now joins consumer thread; `ControllerService.Dispose()` signals and joins SDL thread; `EngineOrchestrator.Shutdown()` disposes InputCommandQueue.
+- **TECH-054: Async Calibration (UI Non-Blocking)** — Fixed UI-blocking `Thread.Sleep(100)` in `HybridEngine.StartCalibrationAsync()` → `await Task.Delay(100)`. Updated `BtnCalibrateQuick_Click` to `async/await`.
+- **TECH-055: Static HttpClient Disposal** — Added thread-safe `DisposeHttpClient()` to `ProfileShareService` with lock-based disposal; called from `EngineOrchestrator.Shutdown()`.
+- **TECH-056: Nullable Safety Verified** — Release build: 0 Errors, 0 Warnings. All CS8602/CS8618/CS8625 risks resolved.
+- **TECH-057: Gitignore Hardening** — Added `*.g.cs` and `*.g.i.cs` to `.gitignore`. Verified no generated files in Git.
+
+### Changed
+- **KANBAN.md** — All TECH-051 through TECH-057 marked ✅ DONE with status notes and timestamps.
+- **EngineOrchestrator.Shutdown()** — Now disposes InputCommandQueue (joins consumer thread) and calls all static registry cleanups.
+- **HybridEngine.StartCalibrationAsync()** — Changed from `void StartCalibration()` with `Thread.Sleep` to `async Task StartCalibrationAsync()` with `await Task.Delay`.
+- **ProfileShareService** — Added `DisposeHttpClient()` and `ClearShareCodeCache()` public static methods.
+- **WindowSwitcher** — Added `Clear()` public static method for cache cleanup.
+- **GroundSpellEngine, InputRouter, KiteEngine, ProfileManager** — All now implement `IDisposable` with proper event cleanup.
+
+### Fixed
+- **TECH-054 UI Blocking** — Calibration button no longer freezes UI for ~3 seconds during calibration sampling.
+- **TECH-051 Memory Leaks** — Static collections in ProfileShareService and WindowSwitcher now properly cleaned on engine shutdown.
+- **TECH-052 Subscription Leaks** — Event subscribers can now cleanly unsubscribe via Dispose pattern.
+- **TECH-053 Thread Leaks** — Consumer thread and SDL thread now properly joined on shutdown.
+- **TECH-055 Socket Exhaustion** — Static HttpClient now properly disposed to prevent connection pool leaks.
+
+### Tests
+- **Build:** 0 Errors, 0 Warnings (Debug & Release) ✅
+- **Unit/Integration Tests:** 325/325 PASS (Debug) ✅
+- **Release Fuzz Tests:** 40/40 PASS (Release Build) ✅
+- **Mutation Testing:** Stryker.NET Pipeline active (CI `windows-latest`)
+
+---
 
 ## [2.2.0] - 2026-10-07
 
 ### Added
-- **TECH-027: KiteRetreatingState Overshoot-Schutz** — `_rem` (verbleibende Distanz) Tracking + `Math.Min(step, _rem)` Clamping eliminiert Overshoot bei `deltaMs >= RetreatDurationMs`. Normales Verhalten bit-exakt erhalten. 3 neue Unit-Tests (`KiteRetreatOvershootTests`): `GrosserDeltaMs_KeinOvershoot`, `NormalerBetrieb_GesamtdistanzUngeschaeumt`, `Null_Duration_SofortPivoting`.
+- **TECH-027: KiteRetreatingState Overshoot-Schutz** — `_rem` (verbleibende Distanz) Tracking + `Math.Min(step, _rem)` Clamping eliminiert Overshoot bei `deltaMs >= RetreatDurationMs`. Normales Verhalten bit-exakt erhalten. 3 neue Unit-Tests (`KiteRetreatOvershootTests`): `GrosserDeltaMs_KeinOvershoot`, `NormalerBetrieb_GesamtdistanzUngeschaedigt`, `Null_Duration_SofortPivoting`.
 - **TECH-019: MainWindow → LocalizationManager Delegation** — Lokale `GetLocalizedString(key.Replace)` durch `LocalizationManager.GetLocalizedString(key)` ersetzt (wie SettingsWindow/CommunityBrowserWindow). Beide Aufrufstellen (`Tab_NoMappings`) nutzen jetzt echtes i18n.
 - **TECH-026: InputCommandQueue Lock Status bestätigt** — `_commandsLock` ist **bereits in Release & Debug aktiv** (kein `#if DEBUG`). Release-Build Fuzz-Tests: 40/40 PASS. Kein Code-Change nötig.
 - **TECH-025: ControllerDiagnosticRunner IDisposable** — Implementiert `IDisposable` mit `IsDisposed`, Subscriber-Referenzen werden freigegeben, `Start()`/`FeedSample()` nach Dispose inert. `ControllerTestWindow.OnClosed` ruft `_diagnostic?.Dispose()` auf. 5 neue Unit-Tests. **WICHTIG:** KANBAN-Eintrag korrigiert — `ControllerDiagnosticRunner` hatte KEINEN `_percentileTimer` (reine Zustandsmaschine), der echte Leak war Event-Delegates ohne Unsubscribe.
@@ -86,6 +123,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Tests
 - All 56 tests passing (verified locally + CI).
 - Build: 0 errors, 0 warnings (Stryker.NET mutation testing configured).
+
+---
 
 ## [2.0.1] - 2026-08-23
 
@@ -238,4 +277,4 @@ The version number follows Semantic Versioning (SemVer):
 
 ---
 
-*Last updated: 2026-08-24 | Documentation synchronized | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 56/56 passing*
+*Last updated: 2026-10-10 | Documentation synchronized for v2.2.1 | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 325/325 (Debug) + 40/40 (Release Fuzz) | SOUL.md: All 7 golden rules satisfied*

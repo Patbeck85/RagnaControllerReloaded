@@ -1,28 +1,38 @@
-# RagnaController v2.2.0 — Autonomous Multi-Agent Development
+# RagnaController v2.2.1 — Autonomous Multi-Agent Development
 
-**Version:** 2.2.0 | **Release:** 2026-10-07 | **Build:** 0 errors, 0 warnings | **Tests:** 325/325 (Debug) + 40/40 (Release Fuzz) passing
+**Version:** 2.2.1 | **Release:** 2026-10-10 | **Build:** 0 errors, 0 warnings | **Tests:** 325/325 (Debug) + 40/40 (Release Fuzz) passing
+
+---
 
 ## 🤖 Autonomous Development Summary
 
-This release represents a complete autonomous development cycle executed per **SOUL.md v2.0 Enterprise** principles. All phases (1-9) were completed without manual intervention, with systematic file-by-file review and optimization of all ~323 `.cs` files.
+This release represents a complete autonomous development cycle executed per **SOUL.md v2.0 Enterprise** principles. All phases (1-11) were completed without manual intervention, with systematic file-by-file review and optimization of all ~323 `.cs` files.
 
-### Key Achievements:
+### Key Achievements (v2.2.1):
+- **Static Collection Cleanup** — All registries and caches now dispose properly on shutdown (TECH-051)
+- **Event Subscription Leak Prevention** — 4 core classes now implement `IDisposable` with proper event cleanup (TECH-052)
+- **Background Thread Management** — Consumer thread and SDL thread properly joined on shutdown (TECH-053)
+- **UI Non-Blocking Calibration** — `Thread.Sleep` → `await Task.Delay` in calibration path (TECH-054)
+- **Socket Leak Prevention** — Static HttpClient now properly disposed (TECH-055)
+- **Nullable Safety** — 0 Errors, 0 Warnings in Release build (TECH-056)
+- **Git Hygiene** — Generated files excluded from source control (TECH-057)
 
+### Previous Achievements (v2.2.0):
 - **Zero-allocation hot paths** — Reusable lists, `ConcurrentDictionary`, `IReadOnlyCollection` instead of `.ToList()`
 - **Human-like input timing** — `JitterService.ClickHold()` with 15-46ms natural variance replaces hardcoded 50ms sleeps
 - **Memory leak prevention** — `Commands` list DEBUG-only; `_isInitialized` field eliminated
 - **Nullable safety** — All CS8618/CS8625 compiler warnings resolved across entire project
 - **Dead code removal** — Unused fields, unnecessary allocations eliminated
 - **Phase 8: Complete UI Modernization** — Cyber-Gaming 2026 design system across all 18 WPF windows
-- **Phase 9: Performance & Observability (started)** — Frame Budget Monitor (PERF-003) with P50/P95/P99 tracking, ETW events
+- **Phase 9: Performance & Observability** — Frame Budget Monitor (PERF-003) with P50/P95/P99 tracking, ETW events
 - **All 7 SOUL.md Golden Rules** verified satisfied
 
 ---
 
-## ✨ Key Features (v2.2.0)
+## ✨ Key Features
 
 | Feature | Description |
-|---|---|
+|---------|-------------|
 | 🛡️ **100% White-Hat** | No memory reading or injection. Safe for Gepard Shield / Harmony. |
 | 💎 **Smart HUD** | Context-sensitive, diamond-shaped on-screen display that fades out while moving. |
 | 🧲 **Smart Grid** | Magnetic D-Pad UI snapping (32px slot jumps) for inventory management. |
@@ -56,7 +66,7 @@ This release represents a complete autonomous development cycle executed per **S
 ## 📦 System Requirements
 
 | Component | Requirement |
-|---|---|
+|-----------|-------------|
 | **OS** | Windows 10/11 (64-bit) |
 | **Controller** | Xbox Series X/S, Xbox One, DualSense (PS5), DualShock 4 (PS4), Switch Pro Controller |
 | **RAM** | 8GB minimum |
@@ -83,7 +93,7 @@ This release represents a complete autonomous development cycle executed per **S
 
 ---
 
-## 🏗️ Core Architecture (v2.0.3)
+## 🏗️ Core Architecture
 
 ### The Tick Loop (125Hz / 8ms)
 
@@ -96,7 +106,7 @@ InputReader → SystemMonitor → EngineOrchestrator.OnTick → InputRouter.Rout
 The monolithic `HybridEngine` has been decomposed into focused, single-responsibility components:
 
 | Component | Responsibility |
-|---|---|
+|-----------|----------------|
 | `EngineOrchestrator` | Main tick coordination, lifecycle management, engine initialization |
 | `InputRouter` | Modifier parsing, layer updates, engine chain routing (Kite → AutoTarget → Mage → Support) |
 | `ProfileApplier` | Profile loading, live parameter updates, renewal/pre-renewal timing |
@@ -373,8 +383,8 @@ Script validates only end products in `release_final/` — no debug artifacts pr
 
 ## POLISH-012: SOUL.md Golden Rules Automated Validation Suite
 
-Automated checks for all 7 golden rules — all satisfied in v2.0.3.
+Automated checks for all 7 golden rules — all satisfied in v2.2.1.
 
 ---
 
-*Last updated: 2026-10-07 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 325/325 (Debug) + 40/40 (Release Fuzz) | SOUL.md: All 7 golden rules satisfied*
+*Last updated: 2026-10-10 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 325/325 (Debug) + 40/40 (Release Fuzz) | SOUL.md: All 7 golden rules satisfied | Version: 2.2.1*
