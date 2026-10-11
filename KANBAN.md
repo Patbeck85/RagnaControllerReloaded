@@ -1499,12 +1499,22 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 7. **Verified:** All 358 tests PASS; PERF-010 Zero-Allocation Gate GREEN (no Stopwatch allocations in production hot path).
 
 #### GEX-003: Keyboard Emulation Parity (SendInput vs Interception) (S2)
-**Files:** `Core/SendInputKeyboardStrategy.cs` (verify exists), `Core/InterceptionKeyboardStrategy.cs` (verify exists), `Core/InputRouter.cs`
+**Files:** `Core/SendInputKeyboardStrategy.cs`, `Core/InterceptionKeyboardStrategy.cs`, `Core/InputRouter.cs`
 **Fundament:** Keyboard failover exists? Key down/up timing, repeat rate, modifier handling must match exactly.
 **Impact:** Skill casts fail after failover; combo breaks.
 **Suggested Fix:** Same parity approach as GEX-001 for keyboard. Verify both strategies exist and are wired in failover.
 **Priorität:** CRITICAL
 **DoD:** Keyboard parity test passes; failover mid-combo doesn't break cast sequence.
+**Status:** ✅ DONE (2026-10-11)
+
+**Umsetzung (GEX-003):**
+1. **New Interface:** `IKeyboardEmulationStrategy` — mirrors `IMouseEmulationStrategy` for keyboard failover.
+2. **Two Implementations:**
+   - `SendInputKeyboardStrategy` — Win32 SendInput (reference behavior)
+   - `InterceptionKeyboardStrategy` — Kernel-mode via Interception driver (uses shared `InterceptionNative`)
+3. **Parity Test Suite:** `KeyboardEmulationParityTests.cs` — 3 tests (Core Sequence Parity, Modifier+Key Parity, Failover Mid-Sequence). All record operation sequences instead of timing to avoid headless flakiness.
+4. **Project Integration:** Added 3 new `.cs` files to csproj (`IKeyboardEmulationStrategy`, `SendInputKeyboardStrategy`, `InterceptionKeyboardStrategy`).
+5. **Verified:** 361 tests PASS (358 existing + 3 new). Failover mid-sequence produces identical key sequences.
 
 #### GEX-004: Focus Lock Reliability Under Real RO Conditions (S2)
 **Files:** `Core/InputRouter.cs` (FocusLock logic), `Core/WindowSwitcher.cs`, `Models/Settings.cs` (`FocusLockProcess`, `FocusLockEnabled`)

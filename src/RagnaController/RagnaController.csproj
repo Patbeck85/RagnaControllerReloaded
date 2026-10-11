@@ -172,7 +172,10 @@
         <Compile Include="Core\RoFeatures.cs" />
         <Compile Include="Core\RoUiMenuService.cs" />
         <Compile Include="Core\SendInputMouseStrategy.cs" />
-        <Compile Include="Core\SkillOrchestrator.cs" />
+                <Compile Include="Core\SendInputKeyboardStrategy.cs" />
+                <Compile Include="Core\InterceptionKeyboardStrategy.cs" />
+                <Compile Include="Core\IKeyboardEmulationStrategy.cs" />
+                <Compile Include="Core\SkillOrchestrator.cs" />
         <Compile Include="Core\SmartCursorEngine.cs" />
         <Compile Include="Core\SmartCursorService.cs" />
         <Compile Include="Core\SnapshotBuilder.cs" />
