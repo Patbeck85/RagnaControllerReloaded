@@ -189,6 +189,7 @@
         <Compile Include="Core\ItemManagerEngine.cs" />
         <Compile Include="Core\PartyManager.cs" />
         <Compile Include="Core\SessionRecorder.cs" />
+        <Compile Include="Core\ShareCodeValidator.cs" />
 
                 <Compile Include="Core\TtsAnnouncerService.cs" />
                 <Compile Include="Core\UpdateChecker.cs" />

@@ -23,6 +23,38 @@ namespace RagnaController
             InitializeComponent();
             _manager = manager;
             Loaded += (s, e) => Refresh();
+            // Initial state: empty input -> placeholder visible, download disabled.
+            UpdateShareCodeValidation();
+        }
+
+        /// <summary>UX-013: Toggles watermark, red validation border and Download-button enablement.</summary>
+        private void TxtShareCode_TextChanged(object sender, TextChangedEventArgs e) => UpdateShareCodeValidation();
+
+        private void UpdateShareCodeValidation()
+        {
+            if (TxtShareCode == null || ShareCodePlaceholder == null || ShareCodeErrorBorder == null || BtnDownload == null) return;
+
+            string code = TxtShareCode.Text?.Trim() ?? "";
+            bool empty = string.IsNullOrEmpty(code);
+            bool valid = ShareCodeValidator.IsValid(code);
+
+            // Watermark: visible only when the field is empty.
+            ShareCodePlaceholder.Visibility = empty ? Visibility.Visible : Visibility.Collapsed;
+
+            // Red validation border + tooltip: shown only for non-empty, invalid input (no error on empty).
+            if (!empty && !valid)
+            {
+                ShareCodeErrorBorder.Visibility = Visibility.Visible;
+                TxtShareCode.ToolTip = "Invalid format. Expected \"XX-XXXX\" (e.g. GX-A3F9) or a full Gist ID.";
+            }
+            else
+            {
+                ShareCodeErrorBorder.Visibility = Visibility.Collapsed;
+                TxtShareCode.ToolTip = "Enter a share code (e.g. GX-A3F9) and click ↓ Download";
+            }
+
+            // Download button enabled only for a valid code.
+            BtnDownload.IsEnabled = valid;
         }
 
         private void Refresh()

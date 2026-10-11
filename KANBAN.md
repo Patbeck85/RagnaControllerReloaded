@@ -1401,6 +1401,17 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Suggested Fix:** Add `TextBox` watermark/placeholder "GX-A3F9" via attached property; validate format on input (regex `^[A-Z]{2}-[0-9A-Fa-f]{4}$`).
 **Priorität:** LOW (Input guidance)
 **DoD:** Placeholder visible; invalid format shows red border + tooltip; valid enables Download button.
+**Status:** ✅ DONE (2026-10-10)
+
+**Umsetzung (UX-013):**
+1. **Watermark/Placeholder:** `ShareCodePlaceholder` TextBlock („GX-A3F9", TextSecondary, JetBrains Mono) überlagert das leere Feld (`IsHitTestVisible=False`), wird per `TextChanged` bei Inhalt ausgeblendet. Grid-Overlay: GlassPanelCompact (Basis) + roter Validierungs-Border + TextBox + Placeholder.
+2. **Live-Validierung:** `ShareCodeValidator.IsValid()` (neuer Core-Helper, testbar, DRY — keine UI-Abhängigkeit). Akzeptiert exakt das, was `ProfileShareService.ResolveGistId` akzeptiert: `^[A-Z]{2}-[0-9A-Fa-f]{4}$` (Share Code, UPPERCASE-Präfix!) ODER `^[0-9a-fA-F]{20,}$` (rohe Gist-ID).
+3. **Roter Border + ToolTip:** `ShareCodeErrorBorder` (Danger `#FF5252`, 2px, RadiusMd) sichtbar NUR bei nicht-leerem ungültigem Input; ToolTip wechselt auf „Invalid format. Expected \"XX-XXXX\" (e.g. GX-A3F9) or a full Gist ID."
+4. **Download-Button:** `BtnDownload.IsEnabled` = valid → Button aktiviert nur bei gültigem Code (kein Dead-End).
+
+**Kritischer Befund:** Die KANBAN-Regex `[A-Za-z]{2}-[0-9A-Fa-f]{4}` hätte **lowercase Präfixe** akzeptiert, die `ProfileShareService.ResolveGistId` (`^[A-Z]{2}-`) aber **ablehnt** → Button aktiv, Download garantiert fehlerhaft = genau der Dead-End-Trap. Regex an Service-Quelle angeglichen (Uppercase-Pflicht). Zusätzlich: Projekt nutzt **explizite `<Compile Include>`** (`EnableDefaultCompileItems=false`) — neue `.cs`-Dateien müssen im csproj eingetragen werden, sonst CS0103.
+
+**Tests:** `ShareCodeValidatorTests.cs` — 15 Fälle (gültige Codes/Gist-IDs, ungültige Formate, leer/null, Trim). 340/340 PASS.
 
 #### UX-014: TutorialWindow Content Not Localized (S4)
 **File:** `TutorialWindow.xaml` (not reviewed but likely hardcoded English)

@@ -103,10 +103,20 @@
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0">
                         <Button Content="New Profile" Style="{StaticResource PrimaryButton}" Width="120" Height="40" Margin="0,0,12,0" Click="BtnNew_Click" ToolTip="Create a new profile from scratch" FontSize="14" AutomationProperties.Name="Create new profile"/>
                                                 <Button Content="Import" Style="{StaticResource GhostButton}" Width="90" Height="40" Margin="0,0,12,0" Click="BtnImport_Click" ToolTip="Import profile from JSON file" FontSize="14" AutomationProperties.Name="Import profile from file"/>
-                                                <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}" Height="40" Margin="0,0,8,0">
-                                                    <TextBox x:Name="TxtShareCode" Width="100" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" Padding="10,0" FontFamily="JetBrains Mono, Consolas" FontSize="14" VerticalContentAlignment="Center" ToolTip="Enter a share code (e.g. GX-A3F9) and click ↓ Download"/>
-                                                </Border>
-                                                <Button Content="↓ Download" Style="{StaticResource GhostButton}" Width="110" Height="40" Margin="0,0,12,0" Click="BtnDownload_Click" ToolTip="Download profile by share code" FontSize="14" AutomationProperties.Name="Download profile by share code"/>
+                                                <Grid Height="40" Margin="0,0,8,0">
+                                                    <!-- Glass base panel -->
+                                                    <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}"/>
+                                                    <!-- Red validation border (visible only when format invalid) -->
+                                                    <Border x:Name="ShareCodeErrorBorder" Width="100" Height="40"
+                                                            CornerRadius="{StaticResource RadiusMd}"
+                                                            BorderThickness="2" BorderBrush="{StaticResource Danger}"
+                                                            Visibility="Collapsed"/>
+                                                    <!-- Share code input -->
+                                                    <TextBox x:Name="TxtShareCode" Width="100" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" Padding="10,0" FontFamily="JetBrains Mono, Consolas" FontSize="14" VerticalContentAlignment="Center" ToolTip="Enter a share code (e.g. GX-A3F9) and click ↓ Download" TextChanged="TxtShareCode_TextChanged"/>
+                                                    <!-- Watermark / placeholder (hidden when text present) -->
+                                                    <TextBlock x:Name="ShareCodePlaceholder" Text="GX-A3F9" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}" FontFamily="JetBrains Mono, Consolas" FontSize="14" IsHitTestVisible="False"/>
+                                                </Grid>
+                                                <Button x:Name="BtnDownload" Content="↓ Download" Style="{StaticResource GhostButton}" Width="110" Height="40" Margin="0,0,12,0" Click="BtnDownload_Click" ToolTip="Download profile by share code" FontSize="14" AutomationProperties.Name="Download profile by share code"/>
                                                 <Button Content="Close" Style="{StaticResource GhostButton}" Width="85" Height="40" Click="BtnClose_Click" ToolTip="Close profile library window" FontSize="14" AutomationProperties.Name="Close profile library window"/>
                     </StackPanel>
                 </Grid>
