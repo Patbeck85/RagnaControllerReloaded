@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using RagnaController.Models;
 using RagnaController.Profiles;
 
@@ -170,73 +171,94 @@ namespace RagnaController.Core
         internal InputRouter() { }
 
         /// <summary>
-                /// Route input through the engine chain. Returns true if input was consumed.
+                        /// Route input through the engine chain. Returns true if input was consumed.
+                        /// </summary>
+                        public bool RouteInput(ParsedInput input, int actualDeltaMs, bool rumbleEnabled)
+                        {
+                            // GEX-002: Measure Route latency (opt-in, zero-allocation when disabled per PERF-010)
+                            var routeSw = InputLatencyBudgets.EnableBudgetTracking ? System.Diagnostics.Stopwatch.StartNew() : null;
+
+                            // Update combat layers (L1, R1, L2, R2)
+                            _combat.UpdateLayers(input.L1, input.R1, input.L2, input.R2);
+
+                            // Update movement (left stick)
+                            _movement.Update(input.LeftX, input.LeftY);
+
+                            // OverlayRouter has priority (Start+DPad shortcuts, Mini-Button)
+                            if (_overlayRouter.TryHandleInput(input))
+                            {
+                                if (routeSw != null) RecordRouteBudget(routeSw);
+                                return true;
+                            }
+
+                            // SmartCursor: D-Pad Grid-Hopping + Precision-Aiming in menus
+                            if (_smartCursor.Tick(input))
+                            {
+                                if (routeSw != null) RecordRouteBudget(routeSw);
+                                return true; // Menu input consumed → skip combat
+                            }
+
+                            // Cursor (right stick) — controlled by RightStickPolicy setting
+                            // Camera: always use right stick for camera
+                            // Aim: only use right stick when target locked
+                            // Hybrid: target locked → aim, otherwise camera
+                            // Use cached settings (refresh every ~10s to avoid allocation every tick)
+                            long currentTick = Environment.TickCount64;
+                            if ((currentTick - _settingsCacheTick) >= SETTINGS_CACHE_TTL_TICKS)
+                            {
+                                var fresh = Models.Settings.Load();
+                                _cachedRightStickPolicy = fresh.RightStickPolicy;
+                                _settingsCacheTick = currentTick;
+                            }
+
+                            bool useRightStickForCursor = _cachedRightStickPolicy switch
+                            {
+                                RightStickPolicy.Camera => true,
+                                RightStickPolicy.Aim => _autoTarget.IsTargetLocked,
+                                RightStickPolicy.Hybrid => _autoTarget.IsTargetLocked || !_movement.IsWalking, // Lock=Aim, else Camera
+                                _ => !_autoTarget.IsTargetLocked && !_movement.IsWalking // fallback = old behavior
+                            };
+
+                            if (useRightStickForCursor)
+                            {
+                                _cursor.Handle(input, actualDeltaMs);
+                            }
+
+                            // Engine chain: first engine returning true consumes the input
+                            if (!_kite.Handle(input, actualDeltaMs))
+                                if (!_autoTarget.Handle(input, actualDeltaMs))
+                                    if (!_mage.Handle(input, actualDeltaMs))
+                                        _support.Handle(input, actualDeltaMs);
+
+                            // Combo engine (Y button hold)
+                            _combo.Update(input.BtnY, actualDeltaMs);
+
+                            // Cooldown tracking
+                            _cooldownManager.Tick();
+
+                            // Mob sweep
+                            _mobSweep.Update(actualDeltaMs);
+
+                            // Handheld mode
+                            _handheld.Tick(input, actualDeltaMs);
+
+                            // Feedback tick (rumble stop via timestamp)
+                            _feedback.Tick();
+
+                            if (routeSw != null) RecordRouteBudget(routeSw);
+                            return false; // Input not consumed by router (processed by engines)
+                        }
+
+                /// <summary>
+                /// GEX-002: Record Route latency budget.
                 /// </summary>
-                public bool RouteInput(ParsedInput input, int actualDeltaMs, bool rumbleEnabled)
+                private void RecordRouteBudget(Stopwatch sw)
                 {
-                    // Update combat layers (L1, R1, L2, R2)
-                    _combat.UpdateLayers(input.L1, input.R1, input.L2, input.R2);
-
-                    // Update movement (left stick)
-                    _movement.Update(input.LeftX, input.LeftY);
-
-                    // OverlayRouter has priority (Start+DPad shortcuts, Mini-Button)
-                    if (_overlayRouter.TryHandleInput(input)) return true;
-
-                    // SmartCursor: D-Pad Grid-Hopping + Precision-Aiming in menus
-                    if (_smartCursor.Tick(input)) return true; // Menu input consumed → skip combat
-
-                    // Cursor (right stick) — controlled by RightStickPolicy setting
-                    // Camera: always use right stick for camera
-                    // Aim: only use right stick when target locked
-                    // Hybrid: target locked → aim, otherwise camera
-                    // Use cached settings (refresh every ~10s to avoid allocation every tick)
-                    long currentTick = Environment.TickCount64;
-                    if ((currentTick - _settingsCacheTick) >= SETTINGS_CACHE_TTL_TICKS)
-                    {
-                        var fresh = Models.Settings.Load();
-                        _cachedRightStickPolicy = fresh.RightStickPolicy;
-                        _settingsCacheTick = currentTick;
-                    }
-
-                    bool useRightStickForCursor = _cachedRightStickPolicy switch
-                    {
-                        RightStickPolicy.Camera => true,
-                        RightStickPolicy.Aim => _autoTarget.IsTargetLocked,
-                        RightStickPolicy.Hybrid => _autoTarget.IsTargetLocked || !_movement.IsWalking, // Lock=Aim, else Camera
-                        _ => !_autoTarget.IsTargetLocked && !_movement.IsWalking // fallback = old behavior
-                    };
-
-                    if (useRightStickForCursor)
-                    {
-                        _cursor.Handle(input, actualDeltaMs);
-                    }
-
-                    // Engine chain: first engine returning true consumes the input
-                    if (!_kite.Handle(input, actualDeltaMs))
-                        if (!_autoTarget.Handle(input, actualDeltaMs))
-                            if (!_mage.Handle(input, actualDeltaMs))
-                                _support.Handle(input, actualDeltaMs);
-
-                    // Combo engine (Y button hold)
-                    _combo.Update(input.BtnY, actualDeltaMs);
-
-                    // Cooldown tracking
-                    _cooldownManager.Tick();
-
-                    // Mob sweep
-                    _mobSweep.Update(actualDeltaMs);
-
-                    // Handheld mode
-                    _handheld.Tick(input, actualDeltaMs);
-
-                    // Feedback tick (rumble stop via timestamp)
-                    _feedback.Tick();
-
-                    return false; // Input not consumed by router (processed by engines)
+                    sw.Stop();
+                    InputLatencyBudgets.RecordRoute(sw.Elapsed.TotalMilliseconds);
                 }
 
-        /// <summary>
+                /// <summary>
                 /// Handle combat action fired event - triggers feedback and cooldown tracking
                 /// </summary>
                 public void OnActionFired(ButtonAction action, bool rumbleEnabled)

@@ -384,97 +384,127 @@ namespace RagnaController.Core
         }
 
         private void ProcessCommand(InputCmd cmd, ref List<INPUT> batch, ref int batchCount, Stopwatch dispatchSw)
-        {
-            // PERF-005: Start latency measurement for this command
-            var latencyStopwatch = System.Diagnostics.Stopwatch.StartNew();
+                {
+                    // PERF-005: Start latency measurement for this command
+                    var latencyStopwatch = System.Diagnostics.Stopwatch.StartNew();
 
-            // Record dispatch latency (time from dequeue to actual processing start)
-            dispatchSw.Stop();
-            _latencyTracker?.RecordDispatchLatency(dispatchSw.Elapsed.TotalMilliseconds, _controllerId);
+                    // GEX-002: Measure Queue dispatch latency (opt-in, zero-allocation when disabled per PERF-010)
+                    var queueSw = InputLatencyBudgets.EnableBudgetTracking ? System.Diagnostics.Stopwatch.StartNew() : null;
 
-            // If the command is NOT a SendInput command, we MUST flush the batch first to maintain chronological order!
-            if (cmd.Type == CmdType.Wait || cmd.Type == CmdType.Action || cmd.Type == CmdType.MouseAbs)
-            {
-                FlushBatch(ref batch, ref batchCount);
-            }
+                    // Record dispatch latency (time from dequeue to actual processing start)
+                    dispatchSw.Stop();
+                    _latencyTracker?.RecordDispatchLatency(dispatchSw.Elapsed.TotalMilliseconds, _controllerId);
 
-            switch (cmd.Type)
-            {
-                // SendInput Commands (Batched)
-                case CmdType.MouseRel:  batch.Add(CreateMouseInput(cmd.X, cmd.Y, 0, MOUSEEVENTF_MOVE | 0x2000)); batchCount++; break; // 0x2000 = NOCOALESCE
-                case CmdType.LeftDown:  batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_LEFTDOWN)); batchCount++; break;
-                case CmdType.LeftUp:    batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_LEFTUP)); batchCount++; break;
-                case CmdType.RightDown: batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_RIGHTDOWN)); batchCount++; break;
-                case CmdType.RightUp:   batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_RIGHTUP)); batchCount++; break;
-                case CmdType.Wheel:     batch.Add(CreateMouseInput(0, 0, (uint)cmd.X, 0x0800)); batchCount++; break; // MOUSEEVENTF_WHEEL
-                case CmdType.KeyDown:   batch.Add(CreateKeyInput((ushort)cmd.Key, KEYEVENTF_KEYDOWN)); batchCount++; break;
-                case CmdType.KeyUp:     batch.Add(CreateKeyInput((ushort)cmd.Key, KEYEVENTF_KEYUP)); batchCount++; break;
+                    // If the command is NOT a SendInput command, we MUST flush the batch first to maintain chronological order!
+                    if (cmd.Type == CmdType.Wait || cmd.Type == CmdType.Action || cmd.Type == CmdType.MouseAbs)
+                    {
+                        FlushBatch(ref batch, ref batchCount);
+                    }
 
-                // Complex Atomic Commands (Batched internally)
-                case CmdType.AtomicLeftClick:
-                    batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_LEFTDOWN));
-                    FlushBatch(ref batch, ref batchCount); // Must flush before sleeping
-                    Thread.Sleep(JitterService.ClickHold()); // Human-like click hold time
-                    batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_LEFTUP));
-                    break;
-                case CmdType.AtomicRightClick:
-                    batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_RIGHTDOWN));
-                    FlushBatch(ref batch, ref batchCount); // Must flush before sleeping
-                    Thread.Sleep(JitterService.ClickHold()); // Human-like click hold time
-                    batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_RIGHTUP));
-                    break;
+                    switch (cmd.Type)
+                    {
+                        // SendInput Commands (Batched)
+                        case CmdType.MouseRel:  batch.Add(CreateMouseInput(cmd.X, cmd.Y, 0, MOUSEEVENTF_MOVE | 0x2000)); batchCount++; break; // 0x2000 = NOCOALESCE
+                        case CmdType.LeftDown:  batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_LEFTDOWN)); batchCount++; break;
+                        case CmdType.LeftUp:    batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_LEFTUP)); batchCount++; break;
+                        case CmdType.RightDown: batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_RIGHTDOWN)); batchCount++; break;
+                        case CmdType.RightUp:   batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_RIGHTUP)); batchCount++; break;
+                        case CmdType.Wheel:     batch.Add(CreateMouseInput(0, 0, (uint)cmd.X, 0x0800)); batchCount++; break; // MOUSEEVENTF_WHEEL
+                        case CmdType.KeyDown:   batch.Add(CreateKeyInput((ushort)cmd.Key, KEYEVENTF_KEYDOWN)); batchCount++; break;
+                        case CmdType.KeyUp:     batch.Add(CreateKeyInput((ushort)cmd.Key, KEYEVENTF_KEYUP)); batchCount++; break;
 
-                // Non-Batchable Commands (Already flushed above)
-                case CmdType.Wait:
-                    Thread.Sleep(cmd.X);
-                    break;
-                case CmdType.Action:
-                    cmd.Callback?.Invoke();
-                    break;
-                case CmdType.MouseAbs:
-                                    // Use SendInput with absolute coordinates for consistency with batching and failover
-                                    {
-                                        int screenWidth = GetSystemMetrics(SM_CXSCREEN);
-                                        int screenHeight = GetSystemMetrics(SM_CYSCREEN);
-                                        int absX = (int)((65535.0 * cmd.X) / screenWidth);
-                                        int absY = (int)((65535.0 * cmd.Y) / screenHeight);
-                                        batch.Add(CreateMouseInput(absX, absY, 0, MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE_NOCOALESCE));
-                                        batchCount++;
-                                    }
-                                    break;
-            }
+                        // Complex Atomic Commands (Batched internally)
+                        case CmdType.AtomicLeftClick:
+                            batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_LEFTDOWN));
+                            FlushBatch(ref batch, ref batchCount); // Must flush before sleeping
+                            Thread.Sleep(JitterService.ClickHold()); // Human-like click hold time
+                            batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_LEFTUP));
+                            break;
+                        case CmdType.AtomicRightClick:
+                            batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_RIGHTDOWN));
+                            FlushBatch(ref batch, ref batchCount); // Must flush before sleeping
+                            Thread.Sleep(JitterService.ClickHold()); // Human-like click hold time
+                            batch.Add(CreateMouseInput(0, 0, 0, MOUSEEVENTF_RIGHTUP));
+                            break;
 
-            // PERF-005: Record latency after command execution
-            latencyStopwatch.Stop();
-            RecordInputLatency(latencyStopwatch.Elapsed.TotalMilliseconds * 1000.0); // Convert to microseconds
+                        // Non-Batchable Commands (Already flushed above)
+                        case CmdType.Wait:
+                            Thread.Sleep(cmd.X);
+                            break;
+                        case CmdType.Action:
+                            cmd.Callback?.Invoke();
+                            break;
+                        case CmdType.MouseAbs:
+                                            // Use SendInput with absolute coordinates for consistency with batching and failover
+                                            {
+                                                int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+                                                int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+                                                int absX = (int)((65535.0 * cmd.X) / screenWidth);
+                                                int absY = (int)((65535.0 * cmd.Y) / screenHeight);
+                                                batch.Add(CreateMouseInput(absX, absY, 0, MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE_NOCOALESCE));
+                                                batchCount++;
+                                            }
+                                            break;
+                    }
+
+                    // GEX-002: Record Queue latency
+                    if (queueSw != null) RecordQueueBudget(queueSw);
+
+                    // PERF-005: Record latency after command execution
+                    latencyStopwatch.Stop();
+                    RecordInputLatency(latencyStopwatch.Elapsed.TotalMilliseconds * 1000.0); // Convert to microseconds
             
-            // PERF-005: Record total end-to-end latency
-            _latencyTracker?.RecordTotalLatency(latencyStopwatch.Elapsed.TotalMilliseconds, _controllerId);
+                    // PERF-005: Record total end-to-end latency
+                    _latencyTracker?.RecordTotalLatency(latencyStopwatch.Elapsed.TotalMilliseconds, _controllerId);
 
-            OnCommandExecuted?.Invoke(cmd);
-        }
+                    OnCommandExecuted?.Invoke(cmd);
+                }
+
+                /// <summary>
+                /// GEX-002: Record Queue dispatch latency budget.
+                /// </summary>
+                private void RecordQueueBudget(Stopwatch sw)
+                {
+                    sw.Stop();
+                    InputLatencyBudgets.RecordQueue(sw.Elapsed.TotalMilliseconds);
+                }
 
         private void FlushBatch(ref List<INPUT> batch, ref int batchCount)
-        {
-            if (batchCount == 0) return;
+                {
+                    if (batchCount == 0) return;
 
-            // PERF-005: Measure SendInput latency
-            var sendInputSw = System.Diagnostics.Stopwatch.StartNew();
-            
-            // Send all gathered inputs to the Windows Kernel in a single API call
-            SendInput((uint)batchCount, batch.ToArray(), InputSize);
-            
-            sendInputSw.Stop();
-            double elapsedMs = sendInputSw.Elapsed.TotalMilliseconds;
-            _latencyTracker?.RecordSendInputLatency(elapsedMs, batchCount, _controllerId);
+                    // GEX-002: Measure Emulation (SendInput) latency (opt-in, zero-allocation when disabled per PERF-010)
+                    var emulationSw = InputLatencyBudgets.EnableBudgetTracking ? System.Diagnostics.Stopwatch.StartNew() : null;
 
-            // ROB-002: Failover-Mechanismus bekommt die gemessene Flush-Latenz.
-            SendInputLatencyRecorded?.Invoke(elapsedMs);
+                    // PERF-005: Measure SendInput latency
+                    var sendInputSw = System.Diagnostics.Stopwatch.StartNew();
 
-            // Clear the batch for next accumulation
-            batch.Clear();
-            batchCount = 0;
-        }
+                    // Send all gathered inputs to the Windows Kernel in a single API call
+                    SendInput((uint)batchCount, batch.ToArray(), InputSize);
+
+                    sendInputSw.Stop();
+                    double elapsedMs = sendInputSw.Elapsed.TotalMilliseconds;
+                    _latencyTracker?.RecordSendInputLatency(elapsedMs, batchCount, _controllerId);
+
+                    // ROB-002: Failover-Mechanismus bekommt die gemessene Flush-Latenz.
+                    SendInputLatencyRecorded?.Invoke(elapsedMs);
+
+                    // GEX-002: Record Emulation latency
+                    if (emulationSw != null) RecordEmulationBudget(emulationSw);
+
+                    // Clear the batch for next accumulation
+                    batch.Clear();
+                    batchCount = 0;
+                }
+
+                /// <summary>
+                /// GEX-002: Record Emulation (SendInput) latency budget.
+                /// </summary>
+                private void RecordEmulationBudget(Stopwatch sw)
+                {
+                    sw.Stop();
+                    InputLatencyBudgets.RecordEmulation(sw.Elapsed.TotalMilliseconds);
+                }
 
         // PERF-005: Record input latency statistics (legacy)
         private void RecordInputLatency(double latencyMicroseconds)

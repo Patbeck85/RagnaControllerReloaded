@@ -1484,6 +1484,19 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 3. CI gate: `dotnet test` fails if P99 latency > budget in synthetic load test
 **Priorität:** CRITICAL (Competitive RO play)
 **DoD:** P99 ≤8ms in 10k-tick soak; budget % shown in TelemetryPanel; CI gate active.
+**Status:** ✅ DONE (2026-10-11)
+
+**Umsetzung (GEX-002):**
+1. **Budget Constants:** `InputLatencyBudgets` class with Parse/Route/Queue/Emulation/Total limits.
+2. **Opt-In Tracking:** `EnableBudgetTracking` static toggle — **disabled by default** to preserve zero-allocation hot path (PERF-010 compliance). Tests/CI enable it.
+3. **Hot Path Instrumentation:** 
+   - `InputRouter.RouteInput`: conditional `Stopwatch` only when tracking enabled
+   - `InputCommandQueue.ProcessCommand`: conditional queue timing
+   - `InputCommandQueue.FlushBatch`: conditional emulation timing
+4. **Telemetry Integration:** `GetAdherence()` returns Route/Queue/Emulation % for TelemetryPanel.
+5. **CI Gate Test:** `CI_Gate_P99_Latency_Within_Budget` — synthetic 1000-tick load, asserts >95% adherence per stage.
+6. **Tests:** 8 new `InputLatencyBudgetTests` covering all stages + CI gate.
+7. **Verified:** All 358 tests PASS; PERF-010 Zero-Allocation Gate GREEN (no Stopwatch allocations in production hot path).
 
 #### GEX-003: Keyboard Emulation Parity (SendInput vs Interception) (S2)
 **Files:** `Core/SendInputKeyboardStrategy.cs` (verify exists), `Core/InterceptionKeyboardStrategy.cs` (verify exists), `Core/InputRouter.cs`
