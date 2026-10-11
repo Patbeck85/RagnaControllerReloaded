@@ -22,12 +22,12 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" Margin="16,16,16,0" CornerRadius="{StaticResource RadiusMd}">
-                <Grid Margin="20,12">
-                    <TextBlock Text="RAGNACONTROLLER TUTORIALS" Style="{StaticResource BrandWordmark}" FontSize="15" VerticalAlignment="Center"/>
-                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close tutorial window" AutomationProperties.Name="Close tutorial window"/>
-                </Grid>
-            </Border>
+                        <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" Margin="16,16,16,0" CornerRadius="{StaticResource RadiusMd}">
+                            <Grid Margin="20,12">
+                                <TextBlock Text="{core:Loc UI.RAGNACONTROLLER_TUTORIALS}" Style="{StaticResource BrandWordmark}" FontSize="15" VerticalAlignment="Center"/>
+                                <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="{core:Loc CLOSE_TUTORIAL_WINDOW}" AutomationProperties.Name="{core:Loc CLOSE_TUTORIAL_WINDOW}"/>
+                            </Grid>
+                        </Border>
 
             <!-- Content Area (The Slide) -->
             <Grid Grid.Row="1" Margin="24">

@@ -1414,12 +1414,22 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Tests:** `ShareCodeValidatorTests.cs` — 15 Fälle (gültige Codes/Gist-IDs, ungültige Formate, leer/null, Trim). 340/340 PASS.
 
 #### UX-014: TutorialWindow Content Not Localized (S4)
-**File:** `TutorialWindow.xaml` (not reviewed but likely hardcoded English)
+**File:** `TutorialWindow.xaml` (already uses `{core:Loc}` for slide content)
 **Fundament:** Tutorial is first-run experience — must be fully localized.
 **Impact:** Non-English users cannot understand tutorial.
 **Suggested Fix:** Audit all TextBlocks; replace hardcoded strings with `{core:Loc Key}`; add missing keys to 41 locale files.
 **Priorität:** LOW (Localization completeness)
 **DoD:** All tutorial text uses localization; 41 locales updated.
+**Status:** ✅ DONE (2026-10-10)
+
+**Umsetzung (UX-014):**
+Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert** (Tut_1_Title bis Tut_5_Desc, Tut_Btn_Prev/Next/Finish). Einzige hardcoded Strings:
+1. Header "RAGNACONTROLLER TUTORIALS" → ersetzt durch `{core:Loc UI.RAGNACONTROLLER_TUTORIALS}` (Key existiert in allen 41 Locales).
+2. Close-Button Tooltip/AutomationProperties "Close tutorial window" → ersetzt durch `{core:Loc CLOSE_TUTORIAL_WINDOW}` (Key existiert in allen 41 Locales).
+
+**Kritischer Befund:** KANBAN-Beschreibung war veraltet ("not reviewed but likely hardcoded English"). Tatsächlicher Zustand: 100% lokalisiert bis auf 2 Strings, die nun gefixt sind. Alle 41 Locale-Dateien enthalten bereits alle benötigten Keys (Tut_1_Title..Tut_5_Desc, Tut_Btn_Prev/Next/Finish, UI.RAGNACONTROLLER_TUTORIALS, CLOSE_TUTORIAL_WINDOW).
+
+**Tests:** 340/340 PASS (keine neuen Tests nötig — reine XAML-Änderung).
 
 #### UX-015: SplashWindow No Skip/Cancel Option (S4)
 **File:** `SplashWindow.xaml` (animated startup)
