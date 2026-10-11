@@ -741,6 +741,7 @@
   "Settings_LogLevel_Tooltip": "Minimales Log-Level für Dateiausgabe festlegen",
   "Settings_EnableDiscordRPC": "Discord Rich Presence aktivieren",
   "Settings_EnableVoiceAnnouncements": "Sprachansagen aktivieren",
+  "Settings_EnableSkipSplash": "Splash-Bildschirm überspringen",
   "Settings_EnableTelemetry": "Anonyme Telemetrie aktivieren",
   "Settings_Language_Tooltip": "Anwendungssprache auswählen",
   "Settings_OverlayCustomization": "OVERLAY ANPASSUNG",
@@ -767,7 +768,7 @@
   "Settings_CalibNoGamepad": "Kein Gamepad verbunden!",
   "Settings_CalibDone": "Kalibrierung abgeschlossen: {0} Deadzone",
   "MainWindow_ProfileCombo_Tooltip": "Aktives Profil",
-    "Tab_NoProfileLoaded": "Kein Profil geladen",
-    "Tab_NoProfileLoaded_Desc": "Ein Profil laden, um Tastenbelegungen für diesen Layer anzuzeigen.",
-    "Tab_OpenProfileLibrary": "Profilbibliothek öffnen"
-  }
+  "Tab_NoProfileLoaded": "Kein Profil geladen",
+  "Tab_NoProfileLoaded_Desc": "Ein Profil laden, um Tastenbelegungen für diesen Layer anzuzeigen.",
+  "Tab_OpenProfileLibrary": "Profilbibliothek öffnen"
+}

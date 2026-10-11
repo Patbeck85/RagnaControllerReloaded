@@ -64,8 +64,9 @@ namespace RagnaController
                     ChkSmartStandby.IsChecked = _s.EnableSmartStandby;
                     ChkFocusLock.IsChecked = _s.FocusLockEnabled;
                     ChkDiscordRPC.IsChecked = _s.EnableDiscordRPC;
-                    ChkVoiceAnnouncements.IsChecked = _s.EnableVoiceAnnouncements;
-                    ChkTelemetry.IsChecked = _s.EnableTelemetry;
+                                        ChkVoiceAnnouncements.IsChecked = _s.EnableVoiceAnnouncements;
+                                        ChkSkipSplash.IsChecked = _s.SkipSplash;
+                                        ChkTelemetry.IsChecked = _s.EnableTelemetry;
 
                     // Initialize LogLevelCombo
                     InitializeLogLevelCombo();
@@ -279,12 +280,18 @@ namespace RagnaController
                 }
 
                 private void ChkVoiceAnnouncements_Click(object sender, RoutedEventArgs e)
-                {
-                    _s.EnableVoiceAnnouncements = ChkVoiceAnnouncements.IsChecked == true;
-                    _s.Save();
-                }
+                                {
+                                    _s.EnableVoiceAnnouncements = ChkVoiceAnnouncements.IsChecked == true;
+                                    _s.Save();
+                                }
 
-                private void ChkTelemetry_Click(object sender, RoutedEventArgs e)
+                        private void ChkSkipSplash_Click(object sender, RoutedEventArgs e)
+                        {
+                            _s.SkipSplash = ChkSkipSplash.IsChecked == true;
+                            _s.Save();
+                        }
+
+                                private void ChkTelemetry_Click(object sender, RoutedEventArgs e)
                 {
                     _s.EnableTelemetry = ChkTelemetry.IsChecked == true;
                     _s.Save();
@@ -322,10 +329,13 @@ namespace RagnaController
             _s.EnableDiscordRPC = ChkDiscordRPC.IsChecked == true;
 
             // Voice Announcements
-            _s.EnableVoiceAnnouncements = ChkVoiceAnnouncements.IsChecked == true;
+                        _s.EnableVoiceAnnouncements = ChkVoiceAnnouncements.IsChecked == true;
 
-            // Anonymous Telemetry
-            _s.EnableTelemetry = ChkTelemetry.IsChecked == true;
+                        // Skip Splash Screen
+                        _s.SkipSplash = ChkSkipSplash.IsChecked == true;
+
+                        // Anonymous Telemetry
+                        _s.EnableTelemetry = ChkTelemetry.IsChecked == true;
 
             _s.Save();
             _onSave?.Invoke(_s);

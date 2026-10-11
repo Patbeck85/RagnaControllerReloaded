@@ -58,7 +58,10 @@ namespace RagnaController.Models
         public int LogLevel { get; set; } = 1; // 0=Debug, 1=Info, 2=Warning, 3=Error
 
         // NEW: Discord RPC
-        public bool EnableDiscordRPC { get; set; } = true;
+                public bool EnableDiscordRPC { get; set; } = true;
+
+                // NEW: Skip Splash Screen on startup
+                public bool SkipSplash { get; set; } = false;
 
         // NEW: TTS Voice Announcements
         public bool EnableVoiceAnnouncements { get; set; } = true;

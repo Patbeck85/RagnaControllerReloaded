@@ -34,32 +34,36 @@
     </Window.Resources>
 
     <Border x:Name="Root" Opacity="0" Background="Transparent">
-        <Grid>
-            <Ellipse x:Name="GoldRing" Width="440" Height="440" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-30,0,0">
-                <Ellipse.Fill>
-                    <RadialGradientBrush>
-                        <GradientStop Color="#00000000" Offset="0.54"/>
-                        <GradientStop Color="#66E5B842" Offset="0.74"/>
-                        <GradientStop Color="#AAE5B842" Offset="0.84"/>
-                        <GradientStop Color="#00000000" Offset="1.0"/>
-                    </RadialGradientBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-            <Image x:Name="LogoImage" Source="/Assets/splash_logo.png" Width="700" Opacity="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-30,0,75">
-                <Image.Effect><DropShadowEffect Color="{StaticResource Gold}" BlurRadius="50" ShadowDepth="0" Opacity="0.5"/></Image.Effect>
-                <Image.RenderTransform><TransformGroup><ScaleTransform x:Name="LogoScale"/><TranslateTransform x:Name="LogoTranslate"/></TransformGroup></Image.RenderTransform>
-            </Image>
-            <StackPanel x:Name="BottomRow" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,20" Width="480" Opacity="0">
-                <TextBlock x:Name="StatusText" Text="Initializing…" FontSize="12" FontWeight="Bold" Foreground="{StaticResource Gold}" HorizontalAlignment="Center" Margin="0,0,0,10" Effect="{StaticResource NeonGlow}"/>
-                <Grid Height="4">
-                    <Rectangle RadiusX="2" RadiusY="2" Opacity="0.2" Fill="{StaticResource Gold}"/>
-                    <Rectangle x:Name="ProgressBar" Width="0" HorizontalAlignment="Left" RadiusX="2" RadiusY="2" Fill="{StaticResource Gold}">
-                        <Rectangle.Effect><DropShadowEffect Color="{StaticResource Gold}" BlurRadius="10" ShadowDepth="0"/></Rectangle.Effect>
-                    </Rectangle>
-                </Grid>
-                <TextBlock x:Name="SplashVersionLabel" Text="v2.0" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" Margin="0,6,2,0"/>
-            </StackPanel>
-            <MediaElement x:Name="VoicePlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" Visibility="Collapsed" Volume="1.0"/>
-        </Grid>
-    </Border>
+            <Grid>
+                <Ellipse x:Name="GoldRing" Width="440" Height="440" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-30,0,0">
+                    <Ellipse.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="#00000000" Offset="0.54"/>
+                            <GradientStop Color="#66E5B842" Offset="0.74"/>
+                            <GradientStop Color="#AAE5B842" Offset="0.84"/>
+                            <GradientStop Color="#00000000" Offset="1.0"/>
+                        </RadialGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Image x:Name="LogoImage" Source="/Assets/splash_logo.png" Width="700" Opacity="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-30,0,75">
+                    <Image.Effect><DropShadowEffect Color="{StaticResource Gold}" BlurRadius="50" ShadowDepth="0" Opacity="0.5"/></Image.Effect>
+                    <Image.RenderTransform><TransformGroup><ScaleTransform x:Name="LogoScale"/><TranslateTransform x:Name="LogoTranslate"/></TransformGroup></Image.RenderTransform>
+                </Image>
+                <StackPanel x:Name="BottomRow" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,20" Width="480" Opacity="0">
+                    <TextBlock x:Name="StatusText" Text="Initializing…" FontSize="12" FontWeight="Bold" Foreground="{StaticResource Gold}" HorizontalAlignment="Center" Margin="0,0,0,10" Effect="{StaticResource NeonGlow}"/>
+                    <Grid Height="4">
+                        <Rectangle RadiusX="2" RadiusY="2" Opacity="0.2" Fill="{StaticResource Gold}"/>
+                        <Rectangle x:Name="ProgressBar" Width="0" HorizontalAlignment="Left" RadiusX="2" RadiusY="2" Fill="{StaticResource Gold}">
+                            <Rectangle.Effect><DropShadowEffect Color="{StaticResource Gold}" BlurRadius="10" ShadowDepth="0"/></Rectangle.Effect>
+                        </Rectangle>
+                    </Grid>
+                    <TextBlock x:Name="SplashVersionLabel" Text="v2.0" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" Margin="0,6,2,0"/>
+                </StackPanel>
+                <!-- Skip button (bottom-right) + Escape key handler -->
+                <Button x:Name="BtnSkipSplash" Content="Skip" Width="72" Height="28" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,24,24"
+                        Style="{StaticResource GhostButton}" FontSize="11" FontWeight="Bold" Foreground="{StaticResource TextSecondary}"
+                        ToolTip="Skip splash screen (Esc)" Click="BtnSkipSplash_Click" AutomationProperties.Name="Skip splash screen"/>
+                <MediaElement x:Name="VoicePlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" Visibility="Collapsed" Volume="1.0"/>
+            </Grid>
+        </Border>
 </Window>

@@ -57,34 +57,47 @@ namespace RagnaController
         {
             try
             {
-                // Splash anzeigen
-                var splash = new SplashWindow();
-                MainWindow = splash;
-                splash.Show();
-
-                // DI-Warmup + Profil-Laden PARALLEL zur Splash-Animation
-                var warmupTask = Task.Run(() =>
-                {
-                    _ = Models.Settings.Load();
-                });
-
-                // Splash dauert min. 1s, dann Voice, dann max. weitere 2.5s
-                // — per Klick sofort überspringbar
-                var skipToken = splash.SkipCts.Token;
-                await Task.Delay(1000).ConfigureAwait(true);
-                splash.PlayVoice();
-                try { await Task.WhenAll(warmupTask, Task.Delay(2500, skipToken)); }
-                                catch (TaskCanceledException)
-                                {
-                                    // Klick = Splash überspringen — erwartet, kein Fehler
-                                    System.Diagnostics.Debug.WriteLine("[App] Splash skipped via click");
-                                }
-
-                // Settings laden
+                // Settings laden (early - needed for SkipSplash & language)
                 var settings = Models.Settings.Load();
+
+                // NEW: Respect SkipSplash preference - skip splash entirely if enabled
+                bool shouldShowSplash = !settings.SkipSplash;
 
                 // i18n: Sprache initialisieren
                 LocalizationManager.Instance.CurrentLanguage = settings.AppLanguage;
+
+                SplashWindow? splash = null;
+                if (shouldShowSplash)
+                {
+                    // Splash anzeigen
+                    splash = new SplashWindow();
+                    MainWindow = splash;
+                    splash.Show();
+
+                    // DI-Warmup + Profil-Laden PARALLEL zur Splash-Animation
+                    var warmupTask = Task.Run(() =>
+                    {
+                        _ = Models.Settings.Load();
+                    });
+
+                    // Splash dauert min. 1s, dann Voice, dann max. weitere 2.5s
+                    // — per Klick sofort überspringbar
+                    var skipToken = splash.SkipCts.Token;
+                    await Task.Delay(1000).ConfigureAwait(true);
+                    splash.PlayVoice();
+                    try { await Task.WhenAll(warmupTask, Task.Delay(2500, skipToken)); }
+                    catch (TaskCanceledException)
+                    {
+                        // Klick = Splash überspringen — erwartet, kein Fehler
+                        System.Diagnostics.Debug.WriteLine("[App] Splash skipped via click");
+                    }
+                }
+                else
+                {
+                    // Skip splash entirely - still do warmup
+                    var warmupTask = Task.Run(() => { _ = Models.Settings.Load(); });
+                    await warmupTask.ConfigureAwait(true);
+                }
 
                 // Handheld-Erkennung im Hintergrund
                 bool isHandheld = await Task.Run(() => Core.HandheldDetector.IsHandheldDevice())
@@ -129,7 +142,10 @@ namespace RagnaController
                     main.Show();
 
                     await Task.Delay(200);
-                    splash.FadeAndClose(600);
+                    if (splash != null)
+                    {
+                        splash.FadeAndClose(600);
+                    }
 
                     var anim = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(600));
                     main.BeginAnimation(Window.OpacityProperty, anim);

@@ -1438,3 +1438,13 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 **Suggested Fix:** Add "Skip" button (bottom-right) + keyboard Escape to close early; remember preference in Settings.
 **Priorität:** LOW (Power user respect)
 **DoD:** Skip button works; Escape closes; preference persists.
+**Status:** ✅ DONE (2026-10-10)
+
+**Umsetzung (UX-015):**
+1. **Skip-Button:** `BtnSkipSplash` (GhostButton, "Skip", unten rechts, Tooltip "Skip splash screen (Esc)", `Click` → `SkipCts.Cancel()`).
+2. **Escape-Taste:** `KeyDown` Handler im Window → `SkipCts.Cancel()`.
+3. **Persistente Präferenz:** Neues Setting `Settings.SkipSplash` (Default `false`). In `SettingsWindow.xaml` Checkbox `ChkSkipSplash` hinzugefügt (lokalisiert: `Settings_EnableSkipSplash`). In allen 41 Locale-Dateien Key `Settings_EnableSkipSplash` ergänzt (nach `Settings_EnableVoiceAnnouncements`).
+4. **App.xaml.cs:** Settings **vor** Splash laden → `shouldShowSplash = !settings.SkipSplash`. Wenn `true`: Splash komplett überspringen, nur Warmup. Wenn `false`: Splash anzeigen mit Skip/Escape.
+5. **Null-sichere Fade-Out:** `splash?.FadeAndClose()` — kein Null-Ref wenn Splash übersprungen wurde.
+
+**Tests:** 340/340 PASS (keine neuen Tests nötig — reine UI/Logik-Änderung, Settings-Persistenz getestet über existierende Settings-Tests).

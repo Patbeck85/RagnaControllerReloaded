@@ -114,9 +114,12 @@
                                                                                                               Click="ChkDiscordRPC_Click"/>
 
                                                                         <CheckBox x:Name="ChkVoiceAnnouncements" Content="{core:Loc Settings_EnableVoiceAnnouncements}"
-                                                                                                              Click="ChkVoiceAnnouncements_Click"/>
+                                                                                                                                                                                      Click="ChkVoiceAnnouncements_Click"/>
 
-                                                                        <CheckBox x:Name="ChkTelemetry" Content="{core:Loc Settings_EnableTelemetry}"
+                                                                                                                                                <CheckBox x:Name="ChkSkipSplash" Content="{core:Loc Settings_EnableSkipSplash}"
+                                                                                                                                                                                      Click="ChkSkipSplash_Click"/>
+
+                                                                                                                                                <CheckBox x:Name="ChkTelemetry" Content="{core:Loc Settings_EnableTelemetry}"
                                                                                                               Click="ChkTelemetry_Click"/>
 
                                                                         <ComboBox x:Name="LanguageCombo" 

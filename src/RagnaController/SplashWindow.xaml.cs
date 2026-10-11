@@ -6,6 +6,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace RagnaController
 {
@@ -24,11 +25,25 @@ namespace RagnaController
             SplashVersionLabel.Text = $"v{Core.AppVersion.Current}";
             PrepareVoice();
             ContentRendered += async (s, e) => await StartAnimationsAsync().ConfigureAwait(false);
+            KeyDown += SplashWindow_KeyDown;
+        }
+
+        private void SplashWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                SkipCts.Cancel();
+            }
         }
 
         private void SplashWindow_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             SkipCts.Cancel(); // Signal an App.xaml.cs: Splash überspringen
+        }
+
+        private void BtnSkipSplash_Click(object sender, RoutedEventArgs e)
+        {
+            SkipCts.Cancel();
         }
 
         private void PrepareVoice()
