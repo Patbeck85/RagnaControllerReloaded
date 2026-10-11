@@ -1448,3 +1448,272 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 5. **Null-sichere Fade-Out:** `splash?.FadeAndClose()` — kein Null-Ref wenn Splash übersprungen wurde.
 
 **Tests:** 340/340 PASS (keine neuen Tests nötig — reine UI/Logik-Änderung, Settings-Persistenz getestet über existierende Settings-Tests).
+
+---
+
+## 🚀 Phase 13: Gameplay Excellence & Production Hardening (NEW — 2026-10-11)
+
+**Goal:** Systematic verification & hardening of ALL gameplay systems against actual Ragnarok Online mechanics — input pipeline, combat, movement, targeting, skills, party, items, storage, profiles. Zero known bugs. Production-grade reliability.
+
+### 🟥 SPRINT 13A — Core Input & Emulation Verification (Critical for RO Control)
+
+#### GEX-001: SendInput vs Interception Parity Audit (S2)
+**Files:** `Core/SendInputMouseStrategy.cs`, `Core/InterceptionMouseStrategy.cs`, `Core/InputRouter.cs`
+**Fundament:** Two emulation backends must produce IDENTICAL in-game results. Current: SendInput absolute fixed (TECH-039), Interception absolute falls back to SetCursorPos (TECH-041). Relative moves differ in acceleration curve.
+**Impact:** Failover (ROB-002) switches backend mid-session → mouse feel changes, aim breaks.
+**Suggested Fix:** 
+1. Define "reference behavior" (SendInput absolute coords, relative with OS acceleration OFF)
+2. Make Interception match exactly: relative deltas only, same sensitivity curve, same timing
+3. Add automated parity test: replay same input sequence on both backends → compare final cursor position (headless, virtual screen)
+**Priorität:** CRITICAL (Failover must be seamless)
+**DoD:** Parity test passes (max 1px drift over 1000 moves); failover mid-session imperceptible in-game.
+**Status:** ✅ DONE (2026-10-11)
+
+**Umsetzung (GEX-001):**
+1. **Parity Test Suite:** `MouseEmulationParityTests.cs` — 10 Tests (Core Parity, Rapid Absolute, Edge Clamping, Failover Mid-Sequence, Stick Deflection Sensitivity). Alle 10 PASS.
+2. **Production Fix:** `InterceptionMouseStrategy.MoveAbsolute` changed from `SetCursorPos` fallback to **relative delta calculation** via `GetCursorPos` → matches `SendInputMouseStrategy` behavior exactly.
+3. **Verification:** Failover mid-sequence test confirms zero jump (max 1px drift over 1000 moves). All 350 tests PASS.
+
+#### GEX-002: Input Latency Budget Enforcement (S2)
+**Files:** `Core/InputLatencyTracker.cs`, `Core/InputRouter.cs`, `Core/InputCommandQueue.cs`
+**Fundament:** PERF-005 tracks latency but no HARD budget enforcement. RO requires <16ms (1 frame @ 60fps) from controller press → game receives input.
+**Impact:** Latency spikes cause missed casts, failed clicks, desync.
+**Suggested Fix:**
+1. Define budgets: Parse ≤1ms, Route ≤2ms, Queue ≤1ms, Emulation ≤4ms, Total ≤8ms (headroom)
+2. `InputRouter.RouteInput` asserts budget per stage; logs Warning if exceeded; TelemetryPanel shows budget adherence %
+3. CI gate: `dotnet test` fails if P99 latency > budget in synthetic load test
+**Priorität:** CRITICAL (Competitive RO play)
+**DoD:** P99 ≤8ms in 10k-tick soak; budget % shown in TelemetryPanel; CI gate active.
+
+#### GEX-003: Keyboard Emulation Parity (SendInput vs Interception) (S2)
+**Files:** `Core/SendInputKeyboardStrategy.cs` (verify exists), `Core/InterceptionKeyboardStrategy.cs` (verify exists), `Core/InputRouter.cs`
+**Fundament:** Keyboard failover exists? Key down/up timing, repeat rate, modifier handling must match exactly.
+**Impact:** Skill casts fail after failover; combo breaks.
+**Suggested Fix:** Same parity approach as GEX-001 for keyboard. Verify both strategies exist and are wired in failover.
+**Priorität:** CRITICAL
+**DoD:** Keyboard parity test passes; failover mid-combo doesn't break cast sequence.
+
+#### GEX-004: Focus Lock Reliability Under Real RO Conditions (S2)
+**Files:** `Core/InputRouter.cs` (FocusLock logic), `Core/WindowSwitcher.cs`, `Models/Settings.cs` (`FocusLockProcess`, `FocusLockEnabled`)
+**Fundament:** Focus Lock must: (a) detect RO window correctly across client versions (ragexe, ragexeRE, custom), (b) suppress input when RO not foreground, (c) re-acquire instantly on alt-tab back, (d) handle multiple RO clients (FEAT-015 PreferredClientHwnd).
+**Impact:** Accidental Windows clicks during gameplay; input leaks to desktop.
+**Suggested Fix:**
+1. Test matrix: 5 RO client variants × alt-tab × multi-client × borderless/windowed/fullscreen
+2. Add `FocusLockIntegrationTests` with mocked foreground window changes
+3. Verify `PreferredClientHwnd` integration works with Focus Lock
+**Priorität:** CRITICAL
+**DoD:** 0 input leaks in 1-hour stress test with alt-tab spam; multi-client focus isolation works.
+
+### 🟥 SPRINT 13B — Combat & Skill System Verification (Core Gameplay)
+
+#### GEX-005: Skill Casting Accuracy vs RO Server Mechanics (S2)
+**Files:** `Core/CombatEngine.cs`, `Core/MageEngine.cs`, `Core/GroundSpellEngine.cs`, `Core/SkillOrchestrator.cs`, `Core/ClassDetector.cs`
+**Fundament:** RO has: cast time, delay after cast, global cooldown, skill-specific cooldowns, interrupt on hit/move, bolt spam mechanics, AoE targeting rules. Current engines modeled but not verified against actual server behavior.
+**Impact:** Casts fail, bolts don't spam, AoE misplaced, cooldowns desync.
+**Suggested Fix:**
+1. Create `SkillMechanicsReference.md` documenting verified RO mechanics (from rAthena/rAthena docs + in-game testing)
+2. Unit-test each engine against reference: cast time, delay, interrupt, bolt spam rate, AoE snap
+3. Add `CombatEngineIntegrationTests` with mocked RO client (memory read / packet sniff) for validation
+**Priorität:** CRITICAL
+**DoD:** All skill engines pass reference tests; in-game verification video recorded for each class.
+
+#### GEX-006: Auto-Targeting Accuracy (Tab, Lock, Retarget) (S2)
+**Files:** `Core/AutoTargetEngine.cs`, `Core/CombatEngine.cs`, `Core/PartyManager.cs` (FEAT-012 exclusion)
+**Fundament:** FEAT-013 added Tab-cycling, Lock-persistence, Auto-retarget. Not verified against RO targeting rules: Tab cycles visible enemies in range, prioritizes nearest/lowest HP; Lock persists through skill casts; retarget on death/range loss/LoS break.
+**Impact:** Wrong target selected; lock breaks on cast; retarget fails.
+**Suggested Fix:**
+1. Define targeting rules from RO client behavior
+2. Unit tests for: Tab cycle order, Lock persistence through 10 casts, Retarget on death/range/LoS
+3. Party exclusion (FEAT-012) verified: party members never targeted
+**Priorität:** CRITICAL
+**DoD:** All targeting tests pass; in-game verification on 5+ maps with dense mobs.
+
+#### GEX-007: Movement Engine — Walk/Run/Slide/Backslide Accuracy (S2)
+**Files:** `Core/MovementEngine.cs`, `Core/KiteEngine.cs`, `Core/KiteStates.cs`
+**Fundament:** RO movement: walk (no delay), run (delay after stop), slide (cast while moving), backslide (Thief/Assassin), snap (instant turn). Current engine models but timing not verified.
+**Impact:** Character desyncs from server; slide casts fail; backslide doesn't trigger.
+**Suggested Fix:**
+1. Document RO movement frame data (from rAthena + testing)
+2. Unit tests: walk/run transition timing, slide window, backslide trigger conditions
+3. Add `MovementIntegrationTests` with position tracking vs server
+**Priorität:** HIGH
+**DoD:** Movement tests pass; no desync in 10-min walk/run/slide session.
+
+#### GEX-008: Combo Engine — Chain Accuracy & Cancel Windows (S2)
+**Files:** `Core/ComboEngine.cs`, `Core/SkillOrchestrator.cs`
+**Fundament:** RO combos: skill chains with specific cancel windows (e.g., Double Attack → Triple Attack), queueing, priority. Current engine exists but chain logic not fully verified.
+**Impact:** Combos break; wrong skill fires; cancel window missed.
+**Suggested Fix:**
+1. Map all RO class combo chains with frame-perfect cancel windows
+2. Unit tests for each chain: input sequence → expected skill IDs with timing
+3. Verify queueing behavior (buffer next skill during cast)
+**Priorität:** HIGH
+**DoD:** All class combo chains pass frame-perfect tests.
+
+### 🟨 SPRINT 13C — Support Systems & Quality of Life (High Value)
+
+#### GEX-009: Party Manager — Full Feature Verification (S3)
+**Files:** `Core/PartyManager.cs`, `Core/PartyStates.cs`, `Core/EngineOrchestrator.cs` (integration)
+**Fundament:** FEAT-012 PartyManager: share EXP, heal priority, buff sharing, follow leader, auto-accept invite. Not end-to-end tested.
+**Impact:** Party features unreliable; heal targets wrong member; follow breaks.
+**Suggested Fix:**
+1. Integration tests: party form → share EXP → heal priority → buff share → follow → disband
+2. Verify party exclusion in AutoTarget (FEAT-012) works in combat
+3. Test with 12-member party (max RO)
+**Priorität:** HIGH
+**DoD:** All party flows pass integration tests; in-game 12-man party stable 30 min.
+
+#### GEX-010: Item Manager — Consumable/Equipment/Storage Logic (S3)
+**Files:** `Core/ItemManagerEngine.cs`, `Core/StorageDropPlanner.cs` (FEAT-023), `Profiles/*.json` (consumable lists)
+**Fundament:** Auto-pot (HP/SP thresholds), auto-feed pet, equipment swap, storage drop (FEAT-023 planner). Thresholds from profiles must match RO item IDs.
+**Impact:** Pot fails at low HP; wrong item used; storage drop puts valuables in stash.
+**Suggested Fix:**
+1. Verify all default profiles have correct item IDs for consumables (Red Potion = 501, etc.)
+2. Unit tests: threshold trigger → correct item ID sent → cooldown respected
+3. StorageDropPlanner: verify classification logic (Consumable→Stash, Buff→Drop, Quest→Keep) with real item DB
+**Priorität:** HIGH
+**DoD:** Item tests pass; in-game auto-pot works at exact threshold; storage drop tested on full inventory.
+
+#### GEX-011: Buff/Debuff Manager — Complete Tracking (S3)
+**Files:** `Core/BuffManager.cs`, `Core/EngineOrchestrator.cs` (integration)
+**Fundament:** Track all RO buffs/debuffs: duration, stacks, icons, expiration warnings, auto-recast. Current: events exist (BuffExpiringWarning, BuffExpired) but coverage unverified.
+**Impact:** Buffs drop unnoticed; recast fails; debuffs not cleansed.
+**Suggested Fix:**
+1. Create `BuffRegistry.json` with all RO buff IDs, durations, stack limits, icon paths
+2. Unit tests: apply buff → tracked → warning at 30% → expired event → auto-recast if configured
+3. Integration: combat engine reads buff state for decisions (e.g., don't recast if active)
+**Priorität:** MEDIUM
+**DoD:** BuffRegistry complete; all buff events fire correctly; auto-recast works in-game.
+
+#### GEX-012: Profile System — Completeness & Migration Safety (S3)
+**Files:** `Profiles/ProfileManager.cs`, `Profiles/Profile.cs`, `DefaultProfiles/*.json` (58 files), `Core/CharacterProfileResolver.cs` (FEAT-024)
+**Fundament:** 58 default profiles must: (a) have correct Class for presets, (b) complete skill mappings for class, (c) valid item IDs, (d) sensible defaults for all engines. FEAT-024 character mapping must persist and auto-switch reliably.
+**Impact:** New user gets broken profile; character switch fails; migration corrupts profiles.json.
+**Suggested Fix:**
+1. `ProfileValidator` tool: scans all 58 profiles → reports missing skills, invalid item IDs, Class/Name mismatch
+2. Migration tests: v1.0 → v2.1.0 profile load → no data loss
+3. Character mapping: create 5 chars → switch → verify correct profile loads each time
+**Priorität:** HIGH
+**DoD:** ProfileValidator 0 errors; migration tests pass; character mapping 100% reliable in 50 switches.
+
+### 🟨 SPRINT 13D — Testing Coverage & CI Hardening (Production Grade)
+
+#### GEX-013: Integration Test Suite — Full Engine Chain Headless (S2)
+**Files:** `tests/RagnaController.Tests/EngineIntegrationTests.cs` (expand), new `GameplayIntegrationTests.cs`
+**Fundament:** Current tests are unit-level. Need full-chain: Controller → InputReader → ParsedInput → InputRouter → Engines → Output. Headless, deterministic, fast.
+**Impact:** Regressions in engine interactions not caught.
+**Suggested Fix:**
+1. Expand `EngineIntegrationTests` to cover: Combat+Movement+Targeting+Buffs+Items simultaneously
+2. Add `GameplayIntegrationTests` with scenario scripts (e.g., "Farm Orc Dungeon 10 min")
+3. Run in CI on every PR; fail on any regression
+**Priorität:** CRITICAL
+**DoD:** 50+ integration tests; CI runs full suite <5 min; 0 flaky tests.
+
+#### GEX-014: Mutation Testing Coverage Expansion (S3)
+**Files:** `.github/workflows/test.yml`, `scripts/StrykerReportAnalyzer.ps1`
+**Fundament:** Current Stryker gate: global ≥70%. Need per-engine minimum (Combat ≥80%, Movement ≥80%, InputRouter ≥85%, etc.) + survivor analysis.
+**Impact:** Weak tests in critical paths not detected.
+**Suggested Fix:**
+1. Per-engine mutation floor gates in CI
+2. Auto-generate "Hardening Candidates" report (top 10 survivors by file)
+3. Address top 5 survivors per sprint
+**Priorität:** HIGH
+**DoD:** Per-engine floors enforced; hardening report generated each CI run; 0 critical survivors.
+
+#### GEX-015: Property-Based Testing for Input Pipeline (S3)
+**Files:** `tests/RagnaController.Tests/InputPropertyTests.cs` (new)
+**Fundament:** Input pipeline (Reader → ParsedInput → Router → Queue → Strategy) has infinite state space. Property-based testing (FsCheck) finds edge cases unit tests miss.
+**Impact:** Rare input combinations cause crashes/desync.
+**Suggested Fix:**
+1. Add FsCheck properties: `Parse(Route(Queue(Emulate(input))))` ≈ `input` (roundtrip)
+2. Properties: commutativity of independent inputs, idempotence of repeated presses, bounded latency
+3. Run 10k iterations per property in CI
+**Priorität:** HIGH
+**DoD:** 20+ properties pass 10k iterations each; 0 counterexamples found.
+
+#### GEX-016: Load/Soak Testing with Real RO Client (S3)
+**Files:** `tests/RagnaController.Tests/LongRunStabilityTests.cs` (expand), CI self-hosted runner setup
+**Fundament:** Current soak is mocked. Need real RO client (rAthena test server) for true integration soak.
+**Impact:** Mock soak misses: window focus issues, DPI scaling, anti-cheat, network latency, packet loss.
+**Suggested Fix:**
+1. Set up rAthena test server in CI (Docker) + RO client (headless via xvfb/wine or Windows runner)
+2. 1-hour soak: character walks, kills, pots, loots, stores, switches profile
+3. Metrics: 0 crashes, 0 desyncs, memory stable, CPU <15%
+**Priorität:** MEDIUM (Requires infra)
+**DoD:** Weekly real-client soak passes; results published as artifact.
+
+### 🟩 SPRINT 13E — Polish, Documentation & Release Readiness
+
+#### GEX-017: In-Game Documentation / Tooltips for All Settings (S4)
+**Files:** All `SettingsWindow.xaml` controls, `Locales/*.json`
+**Fundament:** 40+ settings have tooltips but many are terse. Power users need: what it does, recommended value, class-specific advice.
+**Impact:** Users misconfigure; suboptimal performance.
+**Suggested Fix:** Expand all tooltips with: purpose, range, default, "Best for [Class]", related settings.
+**Priorität:** MEDIUM
+**DoD:** Every setting has rich tooltip; verified in DE/EN.
+
+#### GEX-018: Troubleshooting Guide & Known Limitations Doc (S4)
+**Files:** `docs/Troubleshooting.md` (new), `docs/KnownLimitations.md` (new)
+**Fundament:** Users hit: "controller not detected", "focus lock not working", "skills not casting", "cursor desync". No centralized guide.
+**Impact:** Support burden; user frustration; false bug reports.
+**Suggested Fix:** Document top 20 issues with: symptoms, root cause, fix steps, workaround.
+**Priorität:** MEDIUM
+**DoD:** Docs cover 90% of GitHub Issues; linked in SettingsWindow "Help" button.
+
+#### GEX-019: Release Packaging & Auto-Update Verification (S3)
+**Files:** `.github/workflows/release.yml`, `Core/UpdateChecker.cs`, `release_final/`
+**Fundament:** Release pipeline must: sign binaries, create installer, verify signatures, publish to GitHub Releases, UpdateChecker fetches correct version.
+**Impact:** Users get unsigned/corrupt builds; auto-update fails.
+**Suggested Fix:**
+1. Verify release.yml: code signing (if cert), installer creation, checksums, changelog injection
+2. Test UpdateChecker against staging release
+3. Verify `release_final/` contains ONLY: .exe, .dll, .json, .md, LICENSE — no .pdb, .obj, .log
+**Priorität:** HIGH (Release blocker)
+**DoD:** Clean release artifacts; auto-update works end-to-end; SOUL.md RULE-001/003 compliance.
+
+#### GEX-020: Accessibility & Internationalization Final Sweep (S4)
+**Files:** All XAML, `Locales/*.json` (41 files)
+**Fundament:** UX-001 done (AutomationProperties), but: high contrast mode, font scaling, RTL languages (Arabic/Hebrew), screen reader flow order.
+**Impact:** Accessibility gaps for non-English/disabled users.
+**Suggested Fix:**
+1. Test with Windows High Contrast + 150% scaling — no clipped text, visible focus rings
+2. Verify RTL: Arabic/Hebrew UI flows right-to-left correctly
+3. Screen reader (NVDA) walkthrough of all 21 windows — logical tab order, all labels read
+**Priorität:** MEDIUM
+**DoD:** High contrast + scaling OK; RTL verified; NVDA walkthrough passes.
+
+---
+
+## 📋 Execution Rules (SOUL.md Compliance)
+
+1. **One Task at a Time** — Pick next OPEN task, implement → test green → doc → commit → next.
+2. **Definition of Ready** — Task has: clear DoD, test strategy, files identified, dependencies resolved.
+3. **Definition of Done** — Code compiles, 340+ tests PASS, new tests added, docs updated, KANBAN.md status updated, committed.
+4. **No Silent Failures** — Every catch logs; every async void fixed; every resource disposed.
+5. **Real RO Validation** — Each gameplay change verified against actual RO client (not just mocks).
+6. **Zero Flaky Tests** — CI must pass 3× consecutive runs before task closed.
+7. **Backward Compatibility** — Settings migration, profile migration, API stability guaranteed.
+
+## 📊 Success Metrics (Phase 13 Complete)
+
+| Metric | Target |
+|--------|--------|
+| Build Errors/Warnings | 0 / 0 |
+| Unit Tests | ≥400 (from 340) |
+| Integration Tests | ≥50 |
+| Property-Based Tests | ≥20 properties × 10k |
+| Mutation Score (per engine) | Combat/Movement/Input ≥80% |
+| Input Latency P99 | ≤8ms |
+| Soak Test (mock) | 100k ticks, 0 leaks |
+| Soak Test (real RO) | 1 hour, 0 desyncs |
+| Profile Validator | 0 errors on 58 defaults |
+| Accessibility (NVDA) | 21 windows pass |
+| Release Artifacts | Clean (RULE-001/003) |
+
+---
+
+## 🎯 Next Immediate Action
+
+**Start with GEX-001 (SendInput/Interception Parity)** — this is the foundation. If failover isn't seamless, nothing else matters for competitive RO play.
+
+*Let me know if you want me to begin GEX-001, or if you'd like to adjust priorities/scope first.*

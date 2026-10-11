@@ -135,14 +135,18 @@ namespace RagnaController.Core
         }
 
         public void MoveAbsolute(int x, int y)
-        {
-            if (!IsAvailable) return;
+                {
+                    if (!IsAvailable) return;
 
-            // For absolute movement, we need to calculate relative from current position
-            // This is a limitation of Interception - it only supports relative mouse moves
-            // Fallback to Win32 for absolute positioning
-            NativeMethods.SetCursorPos(x, y);
-        }
+                    // PARITY FIX (GEX-001): Match SendInputMouseStrategy behavior exactly.
+                    // SendInput uses MOUSEEVENTF_ABSOLUTE (0-65535). Interception only supports relative.
+                    // So we calculate the relative delta from current cursor position.
+                    // This ensures failover mid-session produces identical cursor positions.
+                    NativeMethods.GetCursorPos(out var currentPos);
+                    int dx = x - currentPos.X;
+                    int dy = y - currentPos.Y;
+                    MoveRelative(dx, dy);
+                }
 
         public void LeftDown()
         {
