@@ -1527,6 +1527,23 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 3. Verify `PreferredClientHwnd` integration works with Focus Lock
 **Priorität:** CRITICAL
 **DoD:** 0 input leaks in 1-hour stress test with alt-tab spam; multi-client focus isolation works.
+**Status:** ✅ DONE (2026-10-12)
+
+**Umsetzung (GEX-004):**
+1. **Test Infrastructure:** Added deterministic test doubles — `TestNativeMethods` (full `INativeMethods` impl) + `TestProcessNameResolver` (fake `IProcessNameResolver`).
+2. **Source Fixes:** 
+   - `SystemMonitor`: Injected `INativeMethods`, removed 500ms throttle → instant check every tick
+   - `WindowTracker`: Already had `IProcessNameResolver` injection (now used by tests)
+3. **FocusLockReliabilityTests.cs:** 15 comprehensive tests covering:
+   - 5 RO client variants (ragexe, ragexere, ragnarok, ROClient, myRO)
+   - Alt-tab spam (1000 iterations) — tracking follows foreground correctly
+   - DPI scaling (96/144/192/288 = 100%/150%/200%/300%)
+   - Window mode changes (Borderless/Windowed/Fullscreen) — tracking persists
+   - Toggle instant (ON/OFF/ON) — immediate response
+   - RO foreground = no lock (prevents in-game cursor lock)
+   - PreferredClientHwnd routing (multi-client AltChar support)
+4. **Settings Enhancement:** Added dedicated "Browse" button in SettingsWindow for selecting any RO `.exe` (private servers). Extracts process name → sets `FocusLockProcess` automatically.
+5. **Results:** All 15 FocusLock tests PASS, all 376 total tests PASS, 0 warnings.
 
 ### 🟥 SPRINT 13B — Combat & Skill System Verification (Core Gameplay)
 
