@@ -348,7 +348,7 @@
 ## Audit-Findings / Known Issues (Comprehensive App Review)
 
 ### 🟥 UI-001: CheckBox-Handler-Missing in SettingsWindow (S3)
-**Date:** 2026-10-04 | **Severity:** S3 — Funktionalität eingeschränkt | **Status:** bekannt
+**Date:** 2026-10-04 | **Severity:** S3 — Funktionalität eingeschränkt | **Status:** ✅ ERLEDIGT (2026-10-10, verifiziert 2026-10-12)
 **File:** src/RagnaController/SettingsWindow.xaml (Zeilen 66-122)
 **Fundament:** 13 CheckBox-Elemente existieren im UI, aber es sind keine Click- oder Checked-Handler zugeordnet. Die CheckBoxes sind sichtbar, aber funktionslos.
 - `ChkMinimizeToTray` (Minimize to tray on close) — kein Handler
@@ -904,7 +904,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 ## Audit-Findings / Comprehensive Code Review (2026-10-04)
 
 ### 🟥 UI-001: CheckBox-Handler-Missing in SettingsWindow (S3)
-**Date:** 2026-10-04 | **Severity:** S3 — Funktionalität eingeschränkt | **Status:** bekannt
+**Date:** 2026-10-04 | **Severity:** S3 — Funktionalität eingeschränkt | **Status:** ✅ ERLEDIGT (2026-10-10, verifiziert 2026-10-12)
 **File:** src/RagnaController/SettingsWindow.xaml (Zeilen 66-122)
 **Fundament:** 13 CheckBox-Elemente existieren im UI, aber es sind keine Click- oder Checked-Handler zugeordnet. Die CheckBoxes sind sichtbar, aber funktionslos.
 **Impact:** User kann diese Einstellungen im UI nicht steuern; Derstellungen werden vermutlich anderswo oder per Code verwaltet.
