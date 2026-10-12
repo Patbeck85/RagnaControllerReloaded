@@ -1557,6 +1557,19 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 3. Add `CombatEngineIntegrationTests` with mocked RO client (memory read / packet sniff) for validation
 **Priorität:** CRITICAL
 **DoD:** All skill engines pass reference tests; in-game verification video recorded for each class.
+**Status:** ✅ DONE (2026-10-12)
+
+**Umsetzung (GEX-005):**
+1. **Reference Documentation:** Created `docs/SkillMechanicsReference.md` with rAthena skill execution pipeline (4 phases), cast time formulas (fixed + variable), after-cast delay (ACD), bolt spam mechanics, ground spells, self-cast, interrupts, GCD, skill-specific values, server vs client-side behavior.
+2. **Test Suite:** Added `SkillCastingAccuracyTests.cs` with 25 comprehensive tests covering:
+   - **Bolt Spam (MageEngine):** First cast has cast time, subsequent only ACD; respects `MageBoltCastDelayMs` profile setting; TriggerRight analog = digital R2; JitterService ±50ms variance
+   - **Ground Spells (GroundSpellEngine):** Register creates active spell with correct properties; tick events at correct interval; expiration after duration fires expired event; ClearAll removes all; healing vs damage tagged correctly
+   - **Skill Orchestrator:** GlobalCooldown enforced between steps; conditions evaluated correctly (HasTarget, SPAbove, HPAbove, etc.); rotation loop repeats when enabled
+   - **CombatEngine:** Self-cast snap→fire→snap sequence; ground spell press hotkey → release modifier → left click; buffered action LIFO only latest executes
+   - **CooldownManager:** RegisterAction starts warning timer; recast resets timer; non-tracked actions ignored
+   - **Interrupt Mechanics:** Documented server-side behavior (damage, move, stun/stone/sleep interrupt cast)
+   - **rAthena Config Parity:** AfterCastDelay range matches skill.conf [140,180] ± jitter
+3. **Results:** All 25 new tests PASS, all 398 total tests PASS, 0 warnings.
 
 #### GEX-006: Auto-Targeting Accuracy (Tab, Lock, Retarget) (S2)
 **Files:** `Core/AutoTargetEngine.cs`, `Core/CombatEngine.cs`, `Core/PartyManager.cs` (FEAT-012 exclusion)
