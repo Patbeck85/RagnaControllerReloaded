@@ -163,6 +163,8 @@
         <Compile Include="Core\NativeStructs.cs" />
         <Compile Include="Core\ObjectPools.cs" />
         <Compile Include="Core\OverlayRouter.cs" />
+        <Compile Include="Core\IProcessNameResolver.cs" />
+        <Compile Include="Core\ProcessNameResolver.cs" />
         <Compile Include="Core\Pools.cs" />
         <Compile Include="Core\PowerModeService.cs" />
         <Compile Include="Core\PowerMonitor.cs" />

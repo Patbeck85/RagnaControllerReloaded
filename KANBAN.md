@@ -1302,6 +1302,7 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Priorität:** HIGH (Settings visibility)
 **DoD:** All 4 ComboBoxes show current values on open; changes persist.
 **Status:** ✅ DONE (2026-10-10) — All 4 ComboBoxes already had initialization methods (`InitializeLogLevelCombo`, `InitializeLanguageCombo`, `InitializeOverlayCustomization`, `InitializeRoExePathCombo`) that were being called; they now properly set initial values from saved settings.
+**Enhancement (2026-10-12):** Added dedicated **"Browse" button** next to `RoExePathCombo` for better UX — users can now click button to select any RO `.exe` (private servers with custom names like `myRO.exe`, `ROClient.exe`, `ragexere.exe`). Handler extracts process name and sets `FocusLockProcess` automatically. All 376 tests pass.
 
 ### 🟨 SPRINT B — Usability & Discoverability (High Value)
 

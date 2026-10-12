@@ -154,14 +154,27 @@
                                                                                                                                         </Border>
 
                                                                                                     <!-- Ragnarok Online Path Selector -->
-                                                                                                            <TextBlock Text="{core:Loc Settings_RoExePath_Description}" Style="{StaticResource BodyText}" Margin="0,14,0,4"/>
-                                                                                                            <ComboBox x:Name="RoExePathCombo" 
-                                                                                                                      Width="400" Margin="0,0,0,4"
-                                                                                                                      Style="{StaticResource DarkComboBox}"
-                                                                                                                      ToolTip="{core:Loc Settings_RoExePath_Tooltip}"
-                                                                                                                      SelectionChanged="RoExePathCombo_SelectionChanged"/>
-                                                                                                            <TextBlock x:Name="LblRoExeStatus" Text=""
-                                                                                                                     Foreground="{StaticResource TextTertiary}" FontSize="9" FontFamily="Consolas" Margin="0,0,0,10"/>
+                                                                                                                                                                                <TextBlock Text="{core:Loc Settings_RoExePath_Description}" Style="{StaticResource BodyText}" Margin="0,14,0,4"/>
+                                                                                                                                                                                <Grid Margin="0,0,0,4">
+                                                                                                                                                                                    <Grid.ColumnDefinitions>
+                                                                                                                                                                                        <ColumnDefinition Width="*"/>
+                                                                                                                                                                                        <ColumnDefinition Width="Auto"/>
+                                                                                                                                                                                    </Grid.ColumnDefinitions>
+                                                                                                                                                                                    <ComboBox x:Name="RoExePathCombo" 
+                                                                                                                                                                                          Grid.Column="0"
+                                                                                                                                                                                          Style="{StaticResource DarkComboBox}"
+                                                                                                                                                                                          ToolTip="{core:Loc Settings_RoExePath_Tooltip}"
+                                                                                                                                                                                          SelectionChanged="RoExePathCombo_SelectionChanged"/>
+                                                                                                                                                                                    <Button x:Name="BtnBrowseRoExe" 
+                                                                                                                                                                                            Grid.Column="1"
+                                                                                                                                                                                            Content="{core:Loc Settings_RoExePath_BrowseBtn}"
+                                                                                                                                                                                            Style="{StaticResource GhostButton}" 
+                                                                                                                                                                                            Height="36" Width="90" Margin="8,0,0,0"
+                                                                                                                                                                                            Click="BtnBrowseRoExe_Click"
+                                                                                                                                                                                            ToolTip="{core:Loc Settings_RoExePath_Tooltip}"/>
+                                                                                                                                                                                </Grid>
+                                                                                                                                                                                <TextBlock x:Name="LblRoExeStatus" Text=""
+                                                                                                                                                                                         Foreground="{StaticResource TextTertiary}" FontSize="9" FontFamily="Consolas" Margin="0,0,0,10"/>
 
                                                                                                             <!-- Calibrate Button -->
                                                                                                             <Button x:Name="BtnCalibrate" Content="{core:Loc Settings_Btn_Calibrate}"

@@ -6,8 +6,8 @@ namespace RagnaController.Core
     {
         private readonly WindowTracker _tracker;
         private readonly MovementEngine _movement;
+        private readonly INativeMethods _native;
         private IntPtr _lastHwnd;
-        private int _checkCounter;
 
         public bool IsFocusLocked { get; private set; }
         public bool IsTracking => _tracker.IsTracking;
@@ -28,10 +28,11 @@ namespace RagnaController.Core
             }
         }
 
-        public SystemMonitor(WindowTracker tracker, MovementEngine movement)
+        public SystemMonitor(WindowTracker tracker, MovementEngine movement, INativeMethods? native = null)
         {
             _tracker  = tracker;
             _movement = movement;
+            _native   = native ?? new NativeMethodsImpl();
 
             // Sofort Center setzen wenn Fenster kommt — nicht auf nächsten Poll-Zyklus warten
             _tracker.ForegroundChanged += () =>
@@ -41,33 +42,10 @@ namespace RagnaController.Core
             };
         }
 
-        private bool _firstUpdate = true;
-
         public void Update()
         {
-            // Force an immediate check on the very first tick after startup —
-            // otherwise IsTracking stays false (and all input is blocked) for
-            // up to 500ms while we wait for the normal poll interval.
-            if (_firstUpdate)
-            {
-                _firstUpdate = false;
-                _checkCounter = 60;
-            }
-
-            // Nur alle 500ms (60 Ticks) teure Checks machen
-            if (++_checkCounter < 60)
-            {
-                // Schneller Check: Ist das aktuelle Fenster noch RO?
-                if (NativeMethods.GetForegroundWindow() != _lastHwnd)
-                {
-                    _checkCounter = 60; // FIX: Sofortiger Deep-Check im SELBEN Tick (nicht warten auf nächsten)
-                }
-                return;
-            }
-            _checkCounter = 0;
-
             _tracker.Refresh();
-            _lastHwnd = NativeMethods.GetForegroundWindow();
+            _lastHwnd = _native.GetForegroundWindow();
 
             if (_tracker.IsTracking)
             {

@@ -28,6 +28,7 @@ namespace RagnaController.Core
 
         // ── Dependency Injection ──────────────────────────────────────────
         private readonly INativeMethods _native;
+        private readonly IProcessNameResolver _processNames;
 
         // ── State ─────────────────────────────────────────────────────────
         private IntPtr  _hook = IntPtr.Zero;
@@ -48,11 +49,12 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Erstellt einen neuen WindowTracker mit der angegebenen Win32-Implementierung.
-        /// Für Production: <see cref="NativeMethodsImpl"/>. Für Tests: Mock<INativeMethods>.
+        /// Für Production: <see cref="NativeMethodsImpl"/>. Für Tests: Mock&lt;INativeMethods&gt;.
         /// </summary>
-        public WindowTracker(INativeMethods? native = null)
+        public WindowTracker(INativeMethods? native = null, IProcessNameResolver? processNames = null)
         {
-            _native = native ?? new NativeMethodsImpl();
+            _native       = native ?? new NativeMethodsImpl();
+            _processNames  = processNames ?? new ProcessNameResolver();
         }
 
         public void SetProcessName(string name)
@@ -108,13 +110,9 @@ namespace RagnaController.Core
             _native.GetWindowThreadProcessId(hwnd, out uint pid);
             if (pid == 0) { IsTracking = false; return; }
 
-            try
-            {
-                using var proc = Process.GetProcessById((int)pid);
-                bool match = proc.ProcessName.ToLowerInvariant().Contains(_procName);
-                if (!match) { IsTracking = false; return; }
-            }
-            catch { IsTracking = false; return; }
+            string? procName = _processNames.GetProcessName((int)pid);
+            bool match = procName != null && procName.ToLowerInvariant().Contains(_procName);
+            if (!match) { IsTracking = false; return; }
 
             _hwnd = hwnd;
             UpdateGeometry();
