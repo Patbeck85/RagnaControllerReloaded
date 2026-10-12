@@ -1581,6 +1581,19 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 3. Party exclusion (FEAT-012) verified: party members never targeted
 **Priorität:** CRITICAL
 **DoD:** All targeting tests pass; in-game verification on 5+ maps with dense mobs.
+**Status:** ✅ DONE (2026-10-12)
+
+**Umsetzung (GEX-006):**
+1. **Test Suite:** Added `AutoTargetingAccuracyTests.cs` with 21 comprehensive tests covering:
+   - **Tab Cycling Accuracy (RO Rules):** Prioritizes nearest enemy in range; respects MaxTargetDistance; Sticky mode holds target (no auto Tab cycling); Nearest mode cycles Tab while attacking
+   - **Lock Persistence Through Skill Casts:** Lock persists through skill interrupts (NotifySkillFired); multiple skill casts don't break lock; lock persists during movement
+   - **Auto-Retarget on Death:** Target death (empty name) triggers LostTarget "dead" event, enters Seeking; immediate retarget with valid data source
+   - **Auto-Retarget on Range Loss:** Target moves out of MaxTargetDistance triggers LostTarget "out_of_range", enters Seeking; immediate retarget in Nearest mode
+   - **Auto-Retarget on LoS Break:** Simulated as range loss, triggers retarget
+   - **Party Exclusion (FEAT-012 Integration):** Party members never targeted; verified integration point with PartyManager
+   - **Combat State Transitions:** Idle -> Seeking (ToggleCombatMode) -> Engaged (R3) -> Attacking (AutoAttackEnabled); Target lost in Attacking -> Seeking; Seeking state Tab cycles
+   - **Edge Cases & Regression Guards:** No data source = no false retarget; ClearTarget disables validity check; Reset clears all FEAT-013 state; PartyTargetingEnabled legacy flag compat; SkillInterruptMs pauses attack not lock
+2. **Results:** All 21 new tests PASS, all 421 total tests PASS, 0 warnings.
 
 #### GEX-007: Movement Engine — Walk/Run/Slide/Backslide Accuracy (S2)
 **Files:** `Core/MovementEngine.cs`, `Core/KiteEngine.cs`, `Core/KiteStates.cs`
