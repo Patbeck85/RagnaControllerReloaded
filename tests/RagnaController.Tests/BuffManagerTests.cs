@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Xunit;
 using RagnaController.Core;
 using RagnaController.Models;
@@ -75,7 +76,8 @@ namespace RagnaController.Tests
         {
             using var ctx = new TestContext();
 
-            ctx.Manager.RegisterBuff("Haste", 60);
+            // Use explicit for test with known duration
+            ctx.Manager.RegisterBuffExplicit("Haste", 60);
 
             Assert.True(ctx.Manager.HasBuff("Haste"));
             Assert.Contains("Haste", ctx.Manager.ActiveBuffNames);
@@ -88,8 +90,8 @@ namespace RagnaController.Tests
         {
             using var ctx = new TestContext();
 
-            ctx.Manager.RegisterBuff("", 60);
-            ctx.Manager.RegisterBuff(null!, 60);
+            ctx.Manager.RegisterBuffExplicit("", 60);
+            ctx.Manager.RegisterBuffExplicit(null!, 60);
 
             Assert.Empty(ctx.Manager.ActiveBuffNames);
         }
@@ -107,7 +109,7 @@ namespace RagnaController.Tests
         public void RemoveBuff_FiresBuffExpiredEvent()
         {
             using var ctx = new TestContext();
-            ctx.Manager.RegisterBuff("Bless", 60);
+            ctx.Manager.RegisterBuffExplicit("Bless", 60);
 
             ctx.Manager.RemoveBuff("Bless");
 
@@ -134,7 +136,7 @@ namespace RagnaController.Tests
             using var ctx = new TestContext();
 
             // DurationSec=1 mit Auto-Recast: nach ~1.2s läuft der Buff ab
-            ctx.Manager.RegisterBuff("Haste", 1, warningSec: 0, autoRecast: true, recastKey: VirtualKey.F5);
+            ctx.Manager.RegisterBuffExplicit("Haste", 1, warningSec: 0, autoRecast: true, recastKey: VirtualKey.F5);
 
             Thread.Sleep(1200);
             ctx.Manager.Update(16);
@@ -163,7 +165,7 @@ namespace RagnaController.Tests
         public void Update_WhileActive_DoesNotExpireBuff()
         {
             using var ctx = new TestContext();
-            ctx.Manager.RegisterBuff("Haste", 60);
+            ctx.Manager.RegisterBuffExplicit("Haste", 60);
 
             ctx.Manager.Update(16);
 
@@ -175,13 +177,66 @@ namespace RagnaController.Tests
         public void ClearAll_RemovesAllBuffsAndDebuffs()
         {
             using var ctx = new TestContext();
-            ctx.Manager.RegisterBuff("Haste", 60);
+            ctx.Manager.RegisterBuffExplicit("Haste", 60);
             ctx.Manager.RegisterDebuff("Slow", 30);
 
             ctx.Manager.ClearAll();
 
             Assert.Empty(ctx.Manager.ActiveBuffNames);
             Assert.Empty(ctx.Manager.ActiveDebuffNames);
+        }
+
+        // ── GEX-011: Registry Integration Tests ──
+
+        [Fact]
+        public void RegisterBuff_UsesRegistryDefaults_ForKnownBuff()
+        {
+            using var ctx = new TestContext();
+
+            // "Blessing" is in registry with 240s duration
+            ctx.Manager.RegisterBuff("Blessing", recastKey: VirtualKey.F2, autoRecast: true);
+
+            Assert.True(ctx.Manager.HasBuff("Blessing"));
+            float remaining = ctx.Manager.GetBuffRemainingSec("Blessing");
+            Assert.InRange(remaining, 239f, 240f); // Registry default: 240s
+        }
+
+        [Fact]
+        public void RegisterBuff_UnknownBuff_UsesFallbackDuration()
+        {
+            using var ctx = new TestContext();
+
+            // Unknown buff should use fallback (60s)
+            ctx.Manager.RegisterBuff("TotallyUnknownBuff123", recastKey: VirtualKey.F1);
+
+            Assert.True(ctx.Manager.HasBuff("TotallyUnknownBuff123"));
+            float remaining = ctx.Manager.GetBuffRemainingSec("TotallyUnknownBuff123");
+            Assert.InRange(remaining, 59f, 60f);
+        }
+
+        [Fact]
+        public void RegisterDebuffFromRegistry_UsesRegistryDuration()
+        {
+            using var ctx = new TestContext();
+
+            // "Poison" is in debuffs with 60s duration
+            ctx.Manager.RegisterDebuffFromRegistry("Poison");
+
+            Assert.True(ctx.Manager.HasDebuff("Poison"));
+            float remaining = ctx.Manager.GetDebuffRemainingSec("Poison");
+            Assert.InRange(remaining, 59f, 60f);
+        }
+
+        [Fact]
+        public void RegisterBuffExplicit_OverridesRegistryDefaults()
+        {
+            using var ctx = new TestContext();
+
+            // Blessing normally 240s, but we explicitly set 10s
+            ctx.Manager.RegisterBuffExplicit("Blessing", 10, warningSec: 5);
+
+            float remaining = ctx.Manager.GetBuffRemainingSec("Blessing");
+            Assert.InRange(remaining, 9f, 10f);
         }
     }
 }

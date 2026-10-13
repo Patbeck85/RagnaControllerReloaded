@@ -1,0 +1,1086 @@
+{
+  "buffs": [
+    {
+      "id": 1,
+      "name": "Two-Hand Quicken",
+      "description": "Increases ASPD when using 2H weapons",
+      "durationSec": 180,
+      "maxStacks": 1,
+      "iconPath": "skills/knight/2h_quicken.png",
+      "class": "Knight",
+      "skillId": "KN_2HQUICKEN"
+    },
+    {
+      "id": 2,
+      "name": "Guardian's Blessing",
+      "description": "Increases Max HP and SP recovery",
+      "durationSec": 240,
+      "maxStacks": 1,
+      "iconPath": "skills/crusader/guardian_blessing.png",
+      "class": "Crusader",
+      "skillId": "CR_GUARDIAN"
+    },
+    {
+      "id": 3,
+      "name": "Blessing",
+      "description": "Increases STR, INT, DEX",
+      "durationSec": 240,
+      "maxStacks": 10,
+      "iconPath": "skills/priest/blessing.png",
+      "class": "Priest",
+      "skillId": "PR_BLESSING"
+    },
+    {
+      "id": 4,
+      "name": "Increase AGI",
+      "description": "Increases AGI and Flee",
+      "durationSec": 240,
+      "maxStacks": 10,
+      "iconPath": "skills/priest/agi_up.png",
+      "class": "Priest",
+      "skillId": "PR_AGI"
+    },
+    {
+      "id": 5,
+      "name": "Angelus",
+      "description": "Increases DEF",
+      "durationSec": 180,
+      "maxStacks": 10,
+      "iconPath": "skills/priest/angelus.png",
+      "class": "Priest",
+      "skillId": "PR_ANGELUS"
+    },
+    {
+      "id": 6,
+      "name": "Magnificat",
+      "description": "Increases SP recovery",
+      "durationSec": 180,
+      "maxStacks": 10,
+      "iconPath": "skills/priest/magnificat.png",
+      "class": "Priest",
+      "skillId": "PR_MAGNIFICAT"
+    },
+    {
+      "id": 7,
+      "name": "Gloria",
+      "description": "Increases Max HP",
+      "durationSec": 180,
+      "maxStacks": 10,
+      "iconPath": "skills/priest/gloria.png",
+      "class": "Priest",
+      "skillId": "PR_GLORIA"
+    },
+    {
+      "id": 8,
+      "name": "Impositio Manus",
+      "description": "Increases weapon ATK",
+      "durationSec": 180,
+      "maxStacks": 5,
+      "iconPath": "skills/priest/impositio.png",
+      "class": "Priest",
+      "skillId": "PR_IMPOSITIO"
+    },
+    {
+      "id": 9,
+      "name": "Aqua Benedicta",
+      "description": "Creates Holy Water",
+      "durationSec": 0,
+      "maxStacks": 1,
+      "iconPath": "skills/priest/aqua_benedicta.png",
+      "class": "Priest",
+      "skillId": "PR_AQUA"
+    },
+    {
+      "id": 10,
+      "name": "Kyrie Eleison",
+      "description": "Auto-blocks physical attacks",
+      "durationSec": 60,
+      "maxStacks": 10,
+      "iconPath": "skills/priest/kyrie.png",
+      "class": "Priest",
+      "skillId": "PR_KYRIE"
+    },
+    {
+      "id": 11,
+      "name": "Assumptio",
+      "description": "Increases Max HP significantly",
+      "durationSec": 180,
+      "maxStacks": 5,
+      "iconPath": "skills/high_priest/assumptio.png",
+      "class": "High Priest",
+      "skillId": "HP_ASSUMPTIO"
+    },
+    {
+      "id": 12,
+      "name": "Sacrament",
+      "description": "Party HP/SP recovery over time",
+      "durationSec": 60,
+      "maxStacks": 1,
+      "iconPath": "skills/high_priest/sacrament.png",
+      "class": "High Priest",
+      "skillId": "HP_SACRAMENT"
+    },
+    {
+      "id": 13,
+      "name": "Adrenaline Rush",
+      "description": "Increases ASPD and Max HP",
+      "durationSec": 180,
+      "maxStacks": 1,
+      "iconPath": "skills/blacksmith/adrenaline.png",
+      "class": "Blacksmith",
+      "skillId": "BS_ADRENALINE"
+    },
+    {
+      "id": 14,
+      "name": "Weapon Perfection",
+      "description": "Increases weapon ATK and hit rate",
+      "durationSec": 180,
+      "maxStacks": 1,
+      "iconPath": "skills/blacksmith/weapon_perfect.png",
+      "class": "Blacksmith",
+      "skillId": "BS_WEAPONPERFECT"
+    },
+    {
+      "id": 15,
+      "name": "Overthrust",
+      "description": "Increases weapon ATK significantly",
+      "durationSec": 180,
+      "maxStacks": 5,
+      "iconPath": "skills/blacksmith/overthrust.png",
+      "class": "Blacksmith",
+      "skillId": "BS_OVERTHRUST"
+    },
+    {
+      "id": 16,
+      "name": "Overthrust Max",
+      "description": "Max power Overthrust",
+      "durationSec": 180,
+      "maxStacks": 1,
+      "iconPath": "skills/whitesmith/overthrust_max.png",
+      "class": "Whitesmith",
+      "skillId": "WS_OVERTHRUSTMAX"
+    },
+    {
+      "id": 17,
+      "name": "Endure",
+      "description": "Reduces damage taken to 1",
+      "durationSec": 30,
+      "maxStacks": 1,
+      "iconPath": "skills/swordsman/endure.png",
+      "class": "Swordsman",
+      "skillId": "SM_ENDURE"
+    },
+    {
+      "id": 18,
+      "name": "Concentration",
+      "description": "Prevents knockback and spell interrupt",
+      "durationSec": 60,
+      "maxStacks": 10,
+      "iconPath": "skills/merchant/concentration.png",
+      "class": "Merchant",
+      "skillId": "MC_CONCENTRATION"
+    },
+    {
+      "id": 19,
+      "name": "Loud Exclamation",
+      "description": "Increases ATK for party",
+      "durationSec": 180,
+      "maxStacks": 5,
+      "iconPath": "skills/merchant/loud_exclamation.png",
+      "class": "Merchant",
+      "skillId": "MC_LOUDEXCLAMATION"
+    },
+    {
+      "id": 20,
+      "name": "Improve Concentration",
+      "description": "Increases DEX and hit rate",
+      "durationSec": 180,
+      "maxStacks": 10,
+      "iconPath": "skills/archer/improve_conc.png",
+      "class": "Archer",
+      "skillId": "AC_IMPROVECONC"
+    },
+    {
+      "id": 21,
+      "name": "Wind Walker",
+      "description": "Increases Flee and movement speed",
+      "durationSec": 180,
+      "maxStacks": 10,
+      "iconPath": "skills/archer/wind_walker.png",
+      "class": "Archer",
+      "skillId": "AC_WINDWALKER"
+    },
+    {
+      "id": 22,
+      "name": "Cloaking",
+      "description": "Hides from sight, increases Flee",
+      "durationSec": 60,
+      "maxStacks": 10,
+      "iconPath": "skills/thief/cloaking.png",
+      "class": "Thief",
+      "skillId": "TF_CLOAKING"
+    },
+    {
+      "id": 23,
+      "name": "Envenom",
+      "description": "Poison weapon",
+      "durationSec": 180,
+      "maxStacks": 5,
+      "iconPath": "skills/assassin/envenom.png",
+      "class": "Assassin",
+      "skillId": "AS_ENVENOM"
+    },
+    {
+      "id": 24,
+      "name": "Poison React",
+      "description": "Counter with poison",
+      "durationSec": 60,
+      "maxStacks": 10,
+      "iconPath": "skills/assassin/poison_react.png",
+      "class": "Assassin",
+      "skillId": "AS_POISONREACT"
+    },
+    {
+      "id": 25,
+      "name": "Sonic Blow Cloak",
+      "description": "Cloak during Sonic Blow",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/assassin/sonic_cloak.png",
+      "class": "Assassin Cross",
+      "skillId": "ASC_SONICCLOAK"
+    },
+    {
+      "id": 26,
+      "name": "Double Strafe Buff",
+      "description": "Double Strafe ready",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/hunter/double_strafe.png",
+      "class": "Hunter",
+      "skillId": "HT_DOUBLESTRAFE"
+    },
+    {
+      "id": 27,
+      "name": "Arrow Shower Buff",
+      "description": "Arrow Shower ready",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/hunter/arrow_shower.png",
+      "class": "Hunter",
+      "skillId": "HT_ARROWSHOWER"
+    },
+    {
+      "id": 28,
+      "name": "Falcon Buff",
+      "description": "Falcon active",
+      "durationSec": 300,
+      "maxStacks": 1,
+      "iconPath": "skills/hunter/falcon.png",
+      "class": "Hunter",
+      "skillId": "HT_FALCON"
+    },
+    {
+      "id": 29,
+      "name": "Berserk",
+      "description": "Increases ATK, reduces DEF",
+      "durationSec": 60,
+      "maxStacks": 1,
+      "iconPath": "skills/knight/berserk.png",
+      "class": "Knight",
+      "skillId": "KN_BERSERK"
+    },
+    {
+      "id": 30,
+      "name": "Spiritual Sphere",
+      "description": "Monk spirit spheres",
+      "durationSec": 300,
+      "maxStacks": 5,
+      "iconPath": "skills/monk/sphere.png",
+      "class": "Monk",
+      "skillId": "MO_SPIRITS"
+    },
+    {
+      "id": 31,
+      "name": "Guillotine Fist Buff",
+      "description": "Guillotine Fist ready",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/monk/guillotine.png",
+      "class": "Monk",
+      "skillId": "MO_GUILLOTINE"
+    },
+    {
+      "id": 32,
+      "name": "Fury",
+      "description": "Sacrifice HP for ASPD",
+      "durationSec": 60,
+      "maxStacks": 1,
+      "iconPath": "skills/monk/fury.png",
+      "class": "Monk",
+      "skillId": "MO_FURY"
+    },
+    {
+      "id": 33,
+      "name": "Orc Hero Buff",
+      "description": "Orc Hero card effect",
+      "durationSec": 300,
+      "maxStacks": 1,
+      "iconPath": "items/cards/orc_hero.png",
+      "class": "Universal",
+      "skillId": "ITEM_ORC_HERO"
+    },
+    {
+      "id": 34,
+      "name": "Eddga Buff",
+      "description": "Eddga card effect",
+      "durationSec": 300,
+      "maxStacks": 1,
+      "iconPath": "items/cards/eddga.png",
+      "class": "Universal",
+      "skillId": "ITEM_EDDGA"
+    },
+    {
+      "id": 35,
+      "name": "Vampire Buff",
+      "description": "Vampire card HP drain",
+      "durationSec": 300,
+      "maxStacks": 1,
+      "iconPath": "items/cards/vampire.png",
+      "class": "Universal",
+      "skillId": "ITEM_VAMPIRE"
+    },
+    {
+      "id": 36,
+      "name": "Megalodon Buff",
+      "description": "Megalodon card SP drain",
+      "durationSec": 300,
+      "maxStacks": 1,
+      "iconPath": "items/cards/megalodon.png",
+      "class": "Universal",
+      "skillId": "ITEM_MEGALODON"
+    },
+    {
+      "id": 37,
+      "name": "Golden Thief Bug Buff",
+      "description": "Auto-spell Level 5 Frost Diver",
+      "durationSec": 300,
+      "maxStacks": 1,
+      "iconPath": "items/cards/gtb.png",
+      "class": "Universal",
+      "skillId": "ITEM_GTB"
+    },
+    {
+      "id": 38,
+      "name": "Pneuma",
+      "description": "Blocks ranged attacks",
+      "durationSec": 60,
+      "maxStacks": 1,
+      "iconPath": "skills/priest/pneuma.png",
+      "class": "Priest",
+      "skillId": "PR_PNEUMA"
+    },
+    {
+      "id": 39,
+      "name": "Safety Wall",
+      "description": "Blocks melee attacks",
+      "durationSec": 60,
+      "maxStacks": 1,
+      "iconPath": "skills/priest/safety_wall.png",
+      "class": "Priest",
+      "skillId": "PR_SAFETYWALL"
+    },
+    {
+      "id": 40,
+      "name": "Sanctuary",
+      "description": "Holy ground - damages undead/demon",
+      "durationSec": 60,
+      "maxStacks": 1,
+      "iconPath": "skills/priest/sanctuary.png",
+      "class": "Priest",
+      "skillId": "PR_SANCTUARY"
+    },
+    {
+      "id": 41,
+      "name": "Magnus Exorcismus",
+      "description": "Holy damage over time",
+      "durationSec": 30,
+      "maxStacks": 1,
+      "iconPath": "skills/high_priest/magnus.png",
+      "class": "High Priest",
+      "skillId": "HP_MAGNUS"
+    },
+    {
+      "id": 42,
+      "name": "Resurrection Buff",
+      "description": "Post-resurrection protection",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/priest/resurrection.png",
+      "class": "Priest",
+      "skillId": "PR_RESURRECT"
+    },
+    {
+      "id": 43,
+      "name": "Energy Coat",
+      "description": "Consumes SP to block damage",
+      "durationSec": 60,
+      "maxStacks": 1,
+      "iconPath": "skills/sage/energy_coat.png",
+      "class": "Sage",
+      "skillId": "SA_ENERGYCOAT"
+    },
+    {
+      "id": 44,
+      "name": "Magic Crasher",
+      "description": "Breaks magic defense",
+      "durationSec": 60,
+      "maxStacks": 5,
+      "iconPath": "skills/sage/magic_crasher.png",
+      "class": "Sage",
+      "skillId": "SA_MAGICCRASHER"
+    },
+    {
+      "id": 45,
+      "name": "Link (Soul Linker)",
+      "description": "Soul Link buff",
+      "durationSec": 300,
+      "maxStacks": 1,
+      "iconPath": "skills/soul_linker/link.png",
+      "class": "Soul Linker",
+      "skillId": "SL_LINK"
+    },
+    {
+      "id": 46,
+      "name": "Kaizel",
+      "description": "Auto-resurrection",
+      "durationSec": 300,
+      "maxStacks": 1,
+      "iconPath": "skills/soul_linker/kaizel.png",
+      "class": "Soul Linker",
+      "skillId": "SL_KAIZEL"
+    },
+    {
+      "id": 47,
+      "name": "Kaahi",
+      "description": "Auto-heal when HP low",
+      "durationSec": 300,
+      "maxStacks": 1,
+      "iconPath": "skills/soul_linker/kaahi.png",
+      "class": "Soul Linker",
+      "skillId": "SL_KAHAH"
+    },
+    {
+      "id": 48,
+      "name": "Kaupe",
+      "description": "Auto-block physical",
+      "durationSec": 300,
+      "maxStacks": 1,
+      "iconPath": "skills/soul_linker/kaupe.png",
+      "class": "Soul Linker",
+      "skillId": "SL_KAUPE"
+    },
+    {
+      "id": 49,
+      "name": "Frost Diver Freeze",
+      "description": "Target frozen",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/wizard/frost_diver.png",
+      "class": "Wizard",
+      "skillId": "WZ_FROSTDIVER"
+    },
+    {
+      "id": 50,
+      "name": "Stone Curse",
+      "description": "Target petrified",
+      "durationSec": 30,
+      "maxStacks": 1,
+      "iconPath": "skills/wizard/stone_curse.png",
+      "class": "Wizard",
+      "skillId": "WZ_STONE"
+    },
+    {
+      "id": 51,
+      "name": "Quagmire",
+      "description": "Reduces AGI/DEX in area",
+      "durationSec": 30,
+      "maxStacks": 1,
+      "iconPath": "skills/wizard/quagmire.png",
+      "class": "Wizard",
+      "skillId": "WZ_QUAGMIRE"
+    },
+    {
+      "id": 52,
+      "name": "Storm Gust Slow",
+      "description": "Storm Gust freeze/slow",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/wizard/storm_gust.png",
+      "class": "Wizard",
+      "skillId": "WZ_STORMGUST"
+    },
+    {
+      "id": 53,
+      "name": "Heaven's Drive Stun",
+      "description": "Heaven's Drive stun",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/wizard/heavens_drive.png",
+      "class": "Wizard",
+      "skillId": "WZ_HEAVENS"
+    },
+    {
+      "id": 54,
+      "name": "Meteor Storm Stun",
+      "description": "Meteor Storm stun",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/wizard/meteor.png",
+      "class": "Wizard",
+      "skillId": "WZ_METEOR"
+    },
+    {
+      "id": 55,
+      "name": "Ganbantein",
+      "description": "Destroys Safety Wall/Pneuma",
+      "durationSec": 0,
+      "maxStacks": 1,
+      "iconPath": "skills/sage/ganbantein.png",
+      "class": "Sage",
+      "skillId": "SA_GANBANTEIN"
+    },
+    {
+      "id": 56,
+      "name": "Abracadabra",
+      "description": "Random effect",
+      "durationSec": 60,
+      "maxStacks": 1,
+      "iconPath": "skills/sage/abracadabra.png",
+      "class": "Sage",
+      "skillId": "SA_ABRACADABRA"
+    },
+    {
+      "id": 57,
+      "name": "Sight Blaster",
+      "description": "Reveals cloaked/hiding",
+      "durationSec": 60,
+      "maxStacks": 1,
+      "iconPath": "skills/rogue/sight_blaster.png",
+      "class": "Rogue",
+      "skillId": "RG_SIGHTBLASTER"
+    },
+    {
+      "id": 58,
+      "name": "Detoxify",
+      "description": "Removes poison",
+      "durationSec": 0,
+      "maxStacks": 1,
+      "iconPath": "skills/alchemist/detoxify.png",
+      "class": "Alchemist",
+      "skillId": "AM_DETOXIFY"
+    },
+    {
+      "id": 59,
+      "name": "Chemical Protection",
+      "description": "Protects equipment from break",
+      "durationSec": 180,
+      "maxStacks": 1,
+      "iconPath": "skills/alchemist/chemical_protect.png",
+      "class": "Alchemist",
+      "skillId": "AM_CHEMICALPROTECT"
+    },
+    {
+      "id": 60,
+      "name": "Plant Cultivation",
+      "description": "Grows plants",
+      "durationSec": 0,
+      "maxStacks": 1,
+      "iconPath": "skills/alchemist/plant_cultivation.png",
+      "class": "Alchemist",
+      "skillId": "AM_PLANT"
+    },
+    {
+      "id": 61,
+      "name": "Full Chemical Protection",
+      "description": "Full equipment protection",
+      "durationSec": 180,
+      "maxStacks": 1,
+      "iconPath": "skills/creator/full_chem_protect.png",
+      "class": "Creator",
+      "skillId": "CR_FULLCHEM"
+    },
+    {
+      "id": 62,
+      "name": "Crazy Uproar",
+      "description": "AoE stun/confusion",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/minstrel/crazy_uproar.png",
+      "class": "Minstrel",
+      "skillId": "MI_CRAZY"
+    },
+    {
+      "id": 63,
+      "name": "Siren's Song",
+      "description": "Sleeps enemies",
+      "durationSec": 30,
+      "maxStacks": 1,
+      "iconPath": "skills/dancer/sirens_song.png",
+      "class": "Dancer",
+      "skillId": "DC_SIRENS"
+    },
+    {
+      "id": 64,
+      "name": "Tarot Card of Fate",
+      "description": "Random tarot effect",
+      "durationSec": 60,
+      "maxStacks": 1,
+      "iconPath": "skills/gypsy/tarot.png",
+      "class": "Gypsy",
+      "skillId": "BD_TAROT"
+    },
+    {
+      "id": 65,
+      "name": "Hundred Spear",
+      "description": "Spear rapid attack",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/knight/hundred_spear.png",
+      "class": "Knight",
+      "skillId": "KN_HUNDREDSPEAR"
+    },
+    {
+      "id": 66,
+      "name": "Bowling Bash Stun",
+      "description": "Bowling Bash stun",
+      "durationSec": 3,
+      "maxStacks": 1,
+      "iconPath": "skills/knight/bowling_bash.png",
+      "class": "Knight",
+      "skillId": "KN_BOWLING"
+    },
+    {
+      "id": 67,
+      "name": "Spear Boomerang",
+      "description": "Spear returns",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/knight/spear_boomerang.png",
+      "class": "Knight",
+      "skillId": "KN_SPEARBOOM"
+    },
+    {
+      "id": 68,
+      "name": "Brandish Spear",
+      "description": "AoE spear attack",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/knight/brandish.png",
+      "class": "Knight",
+      "skillId": "KN_BRANDISH"
+    },
+    {
+      "id": 69,
+      "name": "Auto Counter",
+      "description": "Auto-counter on hit",
+      "durationSec": 60,
+      "maxStacks": 10,
+      "iconPath": "skills/knight/auto_counter.png",
+      "class": "Knight",
+      "skillId": "KN_AUTOCOUNTER"
+    },
+    {
+      "id": 70,
+      "name": "Riding",
+      "description": "Mounted on Peco/other",
+      "durationSec": 300,
+      "maxStacks": 1,
+      "iconPath": "skills/knight/riding.png",
+      "class": "Knight",
+      "skillId": "KN_RIDING"
+    },
+    {
+      "id": 71,
+      "name": "Spear Quicken",
+      "description": "Spear ASPD boost",
+      "durationSec": 180,
+      "maxStacks": 1,
+      "iconPath": "skills/knight/spear_quicken.png",
+      "class": "Knight",
+      "skillId": "KN_SPEARQUICKEN"
+    },
+    {
+      "id": 72,
+      "name": "Spiral Pierce",
+      "description": "Spiral Pierce ready",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/knight/spiral_pierce.png",
+      "class": "Knight",
+      "skillId": "KN_SPIRAL"
+    },
+    {
+      "id": 73,
+      "name": "Clashing Spiral",
+      "description": "Clashing Spiral ready",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/knight/clashing_spiral.png",
+      "class": "Knight",
+      "skillId": "KN_CLASHING"
+    },
+    {
+      "id": 74,
+      "name": "Pierce",
+      "description": "Pierce attack ready",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/knight/pierce.png",
+      "class": "Knight",
+      "skillId": "KN_PIERCE"
+    },
+    {
+      "id": 75,
+      "name": "Focused Arrow Strike",
+      "description": "Focused Arrow Strike ready",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/ranger/focused_arrow.png",
+      "class": "Ranger",
+      "skillId": "RA_FOCUSEDARROW"
+    },
+    {
+      "id": 76,
+      "name": "Arrow Storm",
+      "description": "Arrow Storm ready",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/ranger/arrow_storm.png",
+      "class": "Ranger",
+      "skillId": "RA_ARROWSTORM"
+    },
+    {
+      "id": 77,
+      "name": "Warg Mastery",
+      "description": "Warg mounted",
+      "durationSec": 300,
+      "maxStacks": 1,
+      "iconPath": "skills/ranger/warg_mastery.png",
+      "class": "Ranger",
+      "skillId": "RA_WARG"
+    },
+    {
+      "id": 78,
+      "name": "Camouflage",
+      "description": "Camouflage - hide + bonuses",
+      "durationSec": 60,
+      "maxStacks": 10,
+      "iconPath": "skills/ranger/camouflage.png",
+      "class": "Ranger",
+      "skillId": "RA_CAMOUFLAGE"
+    },
+    {
+      "id": 79,
+      "name": "Aimed Bolt",
+      "description": "Aimed Bolt ready",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/sniper/aimed_bolt.png",
+      "class": "Sniper",
+      "skillId": "SN_AIMEDBOLT"
+    },
+    {
+      "id": 80,
+      "name": "Focus Arrow",
+      "description": "Focus Arrow ready",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/sniper/focus_arrow.png",
+      "class": "Sniper",
+      "skillId": "SN_FOCUSARROW"
+    },
+    {
+      "id": 81,
+      "name": "Sharp Shooting",
+      "description": "Sharp Shooting ready",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/sniper/sharp_shooting.png",
+      "class": "Sniper",
+      "skillId": "SN_SHARP"
+    },
+    {
+      "id": 82,
+      "name": "Double Strafe",
+      "description": "Double Strafe ready",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/hunter/double_strafe.png",
+      "class": "Hunter",
+      "skillId": "HT_DOUBLESTRAFE"
+    },
+    {
+      "id": 83,
+      "name": "Arrow Shower",
+      "description": "Arrow Shower ready",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/hunter/arrow_shower.png",
+      "class": "Hunter",
+      "skillId": "HT_ARROWSHOWER"
+    },
+    {
+      "id": 84,
+      "name": "Arrow Repel",
+      "description": "Arrow Repel ready",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/hunter/arrow_repel.png",
+      "class": "Hunter",
+      "skillId": "HT_ARROWREPEL"
+    },
+    {
+      "id": 85,
+      "name": "Beast Bane",
+      "description": "Beast damage bonus",
+      "durationSec": 180,
+      "maxStacks": 5,
+      "iconPath": "skills/hunter/beast_bane.png",
+      "class": "Hunter",
+      "skillId": "HT_BEASTBANE"
+    },
+    {
+      "id": 86,
+      "name": "Falcon Eyes",
+      "description": "Falcon active",
+      "durationSec": 300,
+      "maxStacks": 1,
+      "iconPath": "skills/hunter/falcon_eyes.png",
+      "class": "Hunter",
+      "skillId": "HT_FALCON"
+    },
+    {
+      "id": 87,
+      "name": "Blitz Beat",
+      "description": "Blitz Beat ready",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/bard/blitz_beat.png",
+      "class": "Bard",
+      "skillId": "BA_BLITZBEAT"
+    },
+    {
+      "id": 88,
+      "name": "Melody Strike",
+      "description": "Melody Strike ready",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/bard/melody_strike.png",
+      "class": "Bard",
+      "skillId": "BA_MELODY"
+    },
+    {
+      "id": 89,
+      "name": "Voice of Siren",
+      "description": "Sleep enemies",
+      "durationSec": 30,
+      "maxStacks": 1,
+      "iconPath": "skills/bard/siren.png",
+      "class": "Bard",
+      "skillId": "BA_SIREN"
+    },
+    {
+      "id": 90,
+      "name": "Frost Joker",
+      "description": "Frost Joker freeze",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/clown/frost_joker.png",
+      "class": "Clown",
+      "skillId": "DC_FROSTJOKER"
+    },
+    {
+      "id": 91,
+      "name": "Dazzler",
+      "description": "Dazzler blind",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/clown/dazzler.png",
+      "class": "Clown",
+      "skillId": "DC_DAZZLER"
+    },
+    {
+      "id": 92,
+      "name": "Severe Rainstorm",
+      "description": "Severe Rainstorm AoE",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/dancer/rainstorm.png",
+      "class": "Dancer",
+      "skillId": "BD_RAINSTORM"
+    },
+    {
+      "id": 93,
+      "name": "Please Don't Forget Me",
+      "description": "Charm enemies",
+      "durationSec": 30,
+      "maxStacks": 1,
+      "iconPath": "skills/dancer/please_dont.png",
+      "class": "Dancer",
+      "skillId": "BD_PLEASE"
+    },
+    {
+      "id": 94,
+      "name": "Mental Strength",
+      "description": "Mental Strength buff",
+      "durationSec": 180,
+      "maxStacks": 1,
+      "iconPath": "skills/monk/mental.png",
+      "class": "Monk",
+      "skillId": "MO_MENTAL"
+    },
+    {
+      "id": 95,
+      "name": "Guillotine Fist",
+      "description": "Guillotine Fist charged",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/monk/guillotine.png",
+      "class": "Monk",
+      "skillId": "MO_GUILLOTINE"
+    },
+    {
+      "id": 96,
+      "name": "Snap",
+      "description": "Snap ready",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/monk/snap.png",
+      "class": "Monk",
+      "skillId": "MO_SNAP"
+    },
+    {
+      "id": 97,
+      "name": "Throw Spirit Sphere",
+      "description": "Throw Spirit Sphere ready",
+      "durationSec": 5,
+      "maxStacks": 1,
+      "iconPath": "skills/monk/throw_sphere.png",
+      "class": "Monk",
+      "skillId": "MO_THROWSPIRIT"
+    },
+    {
+      "id": 98,
+      "name": "Occult Impaction",
+      "description": "Occult Impaction ready",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/monk/occult.png",
+      "class": "Monk",
+      "skillId": "MO_OCCULT"
+    },
+    {
+      "id": 99,
+      "name": "Raging Trifecta Blow",
+      "description": "Raging Trifecta Blow ready",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/monk/trifecta.png",
+      "class": "Monk",
+      "skillId": "MO_TRIFECTA"
+    },
+    {
+      "id": 100,
+      "name": "Tiger Cannon",
+      "description": "Tiger Cannon ready",
+      "durationSec": 10,
+      "maxStacks": 1,
+      "iconPath": "skills/monk/tiger_cannon.png",
+      "class": "Monk",
+      "skillId": "MO_TIGER"
+    }
+  ],
+  "debuffs": [
+    {
+      "id": 1001,
+      "name": "Poison",
+      "description": "Loses HP over time",
+      "durationSec": 60,
+      "iconPath": "status/poison.png",
+      "isDebuff": true
+    },
+    {
+      "id": 1002,
+      "name": "Curse",
+      "description": "Dark attribute, blind",
+      "durationSec": 60,
+      "iconPath": "status/curse.png",
+      "isDebuff": true
+    },
+    {
+      "id": 1003,
+      "name": "Silence",
+      "description": "Cannot cast skills",
+      "durationSec": 30,
+      "iconPath": "status/silence.png",
+      "isDebuff": true
+    },
+    {
+      "id": 1004,
+      "name": "Blind",
+      "description": "Reduces hit rate",
+      "durationSec": 30,
+      "iconPath": "status/blind.png",
+      "isDebuff": true
+    },
+    {
+      "id": 1005,
+      "name": "Stun",
+      "description": "Cannot act",
+      "durationSec": 10,
+      "iconPath": "status/stun.png",
+      "isDebuff": true
+    },
+    {
+      "id": 1006,
+      "name": "Sleep",
+      "description": "Cannot act, wakes on hit",
+      "durationSec": 30,
+      "iconPath": "status/sleep.png",
+      "isDebuff": true
+    },
+    {
+      "id": 1007,
+      "name": "Stone",
+      "description": "Petrified, cannot act",
+      "durationSec": 30,
+      "iconPath": "status/stone.png",
+      "isDebuff": true
+    },
+    {
+      "id": 1008,
+      "name": "Freeze",
+      "description": "Frozen, cannot act",
+      "durationSec": 10,
+      "iconPath": "status/freeze.png",
+      "isDebuff": true
+    },
+    {
+      "id": 1009,
+      "name": "Bleeding",
+      "description": "Loses HP over time",
+      "durationSec": 60,
+      "iconPath": "status/bleeding.png",
+      "isDebuff": true
+    },
+    {
+      "id": 1010,
+      "name": "Burning",
+      "description": "Fire damage over time",
+      "durationSec": 30,
+      "iconPath": "status/burning.png",
+      "isDebuff": true
+    }
+  ]
+}

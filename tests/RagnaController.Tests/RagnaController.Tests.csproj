@@ -19,9 +19,10 @@
     <ProjectReference Include="../../src/RagnaController/RagnaController.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="xunit.runsettings" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
-  <!-- TEST-016: Controller-Replay-Fixtures (Session + Golden-Master) nach Build-Kopie -->
+      <None Include="xunit.runsettings" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="Resources\BuffRegistry.json" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+    <!-- TEST-016: Controller-Replay-Fixtures (Session + Golden-Master) nach Build-Kopie -->
   <ItemGroup>
     <None Include="fixtures\**\*.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

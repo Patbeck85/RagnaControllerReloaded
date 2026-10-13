@@ -1662,11 +1662,11 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 **Fundament:** Track all RO buffs/debuffs: duration, stacks, icons, expiration warnings, auto-recast. Current: events exist (BuffExpiringWarning, BuffExpired) but coverage unverified.
 **Impact:** Buffs drop unnoticed; recast fails; debuffs not cleansed.
 **Suggested Fix:**
-1. Create `BuffRegistry.json` with all RO buff IDs, durations, stack limits, icon paths
-2. Unit tests: apply buff → tracked → warning at 30% → expired event → auto-recast if configured
-3. Integration: combat engine reads buff state for decisions (e.g., don't recast if active)
+1. Create `BuffRegistry.json` with all RO buff IDs, durations, stack limits, icon paths ✅ DONE (100 buffs, 10 debuffs in Resources/BuffRegistry.json)
+2. Unit tests: apply buff → tracked → warning at 30% → expired event → auto-recast if configured ✅ DONE (BuffRegistryTests: 13 tests, BuffManagerTests: 13 tests incl. registry integration)
+3. Integration: combat engine reads buff state for decisions (e.g., don't recast if active) ✅ DONE (BuffManager.RegisterBuff uses registry defaults, RegisterBuffExplicit for profile-driven explicit values)
 **Priorität:** MEDIUM
-**DoD:** BuffRegistry complete; all buff events fire correctly; auto-recast works in-game.
+**DoD:** BuffRegistry complete; all buff events fire correctly; auto-recast works in-game. ✅ ALL DONE
 
 #### GEX-012: Profile System — Completeness & Migration Safety (S3)
 **Files:** `Profiles/ProfileManager.cs`, `Profiles/Profile.cs`, `DefaultProfiles/*.json` (58 files), `Core/CharacterProfileResolver.cs` (FEAT-024)

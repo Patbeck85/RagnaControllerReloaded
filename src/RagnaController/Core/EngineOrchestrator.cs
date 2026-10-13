@@ -296,16 +296,16 @@ namespace RagnaController.Core
                                                                     }
 
                                         // FEAT-008: Register buff tracking if enabled
-                                                                    if (action.TrackBuff && _buffManager != null)
-                                                                    {
-                                                                        _buffManager.RegisterBuff(
-                                                                            action.Label,
-                                                                            action.BuffDurationSec,
-                                                                            action.BuffWarningSec,
-                                                                            autoRecast: false, // Auto-recast not yet implemented in ButtonAction
-                                                                            recastKey: action.Key
-                                                                        );
-                                                                    }
+                                                                                                            if (action.TrackBuff && _buffManager != null)
+                                                                                                            {
+                                                                                                                _buffManager.RegisterBuffExplicit(
+                                                                                                                    action.Label,
+                                                                                                                    action.BuffDurationSec,
+                                                                                                                    action.BuffWarningSec,
+                                                                                                                    autoRecast: false, // Auto-recast not yet implemented in ButtonAction
+                                                                                                                    recastKey: action.Key
+                                                                                                                );
+                                                                                                            }
                                     };
 
 

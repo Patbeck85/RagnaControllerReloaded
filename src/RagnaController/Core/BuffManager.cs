@@ -9,6 +9,7 @@ namespace RagnaController.Core
     /// Tracks active buffs/debuffs with durations, provides warnings before expiration,
     /// and supports auto-recast when configured.
     /// Optimized: Zero allocations in hot path (Update called every tick).
+    /// GEX-011: Integrated with BuffRegistry for validated defaults and skill IDs.
     /// </summary>
     public class BuffManager : IDisposable
     {
@@ -16,7 +17,7 @@ namespace RagnaController.Core
         private readonly CooldownManager _cooldownManager;
         private readonly Dictionary<string, BuffEntry> _activeBuffs = new(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, BuffEntry> _activeDebuffs = new(StringComparer.OrdinalIgnoreCase);
-        
+
         // Reusable collections to avoid allocations in hot path
         private readonly List<string> _expiredBuffs = new();
         private readonly List<string> _expiredDebuffs = new();
@@ -43,18 +44,51 @@ namespace RagnaController.Core
         {
             _queue = queue;
             _cooldownManager = cooldownManager;
+            // Ensure registry is loaded
+            BuffRegistry.Initialize();
         }
 
         /// <summary>
-        /// Register a new buff or refresh existing one.
+        /// Register a new buff or refresh existing one using registry defaults.
         /// Called when a buff skill is cast or refreshed.
         /// </summary>
-        /// <param name="buffName">Name of the buff (must match ButtonAction.Label in profile)</param>
-        /// <param name="durationSec">Duration in seconds</param>
-        /// <param name="warningSec">Warning threshold in seconds before expiration</param>
-        /// <param name="autoRecast">Whether to auto-recast when expired</param>
-        /// <param name="recastKey">VirtualKey to press for recast (if autoRecast)</param>
-        public void RegisterBuff(string buffName, int durationSec, int warningSec = 10, bool autoRecast = false, VirtualKey recastKey = VirtualKey.None)
+        /// <param name="buffName">Name of the buff (must match registry name or ButtonAction.Label in profile)</param>
+        /// <param name="recastKey">VirtualKey to press for recast (if autoRecast). If None, auto-recast disabled.</param>
+        /// <param name="autoRecast">Whether to auto-recast when expired. Default: false.</param>
+        public void RegisterBuff(string buffName, VirtualKey recastKey = VirtualKey.None, bool autoRecast = false)
+        {
+            if (string.IsNullOrEmpty(buffName))
+                return;
+
+            // Validate against registry
+            if (!BuffRegistry.IsValidBuff(buffName))
+            {
+                // Still allow unknown buffs but log warning via event if needed
+                // For now, we accept it with fallback defaults
+            }
+
+            var now = DateTime.UtcNow;
+            var duration = BuffRegistry.GetDefaultDuration(buffName);
+            var warning = BuffRegistry.GetDefaultWarningSec(buffName);
+
+            var entry = new BuffEntry
+            {
+                Name = buffName,
+                StartTime = now,
+                DurationSec = duration,
+                WarningSec = warning,
+                AutoRecast = autoRecast,
+                RecastKey = recastKey,
+                WarningFired = false
+            };
+
+            _activeBuffs[buffName] = entry;
+        }
+
+        /// <summary>
+        /// Register a buff with explicit duration/warning (for skills not in registry or custom timing).
+        /// </summary>
+        public void RegisterBuffExplicit(string buffName, int durationSec, int warningSec = 10, bool autoRecast = false, VirtualKey recastKey = VirtualKey.None)
         {
             if (string.IsNullOrEmpty(buffName))
                 return;
@@ -95,6 +129,30 @@ namespace RagnaController.Core
 
             _activeDebuffs[debuffName] = entry;
             DebuffApplied?.Invoke(debuffName, durationSec);
+        }
+
+        /// <summary>
+        /// Register a debuff using registry defaults for duration.
+        /// </summary>
+        public void RegisterDebuffFromRegistry(string debuffName)
+        {
+            if (string.IsNullOrEmpty(debuffName))
+                return;
+
+            var duration = BuffRegistry.GetDefaultDuration(debuffName); // Debuffs also in registry with duration
+            var entry = new BuffEntry
+            {
+                Name = debuffName,
+                StartTime = DateTime.UtcNow,
+                DurationSec = duration,
+                WarningSec = 0,
+                AutoRecast = false,
+                RecastKey = VirtualKey.None,
+                WarningFired = false
+            };
+
+            _activeDebuffs[debuffName] = entry;
+            DebuffApplied?.Invoke(debuffName, duration);
         }
 
         /// <summary>
@@ -183,7 +241,7 @@ namespace RagnaController.Core
                 if (remaining <= 0)
                 {
                     _expiredBuffs.Add(entry.Name);
-                    
+
                     // Auto-recast if enabled
                     if (entry.AutoRecast && entry.RecastKey != VirtualKey.None)
                     {

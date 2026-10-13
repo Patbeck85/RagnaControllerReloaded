@@ -78,13 +78,14 @@
     </PropertyGroup>
 
   <ItemGroup>
-    <Resource Include="Assets\icon.ico"            Condition="Exists('Assets\icon.ico')" />
-    <Resource Include="Assets\splash_bg.png"       Condition="Exists('Assets\splash_bg.png')" />
-    <Resource Include="Assets\character_color.png" Condition="Exists('Assets\character_color.png')" />
-    <Resource Include="Assets\character_gray.png"  Condition="Exists('Assets\character_gray.png')" />
-    <Resource Include="Assets\controller.png"      Condition="Exists('Assets\controller.png')" />
-    <Resource Include="Assets\splash_logo.png"     Condition="Exists('Assets\splash_logo.png')" />
-  </ItemGroup>
+      <Resource Include="Assets\icon.ico"            Condition="Exists('Assets\icon.ico')" />
+      <Resource Include="Assets\splash_bg.png"       Condition="Exists('Assets\splash_bg.png')" />
+      <Resource Include="Assets\character_color.png" Condition="Exists('Assets\character_color.png')" />
+      <Resource Include="Assets\character_gray.png"  Condition="Exists('Assets\character_gray.png')" />
+      <Resource Include="Assets\controller.png"      Condition="Exists('Assets\controller.png')" />
+      <Resource Include="Assets\splash_logo.png"     Condition="Exists('Assets\splash_logo.png')" />
+      <Resource Include="Resources\BuffRegistry.json" />
+    </ItemGroup>
 
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
@@ -219,9 +220,10 @@
     <Compile Include="Models\ParsedInput.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\StorageDropPlanner.cs" />
-    <Compile Include="Models\VirtualKey.cs" />
-    <Compile Include="Models\WindowTracker.cs" />
-    <Compile Include="ProfileLibraryWindow.xaml.cs" />
+        <Compile Include="Models\VirtualKey.cs" />
+        <Compile Include="Models\WindowTracker.cs" />
+        <Compile Include="Models\BuffRegistry.cs" />
+        <Compile Include="ProfileLibraryWindow.xaml.cs" />
     <Compile Include="Profiles\AppJsonContext.cs" />
     <Compile Include="Profiles\CharacterProfileResolver.cs" />
     <Compile Include="Profiles\Profile.cs" />
