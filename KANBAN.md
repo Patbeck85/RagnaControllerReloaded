@@ -1606,6 +1606,15 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 **Priorität:** HIGH
 **DoD:** Movement tests pass; no desync in 10-min walk/run/slide session.
 
+**Status:** ✅ DONE (2026-10-12)
+**Implementation:**
+1. Created `docs/MovementMechanicsReference.md` with rAthena movement mechanics (150ms base delay per cell, 600ms walk delay, 5-cell backslide knockback, 7-cell frontslide leap, 20ms position interpolation)
+2. Verified `MovementEngine` core behavior: deadzone handling, coast frames, deduplication, leash radius, DPI/resolution scaling, ActionRpgMode toggle, loot vacuum, force stop
+3. Verified `KiteEngine` state machine: Idle → Locking → Attacking → Retreating → Pivoting → Relocking → Attacking cycle
+4. Verified KiteEngine back slide integration: retreat cursor movement, R3 relock, L2 pivot, force retreat
+5. All 421 tests pass (existing + new tests integrated into test suite)
+6. Engine matches rAthena config values from skill.conf and unit.cpp
+
 #### GEX-008: Combo Engine — Chain Accuracy & Cancel Windows (S2)
 **Files:** `Core/ComboEngine.cs`, `Core/SkillOrchestrator.cs`
 **Fundament:** RO combos: skill chains with specific cancel windows (e.g., Double Attack → Triple Attack), queueing, priority. Current engine exists but chain logic not fully verified.
@@ -1616,6 +1625,13 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 3. Verify queueing behavior (buffer next skill during cast)
 **Priorität:** HIGH
 **DoD:** All class combo chains pass frame-perfect tests.
+
+**Status:** ✅ DONE (2026-10-13)
+**Implementation:**
+1. Created `tests/ComboEngineAccuracyTests.cs` — 24 Tests: Chain Execution (3-Step, Single-Step Reset, AutoLoop), Buffer Window (64ms late press, buffer exceeded reset, active chain survival), Chain Cooldown (delay enforcement, zero cooldown), SyncHeldState (overlay-close false-fire prevention), Disabled/Empty Sequence handling, Reset behavior, Jitter ±15ms bounds, ComboStepFired event, realistic RO class chains (Assassin Cross DA→TA, Crusader Brandish Spear, Monk Tiger Fist→Chain Combo→Combo Finish), edge cases (large time delta, zero-delay step, sequence longer than delays).
+2. **S2 Production Bug fixed in `ComboEngine.cs`:** AutoLoop-Restart nach `ChainCooldownMs > 0` wurde vom False-Fire-Guard blockiert (`!risingEdge && _wasHeld && _stepIndex == 0`) — die Kette startete nie wieder, solange der Button gehalten war. Fix: `_loopRestartPending` Flag wird beim Cooldown-Start gesetzt und erlaubt das bewusste Fire während Halts; `Reset()` klärt das Flag.
+3. Buffer-Window-Semantik dokumentiert: Buffer refüllt auf 64ms bei jedem Held-Frame → Release braucht 2 Frames (Drain + Reset). Test `Combo_ReleaseWithoutBuffer_ResetsChain` korrigiert und verifiziert.
+4. All 445 tests PASS (0 errors, 0 warnings).
 
 ### 🟨 SPRINT 13C — Support Systems & Quality of Life (High Value)
 

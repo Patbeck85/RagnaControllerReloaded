@@ -32,6 +32,7 @@ namespace RagnaController.Core
         private int  _timer;
         private int  _bufferWindow;
         private bool _wasHeld; // für SyncHeldState False-Fire-Prevention
+        private bool _loopRestartPending; // AutoLoop: Restart nach ChainCooldownMs ausstehend (bewusst während Halts)
 
         private readonly InputCommandQueue _queue;
 
@@ -45,6 +46,7 @@ namespace RagnaController.Core
             _stepIndex    = 0;
             _timer        = 0;
             _bufferWindow = 0;
+            _loopRestartPending = false;
         }
 
         /// <summary>
@@ -66,8 +68,13 @@ namespace RagnaController.Core
                 _bufferWindow = 64;
                 _timer -= ms;
                 if (_timer <= 0)
+                {
+                    // AutoLoop-Restart nach ChainCooldownMs ist ein bewusstes Fire während Halts – kein False-Fire.
+                    bool isLoopRestart = _loopRestartPending;
+                    _loopRestartPending = false;
                     // FIX: Nur blockieren, wenn es KEIN Rising Edge ist, die Taste aber vorher schon gehalten wurde
-                    ExecuteNextStep(!risingEdge && _wasHeld && _stepIndex == 0);
+                    ExecuteNextStep(!isLoopRestart && !risingEdge && _wasHeld && _stepIndex == 0);
+                }
             }
             else
             {
@@ -86,7 +93,13 @@ namespace RagnaController.Core
             {
                 if (!AutoLoop) { Reset(); return; }
                 _stepIndex = 0;
-                if (ChainCooldownMs > 0) { _timer = ChainCooldownMs; return; }
+                if (ChainCooldownMs > 0)
+                {
+                    // Cooldown läuft; das anschließende Fire ist ein bewusster Loop-Restart (kein False-Fire).
+                    _timer = ChainCooldownMs;
+                    _loopRestartPending = true;
+                    return;
+                }
             }
 
             int step = _stepIndex + 1;
