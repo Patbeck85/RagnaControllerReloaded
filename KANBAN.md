@@ -1640,9 +1640,9 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 **Fundament:** FEAT-012 PartyManager: share EXP, heal priority, buff sharing, follow leader, auto-accept invite. Not end-to-end tested.
 **Impact:** Party features unreliable; heal targets wrong member; follow breaks.
 **Suggested Fix:**
-1. Integration tests: party form → share EXP → heal priority → buff share → follow → disband
-2. Verify party exclusion in AutoTarget (FEAT-012) works in combat
-3. Test with 12-member party (max RO)
+1. Integration tests: party form → share EXP → heal priority → buff share → follow → disband ⏳ OFFEN
+2. Verify party exclusion in AutoTarget (FEAT-012) works in combat ✅ DONE (Commit 1db928a: `PartyTargetingEnabled` blockiert Tab-Cycling; 4 Tests)
+3. Test with 12-member party (max RO) ✅ DONE (Commit 7240fbc: `MaxMembers=12`, ClampsToTwelve + PartyOfTwelve-Tests)
 **Priorität:** HIGH
 **DoD:** All party flows pass integration tests; in-game 12-man party stable 30 min.
 
