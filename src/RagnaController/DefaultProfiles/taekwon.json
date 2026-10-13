@@ -71,7 +71,7 @@
     "A": {
       "Type": "Key",
       "Key": 90,
-      "Label": "Tornado Stance → Tornado Kick",
+      "Label": "Tornado Stance \u2192 Tornado Kick",
       "TurboEnabled": true,
       "TurboIntervalMs": 100,
       "Mode": "Rhythmic"
@@ -103,5 +103,28 @@
     "Stellar Alignment",
     "Mild Wind"
   ],
-  "ClassTips": "Pre-Renewal: Attack interval ~100ms, Combo delays [300,150,100]ms. Renewal: Attack interval ~60ms, Combo delays [200,100,70]ms (faster). Hold L1 + A for Tornado Stance → Tornado Kick combo chain (auto-loops). Hold B for Mild Wind (180s buff). R2 provides kick feedback."
+  "ClassTips": "Pre-Renewal: Attack interval ~100ms, Combo delays [300,150,100]ms. Renewal: Attack interval ~60ms, Combo delays [200,100,70]ms (faster). Hold L1 + A for Tornado Stance \u2192 Tornado Kick combo chain (auto-loops). Hold B for Mild Wind (180s buff). R2 provides kick feedback.",
+  "ManagedItems": [
+    {
+      "ItemId": 501,
+      "Name": "Red Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 545,
+      "Name": "Red Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

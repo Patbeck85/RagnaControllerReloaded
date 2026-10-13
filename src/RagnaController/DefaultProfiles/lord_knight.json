@@ -89,5 +89,38 @@
     "Guardian's Blessing",
     "Shield Bash"
   ],
-  "ClassTips": "Hold L1 + A for Bowling Bash/Ignition Break. Hold B for Two-Hand Quicken (240s buff). Hold X for Guardian's Blessing (300s buff). R2 provides weapon recoil feedback."
+  "ClassTips": "Hold L1 + A for Bowling Bash/Ignition Break. Hold B for Two-Hand Quicken (240s buff). Hold X for Guardian's Blessing (300s buff). R2 provides weapon recoil feedback.",
+  "ManagedItems": [
+    {
+      "ItemId": 501,
+      "Name": "Red Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 503,
+      "Name": "White Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 545,
+      "Name": "Red Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

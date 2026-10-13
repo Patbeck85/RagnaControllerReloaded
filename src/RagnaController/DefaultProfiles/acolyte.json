@@ -14,18 +14,99 @@
   "PreRenewalAttackIntervalMs": 130,
   "RenewalAttackIntervalMs": 90,
   "ClassTips": "Support-Fokus. A = Heal Ziel. B = Aqua Benedicta/Holy Water. X = Blessing Buff. Y = Increase AGI Buff. L1+A = Resurrect. R1+Tab = Party-Cycle. Undead mit Heal direkt schaden.",
-  "SkillRecommendations": ["Heal", "Blessing", "Increase AGI", "Pneuma", "Angelus", "Warp Portal"],
+  "SkillRecommendations": [
+    "Heal",
+    "Blessing",
+    "Increase AGI",
+    "Pneuma",
+    "Angelus",
+    "Warp Portal"
+  ],
   "ButtonMappings": {
-    "A": { "Type": "Key", "Key": "F1", "Label": "Heal" },
-    "B": { "Type": "Key", "Key": "F2", "Label": "Aqua Benedicta" },
-    "X": { "Type": "Key", "Key": "F3", "Label": "Blessing" },
-    "Y": { "Type": "Key", "Key": "F4", "Label": "Increase AGI" },
-    "L1+A": { "Type": "Key", "Key": "F5", "Label": "Resurrection" },
-    "L1+B": { "Type": "Key", "Key": "F6", "Label": "Pneuma", "IsGroundSpell": true },
-    "L1+X": { "Type": "Key", "Key": "F7", "Label": "Warp Portal", "IsGroundSpell": true },
-    "L1+Y": { "Type": "Key", "Key": "F8", "Label": "Angelus" },
-    "R1+A": { "Type": "Key", "Key": "F9", "Label": "Blue Potion", "TurboEnabled": true, "Mode": "Burst", "TurboIntervalMs": 100 }
+    "A": {
+      "Type": "Key",
+      "Key": "F1",
+      "Label": "Heal"
+    },
+    "B": {
+      "Type": "Key",
+      "Key": "F2",
+      "Label": "Aqua Benedicta"
+    },
+    "X": {
+      "Type": "Key",
+      "Key": "F3",
+      "Label": "Blessing"
+    },
+    "Y": {
+      "Type": "Key",
+      "Key": "F4",
+      "Label": "Increase AGI"
+    },
+    "L1+A": {
+      "Type": "Key",
+      "Key": "F5",
+      "Label": "Resurrection"
+    },
+    "L1+B": {
+      "Type": "Key",
+      "Key": "F6",
+      "Label": "Pneuma",
+      "IsGroundSpell": true
+    },
+    "L1+X": {
+      "Type": "Key",
+      "Key": "F7",
+      "Label": "Warp Portal",
+      "IsGroundSpell": true
+    },
+    "L1+Y": {
+      "Type": "Key",
+      "Key": "F8",
+      "Label": "Angelus"
+    },
+    "R1+A": {
+      "Type": "Key",
+      "Key": "F9",
+      "Label": "Blue Potion",
+      "TurboEnabled": true,
+      "Mode": "Burst",
+      "TurboIntervalMs": 100
+    }
   },
   "RenewalSkillInterruptMs": 350,
-  "PreRenewalSkillInterruptMs": 600
+  "PreRenewalSkillInterruptMs": 600,
+  "ManagedItems": [
+    {
+      "ItemId": 503,
+      "Name": "White Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 502,
+      "Name": "Blue Potion",
+      "Key": 121,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 547,
+      "Name": "White Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

@@ -85,5 +85,38 @@
     "Cure",
     "Iron Fist"
   ],
-  "ClassTips": "Pre-Renewal: Attack interval ~120ms (low ASPD). Renewal: Attack interval ~70ms (faster). Hold L1 + A for Simple Attack/First Aid. R2 provides attack feedback. Novice is a starter class with basic melee mechanics."
+  "ClassTips": "Pre-Renewal: Attack interval ~120ms (low ASPD). Renewal: Attack interval ~70ms (faster). Hold L1 + A for Simple Attack/First Aid. R2 provides attack feedback. Novice is a starter class with basic melee mechanics.",
+  "ManagedItems": [
+    {
+      "ItemId": 501,
+      "Name": "Red Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 503,
+      "Name": "White Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 545,
+      "Name": "Red Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

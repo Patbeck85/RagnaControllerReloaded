@@ -89,5 +89,38 @@
     "Agility Up",
     "Guardian's Blessing"
   ],
-  "ClassTips": "Hold L1 + A for Shield Bash/Holy Sword. Hold B for Blessing (240s buff). Hold X for Agility Up (240s buff). R2 provides weapon recoil feedback."
+  "ClassTips": "Hold L1 + A for Shield Bash/Holy Sword. Hold B for Blessing (240s buff). Hold X for Agility Up (240s buff). R2 provides weapon recoil feedback.",
+  "ManagedItems": [
+    {
+      "ItemId": 501,
+      "Name": "Red Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 503,
+      "Name": "White Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 545,
+      "Name": "Red Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

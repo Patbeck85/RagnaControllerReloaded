@@ -86,5 +86,48 @@
     "Iron Fist",
     "Magic Bolt"
   ],
-  "ClassTips": "Pre-Renewal: Attack interval ~120ms. Renewal: Attack interval ~70ms (faster). Hybrid setup - melee attacks + mage bolts. Hold L1 + A for Simple Attack/First Aid. Toggle Mage Mode with Y. Hold B for Angel's Gift (180s buff). R2 provides attack/bolt feedback."
+  "ClassTips": "Pre-Renewal: Attack interval ~120ms. Renewal: Attack interval ~70ms (faster). Hybrid setup - melee attacks + mage bolts. Hold L1 + A for Simple Attack/First Aid. Toggle Mage Mode with Y. Hold B for Angel's Gift (180s buff). R2 provides attack/bolt feedback.",
+  "ManagedItems": [
+    {
+      "ItemId": 501,
+      "Name": "Red Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 503,
+      "Name": "White Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 502,
+      "Name": "Blue Potion",
+      "Key": 121,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 545,
+      "Name": "Red Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

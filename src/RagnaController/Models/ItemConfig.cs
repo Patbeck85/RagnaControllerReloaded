@@ -3,32 +3,35 @@ using System;
 namespace RagnaController.Models
 {
     /// <summary>
-    /// FEAT-011: Konfiguration eines verwalteten Items (Potion/Trank).
-    /// Wird pro Profil in der Profile-Klasse gespeichert und von der
-    /// ItemManagerEngine im Tick-Pfad ausgewertet.
-    /// </summary>
-    public class ItemConfig
-    {
-        /// <summary>Anzeigename des Items (z. B. "Potion", "Elixir").</summary>
-        public string Name { get; set; } = "";
+        /// FEAT-011: Konfiguration eines verwalteten Items (Potion/Trank).
+        /// Wird pro Profil in der Profile-Klasse gespeichert und von der
+        /// ItemManagerEngine im Tick-Pfad ausgewertet.
+        /// </summary>
+        public class ItemConfig
+        {
+            /// <summary>RO Item-ID (z. B. 501 = Red Potion, 502 = Blue Potion, 545 = Red Slim Potion).</summary>
+            public int ItemId { get; set; } = 0;
 
-        /// <summary>Hotkey, der das Item im Spiel einsetzt.</summary>
-        public VirtualKey Key { get; set; } = VirtualKey.None;
+            /// <summary>Anzeigename des Items (z. B. "Potion", "Elixir").</summary>
+            public string Name { get; set; } = "";
 
-        /// <summary>Mindest-HP-Prozent, bei dem das Item NUR NICHT mehr gefeuert wird.
-        /// Feuert wenn HP &lt;= Schwelle (d. h. erst ab Unterschreiten).</summary>
-        public int HpThresholdPercent { get; set; } = 70;
+            /// <summary>Hotkey, der das Item im Spiel einsetzt.</summary>
+            public VirtualKey Key { get; set; } = VirtualKey.None;
 
-        /// <summary>Mindest-SP-Wert, der für den Cast erforderlich ist (0 = keine SP-Bedingung).</summary>
-        public int MinSpRequired { get; set; } = 0;
+            /// <summary>Mindest-HP-Prozent, bei dem das Item NUR NICHT mehr gefeuert wird.
+            /// Feuert wenn HP <= Schwelle (d. h. erst ab Unterschreiten).</summary>
+            public int HpThresholdPercent { get; set; } = 70;
 
-        /// <summary>Cooldown in ms nach dem Einsatz, bevor das Item erneut gefeuert werden darf.</summary>
-        public int CooldownMs { get; set; } = 3000;
+            /// <summary>Mindest-SP-Wert, der für den Cast erforderlich ist (0 = keine SP-Bedingung).</summary>
+            public int MinSpRequired { get; set; } = 0;
 
-        /// <summary>Globales Update-Intervall in ms (wie oft die Engine prüft, ob dieses Item feuern soll).</summary>
-        public int CheckIntervalMs { get; set; } = 1000;
+            /// <summary>Cooldown in ms nach dem Einsatz, bevor das Item erneut gefeuert werden darf.</summary>
+            public int CooldownMs { get; set; } = 3000;
 
-        /// <summary>Ob das Item aktiv verwaltet wird. Default: true.</summary>
-        public bool Enabled { get; set; } = true;
+            /// <summary>Globales Update-Intervall in ms (wie oft die Engine prüft, ob dieses Item feuern soll).</summary>
+            public int CheckIntervalMs { get; set; } = 1000;
+
+            /// <summary>Ob das Item aktiv verwaltet wird. Default: true.</summary>
+            public bool Enabled { get; set; } = true;
+        }
     }
-}

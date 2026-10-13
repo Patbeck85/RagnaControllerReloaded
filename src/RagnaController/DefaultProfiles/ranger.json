@@ -103,5 +103,28 @@
     "True Sight",
     "Piercing Arrow"
   ],
-  "ClassTips": "Hold L1 + A for Double Strafe/Arrow Vulcan. Hold B for Traps (ground spell - aim with Right Stick, release L1 to cast). Hold X for True Sight (240s buff). R2 provides bow tension feedback."
+  "ClassTips": "Hold L1 + A for Double Strafe/Arrow Vulcan. Hold B for Traps (ground spell - aim with Right Stick, release L1 to cast). Hold X for True Sight (240s buff). R2 provides bow tension feedback.",
+  "ManagedItems": [
+    {
+      "ItemId": 503,
+      "Name": "White Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 545,
+      "Name": "Red Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

@@ -86,5 +86,38 @@
     "Lord of Vermilion",
     "Energy Coat"
   ],
-  "ClassTips": "Pre-Renewal: Skill interrupt ~800ms. Renewal: Skill interrupt ~400ms (faster casting). Right Stick aims spells, L1 release casts (MagicPulse trigger mode for spell pulse feedback). Hold L1 + A for Storm Gust/Meteor Storm. Hold B for Energy Coat (180s buff). Hold X for Lord of Vermilion (ground spell - aim with Right Stick, release L1 to cast). R2 provides magic pulse feedback."
+  "ClassTips": "Pre-Renewal: Skill interrupt ~800ms. Renewal: Skill interrupt ~400ms (faster casting). Right Stick aims spells, L1 release casts (MagicPulse trigger mode for spell pulse feedback). Hold L1 + A for Storm Gust/Meteor Storm. Hold B for Energy Coat (180s buff). Hold X for Lord of Vermilion (ground spell - aim with Right Stick, release L1 to cast). R2 provides magic pulse feedback.",
+  "ManagedItems": [
+    {
+      "ItemId": 502,
+      "Name": "Blue Potion",
+      "Key": 121,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 503,
+      "Name": "White Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 546,
+      "Name": "Blue Slim Potion",
+      "Key": 121,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

@@ -105,5 +105,38 @@
     "Agility Up",
     "Holy Water"
   ],
-  "ClassTips": "Hold L1 + A for Heal (party). Hold B for Sanctuary (ground spell - aim with Right Stick, release L1 to cast). Hold X for Blessing (240s buff). Hold Y for Agility Up (240s buff). R2 provides magic pulse feedback."
+  "ClassTips": "Hold L1 + A for Heal (party). Hold B for Sanctuary (ground spell - aim with Right Stick, release L1 to cast). Hold X for Blessing (240s buff). Hold Y for Agility Up (240s buff). R2 provides magic pulse feedback.",
+  "ManagedItems": [
+    {
+      "ItemId": 503,
+      "Name": "White Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 502,
+      "Name": "Blue Potion",
+      "Key": 121,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 547,
+      "Name": "White Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

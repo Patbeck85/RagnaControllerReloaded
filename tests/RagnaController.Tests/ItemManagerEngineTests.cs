@@ -284,6 +284,31 @@ namespace RagnaController.Tests
         }
 
         [Fact]
+        public void Update_FiresItemFiredEvent_WithCorrectItemId()
+        {
+            // GEX-010 Point 2: Verify ItemId is correctly passed through ItemFired event
+            var item = new ItemConfig
+            {
+                ItemId = 501, // Red Potion
+                Name = "Red Potion",
+                Key = VirtualKey.A,
+                HpThresholdPercent = 70,
+                CooldownMs = 3000,
+                CheckIntervalMs = 1000,
+                Enabled = true
+            };
+            var (engine, _, _) = Create(item);
+            ItemConfig? fired = null;
+            engine.ItemFired += i => fired = i;
+
+            engine.Update(40, 100, 8);
+
+            Assert.NotNull(fired);
+            Assert.Equal(501, fired!.ItemId);
+            Assert.Equal("Red Potion", fired.Name);
+        }
+
+        [Fact]
         public void Update_NoFire_EventNotRaised()
         {
             var (engine, _, _) = Create(DefaultItem());

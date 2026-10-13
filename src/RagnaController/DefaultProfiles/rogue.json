@@ -11,7 +11,7 @@
   "SmartSkillEnabled": true,
   "PreRenewalAttackIntervalMs": 88,
   "RenewalAttackIntervalMs": 52,
-  "ClassTips": "A = Backstab (Rücken = Maximaldamage). B = Raid AoE Blind+Stun. X = Steal / Snatcher passiv. Y = Intimidate (kopiert Mob-Skill). L1+A = Divest Helm. Bow-Build: Vulture's Eye maximieren.",
+  "ClassTips": "A = Backstab (R\u00fccken = Maximaldamage). B = Raid AoE Blind+Stun. X = Steal / Snatcher passiv. Y = Intimidate (kopiert Mob-Skill). L1+A = Divest Helm. Bow-Build: Vulture's Eye maximieren.",
   "SkillRecommendations": [
     "Backstab",
     "Raid",
@@ -69,5 +69,28 @@
     }
   },
   "RenewalSkillInterruptMs": 320,
-  "PreRenewalSkillInterruptMs": 580
+  "PreRenewalSkillInterruptMs": 580,
+  "ManagedItems": [
+    {
+      "ItemId": 501,
+      "Name": "Red Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 545,
+      "Name": "Red Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

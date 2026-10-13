@@ -96,5 +96,28 @@
     "Final Strike",
     "Ninja Aura"
   ],
-  "ClassTips": "Pre-Renewal: Attack interval ~80ms. Renewal: Attack interval ~45ms (very fast). Right Stick aims kunai, L1 release fires. Hold L1 + A for Shadow Leap → Final Strike combo chain. Hold B for Crimson Fire Blossom (ground spell - aim with Right Stick, release L1 to cast). R2 provides weapon recoil feedback."
+  "ClassTips": "Pre-Renewal: Attack interval ~80ms. Renewal: Attack interval ~45ms (very fast). Right Stick aims kunai, L1 release fires. Hold L1 + A for Shadow Leap \u2192 Final Strike combo chain. Hold B for Crimson Fire Blossom (ground spell - aim with Right Stick, release L1 to cast). R2 provides weapon recoil feedback.",
+  "ManagedItems": [
+    {
+      "ItemId": 501,
+      "Name": "Red Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 545,
+      "Name": "Red Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

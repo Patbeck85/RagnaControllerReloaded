@@ -99,5 +99,38 @@
     "Earth Wall",
     "Energy Coat"
   ],
-  "ClassTips": "Hold L1 + A for Land Protector (ground spell - aim with Right Stick, release L1 to cast). Hold B for Spell Fist. Hold X for Earth Wall (ground spell). Hold Y for Energy Coat (180s buff). R2 pulses while casting magic."
+  "ClassTips": "Hold L1 + A for Land Protector (ground spell - aim with Right Stick, release L1 to cast). Hold B for Spell Fist. Hold X for Earth Wall (ground spell). Hold Y for Energy Coat (180s buff). R2 pulses while casting magic.",
+  "ManagedItems": [
+    {
+      "ItemId": 502,
+      "Name": "Blue Potion",
+      "Key": 121,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 503,
+      "Name": "White Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 546,
+      "Name": "Blue Slim Potion",
+      "Key": 121,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

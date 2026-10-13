@@ -11,17 +11,81 @@
   "SmartSkillEnabled": true,
   "PreRenewalAttackIntervalMs": 85,
   "RenewalAttackIntervalMs": 48,
-  "ClassTips": "A = Double Attack Chain. B = Backslide Dodge (halte Richtung). X = Steal. Y = Envenom Gift. Hohe ASPD — Turbo-Mode nutzen. L1+B = Sand Attack DEF-Debuff.",
-  "SkillRecommendations": ["Double Attack", "Backslide", "Steal", "Envenom", "Detoxify", "Sand Attack"],
+  "ClassTips": "A = Double Attack Chain. B = Backslide Dodge (halte Richtung). X = Steal. Y = Envenom Gift. Hohe ASPD \u2014 Turbo-Mode nutzen. L1+B = Sand Attack DEF-Debuff.",
+  "SkillRecommendations": [
+    "Double Attack",
+    "Backslide",
+    "Steal",
+    "Envenom",
+    "Detoxify",
+    "Sand Attack"
+  ],
   "ButtonMappings": {
-    "A": { "Type": "Key", "Key": "F1", "Label": "Double Attack", "TurboEnabled": true, "Mode": "Adaptive", "TurboIntervalMs": 48 },
-    "B": { "Type": "Key", "Key": "F2", "Label": "Backslide" },
-    "X": { "Type": "Key", "Key": "F3", "Label": "Steal" },
-    "Y": { "Type": "Key", "Key": "F4", "Label": "Envenom" },
-    "L1+A": { "Type": "Key", "Key": "F5", "Label": "Detoxify" },
-    "L1+B": { "Type": "Key", "Key": "F6", "Label": "Sand Attack" },
-    "R1+A": { "Type": "Key", "Key": "F9", "Label": "White Potion", "TurboEnabled": true, "Mode": "Burst", "TurboIntervalMs": 80 }
+    "A": {
+      "Type": "Key",
+      "Key": "F1",
+      "Label": "Double Attack",
+      "TurboEnabled": true,
+      "Mode": "Adaptive",
+      "TurboIntervalMs": 48
+    },
+    "B": {
+      "Type": "Key",
+      "Key": "F2",
+      "Label": "Backslide"
+    },
+    "X": {
+      "Type": "Key",
+      "Key": "F3",
+      "Label": "Steal"
+    },
+    "Y": {
+      "Type": "Key",
+      "Key": "F4",
+      "Label": "Envenom"
+    },
+    "L1+A": {
+      "Type": "Key",
+      "Key": "F5",
+      "Label": "Detoxify"
+    },
+    "L1+B": {
+      "Type": "Key",
+      "Key": "F6",
+      "Label": "Sand Attack"
+    },
+    "R1+A": {
+      "Type": "Key",
+      "Key": "F9",
+      "Label": "White Potion",
+      "TurboEnabled": true,
+      "Mode": "Burst",
+      "TurboIntervalMs": 80
+    }
   },
   "RenewalSkillInterruptMs": 350,
-  "PreRenewalSkillInterruptMs": 600
+  "PreRenewalSkillInterruptMs": 600,
+  "ManagedItems": [
+    {
+      "ItemId": 501,
+      "Name": "Red Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 545,
+      "Name": "Red Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

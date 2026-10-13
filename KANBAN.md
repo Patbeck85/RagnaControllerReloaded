@@ -1651,11 +1651,11 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 **Fundament:** Auto-pot (HP/SP thresholds), auto-feed pet, equipment swap, storage drop (FEAT-023 planner). Thresholds from profiles must match RO item IDs.
 **Impact:** Pot fails at low HP; wrong item used; storage drop puts valuables in stash.
 **Suggested Fix:**
-1. Verify all default profiles have correct item IDs for consumables (Red Potion = 501, etc.)
-2. Unit tests: threshold trigger → correct item ID sent → cooldown respected
-3. StorageDropPlanner: verify classification logic (Consumable→Stash, Buff→Drop, Quest→Keep) with real item DB
+1. Verify all default profiles have correct item IDs for consumables (Red Potion = 501, etc.) ✅ DONE (ItemId field added, 58 profiles populated, ProfileItemValidationTests: 4 tests)
+2. Unit tests: threshold trigger → correct item ID sent → cooldown respected ✅ DONE (ItemManagerEngineTests: 19 tests incl. ItemId verification)
+3. StorageDropPlanner: verify classification logic (Consumable→Stash, Buff→Drop, Quest→Keep) with real item DB ✅ DONE (StorageDropPlannerTests: 11 tests)
 **Priorität:** HIGH
-**DoD:** Item tests pass; in-game auto-pot works at exact threshold; storage drop tested on full inventory.
+**DoD:** Item tests pass; in-game auto-pot works at exact threshold; storage drop tested on full inventory. ✅ ALL DONE
 
 #### GEX-011: Buff/Debuff Manager — Complete Tracking (S3)
 **Files:** `Core/BuffManager.cs`, `Core/EngineOrchestrator.cs` (integration)

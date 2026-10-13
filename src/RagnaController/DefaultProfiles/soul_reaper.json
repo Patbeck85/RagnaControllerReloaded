@@ -88,5 +88,38 @@
     "Kaupe",
     "Spirit Buffs"
   ],
-  "ClassTips": "Pre-Renewal: Skill interrupt ~800ms. Renewal: Skill interrupt ~400ms (faster casting). Right Stick aims spells, L1 release casts (MagicPulse trigger mode for spell pulse feedback). Hold L1 + A for Esma spam (turbo mode). Hold B for Kaahi buff (600s). Hold X for Kaupe buff (600s). R2 provides magic pulse feedback."
+  "ClassTips": "Pre-Renewal: Skill interrupt ~800ms. Renewal: Skill interrupt ~400ms (faster casting). Right Stick aims spells, L1 release casts (MagicPulse trigger mode for spell pulse feedback). Hold L1 + A for Esma spam (turbo mode). Hold B for Kaahi buff (600s). Hold X for Kaupe buff (600s). R2 provides magic pulse feedback.",
+  "ManagedItems": [
+    {
+      "ItemId": 503,
+      "Name": "White Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 502,
+      "Name": "Blue Potion",
+      "Key": 121,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 547,
+      "Name": "White Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

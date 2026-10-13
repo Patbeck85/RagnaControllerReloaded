@@ -88,5 +88,38 @@
     "Blessing",
     "Increase AGI"
   ],
-  "ClassTips": "Pre-Renewal: Skill interrupt ~800ms. Renewal: Skill interrupt ~400ms (faster casting). Face Button A heals target. Right Stick aims Sanctuary (ground spell - aim with Right Stick, release L1 to cast). Hold B for Blessing (240s buff). Hold X for Increase AGI (240s buff). R2 provides healing pulse feedback."
+  "ClassTips": "Pre-Renewal: Skill interrupt ~800ms. Renewal: Skill interrupt ~400ms (faster casting). Face Button A heals target. Right Stick aims Sanctuary (ground spell - aim with Right Stick, release L1 to cast). Hold B for Blessing (240s buff). Hold X for Increase AGI (240s buff). R2 provides healing pulse feedback.",
+  "ManagedItems": [
+    {
+      "ItemId": 503,
+      "Name": "White Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 502,
+      "Name": "Blue Potion",
+      "Key": 121,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 547,
+      "Name": "White Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }

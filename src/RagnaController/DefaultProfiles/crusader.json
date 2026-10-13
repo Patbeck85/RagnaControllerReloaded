@@ -85,5 +85,38 @@
     "Grand Cross",
     "Defender"
   ],
-  "ClassTips": "Pre-Renewal: Attack interval ~100ms. Renewal: Attack interval ~60ms (faster). Hold L1 + A for Shield Boomerang/Grand Cross. Hold B for Defender (180s buff). Hold X for Grand Cross (ground spell - aim with Right Stick, release L1 to cast). R2 provides shield block feedback."
+  "ClassTips": "Pre-Renewal: Attack interval ~100ms. Renewal: Attack interval ~60ms (faster). Hold L1 + A for Shield Boomerang/Grand Cross. Hold B for Defender (180s buff). Hold X for Grand Cross (ground spell - aim with Right Stick, release L1 to cast). R2 provides shield block feedback.",
+  "ManagedItems": [
+    {
+      "ItemId": 501,
+      "Name": "Red Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 503,
+      "Name": "White Potion",
+      "Key": 120,
+      "HpThresholdPercent": 70,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    },
+    {
+      "ItemId": 545,
+      "Name": "Red Slim Potion",
+      "Key": 120,
+      "HpThresholdPercent": 50,
+      "MinSpRequired": 0,
+      "CooldownMs": 3000,
+      "CheckIntervalMs": 1000,
+      "Enabled": true
+    }
+  ],
+  "ItemManagerEnabled": true
 }
