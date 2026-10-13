@@ -4,7 +4,7 @@ using RagnaController.Models;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// FEAT-012: Party Manager — verwaltet Party-Mitglieder (max. 5) und feuert den
+    /// FEAT-012: Party Manager — verwaltet Party-Mitglieder (max. 12) und feuert den
     /// autonomen Heal-Loop: ist ein Mitglied unter der HP-Schwelle, wird per Tab-Drücken
     /// im Party-Ring zum schwächsten Member zyklisch navigiert und der konfigurierte
     /// Heal-Key gefeuert (konfigurierbares Intervall).
@@ -14,19 +14,19 @@ namespace RagnaController.Core
     public class PartyManager : IDisposable
     {
         /// <summary>Maximale Anzahl verwalteter Party-Mitglieder (RO-Party-Limit).</summary>
-        public const int MaxMembers = 5;
+        public const int MaxMembers = 12;
 
         private readonly InputCommandQueue _queue;
         private readonly Func<long> _clock;
 
-        // Fix-Size-Array → Zero-Allokation im Tick-Pfad (PERF: O(n), n ≤ 5)
+        // Fix-Size-Array → Zero-Allokation im Tick-Pfad (PERF: O(n), n ≤ 12)
         private readonly int[] _memberHp = new int[MaxMembers];
 
         private volatile bool _isRunning;
         private long _nextEligible;   // ms, TickCount64-Basis — nächster erlaubter Heal
         private int _currentIndex;    // aktuelle Zielposition im Party-Ring (0-basiert)
 
-        /// <summary>Anzahl verwalteter Mitglieder (1..5, wird bei Update geclampt).</summary>
+        /// <summary>Anzahl verwalteter Mitglieder (1..12, wird bei Update geclampt).</summary>
         public int MemberCount { get; set; } = 1;
 
         /// <summary>HP-Schwelle in Prozent: feuert erst ab unterschrittenem Wert (hp &lt;= Schwelle).</summary>
@@ -91,7 +91,7 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Tick-Pfad: prüft alle Mitglieder gegen die HP-Schwelle und feuert den Heal-Loop.
-        /// Zero-Allokation (nur Fix-Size-Array-Iteration, n ≤ 5).
+        /// Zero-Allokation (nur Fix-Size-Array-Iteration, n ≤ 12).
         /// </summary>
         public void Update()
         {

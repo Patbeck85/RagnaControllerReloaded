@@ -275,14 +275,33 @@ namespace RagnaController.Tests
         // ── MemberCount-Clamping & SetMemberHp-Guards ─────────────────────
 
         [Fact]
-        public void Update_MemberCountAboveMax_ClampsToFive()
+        public void Update_MemberCountAboveMax_ClampsToTwelve()
         {
-            var (pm, queue, _) = Create(members: 10); // über RO-Party-Limit → clamped auf 5
-            for (int i = 0; i < 5; i++)
+            var (pm, queue, _) = Create(members: 20); // über RO-Party-Limit → clamped auf 12
+            for (int i = 0; i < 12; i++)
                 pm.SetMemberHp(i, 90);
             pm.Update();
 
             Assert.Equal(0, CountKeyTaps(queue, VirtualKey.Z)); // alle über Schwelle, kein OOB
+        }
+
+        [Fact]
+        public void Full_PartyOfTwelve_WeakestAtEnd_WrapsAndHeals()
+        {
+            // GEX-009: 12-Mitglieder-Party (RO-Max) — schwächstes Mitglied am Ring-Ende.
+            var (pm, queue, _) = Create(members: 12);
+            for (int i = 0; i < 12; i++)
+                pm.SetMemberHp(i, 95);
+            pm.SetMemberHp(11, 30); // schwächstes am Ende des Rings
+
+            int healedIndex = -1;
+            pm.MemberHealed += i => healedIndex = i;
+            pm.Update();
+
+            Assert.Equal(11, healedIndex);
+            Assert.Equal(1, CountKeyTaps(queue, VirtualKey.Z));
+            // Start 0 → Ziel 11: exakt 11 Ctrl+Tab-Zyklen.
+            Assert.Equal(11, CountTabCycles(queue));
         }
 
         [Fact]

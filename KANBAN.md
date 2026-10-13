@@ -214,7 +214,7 @@
 
 #### FEAT-012: PartyManager + Auto-Heal-Loop *(merge Coder FEAT-012 + QA FEAT-021)* ✅ DONE
 **Status:** CLOSED | **Assigned:** @coder | **Priorität:** MEDIUM
-**Description:** `PartyTargetingEnabled` existiert als Flag in `AutoTargetEngine` ohne Logik dahinter. Neue PartyManager-Engine: Party-Mitglieder (max. 5), Heilungs-/Buff-Aktionen bei HP-Schwelle des schwächsten Mitglieds, autonomer Heal-Loop (Tab + Heal zyklisch, konfigurierbares Intervall) — manuelles Verhalten (Y/R1) bleibt unverändert.
+**Description:** `PartyTargetingEnabled` existiert als Flag in `AutoTargetEngine` ohne Logik dahinter. Neue PartyManager-Engine: Party-Mitglieder (max. 12), Heilungs-/Buff-Aktionen bei HP-Schwelle des schwächsten Mitglieds, autonomer Heal-Loop (Tab + Heal zyklisch, konfigurierbares Intervall) — manuelles Verhalten (Y/R1) bleibt unverändert.
 **Dependencies:** FEAT-011 (Party-Heiltränke), BuffManager (existiert)
 **Files:** `Core/PartyManager.cs` (neu), `Core/AutoTargetEngine.cs`, `Core/SupportEngine.cs`, `Core/EngineOrchestrator.cs`
 **DoD:** Party-Mitglieder verwaltbar, Heil-Loop feuert bei Schwelle, Targeting kann auf Party umschalten; Unit-Tests headless für Zielwahl + Zyklus-Timing.
