@@ -23,6 +23,13 @@ namespace RagnaController.Core
             public bool AutoAttackEnabled { get; set; } = true;
             public bool AutoRetargetEnabled { get; set; } = true;
             public bool AutoRetaliateEnabled { get; set; } = false;
+
+            /// <summary>
+            /// FEAT-012: Wenn true, deaktiviert der Engine den Tab-Cycling-Loop, um
+            /// versehentliches Targeting von Party-Mitgliedern zu verhindern (RO-Konvention:
+            /// plain Tab zykliert durch ALLE Ziele inkl. Party). Der Bot verlässt sich dann
+            /// ausschließlich auf den expliziten Ziel-Lock (R3/RightClick).
+            /// </summary>
             public bool PartyTargetingEnabled { get; set; } = false;
             public bool SmartSkillEnabled { get; set; } = true;
         public int AttackKey_VK { get; set; } = 90;
@@ -157,7 +164,9 @@ namespace RagnaController.Core
             switch (State)
             {
                 case CombatState.Seeking:
-                    if (_rc <= 0 && _tc <= 0 && AutoRetargetEnabled)
+                    // FEAT-012: PartyTargeting → kein Tab-Cycling (würde durch ALLE Ziele
+                    // inkl. Party-Mitglieder zyklieren). Bot wartet auf expliziten Lock (R3).
+                    if (!PartyTargetingEnabled && _rc <= 0 && _tc <= 0 && AutoRetargetEnabled)
                     {
                         _queue.TapKey(VirtualKey.Tab);
                         _tc = TabCycleMs;
@@ -169,7 +178,8 @@ namespace RagnaController.Core
                 case CombatState.Attacking:
                     // FEAT-013: Nearest-Modus zykliert auch im Angriff durch Ziele (Tab),
                     // um immer das nächstgelegene Ziel zu treffen. Sticky bleibt fixiert.
-                    if (TargetingMode == TargetingMode.Nearest && _tc <= 0 && AutoRetargetEnabled)
+                    // FEAT-012: PartyTargeting → Cycling deaktiviert (Party-Schutz).
+                    if (!PartyTargetingEnabled && TargetingMode == TargetingMode.Nearest && _tc <= 0 && AutoRetargetEnabled)
                     {
                         _queue.TapKey(VirtualKey.Tab);
                         _tc = TabCycleMs;

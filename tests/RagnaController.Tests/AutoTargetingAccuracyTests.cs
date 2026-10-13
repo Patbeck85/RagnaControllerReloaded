@@ -370,7 +370,7 @@ namespace RagnaController.Tests
             // Verify the integration point exists
             using var ctx = new TestContext();
             var e = ctx.Engine;
-            e.PartyTargetingEnabled = true;  // Legacy flag, kept for compat
+            e.PartyTargetingEnabled = true;
 
             // Party members would never be fed to SetTarget()
             // Verify engine doesn't crash and lock works
@@ -532,7 +532,8 @@ namespace RagnaController.Tests
         [Fact]
         public void PartyTargetingEnabled_LegacyFlag_NoCrash()
         {
-            // Legacy PartyTargetingEnabled flag exists for backward compat
+            // FEAT-012: PartyTargetingEnabled=true deaktiviert Tab-Cycling (Party-Schutz),
+            // Lock via SetTarget/OnTargetLocked bleibt unverändert.
             using var ctx = new TestContext();
             var e = ctx.Engine;
             e.PartyTargetingEnabled = true;
@@ -542,6 +543,87 @@ namespace RagnaController.Tests
             e.Handle(new ParsedInput(), 16);
 
             Assert.True(e.IsTargetLocked);
+        }
+
+        [Fact]
+        public void PartyTargeting_DisablesTabCycling_InSeeking()
+        {
+            // FEAT-012: plain Tab zykliert in RO durch ALLE Ziele inkl. Party-Mitglieder.
+            // Mit PartyTargetingEnabled=true muss der Engine KEIN Tab feuern (Suche per
+            // explizitem Lock), sonst riskiert der Bot versehentliches Party-Angriffen.
+            using var ctx = new TestContext();
+            var e = ctx.Engine;
+            e.PartyTargetingEnabled = true;
+            e.AutoRetargetEnabled = true;
+
+            e.ToggleCombatMode(); // Idle -> Seeking
+            Assert.Equal(CombatState.Seeking, e.State);
+
+            // Mehrere Ticks über das Tab-Intervall hinweg — kein einziges Tab erlaubt.
+            for (int i = 0; i < 10; i++)
+                e.Handle(new ParsedInput(), 200);
+
+            Assert.Equal(0, ctx.TabCycles());
+        }
+
+        [Fact]
+        public void PartyTargeting_DisablesTabCycling_InAttacking_NearestMode()
+        {
+            // FEAT-012: Auch im Nearest-Modus (Attacking) kein Tab-Cycling —
+            // Sticky-Lock bleibt, Attack läuft weiter.
+            using var ctx = new TestContext();
+            var e = ctx.Engine;
+            e.PartyTargetingEnabled = true;
+            e.TargetingMode = TargetingMode.Nearest;
+            e.AutoRetargetEnabled = true;
+
+            e.OnTargetLocked();
+            e.SetTarget("Poring", 5f);
+            e.Handle(new ParsedInput(), 16); // Engaged -> Attacking
+            Assert.Equal(CombatState.Attacking, e.State);
+
+            int tabsBefore = ctx.TabCycles();
+            for (int i = 0; i < 10; i++)
+                e.Handle(new ParsedInput(), 200);
+
+            Assert.Equal(tabsBefore, ctx.TabCycles());
+            // Lock bleibt bestehen (kein versehentliches Retargeting).
+            Assert.True(e.IsTargetLocked);
+        }
+
+        [Fact]
+        public void PartyTargeting_False_StillCyclesInSeeking()
+        {
+            // Regressions-Schutz: Default (PartyTargetingEnabled=false) behält das
+            // klassische Tab-Cycling im Seeking-Modus bei.
+            using var ctx = new TestContext();
+            var e = ctx.Engine;
+            e.AutoRetargetEnabled = true;
+
+            e.ToggleCombatMode(); // Idle -> Seeking
+
+            for (int i = 0; i < 10; i++)
+                e.Handle(new ParsedInput(), 200);
+
+            Assert.True(ctx.TabCycles() > 0);
+        }
+
+        [Fact]
+        public void PartyTargeting_ExplicitLockStillWorks()
+        {
+            // FEAT-012: Party-Schutz blockiert nur das AUTOMATISCHE Tab-Cycling.
+            // Der explizite Ziel-Lock (R3) muss weiterhin funktionieren.
+            using var ctx = new TestContext();
+            var e = ctx.Engine;
+            e.PartyTargetingEnabled = true;
+
+            e.ToggleCombatMode(); // Seeking
+
+            // R3-Druck → expliziter Lock (RightClick).
+            e.Handle(new ParsedInput { R3 = true }, 16);
+
+            Assert.True(e.IsTargetLocked);
+            Assert.Equal(1, ctx.RightClicks());
         }
 
         [Fact]
