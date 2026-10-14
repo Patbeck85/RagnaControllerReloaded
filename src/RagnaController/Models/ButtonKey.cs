@@ -10,8 +10,8 @@ namespace RagnaController.Models
     /// Replaces string-based keys with VirtualKey + optional modifier for compile-time safety.
     /// JSON serialization uses string format "VK" or "Mod+VK" for backward compatibility.
     /// </summary>
-    [JsonConverter(typeof(ButtonKeyJsonConverter))]
-    public readonly struct ButtonKey : IEquatable<ButtonKey>, IComparable<ButtonKey>
+    [JsonConverter(typeof(ButtonKeyConverter))]
+    public struct ButtonKey : IEquatable<ButtonKey>, IComparable<ButtonKey>
     {
         public readonly VirtualKey Key;
         public readonly VirtualKey Modifier;
@@ -86,19 +86,19 @@ namespace RagnaController.Models
     }
 
     /// <summary>JSON converter for ButtonKey - serializes as "VK" or "Mod+VK" string</summary>
-    public class ButtonKeyJsonConverter : JsonConverter<ButtonKey>
-    {
-        public override ButtonKey Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public class ButtonKeyConverter : JsonConverter<ButtonKey>
         {
-            var s = reader.GetString();
-            return string.IsNullOrEmpty(s) ? default : ButtonKey.Parse(s);
-        }
+            public override ButtonKey Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            {
+                var s = reader.GetString();
+                return string.IsNullOrEmpty(s) ? default : ButtonKey.Parse(s);
+            }
 
-        public override void Write(Utf8JsonWriter writer, ButtonKey value, JsonSerializerOptions options)
-        {
-            writer.WriteStringValue(value.ToString());
+            public override void Write(Utf8JsonWriter writer, ButtonKey value, JsonSerializerOptions options)
+            {
+                writer.WriteStringValue(value.ToString());
+            }
         }
-    }
 
     /// <summary>Helper for creating ButtonKey tuples with cleaner syntax</summary>
     public static class ButtonKeys

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using RagnaController.Profiles;
 using Xunit;
 
@@ -191,6 +193,128 @@ namespace RagnaController.Tests
             pm.RegisterCharacterMapping("CharA", "Warrior");
 
             Assert.True(pm.CharacterToProfileMap.ContainsKey("CharA"));
+        }
+
+        // ── GEX-012 Point 3: 5 Characters, 50 Switches Reliability ──
+
+        [Fact]
+        public void FiveCharacters_FiftySwitches_AlwaysCorrectProfile()
+        {
+            // Arrange: 5 characters → 5 different profiles
+            var pm = new ProfileManager(_dir);
+
+            // Create 5 distinct profiles
+            pm.AddAndSave(NewProfile("Novice"));
+            pm.AddAndSave(NewProfile("Swordsman"));
+            pm.AddAndSave(NewProfile("Mage"));
+            pm.AddAndSave(NewProfile("Acolyte"));
+            pm.AddAndSave(NewProfile("Archer"));
+
+            // Register 5 character → profile mappings
+            pm.RegisterCharacterMapping("Char_Novice", "Novice");
+            pm.RegisterCharacterMapping("Char_Swordsman", "Swordsman");
+            pm.RegisterCharacterMapping("Char_Mage", "Mage");
+            pm.RegisterCharacterMapping("Char_Acolyte", "Acolyte");
+            pm.RegisterCharacterMapping("Char_Archer", "Archer");
+
+            var characters = new[]
+            {
+                ("Char_Novice", "Novice"),
+                ("Char_Swordsman", "Swordsman"),
+                ("Char_Mage", "Mage"),
+                ("Char_Acolyte", "Acolyte"),
+                ("Char_Archer", "Archer")
+            };
+
+            // Act & Assert: 50 switches (10 rounds × 5 characters)
+            for (int round = 0; round < 10; round++)
+            {
+                foreach (var tuple in characters)
+                {
+                    string charName = tuple.Item1;
+                    string expectedProfile = tuple.Item2;
+                    bool switched = pm.OnCharacterDetected(charName);
+                    Assert.True(switched, "Round " + round + ": Failed to switch for " + charName);
+                    Assert.Equal(expectedProfile, pm.ActiveProfileName);
+                }
+            }
+        }
+
+        [Fact]
+        public void FiveCharacters_RandomOrderSwitches_AlwaysCorrectProfile()
+        {
+            // Arrange: 5 characters → 5 different profiles
+            var pm = new ProfileManager(_dir);
+
+            pm.AddAndSave(NewProfile("Knight"));
+            pm.AddAndSave(NewProfile("Priest"));
+            pm.AddAndSave(NewProfile("Hunter"));
+            pm.AddAndSave(NewProfile("Assassin"));
+            pm.AddAndSave(NewProfile("Wizard"));
+
+            pm.RegisterCharacterMapping("Ragna_Knight", "Knight");
+            pm.RegisterCharacterMapping("Ragna_Priest", "Priest");
+            pm.RegisterCharacterMapping("Ragna_Hunter", "Hunter");
+            pm.RegisterCharacterMapping("Ragna_Assassin", "Assassin");
+            pm.RegisterCharacterMapping("Ragna_Wizard", "Wizard");
+
+            var characters = new[]
+            {
+                ("Ragna_Knight", "Knight"),
+                ("Ragna_Priest", "Priest"),
+                ("Ragna_Hunter", "Hunter"),
+                ("Ragna_Assassin", "Assassin"),
+                ("Ragna_Wizard", "Wizard")
+            };
+
+            // Act & Assert: 50 switches in random order
+            var random = new Random(42); // Deterministic seed
+            for (int i = 0; i < 50; i++)
+            {
+                var tuple = characters[random.Next(characters.Length)];
+                string charName = tuple.Item1;
+                string expectedProfile = tuple.Item2;
+
+                bool switched = pm.OnCharacterDetected(charName);
+                Assert.True(switched, "Switch " + i + ": Failed to switch for " + charName);
+                Assert.Equal(expectedProfile, pm.ActiveProfileName);
+            }
+        }
+
+        [Fact]
+        public void CharacterMapping_CaseInsensitive_OcrVarianceHandled()
+        {
+            // OCR/Windowname reading often has case variance and extra spaces
+            var pm = new ProfileManager(_dir);
+            pm.AddAndSave(NewProfile("Swordsman"));
+            pm.AddAndSave(NewProfile("Acolyte"));
+
+            pm.RegisterCharacterMapping("  Ragnarok  ", "Swordsman");
+            pm.RegisterCharacterMapping("PriestessOfLight", "Acolyte");
+
+            var ocrVariants = new[]
+            {
+                ("ragnarok", "Swordsman"),
+                ("  RAGNAROK  ", "Swordsman"),
+                ("RaGnArOk", "Swordsman"),
+                ("ragnarok\t", "Swordsman"),
+                ("priestessoflight", "Acolyte"),
+                ("  PRIESTESSOFLIGHT  ", "Acolyte"),
+                ("PriestessOfLight", "Acolyte"),
+            };
+
+            // 50 switches with OCR variance
+            var random = new Random(999);
+            for (int i = 0; i < 50; i++)
+            {
+                var tuple = ocrVariants[random.Next(ocrVariants.Length)];
+                string charName = tuple.Item1;
+                string expectedProfile = tuple.Item2;
+
+                bool switched = pm.OnCharacterDetected(charName);
+                Assert.True(switched, "OCR variance switch " + i + ": Failed for '" + charName + "'");
+                Assert.Equal(expectedProfile, pm.ActiveProfileName);
+            }
         }
     }
 }

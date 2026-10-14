@@ -1673,11 +1673,11 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 **Fundament:** 58 default profiles must: (a) have correct Class for presets, (b) complete skill mappings for class, (c) valid item IDs, (d) sensible defaults for all engines. FEAT-024 character mapping must persist and auto-switch reliably.
 **Impact:** New user gets broken profile; character switch fails; migration corrupts profiles.json.
 **Suggested Fix:**
-1. `ProfileValidator` tool: scans all 58 profiles → reports missing skills, invalid item IDs, Class/Name mismatch
-2. Migration tests: v1.0 → v2.1.0 profile load → no data loss
-3. Character mapping: create 5 chars → switch → verify correct profile loads each time
+1. `ProfileValidator` tool: scans all 58 profiles → reports missing skills, invalid item IDs, Class/Name mismatch ✅ DONE (ProfileValidator.cs + ProfileValidatorTests: 9 tests)
+2. Migration tests: v1.0 → v2.1.0 profile load → no data loss ✅ DONE (ProfileMigrationTests: 5 tests)
+3. Character mapping: create 5 chars → switch → verify correct profile loads each time ✅ DONE (FiveCharacters_FiftySwitches_AlwaysCorrectProfile, FiveCharacters_RandomOrderSwitches_AlwaysCorrectProfile, CharacterMapping_CaseInsensitive_OcrVarianceHandled - 50 switches each)
 **Priorität:** HIGH
-**DoD:** ProfileValidator 0 errors; migration tests pass; character mapping 100% reliable in 50 switches.
+**DoD:** ProfileValidator 0 errors; migration tests pass; character mapping 100% reliable in 50 switches. ✅ ALL DONE
 
 ### 🟨 SPRINT 13D — Testing Coverage & CI Hardening (Production Grade)
 
