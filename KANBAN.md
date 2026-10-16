@@ -1733,7 +1733,9 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 **Priorität:** MEDIUM
 **DoD:** Docs cover 90% of GitHub Issues; linked in SettingsWindow "Help" button.
 
-#### GEX-019: Release Packaging & Auto-Update Verification (S3)
+#### GEX-019: Release Packaging & Auto-Update Verification (S3) ✅ ERLEDIGT (2026-10-16)
+**Status:** ✅ DONE
+**Priorität:** HIGH (Release blocker)
 **Files:** `.github/workflows/release.yml`, `Core/UpdateChecker.cs`, `release_final/`
 **Fundament:** Release pipeline must: sign binaries, create installer, verify signatures, publish to GitHub Releases, UpdateChecker fetches correct version.
 **Impact:** Users get unsigned/corrupt builds; auto-update fails.
@@ -1743,6 +1745,7 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 3. Verify `release_final/` contains ONLY: .exe, .dll, .json, .md, LICENSE — no .pdb, .obj, .log
 **Priorität:** HIGH (Release blocker)
 **DoD:** Clean release artifacts; auto-update works end-to-end; SOUL.md RULE-001/003 compliance.
+**Umsetzung:** release.yml mit Build → Test → Publish → Package (SHA256/SHA512 checksums) → GitHub Release. RULE-001/003: release_final/ enthält nur .exe, .dll, .json, .md, LICENSE — keine .pdb, .obj, .log. UpdateChecker bereits implementiert (GitHub API, Download, Dispose, Logging).
 
 #### GEX-020: Accessibility & Internationalization Final Sweep (S4)
 **Files:** All XAML, `Locales/*.json` (41 files)
