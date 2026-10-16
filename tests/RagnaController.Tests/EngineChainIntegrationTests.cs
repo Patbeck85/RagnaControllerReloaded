@@ -1520,6 +1520,60 @@ namespace RagnaController.Tests
         }
 
         // ============================================================
+        //  11. TECH-058: Input-Failover Verification (S2)
+        // ============================================================
+        [Fact]
+        public void TECH058_SendInputMouseStrategy_MoveRelative_DoesNotThrow()
+        {
+            using var strategy = new SendInputMouseStrategy();
+            Assert.True(strategy.IsAvailable);
+            Assert.Equal("SendInput (Standard)", strategy.DisplayName);
+
+            // Sollte keine Exception werfen
+            strategy.MoveRelative(10, 20);
+            strategy.MoveRelative(-5, -10);
+            strategy.MoveRelative(0, 0); // Sollte ignoriert werden
+            strategy.LeftDown();
+            strategy.LeftUp();
+            strategy.RightDown();
+            strategy.RightUp();
+        }
+
+        [Fact]
+        public void TECH058_InterceptionMouseStrategy_IsAvailable_Check()
+        {
+            using var strategy = new InterceptionMouseStrategy();
+            // Kann true oder false sein (abhängig vom installierten Treiber)
+            // Wichtig: Keine Exception beim Erstellen
+            Assert.True(strategy.DisplayName == "Interception (Kernel-Mode)");
+            strategy.Dispose();
+        }
+
+        [Fact]
+        public void TECH058_InterceptionMouseStrategy_MoveRelative_DoesNotThrow_WhenAvailable()
+        {
+            using var strategy = new InterceptionMouseStrategy();
+            if (!strategy.IsAvailable) return; // Treiber nicht installiert, Test überspringen effektiv
+
+            strategy.MoveRelative(10, 20);
+            strategy.MoveRelative(-5, -10);
+            strategy.LeftDown();
+            strategy.LeftUp();
+        }
+
+        [Fact]
+        public void TECH058_BothStrategies_AreNotNull()
+        {
+            using var sendInput = new SendInputMouseStrategy();
+            using var interception = new InterceptionMouseStrategy();
+
+            Assert.NotNull(sendInput);
+            Assert.NotNull(interception);
+            Assert.Equal("SendInput (Standard)", sendInput.DisplayName);
+            Assert.Equal("Interception (Kernel-Mode)", interception.DisplayName);
+        }
+
+        // ============================================================
         //  Test-Doubles
         // ============================================================
         private sealed class MockTickProvider : ITickProvider
