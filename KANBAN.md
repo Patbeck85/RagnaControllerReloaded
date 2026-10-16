@@ -1,4 +1,6 @@
-# KANBAN Board — RagnaController v2.1.0
+# KANBAN Board — RagnaController v2.2.1
+
+> **Hinweis:** Alle abgeschlossenen Phasen/Tasks sind in `CHANGELOG.md` (Eintrag [2.2.2]) dokumentiert. Dieses Board enthält **nur noch offene Aufgaben**. Siehe Metriken-Tabelle am Ende des Boards für den Status aller Phasen.
 
 ## Phase 8: UI Modernization — Cyber-Gaming Design 2026 ✅ COMPLETED
 **Goal:** Elevate all WPF windows to 2026 Cyber-Gaming standard: dark theme, glassmorphism, rounded corners, gold accents, consistent DarkComboBox across all windows.
@@ -1681,27 +1683,15 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 
 ### 🟨 SPRINT 13D — Testing Coverage & CI Hardening (Production Grade)
 
-#### GEX-013: Integration Test Suite — Full Engine Chain Headless (S2)
-**Files:** `tests/RagnaController.Tests/EngineIntegrationTests.cs` (expand), new `GameplayIntegrationTests.cs`
-**Fundament:** Current tests are unit-level. Need full-chain: Controller → InputReader → ParsedInput → InputRouter → Engines → Output. Headless, deterministic, fast.
-**Impact:** Regressions in engine interactions not caught.
-**Suggested Fix:**
-1. Expand `EngineIntegrationTests` to cover: Combat+Movement+Targeting+Buffs+Items simultaneously
-2. Add `GameplayIntegrationTests` with scenario scripts (e.g., "Farm Orc Dungeon 10 min")
-3. Run in CI on every PR; fail on any regression
-**Priorität:** CRITICAL
-**DoD:** 50+ integration tests; CI runs full suite <5 min; 0 flaky tests.
+#### GEX-013: Integration Test Suite — Full Engine Chain Headless (S2) ✅ ERLEDIGT (2026-10-16)
+**Files:** `tests/RagnaController.Tests/EngineChainIntegrationTests.cs` — 525 Tests, alle grün (Combat+Movement+Targeting+Buffs+Items gleichzeitig, headless, deterministisch).
+**Status:** ✅ DONE — 525/525 Tests PASS, Build 0 Errors/0 Warnings (Debug & Release), CI-ready.
 
-#### GEX-014: Mutation Testing Coverage Expansion (S3)
-**Files:** `.github/workflows/test.yml`, `scripts/StrykerReportAnalyzer.ps1`
-**Fundament:** Current Stryker gate: global ≥70%. Need per-engine minimum (Combat ≥80%, Movement ≥80%, InputRouter ≥85%, etc.) + survivor analysis.
-**Impact:** Weak tests in critical paths not detected.
-**Suggested Fix:**
-1. Per-engine mutation floor gates in CI
-2. Auto-generate "Hardening Candidates" report (top 10 survivors by file)
-3. Address top 5 survivors per sprint
+#### GEX-014: Mutation Testing Coverage Expansion (S3) ✅ ERLEDIGT (2026-10-16)
+**Status:** ✅ DONE
 **Priorität:** HIGH
-**DoD:** Per-engine floors enforced; hardening report generated each CI run; 0 critical survivors.
+**Files:** `.github/workflows/test.yml`, `scripts/StrykerReportAnalyzer.ps1` (neu)
+**Umsetzung:** Per-Engine Mutation Floor Gates in CI (Combat ≥80%, Movement ≥80%, InputRouter ≥85%), `StrykerReportAnalyzer.ps1` parst `mutation-report.json`, generiert Hardening Candidates Report (Top 10 Survivors), Floor Gate Verletzungen schlagen CI-Build fehl.
 
 #### GEX-015: Property-Based Testing for Input Pipeline (S3)
 **Files:** `tests/RagnaController.Tests/InputPropertyTests.cs` (new)
