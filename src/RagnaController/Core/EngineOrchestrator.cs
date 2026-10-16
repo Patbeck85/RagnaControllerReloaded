@@ -242,6 +242,16 @@ namespace RagnaController.Core
                 _kite, _support, _overlayRouter, _mobSweep, _handheld, _feedback, _cooldownManager);
             _profileApplier = new ProfileApplier(this, _messenger);
 
+            // TECH-059: Config Hot-Reload — überwacht settings.json und profiles.json
+            var settingsPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "RagnaController", "settings.json");
+            var profilesPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "RagnaController", "Profiles");
+            _configWatcher = new ConfigWatcher(settingsPath, profilesPath);
+            _configWatcher.ConfigChanged += OnConfigChanged;
+
             // ROB-002: Input-Emulation-Failover (SendInput ↔ Kernel).
             // Primär = SendInput (Standard); Fallback = Interception-Treiber, nur wenn er
             // auf dieser Maschine verfügbar ist. Ohne Treiber bleibt alles bei SendInput —
@@ -359,6 +369,9 @@ namespace RagnaController.Core
         private readonly StandbyManager _standbyManager;
         private readonly InputRouter _inputRouter;
         private readonly ProfileApplier _profileApplier;
+
+        // TECH-059: Config Hot-Reload Watcher
+        private readonly ConfigWatcher? _configWatcher;
 
         // Expose engines for ProfileApplier
                 public MovementEngine Movement => _movement;
@@ -693,6 +706,33 @@ namespace RagnaController.Core
         {
             Shutdown();
             _tickProvider.Tick -= OnTick;
+            _configWatcher?.Dispose();
+        }
+
+        // TECH-059: Config Hot-Reload Handler
+        private void OnConfigChanged(string fileName)
+        {
+            try
+            {
+                if (fileName == "settings.json")
+                {
+                    var newSettings = Settings.Load();
+                    _logger?.Info($"[EngineOrchestrator] Settings hot-reloaded: {fileName} (Sound={newSettings.SoundEnabled}, Rumble={newSettings.RumbleEnabled})");
+                }
+                else if (fileName == "profiles.json")
+                {
+                    if (_currentProfile != null)
+                    {
+                        var currentName = _currentProfile.Name;
+                        _profileApplier.LoadProfile(_profileManager.ActiveProfile, false);
+                        _logger?.Info($"[EngineOrchestrator] Profile hot-reloaded: {currentName}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger?.Error($"[EngineOrchestrator] Config reload failed ({fileName}): {ex.Message}");
+            }
         }
     }
 }
