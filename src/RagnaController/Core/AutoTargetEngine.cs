@@ -240,6 +240,58 @@ namespace RagnaController.Core
             TargetDataValid = false;
         }
 
+        // ── Multi-Mob Targeting (GEX-006a) ──────────────────────────────
+        /// <summary>Alle bekannten Ziele im Umkreis (Name, Entfernung, LoS, Aggressivität).</summary>
+        private readonly List<(string Name, float Distance, bool InLineOfSight, bool IsAggressive, int HpPercent)> _knownTargets = new();
+
+        /// <summary>
+        /// Aktualisiert die bekannte Ziel-Liste (wird vom OCR/Reader/Feeder aufgerufen).
+        /// Ziel mit leerem Name entfernt das Ziel aus der Liste.
+        /// </summary>
+        public void UpdateTargets(List<(string Name, float Distance, bool InLineOfSight, bool IsAggressive, int HpPercent)> targets)
+        {
+            _knownTargets.Clear();
+            foreach (var t in targets)
+            {
+                if (string.IsNullOrWhiteSpace(t.Name)) continue;
+                _knownTargets.Add(t);
+            }
+        }
+
+        /// <summary>
+        /// Gibt das beste Ziel nach Priorität zurück:
+        /// 1. In Line of Sight
+        /// 2. Niedrigste Distanz
+        /// 3. Niedrigster HP-Prozentsatz
+        /// 4. Aggressiv (IsAggressive)
+        /// </summary>
+        public string? GetBestTarget()
+        {
+            if (_knownTargets.Count == 0) return null;
+
+            var best = _knownTargets
+                .Where(t => t.InLineOfSight)
+                .OrderBy(t => t.Distance)
+                .ThenBy(t => t.HpPercent)
+                .ThenByDescending(t => t.IsAggressive)
+                .FirstOrDefault();
+
+            return best.Name;
+        }
+
+        /// <summary>
+        /// Prüft ob ein bekanntes Ziel in Line of Sight ist.
+        /// </summary>
+        public bool IsInLineOfSight(string targetName)
+        {
+            return _knownTargets.Any(t => t.Name == targetName && t.InLineOfSight);
+        }
+
+        /// <summary>
+        /// Gibt die Anzahl bekannter Ziele zurück.
+        /// </summary>
+        public int KnownTargetCount => _knownTargets.Count;
+
         public string StateLabel => State.ToString().ToUpper();
 
         // Reset: Alle Felder auf Initialwerte setzen (wichtig bei Profil-Reload!)

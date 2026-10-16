@@ -1130,6 +1130,117 @@ namespace RagnaController.Tests
         }
 
         // ============================================================
+        //  7. GEX-006a: Multi-Mob Targeting & Line of Sight (S2)
+        // ============================================================
+        [Fact]
+        public void GEX006a_GetBestTarget_PicksNearestInLoS()
+        {
+            using var ctx = new TestContext();
+            var e = new AutoTargetEngine(ctx.Queue);
+
+            e.UpdateTargets(new List<(string Name, float Distance, bool InLineOfSight, bool IsAggressive, int HpPercent)>
+            {
+                ("Mob_Far", 12f, true, false, 100),
+                ("Mob_Near", 3f, true, false, 100),
+                ("Mob_Mid", 6f, true, false, 100),
+            });
+
+            Assert.Equal("Mob_Near", e.GetBestTarget());
+            Assert.Equal(3, e.KnownTargetCount);
+        }
+
+        [Fact]
+        public void GEX006a_GetBestTarget_SkipsOutOfLoS()
+        {
+            using var ctx = new TestContext();
+            var e = new AutoTargetEngine(ctx.Queue);
+
+            e.UpdateTargets(new List<(string Name, float Distance, bool InLineOfSight, bool IsAggressive, int HpPercent)>
+            {
+                ("Mob_BehindWall", 2f, false, false, 100),
+                ("Mob_InLoS", 8f, true, false, 100),
+            });
+
+            Assert.Equal("Mob_InLoS", e.GetBestTarget());
+            Assert.False(e.IsInLineOfSight("Mob_BehindWall"));
+            Assert.True(e.IsInLineOfSight("Mob_InLoS"));
+        }
+
+        [Fact]
+        public void GEX006a_GetBestTarget_LowHpFirst()
+        {
+            using var ctx = new TestContext();
+            var e = new AutoTargetEngine(ctx.Queue);
+
+            e.UpdateTargets(new List<(string Name, float Distance, bool InLineOfSight, bool IsAggressive, int HpPercent)>
+            {
+                ("Mob_FullHp", 5f, true, false, 100),
+                ("Mob_LowHp", 5f, true, false, 15),
+                ("Mob_MidHp", 5f, true, false, 50),
+            });
+
+            Assert.Equal("Mob_LowHp", e.GetBestTarget());
+        }
+
+        [Fact]
+        public void GEX006a_GetBestTarget_AggressiveFirstAtSameDistance()
+        {
+            using var ctx = new TestContext();
+            var e = new AutoTargetEngine(ctx.Queue);
+
+            e.UpdateTargets(new List<(string Name, float Distance, bool InLineOfSight, bool IsAggressive, int HpPercent)>
+            {
+                ("Mob_Passive", 5f, true, false, 50),
+                ("Mob_Aggressive", 5f, true, true, 50),
+            });
+
+            Assert.Equal("Mob_Aggressive", e.GetBestTarget());
+        }
+
+        [Fact]
+        public void GEX006a_GetBestTarget_EmptyReturnsNull()
+        {
+            using var ctx = new TestContext();
+            var e = new AutoTargetEngine(ctx.Queue);
+
+            Assert.Null(e.GetBestTarget());
+            Assert.Equal(0, e.KnownTargetCount);
+        }
+
+        [Fact]
+        public void GEX006a_GetBestTarget_AllOutOfLoSReturnsNull()
+        {
+            using var ctx = new TestContext();
+            var e = new AutoTargetEngine(ctx.Queue);
+
+            e.UpdateTargets(new List<(string Name, float Distance, bool InLineOfSight, bool IsAggressive, int HpPercent)>
+            {
+                ("Mob_Wall1", 2f, false, false, 100),
+                ("Mob_Wall2", 5f, false, false, 100),
+            });
+
+            Assert.Null(e.GetBestTarget());
+            Assert.Equal(2, e.KnownTargetCount);
+        }
+
+        [Fact]
+        public void GEX006a_GetBestTarget_ClearsEmptyNames()
+        {
+            using var ctx = new TestContext();
+            var e = new AutoTargetEngine(ctx.Queue);
+
+            e.UpdateTargets(new List<(string Name, float Distance, bool InLineOfSight, bool IsAggressive, int HpPercent)>
+            {
+                ("", 1f, true, false, 100),
+                ("   ", 2f, true, false, 100),
+                ("ValidMob", 3f, true, false, 100),
+            });
+
+            Assert.Equal("ValidMob", e.GetBestTarget());
+            Assert.Equal(1, e.KnownTargetCount);
+        }
+
+        // ============================================================
         //  Test-Doubles
         // ============================================================
         private sealed class MockTickProvider : ITickProvider
