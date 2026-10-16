@@ -1261,6 +1261,39 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **DoD:** `.gitignore` deckt `obj/`, `bin/`, `*.g.cs`, `*.g.i.cs` ab; Repo sauber.
 **Status:** ✅ DONE (2026-10-10) — Added `*.g.cs` and `*.g.i.cs` to `.gitignore`. Verified: no generated files in Git.
 
+### 🟨 TECH-058: Input-Failover Verification (S2)
+**Status:** ⏳ OFFEN
+**Priorität:** HIGH
+**Files:** Core/SendInputMouseStrategy.cs, Core/InterceptionMouseStrategy.cs, Core/InputRouter.cs, Core/KeyboardEmulationStrategy.cs (new)
+**Fundament:** ROB-002 failover (SendInput ↔ Interception) exists but not verified under real conditions.
+**Offen:**
+1. Parity test: replay same input sequence on both backends → compare final cursor position (headless, virtual screen)
+2. Failover mid-sequence test: switch backend while RO running — zero jump, no missed casts
+3. Keyboard parity: key down/up timing, repeat rate, modifier handling must match exactly
+**DoD:** Parity test passes (max 1px drift over 1000 moves); failover mid-session imperceptible in-game.
+
+### 🟨 TECH-059: Config Hot-Reload (S3)
+**Status:** ⏳ OFFEN
+**Priorität:** MEDIUM
+**Files:** Core/ProfileApplier.cs, Models/Settings.cs, Profiles/ProfileManager.cs
+**Fundament:** Profile changes require app restart.
+**Offen:**
+1. FileSystemWatcher on profiles.json and character_mappings.json
+2. Automatic reload without interrupting running game
+3. Conflict detection: what happens if profile changed during play
+**DoD:** Profile changes applied without restart; no data loss on hot-reload.
+
+### 🟨 TECH-060: Crash Reporting & Telemetry (S4)
+**Status:** ⏳ OFFEN
+**Priorität:** MEDIUM
+**Files:** Core/UpdateChecker.cs, Core/AdvancedLogger.cs, Core/TelemetryService.cs
+**Fundament:** Users report "doesn't work" without logs.
+**Offen:**
+1. Opt-in crash reporting (Discord Webhook, already prepared in UpdateChecker)
+2. Anonymous usage statistics (which engines used, how often)
+3. Test auto-update against staging release (GEX-019 partial)
+**DoD:** Crash reports sent with user consent; usage stats opt-in; auto-update verified end-to-end.
+
 ---
 
 ## 🎨 Phase 12: UX Polish & Accessibility Improvements (NEW — 2026-10-10)
@@ -1573,6 +1606,17 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
    - **rAthena Config Parity:** AfterCastDelay range matches skill.conf [140,180] ± jitter
 3. **Results:** All 25 new tests PASS, all 398 total tests PASS, 0 warnings.
 
+#### GEX-005a: Class-Specific Skill Casting Mechanics (S2)
+**Status:** ⏳ OFFEN
+**Priorität:** HIGH
+**Files:** Core/CombatEngine.cs, Core/MageEngine.cs, Core/GroundSpellEngine.cs, Core/ClassDetector.cs
+**Fundament:** Each RO class has unique cast times, after-cast delays, bolt spam mechanics. Current engine modeled generically — not verified per class.
+**Offen:**
+1. Document per-class cast time formulas from rAthena skill.conf (fixed + variable cast time)
+2. Unit-test class-specific bolt spam rates (Assassin Cross Double Attack → Triple Attack, etc.)
+3. Verify interrupt mechanics per class (stun/stone/sleep break cast)
+**DoD:** All class skill engines pass class-specific reference tests; in-game verification for each class.
+
 #### GEX-006: Auto-Targeting Accuracy (Tab, Lock, Retarget) (S2)
 **Files:** `Core/AutoTargetEngine.cs`, `Core/CombatEngine.cs`, `Core/PartyManager.cs` (FEAT-012 exclusion)
 **Fundament:** FEAT-013 added Tab-cycling, Lock-persistence, Auto-retarget. Not verified against RO targeting rules: Tab cycles visible enemies in range, prioritizes nearest/lowest HP; Lock persists through skill casts; retarget on death/range loss/LoS break.
@@ -1596,6 +1640,17 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
    - **Combat State Transitions:** Idle -> Seeking (ToggleCombatMode) -> Engaged (R3) -> Attacking (AutoAttackEnabled); Target lost in Attacking -> Seeking; Seeking state Tab cycles
    - **Edge Cases & Regression Guards:** No data source = no false retarget; ClearTarget disables validity check; Reset clears all FEAT-013 state; PartyTargetingEnabled legacy flag compat; SkillInterruptMs pauses attack not lock
 2. **Results:** All 21 new tests PASS, all 421 total tests PASS, 0 warnings.
+
+#### GEX-006a: Multi-Mob Targeting & Line of Sight (S2)
+**Status:** ⏳ OFFEN
+**Priorität:** HIGH
+**Files:** Core/AutoTargetEngine.cs, Core/CombatEngine.cs
+**Fundament:** Current targeting tested only with single/mock targets. Real RO maps have 5+ mobs in range.
+**Offen:**
+1. Multi-mob scenarios (5+ targets in range) — Tab cycling, lock persistence
+2. Line of Sight check — target behind wall not targetable
+3. Priority: nearest → lowest HP → most aggressive mob
+**DoD:** All targeting tests pass with 5+ mobs; LoS break correctly triggers retarget; in-game verification on dense mob maps.
 
 #### GEX-007: Movement Engine — Walk/Run/Slide/Backslide Accuracy (S2)
 **Files:** `Core/MovementEngine.cs`, `Core/KiteEngine.cs`, `Core/KiteStates.cs`
@@ -1659,6 +1714,17 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 **Priorität:** HIGH
 **DoD:** Item tests pass; in-game auto-pot works at exact threshold; storage drop tested on full inventory. ✅ ALL DONE
 
+#### GEX-010a: Real Item ID Validation (S3)
+**Status:** ⏳ OFFEN
+**Priorität:** HIGH
+**Files:** Core/ItemManagerEngine.cs, Profiles/*.json (58 files), Resources/ItemDatabase.json (new)
+**Fundament:** Item IDs in profiles must match actual RO item IDs.
+**Offen:**
+1. Create ItemDatabase.json with all RO consumable item IDs (Red Potion=501, Blue Potion=502, etc.)
+2. Validate all 58 default profiles have correct item IDs
+3. Unit tests: threshold trigger → correct item ID sent → cooldown respected
+**DoD:** ItemManagerEngineTests pass; in-game auto-pot works at exact threshold; all default profiles validated against item DB.
+
 #### GEX-011: Buff/Debuff Manager — Complete Tracking (S3)
 **Files:** `Core/BuffManager.cs`, `Core/EngineOrchestrator.cs` (integration)
 **Fundament:** Track all RO buffs/debuffs: duration, stacks, icons, expiration warnings, auto-recast. Current: events exist (BuffExpiringWarning, BuffExpired) but coverage unverified.
@@ -1705,15 +1771,18 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 **DoD:** 20+ properties pass 10k iterations each; 0 counterexamples found.
 
 #### GEX-016: Load/Soak Testing with Real RO Client (S3)
-**Files:** `tests/RagnaController.Tests/LongRunStabilityTests.cs` (expand), CI self-hosted runner setup
+**Status:** ⏳ OFFEN
+**Priorität:** MEDIUM (Requires infrastructure)
+**Files:** tests/RagnaController.Tests/LongRunStabilityTests.cs (expand), CI self-hosted runner setup, tools/rathena-server/ (new)
 **Fundament:** Current soak is mocked. Need real RO client (rAthena test server) for true integration soak.
 **Impact:** Mock soak misses: window focus issues, DPI scaling, anti-cheat, network latency, packet loss.
 **Suggested Fix:**
 1. Set up rAthena test server in CI (Docker) + RO client (headless via xvfb/wine or Windows runner)
 2. 1-hour soak: character walks, kills, pots, loots, stores, switches profile
-3. Metrics: 0 crashes, 0 desyncs, memory stable, CPU <15%
+3. Test matrix: 5 RO client variants (ragexe, ragexere, rognarok, ROClient, myRO) × alt-tab × multi-client × borderless/windowed/fullscreen
+4. Metrics: 0 crashes, 0 desyncs, memory stable, CPU <15%
 **Priorität:** MEDIUM (Requires infra)
-**DoD:** Weekly real-client soak passes; results published as artifact.
+**DoD:** Weekly real-client soak passes; results published as artifact; 0 input leaks in 1-hour stress test with alt-tab spam; multi-client focus isolation works.
 
 ### 🟩 SPRINT 13E — Polish, Documentation & Release Readiness
 
@@ -1760,6 +1829,59 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 
 ---
 
+## 🎮 Phase 14: Steam Deck & Handheld Support (NEW — 2026-10-16)
+
+**Goal:** Make RagnaController a first-class handheld experience for Steam Deck and similar devices — touch-friendly UI, gyro input, haptic feedback, battery optimization, and seamless suspend/resume.
+
+### 🟥 SPRINT 14A — Critical Handheld UX (Immediate Impact)
+
+#### FEAT-026: Steam Deck Optimized UI (S2)
+**Status:** ⏳ OFFEN
+**Priorität:** HIGH
+**Files:** MainWindow.xaml, SettingsWindow.xaml, InGameOverlayWindow.xaml, Resources/UI2026DesignSystem.xaml
+**Fundament:** Current UI is optimized for mouse/keyboard. On Steam Deck (1280×800, touchscreen), buttons are too small, text too small, no touch feedback.
+**Offen:**
+1. **FEAT-026a: Big Picture Mode UI** — 150% scaling, larger touch targets (min. 44×44px), high contrast
+2. **FEAT-026b: Steam Deck Input API** — Gyro as mouse replacement, touchpad as virtual stick, back-buttons as quick access
+3. **FEAT-026c: Sleep Mode Handling** — App pauses cleanly on Steam Deck sleep, resume without reconnect issues
+4. **FEAT-026d: Battery Optimization** — Smart Standby more aggressive (BatteryThrottle), reduce tick rate in battery mode
+**DoD:** All 21 windows usable at 1280×800 with touch, gyro input works, suspend/resume clean, battery life ≥2 hours active play.
+
+#### FEAT-027: Handheld-First Navigation (S3)
+**Status:** ⏳ OFFEN
+**Priorität:** MEDIUM
+**Files:** All XAML windows, MainWindow.xaml.cs, InputRouter.cs
+**Fundament:** Current navigation assumes DPad/stick, but Steam Deck users mix touch + buttons.
+**Offen:**
+1. Touch targets for all main actions (skill slots, inventory, chat)
+2. Haptic feedback (rumble) on skill-cast, hit, death
+3. Vibration patterns differentiate (short = hit, long = death, double = buff expired)
+**DoD:** All primary actions reachable via touch, haptic feedback distinguishable, navigation logical with touch+buttons.
+
+#### UX-016: Steam Deck Quick-Access Radial Menu (S3)
+**Status:** ⏳ OFFEN
+**Priorität:** MEDIUM
+**Files:** RadialSetupWindow.xaml, RadialMenuWindow.xaml, InputRouter.cs
+**Fundament:** On small screen, many menus are too small.
+**Offen:**
+1. Radial Menu for quick access (skill slots, items, chat)
+2. Gesture control (swipe for Tab-cycling, circle for skill-selection)
+3. Touch targets with haptic feedback
+**DoD:** Radial menu opens with one gesture, skill/item selection within 2 taps, haptic feedback on selection.
+
+#### UX-017: High Contrast + Font Scaling (S4)
+**Status:** ⏳ OFFEN
+**Priorität:** MEDIUM
+**Files:** All XAML, Resources/UI2026DesignSystem.xaml
+**Fundament:** Steam Deck users have different visual needs.
+**Offen:**
+1. Test with Windows High Contrast + 150% scaling — no clipped text, visible focus rings
+2. Verify 125%/150%/175% DPI scaling on all 21 windows
+3. RTL languages (Arabic/Hebrew) UI flows correctly
+**DoD:** High contrast + scaling OK, RTL verified, no clipped text at any scale.
+
+---
+
 ## 📋 Execution Rules (SOUL.md Compliance)
 
 1. **One Task at a Time** — Pick next OPEN task, implement → test green → doc → commit → next.
@@ -1779,17 +1901,23 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 | Integration Tests | ≥50 |
 | Property-Based Tests | ≥20 properties × 10k |
 | Mutation Score (per engine) | Combat/Movement/Input ≥80% |
-| Input Latency P99 | ≤8ms |
-| Soak Test (mock) | 100k ticks, 0 leaks |
-| Soak Test (real RO) | 1 hour, 0 desyncs |
-| Profile Validator | 0 errors on 58 defaults |
-| Accessibility (NVDA) | 21 windows pass |
-| Release Artifacts | Clean (RULE-001/003) |
+|| Input Latency P99 | ≤8ms ||
+|| Soak Test (mock) | 100k ticks, 0 leaks ||
+|| Soak Test (real RO) | 1 hour, 0 desyncs ||
+|| Profile Validator | 0 errors on 58 defaults ||
+|| Accessibility (NVDA) | 21 windows pass ||
+|| Release Artifacts | Clean (RULE-001/003) ||
+|| Steam Deck Tick Latency | P99 ≤16ms (1 frame @ 60fps) ||
+|| Handheld Battery Life | ≥2 hours active play ||
+|| Skill-Cast Accuracy | ≥95% of casts successful ||
+|| Mutation Score (per engine) | Combat/Movement/Input ≥80% ||
 
 ---
 
 ## 🎯 Next Immediate Action
 
-**Start with GEX-001 (SendInput/Interception Parity)** — this is the foundation. If failover isn't seamless, nothing else matters for competitive RO play.
+**Start with GEX-016 (Real RO Client Soak)** — all gameplay verification depends on a real RO client. Without it, skill casting, targeting, and movement can't be validated against actual server behavior.
 
-*Let me know if you want me to begin GEX-001, or if you'd like to adjust priorities/scope first.*
+Alternatively, begin **FEAT-026a (Steam Deck Big Picture UI)** if handheld support is the priority.
+
+*Let me know which task you'd like to begin with.*
