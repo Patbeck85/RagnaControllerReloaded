@@ -109,6 +109,7 @@
         <Compile Include="Core\AutoStartManager.cs" />
         <Compile Include="Core\AutoTargetEngine.cs" />
         <Compile Include="Core\ConfigWatcher.cs" />
+<Compile Include="Core\DualSenseLightbarService.cs" />
         <Compile Include="Core\BackgroundTickProvider.cs" />
         <Compile Include="Core\BezierMouseService.cs" />
         <Compile Include="Core\CombatEngine.cs" />

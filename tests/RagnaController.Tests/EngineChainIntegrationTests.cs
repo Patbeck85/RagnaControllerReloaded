@@ -1615,6 +1615,72 @@ namespace RagnaController.Tests
         }
 
         // ============================================================
+        //  14. FEAT-027: DualSense Light Bar Status (S3, MEDIUM)
+        // ============================================================
+        [Fact]
+        public void FEAT027_DualSenseLightbar_SetColor_UpdatesRGB()
+        {
+            using var service = new DualSenseLightbarService();
+            bool result = service.SetColor(255, 128, 64);
+            Assert.True(result);
+            Assert.Equal(255, service.Red);
+            Assert.Equal(128, service.Green);
+            Assert.Equal(64, service.Blue);
+        }
+
+        [Fact]
+        public void FEAT027_DualSenseLightbar_StatusColor_Combat_IsRed()
+        {
+            using var service = new DualSenseLightbarService();
+            bool result = service.SetStatusColor(LightBarStatus.Combat);
+            Assert.True(result);
+            Assert.Equal(255, service.Red);
+            Assert.Equal(0, service.Green);
+            Assert.Equal(0, service.Blue);
+        }
+
+        [Fact]
+        public void FEAT027_DualSenseLightbar_StatusColor_Casting_IsBlue()
+        {
+            using var service = new DualSenseLightbarService();
+            bool result = service.SetStatusColor(LightBarStatus.Casting);
+            Assert.True(result);
+            Assert.Equal(0, service.Red);
+            Assert.Equal(0, service.Green);
+            Assert.Equal(255, service.Blue);
+        }
+
+        [Fact]
+        public void FEAT027_DualSenseLightbar_TurnOff_IsBlack()
+        {
+            using var service = new DualSenseLightbarService();
+            service.SetColor(255, 0, 0);
+            bool result = service.TurnOff();
+            Assert.True(result);
+            Assert.Equal(0, service.Red);
+            Assert.Equal(0, service.Green);
+            Assert.Equal(0, service.Blue);
+        }
+
+        [Fact]
+        public void FEAT027_DualSenseLightbar_Pulse_ReturnsTrue()
+        {
+            using var service = new DualSenseLightbarService();
+            bool result = service.Pulse(255, 0, 255, 500);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void FEAT027_DualSenseLightbar_Dispose_DoesNotThrow()
+        {
+            var service = new DualSenseLightbarService();
+            service.Dispose();
+            // Dispose sollte auch bei doppeltem Aufruf nicht werfen
+            service.Dispose();
+            Assert.True(true); // Wenn wir hier ankommen, hat es nicht geworfen
+        }
+
+        // ============================================================
         //  Test-Doubles
         // ============================================================
         private sealed class MockTickProvider : ITickProvider
