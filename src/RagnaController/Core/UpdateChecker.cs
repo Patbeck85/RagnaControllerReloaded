@@ -95,7 +95,7 @@ namespace RagnaController.Core
             if (MessageBox.Show(owner, msg, "Update Available", MessageBoxButton.YesNo, MessageBoxImage.Information) == MessageBoxResult.Yes)
             {
                 if (info.IsDirectDownload) await DownloadAndOpenAsync(info);
-                else try { Process.Start(new ProcessStartInfo { FileName = info.DownloadUrl, UseShellExecute = true }); } catch { /* browser not available */ }
+                else try { Process.Start(new ProcessStartInfo { FileName = info.DownloadUrl, UseShellExecute = true }); } catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[UpdateChecker] Browser start failed for {info.DownloadUrl}: {ex.Message}"); }
             }
         }
 
@@ -114,7 +114,12 @@ namespace RagnaController.Core
 
         internal static bool IsNewer(string v1, string v2)
         {
-            try { return new Version(v1) > new Version(v2); } catch { return false; }
+            try { return new Version(v1) > new Version(v2); }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[UpdateChecker] Version comparison failed ({v1} vs {v2}): {ex.Message}");
+                return false;
+            }
         }
 
         private static string Truncate(string s, int max) => s.Length <= max ? s : s.Substring(0, max) + "...";
