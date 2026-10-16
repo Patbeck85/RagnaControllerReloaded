@@ -1681,6 +1681,87 @@ namespace RagnaController.Tests
         }
 
         // ============================================================
+        //  15. UX-016: Steam Deck Quick-Access Radial Menu (S4, MEDIUM)
+        // ============================================================
+        [Fact]
+        public void UX016_RadialMenu_AddAndSelectItem()
+        {
+            using var menu = new RadialMenuService();
+            bool selected = false;
+            menu.ItemSelected += (s, item) => { selected = true; Assert.Equal("Calibrate", item.Label); };
+
+            menu.AddItem("Calibrate", () => { });
+            menu.AddItem("Remap", () => { });
+            menu.AddItem("Profile", () => { });
+
+            Assert.Equal(3, menu.ItemCount);
+            menu.Open();
+            Assert.True(menu.IsOpen);
+            Assert.Equal(0, menu.SelectedIndex);
+
+            menu.SelectNext();
+            Assert.Equal(1, menu.SelectedIndex);
+
+            menu.SelectPrevious();
+            Assert.Equal(0, menu.SelectedIndex);
+
+            menu.ActivateSelection();
+            Assert.True(selected);
+            Assert.False(menu.IsOpen);
+        }
+
+        [Fact]
+        public void UX016_RadialMenu_OpenClose_TogglesState()
+        {
+            using var menu = new RadialMenuService();
+            menu.AddItem("Test", () => { });
+
+            Assert.False(menu.IsOpen);
+            menu.Open();
+            Assert.True(menu.IsOpen);
+            menu.Close();
+            Assert.False(menu.IsOpen);
+        }
+
+        [Fact]
+        public void UX016_RadialMenu_ClearItems_ResetsState()
+        {
+            using var menu = new RadialMenuService();
+            menu.AddItem("A", () => { });
+            menu.AddItem("B", () => { });
+            menu.Open();
+            menu.SelectNext();
+
+            menu.ClearItems();
+            Assert.Equal(0, menu.ItemCount);
+            Assert.Equal(-1, menu.SelectedIndex);
+        }
+
+        [Fact]
+        public void UX016_RadialMenu_GetItem_ValidAndInvalidIndex()
+        {
+            using var menu = new RadialMenuService();
+            menu.AddItem("First", () => { });
+            menu.AddItem("Second", () => { });
+
+            Assert.NotNull(menu.GetItem(0));
+            Assert.Equal("First", menu.GetItem(0)!.Label);
+            Assert.Equal("Second", menu.GetItem(1)!.Label);
+            Assert.Null(menu.GetItem(-1));
+            Assert.Null(menu.GetItem(2));
+        }
+
+        [Fact]
+        public void UX016_RadialMenu_Dispose_DoesNotThrow()
+        {
+            var menu = new RadialMenuService();
+            menu.AddItem("Test", () => { });
+            menu.Dispose();
+            menu.Dispose(); // Doppelter Dispose soll nicht werfen
+            Assert.True(true);
+        }
+
+        // ============================================================
         //  Test-Doubles
         // ============================================================
         private sealed class MockTickProvider : ITickProvider
