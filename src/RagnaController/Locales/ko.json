@@ -718,5 +718,12 @@
   "APPLY": "Apply",
   "ENABLE_SOUND": "Enable Sound",
   "CURRENT_PROFILE_NAME": "Current profile name",
-  "R2_TRIGGER": "R2 Trigger"
+  "R2_TRIGGER": "R2 Trigger",
+  "Settings_ActiveProfile_Tooltip": "Active profile — all engine settings (AutoAttack, Mage, Kite, Movement, etc.) apply to this profile. Default: Novice. Best for: All classes. Related: ProfileLibrary, Character mapping.",
+  "Settings_LogLevel_Tooltip": "Set the minimum log level for file output. Options: Debug, Info, Warning, Error. Default: Info. Best for: All classes (Debug for troubleshooting). Related: TelemetryPanel, DeveloperConsole.",
+  "Settings_Language_Tooltip": "Select the application language. Changes UI text immediately. Default: English. Best for: All classes. Related: All UI.",
+  "Settings_OverlayTheme_Tooltip": "Select the overlay visual theme (Neon/Soft/Dark). Affects InGameOverlayWindow colors. Default: Neon. Best for: All classes. Related: InGameOverlayWindow.",
+  "Settings_RoExePath_Tooltip": "Select or browse for the Ragnarok Online executable. Used for Focus Lock and window detection. Supports custom names (myRO.exe, ROClient.exe, ragexere.exe). Default: ragexe. Best for: All classes. Related: Focus Lock, WindowSwitcher.",
+  "Settings_Btn_Cancel_Tooltip": "Cancel changes — discards all unsaved settings. Best for: All classes.",
+  "Settings_Btn_Apply_Tooltip": "Apply settings — saves all changes to profiles.json. Best for: All classes."
 }
