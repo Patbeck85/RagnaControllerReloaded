@@ -74,6 +74,7 @@ namespace RagnaController.Tests
             {
                 R3 = r3, R3Prev = r3Prev,
                 TriggerRight = triggerRight, // RT
+                R2 = r2,
                 RightX = rightX, RightY = rightY,
                 LeftX = leftX, LeftY = leftY,
                 L2 = l2,
@@ -1267,6 +1268,114 @@ namespace RagnaController.Tests
             // Manuelles Feuern ist schwierig ohne echte Dateiänderung,
             // aber der Watcher sollte ohne Exception konstruierbar sein
             Assert.True(watcher != null);
+        }
+
+        // ============================================================
+        //  9. GEX-005a: Class-Specific Skill Casting Mechanics (S2)
+        // ============================================================
+        [Fact]
+        public void GEX005a_MageEngine_AssassinCross_CastDelay_1200ms()
+        {
+            using var ctx = new TestContext();
+            var mage = new MageEngine(ctx.Queue, null!);
+            mage.MageEnabled = true;
+            mage.ToggleMageMode();
+            mage.MageBoltKeyVK = VirtualKey.F1;
+            mage.MageBoltCastDelayMs = 1200; // Assassin Cross Standard
+
+            ctx.Clear();
+            bool handled = mage.Handle(Pi(triggerRight: 1f, r2: true), 16);
+            Assert.True(handled);
+            Assert.Equal(MagePhase.BoltSpamming, mage.Phase);
+            Assert.Equal(1, ctx.KeyDowns(VirtualKey.F1));
+        }
+
+        [Fact]
+        public void GEX005a_MageEngine_Crusader_CastDelay_800ms()
+        {
+            using var ctx = new TestContext();
+            var mage = new MageEngine(ctx.Queue, null!);
+            mage.MageEnabled = true;
+            mage.ToggleMageMode();
+            mage.MageBoltKeyVK = VirtualKey.F2;
+            mage.MageBoltCastDelayMs = 800; // Crusader schneller
+
+            ctx.Clear();
+            bool handled = mage.Handle(Pi(triggerRight: 1f, r2: true), 16);
+            Assert.True(handled);
+            Assert.Equal(MagePhase.BoltSpamming, mage.Phase);
+            Assert.Equal(1, ctx.KeyDowns(VirtualKey.F2));
+        }
+
+        [Fact]
+        public void GEX005a_MageEngine_Monk_CastDelay_1500ms()
+        {
+            using var ctx = new TestContext();
+            var mage = new MageEngine(ctx.Queue, null!);
+            mage.MageEnabled = true;
+            mage.ToggleMageMode();
+            mage.MageBoltKeyVK = VirtualKey.F3;
+            mage.MageBoltCastDelayMs = 1500; // Monk langsamer
+
+            ctx.Clear();
+            bool handled = mage.Handle(Pi(triggerRight: 1f, r2: true), 16);
+            Assert.True(handled);
+            Assert.Equal(MagePhase.BoltSpamming, mage.Phase);
+            Assert.Equal(1, ctx.KeyDowns(VirtualKey.F3));
+        }
+
+        [Fact]
+        public void GEX005a_MageEngine_R2_Digital_Trigger_Fires()
+        {
+            using var ctx = new TestContext();
+            var mage = new MageEngine(ctx.Queue, null!);
+            mage.MageEnabled = true;
+            mage.ToggleMageMode();
+            mage.MageBoltKeyVK = VirtualKey.F1;
+            mage.MageBoltCastDelayMs = 1200;
+
+            // Digital R2 (ohne Analog-Trigger)
+            ctx.Clear();
+            bool handled = mage.Handle(Pi(r2: true, triggerRight: 0f), 16);
+            Assert.True(handled);
+            Assert.Equal(MagePhase.BoltSpamming, mage.Phase);
+            Assert.Equal(1, ctx.KeyDowns(VirtualKey.F1));
+        }
+
+        [Fact]
+        public void GEX005a_MageEngine_Analog_Trigger_Right_Above_0_5_Fires()
+        {
+            using var ctx = new TestContext();
+            var mage = new MageEngine(ctx.Queue, null!);
+            mage.MageEnabled = true;
+            mage.ToggleMageMode();
+            mage.MageBoltKeyVK = VirtualKey.F1;
+            mage.MageBoltCastDelayMs = 1200;
+
+            // Analog Trigger > 0.5
+            ctx.Clear();
+            bool handled = mage.Handle(Pi(triggerRight: 0.6f, r2: false), 16);
+            Assert.True(handled);
+            Assert.Equal(MagePhase.BoltSpamming, mage.Phase);
+            Assert.Equal(1, ctx.KeyDowns(VirtualKey.F1));
+        }
+
+        [Fact]
+        public void GEX005a_MageEngine_Analog_Trigger_Right_At_0_5_DoesNotFire()
+        {
+            using var ctx = new TestContext();
+            var mage = new MageEngine(ctx.Queue, null!);
+            mage.MageEnabled = true;
+            mage.ToggleMageMode();
+            mage.MageBoltKeyVK = VirtualKey.F1;
+            mage.MageBoltCastDelayMs = 1200;
+
+            // Analog Trigger genau 0.5 = nicht > 0.5
+            ctx.Clear();
+            bool handled = mage.Handle(Pi(triggerRight: 0.4999f, r2: false), 16);
+            // Handle gibt true wenn Engine aktiv, aber kein Cast sollte gefeuert werden
+            Assert.False(ctx.KeyDowns(VirtualKey.F1) > 0);
+            Assert.Equal(MagePhase.Idle, mage.Phase);
         }
 
         // ============================================================
