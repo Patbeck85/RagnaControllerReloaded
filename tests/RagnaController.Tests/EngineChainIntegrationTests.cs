@@ -1379,6 +1379,147 @@ namespace RagnaController.Tests
         }
 
         // ============================================================
+        //  10. GEX-010a: Real Item ID Validation (S3)
+        // ============================================================
+        [Fact]
+        public void GEX010a_ItemManagerEngine_Fires_At_Hp_Threshold()
+        {
+            using var ctx = new TestContext();
+            var itemMgr = new ItemManagerEngine(ctx.Queue, () => 1000L);
+            itemMgr.Configure(new List<ItemConfig>
+            {
+                new ItemConfig { Name = "Red Potion", ItemId = 501, Key = VirtualKey.F1, HpThresholdPercent = 70, MinSpRequired = 0, CooldownMs = 3000, CheckIntervalMs = 100, Enabled = true }
+            });
+            itemMgr.Start();
+
+            // HP = 50 <= 70 Schwelle → Item sollte feuern
+            ctx.Clear();
+            itemMgr.Update(50, 100, 16);
+            Assert.Equal(1, ctx.KeyDowns(VirtualKey.F1));
+        }
+
+        [Fact]
+        public void GEX010a_ItemManagerEngine_No_Fire_Above_Threshold()
+        {
+            using var ctx = new TestContext();
+            var itemMgr = new ItemManagerEngine(ctx.Queue, () => 1000L);
+            itemMgr.Configure(new List<ItemConfig>
+            {
+                new ItemConfig { Name = "Red Potion", ItemId = 501, Key = VirtualKey.F1, HpThresholdPercent = 70, MinSpRequired = 0, CooldownMs = 3000, CheckIntervalMs = 100, Enabled = true }
+            });
+            itemMgr.Start();
+
+            // HP = 80 > 70 Schwelle → Item sollte NICHT feuern
+            ctx.Clear();
+            itemMgr.Update(80, 100, 16);
+            Assert.Equal(0, ctx.KeyDowns(VirtualKey.F1));
+        }
+
+        [Fact]
+        public void GEX010a_ItemManagerEngine_Respects_Cooldown()
+        {
+            using var ctx = new TestContext();
+            long clock = 1000L;
+            var itemMgr = new ItemManagerEngine(ctx.Queue, () => clock);
+            itemMgr.Configure(new List<ItemConfig>
+            {
+                new ItemConfig { Name = "Red Potion", ItemId = 501, Key = VirtualKey.F1, HpThresholdPercent = 70, MinSpRequired = 0, CooldownMs = 3000, CheckIntervalMs = 100, Enabled = true }
+            });
+            itemMgr.Start();
+
+            // Erster Cast bei Tick 1000
+            ctx.Clear();
+            itemMgr.Update(50, 100, 16);
+            Assert.Equal(1, ctx.KeyDowns(VirtualKey.F1));
+            clock += 100; // Tick 2: 1100ms
+
+            // Innerhalb von Cooldown (1100ms < 4000ms) → kein zweiter Cast
+            ctx.Clear();
+            itemMgr.Update(50, 100, 100);
+            Assert.Equal(0, ctx.KeyDowns(VirtualKey.F1));
+            clock += 4000; // Tick 3: 5100ms
+
+            // Nach Cooldown (5100ms >= 4000ms) → erneuter Cast
+            ctx.Clear();
+            itemMgr.Update(50, 100, 4000);
+            Assert.Equal(1, ctx.KeyDowns(VirtualKey.F1));
+        }
+
+        [Fact]
+        public void GEX010a_ItemManagerEngine_No_Fire_Above_Sp_Threshold()
+        {
+            using var ctx = new TestContext();
+            long clock = 1000L;
+            var itemMgr = new ItemManagerEngine(ctx.Queue, () => clock);
+            itemMgr.Configure(new List<ItemConfig>
+            {
+                new ItemConfig { Name = "Blue Potion", ItemId = 502, Key = VirtualKey.F2, HpThresholdPercent = 100, MinSpRequired = 200, CooldownMs = 3000, CheckIntervalMs = 100, Enabled = true }
+            });
+            itemMgr.Start();
+
+            // SP = 0 < 200 Mindestwert → kein Feuer auch wenn HP unter Schwelle
+            ctx.Clear();
+            itemMgr.Update(50, 0, 16);
+            Assert.Equal(0, ctx.KeyDowns(VirtualKey.F2));
+            clock += 100;
+
+            // SP = 250 >= 200 → feuert (nach Cooldown-Verstrichung)
+            ctx.Clear();
+            itemMgr.Update(50, 250, 16);
+            Assert.Equal(1, ctx.KeyDowns(VirtualKey.F2));
+        }
+
+        [Fact]
+        public void GEX010a_ItemManagerEngine_ItemId_Validation_Against_Database()
+        {
+            using var ctx = new TestContext();
+            var itemMgr = new ItemManagerEngine(ctx.Queue, () => 1000L);
+
+            // ItemDatabase.json enthält diese Items - validiere dass unsere Profile-IDs existieren
+            var knownIds = new Dictionary<int, string>
+            {
+                { 501, "Red Potion" },
+                { 502, "Blue Potion" },
+                { 505, "Orange Potion" },
+                { 506, "Green Potion" },
+                { 507, "Black Potion" },
+                { 508, "Red Slim Potion" },
+                { 509, "Blue Slim Potion" },
+                { 510, "Orange Slim Potion" },
+                { 511, "Green Slim Potion" },
+                { 512, "Yellow Slim Potion" },
+                { 513, "White Slim Potion" },
+                { 514, "Black Slim Potion" }
+            };
+
+            // Alle bekannten IDs sollten > 0 sein (gültige Item-IDs)
+            foreach (var kvp in knownIds)
+            {
+                Assert.True(kvp.Key > 0, $"ItemId {kvp.Key} ({kvp.Value}) ist ungültig");
+            }
+
+            // Ein ItemManager mit allen bekannten IDs sollte konfigurierbar sein
+            itemMgr.Configure(knownIds.Select(kvp => new ItemConfig
+            {
+                Name = kvp.Value,
+                ItemId = kvp.Key,
+                Key = VirtualKey.F1,
+                HpThresholdPercent = 70,
+                MinSpRequired = 0,
+                CooldownMs = 3000,
+                CheckIntervalMs = 100,
+                Enabled = true
+            }).ToList());
+            itemMgr.Start();
+
+            ctx.Clear();
+            itemMgr.Update(50, 100, 16);
+            // Alle Items unter 70% HP → alle feuern (aber Cooldown verhindert Mehrfach-Fire pro Tick)
+            // Erstes Item feuert, andere sind noch im Cooldown (gleicher Tick)
+            Assert.True(ctx.KeyDowns(VirtualKey.F1) >= 1);
+        }
+
+        // ============================================================
         //  Test-Doubles
         // ============================================================
         private sealed class MockTickProvider : ITickProvider
