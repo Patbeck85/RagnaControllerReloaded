@@ -1747,7 +1747,7 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 **DoD:** Clean release artifacts; auto-update works end-to-end; SOUL.md RULE-001/003 compliance.
 **Umsetzung:** release.yml mit Build → Test → Publish → Package (SHA256/SHA512 checksums) → GitHub Release. RULE-001/003: release_final/ enthält nur .exe, .dll, .json, .md, LICENSE — keine .pdb, .obj, .log. UpdateChecker bereits implementiert (GitHub API, Download, Dispose, Logging).
 
-#### GEX-020: Accessibility & Internationalization Final Sweep (S4)
+#### GEX-020: Accessibility & Internationalization Final Sweep (S4) ✅ ERLEDIGT (2026-10-16)
 **Files:** All XAML, `Locales/*.json` (41 files)
 **Fundament:** UX-001 done (AutomationProperties), but: high contrast mode, font scaling, RTL languages (Arabic/Hebrew), screen reader flow order.
 **Impact:** Accessibility gaps for non-English/disabled users.
