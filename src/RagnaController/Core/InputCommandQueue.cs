@@ -193,6 +193,7 @@ namespace RagnaController.Core
         {
             _latencyTracker = latencyTracker;
             _controllerId = controllerId;
+            _queue = new BlockingCollection<InputCmd>();
         }
 
         public void Enqueue(InputCmd cmd)
@@ -312,7 +313,6 @@ namespace RagnaController.Core
             if (_cts == null || _cts.IsCancellationRequested)
                 _cts = new CancellationTokenSource();
 
-            _queue = new BlockingCollection<InputCmd>();
             _consumerThread = new Thread(Process) { Name = "InputCommandQueue_Consumer", IsBackground = true };
             _consumerThread.Start();
         }

@@ -59,7 +59,9 @@ namespace RagnaController.Core
         {
             if (!IsActive || !MageEnabled) return false;
             Update(input, deltaMs);
-            return false; // CursorEngine handles the right stick aiming automatically!
+            // Engine aktiv → Input konsumiert (Priority-Chain: Support bekommt dann keinen Durchgang mehr).
+            // CursorEngine handles the right stick aiming automatically!
+            return true;
         }
 
         public void ToggleMageMode()

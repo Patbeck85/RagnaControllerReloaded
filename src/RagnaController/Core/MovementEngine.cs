@@ -63,8 +63,10 @@ namespace RagnaController.Core
             {
                 if (_isWalking)
                 {
-                    if (_coastCounter < CoastFrames) { _coastCounter++; }
-                    else
+                    // CoastFrames = Anzahl der Deadzone-Frame, nach denen gestoppt wird.
+                    // FIX Off-by-one: vorher stoppte erst Frame N+1 (Zähler wurde nur bis N erhöht).
+                    _coastCounter++;
+                    if (_coastCounter >= CoastFrames)
                     {
                         _queue.LeftUp();
                         _isWalking = false;

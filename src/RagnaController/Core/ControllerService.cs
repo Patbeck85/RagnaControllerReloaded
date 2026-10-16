@@ -47,7 +47,25 @@ namespace RagnaController.Core
                             string.IsNullOrEmpty(Environment.GetEnvironmentVariable("USERNAME")) ||
                             string.Equals(Environment.GetEnvironmentVariable("CI"), "true", StringComparison.OrdinalIgnoreCase) ||
                             string.Equals(Environment.GetEnvironmentVariable("GITHUB_ACTIONS"), "true", StringComparison.OrdinalIgnoreCase) ||
-                            string.Equals(Environment.GetEnvironmentVariable("TF_BUILD"), "true", StringComparison.OrdinalIgnoreCase);
+                            string.Equals(Environment.GetEnvironmentVariable("TF_BUILD"), "true", StringComparison.OrdinalIgnoreCase) ||
+                            IsTestHostProcess();
+
+                        /// <summary>
+                        /// GEX-013: Testhost-Erkennung — unter dotnet test / VS (testhost.exe) ist SDL_INIT_VIDEO
+                        /// unnötig und kann AccessViolationException auslösen. Hermetic: Tests laufen überall ohne Env-Variablen.
+                        /// </summary>
+                        private static bool IsTestHostProcess()
+                        {
+                            try
+                            {
+                                var name = System.Diagnostics.Process.GetCurrentProcess().ProcessName;
+                                return name.Contains("testhost", StringComparison.OrdinalIgnoreCase);
+                            }
+                            catch
+                            {
+                                return false;
+                            }
+                        }
 
         public bool IsConnected => _isConnected;
         public string ControllerName { get; private set; } = "No Controller";
