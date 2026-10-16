@@ -754,11 +754,19 @@ namespace RagnaController
         }
 
         private async void BtnCalibrateQuick_Click(object sender, RoutedEventArgs e)
-                {
-                    if (_engine != null)
-                        await _engine.StartCalibrationAsync();
-                    ShowToast("Calibration started");
-                }
+        {
+            try
+            {
+                if (_engine != null)
+                    await _engine.StartCalibrationAsync();
+                ShowToast("Calibration started");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[MainWindow] Calibration start failed: {ex.Message}");
+                ShowToast($"Calibration failed: {ex.Message}", isError: true);
+            }
+        }
 
         private void BtnTestInput_Click(object sender, RoutedEventArgs e)
         {

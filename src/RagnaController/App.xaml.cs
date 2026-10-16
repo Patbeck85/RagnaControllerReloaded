@@ -50,10 +50,10 @@ namespace RagnaController
             };
 
             base.OnStartup(e);
-            StartWorkflow();
+            _ = StartWorkflowAsync();
         }
 
-        private async void StartWorkflow()
+        private async Task StartWorkflowAsync()
         {
             try
             {
