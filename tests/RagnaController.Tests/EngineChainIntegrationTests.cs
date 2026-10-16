@@ -975,6 +975,161 @@ namespace RagnaController.Tests
         }
 
         // ============================================================
+        //  7. PartyManager-Kette (GEX-009: Full Feature Verification)
+        // ============================================================
+        [Fact]
+        public void GEX009_Party_Heal_Weakest_Member_First()
+        {
+            using var ctx = new TestContext();
+            var pm = new PartyManager(ctx.Queue, () => 1000L); // fester Clock
+            pm.MemberCount = 4;
+            pm.HealThresholdPercent = 50;
+            pm.HealIntervalMs = 1000;
+            pm.HealKeyVK = VirtualKey.Z;
+            pm.Start();
+
+            // HP setzen: Member 0 = 100, Member 1 = 30 (schwachster), Member 2 = 80, Member 3 = 45
+            pm.SetMemberHp(0, 100);
+            pm.SetMemberHp(1, 30);
+            pm.SetMemberHp(2, 80);
+            pm.SetMemberHp(3, 45);
+
+            int healedIndex = -1;
+            pm.MemberHealed += idx => healedIndex = idx;
+
+            ctx.Clear();
+            pm.Update();
+
+            Assert.Equal(1, healedIndex); // schwächstes Mitglied (30%) zuerst
+            Assert.True(ctx.KeyDowns(VirtualKey.Z) >= 1); // Heal-Key gefeuert (≥1 wegen TapKey-Sequence)
+            Assert.True(ctx.TapKeyCount(VirtualKey.ControlLeft) >= 1); // Ctrl+Tab für Ring-Zyklus
+        }
+
+        [Fact]
+        public void GEX009_Party_No_Heal_Above_Threshold()
+        {
+            using var ctx = new TestContext();
+            var pm = new PartyManager(ctx.Queue, () => 1000L);
+            pm.MemberCount = 3;
+            pm.HealThresholdPercent = 50;
+            pm.HealIntervalMs = 1000;
+            pm.HealKeyVK = VirtualKey.Z;
+            pm.Start();
+
+            // Alle Mitglieder über der Schwelle
+            pm.SetMemberHp(0, 80);
+            pm.SetMemberHp(1, 90);
+            pm.SetMemberHp(2, 100);
+
+            ctx.Clear();
+            pm.Update();
+
+            Assert.Equal(0, ctx.KeyDowns(VirtualKey.Z)); // kein Heal
+        }
+
+        [Fact]
+        public void GEX009_Party_Heal_Interval_Cooldown()
+        {
+            using var ctx = new TestContext();
+            var clock = 1000L;
+            var pm = new PartyManager(ctx.Queue, () => clock);
+            pm.MemberCount = 2;
+            pm.HealThresholdPercent = 50;
+            pm.HealIntervalMs = 5000;
+            pm.HealKeyVK = VirtualKey.Z;
+            pm.Start();
+
+            pm.SetMemberHp(0, 30);
+            pm.SetMemberHp(1, 100);
+
+            // Erster Heal bei t=1000
+            pm.Update();
+            Assert.Equal(1, ctx.KeyDowns(VirtualKey.Z));
+            clock = 1000; // reset für nächsten Test
+
+            // Wieder bei t=1000 (noch kein Intervall vergangen) → kein zweiter Heal
+            ctx.Clear();
+            pm.Update();
+            Assert.Equal(0, ctx.KeyDowns(VirtualKey.Z));
+
+            // Nach Intervall bei t=6001 → zweiter Heal
+            clock = 6001;
+            ctx.Clear();
+            pm.Update();
+            Assert.Equal(1, ctx.KeyDowns(VirtualKey.Z));
+        }
+
+        [Fact]
+        public void GEX009_Party_Max_Members_12()
+        {
+            using var ctx = new TestContext();
+            var pm = new PartyManager(ctx.Queue, () => 1000L);
+            pm.MemberCount = PartyManager.MaxMembers;
+            pm.HealThresholdPercent = 50;
+            pm.HealIntervalMs = 1000;
+            pm.HealKeyVK = VirtualKey.Z;
+            pm.Start();
+
+            // Alle 12 Mitglieder setzen, Member 11 ist schwächster
+            for (int i = 0; i < PartyManager.MaxMembers; i++)
+                pm.SetMemberHp(i, 100);
+            pm.SetMemberHp(11, 10);
+
+            int healedIndex = -1;
+            pm.MemberHealed += idx => healedIndex = idx;
+
+            ctx.Clear();
+            pm.Update();
+
+            Assert.Equal(11, healedIndex); // Index 11 = schwächstes Mitglied
+            Assert.Equal(1, ctx.KeyDowns(VirtualKey.Z)); // genau ein Heal-Key
+        }
+
+        [Fact]
+        public void GEX009_Party_Not_Running_No_Heal()
+        {
+            using var ctx = new TestContext();
+            var pm = new PartyManager(ctx.Queue, () => 1000L);
+            pm.MemberCount = 2;
+            pm.HealThresholdPercent = 50;
+            pm.HealIntervalMs = 1000;
+            pm.HealKeyVK = VirtualKey.Z;
+            // nicht Start() aufgerufen
+
+            pm.SetMemberHp(0, 10);
+            pm.SetMemberHp(1, 100);
+
+            ctx.Clear();
+            pm.Update();
+
+            Assert.Equal(0, ctx.KeyDowns(VirtualKey.Z)); // kein Heal ohne Start
+        }
+
+        [Fact]
+        public void GEX009_Party_Reset_Stops_Loop()
+        {
+            using var ctx = new TestContext();
+            var pm = new PartyManager(ctx.Queue, () => 1000L);
+            pm.MemberCount = 2;
+            pm.HealThresholdPercent = 50;
+            pm.HealIntervalMs = 1000;
+            pm.HealKeyVK = VirtualKey.Z;
+            pm.Start();
+
+            pm.SetMemberHp(0, 30);
+            pm.SetMemberHp(1, 100);
+            pm.Update(); // erster Heal
+            Assert.Equal(1, ctx.KeyDowns(VirtualKey.Z));
+
+            pm.Reset(); // Stoppt Loop
+            ctx.Clear();
+            pm.Update();
+
+            Assert.Equal(0, ctx.KeyDowns(VirtualKey.Z)); // kein weiterer Heal nach Reset
+            Assert.False(pm.IsRunning);
+        }
+
+        // ============================================================
         //  Test-Doubles
         // ============================================================
         private sealed class MockTickProvider : ITickProvider
