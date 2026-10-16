@@ -1574,6 +1574,36 @@ namespace RagnaController.Tests
         }
 
         // ============================================================
+        //  12. UX-017: High Contrast + Font Scaling (S4, MEDIUM)
+        // ============================================================
+        [Fact]
+        public void UX017_DesignSystem_Contains_HighContrast_Keys()
+        {
+            string xamlPath = @"C:\Hermes\RagnaController\src\RagnaController\Resources\UI2026DesignSystem.xaml";
+            string xaml = File.ReadAllText(xamlPath);
+            Assert.Contains("HighContrastTextPrimary", xaml);
+            Assert.Contains("HighContrastTextSecondary", xaml);
+            Assert.Contains("HighContrastBgPrimary", xaml);
+            Assert.Contains("HighContrastAccentBlue", xaml);
+            Assert.Contains("HighContrastAccentPurple", xaml);
+            Assert.Contains("HighContrastBorder", xaml);
+            Assert.Contains("HighContrastLive", xaml);
+            Assert.Contains("HighContrastDanger", xaml);
+        }
+
+        [Fact]
+        public void UX017_DesignSystem_Contains_FontScale_Keys()
+        {
+            string xamlPath = @"C:\Hermes\RagnaController\src\RagnaController\Resources\UI2026DesignSystem.xaml";
+            string xaml = File.ReadAllText(xamlPath);
+            Assert.Contains("FontScaleSmall", xaml);
+            Assert.Contains("FontScaleNormal", xaml);
+            Assert.Contains("FontScaleLarge", xaml);
+            Assert.Contains("FontScaleXLarge", xaml);
+            Assert.Contains("BodyTextScalable", xaml);
+        }
+
+        // ============================================================
         //  Test-Doubles
         // ============================================================
         private sealed class MockTickProvider : ITickProvider
