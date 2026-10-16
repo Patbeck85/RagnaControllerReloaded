@@ -1604,6 +1604,17 @@ namespace RagnaController.Tests
         }
 
         // ============================================================
+        //  13. FEAT-026a: Steam Deck Big Picture UI (S2, HIGH)
+        // ============================================================
+        [Fact]
+        public void FEAT026a_MainWindow_Contains_BigPicture_Toggle()
+        {
+            string xamlPath = @"C:\Hermes\RagnaController\src\RagnaController/MainWindow.xaml";
+            string xaml = File.ReadAllText(xamlPath);
+            Assert.Contains("BigPicture", xaml);
+        }
+
+        // ============================================================
         //  Test-Doubles
         // ============================================================
         private sealed class MockTickProvider : ITickProvider

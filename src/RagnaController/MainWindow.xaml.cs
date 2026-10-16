@@ -254,6 +254,13 @@ namespace RagnaController
             Close();
         }
 
+        private void BtnBigPicture_Click(object s, RoutedEventArgs e)
+        {
+            // Big Picture Mode für Steam Deck: Maximieren + UI-Skalierung aktivieren
+            WindowState = WindowState.Maximized;
+            // TODO: Big Picture Layout anwenden (großere Buttons, kontrastreichere Farben)
+        }
+
         private void TabBase_Click(object s, RoutedEventArgs e) => SelectTab(PanelBase, null);
         private void TabL1_Click(object s, RoutedEventArgs e) => SelectTab(PanelL1, null);
         private void TabR1_Click(object s, RoutedEventArgs e) => SelectTab(PanelR1, null);
