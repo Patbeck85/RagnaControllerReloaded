@@ -2004,7 +2004,7 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 
 ### 🟩 SPRINT 15D — New Features (Low)
 
-#### FEAT-028: Profile Import/Export Backup (S4)
+#### FEAT-028: Profile Import/Export Backup (S4) ✅ ERLEDIGT (2026-10-17)
 **Files:** `ProfileLibraryWindow.xaml`, `SettingsWindow.xaml`
 **Fundament:** Profiles can be imported, but no easy "Export all" button.
 **Suggested Fix:** "Export all profiles as ZIP" in ProfileLibraryWindow; "Export settings as JSON/import"; auto-backup before profile changes.
