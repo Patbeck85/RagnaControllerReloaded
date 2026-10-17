@@ -2016,11 +2016,12 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 **Suggested Fix:** Automatic download of new versions; changelog display before installation; background install option.
 **DoD:** Auto-download new release; changelog shown before install; optional background install.
 
-#### FEAT-030: Multi-Monitor Support for Overlay (S4)
+#### FEAT-030: Multi-Monitor Support for Overlay (S4) ⏸️ BLOCKED (2026-10-17)
 **Files:** `Core/InGameOverlayWindow.xaml(.cs)`
 **Fundament:** No way to place overlay on specific monitor.
 **Suggested Fix:** Monitor selection in settings; per-monitor DPI scaling; overlay position saved per monitor.
 **DoD:** Monitor dropdown in overlay settings; position saved per monitor; DPI scaling respected.
+**Blocker:** Requires `UseWindowsForms=true` which causes ambiguous references (ButtonState, Timer) with WPF types. Revisit with P/Invoke or separate assembly reference.
 
 ---
 
