@@ -476,13 +476,13 @@ namespace RagnaController
 
             if (!gyro.IsAvailable)
             {
-                GyroStatusText.Text = "No DualSense found";
+                GyroStatusText.Text = LocalizationManager.GetLocalizedString("Settings_Gyro_NoDualSense");
                 GyroStatusText.Foreground = Brushes.OrangeRed;
                 return;
             }
 
             BtnGyroCalibrate.IsEnabled = false;
-            GyroStatusText.Text = "Measuring drift… keep controller still";
+            GyroStatusText.Text = LocalizationManager.GetLocalizedString("Settings_Gyro_Measuring");
             GyroStatusText.Foreground = Brushes.Yellow;
 
             try
@@ -499,13 +499,13 @@ namespace RagnaController
                 _s.Save();
 
                 GyroDeadzoneValue.Text = currentThreshold.ToString();
-                GyroStatusText.Text = $"Calibrated: {currentThreshold}";
+                GyroStatusText.Text = string.Format(LocalizationManager.GetLocalizedString("Settings_Gyro_Calibrated"), currentThreshold);
                 GyroStatusText.Foreground = Brushes.LimeGreen;
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[SettingsWindow] Gyro calibration failed: {ex.Message}");
-                GyroStatusText.Text = "Calibration failed";
+                GyroStatusText.Text = LocalizationManager.GetLocalizedString("Settings_Gyro_CalibrationFailed");
                 GyroStatusText.Foreground = Brushes.OrangeRed;
             }
             finally

@@ -25,6 +25,9 @@ namespace RagnaController
             Loaded += (s, e) => Refresh();
             // Initial state: empty input -> placeholder visible, download disabled.
             UpdateShareCodeValidation();
+
+            // Set localized tooltip for Export All button
+            BtnExportAll.ToolTip = LocalizationManager.GetLocalizedString("ProfileLibrary_ExportAll_Tooltip");
         }
 
         /// <summary>UX-013: Toggles watermark, red validation border and Download-button enablement.</summary>

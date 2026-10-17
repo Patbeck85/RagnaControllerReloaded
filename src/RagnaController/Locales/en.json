@@ -770,5 +770,15 @@
   "MainWindow_ProfileCombo_Tooltip": "Active Profile",
   "Tab_NoProfileLoaded": "No Profile Loaded",
   "Tab_NoProfileLoaded_Desc": "Load a profile to see button mappings for this layer.",
-  "Tab_OpenProfileLibrary": "Open Profile Library"
+  "Tab_OpenProfileLibrary": "Open Profile Library",
+  "ProfileLibrary_ExportAll": "Export All",
+  "ProfileLibrary_ExportAll_Tooltip": "Export all profiles as ZIP archive",
+  "Settings_GyroDeadzone_Label": "Gyro Deadzone:",
+  "Settings_GyroCalibrate_Button": "Kalibrieren",
+  "Settings_GyroCalibrate_Tooltip": "Misst den Gyro-Drift und setzt den Deadzone-Wert automatisch",
+  "Settings_OverlayMonitor_Label": "Monitor:",
+  "Settings_Gyro_NoDualSense": "No DualSense found",
+  "Settings_Gyro_Measuring": "Measuring drift… keep controller still",
+  "Settings_Gyro_Calibrated": "Calibrated: {0}",
+  "Settings_Gyro_CalibrationFailed": "Calibration failed"
 }
