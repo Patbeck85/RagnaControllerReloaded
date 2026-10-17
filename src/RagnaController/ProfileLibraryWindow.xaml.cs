@@ -88,6 +88,12 @@ namespace RagnaController
 
             ProfilesList.ItemsSource = filtered;
             ProfileCount.Text = $"{filtered.Count} profiles found";
+
+            // UX-018: Empty State when no profiles found
+            if (EmptyStatePanel != null)
+                EmptyStatePanel.Visibility = filtered.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+            if (ProfilesList != null)
+                ProfilesList.Visibility = filtered.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e) => ApplyFilter();

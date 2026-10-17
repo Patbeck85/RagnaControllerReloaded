@@ -59,9 +59,18 @@
                 </Grid>
                 
                 <!-- Profile List -->
-                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" AllowDrop="True" Drop="ProfilesList_Drop">
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" AllowDrop="True" Drop="ProfilesList_Drop">
+                                <Grid>
+                                    <!-- Empty State (shown when no profiles found) -->
+                                    <StackPanel x:Name="EmptyStatePanel" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed" Margin="40">
+                                        <TextBlock Text="📭" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                                        <TextBlock Text="Keine Profile gefunden" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                                        <TextBlock Text="Erstelle ein neues Profil oder importiere ein bestehendes." FontSize="13" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="300" Margin="0,0,0,24"/>
+                                        <Button Content="Neues Profil erstellen" Style="{StaticResource PrimaryButton}" Width="160" Height="44" HorizontalAlignment="Center" Click="BtnNew_Click"/>
+                                    </StackPanel>
+
                                     <ItemsControl x:Name="ProfilesList">
-                        <ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Style="{StaticResource GlassPanel}" Padding="18" CornerRadius="{StaticResource RadiusLg}" Margin="0,0,0,12" BorderBrush="{StaticResource BgBorder}" BorderThickness="1">
                                     <Grid>
@@ -92,8 +101,9 @@
                                 </Border>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                                    </ItemsControl>
+                                </Grid>
+                            </ScrollViewer>
             </Grid>
             
             <!-- Footer Actions -->
