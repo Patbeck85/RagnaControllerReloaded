@@ -2031,6 +2031,118 @@ namespace RagnaController.Tests
         }
 
         // ============================================================
+        //  19. FEAT-027: Handheld-First Navigation — Haptic Feedback (S3, MEDIUM)
+        // ============================================================
+        private sealed class MockRumbleProvider : IRumbleProvider, IDisposable
+        {
+            public List<(float left, float right)> Calls = new();
+
+            public void SetRumble(float left, float right) => Calls.Add((left, right));
+            public void Dispose() { }
+        }
+
+        [Fact]
+        public void FEAT027_HapticFeedback_PlayHit_RecordsRumble()
+        {
+            using var rumble = new MockRumbleProvider();
+            using var haptics = new HapticFeedbackService(rumble);
+
+            haptics.PlayHit();
+            Thread.Sleep(150); // Pattern: 100ms on, dann aus
+
+            Assert.Equal(2, rumble.Calls.Count);
+            Assert.Equal(0.8f, rumble.Calls[0].left);
+            Assert.Equal(0.4f, rumble.Calls[0].right);
+            Assert.Equal((0f, 0f), rumble.Calls[^1]); // Letzter Call: aus
+        }
+
+        [Fact]
+        public void FEAT027_HapticFeedback_PlayDeath_RecordsRumble()
+        {
+            using var rumble = new MockRumbleProvider();
+            using var haptics = new HapticFeedbackService(rumble);
+
+            haptics.PlayDeath();
+            Thread.Sleep(600); // Pattern: 500ms on, dann aus
+
+            Assert.Equal(2, rumble.Calls.Count);
+            Assert.Equal(1.0f, rumble.Calls[0].left);
+            Assert.Equal(1.0f, rumble.Calls[0].right);
+            Assert.Equal((0f, 0f), rumble.Calls[^1]);
+        }
+
+        [Fact]
+        public void FEAT027_HapticFeedback_PlayBuffExpired_RecordsDoubleRumble()
+        {
+            using var rumble = new MockRumbleProvider();
+            using var haptics = new HapticFeedbackService(rumble);
+
+            haptics.PlayBuffExpired();
+            Thread.Sleep(500); // Pattern: 100 on, 100 off, 100 on, dann aus
+
+            // 3 An-Phasen + Aus-Phasen (insgesamt 4 Calls)
+            Assert.True(rumble.Calls.Count >= 4);
+            Assert.Equal(0.6f, rumble.Calls[0].left);
+            Assert.Equal(0.6f, rumble.Calls[0].right);
+            // Letzter Call sollte aus sein
+            Assert.Equal((0f, 0f), rumble.Calls[^1]);
+        }
+
+        [Fact]
+        public void FEAT027_HapticFeedback_PlaySkillCast_RecordsRumble()
+        {
+            using var rumble = new MockRumbleProvider();
+            using var haptics = new HapticFeedbackService(rumble);
+
+            haptics.PlaySkillCast();
+            Thread.Sleep(350); // Pattern: 250ms on, dann aus
+
+            Assert.Equal(2, rumble.Calls.Count);
+            Assert.Equal(0.5f, rumble.Calls[0].left);
+            Assert.Equal(0.5f, rumble.Calls[0].right);
+            Assert.Equal((0f, 0f), rumble.Calls[^1]);
+        }
+
+        [Fact]
+        public void FEAT027_HapticFeedback_Stop_StopsRumble()
+        {
+            using var rumble = new MockRumbleProvider();
+            using var haptics = new HapticFeedbackService(rumble);
+
+            haptics.PlayDeath(); // 500ms lang
+            Thread.Sleep(100);
+            haptics.Stop();
+
+            // Nach Stop sollte der letzte Call (0,0) sein
+            Assert.Equal((0f, 0f), rumble.Calls[^1]);
+        }
+
+        [Fact]
+        public void FEAT027_HapticFeedback_PlayCustom_RecordsPattern()
+        {
+            using var rumble = new MockRumbleProvider();
+            using var haptics = new HapticFeedbackService(rumble);
+
+            haptics.PlayCustom(new[] { 50, 50 }, 0.3f);
+            Thread.Sleep(200);
+
+            Assert.True(rumble.Calls.Count >= 2);
+            Assert.Equal(0.3f, rumble.Calls[0].left);
+            Assert.Equal(0.3f, rumble.Calls[0].right);
+        }
+
+        [Fact]
+        public void FEAT027_HapticFeedback_Dispose_DoesNotThrow()
+        {
+            var rumble = new MockRumbleProvider();
+            var haptics = new HapticFeedbackService(rumble);
+            haptics.PlayHit();
+            haptics.Dispose();
+            haptics.Dispose(); // Doppelter Dispose soll nicht werfen
+            Assert.True(true);
+        }
+
+        // ============================================================
         //  Test-Doubles
         // ============================================================
         private sealed class MockTickProvider : ITickProvider
