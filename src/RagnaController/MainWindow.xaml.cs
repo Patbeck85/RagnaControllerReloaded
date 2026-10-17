@@ -39,6 +39,15 @@ namespace RagnaController
         // UX-012: Gamepad-Navigation in der Hauptfenster (DPad/Tab-Fokus)
         private GamepadUiNavigator? _navigator;
 
+        // Event handler delegates for proper cleanup in Window_Closing (MEMORY-001: no leaked references)
+        private Action<EngineStatus>? _statusChangedHandler;
+        private Action<int>? _profileQuickSwitchHandler;
+        private Action<string>? _logMessageHandler;
+        private Action<string>? _batteryChangedHandler;
+        private Action<string>? _controllerConnectedHandler;
+        private Action? _controllerDisconnectedHandler;
+        private Action? _restoreMainWindowRequestedHandler;
+
 #pragma warning disable CS0649 // WPF: Fields initialized in XAML
         // Toast/Notifications (NOT in XAML - created dynamically)
         private Border? ToastBorder;
@@ -74,11 +83,12 @@ namespace RagnaController
             _discordRpc = new DiscordRpcService(_settings);
             _ttsService = new TtsAnnouncerService(_settings);
 
-            _engine.StatusChanged += (s) => Dispatcher.BeginInvoke(() =>
+            _statusChangedHandler = (s) => Dispatcher.BeginInvoke(() =>
             {
                 // Status displayed in Health tab panel
                 _vm?.ApplyEngineStatus(s, _engine.ControllerName);
             });
+            _engine.StatusChanged += _statusChangedHandler;
 
             _subs.Add(_engine.Messenger.Subscribe<SnapshotReadyMessage>(msg =>
             {
@@ -129,7 +139,7 @@ namespace RagnaController
                 ShowToast($"⏳ Buff expiring soon: {msg.ActionLabel}", isError: true);
             })));
 
-            _engine.ProfileQuickSwitch += delta => Dispatcher.BeginInvoke(() =>
+            _profileQuickSwitchHandler = delta => Dispatcher.BeginInvoke(() =>
             {
                 if (_manager.Profiles.Count == 0) return;
                 int idx  = _manager.Profiles.IndexOf(ProfileCombo.SelectedItem as Profile ?? _manager.Profiles[0]);
@@ -140,8 +150,9 @@ namespace RagnaController
                     _vm?.UpdateClassImage(p.Class);
                 }
             });
+            _engine.ProfileQuickSwitch += _profileQuickSwitchHandler;
 
-            _engine.LogMessage += msg => Dispatcher.BeginInvoke(() =>
+            _logMessageHandler = msg => Dispatcher.BeginInvoke(() =>
             {
                 if (LogTextBlock != null)
                 {
@@ -155,13 +166,15 @@ namespace RagnaController
                     LogScrollViewer2?.ScrollToEnd();
                 }
             });
+            _engine.LogMessage += _logMessageHandler;
 
-            _engine.BatteryChanged += level => Dispatcher.BeginInvoke(() =>
+            _batteryChangedHandler = level => Dispatcher.BeginInvoke(() =>
             {
                 // Battery level updated - could show in status or toast
             });
+            _engine.BatteryChanged += _batteryChangedHandler;
 
-            _engine.ControllerConnected += name => Dispatcher.BeginInvoke(() =>
+            _controllerConnectedHandler = name => Dispatcher.BeginInvoke(() =>
             {
                 _ttsService?.Speak("Controller connected");
                 SetFooterButtonsEnabled(true);
@@ -173,8 +186,9 @@ namespace RagnaController
                 if (_activeTabPanel == PanelHealth)
                     PopulateTabPanel(PanelHealth);
             });
+            _engine.ControllerConnected += _controllerConnectedHandler;
 
-            _engine.ControllerDisconnected += () => Dispatcher.BeginInvoke(() =>
+            _controllerDisconnectedHandler = () => Dispatcher.BeginInvoke(() =>
             {
                 _ttsService?.Speak("Controller disconnected");
                 SetFooterButtonsEnabled(false);
@@ -187,11 +201,13 @@ namespace RagnaController
                 if (_activeTabPanel == PanelHealth)
                     PopulateTabPanel(PanelHealth);
             });
+            _engine.ControllerDisconnected += _controllerDisconnectedHandler;
 
-            _engine.RestoreMainWindowRequested += () => Dispatcher.BeginInvoke(() =>
+            _restoreMainWindowRequestedHandler = () => Dispatcher.BeginInvoke(() =>
             {
                 if (_isMiniMode) SwitchFromMiniMode();
             });
+            _engine.RestoreMainWindowRequested += _restoreMainWindowRequestedHandler;
 
             // ── Profile Dropdown initialisieren (via ProfileService) ─────────────
             ProfileCombo.ItemsSource = _profileService.GetAllProfiles();
@@ -726,6 +742,22 @@ namespace RagnaController
                                 System.Diagnostics.Debug.WriteLine($"[MainWindow] Subscription dispose failed: {ex.Message}");
                             }
                         _subs.Clear();
+
+            // Unsubscribe engine events (MEMORY-001: prevent leaked references)
+            if (_statusChangedHandler != null)
+                _engine.StatusChanged -= _statusChangedHandler;
+            if (_profileQuickSwitchHandler != null)
+                _engine.ProfileQuickSwitch -= _profileQuickSwitchHandler;
+            if (_logMessageHandler != null)
+                _engine.LogMessage -= _logMessageHandler;
+            if (_batteryChangedHandler != null)
+                _engine.BatteryChanged -= _batteryChangedHandler;
+            if (_controllerConnectedHandler != null)
+                _engine.ControllerConnected -= _controllerConnectedHandler;
+            if (_controllerDisconnectedHandler != null)
+                _engine.ControllerDisconnected -= _controllerDisconnectedHandler;
+            if (_restoreMainWindowRequestedHandler != null)
+                _engine.RestoreMainWindowRequested -= _restoreMainWindowRequestedHandler;
 
             // Save settings
             if (_manager.ActiveProfile != null)

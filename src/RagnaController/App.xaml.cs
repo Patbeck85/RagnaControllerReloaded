@@ -126,15 +126,35 @@ namespace RagnaController
                 // ── Engine + Manager im Hintergrund erstellen ────────────────
                 // WICHTIG: HybridEngine erstellt ControllerService (SDL Init) —
                 // das MUSS im Background-Thread passieren, sonst hängt der UI-Thread!
-                HybridEngine engine = null!;
-                ProfileManager manager = null!;
-                await Task.Run(() =>
+                HybridEngine? engine = null;
+                ProfileManager? manager = null;
+                try
                 {
+                    await Task.Run(() =>
+                    {
 #pragma warning disable CS8625
-                    engine  = new HybridEngine(new BackgroundTickProvider(8), new Messenger(), null, null);
+                        engine = new HybridEngine(new BackgroundTickProvider(8), new Messenger(), null, null);
 #pragma warning restore CS8625
-                    manager = new ProfileManager();
-                });
+                        manager = new ProfileManager();
+                    });
+                }
+                catch (Exception ex)
+                {
+                    LogFatal("Engine Creation", ex.ToString());
+                    MessageBox.Show($"Fehler beim Erstellen der Engine:\\n{ex.Message}\\n\\nDetails: {CrashLog}",
+                        "RagnaController – Startfehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Shutdown();
+                    return;
+                }
+
+                if (engine == null || manager == null)
+                {
+                    LogFatal("Engine Creation", "Engine or Manager is null after initialization");
+                    MessageBox.Show("Fehler beim Erstellen der Engine: Unbekannter Fehler",
+                        "RagnaController – Startfehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Shutdown();
+                    return;
+                }
 
                 var viewModel = new MainViewModel();
 
@@ -191,7 +211,13 @@ namespace RagnaController
                 // FEAT-029: Automatic update check on startup
                 if (settings.AutoUpdateEnabled)
                 {
-                    _ = UpdateChecker.CheckAndNotifyAsync(main);
+                    _ = UpdateChecker.CheckAndNotifyAsync(main).ContinueWith(t =>
+                    {
+                        if (t.IsFaulted)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"[App] Update check failed: {t.Exception}");
+                        }
+                    }, TaskContinuationOptions.OnlyOnFaulted);
                 }
             }
             catch (Exception ex)

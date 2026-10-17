@@ -19,6 +19,13 @@ namespace RagnaController
         private SettingsWindow?              _settingsWin;
         private readonly Settings            _settings;
 
+        // Event handler delegates for proper cleanup on close (MEMORY-001)
+        private Action<string>? _controllerConnectedHandler;
+        private Action? _controllerDisconnectedHandler;
+        private Action<EngineStatus>? _statusChangedHandler;
+        private Action<int>? _profileQuickSwitchHandler;
+        private Action<string>? _batteryChangedHandler;
+
         public HandheldWindow(HybridEngine engine, ProfileManager manager, Settings? settings = null)
         {
             InitializeComponent();
@@ -32,18 +39,23 @@ namespace RagnaController
             DeviceLabel.Text = HandheldDetector.DeviceName.ToUpper();
 
             // Wire up engine events
-            _engine.ControllerConnected    += name => Dispatcher.BeginInvoke(() => SetControllerStatus(name, true));
-            _engine.ControllerDisconnected += ()   => Dispatcher.BeginInvoke(() => SetControllerStatus("—", false));
-            _engine.StatusChanged          += _    => Dispatcher.BeginInvoke(UpdateProfileLabel);
+            _controllerConnectedHandler = name => Dispatcher.BeginInvoke(() => SetControllerStatus(name, true));
+            _controllerDisconnectedHandler = () => Dispatcher.BeginInvoke(() => SetControllerStatus("—", false));
+            _statusChangedHandler = _ => Dispatcher.BeginInvoke(UpdateProfileLabel);
+            _engine.ControllerConnected += _controllerConnectedHandler;
+            _engine.ControllerDisconnected += _controllerDisconnectedHandler;
+            _engine.StatusChanged += _statusChangedHandler;
 
             // B-Button = Back / Start = Play
             KeyDown += Window_KeyDown;
 
             // Start button on controller → play directly
-            engine.ProfileQuickSwitch += _ => Dispatcher.BeginInvoke(CycleProfile);
+            _profileQuickSwitchHandler = _ => Dispatcher.BeginInvoke(CycleProfile);
+            engine.ProfileQuickSwitch += _profileQuickSwitchHandler;
 
             // UX-020: Battery status updates
-            _engine.BatteryChanged += level => Dispatcher.BeginInvoke(() => UpdateBatteryStatus(level));
+            _batteryChangedHandler = level => Dispatcher.BeginInvoke(() => UpdateBatteryStatus(level));
+            _engine.BatteryChanged += _batteryChangedHandler;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -147,7 +159,17 @@ namespace RagnaController
             _settingsWin?.Close();
             _engine.Shutdown();
             Application.Current.Shutdown();
-            System.Threading.Tasks.Task.Delay(500).ContinueWith(_ => Environment.Exit(0));
+            _ = System.Threading.Tasks.Task.Delay(500).ContinueWith(t =>
+            {
+                if (t.IsFaulted)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[HandheldWindow] Exit delay failed: {t.Exception}");
+                }
+                else
+                {
+                    Environment.Exit(0);
+                }
+            });
         }
 
         // ── Helper Methods ─────────────────────────────────────────────────
@@ -203,6 +225,21 @@ namespace RagnaController
                 _engine.LoadProfile(active);
             }
             UpdateProfileLabel();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            // Unsubscribe engine events (MEMORY-001: prevent leaked references)
+            if (_controllerConnectedHandler != null)
+                _engine.ControllerConnected -= _controllerConnectedHandler;
+            if (_controllerDisconnectedHandler != null)
+                _engine.ControllerDisconnected -= _controllerDisconnectedHandler;
+            if (_statusChangedHandler != null)
+                _engine.StatusChanged -= _statusChangedHandler;
+            if (_profileQuickSwitchHandler != null)
+                _engine.ProfileQuickSwitch -= _profileQuickSwitchHandler;
+            if (_batteryChangedHandler != null)
+                _engine.BatteryChanged -= _batteryChangedHandler;
         }
 
         private void Window_Closed(object sender, EventArgs e)

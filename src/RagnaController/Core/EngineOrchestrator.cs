@@ -223,7 +223,14 @@ namespace RagnaController.Core
                             string msg = $"⚠ Engine-Hang erkannt: {msWithoutTick:F0} ms ohne Tick — starte Engine neu.";
                             _logger?.Warn(msg);
                             LogMessage?.Invoke(msg);
-                            _ = Task.Run(() => Restart());
+                            _ = Task.Run(() => Restart()).ContinueWith(t =>
+                            {
+                                if (t.IsFaulted)
+                                {
+                                    _logger?.Error($"[EngineOrchestrator] Engine restart failed: {t.Exception}");
+                                    LogMessage?.Invoke($"⚠ Engine-Restart fehlgeschlagen: {t.Exception.Message}");
+                                }
+                            }, TaskContinuationOptions.OnlyOnFaulted);
                         };
 
                         _cooldownManager = new CooldownManager(_messenger, _feedback);
