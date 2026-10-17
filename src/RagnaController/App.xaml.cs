@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
@@ -23,14 +25,32 @@ namespace RagnaController
             AppDomain.CurrentDomain.UnhandledException += (s, ex) =>
             {
                 LogFatal("UnhandledException", ex.ExceptionObject?.ToString() ?? "unknown");
-                MessageBox.Show($"Fataler Fehler:\n{ex.ExceptionObject?.GetType().Name}\n\nDetails: {CrashLog}",
+                var settings = Models.Settings.Load();
+                if (settings.AutoRestartOnCrash)
+                {
+                    settings.Save(); // Persist last known profile/settings
+                    MessageBox.Show($"⚠ Fataler Fehler — App wird automatisch neu gestartet.\n\nDetails: {CrashLog}",
+                        "RagnaController – Auto-Restart", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    RestartApp();
+                    return;
+                }
+                MessageBox.Show($"{ex.ExceptionObject?.GetType().Name}\n\nDetails: {CrashLog}",
                     "RagnaController – Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
             };
 
             DispatcherUnhandledException += (s, ex) =>
             {
                 LogFatal("DispatcherUnhandledException", ex.Exception?.ToString() ?? "unknown");
-                MessageBox.Show($"UI-Fehler:\n{ex.Exception?.Message}\n\nDetails: {CrashLog}",
+                var settings = Models.Settings.Load();
+                if (settings.AutoRestartOnCrash)
+                {
+                    settings.Save();
+                    MessageBox.Show($"⚠ UI-Fehler — App wird automatisch neu gestartet.\n\nDetails: {CrashLog}",
+                        "RagnaController – Auto-Restart", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    RestartApp();
+                    return;
+                }
+                MessageBox.Show($"{ex.Exception?.Message}\n\nDetails: {CrashLog}",
                     "RagnaController – Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
                 ex.Handled = true;
             };
@@ -187,8 +207,33 @@ namespace RagnaController
             }
             catch (Exception ex)
             {
-                // Log-Fehler darf App nicht crashen 2014 Debug-Output als Fallback
+                // Log-Fehler darf App nicht crashen
                 System.Diagnostics.Debug.WriteLine($"[App] LogFatal failed: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// TECH-063: Restarts the application process (auto-restart on crash).
+        /// Persists settings first, then launches a new instance and shuts down the current one.
+        /// </summary>
+        private static void RestartApp()
+        {
+            try
+            {
+                var exePath = Assembly.GetExecutingAssembly().Location;
+                Process.Start(new ProcessStartInfo
+                {
+                    UseShellExecute = true,
+                    FileName = exePath
+                });
+            }
+            catch (Exception ex)
+            {
+                LogFatal("RestartApp", ex.ToString());
+            }
+            finally
+            {
+                Application.Current.Shutdown();
             }
         }
     }

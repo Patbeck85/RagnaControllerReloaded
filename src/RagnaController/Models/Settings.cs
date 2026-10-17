@@ -77,6 +77,10 @@ namespace RagnaController.Models
         public bool EnableTelemetry { get; set; } = false;
         public bool HasAskedForTelemetry { get; set; } = false;
 
+        // ── TECH-063: Auto-Restart on Crash ─────────────────────────────────
+        /// <summary>Automatically restart the app after a fatal crash (gaming UX: no dead controller mid-session).</summary>
+        public bool AutoRestartOnCrash { get; set; } = false;
+
         // ── ROB-002: Input-Emulation-Failover (SendInput ↔ Kernel-Service) ───
         /// <summary>SendInput-Latenz-Schwelle in ms. Flushes darüber gelten als "langsam".</summary>
         public int FailoverLatencyThresholdMs { get; set; } = 5;
