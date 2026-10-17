@@ -29,6 +29,7 @@ namespace RagnaController
         private MiniModeWindow? _miniWindow;
         private bool _wasFocusLocked;
         private readonly ToastService _toastService = new();
+        private readonly ProfileService _profileService;
 
         private MainViewModel? _vm;
         private DiscordRpcService? _discordRpc;
@@ -53,6 +54,7 @@ namespace RagnaController
             _vm     = vm; // Assign the passed ViewModel
             InitializeComponent();
             _toastService.Initialize(ToastBorder!, ToastText!, ToastBg!);
+            _profileService = new ProfileService(_manager, _settings, _engine, msg => ShowToast(msg));
             DataContext = vm;
 
             // UX-012: Gamepad-Navigation (DPad/Tab) — vor der VM-Guard-Klausel initialisieren,
@@ -188,16 +190,15 @@ namespace RagnaController
                 if (_isMiniMode) SwitchFromMiniMode();
             });
 
-            // ── Profile Dropdown initialisieren ─────────────────────────────
-            ProfileCombo.ItemsSource = _manager.Profiles;
+            // ── Profile Dropdown initialisieren (via ProfileService) ─────────────
+            ProfileCombo.ItemsSource = _profileService.GetAllProfiles();
 
             // Letztes Profil wiederherstellen oder erstes nehmen
-            var lastProfile = _manager.Profiles.FirstOrDefault(p => p.Name == _settings.LastProfileName)
-                           ?? _manager.Profiles.FirstOrDefault();
+            var lastProfile = _profileService.LoadLastOrFirst();
             if (lastProfile != null)
             {
                 ProfileCombo.SelectedItem = lastProfile;
-                ApplyProfile(lastProfile);
+                _profileService.ApplyProfile(lastProfile);
             }
 
             // Initialize tab button mapping
@@ -837,7 +838,7 @@ namespace RagnaController
         {
             if (ProfileCombo.SelectedItem is Profile profile)
             {
-                ApplyProfile(profile);
+                _profileService.ApplyProfile(profile);
             }
         }
 
@@ -851,26 +852,13 @@ namespace RagnaController
 
                 private void OpenProfileLibrary()
                 {
-                    var w = new ProfileLibraryWindow(_manager) { Owner = this };
-                    w.ShowDialog();
+                    _profileService.OpenProfileLibrary(() =>
+                    {
+                        // Refresh profile list after library closed
+                        ProfileCombo.ItemsSource = null;
+                        ProfileCombo.ItemsSource = _profileService.GetAllProfiles();
+                    });
                 }
-
-                private void ApplyProfile(Profile profile)
-        {
-            if (profile == null) return;
-            
-            _engine.LoadProfile(profile);
-            _settings.LastProfileName = profile.Name;
-            _settings.Save();
-            
-            // Update CurrentProfileText if it exists
-            if (ProfileCombo != null)
-            {
-                ProfileCombo.SelectedItem = profile;
-            }
-            
-            ShowToast($"Profile loaded: {profile.Name}");
-        }
 
         // Reset click handlers for double-click on labels
         private void DeadzoneReset_Click(object sender, RoutedEventArgs e)
