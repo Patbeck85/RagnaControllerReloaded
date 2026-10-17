@@ -137,6 +137,8 @@
         <Compile Include="Core\GyroService.cs" />
         <Compile Include="Core\SleepModeService.cs" />
 <Compile Include="Core\BatteryOptimizationService.cs" />
+<Compile Include="Core\FeedbackRumbleProvider.cs" />
+<Compile Include="Core\GestureRecognizer.cs" />
 <Compile Include="Core\HapticFeedbackService.cs" />
         <Compile Include="Core\HandheldDetector.cs" />
         <Compile Include="Core\HandheldModeManager.cs" />

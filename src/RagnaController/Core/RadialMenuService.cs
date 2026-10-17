@@ -11,6 +11,7 @@ namespace RagnaController.Core
     public sealed class RadialMenuService : IDisposable
     {
         private readonly List<RadialMenuItem> _items = new();
+        private readonly IRumbleProvider? _rumble;
         private bool _disposed;
         private bool _isOpen;
         private int _selectedIndex = -1;
@@ -21,6 +22,11 @@ namespace RagnaController.Core
 
         public event EventHandler<RadialMenuItem>? ItemSelected;
         public event EventHandler<bool>? MenuStateChanged;
+
+        public RadialMenuService(IRumbleProvider? rumble = null)
+        {
+            _rumble = rumble;
+        }
 
         public void AddItem(string label, Action action, double angleDegrees = 0)
         {
@@ -57,12 +63,14 @@ namespace RagnaController.Core
         {
             if (!_isOpen || _items.Count == 0) return;
             _selectedIndex = (_selectedIndex + 1) % _items.Count;
+            _rumble?.SetRumble(0.3f, 0.1f); // Kurzes Haptic Feedback bei Navigation
         }
 
         public void SelectPrevious()
         {
             if (!_isOpen || _items.Count == 0) return;
             _selectedIndex = (_selectedIndex - 1 + _items.Count) % _items.Count;
+            _rumble?.SetRumble(0.3f, 0.1f); // Kurzes Haptic Feedback bei Navigation
         }
 
         public void ActivateSelection()
@@ -71,6 +79,7 @@ namespace RagnaController.Core
             var item = _items[_selectedIndex];
             ItemSelected?.Invoke(this, item);
             item.Action?.Invoke();
+            _rumble?.SetRumble(0.8f, 0.8f); // Stärkeres Feedback bei Auswahl
             Close();
         }
 

@@ -76,7 +76,11 @@ namespace RagnaController.Core
                                                                                                                                                                 // ProfileManager for auto-switching profiles based on controller
                                                                                                                                                                 private readonly ProfileManager _profileManager;
 
-        // ── Runtime ──
+                                                                                                                                                                // UX-016: Radial Menu + Gesten (Handheld-First Navigation)
+                                                                                                                                                                private readonly RadialMenuService _radialMenu;
+                                                                                                                                                                private readonly GestureRecognizer _gestureRecognizer;
+
+                                                                                                                                                                // ── Runtime ──
                 private volatile bool _isRunning;
                 public bool IsRunning { get => _isRunning; private set => _isRunning = value; }
                 private volatile bool _isPaused;
@@ -237,9 +241,15 @@ namespace RagnaController.Core
 
             // Initialize decomposed components FIRST (before using them in event handlers)
             _standbyManager = new StandbyManager();
+
+            // UX-016: Radial Menu + Gesten (Handheld-First Navigation)
+            _radialMenu = new RadialMenuService(new FeedbackRumbleProvider(_feedback));
+            _gestureRecognizer = new GestureRecognizer();
+
             _inputRouter = new InputRouter(
                 _combat, _movement, _autoTarget, _mage, _combo, _cursor, _smartCursor,
-                _kite, _support, _overlayRouter, _mobSweep, _handheld, _feedback, _cooldownManager);
+                _kite, _support, _overlayRouter, _mobSweep, _handheld, _feedback, _cooldownManager,
+                _radialMenu, _gestureRecognizer);
             _profileApplier = new ProfileApplier(this, _messenger);
 
             // TECH-059: Config Hot-Reload — überwacht settings.json und profiles.json

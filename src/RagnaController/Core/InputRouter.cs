@@ -30,6 +30,10 @@ namespace RagnaController.Core
         private IFeedbackProvider _feedback = null!;
         private CooldownManager _cooldownManager = null!;
 
+        // ── Radial Menu + Gesten (UX-016) ─────────────────────────────────
+        private RadialMenuService? _radialMenu;
+        private GestureRecognizer? _gestureRecognizer;
+
         // ── ROB-002: Input-Emulation-Failover (SendInput ↔ Kernel) ─────────────
                 private IMouseEmulationStrategy? _failoverPrimary;
                 private IMouseEmulationStrategy? _failoverFallback;
@@ -145,7 +149,9 @@ namespace RagnaController.Core
             MobSweepEngine mobSweep,
             HandheldModeManager handheld,
             IFeedbackProvider feedback,
-            CooldownManager cooldownManager)
+            CooldownManager cooldownManager,
+            RadialMenuService radialMenu,
+            GestureRecognizer gestureRecognizer)
         {
             _combat = combat;
             _movement = movement;
@@ -161,6 +167,18 @@ namespace RagnaController.Core
             _handheld = handheld;
             _feedback = feedback;
             _cooldownManager = cooldownManager;
+            _radialMenu = radialMenu;
+            _gestureRecognizer = gestureRecognizer;
+
+            // Gesten-Events mit RadialMenuService verdrahten
+            _gestureRecognizer.MenuStateChanged += (s, isOpen) =>
+            {
+                if (isOpen) _radialMenu?.Open();
+                else _radialMenu?.Close();
+            };
+            _gestureRecognizer.ItemNext += (s, e) => _radialMenu?.SelectNext();
+            _gestureRecognizer.ItemPrevious += (s, e) => _radialMenu?.SelectPrevious();
+            _gestureRecognizer.ItemActivate += (s, e) => _radialMenu?.ActivateSelection();
         }
 
         /// <summary>
@@ -177,6 +195,18 @@ namespace RagnaController.Core
                         {
                             // GEX-002: Measure Route latency (opt-in, zero-allocation when disabled per PERF-010)
                             var routeSw = InputLatencyBudgets.EnableBudgetTracking ? System.Diagnostics.Stopwatch.StartNew() : null;
+
+                            // UX-016: Gestenerkennung (Right-Stick Swipes für Radial Menu)
+                            _gestureRecognizer?.Tick(input.RightX, input.RightY, input.R3);
+
+                            // Wenn Radial Menu offen ist: Right-Stick steuert das Menü, nicht den Cursor
+                            if (_gestureRecognizer?.IsMenuOpen == true)
+                            {
+                                // Menu-Input wird vom GestureRecognizer verarbeitet (SelectNext/Previous/Activate)
+                                // Cursor-Bewegung überspringen wenn Menü offen
+                                if (routeSw != null) RecordRouteBudget(routeSw);
+                                return false;
+                            }
 
                             // Update combat layers (L1, R1, L2, R2)
                             _combat.UpdateLayers(input.L1, input.R1, input.L2, input.R2);
@@ -270,6 +300,8 @@ namespace RagnaController.Core
                 public void Dispose()
                 {
                     FailoverSwitched = null;
+                    _gestureRecognizer?.Dispose();
+                    _radialMenu?.Dispose();
                 }
             }
         }
