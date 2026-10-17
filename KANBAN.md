@@ -1964,7 +1964,7 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 **Suggested Fix:** Add `InputGesture` for frequent actions: Ctrl+O (Profile), Ctrl+S (Save), F1 (Help), Esc (Close dialogs / Exit Mini Mode).
 **DoD:** All main actions have keyboard shortcuts; shortcuts documented in tooltips.
 
-#### UX-020: HandheldWindow Touch Optimization for Steam Deck (S3)
+#### UX-020: HandheldWindow Touch Optimization for Steam Deck (S3) ✅ ERLEDIGT (2026-10-17)
 **Files:** `src/RagnaController/HandheldWindow.xaml(.cs)`
 **Fundament:** HandheldWindow is very simple (only 4 buttons). Needs larger touch targets and quick access.
 **Suggested Fix:** Minimum 44×44px touch targets (preferably 56×56px); quick access to profile switch, overlay toggle, calibration; battery status display.
