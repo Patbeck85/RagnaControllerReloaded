@@ -1903,6 +1903,78 @@ namespace RagnaController.Tests
         }
 
         // ============================================================
+        //  17. FEAT-026c: Steam Deck Sleep Mode Handling (S2, HIGH)
+        // ============================================================
+        [Fact]
+        public void FEAT026c_SleepModeService_DefaultValues()
+        {
+            using var service = new SleepModeService();
+            Assert.False(service.IsSuspended);
+            Assert.Null(service.OnSuspend);
+            Assert.Null(service.OnResume);
+        }
+
+        [Fact]
+        public void FEAT026c_SleepModeService_SimulateSuspend_TriggersOnSuspend()
+        {
+            using var service = new SleepModeService();
+            bool suspendFired = false;
+            service.OnSuspend += () => suspendFired = true;
+
+            service.SimulateSuspend();
+
+            Assert.True(suspendFired);
+            Assert.True(service.IsSuspended);
+        }
+
+        [Fact]
+        public void FEAT026c_SleepModeService_SimulateResume_TriggersOnResume()
+        {
+            using var service = new SleepModeService();
+            bool resumeFired = false;
+            service.OnResume += () => resumeFired = true;
+
+            service.SimulateResume();
+
+            Assert.True(resumeFired);
+            Assert.False(service.IsSuspended);
+        }
+
+        [Fact]
+        public void FEAT026c_SleepModeService_SuspendResume_Cycle()
+        {
+            using var service = new SleepModeService();
+            int suspendCount = 0;
+            int resumeCount = 0;
+            service.OnSuspend += () => suspendCount++;
+            service.OnResume += () => resumeCount++;
+
+            service.SimulateSuspend();
+            Assert.Equal(1, suspendCount);
+            Assert.Equal(0, resumeCount);
+            Assert.True(service.IsSuspended);
+
+            service.SimulateResume();
+            Assert.Equal(1, suspendCount);
+            Assert.Equal(1, resumeCount);
+            Assert.False(service.IsSuspended);
+
+            service.SimulateSuspend();
+            Assert.Equal(2, suspendCount);
+            Assert.Equal(1, resumeCount);
+            Assert.True(service.IsSuspended);
+        }
+
+        [Fact]
+        public void FEAT026c_SleepModeService_Dispose_DoesNotThrow()
+        {
+            var service = new SleepModeService();
+            service.Dispose();
+            service.Dispose(); // Doppelter Dispose soll nicht werfen
+            Assert.True(true);
+        }
+
+        // ============================================================
         //  Test-Doubles
         // ============================================================
         private sealed class MockTickProvider : ITickProvider

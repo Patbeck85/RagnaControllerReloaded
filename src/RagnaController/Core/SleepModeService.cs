@@ -1,0 +1,102 @@
+using System;
+using System.Diagnostics;
+using Microsoft.Win32;
+
+namespace RagnaController.Core
+{
+    /// <summary>
+    /// Steam Deck / Handheld Sleep-Mode Handling.
+    /// Erkennt Windows-Power-Mode-Änderungen (Suspend/Resume) und pausiert/
+    /// setzt die Engine-Orchestrierung cleanly fort — damit kein Reconnect-
+    /// Issue nach dem Aufwecken aus dem Sleep-Modus entsteht.
+    ///
+    /// Architektur:
+    ///   - SystemEvents.PowerModeChanged überwacht Suspend/Resume
+    ///   - Bei Suspend: OnSuspend-Callback (EngineOrchestrator.Pause)
+    ///   - Bei Resume:  OnResume-Callback  (EngineOrchestrator.Resume)
+    ///   - Beide Callbacks sind injizierbar → unit-testbar ohne echtes Windows-Event
+    /// </summary>
+    public sealed class SleepModeService : IDisposable
+    {
+        private bool _disposed;
+        private bool _isSuspended;
+
+        /// <summary>Callback beim Suspend (Sleep). Wird vom EngineOrchestrator gesetzt.</summary>
+        public Action? OnSuspend { get; set; }
+
+        /// <summary>Callback beim Resume (Aufwecken). Wird vom EngineOrchestrator gesetzt.</summary>
+        public Action? OnResume { get; set; }
+
+        /// <summary>True wenn das System im Suspend/Sleep-Zustand ist.</summary>
+        public bool IsSuspended => _isSuspended;
+
+        public SleepModeService()
+        {
+            // Windows Power-Mode-Events abonnieren
+            SystemEvents.PowerModeChanged += OnPowerModeChanged;
+        }
+
+        private void OnPowerModeChanged(object s, PowerModeChangedEventArgs e)
+        {
+            if (_disposed) return;
+
+            switch (e.Mode)
+            {
+                case PowerModes.Suspend:
+                    _isSuspended = true;
+                    Debug.WriteLine("[SleepModeService] System suspending → OnSuspend");
+                    OnSuspend?.Invoke();
+                    break;
+
+                case PowerModes.Resume:
+                    _isSuspended = false;
+                    Debug.WriteLine("[SleepModeService] System resuming → OnResume");
+                    OnResume?.Invoke();
+                    break;
+
+                case PowerModes.StatusChange:
+                    // Status-Änderung (z. B. Batterie-Status) — ignorieren
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Simuliert einen Suspend (für Unit-Tests ohne echtes Windows-Event).
+        /// Löst OnSuspend aus und setzt _isSuspended = true.
+        /// </summary>
+        public void SimulateSuspend()
+        {
+            if (_disposed) return;
+            _isSuspended = true;
+            OnSuspend?.Invoke();
+            Debug.WriteLine("[SleepModeService] Simulated suspend");
+        }
+
+        /// <summary>
+        /// Simuliert einen Resume (für Unit-Tests ohne echtes Windows-Event).
+        /// Löst OnResume aus und setzt _isSuspended = false.
+        /// </summary>
+        public void SimulateResume()
+        {
+            if (_disposed) return;
+            _isSuspended = false;
+            OnResume?.Invoke();
+            Debug.WriteLine("[SleepModeService] Simulated resume");
+        }
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+
+            try
+            {
+                SystemEvents.PowerModeChanged -= OnPowerModeChanged;
+            }
+            catch
+            {
+                // SystemEvents kann bereits disposed sein — ignorieren
+            }
+        }
+    }
+}
