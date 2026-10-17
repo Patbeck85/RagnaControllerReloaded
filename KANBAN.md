@@ -1935,7 +1935,7 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 **Suggested Fix:** Replace `null!` with nullable types + validation throw with clear error message.
 **DoD:** 0 `null!` engine fields; clear InvalidOperationException on missing engine; unit test for each engine initialization.
 
-#### TECH-062: MainWindow.xaml.cs — God Class Refactoring (S2)
+#### TECH-062: MainWindow.xaml.cs — God Class Refactoring (S2) ✅ ERLEDIGT (2026-10-17)
 **Files:** `src/RagnaController/MainWindow.xaml.cs` (948 lines)
 **Fundament:** MainWindow handles UI, engine management, toast service, gamepad navigation, profile management — too many responsibilities.
 **Impact:** Hard to test, high regression risk, difficult to extend.
