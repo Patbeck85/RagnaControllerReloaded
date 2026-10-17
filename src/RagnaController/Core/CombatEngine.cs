@@ -53,7 +53,17 @@ namespace RagnaController.Core
                     break;
                 case ActionType.SwitchWindow:
                     // FIX: Fire-and-forget für asynchrone Window-Switching (125Hz Tick-Loop bleibt blockfrei)
-                    _ = Task.Run(async () => await WindowSwitcher.ToggleAsync(action.WindowTarget));
+                    _ = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            await WindowSwitcher.ToggleAsync(action.WindowTarget);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"[CombatEngine] WindowSwitcher failed: {ex.Message}");
+                        }
+                    });
                     break;
                 // ActionType.Combo und RoFeature werden von ComboEngine / RoUiMenuService behandelt
             }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using RagnaController.Models;
 using RagnaController.Profiles;
@@ -130,6 +131,34 @@ namespace RagnaController.Core
                         /// </summary>
                         public bool RouteInput(ParsedInput input, int actualDeltaMs, bool rumbleEnabled)
                         {
+                            // TECH-064: Validate engines are initialized — prevents NullReferenceException
+                            // when RouteInput is accidentally called on a failover-only InputRouter instance.
+                            if (_combat == null || _movement == null || _autoTarget == null || _mage == null ||
+                                _combo == null || _cursor == null || _smartCursor == null || _kite == null ||
+                                _support == null || _overlayRouter == null || _mobSweep == null || _handheld == null ||
+                                _feedback == null || _cooldownManager == null)
+                            {
+                                var missing = new List<string>();
+                                if (_combat == null) missing.Add(nameof(_combat));
+                                if (_movement == null) missing.Add(nameof(_movement));
+                                if (_autoTarget == null) missing.Add(nameof(_autoTarget));
+                                if (_mage == null) missing.Add(nameof(_mage));
+                                if (_combo == null) missing.Add(nameof(_combo));
+                                if (_cursor == null) missing.Add(nameof(_cursor));
+                                if (_smartCursor == null) missing.Add(nameof(_smartCursor));
+                                if (_kite == null) missing.Add(nameof(_kite));
+                                if (_support == null) missing.Add(nameof(_support));
+                                if (_overlayRouter == null) missing.Add(nameof(_overlayRouter));
+                                if (_mobSweep == null) missing.Add(nameof(_mobSweep));
+                                if (_handheld == null) missing.Add(nameof(_handheld));
+                                if (_feedback == null) missing.Add(nameof(_feedback));
+                                if (_cooldownManager == null) missing.Add(nameof(_cooldownManager));
+
+                                throw new InvalidOperationException(
+                                    $"[InputRouter] RouteInput called but engines not initialized: {string.Join(", ", missing)}. " +
+                                    "Use the full constructor for production; the failover-only constructor is for unit tests only.");
+                            }
+
                             // GEX-002: Measure Route latency (opt-in, zero-allocation when disabled per PERF-010)
                             var routeSw = InputLatencyBudgets.EnableBudgetTracking ? System.Diagnostics.Stopwatch.StartNew() : null;
 
