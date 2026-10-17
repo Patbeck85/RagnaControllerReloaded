@@ -1942,7 +1942,7 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 **Suggested Fix:** Extract ToastService, MainWindowViewModel, ProfileService into separate classes.
 **DoD:** MainWindow < 400 lines; ToastService, MainWindowViewModel, ProfileService as separate classes; all existing tests pass.
 
-#### TECH-063: App.xaml.cs — Auto-Restart on Crash (S3)
+#### TECH-063: App.xaml.cs — Auto-Restart on Crash (S3) ✅ ERLEDIGT (2026-10-17)
 **Files:** `src/RagnaController/App.xaml.cs`
 **Fundament:** On fatal error, only MessageBox shown and app exits. Gaming player is left without controller mid-session.
 **Impact:** Player loses controller connection mid-game; poor UX.
