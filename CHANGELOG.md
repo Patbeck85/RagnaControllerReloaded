@@ -7,7 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --
 
-## [2.2.2] - 2026-10-16
+## [2.3.0] - 2026-10-17
+
+### 🟥 SPRINT 15A — Critical Bug Fixes
+- **TECH-061: EngineOrchestrator Startup Validation** — All engine fields changed from `null!` to `private readonly`. Startup validation throws clear `InvalidOperationException` instead of silent `NullReferenceException` if any engine fails to initialize.
+- **TECH-062: MainWindow God Class Refactoring** — Extracted `ToastService` (~25 lines removed) and `ProfileService` (~60 lines removed) from MainWindow. MainWindow now delegates toast notifications and profile management to dedicated services.
+- **TECH-063: App.xaml.cs Auto-Restart on Crash** — Added `AutoRestartOnCrash` setting. Unhandled/Dispatcher exceptions now auto-restart the app with settings persisted first, preventing dead controller mid-session.
+
+### 🟨 SPRINT 15B — UI/UX Polish
+- **UX-018: Empty States in All Panels** — ProfileLibraryWindow shows contextual empty state with icon, message, and "Create New Profile" CTA button when no profiles found.
+- **UX-019: Keyboard Shortcuts for Main Functions** — Ctrl+O (Profile Library), Ctrl+S (Save Settings), F1 (Help), Esc (Exit Mini Mode / Close Overlay) via `PreviewKeyDown`.
+- **UX-020: HandheldWindow Touch Optimization** — Battery status display in top bar (color-coded icon + text). All 6 main buttons already ≥180px touch targets.
+- **UX-021: InGameOverlayWindow Position Memory & Movable** — Overlay position saved/restored from settings. Draggable with left mouse button (except on interactive elements). Existing Opacity and FontScale settings supported.
+- **UX-022: Gyro Calibration in UI** — Added `GyroDeadzone` setting (default: 64). Calibration wizard in Settings measures DualSense gyro drift over 3 seconds and sets deadzone automatically.
+
+### 🟩 SPRINT 15C — Code Quality
+- **TECH-064: InputRouter Split** — Extracted `InputFailoverManager` class with ROB-002 failover state machine. `InputRouter` delegates failover logic (~50 lines removed).
+- **TECH-065: ControllerTestWindow Timer Optimization** — Timer now only runs when recording or diagnostic is active. 0 CPU usage when idle.
+- **TECH-066: AdvancedLogger Log Rotation** — Log files capped at 10 MB each, max 5 rotated files (.log.1 → .log.5, oldest deleted). Automatic rotation before each write cycle.
+
+### 🟩 SPRINT 15D — New Features
+- **FEAT-028: Profile Import/Export Backup** — "Export All" button in ProfileLibraryWindow exports all profiles as ZIP archive with individual JSON files per profile.
+- **FEAT-029: Automatic Updates with Changelog** — Added `AutoUpdateEnabled` setting (default: true). App checks for updates on startup via GitHub API and displays changelog before download.
+- **FEAT-030: Multi-Monitor Support** — Added `OverlayMonitorIndex` setting. `MonitorHelper` class with P/Invoke `EnumDisplayMonitors` for monitor enumeration. Overlay positions on selected monitor at startup.
+
+### 🔴 Critical Bug Fixes (ERR-01 to ERR-04)
+- **ERR-01/ERR-02: Event-Handler Memory Leaks** — MainWindow and HandheldWindow lambda event handlers replaced with named delegate fields. All engine events properly unsubscribed in `Window_Closing`.
+- **ERR-03: App.xaml.cs null! Fields** — `HybridEngine?`/`ProfileManager?` as nullable. Try/catch around engine creation with clear error dialog. Null-check after `Task.Run` with graceful shutdown.
+- **ERR-04: Fire-and-Forget Tasks** — `TaskContinuationOptions.OnlyOnFaulted` with error logging added to UpdateChecker, EngineOrchestrator Restart, HandheldWindow Exit-Delay, CombatEngine WindowSwitcher.
+
+### 🔧 InputRouter NRE Protection
+- **RouteInput() Validation** — Validates all engine fields at entry point. Throws clear `InvalidOperationException` listing missing engines if failover-only constructor instance is used incorrectly.
+
+### 📊 Success Metrics
+- Build: 0 Errors / 0 Warnings
+- Tests: 642/642 passing
+- Localization: 41 locale files updated with new keys
+
+--
+
+
 
 ### GEX-013: Integration Test Suite — Full Engine Chain Headless ✅
 **`tests/RagnaController.Tests/EngineChainIntegrationTests.cs`** — 525 Tests, alle grün (Combat+Movement+Targeting+Buffs+Items gleichzeitig, headless, deterministisch). Build: 0 Errors/0 Warnings (Debug & Release).

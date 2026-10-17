@@ -57,7 +57,7 @@
                             <Rectangle.Effect><DropShadowEffect Color="{StaticResource Gold}" BlurRadius="10" ShadowDepth="0"/></Rectangle.Effect>
                         </Rectangle>
                     </Grid>
-                    <TextBlock x:Name="SplashVersionLabel" Text="v2.0" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" Margin="0,6,2,0"/>
+                    <TextBlock x:Name="SplashVersionLabel" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Right" Margin="0,6,2,0"/>
                 </StackPanel>
                 <!-- Skip button (bottom-right) + Escape key handler -->
                 <Button x:Name="BtnSkipSplash" Content="Skip" Width="72" Height="28" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,24,24"
