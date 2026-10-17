@@ -136,6 +136,7 @@
         <Compile Include="Core\GyroCursorAdapter.cs" />
         <Compile Include="Core\GyroService.cs" />
         <Compile Include="Core\SleepModeService.cs" />
+<Compile Include="Core\BatteryOptimizationService.cs" />
         <Compile Include="Core\HandheldDetector.cs" />
         <Compile Include="Core\HandheldModeManager.cs" />
         <Compile Include="Core\HybridEngine.cs" />

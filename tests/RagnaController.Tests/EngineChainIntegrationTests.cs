@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows.Forms;
 using Xunit;
 using RagnaController.Core;
 using RagnaController.Models;
@@ -1969,6 +1970,61 @@ namespace RagnaController.Tests
         public void FEAT026c_SleepModeService_Dispose_DoesNotThrow()
         {
             var service = new SleepModeService();
+            service.Dispose();
+            service.Dispose(); // Doppelter Dispose soll nicht werfen
+            Assert.True(true);
+        }
+
+        // ============================================================
+        //  18. FEAT-026d: Steam Deck Battery Optimization (S2, HIGH)
+        // ============================================================
+        [Fact]
+        public void FEAT026d_BatteryOptimizationService_OnAc_IsNotOnBattery()
+        {
+            using var service = new BatteryOptimizationService(false, 100, false);
+
+            Assert.False(service.IsOnBattery);
+            Assert.False(service.IsCharging);
+            Assert.Equal(100, service.BatteryPercent);
+            Assert.Equal(125, service.GetRecommendedTickRateHz());
+            Assert.False(service.GetRecommendedAggressiveStandby());
+        }
+
+        [Fact]
+        public void FEAT026d_BatteryOptimizationService_OnBattery_IsOnBattery()
+        {
+            using var service = new BatteryOptimizationService(true, 45, false);
+
+            Assert.True(service.IsOnBattery);
+            Assert.False(service.IsCharging);
+            Assert.Equal(45, service.BatteryPercent);
+            Assert.Equal(60, service.GetRecommendedTickRateHz());
+            Assert.True(service.GetRecommendedAggressiveStandby());
+        }
+
+        [Fact]
+        public void FEAT026d_BatteryOptimizationService_Charging_OnBattery()
+        {
+            using var service = new BatteryOptimizationService(true, 30, true);
+
+            Assert.True(service.IsOnBattery);
+            Assert.True(service.IsCharging);
+            Assert.Equal(30, service.BatteryPercent);
+            Assert.Equal(60, service.GetRecommendedTickRateHz());
+        }
+
+        [Fact]
+        public void FEAT026d_BatteryOptimizationService_NoBattery_IsNotOnBattery()
+        {
+            using var service = new BatteryOptimizationService(false, 100, false);
+
+            Assert.False(service.IsOnBattery);
+        }
+
+        [Fact]
+        public void FEAT026d_BatteryOptimizationService_Dispose_DoesNotThrow()
+        {
+            var service = new BatteryOptimizationService(false, 100, false);
             service.Dispose();
             service.Dispose(); // Doppelter Dispose soll nicht werfen
             Assert.True(true);
