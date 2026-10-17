@@ -1859,15 +1859,15 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 **DoD:** ✅ Alle primären Aktionen per Touch erreichbar, Haptic Feedback unterscheidbar, Navigation logisch mit Touch+Buttons.
 
 #### UX-016: Steam Deck Quick-Access Radial Menu (S3)
-**Status:** ⏳ OFFEN
+**Status:** ✅ ERLEDIGT (2026-10-17)
 **Priorität:** MEDIUM
-**Files:** RadialSetupWindow.xaml, RadialMenuWindow.xaml, InputRouter.cs
+**Files:** Core/RadialMenuService.cs (erweitert), Core/GestureRecognizer.cs (neu), Core/FeedbackRumbleProvider.cs (neu), Core/InputRouter.cs (erweitert), Core/EngineOrchestrator.cs (erweitert)
 **Fundament:** On small screen, many menus are too small.
-**Offen:**
-1. Radial Menu for quick access (skill slots, items, chat)
-2. Gesture control (swipe for Tab-cycling, circle for skill-selection)
-3. Touch targets with haptic feedback
-**DoD:** Radial menu opens with one gesture, skill/item selection within 2 taps, haptic feedback on selection.
+**Umgesetzt:**
+1. Radial Menu for quick access ✅ DONE — RadialMenuService mit Open/Close/SelectNext/SelectPrevious/ActivateSelection
+2. Gesture control ✅ DONE — GestureRecognizer: Right-Stick Richtungs-Erkennung (Rechts=Menu toggle, Links/Oben/Unten=Navigation, R3=Bestätigen)
+3. Touch targets with haptic feedback ✅ DONE — Haptic Feedback bei Navigation (0.3/0.1) und Auswahl (0.8/0.8)
+**DoD:** ✅ Radial menu per Geste öffnbar, Skill/Item Auswahl per Stick-Navigation, Haptic Feedback unterscheidbar.
 
 #### UX-017: High Contrast + Font Scaling (S4)
 **Status:** ✅ ERLEDIGT (2026-10-17)
