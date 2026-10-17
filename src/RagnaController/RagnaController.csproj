@@ -133,7 +133,8 @@
         <Compile Include="Core\IControllerProvider.cs" />
         <Compile Include="Core\NullFeedbackProvider.cs" />
         <Compile Include="Core\GamepadUiNavigator.cs" />
-        <Compile Include="Core\GyroService.cs" />
+        <Compile Include="Core\GyroCursorAdapter.cs" />
+<Compile Include="Core\GyroService.cs" />
         <Compile Include="Core\HandheldDetector.cs" />
         <Compile Include="Core\HandheldModeManager.cs" />
         <Compile Include="Core\HybridEngine.cs" />

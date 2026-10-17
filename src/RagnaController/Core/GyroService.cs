@@ -61,7 +61,17 @@ namespace RagnaController.Core
         /// 1.0 = one degree of rotation ≈ one degree of cursor arc at default scale.
         /// Increase for faster response on small-screen handhelds.
         /// </summary>
-        public float Sensitivity { get; set; } = 1.0f;
+        public float Sensitivity
+        {
+            get => _sensitivity;
+            set
+            {
+                if (_disposed) return;
+                _sensitivity = Math.Clamp(value, 0.1f, 5.0f);
+            }
+        }
+
+        private float _sensitivity = 1.0f;
 
         /// <summary>
         /// Low-pass filter coefficient (0.0 = instant, 1.0 = frozen).
@@ -88,6 +98,33 @@ namespace RagnaController.Core
 
         /// <summary>True when a DualSense HID device was found and the reader is running.</summary>
         public bool IsAvailable { get; private set; }
+
+        /// <summary>Gyro-Eingabe aktiviert/deaktiviert (Software-Flag, unabhängig von Hardware-Verfügbarkeit).</summary>
+        public bool IsEnabled { get; set; }
+
+        /// <summary>
+        /// Gyro-Daten manuell einspeisen (für Tests / Simulierte Input ohne echtes HID-Device).
+        /// Nimmt Angular Velocity in Grad/s entgegen und wendet Low-Pass-Filter an.
+        /// </summary>
+        public void FeedGyro(float pitchRateDegPerS, float yawRateDegPerS, float rollRateDegPerS, float deltaMs)
+        {
+            if (deltaMs <= 0f) return;
+
+            // Drift threshold (wie im Reader-Loop)
+            var rawPitch = pitchRateDegPerS * GyroScale;
+            var rawYaw   = yawRateDegPerS   * GyroScale;
+            if (Math.Abs(rawPitch) < DriftThreshold) rawPitch = 0;
+            if (Math.Abs(rawYaw)   < DriftThreshold) rawYaw   = 0;
+
+            // Scale to deg/s
+            float scaledPitch = rawPitch / GyroScale;
+            float scaledYaw   = rawYaw   / GyroScale;
+
+            // Low-pass filter (identisch zu ReadLoop)
+            float alpha = 1f - Smoothing;
+            _pitchDps = _pitchDps * Smoothing + scaledPitch * alpha;
+            _yawDps   = _yawDps   * Smoothing + scaledYaw   * alpha;
+        }
 
         // ── Internal ──────────────────────────────────────────────────────
         private IntPtr            _handle = IntPtr.Zero;
@@ -134,7 +171,7 @@ namespace RagnaController.Core
         /// <param name="dy">Vertical pixel delta (positive = down).</param>
         public void GetCursorDelta(int tickMs, out int dx, out int dy)
         {
-            if (!IsAvailable)
+            if (!IsEnabled)
             {
                 dx = dy = 0;
                 return;
@@ -155,12 +192,27 @@ namespace RagnaController.Core
             _subY -= dy;
         }
 
+        /// <summary>Akumuliertes Maus-Delta konsumieren und auf 0 zurücksetzen (Standard-Tick 16ms).</summary>
+        public (int dx, int dy) ConsumeDelta()
+        {
+            GetCursorDelta(16, out var dx, out var dy);
+            return (dx, dy);
+        }
+
+        /// <summary>Internen Zustand zurücksetzen (z.B. nach Sleep/Resume).</summary>
+        public void Reset()
+        {
+            _subX = 0f;
+            _subY = 0f;
+            System.Diagnostics.Debug.WriteLine("[GyroService] State reset.");
+        }
+
         private float _subX, _subY; // sub-pixel accumulators
 
         // ── Background reader ─────────────────────────────────────────────
         private void ReadLoop()
-                {
-                    float filtPitch = 0f, filtYaw = 0f;
+        {
+            float filtPitch = 0f, filtYaw = 0f;
 
                     while (_cts?.IsCancellationRequested == false)
                     {

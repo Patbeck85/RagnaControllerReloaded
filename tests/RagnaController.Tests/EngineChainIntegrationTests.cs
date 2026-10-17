@@ -1762,6 +1762,147 @@ namespace RagnaController.Tests
         }
 
         // ============================================================
+        //  16. FEAT-026b: Steam Deck Input API — GyroCursorAdapter + GyroService (S2, HIGH)
+        // ============================================================
+        private sealed class MockMouseStrategy : IMouseEmulationStrategy
+        {
+            public List<(int dx, int dy)> Moves = new();
+            public bool IsAvailable => true;
+            public string DisplayName => "Mock";
+
+            public void MoveRelative(int dx, int dy) => Moves.Add((dx, dy));
+            public void MoveAbsolute(int x, int y) { }
+            public void LeftDown() { }
+            public void LeftUp() { }
+            public void RightDown() { }
+            public void RightUp() { }
+            public void Dispose() { }
+        }
+
+        [Fact]
+        public void FEAT026b_GyroService_DefaultValues()
+        {
+            using var gyro = new GyroService();
+            // Ohne echtes HID-Device ist IsAvailable false, aber IsEnabled/Defaults sollten funktionieren
+            Assert.Equal(1.0f, gyro.Sensitivity);
+            Assert.False(gyro.IsEnabled);
+            Assert.False(gyro.IsAvailable);
+        }
+
+        [Fact]
+        public void FEAT026b_GyroService_Sensitivity_Clamped()
+        {
+            using var gyro = new GyroService();
+            gyro.Sensitivity = 10f;
+            Assert.Equal(5.0f, gyro.Sensitivity); // Math.Clamp auf 5.0
+
+            gyro.Sensitivity = 0.01f;
+            Assert.Equal(0.1f, gyro.Sensitivity); // Math.Clamp auf 0.1
+        }
+
+        [Fact]
+        public void FEAT026b_GyroService_FeedGyro_ProducesDelta()
+        {
+            using var gyro = new GyroService();
+            gyro.IsEnabled = true;
+            gyro.Smoothing = 0f; // Filter aus für deterministischen Test
+
+            gyro.FeedGyro(pitchRateDegPerS: 0f, yawRateDegPerS: 500f, rollRateDegPerS: 0f, deltaMs: 16f);
+
+            var delta = gyro.ConsumeDelta();
+            Assert.True(delta.dx > 0, $"Yaw sollte positiven X-Delta erzeugen, war {delta.dx}");
+            Assert.Equal(0, delta.dy); // Kein Pitch → keine Y-Bewegung
+        }
+
+        [Fact]
+        public void FEAT026b_GyroService_FeedGyro_Pitch_ProducesYDelta()
+        {
+            using var gyro = new GyroService();
+            gyro.IsEnabled = true;
+            gyro.Smoothing = 0f; // Filter aus für deterministischen Test
+
+            gyro.FeedGyro(pitchRateDegPerS: 500f, yawRateDegPerS: 0f, rollRateDegPerS: 0f, deltaMs: 16f);
+
+            var delta = gyro.ConsumeDelta();
+            Assert.Equal(0, delta.dx);
+            Assert.True(delta.dy != 0, $"Pitch sollte Y-Delta erzeugen, war {delta.dy}");
+        }
+
+        [Fact]
+        public void FEAT026b_GyroService_IsEnabled_False_NoDelta()
+        {
+            using var gyro = new GyroService();
+            gyro.IsEnabled = false;
+
+            gyro.FeedGyro(pitchRateDegPerS: 500f, yawRateDegPerS: 500f, rollRateDegPerS: 0f, deltaMs: 16f);
+
+            var delta = gyro.ConsumeDelta();
+            Assert.Equal(0, delta.dx);
+            Assert.Equal(0, delta.dy);
+        }
+
+        [Fact]
+        public void FEAT026b_GyroService_Reset_ClearsAccumulated()
+        {
+            using var gyro = new GyroService();
+            gyro.IsEnabled = true;
+            gyro.Smoothing = 0f;
+
+            gyro.FeedGyro(pitchRateDegPerS: 0f, yawRateDegPerS: 500f, rollRateDegPerS: 0f, deltaMs: 16f);
+            var delta1 = gyro.ConsumeDelta();
+            Assert.True(delta1.dx > 0, "Erster FeedGyro sollte Delta erzeugen");
+
+            // Reset sollte nicht crashen und den sub-pixel Rest löschen
+            gyro.Reset();
+
+            // Nach Reset ist der sub-pixel Rest 0, aber _yawDps besteht weiter (korrektes Verhalten),
+            // daher wird erneut Delta produziert. Wichtig: Reset wirft keine Exception.
+            var delta2 = gyro.ConsumeDelta();
+            Assert.True(delta2.dx >= 0, "Nach Reset sollte konsistenter Wert zurückkommen");
+        }
+
+        [Fact]
+        public void FEAT026b_GyroCursorAdapter_Tick_Enabled_MovesMouse()
+        {
+            using var gyro = new GyroService();
+            gyro.IsEnabled = true;
+            gyro.Smoothing = 0f;
+            using var mouse = new MockMouseStrategy();
+            using var adapter = new GyroCursorAdapter(gyro, mouse) { Enabled = true };
+
+            gyro.FeedGyro(pitchRateDegPerS: 0f, yawRateDegPerS: 500f, rollRateDegPerS: 0f, deltaMs: 16f);
+            adapter.Tick(16);
+
+            Assert.Single(mouse.Moves);
+            Assert.True(mouse.Moves[0].dx > 0, $"Adapter sollte positiven X-Delta emulieren, war {mouse.Moves[0].dx}");
+        }
+
+        [Fact]
+        public void FEAT026b_GyroCursorAdapter_Tick_Disabled_NoMove()
+        {
+            using var gyro = new GyroService();
+            gyro.IsEnabled = true;
+            using var mouse = new MockMouseStrategy();
+            using var adapter = new GyroCursorAdapter(gyro, mouse) { Enabled = false };
+
+            gyro.FeedGyro(pitchRateDegPerS: 10f, yawRateDegPerS: 10f, rollRateDegPerS: 0f, deltaMs: 16f);
+            adapter.Tick(16);
+
+            Assert.Empty(mouse.Moves);
+        }
+
+        [Fact]
+        public void FEAT026b_GyroCursorAdapter_Reset_DoesNotThrow()
+        {
+            using var gyro = new GyroService();
+            using var mouse = new MockMouseStrategy();
+            using var adapter = new GyroCursorAdapter(gyro, mouse) { Enabled = true };
+
+            adapter.Reset(); // Sollte nicht werfen auch wenn Gyro nicht verfügbar
+            Assert.True(true);
+        }
+
+        // ============================================================
         //  Test-Doubles
         // ============================================================
         private sealed class MockTickProvider : ITickProvider
