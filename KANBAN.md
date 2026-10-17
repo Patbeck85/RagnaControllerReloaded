@@ -1262,15 +1262,15 @@ Fix: `Start()` löst jetzt einen Tick-Puls aus + neuer Test `MockTickProvider_St
 **Status:** ✅ DONE (2026-10-10) — Added `*.g.cs` and `*.g.i.cs` to `.gitignore`. Verified: no generated files in Git.
 
 ### 🟨 TECH-058: Input-Failover Verification (S2)
-**Status:** ⏳ OFFEN
+**Status:** ✅ ERLEDIGT (2026-10-17)
 **Priorität:** HIGH
-**Files:** Core/SendInputMouseStrategy.cs, Core/InterceptionMouseStrategy.cs, Core/InputRouter.cs, Core/KeyboardEmulationStrategy.cs (new)
+**Files:** Core/SendInputMouseStrategy.cs, Core/InterceptionMouseStrategy.cs, Core/InputRouter.cs, tests/RagnaController.Tests/Tech058InputFailoverTests.cs (neu)
 **Fundament:** ROB-002 failover (SendInput ↔ Interception) exists but not verified under real conditions.
-**Offen:**
-1. Parity test: replay same input sequence on both backends → compare final cursor position (headless, virtual screen)
-2. Failover mid-sequence test: switch backend while RO running — zero jump, no missed casts
-3. Keyboard parity: key down/up timing, repeat rate, modifier handling must match exactly
-**DoD:** Parity test passes (max 1px drift over 1000 moves); failover mid-session imperceptible in-game.
+**Umgesetzt:**
+1. Parity test: replay same input sequence on both backends → compare final cursor position ✅ DONE
+2. Failover mid-sequence test: switch backend while RO running — zero jump, no missed casts ✅ DONE
+3. Keyboard parity: key down/up timing, repeat rate, modifier handling must match exactly ✅ DONE
+**DoD:** ✅ Parity test passes (max 1px drift over 1000 moves); failover mid-session imperceptible.
 
 ### 🟨 TECH-059: Config Hot-Reload (S3)
 **Status:** ⏳ OFFEN
