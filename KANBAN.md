@@ -1990,7 +1990,7 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 **Suggested Fix:** Extract `InputFailoverManager`, `GestureProcessor`, `RadialMenuController` into separate classes.
 **DoD:** InputRouter < 200 lines; failover, gesture, and radial menu logic in separate classes; all existing tests pass.
 
-#### TECH-065: ControllerTestWindow — Timer Only When Recording (S3)
+#### TECH-065: ControllerTestWindow — Timer Only When Recording (S3) ✅ ERLEDIGT (2026-10-17)
 **Files:** `src/RagnaController/ControllerTest/ControllerTestWindow.xaml.cs`
 **Fundament:** Timer runs at 50ms (20 FPS) even when nothing is happening.
 **Suggested Fix:** Event-based instead of timer, or timer only when recording/diagnostic active.
