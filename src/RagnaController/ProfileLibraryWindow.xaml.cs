@@ -135,6 +135,41 @@ namespace RagnaController
             }
         }
 
+        // FEAT-028: Export all profiles as ZIP archive
+        private void BtnExportAll_Click(object sender, RoutedEventArgs e)
+        {
+            var sfd = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "ZIP Archive|*.zip",
+                FileName = $"RagnaController_Profiles_{DateTime.Now:yyyyMMdd-HHmmss}.zip",
+                DefaultExt = "zip"
+            };
+            if (sfd.ShowDialog() != true) return;
+
+            try
+            {
+                using var zip = System.IO.Compression.ZipFile.Open(sfd.FileName, System.IO.Compression.ZipArchiveMode.Create);
+                int count = 0;
+                foreach (var profile in _manager.Profiles)
+                {
+                    var json = System.Text.Json.JsonSerializer.Serialize(profile, RagnaController.AppJsonContext.Default.Profile);
+                    var entry = zip.CreateEntry($"{profile.Name}.json", System.IO.Compression.CompressionLevel.Optimal);
+                    using var sw = new System.IO.StreamWriter(entry.Open());
+                    sw.Write(json);
+                    count++;
+                }
+                StatusText.Text = $"✓ Exported {count} profiles to ZIP";
+                StatusText.Foreground = (Brush)FindResource("Live");
+            }
+            catch (Exception ex)
+            {
+                // ERROR-001: kein stiller Fehler
+                System.Diagnostics.Debug.WriteLine($"[ProfileLibrary] Export all failed: {ex.Message}");
+                StatusText.Text = $"Export failed: {ex.Message}";
+                StatusText.Foreground = Brushes.OrangeRed;
+            }
+        }
+
         private void BtnNew_Click(object sender, RoutedEventArgs e)
         {
             var wizard = new ProfileWizardWindow(_manager) { Owner = this };
