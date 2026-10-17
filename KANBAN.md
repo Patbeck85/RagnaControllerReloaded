@@ -1958,7 +1958,7 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 **Suggested Fix:** Add contextual empty-state with CTA button (e.g., "Load a profile" with link to Profile Library).
 **DoD:** All 7 MainWindow panels show helpful empty state; Settings and ProfileLibrary show empty states when applicable.
 
-#### UX-019: Keyboard Shortcuts for All Main Functions (S3)
+#### UX-019: Keyboard Shortcuts for All Main Functions (S3) ✅ ERLEDIGT (2026-10-17)
 **Files:** All XAML windows
 **Fundament:** Many buttons have no keyboard shortcuts. Power users need keyboard navigation.
 **Suggested Fix:** Add `InputGesture` for frequent actions: Ctrl+O (Profile), Ctrl+S (Save), F1 (Help), Esc (Close dialogs / Exit Mini Mode).
