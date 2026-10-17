@@ -13,6 +13,7 @@ namespace RagnaController.Models
     public static class BuffRegistry
     {
         private static BuffRegistryData? _data;
+        private static readonly object _initLock = new();
         private static readonly Dictionary<int, BuffEntry> _buffById = new();
         private static readonly Dictionary<string, BuffEntry> _buffByName = new(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<int, DebuffEntry> _debuffById = new();
@@ -23,53 +24,65 @@ namespace RagnaController.Models
         {
             if (_data != null) return;
 
-            // Try embedded resource first (production)
-            var assembly = typeof(BuffRegistry).Assembly;
-            var resourceName = "RagnaController.Resources.BuffRegistry.json";
-            using var stream = assembly.GetManifestResourceStream(resourceName);
-            
-            string json;
-            if (stream != null)
+            lock (_initLock)
             {
-                using var reader = new System.IO.StreamReader(stream);
-                json = reader.ReadToEnd();
-            }
-            else
-            {
-                // Fallback: load from file (tests / development)
-                var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-                var filePath = System.IO.Path.Combine(baseDir, "Resources", "BuffRegistry.json");
-                if (!System.IO.File.Exists(filePath))
+                if (_data != null) return;
+
+                // Try embedded resource first (production)
+                var assembly = typeof(BuffRegistry).Assembly;
+                var resourceName = "RagnaController.Resources.BuffRegistry.json";
+                using var stream = assembly.GetManifestResourceStream(resourceName);
+                
+                string json;
+                if (stream != null)
                 {
-                    // Try parent directories (test project structure)
-                    filePath = System.IO.Path.Combine(baseDir, "..", "..", "..", "..", "src", "RagnaController", "Resources", "BuffRegistry.json");
-                    filePath = System.IO.Path.GetFullPath(filePath);
+                    using var reader = new System.IO.StreamReader(stream);
+                    json = reader.ReadToEnd();
                 }
-                if (!System.IO.File.Exists(filePath))
+                else
                 {
-                    // Try test project output
-                    filePath = System.IO.Path.Combine(baseDir, "Resources", "BuffRegistry.json");
-                    filePath = System.IO.Path.GetFullPath(filePath);
+                    // Fallback: load from file (tests / development)
+                    var baseDir = AppDomain.CurrentDomain.BaseDirectory;
+                    var filePath = System.IO.Path.Combine(baseDir, "Resources", "BuffRegistry.json");
+                    if (!System.IO.File.Exists(filePath))
+                    {
+                        // Try parent directories (test project structure)
+                        filePath = System.IO.Path.Combine(baseDir, "..", "..", "..", "..", "src", "RagnaController", "Resources", "BuffRegistry.json");
+                        filePath = System.IO.Path.GetFullPath(filePath);
+                    }
+                    if (!System.IO.File.Exists(filePath))
+                    {
+                        // Try test project output
+                        filePath = System.IO.Path.Combine(baseDir, "Resources", "BuffRegistry.json");
+                        filePath = System.IO.Path.GetFullPath(filePath);
+                    }
+                    if (!System.IO.File.Exists(filePath))
+                        throw new InvalidOperationException($"BuffRegistry.json not found. Searched: {baseDir}");
+
+                    json = System.IO.File.ReadAllText(filePath);
                 }
-                if (!System.IO.File.Exists(filePath))
-                    throw new InvalidOperationException($"BuffRegistry.json not found. Searched: {baseDir}");
 
-                json = System.IO.File.ReadAllText(filePath);
-            }
+                var data = System.Text.Json.JsonSerializer.Deserialize<BuffRegistryData>(json)
+                    ?? throw new InvalidOperationException("Failed to deserialize BuffRegistry.json");
 
-            _data = System.Text.Json.JsonSerializer.Deserialize<BuffRegistryData>(json)
-                ?? throw new InvalidOperationException("Failed to deserialize BuffRegistry.json");
+                // Indizes bauen
+                _buffById.Clear();
+                _buffByName.Clear();
+                _debuffById.Clear();
+                _debuffByName.Clear();
 
-            // Indizes bauen
-            foreach (var b in _data.Buffs)
-            {
-                _buffById[b.Id] = b;
-                _buffByName[b.Name] = b;
-            }
-            foreach (var d in _data.Debuffs)
-            {
-                _debuffById[d.Id] = d;
-                _debuffByName[d.Name] = d;
+                foreach (var b in data.Buffs)
+                {
+                    _buffById[b.Id] = b;
+                    _buffByName[b.Name] = b;
+                }
+                foreach (var d in data.Debuffs)
+                {
+                    _debuffById[d.Id] = d;
+                    _debuffByName[d.Name] = d;
+                }
+
+                _data = data;
             }
         }
 

@@ -1,4 +1,4 @@
-# KANBAN Board — RagnaController v2.2.1
+# KANBAN Board — RagnaController v2.3.0
 
 > **Hinweis:** Alle abgeschlossenen Phasen/Tasks sind in `CHANGELOG.md` (Eintrag [2.2.2]) dokumentiert. Dieses Board enthält **nur noch offene Aufgaben**. Siehe Metriken-Tabelle am Ende des Boards für den Status aller Phasen.
 

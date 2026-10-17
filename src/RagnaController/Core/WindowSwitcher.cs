@@ -130,7 +130,14 @@ namespace RagnaController.Core
                     {
                         _pidNameCache[p.Id] = p.ProcessName;
                     }
-                    catch { /* Access denied — ignorieren */ }
+                    catch (Exception ex)
+                    {
+                        // ERROR-001: Kein leerer catch. Prozessname-Lesen fehlgeschlagen
+                        // (z. B. systemgeschützter Prozess, Zugriff verweigert) —
+                        // wird ignoriert, PID bleibt im Cache fehlen, Fallback funktioniert weiterhin.
+                        System.Diagnostics.Debug.WriteLine(
+                            $"[WindowSwitcher] Prozessname für PID {p.Id} nicht lesbar: {ex.Message}");
+                    }
                     finally
                     {
                         p.Dispose();
@@ -138,7 +145,11 @@ namespace RagnaController.Core
                 }
                 _pidNameCacheTick = now;
             }
-            catch { /* System.Diagnostics nicht verfügbar — Fallback leer lassen */ }
+            catch (Exception ex)
+            {
+                // ERROR-001: Kein leerer catch — System.Diagnostics nicht verfügbar
+                System.Diagnostics.Debug.WriteLine($"[WindowSwitcher] RefreshPidNameCache äußerer Fehler: {ex.Message}");
+            }
         }
 
         private static IntPtr FindWindowByProcessName(string procName)

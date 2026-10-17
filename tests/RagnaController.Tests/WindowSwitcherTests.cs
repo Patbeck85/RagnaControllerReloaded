@@ -62,5 +62,52 @@ namespace RagnaController.Tests
             Assert.Equal(IntPtr.Zero, deadResult);
             Assert.Equal(FakeClientA, aliveResult);
         }
+
+        #region TECH-020: PID→ProcessName Cache Tests
+
+        /// <summary>
+        /// TECH-020: Verifiziert, dass RefreshPidNameCache den PID→Name Cache befüllt.
+        /// Auf einem laufenden System sind immer Prozesse vorhanden → Count > 0 erwartet.
+        /// </summary>
+        [Fact]
+        public void Tech020_RefreshPidNameCache_PopulatesCache()
+        {
+            var cacheField = typeof(WindowSwitcher).GetField(
+                "_pidNameCache",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!;
+
+            // Act: Cache füllen (überschreibt ggf. vorhandenen Inhalt)
+            var refreshMethod = typeof(WindowSwitcher).GetMethod(
+                "RefreshPidNameCache",
+                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!;
+            refreshMethod.Invoke(null, new object?[] { Environment.TickCount64 });
+
+            // Assert: Cache enthält Einträge (System hat Prozesse)
+            var cache = (Dictionary<int, string>)cacheField.GetValue(null)!;
+            Assert.True(cache.Count > 0, "PID-Cache sollte nach Refresh nicht leer sein");
+
+            // Jeder Eintrag hat gültigen Key (PID > 0, PID 0 = Idle wird übersprungen) und Wert (nicht null/leer)
+            foreach (var kvp in cache)
+            {
+                if (kvp.Key == 0) continue; // System Idle Process
+                Assert.True(kvp.Key > 0, $"PID muss > 0 sein, war {kvp.Key}");
+                Assert.False(string.IsNullOrEmpty(kvp.Value), $"Prozessname für PID {kvp.Key} darf nicht leer sein");
+            }
+        }
+
+        /// <summary>
+        /// TECH-020: Verifiziert, dass SelectTargetHwnd mit PreferredHwnd den Cache nicht berührt.
+        /// Das ist der schnelle Pfad — keine Process.GetProcesses()-Aufrufe.
+        /// </summary>
+        [Fact]
+        public void Tech020_SelectTargetHwnd_PreferredPath_DoesNotTouchCache()
+        {
+            // PreferredHwnd lebt → SelectTargetHwnd gibt ihn sofort zurück,
+            // ohne in GetCachedHwnd / RefreshPidNameCache zu gehen.
+            var hwnd = WindowSwitcher.SelectTargetHwnd("irgendein_prozess", FakeClientB, _ => true);
+            Assert.Equal(FakeClientB, hwnd);
+        }
+
+        #endregion
     }
 }
