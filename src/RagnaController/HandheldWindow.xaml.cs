@@ -41,6 +41,9 @@ namespace RagnaController
 
             // Start button on controller → play directly
             engine.ProfileQuickSwitch += _ => Dispatcher.BeginInvoke(CycleProfile);
+
+            // UX-020: Battery status updates
+            _engine.BatteryChanged += level => Dispatcher.BeginInvoke(() => UpdateBatteryStatus(level));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -170,6 +173,21 @@ namespace RagnaController
             ActiveProfileText.Text = active != null
                 ? $"{active.Class}  ·  {active.Name}"
                 : "No Profile";
+        }
+
+        // UX-020: Battery status display
+        private void UpdateBatteryStatus(string level)
+        {
+            BatteryStatusText.Text = $"Battery: {level}";
+            var color = level switch
+            {
+                "Full" or "High" => Color.FromRgb(57, 255, 20),
+                "Mid" => Color.FromRgb(255, 184, 0),
+                "Low" or "Empty" => Color.FromRgb(255, 58, 82),
+                _ => Color.FromRgb(85, 94, 106)
+            };
+            BatteryDot.Fill = new SolidColorBrush(color);
+            BatteryStatusText.Foreground = new SolidColorBrush(color);
         }
 
         private void CycleProfile()
