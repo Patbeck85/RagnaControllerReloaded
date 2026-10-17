@@ -166,7 +166,17 @@
 
 
 
-                                                                                                                                            <!-- Ragnarok Online Path Selector -->
+                                                                                                                                                <!-- Multi-Monitor Support -->
+                                                                            <TextBlock Text="{core:Loc Settings_OverlayMonitor_Label}" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
+                                                                            <Border Style="{StaticResource GlassPanel}">
+                                                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                                                    <TextBlock Text="{core:Loc Settings_OverlayMonitor_Label}" Style="{StaticResource BodyText}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                                                                    <ComboBox x:Name="OverlayMonitorCombo" Width="200" Margin="0,0,0,4" Style="{StaticResource DarkComboBox}" SelectionChanged="OverlayMonitorCombo_SelectionChanged" ToolTip="{core:Loc Settings_OverlayMonitor_Tooltip}"/>
+                                                                                    <TextBlock x:Name="OverlayMonitorInfo" Text="" Style="{StaticResource MutedText}" FontSize="9" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                                                                                </StackPanel>
+                                                                            </Border>
+
+                                                                        <!-- Ragnarok Online Path Selector -->
                                                                                                                                                                                 <TextBlock Text="{core:Loc Settings_RoExePath_Description}" Style="{StaticResource BodyText}" Margin="0,14,0,4"/>
                                                                                                                                                                                 <Grid Margin="0,0,0,4">
                                                                                                                                                                                     <Grid.ColumnDefinitions>

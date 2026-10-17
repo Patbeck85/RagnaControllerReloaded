@@ -113,6 +113,10 @@ namespace RagnaController.Models
         /// <summary>Automatically check for updates on startup.</summary>
         public bool AutoUpdateEnabled { get; set; } = true;
 
+        // ── FEAT-030: Multi-Monitor Support ──────────────────────────────
+        /// <summary>Index of monitor where the overlay window should appear (0 = primary).</summary>
+        public int OverlayMonitorIndex { get; set; } = 0;
+
         // ── Lifetime RSI Stats (v1.7.0) ───────────────────────────────
         public long LifetimeSavedClicks { get; set; } = 0;
         public long LifetimeSavedKeystrokes { get; set; } = 0;

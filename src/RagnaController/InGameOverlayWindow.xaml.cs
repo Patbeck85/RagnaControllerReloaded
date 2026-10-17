@@ -49,6 +49,11 @@ namespace RagnaController
                 this.Left = _settings.OverlayPositionX.Value;
                 this.Top = _settings.OverlayPositionY.Value;
             }
+            else
+            {
+                // FEAT-030: Position overlay on selected monitor
+                ApplyMonitorPosition();
+            }
 
             // Subscribe to controller manager events
             if (_controllerManager != null)
@@ -148,6 +153,20 @@ namespace RagnaController
                     UpdateDisplay();
                 }
         
+        // FEAT-030: Position overlay on selected monitor
+        private void ApplyMonitorPosition()
+        {
+            if (_settings == null) return;
+
+            var monitors = Core.MonitorHelper.GetMonitors();
+            int index = Math.Clamp(_settings.OverlayMonitorIndex, 0, monitors.Count - 1);
+            var monitor = monitors[index];
+
+            // Position overlay at top-right of selected monitor with some margin
+            this.Left = monitor.Right - this.Width - 20;
+            this.Top = monitor.Top + 20;
+        }
+
         private void ApplyThemeSettings()
                 {
                     if (_settings == null) return;

@@ -82,6 +82,9 @@ namespace RagnaController
 
                     // UX-022: Gyro calibration UI
                     GyroDeadzoneValue.Text = _s.GyroDeadzone.ToString();
+
+                    // FEAT-030: Multi-monitor support
+                    InitializeOverlayMonitorCombo();
                 }
 
         private void InitializeOverlayCustomization()
@@ -300,7 +303,45 @@ namespace RagnaController
                     _s.Save();
                 }
 
-                private void BtnCancel_Click(object sender, RoutedEventArgs e) => Close();
+                // FEAT-030: Initialize monitor dropdown
+        private void InitializeOverlayMonitorCombo()
+        {
+            if (OverlayMonitorCombo == null || OverlayMonitorInfo == null) return;
+
+            var monitors = Core.MonitorHelper.GetMonitors();
+            OverlayMonitorCombo.Items.Clear();
+            foreach (var m in monitors)
+            {
+                OverlayMonitorCombo.Items.Add(new ComboBoxItem
+                {
+                    Content = m.DisplayName,
+                    Tag = m,
+                });
+            }
+
+            // Select saved monitor index
+            int index = Math.Clamp(_s.OverlayMonitorIndex, 0, monitors.Count - 1);
+            OverlayMonitorCombo.SelectedIndex = index;
+            UpdateMonitorInfo();
+        }
+
+        private void UpdateMonitorInfo()
+        {
+            if (OverlayMonitorInfo == null || OverlayMonitorCombo?.SelectedItem is not ComboBoxItem item) return;
+            var m = (Core.MonitorDisplayInfo)item.Tag;
+            OverlayMonitorInfo.Text = m.IsPrimary ? "Primary monitor" : $"Position: {m.Left}, {m.Top}";
+        }
+
+        private void OverlayMonitorCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (OverlayMonitorCombo?.SelectedItem is not ComboBoxItem item) return;
+            var m = (Core.MonitorDisplayInfo)item.Tag;
+            _s.OverlayMonitorIndex = OverlayMonitorCombo.SelectedIndex;
+            _s.Save();
+            UpdateMonitorInfo();
+        }
+
+        private void BtnCancel_Click(object sender, RoutedEventArgs e) => Close();
 
         /// <summary>
         /// Kopiert alle aktuellen UI-Kontrollwerte in das Settings-Modell, persistiert und benachrichtigt den Caller.

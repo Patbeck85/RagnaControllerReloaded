@@ -780,5 +780,7 @@
   "Settings_Gyro_NoDualSense": "No DualSense found",
   "Settings_Gyro_Measuring": "Measuring drift… keep controller still",
   "Settings_Gyro_Calibrated": "Calibrated: {0}",
-  "Settings_Gyro_CalibrationFailed": "Calibration failed"
+  "Settings_Gyro_CalibrationFailed": "Calibration failed",
+  "Settings_OverlayMonitor_Tooltip": "Select which monitor the in-game overlay appears on",
+  "Settings_OverlayMonitor_Primary": "Primary"
 }
