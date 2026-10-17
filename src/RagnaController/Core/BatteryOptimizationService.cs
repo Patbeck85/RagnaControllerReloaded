@@ -22,7 +22,9 @@ namespace RagnaController.Core
         private bool _isOnBattery;
         private int _batteryPercent = 100;
         private bool _isCharging;
-        private PowerStatus _lastStatus;
+#pragma warning disable CS8618 // _lastStatus is set in private constructor before any read
+        private PowerStatus? _lastStatus;
+#pragma warning restore CS8618
         private readonly Func<PowerStatus>? _getPowerStatus;
 
         /// <summary>True wenn das Gerät auf Batterie läuft (nicht am Netzteil).</summary>
@@ -74,12 +76,13 @@ namespace RagnaController.Core
         private BatteryOptimizationService(Func<PowerStatus> getPowerStatus)
         {
             _getPowerStatus = getPowerStatus ?? throw new ArgumentNullException(nameof(getPowerStatus));
-            _lastStatus = getPowerStatus();
-            _isOnBattery = _lastStatus.BatteryChargeStatus != BatteryChargeStatus.NoSystemBattery &&
-                           _lastStatus.BatteryChargeStatus != BatteryChargeStatus.Unknown &&
-                           _lastStatus.PowerLineStatus != PowerLineStatus.Online;
-            _batteryPercent = _lastStatus.BatteryLifePercent == 255 ? 100 : (int)_lastStatus.BatteryLifePercent;
-            _isCharging = _lastStatus.BatteryChargeStatus.HasFlag(BatteryChargeStatus.Charging);
+            var status = getPowerStatus();
+            _lastStatus = status;
+            _isOnBattery = status.BatteryChargeStatus != BatteryChargeStatus.NoSystemBattery &&
+                           status.BatteryChargeStatus != BatteryChargeStatus.Unknown &&
+                           status.PowerLineStatus != PowerLineStatus.Online;
+            _batteryPercent = status.BatteryLifePercent == 255 ? 100 : (int)status.BatteryLifePercent;
+            _isCharging = status.BatteryChargeStatus.HasFlag(BatteryChargeStatus.Charging);
         }
 
         /// <summary>

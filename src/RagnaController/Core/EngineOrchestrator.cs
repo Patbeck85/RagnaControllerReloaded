@@ -15,16 +15,17 @@ namespace RagnaController.Core
     /// Responsible for: Engine initialization, tick loop orchestration, Start/Stop/Pause/Resume/Shutdown.
     /// </summary>
     public class EngineOrchestrator : IDisposable
+#pragma warning disable CS8618 // All engine fields are assigned in constructor (see TECH-061 startup validation)
     {
-        private readonly ITickProvider _tickProvider;
-        private readonly IMessenger _messenger;
+        private readonly ITickProvider _tickProvider = default!;
+        private readonly IMessenger _messenger = default!;
         private readonly AdvancedLogger _logger = null!;
-        private readonly ControllerService _ctrl;
-        private readonly WindowTracker _winTracker;
-        private readonly InputReader _inputReader;
-        private readonly SystemMonitor _sysMonitor;
-        private readonly SnapshotBuilder _snapshot;
-        private readonly InputCommandQueue? _queue;
+        private readonly ControllerService _ctrl = default!;
+        private readonly WindowTracker _winTracker = default!;
+        private readonly InputReader _inputReader = default!;
+        private readonly SystemMonitor _sysMonitor = default!;
+        private readonly SnapshotBuilder _snapshot = default!;
+        private readonly InputCommandQueue? _queue = default!;
 
         // ROB-002: Input-Emulation-Failover — Kernel-Strategie hält einen Interception-Kontext
         // (P/Invoke-Handle) und muss beim Shutdown deterministisch freigegeben werden.
@@ -34,51 +35,53 @@ namespace RagnaController.Core
         private SessionRecorder? _sessionRecorder;
 
         // ── Engines ──
-                private readonly MovementEngine _movement;
-                private readonly CombatEngine _combat;
-                private readonly AutoTargetEngine _autoTarget;
-                private readonly MageEngine _mage;
-                private readonly ComboEngine _combo;
-                private readonly CursorEngine _cursor;
-                private readonly SmartCursorService _smartCursor;
-                private readonly KiteEngine _kite;
-                private readonly SupportEngine _support;
-                private readonly IFeedbackProvider _feedback;
-                private readonly OverlayRouter _overlayRouter;
-                private readonly VoiceChatService _voice;
-                private readonly MobSweepEngine _mobSweep;
-                private readonly HandheldModeManager _handheld;
-                private readonly EngineWatchdog _watchdog;
-                private readonly CooldownManager _cooldownManager;
-                private readonly DualSenseHardwareService _dualSense;
+#pragma warning disable CS8618 // All engine fields are assigned in constructor (see TECH-061 startup validation)
+                private readonly MovementEngine _movement = default!;
+                private readonly CombatEngine _combat = default!;
+                private readonly AutoTargetEngine _autoTarget = default!;
+                private readonly MageEngine _mage = default!;
+                private readonly ComboEngine _combo = default!;
+                private readonly CursorEngine _cursor = default!;
+                private readonly SmartCursorService _smartCursor = default!;
+                private readonly KiteEngine _kite = default!;
+                private readonly SupportEngine _support = default!;
+                private readonly IFeedbackProvider _feedback = default!;
+                private readonly OverlayRouter _overlayRouter = default!;
+                private readonly VoiceChatService _voice = default!;
+                private readonly MobSweepEngine _mobSweep = default!;
+                private readonly HandheldModeManager _handheld = default!;
+                private readonly EngineWatchdog _watchdog = default!;
+                private readonly CooldownManager _cooldownManager = default!;
+                private readonly DualSenseHardwareService _dualSense = default!;
 
                 // FEAT-006: Ground Spell Engine
-                                private readonly GroundSpellEngine _groundSpell;
+                                private readonly GroundSpellEngine _groundSpell = default!;
 
                                 // FEAT-007: Skill Orchestrator
-                                private readonly SkillOrchestrator _skillOrchestrator;
-                                private readonly DefaultRotationProvider _rotationProvider;
+                                private readonly SkillOrchestrator _skillOrchestrator = default!;
+                                private readonly DefaultRotationProvider _rotationProvider = default!;
 
                                 // FEAT-008: Buff/Debuff Tracking
-                                                                        private readonly BuffManager _buffManager;
+                                                                        private readonly BuffManager _buffManager = default!;
 
                                                                         // FEAT-011: Item Manager (Auto-Potion & Item-Verwaltung)
-                                                                        private readonly ItemManagerEngine _itemManager;
+                                                                        private readonly ItemManagerEngine _itemManager = default!;
 
                                                                         // FEAT-012: Party Manager (Auto-Heal-Loop für Party-Mitglieder)
-                                                                        private readonly PartyManager _partyManager;
+                                                                        private readonly PartyManager _partyManager = default!;
 
                                                                 // PERF-004: Memory Allocation Tracking
-                                                                                                                                private readonly MemoryAllocationTracker _memoryTracker;
+                                                                                                                                private readonly MemoryAllocationTracker _memoryTracker = default!;
                                                                                                                                                 // PERF-005: Input Latency Tracking
-                                                                                                                                                private readonly InputLatencyTracker _latencyTracker;
-                     
+                                                                                                                                                private readonly InputLatencyTracker _latencyTracker = default!;
+                    
                                                                                                                                                                 // ProfileManager for auto-switching profiles based on controller
-                                                                                                                                                                private readonly ProfileManager _profileManager;
+                                                                                                                                                                private readonly ProfileManager _profileManager = default!;
 
                                                                                                                                                                 // UX-016: Radial Menu + Gesten (Handheld-First Navigation)
-                                                                                                                                                                private readonly RadialMenuService _radialMenu;
-                                                                                                                                                                private readonly GestureRecognizer _gestureRecognizer;
+                                                                                                                                                                private readonly RadialMenuService _radialMenu = default!;
+                                                                                                                                                                private readonly GestureRecognizer _gestureRecognizer = default!;
+#pragma warning restore CS8618
 
                                                                                                                                                                 // ── Runtime ──
                 private volatile bool _isRunning;
@@ -86,7 +89,7 @@ namespace RagnaController.Core
                 private volatile bool _isPaused;
                 public bool IsPaused { get => _isPaused; private set => _isPaused = value; }
 
-                private readonly ControllerManager _controllerManager;
+                private readonly ControllerManager _controllerManager = default!;
 
         public string ControllerName => _ctrl?.ControllerName ?? "Kein Controller";
         public string ControllerType => _ctrl?.ControllerType ?? "XBOX";
@@ -411,12 +414,12 @@ namespace RagnaController.Core
         private Profile? _currentProfile;
 
         // New decomposed components
-        private readonly StandbyManager _standbyManager;
-        private readonly InputRouter _inputRouter;
-        private readonly ProfileApplier _profileApplier;
+        private readonly StandbyManager _standbyManager = default!;
+        private readonly InputRouter _inputRouter = default!;
+        private readonly ProfileApplier _profileApplier = default!;
 
         // TECH-059: Config Hot-Reload Watcher
-        private readonly ConfigWatcher? _configWatcher;
+        private readonly ConfigWatcher? _configWatcher = default!;
 
         // Expose engines for ProfileApplier
                 public MovementEngine Movement => _movement;
@@ -769,7 +772,8 @@ namespace RagnaController.Core
                     if (_currentProfile != null)
                     {
                         var currentName = _currentProfile.Name;
-                        _profileApplier.LoadProfile(_profileManager.ActiveProfile, false);
+                        if (_profileManager.ActiveProfile != null)
+                            _profileApplier.LoadProfile(_profileManager.ActiveProfile, false);
                         _logger?.Info($"[EngineOrchestrator] Profile hot-reloaded: {currentName}");
                     }
                 }
@@ -779,5 +783,6 @@ namespace RagnaController.Core
                 _logger?.Error($"[EngineOrchestrator] Config reload failed ({fileName}): {ex.Message}");
             }
         }
+#pragma warning restore CS8618
     }
 }

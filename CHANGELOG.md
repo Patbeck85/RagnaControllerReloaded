@@ -5,6 +5,40 @@ All notable changes to RagnaController will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+--
+
+## [2.2.2] - 2026-10-16
+
+### GEX-013: Integration Test Suite — Full Engine Chain Headless ✅
+**`tests/RagnaController.Tests/EngineChainIntegrationTests.cs`** — 525 Tests, alle grün (Combat+Movement+Targeting+Buffs+Items gleichzeitig, headless, deterministisch). Build: 0 Errors/0 Warnings (Debug & Release).
+
+### Phase 8: UI Modernization — Cyber-Gaming Design 2026 ✅ (9/9 Tasks)
+UI-001 App.xaml Design System, UI-002 MainWindow, UI-003 SettingsWindow, UI-004 InGameOverlayWindow, UI-005 Handheld/RadialMenu/DaisyWheel, UI-006 ProfileWizard/Library/CommunityBrowser, UI-007 ControllerTest/ButtonRemapping/ComboEditor/Tutorial/Splash/MiniMode/DeveloperConsole, UI-008 Build Verification, UI-009 Documentation.
+
+### Phase 9: Performance & Observability — Sub-2ms Tick Budget ✅ (9/9 Tasks)
+PERF-001 ETW EventSource, PERF-002 Structured Logging (Serilog), PERF-003 Frame-Time Budget Tracking, PERF-004 Memory Allocation Tracking, PERF-005 Input Latency Measurement, PERF-006 BenchmarkDotNet Regression Gate, PERF-007 BenchmarkDotNet Integration, PERF-008 GPU/Overlay Render Profiling, PERF-009 CI Performance Dashboard.
+
+### Phase 10: Gameplay Depth, Robustness & UX ✅ (13/13 Tasks)
+ROB-001 Watchdog-Härtung, FEAT-011 ItemManagerEngine, UI-010 WindowControlButton Token-Fix, TEST-010 Unit-Tests für 6 Engines, TEST-011 Fuzzing/Robustness, TEST-015 FakeControllerProvider Pipeline-Goldtests, TEST-016 Controller-Replay Golden-Master, TEST-017 Eingabe-Selbsttest, FEAT-012 PartyManager + Auto-Heal, FEAT-013 Target-Management (Tab/Lock/Retarget), ROB-002 Input-Emulation-Failover, PERF-010 Zero-Allokation-Gate, UI-011 Live-Telemetrie-Dashboard, FEAT-014 Session-Replay, TEST-012 Long-Run Soak, TEST-013 Stryker-Scoping, TEST-014 PerformanceTests, UX-012 Accessibility, FEAT-015 Multi-Client-Routing, FEAT-024 Multi-Character-Profil-Switch, FEAT-023 Auto-Item-Einlagerung.
+
+### Phase 12: UX Polish & Accessibility ✅ (15/15 Tasks)
+UX-001 AutomationProperties, UX-002 Empty State ohne Profil, UX-003 CheckBox Persistenz, UX-004 ComboBox Initialwerte, UX-005 Overlay Disconnected State, UX-006 Drag-Drop Import, UX-007 Wizard Validation, UX-008 Empty/Error State, UX-009 Unsaved Changes Warning, UX-010 Emote Search/Filter, UX-011 Tooltip Placement, UX-012 Click-Through Escape-Hatch, UX-013 Share Code Format Hint, UX-014 Tutorial Localization, UX-015 Splash Skip/Cancel.
+
+### Phase 13A: Core Input & Emulation Verification ✅ (4/4)
+GEX-001 SendInput/Interception Parity, GEX-002 Input Latency Budget, GEX-003 Keyboard Emulation Parity, GEX-004 Focus Lock Reliability.
+
+### Phase 13B: Combat & Skill System Verification ✅ (4/4)
+GEX-005 Skill Casting Accuracy, GEX-006 Auto-Targeting Accuracy, GEX-007 Movement Engine, GEX-008 Combo Engine.
+
+### Phase 13C: Support Systems ✅ (GEX-010, GEX-011, GEX-012)
+GEX-010 Item Manager, GEX-011 Buff/Debuff Manager, GEX-012 Profile System.
+
+### SPRINT D — Technical Debt ✅ (TECH-016 bis TECH-033, TECH-051 bis TECH-057)
+TECH-016 Empty Catch Blocks, TECH-017 CheckBox Handlers, TECH-018 HttpClient Disposal, TECH-019 LocalizationManager, TECH-020 WindowSwitcher Cache, TECH-021 God Class (WONT_FIX), TECH-022 Localization Keys, TECH-023 ProfileManager I/O (WONT_FIX), TECH-024 Logger Channel, TECH-025 Timer Cleanup, TECH-026 Debug-Only Lock, TECH-027 Kite Overshoot, TECH-028 TelemetryPanel Dispose, TECH-029 ClassDetector BuildSkillToClassMap, TECH-030 Window_Closing Duplikation, TECH-031 Settings.Load() pro Tick, TECH-032 Cursor Desync, TECH-033 MageEngine R2 Digital+Analog, TECH-034 Cursor Reset, TECH-035 DPI Awareness, TECH-036 VirtualCursorPosition, TECH-037 Deterministic RNG, TECH-038 Blocking Sleep (WONT_FIX), TECH-039 MoveAbsolute SendInput, TECH-040 Dispose on Failover, TECH-041 Interception Absolute (documented), TECH-042 InvalidateSettingsCache, TECH-043 10x8 Grid (WONT_FIX), TECH-044 Back/Shift Separation, TECH-045 Drag Trigger L1+BtnA, TECH-046 ScrollWheel Queue, TECH-047 MouseAbs Batch, TECH-048 SmartCursor Guard, TECH-051 Static Collections Cleanup, TECH-052 IDisposable Events, TECH-053 Thread Cleanup (partiell), TECH-054 Async Calibration, TECH-055 HttpClient Dispose, TECH-056 Nullable Safety, TECH-057 Gitignore.
+
+### Comprehensive App Audit — New Findings ✅ (TECH-051–TECH-057 done, TECH-049/TECH-050 offen)
+Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join im Dispose, Async Calibration, HttpClient Dispose, Nullable Safety, Gitignore Hardening.
+
 ---
 
 ## [2.2.1] - 2026-10-10

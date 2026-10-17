@@ -503,7 +503,7 @@ namespace RagnaController.Tests
             bool handled = kite.Handle(Pi(), 16);
 
             Assert.False(handled);
-            Assert.Equal(0, ctx.Log.Count);
+            Assert.Empty(ctx.Log);
         }
 
         [Fact]
@@ -518,7 +518,7 @@ namespace RagnaController.Tests
             bool handled = kite.Handle(Pi(), 16);
 
             Assert.False(handled);
-            Assert.Equal(0, ctx.Log.Count);
+            Assert.Empty(ctx.Log);
         }
 
         [Fact]
@@ -1263,8 +1263,7 @@ namespace RagnaController.Tests
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RagnaController", "settings.json"),
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RagnaController", "Profiles"));
 
-            bool fired = false;
-            watcher.ConfigChanged += fileName => fired = true;
+            watcher.ConfigChanged += fileName => { };
 
             // Manuelles Feuern ist schwierig ohne echte Dateiänderung,
             // aber der Watcher sollte ohne Exception konstruierbar sein
@@ -2170,6 +2169,7 @@ namespace RagnaController.Tests
                 gesture.Tick(rightX: 2f, rightY: 0f, r3Pressed: false); // Bewegung
 
             Assert.True(opened);
+            Assert.False(closed);
             Assert.True(gesture.IsMenuOpen);
         }
 
