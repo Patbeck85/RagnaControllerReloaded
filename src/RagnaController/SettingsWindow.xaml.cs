@@ -79,6 +79,9 @@ namespace RagnaController
 
                     // Initialize Overlay Customization Settings
                     InitializeOverlayCustomization();
+
+                    // UX-022: Gyro calibration UI
+                    GyroDeadzoneValue.Text = _s.GyroDeadzone.ToString();
                 }
 
         private void InitializeOverlayCustomization()
@@ -463,6 +466,51 @@ namespace RagnaController
                 // TECH-050: UI-Zustand immer wiederherstellen, auch bei Exception (Button war sonst dauerhaft disabled).
                 BtnCalibrate.IsEnabled = true;
                 ChkStartWithWindows.IsEnabled = true;
+            }
+        }
+
+        // UX-022: Gyro calibration — measures drift and sets GyroDeadzone
+        private async void BtnGyroCalibrate_Click(object sender, RoutedEventArgs e)
+        {
+            using var gyro = new Core.GyroService();
+
+            if (!gyro.IsAvailable)
+            {
+                GyroStatusText.Text = "No DualSense found";
+                GyroStatusText.Foreground = Brushes.OrangeRed;
+                return;
+            }
+
+            BtnGyroCalibrate.IsEnabled = false;
+            GyroStatusText.Text = "Measuring drift… keep controller still";
+            GyroStatusText.Foreground = Brushes.Yellow;
+
+            try
+            {
+                gyro.Start();
+                await Task.Delay(3000); // Measure for 3 seconds
+                gyro.Stop();
+
+                // Read current drift threshold from service
+                int currentThreshold = gyro.DriftThreshold;
+
+                // Save to settings
+                _s.GyroDeadzone = currentThreshold;
+                _s.Save();
+
+                GyroDeadzoneValue.Text = currentThreshold.ToString();
+                GyroStatusText.Text = $"Calibrated: {currentThreshold}";
+                GyroStatusText.Foreground = Brushes.LimeGreen;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[SettingsWindow] Gyro calibration failed: {ex.Message}");
+                GyroStatusText.Text = "Calibration failed";
+                GyroStatusText.Foreground = Brushes.OrangeRed;
+            }
+            finally
+            {
+                BtnGyroCalibrate.IsEnabled = true;
             }
         }
 

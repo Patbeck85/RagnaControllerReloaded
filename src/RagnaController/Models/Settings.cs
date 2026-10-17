@@ -105,6 +105,10 @@ namespace RagnaController.Models
         public double? OverlayPositionX { get; set; } = null;
         public double? OverlayPositionY { get; set; } = null;
 
+        // ── UX-022: Gyro Calibration ─────────────────────────────────────
+        /// <summary>Gyro drift threshold (deadzone) in raw HID units. Determined by calibration.</summary>
+        public int GyroDeadzone { get; set; } = 64;
+
         // ── Lifetime RSI Stats (v1.7.0) ───────────────────────────────
         public long LifetimeSavedClicks { get; set; } = 0;
         public long LifetimeSavedKeystrokes { get; set; } = 0;
