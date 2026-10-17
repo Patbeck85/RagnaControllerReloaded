@@ -2010,7 +2010,7 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 **Suggested Fix:** "Export all profiles as ZIP" in ProfileLibraryWindow; "Export settings as JSON/import"; auto-backup before profile changes.
 **DoD:** ZIP export of all profiles; settings JSON export/import; auto-backup before profile save.
 
-#### FEAT-029: Automatic Updates with Changelog (S4)
+#### FEAT-029: Automatic Updates with Changelog (S4) ✅ ERLEDIGT (2026-10-17)
 **Files:** `Core/UpdateChecker.cs`, `.github/workflows/release.yml`
 **Fundament:** UpdateChecker exists but no automatic download/install.
 **Suggested Fix:** Automatic download of new versions; changelog display before installation; background install option.
