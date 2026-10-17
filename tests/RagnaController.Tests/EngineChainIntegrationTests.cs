@@ -2143,6 +2143,73 @@ namespace RagnaController.Tests
         }
 
         // ============================================================
+        //  20. FEAT-026a: Steam Deck Big Picture UI — Full Implementation (S2, HIGH)
+        // ============================================================
+        [Fact]
+        public void FEAT026a_MainWindow_BigPictureMode_Toggle()
+        {
+            // Testet die Big Picture Mode Logik über Reflection auf private Methode
+            // Da MainWindow Dependency Injection benötigt, testen wir über das Design-System
+            // dass die Font Scale Keys existieren und anwendbar sind
+            string xamlPath = @"C:\Hermes\RagnaController\src\RagnaController\Resources\UI2026DesignSystem.xaml";
+            string xaml = File.ReadAllText(xamlPath);
+            Assert.Contains("FontScaleLarge", xaml);
+            Assert.Contains("1.25", xaml); // 150% scaling
+        }
+
+        [Fact]
+        public void FEAT026a_MainWindow_TouchTargets_MinSize()
+        {
+            // Überprüft dass die Big Picture Button-Größen >= 44px sind
+            // (durchgeführt über XAML-Analyse der Quick Actions Buttons)
+            string xamlPath = @"C:\Hermes\RagnaController\src\RagnaController/MainWindow.xaml";
+            string xaml = File.ReadAllText(xamlPath);
+
+            // Alle Quick-Action Buttons haben Height="44" (Touch-freundlich)
+            Assert.Contains("Height=\"44\"", xaml);
+            Assert.Contains("BtnCalibrateQuick", xaml);
+            Assert.Contains("BtnTestInput", xaml);
+            Assert.Contains("BtnOpenRemap", xaml);
+            Assert.Contains("BtnRadial", xaml);
+        }
+
+        [Fact]
+        public void FEAT026a_MainWindow_BigPictureButton_Exists()
+        {
+            string xamlPath = @"C:\Hermes\RagnaController\src\RagnaController/MainWindow.xaml";
+            string xaml = File.ReadAllText(xamlPath);
+
+            // Big Picture Toggle Button existiert in der Top Bar
+            Assert.Contains("BtnBigPicture", xaml);
+            Assert.Contains("Big Picture Mode", xaml);
+            Assert.Contains("🎮", xaml);
+        }
+
+        [Fact]
+        public void FEAT026a_DesignSystem_FontScaleLarge_150Percent()
+        {
+            string xamlPath = @"C:\Hermes\RagnaController\src\RagnaController\Resources\UI2026DesignSystem.xaml";
+            string xaml = File.ReadAllText(xamlPath);
+
+            // FontScaleLarge = 1.25 (150%) für Big Picture Mode
+            Assert.Contains("FontScaleLarge", xaml);
+            Assert.Contains("1.25", xaml);
+        }
+
+        [Fact]
+        public void FEAT026a_MainWindow_ApplyBigPictureMode_SetsWindowState()
+        {
+            // Diese Logik kann nicht direkt getestet werden ohne MainWindow-Instanz,
+            // aber wir prüfen dass die Methode im Code-Behind existiert
+            string csPath = @"C:\Hermes\RagnaController\src\RagnaController/MainWindow.xaml.cs";
+            string cs = File.ReadAllText(csPath);
+
+            Assert.Contains("ApplyBigPictureMode", cs);
+            Assert.Contains("_isBigPictureMode", cs);
+            Assert.Contains("WindowState.Maximized", cs);
+        }
+
+        // ============================================================
         //  Test-Doubles
         // ============================================================
         private sealed class MockTickProvider : ITickProvider

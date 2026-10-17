@@ -23,6 +23,7 @@ namespace RagnaController
         private Settings       _settings = Settings.Load();
         private readonly System.Collections.Generic.List<IDisposable> _subs = new();
         private bool _isMiniMode = false;
+        private bool _isBigPictureMode = false;
         private readonly List<string> _logBuffer = new();
         private MiniModeWindow? _miniWindow;
         private bool _wasFocusLocked;
@@ -257,8 +258,61 @@ namespace RagnaController
         private void BtnBigPicture_Click(object s, RoutedEventArgs e)
         {
             // Big Picture Mode für Steam Deck: Maximieren + UI-Skalierung aktivieren
-            WindowState = WindowState.Maximized;
-            // TODO: Big Picture Layout anwenden (großere Buttons, kontrastreichere Farben)
+            _isBigPictureMode = !_isBigPictureMode;
+            ApplyBigPictureMode(_isBigPictureMode);
+        }
+
+        /// <summary>
+        /// Wendet das Big Picture Mode Layout an: 150% Font Scaling,
+        /// min. 44×44px Touch-Targets, größere Spacing für Touch-Bedienung.
+        /// </summary>
+        private void ApplyBigPictureMode(bool enabled)
+        {
+            // Fenster maximiert für Big Picture
+            WindowState = enabled ? WindowState.Maximized : WindowState.Normal;
+
+            // Design-System Resource für Font Scale setzen (über App.Resources)
+            var scaleKey = enabled ? "FontScaleLarge" : "FontScaleNormal";
+            if (Application.Current.Resources.Contains(scaleKey))
+            {
+                Application.Current.Resources["FontScaleNormal"] = Application.Current.Resources[scaleKey];
+            }
+
+            // Touch-Targets für Haupt-Buttons vergrößern (min. 44×44px)
+            SetButtonMinSize(BtnCalibrateQuick, enabled ? 56 : 44);
+            SetButtonMinSize(BtnTestInput, enabled ? 56 : 44);
+            SetButtonMinSize(BtnOpenRemap, enabled ? 56 : 44);
+            SetButtonMinSize(BtnRadial, enabled ? 56 : 44);
+            SetButtonMinSize(BtnBigPicture, enabled ? 48 : 36);
+
+            // Fenster-Controls (Min/Max/Close) für Touch vergrößern
+            SetButtonMinSize(BtnMinimize, enabled ? 48 : 36);
+            SetButtonMinSize(BtnMaximize, enabled ? 48 : 36);
+            SetButtonMinSize(BtnClose, enabled ? 48 : 36);
+
+            // ComboBox für Touch vergrößern
+            if (ProfileCombo != null)
+            {
+                ProfileCombo.MinHeight = enabled ? 44 : 32;
+                ProfileCombo.Height = enabled ? 44 : double.NaN;
+            }
+
+            // Log-Buttons für Touch
+            SetButtonMinSize(BtnClearLog, enabled ? 44 : 28);
+            SetButtonMinSize(BtnExportLog, enabled ? 44 : 28);
+
+            System.Diagnostics.Debug.WriteLine($"[MainWindow] Big Picture Mode: {(enabled ? "ON" : "OFF")}");
+        }
+
+        private void SetButtonMinSize(Button? btn, double minSize)
+        {
+            if (btn != null)
+            {
+                btn.MinWidth = minSize;
+                btn.MinHeight = minSize;
+                if (btn.Width == 0 || btn.Width == double.NaN) btn.Width = minSize;
+                if (btn.Height == 0 || btn.Height == double.NaN) btn.Height = minSize;
+            }
         }
 
         private void TabBase_Click(object s, RoutedEventArgs e) => SelectTab(PanelBase, null);
