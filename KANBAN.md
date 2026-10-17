@@ -1928,7 +1928,7 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 
 ### 🟥 SPRINT 15A — Critical Bug Fixes (Immediate Impact)
 
-#### TECH-061: EngineOrchestrator `null!` Fields — NRE Risk (S2)
+#### TECH-061: EngineOrchestrator `null!` Fields — NRE Risk (S2) ✅ ERLEDIGT (2026-10-17)
 **Files:** `src/RagnaController/Core/EngineOrchestrator.cs`
 **Fundament:** 20+ Engine fields initialized with `null!`. If an engine fails to instantiate, app crashes with NullReferenceException instead of clean error message.
 **Impact:** Hard crash on missing dependency instead of graceful degradation.
