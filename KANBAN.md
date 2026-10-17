@@ -1976,7 +1976,7 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 **Suggested Fix:** Save/restore position; allow dragging overlay with controller button (e.g., L3+R3); transparency and scale configurable.
 **DoD:** Overlay position saved and restored; draggable via controller; opacity/scale configurable in settings.
 
-#### UX-022: Gyro Calibration in UI (S3)
+#### UX-022: Gyro Calibration in UI (S3) ✅ ERLEDIGT (2026-10-17)
 **Files:** `Core/GyroService.cs`, `SettingsWindow.xaml`
 **Fundament:** GyroService exists but no calibration in UI.
 **Suggested Fix:** Calibration wizard in Settings or HandheldWindow: "Place controller flat", gyro deadzone adjustable.
