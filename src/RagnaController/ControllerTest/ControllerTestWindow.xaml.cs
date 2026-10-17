@@ -36,7 +36,8 @@ namespace RagnaController.ControllerTest
             _updateTimer = new DispatcherTimer();
             _updateTimer.Interval = TimeSpan.FromMilliseconds(50); // 20 FPS update
             _updateTimer.Tick += UpdateControllerState;
-            _updateTimer.Start();
+            // Timer only runs when recording or diagnostic is active (TECH-065)
+            // _updateTimer.Start();  ← REMOVED
 
             // Subscribe to connection changes
             if (_controllerProvider is ControllerService cs)
@@ -48,6 +49,21 @@ namespace RagnaController.ControllerTest
             // Initial update
             UpdateControllerState(this, EventArgs.Empty);
             _isInitialized = true;
+
+            EnsureTimerState();
+        }
+
+        /// <summary>
+        /// TECH-065: Starts the update timer only when recording or diagnostic is active.
+        /// Stops it when neither is running — 0 CPU usage when idle.
+        /// </summary>
+        private void EnsureTimerState()
+        {
+            bool shouldRun = _recorder.IsRecording || _diagnostic.IsRunning;
+            if (shouldRun && !_updateTimer!.IsEnabled)
+                _updateTimer!.Start();
+            else if (!shouldRun && _updateTimer!.IsEnabled)
+                _updateTimer!.Stop();
         }
 
         private void OnControllerDetected(object? sender, EventArgs e)
@@ -152,6 +168,7 @@ namespace RagnaController.ControllerTest
             _recorder.Start();
             RecordingStatus.Text = "läuft… (0 Frames)";
             RecordingStatus.Foreground = System.Windows.Media.Brushes.Orange;
+            EnsureTimerState();
         }
 
         private void BtnRecordStopSave_Click(object sender, RoutedEventArgs e)
@@ -179,6 +196,7 @@ namespace RagnaController.ControllerTest
                 RecordingStatus.Text = $"Fehler: {ex.Message}";
                 RecordingStatus.Foreground = System.Windows.Media.Brushes.Red;
             }
+            EnsureTimerState();
         }
 
         /// <summary>
@@ -255,6 +273,7 @@ namespace RagnaController.ControllerTest
             DiagPrompt.Text = $"1/{_diagnostic.TotalControls} — {_diagnostic.CurrentControl?.Prompt ?? ""}";
             DiagStatus.Text = "läuft…";
             DiagStatus.Foreground = System.Windows.Media.Brushes.Orange;
+            EnsureTimerState();
         }
 
         private void OnDiagnosticControlCompleted(DiagnosticControlResult result)
@@ -282,6 +301,7 @@ namespace RagnaController.ControllerTest
                 DiagStatus.Text = $"FAIL — {_diagnostic.PassedCount}/{_diagnostic.TotalControls} bestanden";
                 DiagStatus.Foreground = System.Windows.Media.Brushes.Red;
             }
+            EnsureTimerState();
         }
 
         private void BtnDiagExport_Click(object sender, RoutedEventArgs e)
