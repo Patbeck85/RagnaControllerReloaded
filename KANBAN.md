@@ -1970,7 +1970,7 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 **Suggested Fix:** Minimum 44×44px touch targets (preferably 56×56px); quick access to profile switch, overlay toggle, calibration; battery status display.
 **DoD:** All buttons ≥ 44×44px; quick access buttons for profile, overlay, calibration; battery status visible.
 
-#### UX-021: InGameOverlayWindow — Position Memory & Movable (S3)
+#### UX-021: InGameOverlayWindow — Position Memory & Movable (S3) ✅ ERLEDIGT (2026-10-17)
 **Files:** `src/RagnaController/InGameOverlayWindow.xaml(.cs)`
 **Fundament:** Overlay is always at same position and cannot be moved.
 **Suggested Fix:** Save/restore position; allow dragging overlay with controller button (e.g., L3+R3); transparency and scale configurable.
