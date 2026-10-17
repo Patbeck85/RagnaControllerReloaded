@@ -1919,3 +1919,151 @@ Bei Audit festgestellt: **Slide-Inhalte waren bereits vollständig lokalisiert**
 **Start with GEX-016 (Real RO Client Soak)** — all gameplay verification depends on a real RO client. Without it, skill casting, targeting, and movement can't be validated against actual server behavior.
 
 Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
+
+---
+
+## 🎨 Phase 15: UI/UX Polish & Code Quality Improvements (NEW — 2026-10-17)
+
+**Goal:** Systematic code quality improvements, UI/UX polish, and new feature infrastructure identified during comprehensive app review.
+
+### 🟥 SPRINT 15A — Critical Bug Fixes (Immediate Impact)
+
+#### TECH-061: EngineOrchestrator `null!` Fields — NRE Risk (S2)
+**Files:** `src/RagnaController/Core/EngineOrchestrator.cs`
+**Fundament:** 20+ Engine fields initialized with `null!`. If an engine fails to instantiate, app crashes with NullReferenceException instead of clean error message.
+**Impact:** Hard crash on missing dependency instead of graceful degradation.
+**Suggested Fix:** Replace `null!` with nullable types + validation throw with clear error message.
+**DoD:** 0 `null!` engine fields; clear InvalidOperationException on missing engine; unit test for each engine initialization.
+
+#### TECH-062: MainWindow.xaml.cs — God Class Refactoring (S2)
+**Files:** `src/RagnaController/MainWindow.xaml.cs` (948 lines)
+**Fundament:** MainWindow handles UI, engine management, toast service, gamepad navigation, profile management — too many responsibilities.
+**Impact:** Hard to test, high regression risk, difficult to extend.
+**Suggested Fix:** Extract ToastService, MainWindowViewModel, ProfileService into separate classes.
+**DoD:** MainWindow < 400 lines; ToastService, MainWindowViewModel, ProfileService as separate classes; all existing tests pass.
+
+#### TECH-063: App.xaml.cs — Auto-Restart on Crash (S3)
+**Files:** `src/RagnaController/App.xaml.cs`
+**Fundament:** On fatal error, only MessageBox shown and app exits. Gaming player is left without controller mid-session.
+**Impact:** Player loses controller connection mid-game; poor UX.
+**Suggested Fix:** Add "Auto-restart on crash" option with profile restoration.
+**DoD:** Setting for auto-restart; profile state saved before crash; app attempts restart with last profile.
+
+### 🟨 SPRINT 15B — UI/UX Polish (High Value)
+
+#### UX-018: Empty States in All Panels (S3)
+**Files:** `MainWindow.xaml`, `SettingsWindow.xaml`, `ProfileLibraryWindow.xaml`
+**Fundament:** When no profile is loaded, panels show empty space or confusing default values.
+**Impact:** New users think features are broken.
+**Suggested Fix:** Add contextual empty-state with CTA button (e.g., "Load a profile" with link to Profile Library).
+**DoD:** All 7 MainWindow panels show helpful empty state; Settings and ProfileLibrary show empty states when applicable.
+
+#### UX-019: Keyboard Shortcuts for All Main Functions (S3)
+**Files:** All XAML windows
+**Fundament:** Many buttons have no keyboard shortcuts. Power users need keyboard navigation.
+**Suggested Fix:** Add `InputGesture` for frequent actions: Ctrl+O (Profile), Ctrl+S (Save), F1 (Help), Esc (Close dialogs / Exit Mini Mode).
+**DoD:** All main actions have keyboard shortcuts; shortcuts documented in tooltips.
+
+#### UX-020: HandheldWindow Touch Optimization for Steam Deck (S3)
+**Files:** `src/RagnaController/HandheldWindow.xaml(.cs)`
+**Fundament:** HandheldWindow is very simple (only 4 buttons). Needs larger touch targets and quick access.
+**Suggested Fix:** Minimum 44×44px touch targets (preferably 56×56px); quick access to profile switch, overlay toggle, calibration; battery status display.
+**DoD:** All buttons ≥ 44×44px; quick access buttons for profile, overlay, calibration; battery status visible.
+
+#### UX-021: InGameOverlayWindow — Position Memory & Movable (S3)
+**Files:** `src/RagnaController/InGameOverlayWindow.xaml(.cs)`
+**Fundament:** Overlay is always at same position and cannot be moved.
+**Suggested Fix:** Save/restore position; allow dragging overlay with controller button (e.g., L3+R3); transparency and scale configurable.
+**DoD:** Overlay position saved and restored; draggable via controller; opacity/scale configurable in settings.
+
+#### UX-022: Gyro Calibration in UI (S3)
+**Files:** `Core/GyroService.cs`, `SettingsWindow.xaml`
+**Fundament:** GyroService exists but no calibration in UI.
+**Suggested Fix:** Calibration wizard in Settings or HandheldWindow: "Place controller flat", gyro deadzone adjustable.
+**DoD:** Calibration wizard with visual instructions; gyro deadzone setting persisted; calibration values stored per controller.
+
+### 🟩 SPRINT 15C — Code Quality (Medium)
+
+#### TECH-064: InputRouter — Split into Smaller Classes (S3)
+**Files:** `src/RagnaController/Core/InputRouter.cs` (307 lines)
+**Fundament:** InputRouter handles failover, gesture recognition, radial menu integration, engine chain routing — too many responsibilities.
+**Suggested Fix:** Extract `InputFailoverManager`, `GestureProcessor`, `RadialMenuController` into separate classes.
+**DoD:** InputRouter < 200 lines; failover, gesture, and radial menu logic in separate classes; all existing tests pass.
+
+#### TECH-065: ControllerTestWindow — Timer Only When Recording (S3)
+**Files:** `src/RagnaController/ControllerTest/ControllerTestWindow.xaml.cs`
+**Fundament:** Timer runs at 50ms (20 FPS) even when nothing is happening.
+**Suggested Fix:** Event-based instead of timer, or timer only when recording/diagnostic active.
+**DoD:** Timer only active when `_recorder.IsRecording || _diagnostic.IsRunning`; 0 CPU usage when idle.
+
+#### TECH-066: AdvancedLogger — Log Rotation (S4)
+**Files:** `src/RagnaController/Core/AdvancedLogger.cs`
+**Fundament:** Logger writes to single file without rotation. File grows unbounded during long sessions.
+**Suggested Fix:** Max file size (10 MB), max file count (5), automatic compression of old logs.
+**DoD:** Log files capped at 10 MB each; max 5 rotated files; old files compressed.
+
+### 🟩 SPRINT 15D — New Features (Low)
+
+#### FEAT-028: Profile Import/Export Backup (S4)
+**Files:** `ProfileLibraryWindow.xaml`, `SettingsWindow.xaml`
+**Fundament:** Profiles can be imported, but no easy "Export all" button.
+**Suggested Fix:** "Export all profiles as ZIP" in ProfileLibraryWindow; "Export settings as JSON/import"; auto-backup before profile changes.
+**DoD:** ZIP export of all profiles; settings JSON export/import; auto-backup before profile save.
+
+#### FEAT-029: Automatic Updates with Changelog (S4)
+**Files:** `Core/UpdateChecker.cs`, `.github/workflows/release.yml`
+**Fundament:** UpdateChecker exists but no automatic download/install.
+**Suggested Fix:** Automatic download of new versions; changelog display before installation; background install option.
+**DoD:** Auto-download new release; changelog shown before install; optional background install.
+
+#### FEAT-030: Multi-Monitor Support for Overlay (S4)
+**Files:** `Core/InGameOverlayWindow.xaml(.cs)`
+**Fundament:** No way to place overlay on specific monitor.
+**Suggested Fix:** Monitor selection in settings; per-monitor DPI scaling; overlay position saved per monitor.
+**DoD:** Monitor dropdown in overlay settings; position saved per monitor; DPI scaling respected.
+
+---
+
+## 📋 Execution Rules (SOUL.md Compliance)
+
+1. **One Task at a Time** — Pick next OPEN task, implement → test green → doc → commit → next.
+2. **Definition of Ready** — Task has: clear DoD, test strategy, files identified, dependencies resolved.
+3. **Definition of Done** — Code compiles, 340+ tests PASS, new tests added, docs updated, KANBAN.md status updated, committed.
+4. **No Silent Failures** — Every catch logs; every async void fixed; every resource disposed.
+5. **Real RO Validation** — Each gameplay change verified against actual RO client (not just mocks).
+6. **Zero Flaky Tests** — CI must pass 3× consecutive runs before task closed.
+7. **Backward Compatibility** — Settings migration, profile migration, API stability guaranteed.
+
+---
+
+## 📊 Success Metrics (Phase 13 Complete)
+
+|| Metric | Target |
+||--------|--------|
+|| Build Errors/Warnings | 0 / 0 |
+|| Unit Tests | ≥400 (from 340) |
+|| Integration Tests | ≥50 |
+|| Property-Based Tests | ≥20 properties × 10k |
+|| Mutation Score (per engine) | Combat/Movement/Input ≥80% |
+|| Input Latency P99 | ≤8ms |
+|| Soak Test (mock) | 100k ticks, 0 leaks |
+|| Soak Test (real RO) | 1 hour, 0 desyncs |
+|| Profile Validator | 0 errors on 58 defaults |
+|| Accessibility (NVDA) | 21 windows pass |
+|| Release Artifacts | Clean (RULE-001/003) |
+|| Steam Deck Tick Latency | P99 ≤16ms (1 frame @ 60fps) |
+|| Handheld Battery Life | ≥2 hours active play |
+|| Skill-Cast Accuracy | ≥95% of casts successful |
+|| Mutation Score (per engine) | Combat/Movement/Input ≥80% |
+
+---
+
+## 🎯 Next Immediate Action
+
+**Start with TECH-061 (EngineOrchestrator `null!` Fields)** — critical NRE risk that should be fixed before any new features.
+
+Alternatively, begin **UX-018 (Empty States)** for immediate UX improvement.
+
+---
+
+*Phase 14 (Steam Deck & Handheld Support) is fully completed ✅.*
