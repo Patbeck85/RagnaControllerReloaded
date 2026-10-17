@@ -1951,7 +1951,7 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 
 ### 🟨 SPRINT 15B — UI/UX Polish (High Value)
 
-#### UX-018: Empty States in All Panels (S3)
+#### UX-018: Empty States in All Panels (S3) ✅ ERLEDIGT (2026-10-17)
 **Files:** `MainWindow.xaml`, `SettingsWindow.xaml`, `ProfileLibraryWindow.xaml`
 **Fundament:** When no profile is loaded, panels show empty space or confusing default values.
 **Impact:** New users think features are broken.
