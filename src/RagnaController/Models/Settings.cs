@@ -109,6 +109,10 @@ namespace RagnaController.Models
         /// <summary>Gyro drift threshold (deadzone) in raw HID units. Determined by calibration.</summary>
         public int GyroDeadzone { get; set; } = 64;
 
+        // ── FEAT-029: Automatic Updates ──────────────────────────────────
+        /// <summary>Automatically check for updates on startup.</summary>
+        public bool AutoUpdateEnabled { get; set; } = true;
+
         // ── Lifetime RSI Stats (v1.7.0) ───────────────────────────────
         public long LifetimeSavedClicks { get; set; } = 0;
         public long LifetimeSavedKeystrokes { get; set; } = 0;

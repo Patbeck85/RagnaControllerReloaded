@@ -187,6 +187,12 @@ namespace RagnaController
 
                 TelemetryService.Initialize(settings);
                 TelemetryService.SendAppStartPing();
+
+                // FEAT-029: Automatic update check on startup
+                if (settings.AutoUpdateEnabled)
+                {
+                    _ = UpdateChecker.CheckAndNotifyAsync(main);
+                }
             }
             catch (Exception ex)
             {
