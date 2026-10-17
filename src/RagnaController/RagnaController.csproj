@@ -104,6 +104,7 @@
     <Compile Include="ControllerPreview.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="Core\ActionLogService.cs" />
+    <Compile Include="Services\ToastService.cs" />
         <Compile Include="Core\AdvancedLogger.cs" />
         <Compile Include="Core\AppVersion.cs" />
         <Compile Include="Core\AutoStartManager.cs" />

@@ -13,6 +13,7 @@ using RagnaController.Core;
 using RagnaController.Models;
 using RagnaController.Profiles;
 using RagnaController.ControllerTest;
+using RagnaController.Services;
 
 namespace RagnaController
 {
@@ -27,6 +28,7 @@ namespace RagnaController
         private readonly List<string> _logBuffer = new();
         private MiniModeWindow? _miniWindow;
         private bool _wasFocusLocked;
+        private readonly ToastService _toastService = new();
 
         private MainViewModel? _vm;
         private DiscordRpcService? _discordRpc;
@@ -50,6 +52,7 @@ namespace RagnaController
             _manager = manager;
             _vm     = vm; // Assign the passed ViewModel
             InitializeComponent();
+            _toastService.Initialize(ToastBorder!, ToastText!, ToastBg!);
             DataContext = vm;
 
             // UX-012: Gamepad-Navigation (DPad/Tab) — vor der VM-Guard-Klausel initialisieren,
@@ -732,28 +735,7 @@ namespace RagnaController
         // Helper methods to fix missing methods
         private void ShowToast(string message, bool isError = false)
                 {
-                    try
-                    {
-                        if (ToastBorder == null || ToastText == null || ToastBg == null) return;
-
-                        ToastText.Text = message;
-                        ToastBg.Color = isError ? Color.FromRgb(255, 58, 82) : Color.FromRgb(57, 255, 20);
-                        ToastBorder.Visibility = Visibility.Visible;
-
-                        // Auto-hide after 3 seconds
-                        var timer = new System.Windows.Threading.DispatcherTimer();
-                        timer.Interval = TimeSpan.FromSeconds(3);
-                        timer.Tick += (s, e) =>
-                        {
-                            timer.Stop();
-                            ToastBorder.Visibility = Visibility.Collapsed;
-                        };
-                        timer.Start();
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"[MainWindow] ShowToast failed: {ex.Message}");
-                    }
+                    _toastService.Show(message, isError);
                 }
 
         private static string GetLocalizedString(string key) => LocalizationManager.GetLocalizedString(key);
