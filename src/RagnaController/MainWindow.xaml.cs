@@ -57,6 +57,9 @@ namespace RagnaController
             _profileService = new ProfileService(_manager, _settings, _engine, msg => ShowToast(msg));
             DataContext = vm;
 
+            // UX-019: Keyboard shortcuts
+            PreviewKeyDown += Window_PreviewKeyDown;
+
             // UX-012: Gamepad-Navigation (DPad/Tab) — vor der VM-Guard-Klausel initialisieren,
             // damit auch bei early return der Navigator sauber in Window_Closing disposed wird.
             _navigator = new GamepadUiNavigator(_engine.ControllerSvc) { ActiveWindow = this };
@@ -746,6 +749,48 @@ namespace RagnaController
             // Initialize event handlers after component loading
             // UX-012: Gamepad-Navigation starten (DPad/Tab-Fokus in Hauptfenster)
             _navigator?.Start();
+        }
+
+        /// <summary>
+        /// UX-019: Keyboard shortcuts for power users.
+        /// Ctrl+O: Open Profile Library
+        /// Ctrl+S: Save settings
+        /// F1: Show help tooltip
+        /// Esc: Exit Mini Mode / Close overlays
+        /// </summary>
+        private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            var kb = Keyboard.Modifiers;
+            bool isCtrl = (kb & ModifierKeys.Control) == ModifierKeys.Control;
+
+            if (isCtrl && e.Key == System.Windows.Input.Key.O)
+            {
+                e.Handled = true;
+                OpenProfileLibrary();
+                ShowToast("Profile Library opened (Ctrl+O)");
+            }
+            else if (isCtrl && e.Key == System.Windows.Input.Key.S)
+            {
+                e.Handled = true;
+                _settings.Save();
+                ShowToast("Settings saved (Ctrl+S)");
+            }
+            else if (e.Key == System.Windows.Input.Key.F1)
+            {
+                e.Handled = true;
+                ShowToast("Help: Ctrl+O Profile Library · Ctrl+S Save · Esc Exit Mini Mode");
+            }
+            else if (e.Key == System.Windows.Input.Key.Escape)
+            {
+                e.Handled = true;
+                if (_isMiniMode)
+                    SwitchFromMiniMode();
+                else if (_gameOverlay != null)
+                {
+                    _gameOverlay.Close();
+                    _gameOverlay = null;
+                }
+            }
         }
 
         private void BtnScanController_Click(object s, RoutedEventArgs e)
