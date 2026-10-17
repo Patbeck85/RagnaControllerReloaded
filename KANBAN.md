@@ -1996,7 +1996,7 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 **Suggested Fix:** Event-based instead of timer, or timer only when recording/diagnostic active.
 **DoD:** Timer only active when `_recorder.IsRecording || _diagnostic.IsRunning`; 0 CPU usage when idle.
 
-#### TECH-066: AdvancedLogger — Log Rotation (S4)
+#### TECH-066: AdvancedLogger — Log Rotation (S4) ✅ ERLEDIGT (2026-10-17)
 **Files:** `src/RagnaController/Core/AdvancedLogger.cs`
 **Fundament:** Logger writes to single file without rotation. File grows unbounded during long sessions.
 **Suggested Fix:** Max file size (10 MB), max file count (5), automatic compression of old logs.
