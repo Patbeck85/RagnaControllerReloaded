@@ -367,9 +367,44 @@ namespace RagnaController.Core
 
                                                                         // PERF-004: Initialize Memory Allocation Tracker
                                                                         _memoryTracker = new MemoryAllocationTracker("EngineOrchestrator", _logger);
+
+	// TECH-061: Startup validation — ensure all engines are initialized.
+	// Throws clear InvalidOperationException instead of silent NullReferenceException at runtime.
+	var missingEngines = new List<string>();
+	if (_movement == null) missingEngines.Add(nameof(MovementEngine));
+	if (_combat == null) missingEngines.Add(nameof(CombatEngine));
+	if (_autoTarget == null) missingEngines.Add(nameof(AutoTargetEngine));
+	if (_mage == null) missingEngines.Add(nameof(MageEngine));
+	if (_combo == null) missingEngines.Add(nameof(ComboEngine));
+	if (_cursor == null) missingEngines.Add(nameof(CursorEngine));
+	if (_smartCursor == null) missingEngines.Add(nameof(SmartCursorService));
+	if (_kite == null) missingEngines.Add(nameof(KiteEngine));
+	if (_support == null) missingEngines.Add(nameof(SupportEngine));
+	if (_overlayRouter == null) missingEngines.Add(nameof(OverlayRouter));
+	if (_mobSweep == null) missingEngines.Add(nameof(MobSweepEngine));
+	if (_handheld == null) missingEngines.Add(nameof(HandheldModeManager));
+	if (_feedback == null) missingEngines.Add(nameof(IFeedbackProvider));
+	if (_cooldownManager == null) missingEngines.Add(nameof(CooldownManager));
+	if (_groundSpell == null) missingEngines.Add(nameof(GroundSpellEngine));
+	if (_buffManager == null) missingEngines.Add(nameof(BuffManager));
+	if (_itemManager == null) missingEngines.Add(nameof(ItemManagerEngine));
+	if (_partyManager == null) missingEngines.Add(nameof(PartyManager));
+	if (_inputRouter == null) missingEngines.Add(nameof(InputRouter));
+	if (_radialMenu == null) missingEngines.Add(nameof(RadialMenuService));
+	if (_gestureRecognizer == null) missingEngines.Add(nameof(GestureRecognizer));
+
+	if (missingEngines.Count > 0)
+	{
+	string msg = $"[EngineOrchestrator] Initialization incomplete — missing engines: {string.Join(", ", missingEngines)}";
+	_logger?.Error(msg);
+	throw new InvalidOperationException(msg);
+	}
+
+	_logger?.Info("[EngineOrchestrator] All engines initialized successfully.");
+
                                                         }
 
-        // These will be set via ProfileApplier
+                                                        // These will be set via ProfileApplier
         private bool _soundEnabled = true;
         private bool _rumbleEnabled = true;
         private bool _isRenewal = true;
