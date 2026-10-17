@@ -1984,7 +1984,7 @@ Phase 14 (Steam Deck & Handheld Support) ist vollständig abgeschlossen ✅.
 
 ### 🟩 SPRINT 15C — Code Quality (Medium)
 
-#### TECH-064: InputRouter — Split into Smaller Classes (S3)
+#### TECH-064: InputRouter — Split into Smaller Classes (S3) ✅ ERLEDIGT (2026-10-17)
 **Files:** `src/RagnaController/Core/InputRouter.cs` (307 lines)
 **Fundament:** InputRouter handles failover, gesture recognition, radial menu integration, engine chain routing — too many responsibilities.
 **Suggested Fix:** Extract `InputFailoverManager`, `GestureProcessor`, `RadialMenuController` into separate classes.
