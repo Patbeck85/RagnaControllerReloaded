@@ -24,7 +24,8 @@
             CornerRadius="{StaticResource RadiusMd}"
             Padding="12,10"
             Margin="0"
-            Effect="{StaticResource CardShadow}">
+            Effect="{StaticResource CardShadow}"
+            PreviewMouseLeftButtonDown="Overlay_PreviewMouseLeftButtonDown">
 
         <Grid>
             <Grid.RowDefinitions>

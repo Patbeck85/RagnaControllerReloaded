@@ -43,6 +43,13 @@ namespace RagnaController
             _controllerManager = controllerManager;
             _settings = settings;
 
+            // UX-021: Restore saved overlay position
+            if (_settings?.OverlayPositionX.HasValue == true && _settings.OverlayPositionY.HasValue)
+            {
+                this.Left = _settings.OverlayPositionX.Value;
+                this.Top = _settings.OverlayPositionY.Value;
+            }
+
             // Subscribe to controller manager events
             if (_controllerManager != null)
             {
@@ -100,6 +107,22 @@ namespace RagnaController
             FrameBudgetRegistry.Remove(_overlayKey);
             _gpuProfiler = null;
             _frameBudgetMonitor = null;
+
+            // UX-021: Save overlay position
+            if (_settings != null)
+            {
+                _settings.OverlayPositionX = this.Left;
+                _settings.OverlayPositionY = this.Top;
+                _settings.Save();
+            }
+        }
+
+        // UX-021: Drag overlay with left mouse button (except on buttons)
+        private void Overlay_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            // Only drag if clicking on the background border, not on interactive elements
+            if (e.OriginalSource is System.Windows.Controls.Button) return;
+            this.DragMove();
         }
 
         // Backward compatibility constructor (for existing code without ControllerManager)

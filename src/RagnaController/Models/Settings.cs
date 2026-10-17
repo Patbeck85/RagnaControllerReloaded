@@ -100,7 +100,12 @@ namespace RagnaController.Models
         public double? WindowPositionX { get; set; } = null;
         public double? WindowPositionY { get; set; } = null;
 
-        // ── Lifetime RSI Stats (v1.7.0) ───────────────────────────────────
+        // ── UX-021: Overlay Position Memory ───────────────────────────────
+        /// <summary>Gespeicherte Overlay-Position (X,Y). Null = standard (oben-rechts).</summary>
+        public double? OverlayPositionX { get; set; } = null;
+        public double? OverlayPositionY { get; set; } = null;
+
+        // ── Lifetime RSI Stats (v1.7.0) ───────────────────────────────
         public long LifetimeSavedClicks { get; set; } = 0;
         public long LifetimeSavedKeystrokes { get; set; } = 0;
 
