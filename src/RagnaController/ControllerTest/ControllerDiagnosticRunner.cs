@@ -74,25 +74,25 @@ namespace RagnaController.ControllerTest
     }
 
     /// <summary>
-    /// TEST-017: Unit-testbarer Kern des geführten Eingabe-Selbsttests (ControllerTestWindow).
+    /// TEST-017: Unit-testable core of the guided input self-test (ControllerTestWindow).
     ///
-    /// Führt eine feste Folge from <see cref="DiagnosticControl"/>-Kontrollen durch. Pro Tick is ein
-    /// <see cref="RecordingSample"/> about <see cref="FeedSample"/> eingespeist; die aktive Kontrolle
+    /// Runs a fixed sequence of <see cref="DiagnosticControl"/> controls. Per tick a
+    /// <see cref="RecordingSample"/> fed via <see cref="FeedSample"/>; the active control
     /// is bestanden, sobald ihr <c>Detect</c>-Prädikat wahr is (Detektion). The Reaktionszeit
-    /// (Aktivierung → erste Detektion) is gemessen and als p50/p95 pro Kontrolle ausgegeben
-    /// (geführter Selbsttest: n=1 pro Kontrolle, daher p50 == p95 == Reaktionszeit). Ohne Detektion
-    /// innerhalb des Timeouts gilt die Kontrolle als fehlgeschlagen. So erhält der Nutzer ein
+    /// (activation → first detection) is measured and output as p50/p95 per control
+    /// (guided self-test: n=1 per control, therefore p50 == p95 == reaction time). Without detection
+    /// within the timeout the control counts as failed. So the user gets a
     /// verifizierbares Pass/Fail-Statement („einwandfrei") statt only einer Live-Anzeige.
     ///
-    /// Hardware-/UI-frei: Samples are injiziert, Zeit is about <c>nowMs</c> übergeben (default
-    /// <see cref="Environment.TickCount64"/>), daher vollständig unit-testbar.
+    /// hardware-/UI-free: samples are injected, time is passed via <c>nowMs</c> (default
+    /// <see cref="Environment.TickCount64"/>), therefore fully unit-testable.
     /// </summary>
     /// <summary>
     /// Test harness class for controller validation.
     /// </summary>
     public sealed class ControllerDiagnosticRunner : IDisposable
     {
-        /// <summary>Timeout pro Kontrolle: danach gilt they als fehlgeschlagen, if nie detektiert.</summary>
+        /// <summary>Timeout per control: afterwards it counts as failed, if never detected.</summary>
         public const int DefaultTimeoutMs = 15000;
 
         private readonly DiagnosticControl[] _controls;
@@ -112,37 +112,37 @@ namespace RagnaController.ControllerTest
             TimeoutMs = timeoutMs;
         }
 
-        /// <summary>Timeout pro Kontrolle in ms.</summary>
+        /// <summary>Timeout per control in ms.</summary>
         public int TimeoutMs { get; }
 
-        /// <summary>Anzahl der definierten Kontrollen.</summary>
+        /// <summary>Number of defined controls.</summary>
         public int TotalControls => _controls.Length;
 
-        /// <summary>Index der aktuell aktiven Kontrolle (0..Total-1), -1 if nicht active/done.</summary>
+        /// <summary>Index of currently active control (0..Total-1), -1 if not active/done.</summary>
         public int CurrentIndex => _running ? _currentIndex : -1;
 
-        /// <summary>The aktive Kontrolle, null if keine läuft.</summary>
+        /// <summary>The active control, null if none running.</summary>
         public DiagnosticControl? CurrentControl => _running && _currentIndex >= 0 ? _controls[_currentIndex] : null;
 
         /// <summary>Ob der Selbsttest gerade active is.</summary>
         public bool IsRunning => _running;
 
-        /// <summary>Ergebnisse aller abgeschlossenen Kontrollen (in Reihenfolge).</summary>
+        /// <summary>Results of all completed controls (in order).</summary>
         public IReadOnlyList<DiagnosticControlResult> Results => _results;
 
-        /// <summary>The Gesamtstatus: bestanden, if all Kontrollen bestanden are.</summary>
+        /// <summary>The overall status: passed, if all controls passed.</summary>
         public bool AllPassed => _results.Count == _controls.Length && _results.All(r => r.Passed);
 
-        /// <summary>Anzahl bestandener Kontrollen.</summary>
+        /// <summary>Number of passed controls.</summary>
         public int PassedCount => _results.Count(r => r.Passed);
 
-        /// <summary>Anzahl fehlgeschlagener Kontrollen.</summary>
+        /// <summary>Number of failed controls.</summary>
         public int FailedCount => _results.Count(r => !r.Passed);
 
-        /// <summary>Feuert, after eine Kontrolle abgeschlossen is (Pass or Fail).</summary>
+        /// <summary>Fires after a control is completed (Pass or Fail).</summary>
         public event Action<DiagnosticControlResult>? ControlCompleted;
 
-        /// <summary>Feuert, if all Kontrollen abgeschlossen are.</summary>
+        /// <summary>Fires if all controls are completed.</summary>
         public event Action? Completed;
 
         /// <summary>Startet den Selbsttest and setzt all Ergebnisse zurück.</summary>
@@ -158,13 +158,13 @@ namespace RagnaController.ControllerTest
             _running = true;
         }
 
-        /// <summary>Beendet den Selbsttest (aktive Kontrolle zählt als fehlgeschlagen).</summary>
+        /// <summary>Ends the self-test (active control counts as failed).</summary>
         public void Stop()
         {
             if (!_running) return;
             FinalizeCurrent(false);
             _running = false;
-            _currentIndex = -1; // Gestoppt: keine aktive Kontrolle mehr (UI zeigt Ruhestand).
+            _currentIndex = -1; // Stopped: no active control anymore (UI shows idle state).
         }
 
         /// <summary>

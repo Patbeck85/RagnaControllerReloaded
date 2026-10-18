@@ -104,14 +104,14 @@ namespace RagnaController
                     });
 
                     // Splash dauert min. 1s, then Voice, then max. weitere 2.5s
-                    // — per Klick sofort überspringbar
+                    // — skippable on click immediately
                     var skipToken = splash.SkipCts.Token;
                     await Task.Delay(1000).ConfigureAwait(true);
                     splash.PlayVoice();
                     try { await Task.WhenAll(warmupTask, Task.Delay(2500, skipToken)); }
                     catch (TaskCanceledException)
                     {
-                        // Klick = Splash überspringen — erwartet, no Fehler
+                        // Click = skip splash — expected, no error
                         System.Diagnostics.Debug.WriteLine("[App] Splash skipped via click");
                     }
                 }
@@ -128,7 +128,7 @@ namespace RagnaController
 
                 // ── Engine + Manager im Hintergrand erstellen ────────────────
                 // WICHTIG: HybridEngine erstellt ControllerService (SDL Init) —
-                // das MUSS im Backgroand-Thread passieren, sonst hängt der UI-Thread!
+                // this MUST happen on background thread, otherwise UI thread hangs!
                 HybridEngine? engine = null;
                 ProfileManager? manager = null;
                 try
@@ -153,7 +153,7 @@ namespace RagnaController
                 if (engine == null || manager == null)
                 {
                     LogFatal("Engine Creation", "Engine or Manager is null after initialization");
-                    MessageBox.Show("Fehler beim Erstellen der Engine: Unbekannter Fehler",
+                    MessageBox.Show("Error creating engine: Unknown error",
                         "RagnaController – Startfehler", MessageBoxButton.OK, MessageBoxImage.Error);
                     Shutdown();
                     return;
@@ -242,7 +242,7 @@ namespace RagnaController
             }
             catch (Exception ex)
             {
-                // Log-Fehler darf App nicht crashen
+                // Log error must not crash app
                 System.Diagnostics.Debug.WriteLine($"[App] LogFatal failed: {ex.Message}");
             }
         }

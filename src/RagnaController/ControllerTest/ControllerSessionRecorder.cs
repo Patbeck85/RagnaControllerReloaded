@@ -80,11 +80,11 @@ namespace RagnaController.ControllerTest
     }
 
     /// <summary>
-    /// TEST-016: Aufnahmefunktion for Controller-Sitzungen (ControllerTestWindow).
+    /// TEST-016: Recording function for controller sessions (ControllerTestWindow).
     ///
     /// Nimmt pro Tick einen <see cref="RecordingSample"/> on and speichert die komplette Sitzung als
     /// JSON im EXAKTEN Format der CI-Replay-Fixtures (fixtures/controller_session_001.json), sodass
-    /// eine reale Aufnahme direkt als Replay-Golden-Master-Wiedergabe nutzbar is. Unit-testbar ohne
+    /// a real recording can be used directly as replay golden master playback. Unit-testbar ohne
     /// UI/SDL: Samples are injiziert, das JSON is deterministisch erzeugt.
     /// </summary>
     /// <summary>

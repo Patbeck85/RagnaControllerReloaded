@@ -161,7 +161,7 @@ namespace RagnaController.ControllerTest
             }
         }
 
-        // ------------------------------------------------------------------ TEST-016: Aufnahme
+        // ------------------------------------------------------------------ TEST-016: Recording
 
         private void BtnRecordStart_Click(object sender, RoutedEventArgs e)
         {
@@ -192,8 +192,8 @@ namespace RagnaController.ControllerTest
             }
             catch (Exception ex)
             {
-                // ERROR-001: no stiller Fehler — Meldung im Status.
-                RecordingStatus.Text = $"Fehler: {ex.Message}";
+                // ERROR-001: no silent error — message in status.
+                RecordingStatus.Text = $"Error: {ex.Message}";
                 RecordingStatus.Foreground = System.Windows.Media.Brushes.Red;
             }
             EnsureTimerState();
@@ -241,14 +241,14 @@ namespace RagnaController.ControllerTest
 
         /// <summary>
         /// Spielt ein Sample in den geführten Selbsttest ein (UI-Thread — Timer läuft on dem
-        /// Dispatcher). The aktive Kontrolle is per Prompt angezeigt, bei Abschluss das
+        /// Dispatcher). The active control is displayed per prompt, on completion the
         /// Pass/Fail-Ergebnis with Latenz p50/p95.
         /// </summary>
         private void FeedDiagnostic(RecordingSample sample)
         {
             _diagnostic.FeedSample(sample);
 
-            // Prompt only bei Wechsel der aktiven Kontrolle aktualisieren, damit die
+            // Prompt only updated on switch of active control, so that the
             // Bestehens-Feedback-Zeile (✓/✗ + Latenz) nicht sofort überschrieben is.
             var current = _diagnostic.CurrentControl;
             int idx = _diagnostic.CurrentIndex;
@@ -271,14 +271,14 @@ namespace RagnaController.ControllerTest
             BtnDiagStart.IsEnabled = false;
             BtnDiagExport.IsEnabled = false;
             DiagPrompt.Text = $"1/{_diagnostic.TotalControls} — {_diagnostic.CurrentControl?.Prompt ?? ""}";
-            DiagStatus.Text = "läuft…";
+            DiagStatus.Text = "running…";
             DiagStatus.Foreground = System.Windows.Media.Brushes.Orange;
             EnsureTimerState();
         }
 
         private void OnDiagnosticControlCompleted(DiagnosticControlResult result)
         {
-            // Dispatcher-safe: Timer läuft bereits on dem UI-Thread, hier direkt updaten.
+            // Dispatcher-safe: Timer already running on UI-Thread, update directly here.
             string mark = result.Passed ? "✓" : "✗";
             DiagPrompt.Text = $"{mark} {result.Name} — {result.Prompt}" +
                               $"  (p50 {result.P50Ms:0.#} ms / p95 {result.P95Ms:0.#} ms)";
@@ -318,8 +318,8 @@ namespace RagnaController.ControllerTest
             }
             catch (Exception ex)
             {
-                // ERROR-001: no stiller Fehler — Meldung im Status.
-                DiagStatus.Text = $"Export-Fehler: {ex.Message}";
+                // ERROR-001: no silent error — message in status.
+                DiagStatus.Text = $"Export error: {ex.Message}";
                 DiagStatus.Foreground = System.Windows.Media.Brushes.Red;
             }
         }

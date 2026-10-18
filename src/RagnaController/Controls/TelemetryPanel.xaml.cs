@@ -62,7 +62,7 @@ namespace RagnaController.Controls
             if (engine != null) RefreshNow();
         }
 
-        /// <summary>Stoppt den Timer explizit and räumt Ressourcen on (Window_Closing, MEMORY-001).</summary>
+        /// <summary>Stops the timer explicitly and cleans up resources (Window_Closing, MEMORY-001).</summary>
         public void StopUpdates()
         {
             if (_updatesStopped) return;
@@ -78,17 +78,17 @@ namespace RagnaController.Controls
         {
             try
             {
-                // THREAD-001: DispatcherTimer läuft on dem UI-Thread; Tracker-Snapshots are Interlocked-basiert.
+                // THREAD-001: DispatcherTimer runs on UI thread; tracker snapshots are Interlocked-based.
                 UpdateTelemetry(_engine?.LatencyTracker, _engine?.MemoryTracker);
             }
             catch (Exception ex)
             {
-                // ERROR-001: No stilles Verschlucken — Fehler in die Karte zeigen, Timer läuft weiter.
+                // ERROR-001: no silent swallowing — show errors on card, timer keeps running.
                 try
                 {
                     var err = new TextBlock
                     {
-                        Text = $"Refresh-Fehler: {ex.GetType().Name}: {ex.Message}",
+                        Text = $"Refresh error: {ex.GetType().Name}: {ex.Message}",
                         Foreground = new SolidColorBrush(CfgBad),
                         FontFamily = new FontFamily("Consolas"),
                         FontSize = 9,
@@ -98,14 +98,14 @@ namespace RagnaController.Controls
                 }
                 catch (Exception renderEx)
                 {
-                    // Panel-Rendering-Fehler dürfen den Timer nicht killen — but loggen
+                    // Panel rendering errors must not kill the timer — but log
                     System.Diagnostics.Debug.WriteLine($"[TelemetryPanel] Render error: {renderEx.Message}");
                 }
             }
         }
 
         /// <summary>
-        /// Füllt all vier Karten aus den Tracker-Snapshots (public for Unit-Tests, thread-safe).
+        /// Fills all four cards from tracker snapshots (public for unit tests, thread-safe).
         /// </summary>
         public void UpdateTelemetry(InputLatencyTracker? latency, MemoryAllocationTracker? memory)
         {
@@ -208,7 +208,7 @@ namespace RagnaController.Controls
             return card;
         }
 
-        /// <summary>Erzeugt eine Telemetrie-Karte with Header + Zeilen. Gibt (Border, StackPanel) zurück.</summary>
+        /// <summary>Creates a telemetry card with header + rows. Returns (Border, StackPanel).</summary>
         private (Border Card, StackPanel Rows) MakeCard(string title, Color statusColor, params (string Label, string Value)[] rows)
         {
             var stack = new StackPanel();
