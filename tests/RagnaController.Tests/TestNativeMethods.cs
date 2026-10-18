@@ -134,12 +134,36 @@ namespace RagnaController.Tests
         public int CW_USEDEFAULT => unchecked((int)0x80000000);
         public Guid GUID_DEVINTERFACE_HID => new Guid(0x4D1E55B2, 0xF16F, 0x11CF, 0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30);
 
+        // Multi-Client Window Enumeration (TASK-1602)
+        public bool EnumWindows(EnumWindowsProcDelegate lpEnumFunc, IntPtr lParam)
+        {
+            foreach (var hwnd in _aliveWindows)
+            {
+                if (!lpEnumFunc(hwnd, IntPtr.Zero))
+                    return false;
+            }
+            return true;
+        }
+        public bool IsWindow(IntPtr hWnd) => _aliveWindows.Contains(hWnd);
+        public bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam) => true;
+
+        // PostMessage constants (TASK-1602)
+        public uint WM_KEYDOWN => 0x0100;
+        public uint WM_KEYUP => 0x0101;
+        public uint WM_CHAR => 0x0102;
+        public uint WM_LBUTTONDOWN => 0x0201;
+        public uint WM_LBUTTONUP => 0x0202;
+        public uint WM_RBUTTONDOWN => 0x0204;
+        public uint WM_RBUTTONUP => 0x0205;
+        public uint WM_MOUSEWHEEL => 0x020A;
+
         // Test control
         private IntPtr? _foregroundWindow;
         private readonly Dictionary<IntPtr, uint> _windowProcessIdMap = new();
         private readonly Dictionary<IntPtr, RECT> _clientRectMap = new();
         private readonly Dictionary<IntPtr, POINT> _clientToScreenOffsetMap = new();
         private readonly Dictionary<IntPtr, uint> _dpiMap = new();
+        private readonly HashSet<IntPtr> _aliveWindows = new();
         private POINT _cursorPos = new POINT { X = 0, Y = 0 };
 
         public void SetForegroundWindow(IntPtr hwnd) => _foregroundWindow = hwnd;
@@ -147,6 +171,10 @@ namespace RagnaController.Tests
         public void SetClientRect(IntPtr hwnd, RECT rect) => _clientRectMap[hwnd] = rect;
         public void SetClientToScreenOffset(IntPtr hwnd, POINT offset) => _clientToScreenOffsetMap[hwnd] = offset;
         public void SetDpiForWindow(IntPtr hwnd, uint dpi) => _dpiMap[hwnd] = dpi;
-        public void Clear() { _foregroundWindow = null; _windowProcessIdMap.Clear(); _clientRectMap.Clear(); _clientToScreenOffsetMap.Clear(); _dpiMap.Clear(); }
+        public void SetAliveWindow(IntPtr hwnd, bool alive = true)
+        {
+            if (alive) _aliveWindows.Add(hwnd); else _aliveWindows.Remove(hwnd);
+        }
+        public void Clear() { _foregroundWindow = null; _windowProcessIdMap.Clear(); _clientRectMap.Clear(); _clientToScreenOffsetMap.Clear(); _dpiMap.Clear(); _aliveWindows.Clear(); }
     }
 }

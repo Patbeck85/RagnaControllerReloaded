@@ -52,6 +52,11 @@ namespace RagnaController.Core
         ushort RegisterClassEx(ref WNDCLASSEX lpwcx);
         IntPtr GetModuleHandle(string? lpModuleName);
 
+        // Multi-Client Window Enumeration (TASK-1602)
+        bool EnumWindows(EnumWindowsProcDelegate lpEnumFunc, IntPtr lParam);
+        bool IsWindow(IntPtr hWnd);
+        bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
         // Constants
         int InputSize { get; }
         uint INPUT_MOUSE { get; }
@@ -88,5 +93,15 @@ namespace RagnaController.Core
         uint WS_OVERLAPPED { get; }
         int CW_USEDEFAULT { get; }
         Guid GUID_DEVINTERFACE_HID { get; }
+
+        // PostMessage constants for multi-client input (TASK-1602)
+        uint WM_KEYDOWN { get; }
+        uint WM_KEYUP { get; }
+        uint WM_CHAR { get; }
+        uint WM_LBUTTONDOWN { get; }
+        uint WM_LBUTTONUP { get; }
+        uint WM_RBUTTONDOWN { get; }
+        uint WM_RBUTTONUP { get; }
+        uint WM_MOUSEWHEEL { get; }
     }
 }

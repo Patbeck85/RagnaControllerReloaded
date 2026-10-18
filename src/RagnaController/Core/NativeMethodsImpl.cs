@@ -46,6 +46,11 @@ namespace RagnaController.Core
         public IntPtr GetModuleHandle(string? lpModuleName) => NativeMethods.GetModuleHandle(lpModuleName);
 
         public int InputSize => NativeMethods.InputSize;
+
+        // Multi-Client Window Enumeration (TASK-1602)
+        public bool EnumWindows(EnumWindowsProcDelegate lpEnumFunc, IntPtr lParam) => NativeMethods.EnumWindows(lpEnumFunc, lParam);
+        public bool IsWindow(IntPtr hWnd) => NativeMethods.IsWindow(hWnd);
+        public bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam) => NativeMethods.PostMessage(hWnd, Msg, wParam, lParam);
         public uint INPUT_MOUSE => NativeMethods.INPUT_MOUSE;
         public uint INPUT_KEYBOARD => NativeMethods.INPUT_KEYBOARD;
         public uint MOUSEEVENTF_MOVE => NativeMethods.MOUSEEVENTF_MOVE;
@@ -80,5 +85,15 @@ namespace RagnaController.Core
         public uint WS_OVERLAPPED => NativeMethods.WS_OVERLAPPED;
         public int CW_USEDEFAULT => NativeMethods.CW_USEDEFAULT;
         public Guid GUID_DEVINTERFACE_HID => NativeMethods.GUID_DEVINTERFACE_HID;
+
+        // PostMessage constants (TASK-1602)
+        public uint WM_KEYDOWN => NativeMethods.WM_KEYDOWN;
+        public uint WM_KEYUP => NativeMethods.WM_KEYUP;
+        public uint WM_CHAR => NativeMethods.WM_CHAR;
+        public uint WM_LBUTTONDOWN => NativeMethods.WM_LBUTTONDOWN;
+        public uint WM_LBUTTONUP => NativeMethods.WM_LBUTTONUP;
+        public uint WM_RBUTTONDOWN => NativeMethods.WM_RBUTTONDOWN;
+        public uint WM_RBUTTONUP => NativeMethods.WM_RBUTTONUP;
+        public uint WM_MOUSEWHEEL => NativeMethods.WM_MOUSEWHEEL;
     }
 }

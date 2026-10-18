@@ -111,6 +111,17 @@ namespace RagnaController.Core
         // WndProc delegate for window procedure
         internal delegate IntPtr WndProcDelegate(IntPtr hwnd, uint msg, IntPtr wParam, IntPtr lParam);
 
+        // --- Multi-Client Window Enumeration (TASK-1602) ---
+        [DllImport("user32.dll")]
+        internal static extern bool EnumWindows(EnumWindowsProcDelegate lpEnumFunc, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool IsWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        internal static extern bool PostMessage(IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+
         // --- Constants ---
         internal const uint INPUT_MOUSE = 0;
         internal const uint INPUT_KEYBOARD = 1;
@@ -159,6 +170,16 @@ namespace RagnaController.Core
 
         // GUID for HID devices
         internal static readonly Guid GUID_DEVINTERFACE_HID = new Guid(0x4D1E55B2, 0xF16F, 0x11CF, 0x88, 0xCB, 0x00, 0x11, 0x11, 0x00, 0x00, 0x30);
+
+        // PostMessage message constants (TASK-1602)
+        internal const uint WM_KEYDOWN = 0x0100;
+        internal const uint WM_KEYUP = 0x0101;
+        internal const uint WM_CHAR = 0x0102;
+        internal const uint WM_LBUTTONDOWN = 0x0201;
+        internal const uint WM_LBUTTONUP = 0x0202;
+        internal const uint WM_RBUTTONDOWN = 0x0204;
+        internal const uint WM_RBUTTONUP = 0x0205;
+        internal const uint WM_MOUSEWHEEL = 0x020A;
 
         // Bewegt den Cursor relativ zur aktuellen Position via SendInput (MOUSEEVENTF_MOVE)
         internal static void MoveCursorRelative(int dx, int dy)
