@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 using RagnaController.Core;
+using RagnaController.Core.Services;
 using RagnaController.Profiles;
 using RagnaController.Models;
 using RagnaController.Views.Windows;
@@ -83,6 +84,33 @@ namespace RagnaController
                 // Settings laden (early - needed for SkipSplash & language)
                 var settings = Models.Settings.Load();
 
+                // ── TASK-1631: First-Run Wizard ─────────────────────────────
+                // Wenn noch kein RO-Client-Pfad konfiguriert ist, zeige den Wizard
+                // bevor Splash und Hauptfenster geladen werden.
+                var firstRunService = new FirstRunService(settings);
+                ProfileManager? preCreatedProfileManager = null;
+
+                if (firstRunService.IsFirstRun)
+                {
+                    // Leichtgewichtigen ProfileManager für den Wizard erstellen
+                    preCreatedProfileManager = new ProfileManager();
+
+                    var wizard = new WizardWindow(firstRunService, preCreatedProfileManager);
+                    var wizardResult = wizard.ShowDialog();
+
+                    if (wizardResult == true && !string.IsNullOrWhiteSpace(wizard.SelectedRoExePath))
+                    {
+                        // RO-Pfad aus dem Wizard speichern
+                        firstRunService.CompleteFirstRun(wizard.SelectedRoExePath);
+                    }
+                    else if (wizardResult != true)
+                    {
+                        // Nutzer hat den Wizard abgebrochen — App beenden
+                        Shutdown();
+                        return;
+                    }
+                }
+
                 // NEW: Respect SkipSplash preference - skip splash entirely if enabled
                 bool shouldShowSplash = !settings.SkipSplash;
 
@@ -138,7 +166,8 @@ namespace RagnaController
 #pragma warning disable CS8625
                         engine = new HybridEngine(new BackgroundTickProvider(8), new Messenger(), null, null);
 #pragma warning restore CS8625
-                        manager = new ProfileManager();
+                        // TASK-1631: Verwende den vor-erstellten ProfileManager vom Wizard, falls vorhanden
+                        manager = preCreatedProfileManager ?? new ProfileManager();
                     });
                 }
                 catch (Exception ex)
