@@ -17,6 +17,9 @@
         Background="Transparent" WindowStyle="None" AllowsTransparency="True"
         Loaded="Window_Loaded" Closing="Window_Closing" StateChanged="Window_StateChanged"
         MouseLeftButtonDown="Window_MouseLeftButtonDown">
+    <Window.Resources>
+        <local:ClassToIconConverter x:Key="ClassToIconConverter"/>
+    </Window.Resources>
 
     
 
@@ -105,6 +108,27 @@
                                                     <TextBlock Text="Preset:" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
                                                     <ComboBox x:Name="PresetCombo" Width="140" Style="{StaticResource DarkComboBox}" SelectionChanged="PresetCombo_SelectionChanged" ToolTip="Select saved profile preset for quick switch" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center"/>
                                                     <Button x:Name="BtnSavePreset" Content="&#xE74E;" Width="28" Height="28" Style="{StaticResource WindowControlButton}" Click="BtnSavePreset_Click" ToolTip="Save current profile as preset" AutomationProperties.Name="Save preset" Grid.Column="2" VerticalAlignment="Center"/>
+                                                </Grid>
+                                            </Border>
+                                            <Border x:Name="CharacterClassSelectorBorder" Style="{StaticResource GlassPanel}" Padding="0,0,8,0" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,12,0" Effect="{StaticResource CardShadow}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="Class:" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
+                                                    <ComboBox x:Name="ClassCharacterCombo" Width="130" Style="{StaticResource DarkComboBox}" SelectionChanged="ClassCharacterCombo_SelectionChanged" ToolTip="Select character class for quick profile load" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center">
+                                                        <ComboBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Orientation="Horizontal" Margin="4,2">
+                                                                    <Image Source="{Binding Class, Converter={StaticResource ClassToIconConverter}}" Width="16" Height="16" Margin="0,0,6,0"/>
+                                                                    <TextBlock Text="{Binding Class}" VerticalAlignment="Center"/>
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </ComboBox.ItemTemplate>
+                                                    </ComboBox>
+                                                    <Button x:Name="BtnRefreshClasses" Content="&#xE72C;" Width="28" Height="28" Style="{StaticResource WindowControlButton}" Click="BtnRefreshClasses_Click" ToolTip="Refresh class list" AutomationProperties.Name="Refresh classes" Grid.Column="2" VerticalAlignment="Center"/>
                                                 </Grid>
                                             </Border>
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">

@@ -255,6 +255,9 @@ public partial class MainWindow : Window
             // ── TASK-1611: Profil-Preset-Manager initialisieren ──
             _presetManager = new ProfilePresetManager();
             RefreshPresetList();
+
+            // ── TASK-1612: Charakter-Klasse Auswahl initialisieren ──
+            RefreshClassList();
         }
 
         public void SwitchFromMiniMode()
@@ -1182,6 +1185,91 @@ public partial class MainWindow : Window
             _presetManager.SavePreset(preset);
             RefreshPresetList();
             ShowToast($"Preset gespeichert: {preset.PresetName}");
+        }
+
+        // ── TASK-1612: Charakter-Klasse Auswahl-Dropdown ──
+        private void RefreshClassList()
+        {
+            try
+            {
+                _presetComboUpdating = true;
+                ClassCharacterCombo.Items.Clear();
+
+                // Sammle alle eindeutigen Klassen aus den verfügbaren Profilen
+                var classes = _manager.Profiles
+                    .Select(p => p.Class)
+                    .Distinct()
+                    .OrderBy(c => c)
+                    .ToList();
+
+                foreach (var className in classes)
+                {
+                    var classProfileCount = _manager.Profiles.Count(p => p.Class == className);
+                    var countSuffix = classProfileCount > 1 ? "e" : "";
+                    ClassCharacterCombo.Items.Add(new ClassCharacterItem
+                    {
+                        Class = className,
+                        DisplayName = $"{className} ({classProfileCount} Profil{countSuffix})"
+                    });
+                }
+
+                // Wähle die Klasse des aktuellen aktiven Profils
+                var activeClass = _manager.ActiveProfile?.Class;
+                if (!string.IsNullOrEmpty(activeClass))
+                {
+                    for (int i = 0; i < ClassCharacterCombo.Items.Count; i++)
+                    {
+                        if (ClassCharacterCombo.Items[i] is ClassCharacterItem item && item.Class == activeClass)
+                        {
+                            ClassCharacterCombo.SelectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (ClassCharacterCombo.Items.Count == 0)
+                {
+                    ClassCharacterCombo.Items.Add(new ClassCharacterItem { Class = "Unknown", DisplayName = "Unbekannt" });
+                    ClassCharacterCombo.SelectedIndex = 0;
+                    ClassCharacterCombo.IsEnabled = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[MainWindow] RefreshClassList failed: {ex.Message}");
+            }
+            finally
+            {
+                _presetComboUpdating = false;
+            }
+        }
+
+        private void ClassCharacterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_presetComboUpdating || ClassCharacterCombo.SelectedItem is not ClassCharacterItem item)
+                return;
+
+            // Finde das erste Profil mit dieser Klasse
+            var targetProfile = _manager.Profiles.FirstOrDefault(p => p.Class == item.Class);
+            if (targetProfile != null)
+            {
+                _profileService.ApplyProfile(targetProfile);
+                ShowToast($"Klasse gewechselt: {item.Class} → Profil '{targetProfile.Name}'");
+            }
+        }
+
+        private void BtnRefreshClasses_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshClassList();
+            ShowToast("Klassenliste aktualisiert");
+        }
+
+        private sealed class ClassCharacterItem
+        {
+            public string Class { get; set; } = "";
+            public string DisplayName { get; set; } = "";
+
+            public override string ToString() => DisplayName;
         }
     }
 }
