@@ -83,7 +83,7 @@ namespace RagnaController.Core
                 _timer -= ms;
                 if (_timer <= 0)
                 {
-                    // AutoLoop-Restart nach ChainCooldownMs is ein bewusstes Fire während Halts – no False-Fire.
+                    // AutoLoop restart after ChainCooldownMs is a deliberate fire during holds – no false-fire.
                     bool isLoopRestart = _loopRestartPending;
                     _loopRestartPending = false;
                     // FIX: Only blockieren, if es KEIN Rising Edge is, die Taste but vorher schon gehalten wurde

@@ -33,7 +33,7 @@ namespace RagnaController.Views.Dialogs
         private readonly ProfileManager _manager;
         private static readonly HttpClient _http;
         private List<CommunityEntry> _allEntries = new();
-        private readonly object _lock = new(); // Thread-Safety für _allEntries
+        private readonly object _lock = new(); // Thread safety for _allEntries
 
         /// <summary>
         /// Singleton-HttpClient (application lifetime) — public read-only for Unit-Tests (TECH-018).

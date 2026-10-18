@@ -14,13 +14,13 @@ namespace RagnaController.Core
 
         // Parallel-Arrays to _items → index-basierte Iteration ohne Allokation (PERF: O(n), n = Items)
         private ItemConfig[] _items = Array.Empty<ItemConfig>();
-        private long[] _nextCheck = Array.Empty<long>();     // nächstes erlaubtes Prüfen (ms, TickCount64-Basis)
+        private long[] _nextCheck = Array.Empty<long>();     // next allowed check (ms, TickCount64 basis)
         private long[] _nextEligible = Array.Empty<long>();  // Cooldown-Ende (ms, TickCount64-Basis)
 
         private volatile bool _isRunning;
         private readonly Func<long> _clock;
 
-        /// <summary>True if die Engine active prüft (Start/Stop gesteuert).</summary>
+        /// <summary>True if engine actively checks (start/stop controlled).</summary>
         public bool IsRunning { get => _isRunning; }
 
         /// <summary>Feuert if ein Item eingesetzt wurde (for Logging/Telemetrie).</summary>
@@ -29,7 +29,7 @@ namespace RagnaController.Core
         /// <summary>
         /// Erzeugt die ItemManagerEngine.
         /// </summary>
-        /// <param name="clock">Zeitquelle (Test-Injektion möglich; Default: Environment.TickCount64).</param>
+        /// <param name="clock">time source (test injection possible; default: Environment.TickCount64).</param>
         public ItemManagerEngine(InputCommandQueue queue, Func<long>? clock = null)
         {
             _queue = queue;
@@ -37,7 +37,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Konfiguriert die verwalteten Items (Profil-Load). Setzt all Timer zurück.
+        /// Configures managed items (profile load). Resets all timers.
         /// Thread-Note: is vom UI-Thread beim Profil-Load aufgerufen, Update() vom Tick-Thread —
         /// Array-Referenz-Swap is atomar, identisch with dem etablierten Engine-Pattern (CombatEngine._profile).
         /// </summary>
@@ -52,14 +52,14 @@ namespace RagnaController.Core
                 _items[i] = items![i];
         }
 
-        /// <summary>Enabled die Prüfung (Profil-Flag ItemManagerEnabled).</summary>
+        /// <summary>Enables the check (profile flag ItemManagerEnabled).</summary>
         public void Start() => _isRunning = true;
 
-        /// <summary>Disabled die Prüfung (Pause/Disconnect/Profil-Switch).</summary>
+        /// <summary>Disables the check (pause/disconnect/profile switch).</summary>
         public void Stop() => _isRunning = false;
 
         /// <summary>
-        /// Reset: all Items and Timer löschen (Profil-Load / Shutdown).
+        /// Reset: delete all items and timers (profile load / shutdown).
         /// </summary>
         public void Reset()
         {
@@ -70,7 +70,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Tick-Pfad: prüft all Items gegen HP/SP-Schwellen. Zero-Allokation (only Array-Iteration).
+        /// Tick path: checks all items against HP/SP thresholds. Zero-allocation (only array iteration).
         /// </summary>
         /// <param name="sp">Aktueller SP-Wert.</param>
         /// <param name="deltaMs">Delta des Ticks in ms (only zur Signatur-Konsistenz with anderen Engines).</param>
@@ -99,7 +99,7 @@ namespace RagnaController.Core
                     continue;
                 }
 
-                // Cooldown active → exakt zum Cooldown-Ende erneut prüfen (no Intervall-Verlust).
+                // Cooldown active → re-check exactly at cooldown end (no interval loss).
                 if (now < _nextEligible[i])
                 {
                     _nextCheck[i] = _nextEligible[i];

@@ -34,7 +34,7 @@ namespace RagnaController.Views.Dialogs
         }
 
         private static readonly Color[] BtnColors = {
-            Color.FromRgb(61, 219, 110),  // A - Grün
+            Color.FromRgb(61, 219, 110),  // A - Green
             Color.FromRgb(255, 58, 82),   // B - Rot
             Color.FromRgb(58, 142, 255),  // X - Blau
             Color.FromRgb(255, 184, 0),   // Y - Gelb
@@ -44,7 +44,7 @@ namespace RagnaController.Views.Dialogs
         private const double InnerR = 90, OuterR = 195;
 
         private int _activeSector = -1;
-        private int _lastHighlightedSector = -2; // Speicher für Performance-Optimierung
+        private int _lastHighlightedSector = -2; // Memory for performance optimization
         private string _currentText = "";
 
         private readonly List<Path> _sectorPaths = new();
@@ -140,7 +140,7 @@ namespace RagnaController.Views.Dialogs
         public bool UpdateInput(float lx, float ly, bool a, bool b, bool x, bool y, bool l3, bool r3, bool start, bool bBtnRaw)
         {
             float mag = MathF.Sqrt(lx * lx + ly * ly);
-            if (mag > 0.35f) // Leicht erhöhte Deadzone für präzisere Sektorenwahl
+            if (mag > 0.35f) // Slightly increased deadzone for more precise sector selection
             {
                 // Korrigierte Winkelberechnung: Norden = 0 Grad
                 double angle = (Math.Atan2(-ly, lx) * 180.0 / Math.PI);
@@ -152,7 +152,7 @@ namespace RagnaController.Views.Dialogs
                 _activeSector = -1;
             }
 
-            // Performance: Only updaten, if sich der Sektor geändert has
+            // Performance: only update if sector has changed
             if (_activeSector != _lastHighlightedSector)
             {
                 HighlightSector(_activeSector);
@@ -167,7 +167,7 @@ namespace RagnaController.Views.Dialogs
                 if (x && !_prevX) TypeChar(Sectors[_activeSector, 2]);
                 if (y && !_prevY) TypeChar(Sectors[_activeSector, 3]);
             }
-            else if (b && !_prevB) // Abbruch nur, wenn KEIN Sektor gewählt ist
+            else if (b && !_prevB) // Abort only if NO sector is selected
             {
                 Dispatcher.BeginInvoke(() => Close());
                 return true;
@@ -191,7 +191,7 @@ namespace RagnaController.Views.Dialogs
 
         private void HighlightSector(int active)
         {
-            // Performance: EINEN Invoke for die gesamte UI-Änderung
+            // Performance: ONE invoke for the entire UI change
             Dispatcher.BeginInvoke(() =>
             {
                 var goldBrush = TryFindResource("Gold") as SolidColorBrush ?? new SolidColorBrush(Colors.Gold);

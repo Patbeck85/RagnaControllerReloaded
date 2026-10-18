@@ -145,7 +145,7 @@ namespace RagnaController.Core
             int newCy = pt.Y + newH / 2;
             bool nowTracking = newW > 0 && newH > 0;
 
-            // Only feuern if sich something tatsächlich geändert has —
+            // Only fire if something actually changed —
             // verhindert Endlosschleife if ForegroundChanged → Refresh() → UpdateGeometry()
             bool changed = nowTracking != IsTracking
                         || newCx != CenterX || newCy != CenterY

@@ -43,7 +43,7 @@ namespace RagnaController.Core
         public int CurrentSP { get; private set; } = 0;
         public int CurrentHPPercent { get; private set; } = 100;
 
-        /// <summary>Physische Ausführung der konfigurierten Aktion.</summary>
+        /// <summary>Physical execution of the configured action.</summary>
         private void ExecuteAction(ButtonAction action)
         {
             switch (action.Type)
@@ -216,7 +216,7 @@ namespace RagnaController.Core
         {
             if (_profile == null) return false;
 
-            // FIX: Only Combos prüfen, deren Layer with dem aktuellen Prefix übereinstimmt
+            // FIX: only check combos whose layer matches current prefix
             foreach (var mapping in _profile.ButtonMappings)
             {
                 if (mapping.Value.Type != ActionType.Combo) continue;
@@ -224,7 +224,7 @@ namespace RagnaController.Core
                 // mapping.Key is now ButtonKey, check if it starts with current prefix
                 var mappedKey = mapping.Key.ToString();
                 
-                // Layer-Prüfung: The Mapping-Key muss with dem aktuellen Layer übereinstimmen
+                // Layer check: mapping key must match current layer
                 if (!_prefix.Equals(mappedKey.Substring(0, Math.Min(_prefix.Length, mappedKey.Length)))) continue;
 
                 // Button-Teil extrahieren (nach dem '+')

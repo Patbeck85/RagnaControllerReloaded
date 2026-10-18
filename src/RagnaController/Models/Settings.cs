@@ -42,8 +42,8 @@ namespace RagnaController.Models
                 public bool ShowLatency { get; set; } = false;
 
                 /// <summary>
-        /// Erzwingt Handheld-Modus unabhängig vom erkannten Gerät.
-        /// Nützlich for Desktop-Nutzer with Controller die das Big-Picture-UI bevorzugen.
+        /// Forces handheld mode regardless of detected device.
+        /// Useful for desktop users with controller who prefer big-picture UI.
         /// </summary>
         public bool ForceHandheldMode { get; set; } = false;
         public bool StartInMiniMode { get; set; } = false;
@@ -85,15 +85,15 @@ namespace RagnaController.Models
         public bool AutoRestartOnCrash { get; set; } = false;
 
         // ── ROB-002: Input-Emulation-Failover (SendInput ↔ Kernel-Service) ───
-        /// <summary>SendInput-Latenz-Schwelle in ms. Flushes darüber gelten als "langsam".</summary>
+        /// <summary>SendInput latency threshold in ms. Flushes above are considered "slow".</summary>
         public int FailoverLatencyThresholdMs { get; set; } = 5;
         /// <summary>N aufeinanderfolgende langsame Flushes → Auto-Switch on Kernel-Strategie.</summary>
         public int FailoverTriggerCount { get; set; } = 3;
-        /// <summary>M stabile (schnelle) Flushes nach Switch → Recovery zurück to SendInput.</summary>
+        /// <summary>M stable (fast) flushes after switch → recovery back to SendInput.</summary>
         public int FailoverRecoveryCount { get; set; } = 2;
 
         // ── FEAT-014: Session-Replay (JSONL-Aufzeichnung for deterministische Wiedergabe) ──
-        /// <summary>Session-Replay enabled? Aufzeichnung läuft pro Engine-Session, Rotation bei 50 MB.</summary>
+        /// <summary>Session replay enabled? Recording runs per engine session, rotation at 50 MB.</summary>
         public bool EnableSessionRecording { get; set; } = false;
 
         // Fenster-Einstellungen (v1.6.0)

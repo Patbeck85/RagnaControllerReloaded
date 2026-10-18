@@ -186,7 +186,7 @@ namespace RagnaController.Views.Dialogs
 
         private async void BtnShare_Click(object sender, RoutedEventArgs e)
         {
-            // Sicheres Pattern Matching: Überprüfen, ob sender ein Button is UND Tag ein Profile is
+            // Safe pattern matching: check if sender is a button AND tag is a profile
             if (sender is not Button btn || btn.Tag is not Profile p) return;
             
             btn.IsEnabled = false;
@@ -222,7 +222,7 @@ namespace RagnaController.Views.Dialogs
             string code = TxtShareCode?.Text?.Trim() ?? "";
             if (string.IsNullOrEmpty(code)) { MessageBox.Show("Enter a share code first.", "No Code", MessageBoxButton.OK, MessageBoxImage.Information); return; }
             
-            // Sicheres Pattern Matching: Compiler weiß ab hier 100%, dass 'btn' nicht null is
+            // Safe pattern matching: compiler knows from here 100% that 'btn' is not null
             if (sender is not Button btn) return;
 
             btn.IsEnabled = false; 
@@ -236,7 +236,7 @@ namespace RagnaController.Views.Dialogs
                     _manager.AddAndSave(profile);
                     Refresh();
                     
-                    // Null-Check hinzugefügt, um CS8602 to verhindern
+                    // Null check added to prevent CS8602
                     if (TxtShareCode != null) TxtShareCode.Text = "";
                     
                     // Toast-Feedback (no blockierendes MessageBox)

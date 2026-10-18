@@ -13,7 +13,7 @@ namespace RagnaController.Core
     {
         /// <summary>Ziel bleibt fixiert, bis Tod/Reichweitenverlust erkannt is.</summary>
         Sticky = 0,
-        /// <summary>Zyklus durch all Ziele (Tab-Cycling) unabhängig vom Lock-Status.</summary>
+        /// <summary>Cycles through all targets (Tab-cycling) independent of lock status.</summary>
         Nearest = 1
     }
 
@@ -31,8 +31,8 @@ namespace RagnaController.Core
             /// <summary>
             /// FEAT-012: If true, disabled der Engine den Tab-Cycling-Loop, um
             /// versehentliches Targeting from Party-Mitgliedern to verhindern (RO-Konvention:
-            /// plain Tab zykliert durch ALLE Ziele inkl. Party). The Bot verlässt sich then
-            /// ausschließlich on den expliziten Ziel-Lock (R3/RightClick).
+            /// plain Tab cycles through ALL targets including party). The bot then relies
+            /// exclusively on the explicit target lock (R3/right click).
             /// </summary>
             public bool PartyTargetingEnabled { get; set; } = false;
             public bool SmartSkillEnabled { get; set; } = true;
@@ -151,7 +151,7 @@ namespace RagnaController.Core
             _tc = Math.Max(0, _tc - ms); _ac = Math.Max(0, _ac - ms); _rc = Math.Max(0, _rc - ms);
             _wac = Math.Max(0, _wac - ms); _skillPause = Math.Max(0, _skillPause - ms);
 
-            // FEAT-013: Zielvalidität prüfen (Tod / Reichweitenverlust) → Auto-Retarget.
+            // FEAT-013: check target validity (death / range loss) → auto-retarget.
             CheckTargetValidity();
 
             // Stick-Zielen aktualisiert Lock-Position
@@ -171,7 +171,7 @@ namespace RagnaController.Core
             switch (State)
             {
                 case CombatState.Seeking:
-                    // FEAT-012: PartyTargeting → no Tab-Cycling (würde durch ALLE Ziele
+                    // FEAT-012: party targeting → no tab-cycling (would go through ALL targets
                     // inkl. Party-Mitglieder zyklieren). Bot wartet on expliziten Lock (R3).
                     if (!PartyTargetingEnabled && _rc <= 0 && _tc <= 0 && AutoRetargetEnabled)
                     {
@@ -184,7 +184,7 @@ namespace RagnaController.Core
                     break;
                 case CombatState.Attacking:
                     // FEAT-013: Nearest-Modus zykliert auch im Angriff durch Ziele (Tab),
-                    // um immer das nächstgelegene Ziel to treffen. Sticky bleibt fixiert.
+                    // to always hit nearest target. Sticky stays fixed.
                     // FEAT-012: PartyTargeting → Cycling disabled (Party-Schutz).
                     if (!PartyTargetingEnabled && TargetingMode == TargetingMode.Nearest && _tc <= 0 && AutoRetargetEnabled)
                     {
@@ -205,10 +205,10 @@ namespace RagnaController.Core
         private void EnterIdle() { IsTargetLocked = false; SetState(CombatState.Idle); }
         private void SetState(CombatState s) { if (State == s) return; State = s; }
 
-        // FEAT-013: Zielvalidität prüfen. Ein gelocktes Ziel gilt als verloren, if es tot is
-        // (leerer TargetName) or außerhalb der Reichweite. NUR active, if eine Datenquelle
-        // liefert (TargetDataValid) — sonst keine falschen Positives. Sticky hält ansonsten das
-        // Ziel; Nearest löst zusätzlich zyklisches Tab-Cycling aus, um zum nächsten Ziel to springen.
+        // FEAT-013: check target validity. A locked target is considered lost if it is dead
+        // (empty target name) or outside range. Only active if a data source
+        // delivers (TargetDataValid) — otherwise no false positives. Sticky otherwise holds the
+        // target; Nearest additionally triggers cyclic tab-cycling to jump to next target.
         private void CheckTargetValidity()
         {
             if (!IsTargetLocked || State == CombatState.Idle) return;
@@ -229,7 +229,7 @@ namespace RagnaController.Core
 
         /// <summary>
         /// FEAT-013: Ziel-Daten aus einer Datenquelle (OCR/Reader) liefern.
-        /// Setzt TargetDataValid=true and triggert die Zielvaliditätsprüfung.
+        /// Sets TargetDataValid=true and triggers target validity check.
         /// </summary>
         public void SetTarget(string name, float distance)
         {
@@ -248,7 +248,7 @@ namespace RagnaController.Core
         }
 
         // ── Multi-Mob Targeting (GEX-006a) ──────────────────────────────
-        /// <summary>All bekannten Ziele im Umkreis (Name, Entfernung, LoS, Aggressivität).</summary>
+        /// <summary>All known targets in radius (name, distance, LoS, aggressiveness).</summary>
         private readonly List<(string Name, float Distance, bool InLineOfSight, bool IsAggressive, int HpPercent)> _knownTargets = new();
 
         /// <summary>
@@ -266,7 +266,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Gibt das beste Ziel nach Priorität zurück:
+        /// Returns the best target by priority:
         /// 1. In Line of Sight
         /// 2. Niedrigste Distanz
         /// 3. Niedrigster HP-Prozentsatz
@@ -287,7 +287,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Prüft ob ein bekanntes Ziel in Line of Sight is.
+        /// Checks if a known target is in line of sight.
         /// </summary>
         public bool IsInLineOfSight(string targetName)
         {
@@ -295,7 +295,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Gibt die Anzahl bekannter Ziele zurück.
+        /// Returns the number of known targets.
         /// </summary>
         public int KnownTargetCount => _knownTargets.Count;
 
@@ -313,7 +313,7 @@ namespace RagnaController.Core
             AimSensitivity = 22f;
             AimDeadzone = 0.20f;
             SkillInterruptMs = 750;
-            // FEAT-013: Targeting-Strategie & Reichweite hart zurücksetzen.
+            // FEAT-013: targeting strategy & range hard reset.
             TargetingMode = TargetingMode.Sticky;
             MaxTargetDistance = 15f;
             ClearTarget();
