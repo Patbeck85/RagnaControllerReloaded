@@ -38,7 +38,7 @@
 || Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|------|-----------|----------------|--------|
 ||| **TASK-1631** | First-Run Wizard: Controller-Erkennung, RO-Pfad, erstes Profil | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
-||| **TASK-1632** | High-Contrast-Modus Toggle + Schrift-Scaling (UX-017) | Designer | MEDIUM | UI-010 | 📋 OPEN |
+||| **TASK-1632** | High-Contrast-Modus Toggle + Schrift-Scaling (UX-017) | Designer | MEDIUM | UI-010 | ✅ CLOSED (2026-10-18) |
 
 ---
 
