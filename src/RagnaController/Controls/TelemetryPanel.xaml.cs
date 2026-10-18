@@ -16,7 +16,7 @@ namespace RagnaController.Controls
     /// </summary>
     public partial class TelemetryPanel : UserControl
     {
-        // ── Theme colors (konsistent with MainWindow) ───────────────────────
+        /// Theme colors (consistent with MainWindow)
         private static readonly Color CfgText = Color.FromRgb(161, 176, 197);   // #A1B0C5
         private static readonly Color CfgMuted = Color.FromRgb(85, 94, 106);    // #555E6A
         private static readonly Color CfgGood = Color.FromRgb(57, 255, 20);     // #39FF14

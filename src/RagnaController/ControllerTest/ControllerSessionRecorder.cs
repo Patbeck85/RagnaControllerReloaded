@@ -49,16 +49,12 @@ namespace RagnaController.ControllerTest
             return new RecordingSample((uint)mask, lx, ly, rx, ry, lt, rt, true);
         }
 
-        /// <summary>
-        /// Prüft, ob das benannte Buttons-Bit gesetzt is (for Diagnose/Replay). The Namen
-        /// entsprechen <see cref="ButtonState"/>; L2/R2 are analoge Trigger and NICHT Teil der Mask.
-        /// Single Source of Truth for die Buttons-Bits — keine Kopie in anderen Klassen.
+        /// <summary>Checks whether the named button bit is set (for Diagnose/Replay). The names
+        /// correspond to <see cref="ButtonState"/>; L2/R2 are analog triggers and NOT part of the mask.
+        /// Single Source of Truth for button bits — no copy in other classes.
         /// </summary>
-        /// <summary>
-        /// HasButton method.
-        /// <param name="name">name parameter.</param>
-        /// <returns>Result of HasButton.</returns>
-        /// </summary>
+        /// <param name="name">Button name.</param>
+        /// <returns>True if the button is pressed.</returns>
         public bool HasButton(string name) => name switch
         {
             "A"         => (Buttons & BtnA) != 0,
@@ -98,23 +94,23 @@ namespace RagnaController.ControllerTest
     {
         private readonly List<RecordingSample> _frames = new();
 
-        /// <summary>Anzahl der aufgenommenen Frames.</summary>
+        /// <summary>Number of recorded frames.</summary>
         public int FrameCount => _frames.Count;
 
-        /// <summary>Ob aktuell eine Aufnahme läuft.</summary>
+        /// <summary>Is recording currently running.</summary>
         public bool IsRecording { get; private set; }
 
-        /// <summary>Nimmt die Aufnahme on (startet with leerem Frame-Bestand).</summary>
+        /// <summary>Starts recording (starts with empty frame list).</summary>
         public void Start()
         {
             _frames.Clear();
             IsRecording = true;
         }
 
-        /// <summary>Beendet die Aufnahme. Danach is <see cref="Save"/> möglich.</summary>
+        /// <summary>Stops recording. After this <see cref="Save"/> is possible.</summary>
         public void Stop() => IsRecording = false;
 
-        /// <summary>Nimmt einen Frame on (only if eine Aufnahme läuft).</summary>
+        /// <summary>Takes a frame (only if recording is running).</summary>
         public void RecordFrame(RecordingSample sample)
         {
             if (!IsRecording) return;
@@ -122,8 +118,8 @@ namespace RagnaController.ControllerTest
         }
 
         /// <summary>
-        /// Schreibt die Sitzung als JSON im Fixture-Format nach <paramref name="path"/>.
-        /// Floats are with InvariantCulture geschrieben (Punkt als Dezimaltrenner).
+        /// Writes the session as JSON in fixture format to <paramref name="path"/>.
+        /// Floats are written with InvariantCulture (dot as decimal separator).
         /// </summary>
         public void Save(string path)
         {
@@ -133,10 +129,10 @@ namespace RagnaController.ControllerTest
                 w.WriteStartObject();
                 w.WriteString("id", $"session-{DateTime.Now:yyyyMMdd-HHmmss}");
                 w.WriteString("description",
-                    "Aufgezeichnete Controller-Sitzung aus dem ControllerTestWindow (RagnaController). " +
-                    "Buttons sind GamepadButtonFlags-Bitmasks. Analogwerte reichen roh durch (KEIN " +
-                    "Deadzone/Normalisierung — das ist Aufgabe der Backend-Layer InputReader/" +
-                    "XInputFallbackService und liegt außerhalb des Replay-Skops).");
+                    "Recorded controller session from ControllerTestWindow (RagnaController). " +
+                    "Buttons are GamepadButtonFlags bitmasks. Analog values pass through raw (NO " +
+                    "deadzone/normalization — that's the backend layer InputReader/" +
+                    "XInputFallbackService responsibility and outside the replay scope).");
                 w.WriteStartArray("frames");
                 foreach (var f in _frames)
                 {

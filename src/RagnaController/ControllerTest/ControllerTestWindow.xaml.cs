@@ -83,18 +83,18 @@ namespace RagnaController.ControllerTest
         {
             if (!_isInitialized || _controllerProvider == null) return;
 
-            // TEST-016/017: jeden Tick (50ms) ein Sample bauen — unabhängig vom Button-Change-Guard,
-            // da Sticks/Trigger sich ändern können ohne Button-Wechsel. Ein Sample pro Tick dient
-            // sowohl der Aufnahme als auch dem geführten Eingabe-Selbsttest (gleiche Rohwerte).
+            // TEST-016/017: Build a sample every tick (50ms) — independent of Button-Change-Guard,
+            // because sticks/triggers can change without button change. One sample per tick serves
+            // both recording and guided input self-test (same raw values).
             var sample = BuildCurrentSample();
 
             if (_recorder.IsRecording) _recorder.RecordFrame(sample);
             if (_diagnostic.IsRunning) FeedDiagnostic(sample);
 
-            // Aufnahme-Status (TEST-016): Frame-Zähler live anzeigen.
+            // Recording status (TEST-016): Show frame counter live.
             if (_recorder.IsRecording)
             {
-                RecordingStatus.Text = $"läuft… ({_recorder.FrameCount} Frames)";
+                RecordingStatus.Text = $"recording… ({_recorder.FrameCount} frames)";
             }
 
             // Get current button state
@@ -166,7 +166,7 @@ namespace RagnaController.ControllerTest
         private void BtnRecordStart_Click(object sender, RoutedEventArgs e)
         {
             _recorder.Start();
-            RecordingStatus.Text = "läuft… (0 Frames)";
+            RecordingStatus.Text = "recording… (0 frames)";
             RecordingStatus.Foreground = System.Windows.Media.Brushes.Orange;
             EnsureTimerState();
         }

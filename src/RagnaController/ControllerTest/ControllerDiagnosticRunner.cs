@@ -9,7 +9,7 @@ using System.Text.Json;
 namespace RagnaController.ControllerTest
 {
     /// <summary>
-    /// TEST-017: Eine einzelne Kontrolle des geführten Eingabe-Selbsttests.
+    /// TEST-017: A single check of the guided input self-test.
     /// </summary>
     public enum DiagnosticStatus
     {
@@ -19,9 +19,9 @@ namespace RagnaController.ControllerTest
     }
 
     /// <summary>
-    /// TEST-017: Eine geprüfte Eingabe (Button/Stick/Trigger/DPad) with Prompt and Detektions-Bedingung.
-    /// The Bedingung prüft ein einzelnes <see cref="RecordingSample"/> (Rohwerte, identisch zur
-    /// CI-Replay-Fixtur), damit Diagnose and Replay dieselbe Datenbasis nutzen.
+    /// TEST-017: A verified input (Button/Stick/Trigger/DPad) with Prompt and Detection condition.
+    /// The condition checks a single <see cref="RecordingSample"/> (raw values, identical to the
+    /// CI replay fixture), so Diagnose and Replay use the same data basis.
     /// </summary>
     public readonly record struct DiagnosticControl(
         string Name,
@@ -30,31 +30,31 @@ namespace RagnaController.ControllerTest
         Func<RecordingSample, bool> Detect)
     {
         /// <summary>
-        /// The 16 Pflicht-Kontrollen (DoD ≥ 12): all Face-Buttons, L1/R1, Start/Back, L3/R3,
-        /// komplettes DPad (4), beide Sticks (je 2 Richtungen) and beide Triggers.
+        /// The 16 mandatory controls (DoD ≥ 12): all face buttons, L1/R1, Start/Back, L3/R3,
+        /// full DPad (4), both sticks (2 directions each), and both triggers.
         /// </summary>
         public static readonly DiagnosticControl[] All =
         {
-            new("A",          "Button",  "Drücke A (□)",           s => s.HasButton("A")),
-            new("B",          "Button",  "Drücke B (○)",           s => s.HasButton("B")),
-            new("X",          "Button",  "Drücke X (✕)",           s => s.HasButton("X")),
-            new("Y",          "Button",  "Drücke Y (△)",           s => s.HasButton("Y")),
-            new("L1",         "Schulter","Drücke L1",              s => s.HasButton("L1")),
-            new("R1",         "Schulter","Drücke R1",              s => s.HasButton("R1")),
-            new("Start",      "System",  "Drücke Start",           s => s.HasButton("Start")),
-            new("Back",       "System",  "Drücke Back/Select",     s => s.HasButton("Back")),
-            new("L3",         "Stick",   "Drücke L3 (Linkstick drücken)", s => s.HasButton("L3")),
-            new("R3",         "Stick",   "Drücke R3 (Rechtsstick drücken)", s => s.HasButton("R3")),
-            new("DPadUp",     "DPad",    "DPad nach oben",         s => s.HasButton("DPadUp")),
-            new("DPadDown",   "DPad",    "DPad nach unten",        s => s.HasButton("DPadDown")),
-            new("DPadLeft",   "DPad",    "DPad nach links",        s => s.HasButton("DPadLeft")),
-            new("DPadRight",  "DPad",    "DPad nach rechts",       s => s.HasButton("DPadRight")),
-            new("StickLUp",   "Stick",   "Linker Stick: nach oben", s => s.Ly > 0.6f),
-            new("StickLDown", "Stick",   "Linker Stick: nach unten",s => s.Ly < -0.6f),
-            new("StickRUp",   "Stick",   "Rechter Stick: nach oben",s => s.Ry > 0.6f),
-            new("StickRDown", "Stick",   "Rechter Stick: nach unten",s => s.Ry < -0.6f),
-            new("TriggerL",   "Trigger", "Linker Trigger (L2) durchdrücken", s => s.Lt > 0.5f),
-            new("TriggerR",   "Trigger", "Rechter Trigger (R2) durchdrücken",s => s.Rt > 0.5f),
+            new("A",          "Button",  "Press A (□)",           s => s.HasButton("A")),
+            new("B",          "Button",  "Press B (○)",           s => s.HasButton("B")),
+            new("X",          "Button",  "Press X (✕)",           s => s.HasButton("X")),
+            new("Y",          "Button",  "Press Y (△)",           s => s.HasButton("Y")),
+            new("L1",         "Shoulder","Press L1",              s => s.HasButton("L1")),
+            new("R1",         "Shoulder","Press R1",              s => s.HasButton("R1")),
+            new("Start",      "System",  "Press Start",           s => s.HasButton("Start")),
+            new("Back",       "System",  "Press Back/Select",     s => s.HasButton("Back")),
+            new("L3",         "Stick",   "Press L3 (Left stick press)", s => s.HasButton("L3")),
+            new("R3",         "Stick",   "Press R3 (Right stick press)", s => s.HasButton("R3")),
+            new("DPadUp",     "DPad",    "DPad up",         s => s.HasButton("DPadUp")),
+            new("DPadDown",   "DPad",    "DPad down",        s => s.HasButton("DPadDown")),
+            new("DPadLeft",   "DPad",    "DPad left",        s => s.HasButton("DPadLeft")),
+            new("DPadRight",  "DPad",    "DPad right",       s => s.HasButton("DPadRight")),
+            new("StickLUp",   "Stick",   "Left stick: up", s => s.Ly > 0.6f),
+            new("StickLDown", "Stick",   "Left stick: down",s => s.Ly < -0.6f),
+            new("StickRUp",   "Stick",   "Right stick: up",s => s.Ry > 0.6f),
+            new("StickRDown", "Stick",   "Right stick: down",s => s.Ry < -0.6f),
+            new("TriggerL",   "Trigger", "Press left trigger (L2)", s => s.Lt > 0.5f),
+            new("TriggerR",   "Trigger", "Press right trigger (R2)",s => s.Rt > 0.5f),
         };
     }
 

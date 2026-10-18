@@ -24,7 +24,7 @@ namespace RagnaController
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            // ── All Exception-Handler so früh wie möglich registrieren ──────
+            // ── Register all Exception-Handlers as early as possible ──────
             AppDomain.CurrentDomain.UnhandledException += (s, ex) =>
             {
                 LogFatal("UnhandledException", ex.ExceptionObject?.ToString() ?? "unknown");
@@ -38,7 +38,7 @@ namespace RagnaController
                     return;
                 }
                 MessageBox.Show($"{ex.ExceptionObject?.GetType().Name}\n\nDetails: {CrashLog}",
-                    "RagnaController – Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    "RagnaController – Error", MessageBoxButton.OK, MessageBoxImage.Error);
             };
 
             DispatcherUnhandledException += (s, ex) =>
@@ -54,7 +54,7 @@ namespace RagnaController
                     return;
                 }
                 MessageBox.Show($"{ex.Exception?.Message}\n\nDetails: {CrashLog}",
-                    "RagnaController – Fehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    "RagnaController – Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 ex.Handled = true;
             };
 
