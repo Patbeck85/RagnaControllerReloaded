@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,6 +9,7 @@ using System.Windows.Media;
 using Microsoft.Win32;
 using RagnaController.Models;
 using RagnaController.Core;
+using RagnaController.Core.Services;
 using RagnaController.Profiles;
 using RagnaController.Controller;
 using RagnaController.Views.Dialogs;
@@ -31,6 +33,7 @@ public partial class SettingsWindow : Window
         private readonly HybridEngine _engine;
         private readonly ProfileManager _manager;
         private readonly Settings _s;
+        private HighContrastService? _highContrastService;
 #pragma warning disable CS0649 // WPF: Field initialized in XAML
         private readonly Action<Settings>? _onSave;
 #pragma warning restore CS0649
@@ -42,7 +45,7 @@ public partial class SettingsWindow : Window
                     _manager = manager;
                     _s = s;
                     _onSave = onSave;
-      
+
                     // Initialize all settings from saved values
                     InitializeSettings();
                 }
@@ -92,6 +95,11 @@ public partial class SettingsWindow : Window
 
                     // UX-022: Gyro calibration UI
                     GyroDeadzoneValue.Text = _s.GyroDeadzone.ToString();
+
+                    // UX-017: Accessibility — High Contrast & Font Scale
+                    ChkHighContrast.IsChecked = _s.HighContrastEnabled;
+                    FontScaleSlider.Value = _s.FontScale;
+                    FontScaleValue.Text = $"{_s.FontScale:P0}";
 
                     // FEAT-030: Multi-monitor support
                     InitializeOverlayMonitorCombo();
@@ -312,6 +320,39 @@ public partial class SettingsWindow : Window
                     _s.EnableTelemetry = ChkTelemetry.IsChecked == true;
                     _s.Save();
                 }
+
+        // ── UX-017: Accessibility — High Contrast & Font Scale ─────────
+        private void ChkHighContrast_Click(object sender, RoutedEventArgs e)
+        {
+            _s.HighContrastEnabled = ChkHighContrast.IsChecked == true;
+            _s.Save();
+            ApplyTheme();
+        }
+
+        private void FontScaleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            _s.FontScale = FontScaleSlider.Value;
+            FontScaleValue.Text = $"{_s.FontScale:P0}";
+            _s.Save();
+            ApplyTheme();
+        }
+
+        private void ApplyTheme()
+        {
+            // HighContrastService mit dem aktuellen DesignSystem verknüpfen und anwenden
+            var app = Application.Current;
+            if (app == null) return;
+
+            var designSystem = app.Resources.MergedDictionaries
+                .FirstOrDefault(d => d.Source?.OriginalString?.Contains("UI2026DesignSystem") == true);
+
+            if (designSystem != null && _highContrastService == null)
+            {
+                _highContrastService = new HighContrastService(_s, designSystem);
+            }
+
+            _highContrastService?.ApplyHighContrast();
+        }
 
                 // FEAT-030: Initialize monitor dropdown
         private void InitializeOverlayMonitorCombo()
