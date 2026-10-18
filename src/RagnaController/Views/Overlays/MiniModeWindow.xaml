@@ -1,3 +1,7 @@
+<!-- 
+    Compact click-through HUD.
+    Minimal overlay showing core state without blocking game interaction.
+-->
 <Window x:Class="RagnaController.Views.Overlays.MiniModeWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

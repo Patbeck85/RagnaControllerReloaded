@@ -1,3 +1,7 @@
+<!-- 
+    FEAT-010: Guided profile creation wizard.
+    Steps: 1. Class selection → 2. Skill mapping → 3. Auto-detect → 4. Save.
+-->
 <Window x:Class="RagnaController.Views.Dialogs.ProfileWizardWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

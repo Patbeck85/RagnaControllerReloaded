@@ -13,6 +13,12 @@ namespace RagnaController.Core
     /// ARCH-001: Extracted from HybridEngine - Main tick coordination & lifecycle management.
     /// Responsible for: Engine initialization, tick loop orchestration, Start/Stop/Pause/Resume/Shutdown.
     /// </summary>
+    /// <remarks>
+    /// Thread safety: Safe to call from background engine thread.
+    /// UI access must go through Dispatcher.Invoke.
+    /// All methods are thread-safe against concurrent calls.
+    /// </remarks>
+    /// <seealso cref="TECH-061"/>
     public class EngineOrchestrator : IDisposable
 #pragma warning disable CS8618 // All engine fields are assigned in constructor (see TECH-061 startup validation)
     {

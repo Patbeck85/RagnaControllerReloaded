@@ -13,6 +13,9 @@ namespace RagnaController.Core
     /// Manages release-to-cast ground spell (AoE) state tracking.
     /// Exposes CurrentSP and CurrentHPPercent for SkillOrchestrator condition evaluation.
     /// </summary>
+    /// <remarks>
+    /// Thread safety: Not thread-safe. Must be called from the engine tick thread only.
+    /// </remarks>
     public class CombatEngine : IDisposable
     {
         private Profile? _profile;

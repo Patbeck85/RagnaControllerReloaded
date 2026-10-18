@@ -7,6 +7,9 @@ namespace RagnaController.Core
     /// Right stick moves mouse cursor, left stick sets click direction.
     /// Supports DPI-aware scaling, deadzone, curve sensitivity, and action RPG mode.
     /// </summary>
+    /// <remarks>
+    /// Thread safety: Not thread-safe. Must be called from the engine tick thread only.
+    /// </remarks>
     public class MovementEngine
     {
         private readonly InputCommandQueue _queue;

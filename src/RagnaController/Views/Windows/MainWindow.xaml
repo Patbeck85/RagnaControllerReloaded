@@ -1,3 +1,7 @@
+<!-- 
+    Main application window with tab navigation and status display.
+    Hosts the main UI layout, engine status indicators, and window switching controls.
+-->
 <Window x:Class="RagnaController.Views.Windows.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"

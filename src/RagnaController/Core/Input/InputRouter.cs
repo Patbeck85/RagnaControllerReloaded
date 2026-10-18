@@ -10,6 +10,11 @@ namespace RagnaController.Core
     /// ARCH-001: Extracted from HybridEngine - Input routing & modifier parsing.
     /// Responsible for: Layer updates, overlay routing, smart cursor, engine chain routing.
     /// </summary>
+    /// <remarks>
+    /// Thread safety: Safe to call from background engine thread.
+    /// Not safe for concurrent RouteInput calls from multiple threads.
+    /// </remarks>
+    /// <seealso cref="TECH-064"/>
     public class InputRouter
     {
         // FIX (ROB-002): Engine-Felder bewusst nicht mehr `readonly`, damit der

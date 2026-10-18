@@ -11,6 +11,10 @@ namespace RagnaController.Controller
     /// CursorEngine, SmartCursorService, and SkillOrchestrator into a single snapshot
     /// for UI binding. Uses EngineOptimizationPool for zero-allocation string caching.
     /// </summary>
+    /// <remarks>
+    /// Thread safety: Safe to call from background engine thread.
+    /// Result is immutable and safe for UI thread binding.
+    /// </remarks>
     public sealed class SnapshotBuilder
     {
         private readonly AutoTargetEngine _autoTarget;

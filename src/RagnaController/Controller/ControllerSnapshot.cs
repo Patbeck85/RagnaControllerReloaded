@@ -11,6 +11,9 @@ namespace RagnaController.Controller
     /// D-Pad, system buttons, combat state, and skill cooldown information.
     /// Updated every tick by SnapshotBuilder from engine state.
     /// </summary>
+    /// <remarks>
+    /// Thread safety: Immutable record - safe for cross-thread access after construction.
+    /// </remarks>
     public sealed class ControllerSnapshot
     {
         // Layer text (COMBO/MAGE/AUTO/GRID MODE)
