@@ -47,7 +47,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Resets the combo step index, timer, and buffer window.
+        /// Resets the combo step index, timer, buffer window, and held state.
         /// </summary>
         public void Reset()
         {
@@ -55,6 +55,7 @@ namespace RagnaController.Core
             _timer        = 0;
             _bufferWindow = 0;
             _loopRestartPending = false;
+            _wasHeld = false;
         }
 
         /// <summary>

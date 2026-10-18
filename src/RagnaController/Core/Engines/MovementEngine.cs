@@ -129,9 +129,17 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Reset method.
+        /// Reset method. Sets all movement state to idle and clears input queue.
         /// </summary>
-        public void Reset() => ForceStop();
+        public void Reset()
+        {
+            ForceStop();
+            _lastTx = -1;
+            _lastTy = -1;
+            _lastX = 0f;
+            _lastY = 0f;
+            _coastCounter = 0;
+        }
 
         // ── Loot-Vacuum (kreist um Mittelpunkt) ───────────────────────────
         public void PerformLootVacuum(int ms)

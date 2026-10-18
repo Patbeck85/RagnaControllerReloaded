@@ -31,6 +31,16 @@ namespace RagnaController.Core
         public bool IsUiActive => _uiActive;
 
         /// <summary>
+        /// Reset method. Clears UI state for profile isolation.
+        /// </summary>
+        public void Reset()
+        {
+            _uiActive = false;
+            _gridX = 0;
+            _gridY = 0;
+        }
+
+        /// <summary>
         /// Verarbeitet SmartCursor-Eingaben.
         /// FIX: Keine Early Returns — all Tasten müssen an CombatEngine weitergegeben are,
         /// damit offene Prozesse sauber abgebrochen are.

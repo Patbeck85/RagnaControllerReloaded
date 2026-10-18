@@ -74,7 +74,7 @@ namespace RagnaController.Core
                 public bool SuppressMovementClicks => State != CombatState.Idle;
 
         public AutoTargetEngine(InputCommandQueue queue) { _queue = queue; }
-        
+
         private volatile int _skillPause;
         private int _tc, _ac, _rc, _wac;
         private bool _prevR3;
@@ -319,10 +319,17 @@ namespace RagnaController.Core
             ClearTarget();
             State = CombatState.Idle;
             IsTargetLocked = false;
+            IsAutoAttacking = false;
+            CurrentTarget = null;
+            CurrentTargetDistance = 0f;
+            TargetName = "";
+            TargetType = "";
+            TargetDistance = 0f;
+            TargetDataValid = false;
             _skillPause = 0;
+            _tc = 0;
             _ac = 0;
             _rc = 0;
-            _tc = 0;
             _wac = 0;
             _prevR3 = false;
             _lockPosValid = false;

@@ -110,6 +110,16 @@ namespace RagnaController.Core
         public event Action<ActiveGroundSpell>? GroundSpellExpired;
 
         /// <summary>
+        /// Reset method. Clears all active ground spells for profile isolation.
+        /// </summary>
+        public void Reset()
+        {
+            Enabled = false;
+            ClearAll();
+            _lastTickMs = 0;
+        }
+
+        /// <summary>
         /// FEAT-007: Get active spell names for SkillOrchestrator condition evaluation
         /// Zero-allocation: reuses reusable names list.
         /// </summary>

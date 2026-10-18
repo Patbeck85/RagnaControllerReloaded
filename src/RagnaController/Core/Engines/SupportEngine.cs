@@ -95,6 +95,8 @@ namespace RagnaController.Core
             _healCooldown = 0;
             _wasY = false;
             _wasRB = false;
+            ActiveBuffs.Clear();
+            ActiveDebuffs.Clear();
         }
     }
 }

@@ -783,6 +783,84 @@ namespace RagnaController.Core
                                         }
 
         /// <summary>
+        /// TASK-1613: Isoliert den Profil-Switch, indem alle Engine-Zustände zurückgesetzt werden.
+        /// Verhindert, dass Zustand aus dem vorherigen Profil in das neue übergeht (z.B. laufender
+        /// Kampf, aktive Buffs, gebliebene Tasten, etc.).
+        /// </summary>
+        public void IsolateProfileSwitch()
+        {
+            // 1. Alle Gameplay-Engines reseten
+            _movement.Reset();
+            _autoTarget.Reset();
+            _mage.Reset();
+            _combo.Reset();
+            _cursor.Reset();
+            _smartCursor.Reset();
+            _kite.Reset();
+            _support.Reset();
+            _mobSweep.Reset();
+            _itemManager.Reset();
+            _partyManager.Reset();
+            _groundSpell.Reset();
+            _skillOrchestrator?.Reset();
+
+            // 2. InputCommandQueue leeren - alle Tasten loslassen
+            _queue?.LeftUp();
+            _queue?.RightUp();
+            _queue?.KeyUp(VirtualKey.A);
+            _queue?.KeyUp(VirtualKey.B);
+            _queue?.KeyUp(VirtualKey.C);
+            _queue?.KeyUp(VirtualKey.D);
+            _queue?.KeyUp(VirtualKey.E);
+            _queue?.KeyUp(VirtualKey.F);
+            _queue?.KeyUp(VirtualKey.G);
+            _queue?.KeyUp(VirtualKey.H);
+            _queue?.KeyUp(VirtualKey.I);
+            _queue?.KeyUp(VirtualKey.J);
+            _queue?.KeyUp(VirtualKey.K);
+            _queue?.KeyUp(VirtualKey.L);
+            _queue?.KeyUp(VirtualKey.M);
+            _queue?.KeyUp(VirtualKey.N);
+            _queue?.KeyUp(VirtualKey.O);
+            _queue?.KeyUp(VirtualKey.P);
+            _queue?.KeyUp(VirtualKey.Q);
+            _queue?.KeyUp(VirtualKey.R);
+            _queue?.KeyUp(VirtualKey.S);
+            _queue?.KeyUp(VirtualKey.T);
+            _queue?.KeyUp(VirtualKey.U);
+            _queue?.KeyUp(VirtualKey.V);
+            _queue?.KeyUp(VirtualKey.W);
+            _queue?.KeyUp(VirtualKey.X);
+            _queue?.KeyUp(VirtualKey.Y);
+            _queue?.KeyUp(VirtualKey.Z);
+            _queue?.KeyUp(VirtualKey.F1);
+            _queue?.KeyUp(VirtualKey.F2);
+            _queue?.KeyUp(VirtualKey.F3);
+            _queue?.KeyUp(VirtualKey.F4);
+            _queue?.KeyUp(VirtualKey.F5);
+            _queue?.KeyUp(VirtualKey.F6);
+            _queue?.KeyUp(VirtualKey.F7);
+            _queue?.KeyUp(VirtualKey.F8);
+            _queue?.KeyUp(VirtualKey.F9);
+            _queue?.KeyUp(VirtualKey.F10);
+            _queue?.KeyUp(VirtualKey.F11);
+            _queue?.KeyUp(VirtualKey.F12);
+            // Arrow keys
+            _queue?.KeyUp(VirtualKey.ArrowLeft);
+            _queue?.KeyUp(VirtualKey.ArrowRight);
+            _queue?.KeyUp(VirtualKey.ArrowUp);
+            _queue?.KeyUp(VirtualKey.ArrowDown);
+
+            // 3. CooldownManager resetet
+            _cooldownManager.ResetAll();
+
+            // 4. FeedbackSystem stoppen
+            _feedback?.StopAll();
+
+            _logger?.Info("[EngineOrchestrator] Profil-Switch isoliert - alle Engine-Zustände zurückgesetzt");
+        }
+
+        /// <summary>
         /// Disposes all engine resources and unhooks event handlers.
         /// </summary>
         public void Dispose()

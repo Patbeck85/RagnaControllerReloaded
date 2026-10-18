@@ -25,33 +25,10 @@ namespace RagnaController.Core
         /// </summary>
         public void LoadProfile(Profile p, bool autoDetectClass = false)
         {
-            // CRITICAL: Reset ALL state machines HARD!
-            // Problem: If Sniper was in 'Kite' mode (running backwards),
-            // this state remains active in backgroand. New Knight would
-            // suddenly start running backwards uncontrollably!
-
-            // 0. FeedbackSystem stop (prevents Rumble/LED ghosting on profile switch)
-            _orchestrator.Feedback?.StopAll();
-
-            // 1. MovementEngine stop and clear queue
-            _orchestrator.Movement.ForceStop();
-            var queue = _orchestrator.CommandQueue;
-            queue?.LeftUp();
-            queue?.KeyUp(VirtualKey.ArrowLeft);
-            queue?.KeyUp(VirtualKey.ArrowRight);
-            queue?.KeyUp(VirtualKey.ArrowUp);
-            queue?.KeyUp(VirtualKey.ArrowDown);
-
-            // 2. Disable all Combat-Engines (not null - they're readonly!)
-            // Just don't call them anymore - GC cleans up when no refs exist
-            _orchestrator.AutoTarget.Reset();
-            _orchestrator.Kite.Reset();
-            _orchestrator.Mage.Reset();
-            _orchestrator.Support.Reset();
-            _orchestrator.Combo.Reset();
-            _orchestrator.MobSweep.Reset();
-            _orchestrator.ItemManager.Reset(); // FEAT-011: Item-Timer hart zurücksetzen
-            _orchestrator.PartyManager.Reset(); // FEAT-012: Party-Heal-Zustand hart zurücksetzen
+            // TASK-1613: Isolierter Profil-Switch - alle Engine-Zustände hart zurücksetzen
+            // bevor neue Profile-Einstellungen angewendet werden. Verhindert Cross-Contamination
+            // zwischen Charakteren (z.B. Kite-Modus, aktive Buffs, gebliebene Tasten).
+            _orchestrator.IsolateProfileSwitch();
 
             // 3. Load profile configurations
             _orchestrator.CurrentProfile = p;
