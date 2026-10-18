@@ -105,14 +105,14 @@ namespace RagnaController.Core
                                     _wasInDeadzone = false;
                                 }
 
-                // Wende die Bewegung völlig flüssig on unseren virtuellen Cursor an
+                // Apply movement completely smoothly to our virtual cursor
                 _virtualX += mx;
                 _virtualY += my;
 
                 int targetX = (int)_virtualX;
                                 int targetY = (int)_virtualY;
 
-                                // FIX: Sperre den Cursor zwingend im RO-Fenster ein (abzüglich 5px Rand)
+                                // FIX: Force-lock cursor inside RO window (minus 5px border)
                                 // TECH-035: Apply DpiScale for per-monitor DPI awareness
                                 if (_tracker != null && _tracker.IsTracking)
                                 {
@@ -123,7 +123,7 @@ namespace RagnaController.Core
                                     targetX = Math.Clamp(targetX, _tracker.CenterX - limitX, _tracker.CenterX + limitX);
                                     targetY = Math.Clamp(targetY, _tracker.CenterY - limitY, _tracker.CenterY + limitY);
 
-                                    // Verhindert, dass der virtuelle Cursor den Bildschirmrand verlässt and sich aufstaut
+                                    // Prevent virtual cursor from leaving screen edge and getting stuck
                                     _virtualX = targetX;
                                     _virtualY = targetY;
                                 }
@@ -132,7 +132,7 @@ namespace RagnaController.Core
             }
 
             // TECH-020: Periodischer Resync des virtuellen Cursors
-                        // Verhindert Desync bei physischer Maus-Bewegung, Fensterwechsel or DPI-Änderungen
+                        // Prevent desync on physical mouse movement, window change or DPI changes
                         _resyncCounter++;
                         if (_resyncCounter >= RESYNC_INTERVAL_TICKS)
                         {
@@ -145,7 +145,7 @@ namespace RagnaController.Core
                                 int dy = Math.Abs(pt.Y - (int)_virtualY);
                                 if (dx > (int)(MAX_DESYNC_PIXELS * scale) || dy > (int)(MAX_DESYNC_PIXELS * scale))
                                 {
-                                    // Forced Resync bei to großer Abweichung
+                                    // Forced resync on too large deviation
                                     _virtualX = pt.X;
                                     _virtualY = pt.Y;
                                 }

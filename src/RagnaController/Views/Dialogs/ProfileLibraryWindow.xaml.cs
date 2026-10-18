@@ -171,7 +171,7 @@ namespace RagnaController.Views.Dialogs
             }
             catch (Exception ex)
             {
-                // ERROR-001: no stiller Fehler
+                // ERROR-001: no silent error
                 System.Diagnostics.Debug.WriteLine($"[ProfileLibrary] Export all failed: {ex.Message}");
                 StatusText.Text = $"Export failed: {ex.Message}";
                 StatusText.Foreground = Brushes.OrangeRed;

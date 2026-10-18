@@ -36,8 +36,8 @@ namespace RagnaController.Core
         private int  _stepIndex;
         private int  _timer;
         private int  _bufferWindow;
-        private bool _wasHeld; // für SyncHeldState False-Fire-Prevention
-        private bool _loopRestartPending; // AutoLoop: Restart nach ChainCooldownMs ausstehend (bewusst während Halts)
+        private bool _wasHeld; // for SyncHeldState false-fire-prevention
+        private bool _loopRestartPending; // AutoLoop: restart pending after ChainCooldownMs (intentional during holds)
 
         private readonly InputCommandQueue _queue;
 
@@ -109,7 +109,7 @@ namespace RagnaController.Core
                 _stepIndex = 0;
                 if (ChainCooldownMs > 0)
                 {
-                    // Cooldown läuft; das anschließende Fire is ein bewusster Loop-Restart (no False-Fire).
+                    // Cooldown running; subsequent fire is a deliberate loop restart (no false-fire).
                     _timer = ChainCooldownMs;
                     _loopRestartPending = true;
                     return;

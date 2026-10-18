@@ -31,10 +31,10 @@ namespace RagnaController.Services
             _onToast = onToast;
         }
 
-        /// <summary>Gibt die Liste aller verfügbaren Profile zurück.</summary>
+        /// <summary>Returns the list of all available profiles.</summary>
         public System.Collections.Generic.IEnumerable<Profile> GetAllProfiles() => _manager.Profiles;
 
-        /// <summary>Lädt das zuletzt verwendete Profil or das erste verfügbare.</summary>
+        /// <summary>Loads the last used profile or the first available one.</summary>
         /// <returns>The geladene Profil or null, if keine Profile available.</summary>
         public Profile? LoadLastOrFirst()
         {
@@ -44,7 +44,7 @@ namespace RagnaController.Services
         }
 
         /// <summary>
-        /// Wendet ein Profil an: lädt es in die Engine, speichert LastProfileName,
+        /// Applies a profile: loads it into engine, saves LastProfileName,
         /// and zeigt eine Toast-Benachrichtigung.
         /// </summary>
         public void ApplyProfile(Profile profile)
@@ -58,7 +58,7 @@ namespace RagnaController.Services
         }
 
         /// <summary>
-        /// Wechselt zum nächsten or vorherigen Profil in der Liste (z. B. via D-Pad Quick-Switch).
+        /// Switches to next or previous profile in list (e.g. via D-Pad quick-switch).
         /// </summary>
         public void SwitchProfile(int delta)
         {
@@ -70,7 +70,7 @@ namespace RagnaController.Services
             ApplyProfile(nextProfile);
         }
 
-        /// <summary>Öffnet das Profile Library Fenster (modal).</summary>
+        /// <summary>Opens the profile library window (modal).</summary>
         public void OpenProfileLibrary(Action onClosed)
         {
             var w = new ProfileLibraryWindow(_manager) { Owner = null };
@@ -78,7 +78,7 @@ namespace RagnaController.Services
             w.ShowDialog();
         }
 
-        /// <summary>Gibt den Namen des aktuell aktiven Profils zurück.</summary>
+        /// <summary>Returns the name of the currently active profile.</summary>
         public string? ActiveProfileName => _manager.ActiveProfile?.Name;
     }
 }

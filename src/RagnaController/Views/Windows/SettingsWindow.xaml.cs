@@ -507,7 +507,7 @@ public partial class SettingsWindow : Window
             }
             catch (Exception ex)
             {
-                // ERROR-001: no stiller Fehler — Kalibrierung abbrechen, UI wieder freischalten.
+                // ERROR-001: no silent error — abort calibration, release UI again.
                 System.Diagnostics.Debug.WriteLine($"[SettingsWindow] Calibration failed: {ex.Message}");
                 EngineStateText.Foreground = Brushes.OrangeRed;
                 EngineStateText.Text = "Calibration failed";
