@@ -1,5 +1,6 @@
 using System.Net.Http;
 using Xunit;
+using RagnaController.Views.Dialogs;
 
 namespace RagnaController.Tests
 {

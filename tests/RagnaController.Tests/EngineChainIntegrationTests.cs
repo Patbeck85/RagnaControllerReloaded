@@ -1609,7 +1609,7 @@ namespace RagnaController.Tests
         [Fact]
         public void FEAT026a_MainWindow_Contains_BigPicture_Toggle()
         {
-            string xamlPath = @"C:\Hermes\RagnaController\src\RagnaController/MainWindow.xaml";
+            string xamlPath = @"C:\Hermes\RagnaController\src\RagnaController/Views/Windows/MainWindow.xaml";
             string xaml = File.ReadAllText(xamlPath);
             Assert.Contains("BigPicture", xaml);
         }
@@ -2316,7 +2316,7 @@ namespace RagnaController.Tests
         {
             // Überprüft dass die Big Picture Button-Größen >= 44px sind
             // (durchgeführt über XAML-Analyse der Quick Actions Buttons)
-            string xamlPath = @"C:\Hermes\RagnaController\src\RagnaController/MainWindow.xaml";
+            string xamlPath = @"C:\Hermes\RagnaController\src\RagnaController/Views/Windows/MainWindow.xaml";
             string xaml = File.ReadAllText(xamlPath);
 
             // Alle Quick-Action Buttons haben Height="44" (Touch-freundlich)
@@ -2330,7 +2330,7 @@ namespace RagnaController.Tests
         [Fact]
         public void FEAT026a_MainWindow_BigPictureButton_Exists()
         {
-            string xamlPath = @"C:\Hermes\RagnaController\src\RagnaController/MainWindow.xaml";
+            string xamlPath = @"C:\Hermes\RagnaController\src\RagnaController/Views/Windows/MainWindow.xaml";
             string xaml = File.ReadAllText(xamlPath);
 
             // Big Picture Toggle Button existiert in der Top Bar
@@ -2355,7 +2355,7 @@ namespace RagnaController.Tests
         {
             // Diese Logik kann nicht direkt getestet werden ohne MainWindow-Instanz,
             // aber wir prüfen dass die Methode im Code-Behind existiert
-            string csPath = @"C:\Hermes\RagnaController\src\RagnaController/MainWindow.xaml.cs";
+            string csPath = @"C:\Hermes\RagnaController\src\RagnaController/Views/Windows/MainWindow.xaml.cs";
             string cs = File.ReadAllText(csPath);
 
             Assert.Contains("ApplyBigPictureMode", cs);

@@ -1,0 +1,310 @@
+<Window x:Class="RagnaController.Views.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RagnaController"
+        xmlns:ctrl="clr-namespace:RagnaController.Controls"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:core="clr-namespace:RagnaController.Core"
+        mc:Ignorable="d"
+        Title="RagnaController" Height="800" Width="1200"
+        MinHeight="600" MinWidth="900"
+        Background="Transparent" WindowStyle="None" AllowsTransparency="True"
+        Loaded="Window_Loaded" Closing="Window_Closing" StateChanged="Window_StateChanged"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
+    
+
+    <!-- ROOT with radial depth gradient + glassmorphism -->
+    <Border CornerRadius="{StaticResource RadiusXl}" BorderThickness="1" BorderBrush="{StaticResource BgBorder}">
+        <Border.Background>
+            <RadialGradientBrush Center="0.18,0" RadiusX="0.9" RadiusY="0.9">
+                <GradientStop Color="#0f0f12" Offset="0"/>
+                <GradientStop Color="#1a1a20" Offset="0.55"/>
+                <GradientStop Color="#0f0f12" Offset="1"/>
+            </RadialGradientBrush>
+        </Border.Background>
+        <Border CornerRadius="{StaticResource RadiusXl}" ClipToBounds="True">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Top Bar (Modern Header) -->
+                <Grid x:Name="TopBar" Grid.Row="0" Height="56" Background="Transparent" Margin="16,12,16,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Brand + Status -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="4" Height="28" Background="{StaticResource AccentBlue}" Effect="{StaticResource BlueGlow}" Margin="0,0,12,0" CornerRadius="2"/>
+                        <TextBlock Text="RAGNACONTROLLER" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
+                        <Border Style="{StaticResource GlassPanel}" Margin="16,0,0,0" Padding="10,4" CornerRadius="{StaticResource RadiusSm}">
+                            <StackPanel Orientation="Horizontal">
+                                <Ellipse Width="8" Height="8" Fill="{StaticResource LiveColor}" VerticalAlignment="Center" Margin="0,0,6,0" Effect="{StaticResource GoldGlow}"/>
+                                <TextBlock Text="SYSTEM ONLINE" Foreground="{StaticResource LiveColor}" FontSize="9" FontWeight="SemiBold" FontFamily="Segoe UI Variable, Segoe UI" VerticalAlignment="Center" Typography.Capitals="AllSmallCaps"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- Center: Tab Navigation (Modern Pill Style) -->
+                    <Border Grid.Column="1" Style="{StaticResource GlassPanel}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="4" CornerRadius="{StaticResource RadiusLg}">
+                        <StackPanel x:Name="TabNavigation" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Button x:Name="TabBtnBase" Content="Base" Style="{StaticResource TabButton}" Click="TabBase_Click" Tag="Base"/>
+                            <Button x:Name="TabBtnL1" Content="L1+" Style="{StaticResource TabButton}" Click="TabL1_Click" Tag="L1+"/>
+                            <Button x:Name="TabBtnR1" Content="R1+" Style="{StaticResource TabButton}" Click="TabR1_Click" Tag="R1+"/>
+                            <Button x:Name="TabBtnL2" Content="L2+" Style="{StaticResource TabButton}" Click="TabL2_Click" Tag="L2+"/>
+                            <Button x:Name="TabBtnR2" Content="R2+" Style="{StaticResource TabButton}" Click="TabR2_Click" Tag="R2+"/>
+                            <Button x:Name="TabBtnHealth" Content="Health" Style="{StaticResource TabButton}" Click="TabHealth_Click" Tag="Health"/>
+                            <Button x:Name="TabBtnTelemetry" Content="Telemetrie" Style="{StaticResource TabButton}" Click="TabTelemetry_Click" Tag="Telemetry"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Right: Profile Selector + Window Controls -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0">
+                        <Border x:Name="ProfileSelectorBorder" Style="{StaticResource GlassPanel}" Padding="0,0,8,0" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,12,0" Effect="{StaticResource CardShadow}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ComboBox x:Name="ProfileCombo" Width="200" Style="{StaticResource DarkComboBox}" SelectionChanged="ProfileCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_ProfileCombo_Tooltip}" Grid.Column="0" Margin="8,4,0,4" VerticalAlignment="Center"/>
+                                <Border Grid.Column="1" Width="36" Height="36" Background="{StaticResource AccentBlue}" CornerRadius="0,{StaticResource RadiusMd},{StaticResource RadiusMd},0" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Right" Effect="{StaticResource BlueGlow}">
+                                    <Path Data="M0,0 L4,4 L8,0" Stroke="{StaticResource TextPrimary}" StrokeThickness="1.8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button x:Name="BtnMinimize" Content="&#xE921;" Style="{StaticResource WindowControlButton}" Click="BtnMinimize_Click" ToolTip="Minimize" AutomationProperties.Name="Minimize" Width="36" Height="36"/>
+                            <Button x:Name="BtnMaximize" Content="&#xE922;" Style="{StaticResource WindowControlButton}" Click="BtnMaximize_Click" ToolTip="Maximize" AutomationProperties.Name="Maximize" Width="36" Height="36"/>
+                            <Button x:Name="BtnClose" Content="&#xE8BB;" Style="{StaticResource WindowControlButtonClose}" Click="BtnClose_Click" ToolTip="Close" AutomationProperties.Name="Close" Width="36" Height="36"/>
+                            <Button x:Name="BtnBigPicture" Content="🎮" Style="{StaticResource WindowControlButton}" Click="BtnBigPicture_Click" ToolTip="Big Picture Mode (Steam Deck)" AutomationProperties.Name="Big Picture Mode" Width="36" Height="36" FontSize="16"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Main Content Area -->
+                <Grid Grid.Row="1" Margin="16,0,16,16">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="360"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- LEFT: Controller Visualization + Quick Actions -->
+                    <Border Grid.Column="0" Style="{StaticResource GlassPanel}" Margin="0,0,8,0" Effect="{StaticResource CardShadow}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Controller Visualization Header -->
+                            <TextBlock Grid.Row="0" Text="CONTROLLER" Style="{StaticResource Eyebrow}" Margin="16,16,16,8"/>
+
+                            <!-- Controller SVG Canvas with Interactive Layout -->
+                            <Border Grid.Row="1" Margin="16,0,16,8" Background="{StaticResource BgPanel}" CornerRadius="{StaticResource RadiusMd}" BorderBrush="{StaticResource BgBorder}" BorderThickness="1">
+                                <Viewbox Stretch="Uniform" Margin="16">
+                                    <Canvas Width="400" Height="280">
+                                        <!-- Controller Body Outline -->
+                                        <Path Data="M20,140 C20,60 60,20 140,20 L260,20 C340,20 380,60 380,140 L380,220 C380,260 340,280 260,280 L140,280 C60,280 20,260 20,220 Z" 
+                                              Stroke="{StaticResource AccentBlue}" StrokeThickness="2" Fill="{StaticResource BgSecondary}" Opacity="0.4" Effect="{StaticResource BlueGlow}"/>
+                                        
+                                        <!-- D-Pad -->
+                                        <Border Canvas.Left="50" Canvas.Top="60" Width="70" Height="70" Background="{StaticResource BgTertiary}" CornerRadius="16" BorderBrush="{StaticResource BgBorder}" BorderThickness="1">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="*"/>
+                                                    <RowDefinition Height="*"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Border x:Name="DpadUp" Grid.Row="0" Grid.Column="1" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Up"/>
+                                                <Border x:Name="DpadLeft" Grid.Row="1" Grid.Column="0" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Left"/>
+                                                <Border x:Name="DpadCenter" Grid.Row="1" Grid.Column="1" Background="{StaticResource BgPanel}" CornerRadius="4" Margin="4" BorderBrush="{StaticResource BgBorder}" BorderThickness="1"/>
+                                                <Border x:Name="DpadRight" Grid.Row="1" Grid.Column="2" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Right"/>
+                                                <Border x:Name="DpadDown" Grid.Row="2" Grid.Column="1" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Down"/>
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Left Stick -->
+                                        <Ellipse Canvas.Left="50" Canvas.Top="150" Width="70" Height="70" Stroke="{StaticResource AccentBlue}" StrokeThickness="2" Fill="Transparent" Opacity="0.3" ToolTip="Left Stick">
+                                            <Ellipse.Effect>
+                                                <DropShadowEffect Color="#3b82f6" BlurRadius="15" ShadowDepth="0" Opacity="0.4"/>
+                                            </Ellipse.Effect>
+                                        </Ellipse>
+                                        <Ellipse x:Name="LeftStickPos" Canvas.Left="80" Canvas.Top="180" Width="10" Height="10" Fill="{StaticResource AccentBlue}" Effect="{StaticResource BlueGlow}" IsHitTestVisible="False"/>
+
+                                        <!-- Right Stick -->
+                                        <Ellipse Canvas.Left="280" Canvas.Top="150" Width="70" Height="70" Stroke="{StaticResource AccentPurple}" StrokeThickness="2" Fill="Transparent" Opacity="0.3" ToolTip="Right Stick">
+                                            <Ellipse.Effect>
+                                                <DropShadowEffect Color="#8b5cf6" BlurRadius="15" ShadowDepth="0" Opacity="0.4"/>
+                                            </Ellipse.Effect>
+                                        </Ellipse>
+                                        <Ellipse x:Name="RightStickPos" Canvas.Left="310" Canvas.Top="180" Width="10" Height="10" Fill="{StaticResource AccentPurple}" Effect="{StaticResource PurpleGlow}" IsHitTestVisible="False"/>
+
+                                        <!-- Action Buttons (A/B/X/Y) - Modern styling -->
+                                        <Ellipse x:Name="BtnA" Canvas.Left="330" Canvas.Top="80" Width="42" Height="42" Fill="#ef4444" Effect="{StaticResource GoldGlow}" ToolTip="Button A"/>
+                                        <Ellipse x:Name="BtnB" Canvas.Left="380" Canvas.Top="30" Width="42" Height="42" Fill="#f59e0b" Effect="{StaticResource GoldGlow}" ToolTip="Button B"/>
+                                        <Ellipse x:Name="BtnX" Canvas.Left="280" Canvas.Top="30" Width="42" Height="42" Fill="#3b82f6" Effect="{StaticResource BlueGlow}" ToolTip="Button X"/>
+                                        <Ellipse x:Name="BtnY" Canvas.Left="330" Canvas.Top="-20" Width="42" Height="42" Fill="#a855f7" Effect="{StaticResource PurpleGlow}" ToolTip="Button Y"/>
+                                        
+                                        <TextBlock Canvas.Left="341" Canvas.Top="86" Text="A" Foreground="White" FontWeight="Bold" FontSize="14" IsHitTestVisible="False"/>
+                                        <TextBlock Canvas.Left="391" Canvas.Top="36" Text="B" Foreground="White" FontWeight="Bold" FontSize="14" IsHitTestVisible="False"/>
+                                        <TextBlock Canvas.Left="291" Canvas.Top="36" Text="X" Foreground="White" FontWeight="Bold" FontSize="14" IsHitTestVisible="False"/>
+                                        <TextBlock Canvas.Left="341" Canvas.Top="-14" Text="Y" Foreground="White" FontWeight="Bold" FontSize="14" IsHitTestVisible="False"/>
+
+                                        <!-- Trigger Indicators -->
+                                        <Border x:Name="TriggerL" Canvas.Left="20" Canvas.Top="10" Width="24" Height="60" Background="{StaticResource BgTertiary}" CornerRadius="12" BorderBrush="{StaticResource AccentBlueDim}" BorderThickness="2" Opacity="0.5" ToolTip="L2 Trigger"/>
+                                        <Border x:Name="TriggerR" Canvas.Left="356" Canvas.Top="10" Width="24" Height="60" Background="{StaticResource BgTertiary}" CornerRadius="12" BorderBrush="{StaticResource AccentPurpleDim}" BorderThickness="2" Opacity="0.5" ToolTip="R2 Trigger"/>
+                                        <Border x:Name="BumperL" Canvas.Left="20" Canvas.Top="75" Width="24" Height="30" Background="{StaticResource BgTertiary}" CornerRadius="8" BorderBrush="{StaticResource AccentBlueDim}" BorderThickness="1" Opacity="0.5" ToolTip="L1 Bumper"/>
+                                        <Border x:Name="BumperR" Canvas.Left="356" Canvas.Top="75" Width="24" Height="30" Background="{StaticResource BgTertiary}" CornerRadius="8" BorderBrush="{StaticResource AccentPurpleDim}" BorderThickness="1" Opacity="0.5" ToolTip="R1 Bumper"/>
+
+                                        <!-- Touchpad Center -->
+                                        <Border Canvas.Left="150" Canvas.Top="100" Width="100" Height="60" Background="{StaticResource BgTertiary}" CornerRadius="20" BorderBrush="{StaticResource BgBorder}" BorderThickness="1" ToolTip="Touchpad">
+                                            <Border.Effect>
+                                                <DropShadowEffect Color="#000000" BlurRadius="10" ShadowDepth="2" Opacity="0.3"/>
+                                            </Border.Effect>
+                                        </Border>
+
+                                        <!-- Start/Select/PS Buttons -->
+                                        <Ellipse Canvas.Left="180" Canvas.Top="115" Width="18" Height="18" Fill="#6b7280" ToolTip="Share"/>
+                                        <Ellipse Canvas.Left="205" Canvas.Top="115" Width="18" Height="18" Fill="#6b7280" ToolTip="Options"/>
+                                        <Ellipse x:Name="BtnPS" Canvas.Left="192" Canvas.Top="140" Width="20" Height="20" Stroke="{StaticResource AccentBlue}" StrokeThickness="2" Fill="Transparent" ToolTip="PS Button">
+                                            <Ellipse.Effect>
+                                                <DropShadowEffect Color="#3b82f6" BlurRadius="10" ShadowDepth="0" Opacity="0.5"/>
+                                            </Ellipse.Effect>
+                                        </Ellipse>
+                                    </Canvas>
+                                </Viewbox>
+                            </Border>
+
+                            <!-- Quick Actions -->
+                            <StackPanel Grid.Row="2" Orientation="Vertical" Margin="16,0,16,16" HorizontalAlignment="Stretch">
+                                <Button x:Name="BtnCalibrateQuick" Content="Calibrate" Style="{StaticResource PrimaryButton}" Height="44" Margin="0,0,0,8" Click="BtnCalibrateQuick_Click"/>
+                                <Button x:Name="BtnTestInput" Content="Test Input" Style="{StaticResource GhostButton}" Height="44" Margin="0,0,0,8" Click="BtnTestInput_Click"/>
+                                <Button x:Name="BtnOpenRemap" Content="Button Remapping" Style="{StaticResource GhostButton}" Height="44" Click="BtnOpenRemap_Click"/>
+                                <Button x:Name="BtnRadial" Content="Radial Menu" Style="{StaticResource GhostButton}" Height="44" Margin="0,8,0,0" Click="BtnRadial_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- CENTER: Dynamic Panels -->
+                    <Grid Grid.Column="1">
+                        <!-- Base Panel -->
+                        <Border x:Name="PanelBase" Style="{StaticResource GlassPanel}" Visibility="Visible" Effect="{StaticResource CardShadow}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
+                                <StackPanel x:Name="OverviewPanelContent"/>
+                            </ScrollViewer>
+                        </Border>
+
+                        <!-- L1+ Panel -->
+                        <Border x:Name="PanelL1" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
+                                <StackPanel x:Name="L1PanelContent"/>
+                            </ScrollViewer>
+                        </Border>
+
+                        <!-- R1+ Panel -->
+                        <Border x:Name="PanelR1" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
+                                <StackPanel x:Name="R1PanelContent"/>
+                            </ScrollViewer>
+                        </Border>
+
+                        <!-- L2+ Panel -->
+                        <Border x:Name="PanelL2" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
+                                <StackPanel x:Name="L2PanelContent"/>
+                            </ScrollViewer>
+                        </Border>
+
+                        <!-- R2+ Panel -->
+                        <Border x:Name="PanelR2" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
+                                <StackPanel x:Name="R2PanelContent"/>
+                            </ScrollViewer>
+                        </Border>
+
+                        <!-- Health Panel -->
+                        <Border x:Name="PanelHealth" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
+                                <StackPanel x:Name="HealthPanelContent"/>
+                            </ScrollViewer>
+                        </Border>
+
+                        <!-- Telemetrie-Panel (UI-011) -->
+                        <ctrl:TelemetryPanel x:Name="TelemetryPanelControl" Visibility="Collapsed" Panel.ZIndex="10"/>
+
+                        <!-- Info/Log Panel -->
+                        <StackPanel x:Name="LogPanel" Visibility="Collapsed">
+                            <Border Style="{StaticResource GlassPanel}" Effect="{StaticResource CardShadow}" Padding="12" Margin="0,0,0,8">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="FILTER" Style="{StaticResource Eyebrow}" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                                    <CheckBox x:Name="LogFilterEngine" Content="Engine" IsChecked="True" Style="{StaticResource ToggleSwitch}" Margin="0,0,12,0" Checked="LogFilter_Changed" Unchecked="LogFilter_Changed"/>
+                                    <CheckBox x:Name="LogFilterInput" Content="Input" IsChecked="True" Style="{StaticResource ToggleSwitch}" Margin="0,0,12,0" Checked="LogFilter_Changed" Unchecked="LogFilter_Changed"/>
+                                    <CheckBox x:Name="LogFilterProfile" Content="Profile" IsChecked="True" Style="{StaticResource ToggleSwitch}" Checked="LogFilter_Changed" Unchecked="LogFilter_Changed"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource GlassPanel}" MinHeight="220" Effect="{StaticResource CardShadow}">
+                                <ScrollViewer x:Name="LogScrollViewer2" VerticalScrollBarVisibility="Auto" Padding="12">
+                                    <TextBlock x:Name="LogTextBlock2" Text="" Foreground="{StaticResource TextTertiary}" FontSize="9" FontFamily="Consolas" TextWrapping="Wrap"/>
+                                </ScrollViewer>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- RIGHT: Status Sidebar -->
+                    <Border Grid.Column="2" Style="{StaticResource GlassPanel}" Margin="8,0,0,0" Effect="{StaticResource CardShadow}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Connection Status Header -->
+                            <TextBlock Grid.Row="0" Text="STATUS" Style="{StaticResource Eyebrow}" Margin="16,16,16,8"/>
+                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="0,0,0,16" Padding="0,0,16,0">
+                                <StackPanel Margin="16,0,16,0"/>
+                            </ScrollViewer>
+
+                            <!-- Live Log Viewer -->
+                            <Border Grid.Row="2" Background="{StaticResource BgPanel}" CornerRadius="{StaticResource RadiusMd}" BorderBrush="{StaticResource BgBorder}" BorderThickness="1" Margin="16,0,16,16" Effect="{StaticResource CardShadow}">
+                                <Grid Margin="12">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                        <TextBlock Text="LIVE LOG" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
+                                        <CheckBox x:Name="ChkAutoScroll" Content="Auto-scroll" IsChecked="True" Margin="12,0,0,0" VerticalAlignment="Center" Foreground="{StaticResource TextTertiary}" FontSize="10" Style="{StaticResource ToggleSwitch}"/>
+                                        <Button x:Name="BtnClearLog" Content="Clear" Style="{StaticResource GhostButton}" Height="28" Padding="10,0" Margin="12,0,0,0" Click="BtnClearLog_Click"/>
+                                        <Button x:Name="BtnExportLog" Content="Export" Style="{StaticResource GhostButton}" Height="28" Padding="10,0" Margin="8,0,0,0" Click="BtnLogExport_Click"/>
+                                    </StackPanel>
+                                    <ScrollViewer x:Name="LogScrollViewer" VerticalScrollBarVisibility="Auto" Margin="0,8,0,8" MinHeight="160" MaxHeight="240">
+                                        <TextBlock x:Name="LogTextBlock" Text="" Foreground="#3A5020" FontSize="9" FontFamily="Consolas" TextWrapping="Wrap"/>
+                                    </ScrollViewer>
+                                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+                                        <TextBlock x:Name="LogLineCount" Text="0 lines" Foreground="{StaticResource TextTertiary}" FontSize="9" FontFamily="Consolas" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+    </Border>
+</Window>

@@ -90,9 +90,9 @@
   <ItemGroup>
     <Compile Include="App.xaml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ButtonRemappingWindow.xaml.cs" />
-    <Compile Include="ComboEditorWindow.xaml.cs" />
-    <Compile Include="CommunityBrowserWindow.xaml.cs" />
+    <Compile Include="Views\Editors\ButtonRemappingWindow.xaml.cs" />
+    <Compile Include="Views\Editors\ComboEditorWindow.xaml.cs" />
+    <Compile Include="Views\Dialogs\CommunityBrowserWindow.xaml.cs" />
     <Compile Include="ControllerTest\ControllerTestWindow.xaml.cs" />
     <Compile Include="ControllerTest\ControllerSessionRecorder.cs" />
     <Compile Include="ControllerTest\ControllerDiagnosticRunner.cs" />
@@ -221,13 +221,13 @@
                 <Compile Include="Core\WpfTickProvider.cs" />
                 <Compile Include="Core\Benchmarks\BenchmarkHarness.cs" />
     <Compile Include="Controls\TelemetryPanel.xaml.cs" />
-    <Compile Include="DaisyWheelWindow.xaml.cs" />
-    <Compile Include="DeveloperConsoleWindow.xaml.cs" />
-    <Compile Include="HandheldWindow.xaml.cs" />
-    <Compile Include="InGameOverlayWindow.xaml.cs" />
+    <Compile Include="Views\Dialogs\DaisyWheelWindow.xaml.cs" />
+    <Compile Include="Views\Dialogs\DeveloperConsoleWindow.xaml.cs" />
+    <Compile Include="Views\Overlays\HandheldWindow.xaml.cs" />
+    <Compile Include="Views\Overlays\InGameOverlayWindow.xaml.cs" />
     <Compile Include="LocStrings.Designer.cs" />
-    <Compile Include="MainWindow.xaml.cs" />
-    <Compile Include="MiniModeWindow.xaml.cs" />
+    <Compile Include="Views\Windows\MainWindow.xaml.cs" />
+    <Compile Include="Views\Overlays\MiniModeWindow.xaml.cs" />
     <Compile Include="Models\AdaptiveTriggerMode.cs" />
     <Compile Include="Models\ButtonAction.cs" />
         <Compile Include="Models\ButtonKey.cs" />
@@ -237,20 +237,19 @@
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\StorageDropPlanner.cs" />
         <Compile Include="Models\VirtualKey.cs" />
-        <Compile Include="Models\WindowTracker.cs" />
         <Compile Include="Models\BuffRegistry.cs" />
             <Compile Include="Core\ProfileValidator.cs" />
-            <Compile Include="ProfileLibraryWindow.xaml.cs" />
+            <Compile Include="Views\Dialogs\ProfileLibraryWindow.xaml.cs" />
     <Compile Include="Profiles\AppJsonContext.cs" />
     <Compile Include="Profiles\CharacterProfileResolver.cs" />
     <Compile Include="Profiles\Profile.cs" />
     <Compile Include="Profiles\ProfileManager.cs" />
-    <Compile Include="ProfileWizardWindow.xaml.cs" />
-    <Compile Include="RadialMenuWindow.xaml.cs" />
-    <Compile Include="RadialSetupWindow.xaml.cs" />
-    <Compile Include="SettingsWindow.xaml.cs" />
-    <Compile Include="SplashWindow.xaml.cs" />
-    <Compile Include="TutorialWindow.xaml.cs" />
+    <Compile Include="Views\Dialogs\ProfileWizardWindow.xaml.cs" />
+    <Compile Include="Views\Editors\RadialMenuWindow.xaml.cs" />
+    <Compile Include="Views\Editors\RadialSetupWindow.xaml.cs" />
+    <Compile Include="Views\Windows\SettingsWindow.xaml.cs" />
+    <Compile Include="Views\Windows\SplashWindow.xaml.cs" />
+    <Compile Include="Views\Dialogs\TutorialWindow.xaml.cs" />
   </ItemGroup>
 
   <ItemGroup>

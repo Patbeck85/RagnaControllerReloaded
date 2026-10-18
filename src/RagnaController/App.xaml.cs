@@ -8,6 +8,9 @@ using System.Windows.Media.Animation;
 using RagnaController.Core;
 using RagnaController.Profiles;
 using RagnaController.Models;
+using RagnaController.Views.Windows;
+using RagnaController.Views.Overlays;
+using RagnaController.Views.Dialogs;
 
 namespace RagnaController
 {

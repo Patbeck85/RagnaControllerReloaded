@@ -1,0 +1,997 @@
+using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using Microsoft.Win32;
+using RagnaController.Core;
+using RagnaController.Models;
+using RagnaController.Profiles;
+using RagnaController.ControllerTest;
+using RagnaController.Services;
+using RagnaController.Views.Overlays;
+using RagnaController.Views.Editors;
+
+namespace RagnaController.Views.Windows
+{
+    public partial class MainWindow : Window
+    {
+        private readonly HybridEngine   _engine;
+        private readonly ProfileManager _manager;
+        private Settings       _settings = Settings.Load();
+        private readonly System.Collections.Generic.List<IDisposable> _subs = new();
+        private bool _isMiniMode = false;
+        private bool _isBigPictureMode = false;
+        private readonly List<string> _logBuffer = new();
+        private MiniModeWindow? _miniWindow;
+        private bool _wasFocusLocked;
+        private readonly ToastService _toastService = new();
+        private readonly ProfileService _profileService;
+
+        private MainViewModel? _vm;
+        private DiscordRpcService? _discordRpc;
+        private TtsAnnouncerService? _ttsService;
+        private InGameOverlayWindow? _gameOverlay;
+        private ControllerTestWindow? _controllerTestWindow;
+        // UX-012: Gamepad-Navigation in der Hauptfenster (DPad/Tab-Fokus)
+        private GamepadUiNavigator? _navigator;
+
+        // Event handler delegates for proper cleanup in Window_Closing (MEMORY-001: no leaked references)
+        private Action<EngineStatus>? _statusChangedHandler;
+        private Action<int>? _profileQuickSwitchHandler;
+        private Action<string>? _logMessageHandler;
+        private Action<string>? _batteryChangedHandler;
+        private Action<string>? _controllerConnectedHandler;
+        private Action? _controllerDisconnectedHandler;
+        private Action? _restoreMainWindowRequestedHandler;
+
+#pragma warning disable CS0649 // WPF: Fields initialized in XAML
+        // Toast/Notifications (NOT in XAML - created dynamically)
+        private Border? ToastBorder;
+        private TextBlock? ToastText;
+        private SolidColorBrush? ToastBg;
+
+#pragma warning restore CS0649
+
+        public MainWindow(HybridEngine engine, ProfileManager manager, MainViewModel vm)
+        {
+            _engine  = engine;
+            _manager = manager;
+            _vm     = vm; // Assign the passed ViewModel
+            InitializeComponent();
+            _toastService.Initialize(ToastBorder!, ToastText!, ToastBg!);
+            _profileService = new ProfileService(_manager, _settings, _engine, msg => ShowToast(msg));
+            DataContext = vm;
+
+            // UX-019: Keyboard shortcuts
+            PreviewKeyDown += Window_PreviewKeyDown;
+
+            // UX-012: Gamepad-Navigation (DPad/Tab) — vor der VM-Guard-Klausel initialisieren,
+            // damit auch bei early return der Navigator sauber in Window_Closing disposed wird.
+            _navigator = new GamepadUiNavigator(_engine.ControllerSvc) { ActiveWindow = this };
+
+            // Initialize ViewModel first before setting up services
+            if (vm == null)
+            {
+                ShowToast("ViewModel not initialized", isError: true);
+                return;
+            }
+
+            _discordRpc = new DiscordRpcService(_settings);
+            _ttsService = new TtsAnnouncerService(_settings);
+
+            _statusChangedHandler = (s) => Dispatcher.BeginInvoke(() =>
+            {
+                // Status displayed in Health tab panel
+                _vm?.ApplyEngineStatus(s, _engine.ControllerName);
+            });
+            _engine.StatusChanged += _statusChangedHandler;
+
+            _subs.Add(_engine.Messenger.Subscribe<SnapshotReadyMessage>(msg =>
+            {
+                Dispatcher.BeginInvoke(() =>
+                {
+                    _vm?.ApplySnapshot(msg.Snapshot);
+
+                    if (msg.Snapshot.FocusLocked && !_wasFocusLocked)
+                    {
+                        _ttsService?.Speak("Game Paused");
+                        _wasFocusLocked = true;
+                    }
+                    else if (!msg.Snapshot.FocusLocked && _wasFocusLocked)
+                    {
+                        _ttsService?.Speak("Game Resumed");
+                        _wasFocusLocked = false;
+                    }
+                    if (_isMiniMode && _miniWindow != null)
+                    {
+                        // Battery read must happen on UI thread — SDL calls aren't thread-safe
+                        // from the engine tick context. Cache via Dispatcher.
+                        Dispatcher.BeginInvoke(() =>
+                        {
+                            string pName = (ProfileCombo?.SelectedItem is Profiles.Profile pf2) ? pf2.Name : "—";
+                            string battery = _engine.ControllerSvc?.BatteryLevel ?? "-";
+                            _miniWindow?.UpdateSnapshot(msg.Snapshot, pName, _engine.IsRunning, battery);
+                        });
+                    }
+                });
+            }));
+
+            _subs.Add(_engine.Messenger.Subscribe<EngineStatusMessage>(msg =>
+            {
+                Dispatcher.BeginInvoke(() =>
+                {
+                    _vm?.ApplyEngineStatus(msg.Status, msg.ControllerName);
+                });
+            }));
+
+            _subs.Add(_engine.Messenger.Subscribe<BatteryChangedMessage>(msg =>
+            {
+                // Battery changed - handled internally
+            }));
+
+            _subs.Add(_engine.Messenger.Subscribe<BuffWarningMessage>(msg => Dispatcher.BeginInvoke(() =>
+            {
+                _ttsService?.Speak($"Warning: {msg.ActionLabel} expiring.");
+                ShowToast($"⏳ Buff expiring soon: {msg.ActionLabel}", isError: true);
+            })));
+
+            _profileQuickSwitchHandler = delta => Dispatcher.BeginInvoke(() =>
+            {
+                if (_manager.Profiles.Count == 0) return;
+                int idx  = _manager.Profiles.IndexOf(ProfileCombo.SelectedItem as Profile ?? _manager.Profiles[0]);
+                int next = (idx + delta + _manager.Profiles.Count) % _manager.Profiles.Count;
+                ProfileCombo.SelectedItem = _manager.Profiles[next];
+                if (ProfileCombo.SelectedItem is Profile p)
+                {
+                    _vm?.UpdateClassImage(p.Class);
+                }
+            });
+            _engine.ProfileQuickSwitch += _profileQuickSwitchHandler;
+
+            _logMessageHandler = msg => Dispatcher.BeginInvoke(() =>
+            {
+                if (LogTextBlock != null)
+                {
+                    _logBuffer.Add(msg);
+                    if (_logBuffer.Count > 500) _logBuffer.RemoveRange(0, 100);
+                    ApplyLogFilter();
+                    LogScrollViewer?.ScrollToEnd();
+                }
+                if (LogTextBlock2 != null)
+                {
+                    LogScrollViewer2?.ScrollToEnd();
+                }
+            });
+            _engine.LogMessage += _logMessageHandler;
+
+            _batteryChangedHandler = level => Dispatcher.BeginInvoke(() =>
+            {
+                // Battery level updated - could show in status or toast
+            });
+            _engine.BatteryChanged += _batteryChangedHandler;
+
+            _controllerConnectedHandler = name => Dispatcher.BeginInvoke(() =>
+            {
+                _ttsService?.Speak("Controller connected");
+                SetFooterButtonsEnabled(true);
+                
+                // Show controller test window when controller connects
+                ShowControllerTestWindow();
+                
+                // Refresh health tab if visible
+                if (_activeTabPanel == PanelHealth)
+                    PopulateTabPanel(PanelHealth);
+            });
+            _engine.ControllerConnected += _controllerConnectedHandler;
+
+            _controllerDisconnectedHandler = () => Dispatcher.BeginInvoke(() =>
+            {
+                _ttsService?.Speak("Controller disconnected");
+                SetFooterButtonsEnabled(false);
+                
+                // Close controller test window when controller disconnects
+                _controllerTestWindow?.Close();
+                _controllerTestWindow = null;
+                
+                // Refresh health tab if visible
+                if (_activeTabPanel == PanelHealth)
+                    PopulateTabPanel(PanelHealth);
+            });
+            _engine.ControllerDisconnected += _controllerDisconnectedHandler;
+
+            _restoreMainWindowRequestedHandler = () => Dispatcher.BeginInvoke(() =>
+            {
+                if (_isMiniMode) SwitchFromMiniMode();
+            });
+            _engine.RestoreMainWindowRequested += _restoreMainWindowRequestedHandler;
+
+            // ── Profile Dropdown initialisieren (via ProfileService) ─────────────
+            ProfileCombo.ItemsSource = _profileService.GetAllProfiles();
+
+            // Letztes Profil wiederherstellen oder erstes nehmen
+            var lastProfile = _profileService.LoadLastOrFirst();
+            if (lastProfile != null)
+            {
+                ProfileCombo.SelectedItem = lastProfile;
+                _profileService.ApplyProfile(lastProfile);
+            }
+
+            // Initialize tab button mapping
+            InitTabBtnMap();
+
+            // UI-011: Telemetrie-Panel mit Engine verdrahten (einmalig)
+            if (TelemetryPanelControl != null)
+                TelemetryPanelControl.SetEngine(_engine);
+
+            // Select default tab (Base)
+            SelectTab(PanelBase, null);
+        }
+
+        public void SwitchFromMiniMode()
+                {
+                    _isMiniMode = false;
+                    Show(); WindowState = WindowState.Normal; Activate();
+                    if (_miniWindow != null)
+                    {
+                        var w = _miniWindow;
+                        _miniWindow = null;
+                        try { w.Close(); } 
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"[MainWindow] SwitchFromMiniMode Close failed: {ex.Message}");
+                        }
+                    }
+                }
+
+        private void RestoreWindow()
+        {
+            Show();
+            WindowState = WindowState.Normal;
+            Activate();
+        }
+
+        private void SwitchToMiniMode()
+        {
+            if (_isMiniMode) return;
+            _isMiniMode = true;
+            _miniWindow = new MiniModeWindow { Owner = this };
+            _miniWindow.Closed += (_, _) =>
+            {
+                if (_isMiniMode) SwitchFromMiniMode();
+            };
+            _miniWindow.Show();
+            Hide();
+        }
+
+        private void Window_MouseLeftButtonDown(object s, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed) DragMove();
+        }
+
+        private void BtnMinimize_Click(object s, RoutedEventArgs e) => WindowState = WindowState.Minimized;
+        private void BtnClose_Click(object s, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void BtnBigPicture_Click(object s, RoutedEventArgs e)
+        {
+            // Big Picture Mode für Steam Deck: Maximieren + UI-Skalierung aktivieren
+            _isBigPictureMode = !_isBigPictureMode;
+            ApplyBigPictureMode(_isBigPictureMode);
+        }
+
+        /// <summary>
+        /// Wendet das Big Picture Mode Layout an: 150% Font Scaling,
+        /// min. 44×44px Touch-Targets, größere Spacing für Touch-Bedienung.
+        /// </summary>
+        private void ApplyBigPictureMode(bool enabled)
+        {
+            // Fenster maximiert für Big Picture
+            WindowState = enabled ? WindowState.Maximized : WindowState.Normal;
+
+            // Design-System Resource für Font Scale setzen (über App.Resources)
+            var scaleKey = enabled ? "FontScaleLarge" : "FontScaleNormal";
+            if (Application.Current.Resources.Contains(scaleKey))
+            {
+                Application.Current.Resources["FontScaleNormal"] = Application.Current.Resources[scaleKey];
+            }
+
+            // Touch-Targets für Haupt-Buttons vergrößern (min. 44×44px)
+            SetButtonMinSize(BtnCalibrateQuick, enabled ? 56 : 44);
+            SetButtonMinSize(BtnTestInput, enabled ? 56 : 44);
+            SetButtonMinSize(BtnOpenRemap, enabled ? 56 : 44);
+            SetButtonMinSize(BtnRadial, enabled ? 56 : 44);
+            SetButtonMinSize(BtnBigPicture, enabled ? 48 : 36);
+
+            // Fenster-Controls (Min/Max/Close) für Touch vergrößern
+            SetButtonMinSize(BtnMinimize, enabled ? 48 : 36);
+            SetButtonMinSize(BtnMaximize, enabled ? 48 : 36);
+            SetButtonMinSize(BtnClose, enabled ? 48 : 36);
+
+            // ComboBox für Touch vergrößern
+            if (ProfileCombo != null)
+            {
+                ProfileCombo.MinHeight = enabled ? 44 : 32;
+                ProfileCombo.Height = enabled ? 44 : double.NaN;
+            }
+
+            // Log-Buttons für Touch
+            SetButtonMinSize(BtnClearLog, enabled ? 44 : 28);
+            SetButtonMinSize(BtnExportLog, enabled ? 44 : 28);
+
+            System.Diagnostics.Debug.WriteLine($"[MainWindow] Big Picture Mode: {(enabled ? "ON" : "OFF")}");
+        }
+
+        private void SetButtonMinSize(Button? btn, double minSize)
+        {
+            if (btn != null)
+            {
+                btn.MinWidth = minSize;
+                btn.MinHeight = minSize;
+                if (btn.Width == 0 || btn.Width == double.NaN) btn.Width = minSize;
+                if (btn.Height == 0 || btn.Height == double.NaN) btn.Height = minSize;
+            }
+        }
+
+        private void TabBase_Click(object s, RoutedEventArgs e) => SelectTab(PanelBase, null);
+        private void TabL1_Click(object s, RoutedEventArgs e) => SelectTab(PanelL1, null);
+        private void TabR1_Click(object s, RoutedEventArgs e) => SelectTab(PanelR1, null);
+        private void TabL2_Click(object s, RoutedEventArgs e) => SelectTab(PanelL2, null);
+        private void TabR2_Click(object s, RoutedEventArgs e) => SelectTab(PanelR2, null);
+        private void TabHealth_Click(object s, RoutedEventArgs e) => SelectTab(PanelHealth, null);
+        private void TabTelemetry_Click(object s, RoutedEventArgs e) => SelectTelemetryTab();
+
+        /// <summary>UI-011: Telemetrie-Tab aktivieren (kein Mapping-Panel → eigener Pfad).</summary>
+        private void SelectTelemetryTab()
+        {
+            // Alle Mapping-Panels ausblenden
+            var allPanels = new[] { PanelBase, PanelL1, PanelR1, PanelL2, PanelR2, PanelHealth };
+            foreach (var p2 in allPanels)
+                if (p2 != null) p2.Visibility = Visibility.Collapsed;
+
+            // Reset aller Tab-Buttons inkl. Telemetrie
+            var allTabBtns = new[] { TabBtnBase, TabBtnL1, TabBtnR1, TabBtnL2, TabBtnR2, TabBtnHealth, TabBtnTelemetry };
+            foreach (var btn in allTabBtns)
+                if (btn != null) btn.Style = (Style)FindResource("TabButton");
+
+            if (TabBtnTelemetry != null) TabBtnTelemetry.Style = (Style)FindResource("TabButtonActive");
+
+            // Log-Panel ausblenden (konsistent mit Mapping-Tabs)
+            if (LogPanel != null)
+                LogPanel.Visibility = Visibility.Collapsed;
+
+            TelemetryPanelControl.Visibility = Visibility.Visible;
+            _activeTabPanel = null; // Telemetrie ist kein Profil-Mapping-Panel
+        }
+
+        private Border? _activeTabPanel;
+
+        private readonly Dictionary<object, Button?> _panelToTabBtn = new();
+        private void InitTabBtnMap()
+        {
+            _panelToTabBtn[PanelBase] = TabBtnBase;
+            _panelToTabBtn[PanelL1]   = TabBtnL1;
+            _panelToTabBtn[PanelR1]   = TabBtnR1;
+            _panelToTabBtn[PanelL2]   = TabBtnL2;
+            _panelToTabBtn[PanelR2]   = TabBtnR2;
+            _panelToTabBtn[PanelHealth] = TabBtnHealth;
+        }
+
+        private void SelectTab(Border? panel, Border? mappings, bool showInfo = false)
+        {
+            // Hide all mapping panels including Health + Telemetrie (UI-011)
+            var allPanels = new[] { PanelBase, PanelL1, PanelR1, PanelL2, PanelR2, PanelHealth };
+            foreach (var p2 in allPanels)
+                if (p2 != null) p2.Visibility = Visibility.Collapsed;
+
+            // Telemetrie-Panel ausblenden (eigener Tab-Pfad, UI-011)
+            if (TelemetryPanelControl != null)
+                TelemetryPanelControl.Visibility = Visibility.Collapsed;
+
+            // Reset all tab button styles
+            var allTabBtns = new[] { TabBtnBase, TabBtnL1, TabBtnR1, TabBtnL2, TabBtnR2, TabBtnHealth, TabBtnTelemetry };
+            foreach (var btn in allTabBtns)
+                if (btn != null) btn.Style = (Style)FindResource("TabButton");
+
+            // Activate the correct tab button
+            Button? activeBtn = panel switch
+            {
+                _ when panel == PanelBase => TabBtnBase,
+                _ when panel == PanelL1   => TabBtnL1,
+                _ when panel == PanelR1   => TabBtnR1,
+                _ when panel == PanelL2   => TabBtnL2,
+                _ when panel == PanelR2   => TabBtnR2,
+                _ when panel == PanelHealth => TabBtnHealth,
+                _ => null
+            };
+            if (activeBtn != null) activeBtn.Style = (Style)FindResource("TabButtonActive");
+
+            bool isMappingTab = panel != null;
+
+            // Show/hide Log panel — hidden when a mapping tab is active
+            if (LogPanel != null)
+                LogPanel.Visibility = isMappingTab ? Visibility.Collapsed : Visibility.Visible;
+
+            if (panel != null)
+            {
+                panel.Visibility = Visibility.Visible;
+                _activeTabPanel  = panel;
+                PopulateTabPanel(panel);
+            }
+        }
+
+        private void PopulateTabPanel(Border panel)
+        {
+            if (ProfileCombo?.SelectedItem is not Profiles.Profile p)
+            {
+                // Show empty-state with CTA to Profile Library when no profile selected
+                var emptyStack = new StackPanel { Margin = new Thickness(16), VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
+
+                var icon = new TextBlock
+                {
+                    Text = "📋",
+                    FontSize = 48,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    Margin = new Thickness(0, 0, 0, 16)
+                };
+                emptyStack.Children.Add(icon);
+
+                var title = new TextBlock
+                {
+                    Text = GetLocalizedString("Tab_NoProfileLoaded"),
+                    FontSize = 18,
+                    FontWeight = FontWeights.SemiBold,
+                    Foreground = new SolidColorBrush(Color.FromRgb(201, 209, 217)),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    TextAlignment = TextAlignment.Center,
+                    Margin = new Thickness(0, 0, 0, 8)
+                };
+                emptyStack.Children.Add(title);
+
+                var desc = new TextBlock
+                {
+                    Text = GetLocalizedString("Tab_NoProfileLoaded_Desc"),
+                    FontSize = 13,
+                    Foreground = new SolidColorBrush(Color.FromRgb(136, 144, 156)),
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    TextAlignment = TextAlignment.Center,
+                    TextWrapping = TextWrapping.Wrap,
+                    MaxWidth = 300,
+                    Margin = new Thickness(0, 0, 0, 24)
+                };
+                emptyStack.Children.Add(desc);
+
+                var ctaBtn = new Button
+                {
+                    Content = GetLocalizedString("Tab_OpenProfileLibrary"),
+                    Style = (Style)FindResource("PrimaryButton"),
+                    Width = 200,
+                    Height = 44,
+                    FontSize = 14,
+                    HorizontalAlignment = HorizontalAlignment.Center
+                };
+                ctaBtn.Click += (s, e) => OpenProfileLibrary();
+                emptyStack.Children.Add(ctaBtn);
+
+                panel.Child = new ScrollViewer { Content = emptyStack, VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+                return;
+            }
+
+            // Determine which button group this panel represents
+            string layerKey = panel == PanelBase ? "" : panel == PanelL1 ? "L1+" :
+                              panel == PanelR1 ? "R1+" : panel == PanelL2 ? "L2+" : panel == PanelR2 ? "R2+" : "";
+
+            var stack = new StackPanel { Margin = new Thickness(8) };
+
+            // Health Panel has special content
+            if (panel == PanelHealth)
+            {
+                var healthStack = new StackPanel();
+                
+                // Engine Status
+                var engineStack = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal };
+                engineStack.Children.Add(new TextBlock { 
+                    Text = "Engine:", 
+                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)), 
+                    FontSize = 10.5, FontWeight = System.Windows.FontWeights.SemiBold, Margin = new Thickness(0, 0, 8, 0)
+                });
+                engineStack.Children.Add(new TextBlock { 
+                    Text = _engine.IsRunning ? "RUNNING" : "STOPPED", 
+                    Foreground = Brushes.Lime, 
+                    FontSize = 13, FontWeight = System.Windows.FontWeights.Bold 
+                });
+                var engineBorder = new Border { 
+                    Background = new SolidColorBrush(Color.FromRgb(10, 12, 20)), 
+                    CornerRadius = new CornerRadius(4), Padding = new Thickness(12), Margin = new Thickness(0, 0, 0, 8),
+                    Child = engineStack
+                };
+                healthStack.Children.Add(engineBorder);
+
+                // Profile Info
+                var profileStack = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal };
+                profileStack.Children.Add(new TextBlock { 
+                    Text = "Profile:", 
+                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)), 
+                    FontSize = 10.5, FontWeight = System.Windows.FontWeights.SemiBold, Margin = new Thickness(0, 0, 8, 0)
+                });
+                profileStack.Children.Add(new TextBlock { 
+                    Text = p.Name ?? "None", 
+                    Foreground = Brushes.White, 
+                    FontSize = 11, FontWeight = System.Windows.FontWeights.SemiBold 
+                });
+                var profileBorder = new Border { 
+                    Background = new SolidColorBrush(Color.FromRgb(10, 12, 20)), 
+                    CornerRadius = new CornerRadius(4), Padding = new Thickness(12), Margin = new Thickness(0, 0, 0, 8),
+                    Child = profileStack
+                };
+                healthStack.Children.Add(profileBorder);
+
+                var classStack = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal };
+                classStack.Children.Add(new TextBlock { 
+                    Text = "Class:", 
+                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)), 
+                    FontSize = 10.5, FontWeight = System.Windows.FontWeights.SemiBold, Margin = new Thickness(0, 0, 8, 0)
+                });
+                classStack.Children.Add(new TextBlock { 
+                    Text = p.Class ?? "N/A", 
+                    Foreground = new SolidColorBrush(Color.FromRgb(229, 184, 66)), 
+                    FontSize = 11, FontWeight = System.Windows.FontWeights.SemiBold 
+                });
+                var classBorder = new Border { 
+                    Background = new SolidColorBrush(Color.FromRgb(10, 12, 20)), 
+                    CornerRadius = new CornerRadius(4), Padding = new Thickness(12), Margin = new Thickness(0, 0, 0, 8),
+                    Child = classStack
+                };
+                healthStack.Children.Add(classBorder);
+
+                // Battery Status
+                var batteryStack = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal };
+                batteryStack.Children.Add(new TextBlock { 
+                    Text = "Battery:", 
+                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)), 
+                    FontSize = 10.5, FontWeight = System.Windows.FontWeights.SemiBold, Margin = new Thickness(0, 0, 8, 0)
+                });
+                batteryStack.Children.Add(new Ellipse { Width = 7, Height = 7, VerticalAlignment = System.Windows.VerticalAlignment.Center, 
+                    Fill = new SolidColorBrush(_engine.ControllerSvc?.BatteryLevel switch {
+                        "Full" or "High" => Color.FromRgb(57, 255, 20),
+                        "Mid" => Color.FromRgb(255, 184, 0),
+                        "Low" or "Empty" => Color.FromRgb(255, 58, 82),
+                        _ => Color.FromRgb(85, 94, 106)
+                    })
+                });
+                batteryStack.Children.Add(new TextBlock { 
+                    Text = _engine.ControllerSvc?.BatteryLevel ?? "-", 
+                    Foreground = new SolidColorBrush(_engine.ControllerSvc?.BatteryLevel switch {
+                        "Full" or "High" => Color.FromRgb(57, 255, 20),
+                        "Mid" => Color.FromRgb(255, 184, 0),
+                        "Low" or "Empty" => Color.FromRgb(255, 58, 82),
+                        _ => Color.FromRgb(85, 94, 106)
+                    }), 
+                    FontSize = 11, VerticalAlignment = System.Windows.VerticalAlignment.Center 
+                });
+                var batteryBorder = new Border { 
+                    Background = new SolidColorBrush(Color.FromRgb(10, 12, 20)), 
+                    CornerRadius = new CornerRadius(4), Padding = new Thickness(12), Margin = new Thickness(0, 0, 0, 8),
+                    Child = batteryStack
+                };
+                healthStack.Children.Add(batteryBorder);
+
+                if (!healthStack.Children.OfType<UIElement>().Any())
+                {
+                    healthStack.Children.Add(new TextBlock
+                    {
+                        Text = GetLocalizedString("Tab_NoMappings"),
+                        Foreground = new SolidColorBrush(Color.FromRgb(85, 94, 106)),
+                        FontSize = 11, Margin = new Thickness(0, 8, 0, 0)
+                    });
+                }
+
+                panel.Child = new ScrollViewer { Content = healthStack, VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+                return;
+            }
+
+            var relevantMappings = p.ButtonMappings
+                            .Where(kv => layerKey == "" 
+                                ? !kv.Key.ToString().Contains('+') 
+                                : kv.Key.ToString().StartsWith(layerKey))
+                            .OrderBy(kv => kv.Key.ToString());
+
+                        foreach (var kv in relevantMappings)
+                        {
+                            var row = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal, Margin = new Thickness(0, 2, 0, 2) };
+                            row.Children.Add(new TextBlock
+                            {
+                                Text = kv.Key.ToString().Replace(layerKey, "") + ":",
+                                Width = 60,
+                                Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)),
+                                FontSize = 11
+                            });
+                            row.Children.Add(new TextBlock
+                            {
+                                Text = kv.Value.Label ?? kv.Value.Type.ToString(),
+                                Foreground = new SolidColorBrush(Color.FromRgb(229, 184, 66)),
+                                FontSize = 11
+                            });
+                            stack.Children.Add(row);
+                        }
+
+            if (!stack.Children.OfType<UIElement>().Any())
+            {
+                stack.Children.Add(new TextBlock
+                {
+                    Text = GetLocalizedString("Tab_NoMappings"),
+                    Foreground = new SolidColorBrush(Color.FromRgb(85, 94, 106)),
+                    FontSize = 11, Margin = new Thickness(0, 8, 0, 0)
+                });
+            }
+
+            panel.Child = new ScrollViewer { Content = stack, VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+        }
+
+        private void LogFilter_Changed(object s, RoutedEventArgs e) => ApplyLogFilter();
+
+        private void ApplyLogFilter()
+        {
+            if (LogTextBlock == null || _logBuffer.Count == 0) return;
+
+            bool showEngine  = LogFilterEngine?.IsChecked  ?? true;
+            bool showInput   = LogFilterInput?.IsChecked   ?? true;
+            bool showProfile = LogFilterProfile?.IsChecked ?? true;
+
+            var filtered = _logBuffer.Where(msg =>
+            {
+                if (msg.Contains("[Engine]") || msg.Contains("[HybridEngine]") || msg.Contains("[Tick]"))
+                    return showEngine;
+                if (msg.Contains("[Input]") || msg.Contains("[Controller]") || msg.Contains("[SDL]"))
+                    return showInput;
+                if (msg.Contains("[Profile]") || msg.Contains("[ProfileManager]"))
+                    return showProfile;
+                return true; // Show untagged messages always
+            });
+
+            LogTextBlock.Text = string.Join(Environment.NewLine, filtered);
+
+            // Auto-scroll to bottom
+            if (LogScrollViewer != null)
+                LogScrollViewer.ScrollToBottom();
+        }
+
+        private void BtnLogClear_Click(object s, RoutedEventArgs e)
+        {
+            _logBuffer.Clear();
+            if (LogTextBlock != null) LogTextBlock.Text = string.Empty;
+            ShowToast("Log cleared");
+        }
+
+        private void BtnLogExport_Click(object s, RoutedEventArgs e)
+        {
+            try
+            {
+                var path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", $"ragna_{DateTime.Now:yyyyMMdd_HHmmss}.txt");
+                Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
+                File.WriteAllLines(path, _logBuffer);
+                ShowToast($"Exported: {System.IO.Path.GetFileName(path)}");
+            }
+            catch (Exception ex) { ShowToast($"Export failed: {ex.Message}", isError: true); }
+        }
+        private void DeadzoneLabel_DblClick(object s, RoutedEventArgs e) => DeadzoneReset_Click(null!, null!);
+        private void CurveLabel_DblClick(object s, RoutedEventArgs e) => CurveReset_Click(null!, null!);
+        private void ActionSpeedLabel_DblClick(object s, RoutedEventArgs e) => ActionSpeedReset_Click(null!, null!);
+        private void SensitivityLabel_DblClick(object s, RoutedEventArgs e) => SensitivityReset_Click(null!, null!);
+
+        private void BtnToggleMiniMode_Click(object s, RoutedEventArgs e) => SwitchToMiniMode();
+        private void BtnToggleGameOverlay_Click(object s, RoutedEventArgs e)
+        {
+            if (_gameOverlay == null)
+            {
+                _gameOverlay = new InGameOverlayWindow(_engine.Messenger, _engine.WindowTracker, _engine.ControllerManager, _settings);
+                _gameOverlay.Show();
+            }
+            else
+            {
+                _gameOverlay?.Close();
+                _gameOverlay = null;
+            }
+        }
+
+        private void SetFooterButtonsEnabled(bool enabled)
+        {
+            if (BtnCalibrateQuick != null) BtnCalibrateQuick.IsEnabled = enabled;
+            if (BtnTestInput != null) BtnTestInput.IsEnabled = enabled;
+            if (BtnOpenRemap != null) BtnOpenRemap.IsEnabled = enabled;
+            if (BtnRadial != null) BtnRadial.IsEnabled = enabled;
+        }
+
+
+        private void ShowControllerTestWindow()
+        {
+            if (_controllerTestWindow == null && _engine?.ControllerSvc != null)
+            {
+                // Use the public ControllerSvc property instead of reflection
+                var sdlProvider = _engine.ControllerSvc;
+                
+                if (sdlProvider != null)
+                {
+                    _controllerTestWindow = new ControllerTestWindow(sdlProvider);
+                    _controllerTestWindow.Closed += (s, e) => _controllerTestWindow = null;
+                    _controllerTestWindow.Show();
+                }
+            }
+        }
+
+        private void Window_Closing(object s, EventArgs e)
+        {
+            // UX-012: Gamepad-Navigation stoppen (MEMORY-001: Timer sauber freigeben)
+            _navigator?.Stop();
+            _navigator?.Dispose();
+
+            // UI-011: Telemetrie-Timer stoppen (MEMORY-001: keine hängenden DispatcherTimers)
+            if (TelemetryPanelControl != null)
+                TelemetryPanelControl.StopUpdates();
+
+            // Cleanup subscriptions
+                        foreach (var sub in _subs)
+                            try { sub.Dispose(); } 
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"[MainWindow] Subscription dispose failed: {ex.Message}");
+                            }
+                        _subs.Clear();
+
+            // Unsubscribe engine events (MEMORY-001: prevent leaked references)
+            if (_statusChangedHandler != null)
+                _engine.StatusChanged -= _statusChangedHandler;
+            if (_profileQuickSwitchHandler != null)
+                _engine.ProfileQuickSwitch -= _profileQuickSwitchHandler;
+            if (_logMessageHandler != null)
+                _engine.LogMessage -= _logMessageHandler;
+            if (_batteryChangedHandler != null)
+                _engine.BatteryChanged -= _batteryChangedHandler;
+            if (_controllerConnectedHandler != null)
+                _engine.ControllerConnected -= _controllerConnectedHandler;
+            if (_controllerDisconnectedHandler != null)
+                _engine.ControllerDisconnected -= _controllerDisconnectedHandler;
+            if (_restoreMainWindowRequestedHandler != null)
+                _engine.RestoreMainWindowRequested -= _restoreMainWindowRequestedHandler;
+
+            // Save settings
+            if (_manager.ActiveProfile != null)
+                _settings.LastProfileName = _manager.ActiveProfile.Name;
+            _settings.Save();
+
+            // Close game overlay if open
+            _gameOverlay?.Close();
+        }
+
+        // Helper methods to fix missing methods
+        private void ShowToast(string message, bool isError = false)
+                {
+                    _toastService.Show(message, isError);
+                }
+
+        private static string GetLocalizedString(string key) => LocalizationManager.GetLocalizedString(key);
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Initialize event handlers after component loading
+            // UX-012: Gamepad-Navigation starten (DPad/Tab-Fokus in Hauptfenster)
+            _navigator?.Start();
+        }
+
+        /// <summary>
+        /// UX-019: Keyboard shortcuts for power users.
+        /// Ctrl+O: Open Profile Library
+        /// Ctrl+S: Save settings
+        /// F1: Show help tooltip
+        /// Esc: Exit Mini Mode / Close overlays
+        /// </summary>
+        private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            var kb = Keyboard.Modifiers;
+            bool isCtrl = (kb & ModifierKeys.Control) == ModifierKeys.Control;
+
+            if (isCtrl && e.Key == System.Windows.Input.Key.O)
+            {
+                e.Handled = true;
+                OpenProfileLibrary();
+                ShowToast("Profile Library opened (Ctrl+O)");
+            }
+            else if (isCtrl && e.Key == System.Windows.Input.Key.S)
+            {
+                e.Handled = true;
+                _settings.Save();
+                ShowToast("Settings saved (Ctrl+S)");
+            }
+            else if (e.Key == System.Windows.Input.Key.F1)
+            {
+                e.Handled = true;
+                ShowToast("Help: Ctrl+O Profile Library · Ctrl+S Save · Esc Exit Mini Mode");
+            }
+            else if (e.Key == System.Windows.Input.Key.Escape)
+            {
+                e.Handled = true;
+                if (_isMiniMode)
+                    SwitchFromMiniMode();
+                else if (_gameOverlay != null)
+                {
+                    _gameOverlay.Close();
+                    _gameOverlay = null;
+                }
+            }
+        }
+
+        private void BtnScanController_Click(object s, RoutedEventArgs e)
+        {
+            _engine?.Start();
+            ShowToast("Controller scan initiated");
+        }
+
+        private void BtnSettings_Click(object s, RoutedEventArgs e)
+        {
+            var settings = new SettingsWindow(_engine, _manager, _settings, s =>
+            {
+                _engine.FocusLockEnabled = s.FocusLockEnabled;
+                _engine.FocusLockProcess = s.FocusLockProcess;
+                _settings = s; // Update local reference
+            });
+            settings.Show();
+        }
+
+        private void ResetBtn_MouseEnter(object s, RoutedEventArgs e)
+        {
+            // Mouse enter handler for reset button
+        }
+
+        private void ResetBtn_MouseLeave(object s, RoutedEventArgs e)
+        {
+            // Mouse leave handler for reset button
+        }
+
+
+
+        
+
+        // Missing event handlers for XAML
+        private void Window_StateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized && _settings.MinimizeToTray)
+            {
+                Hide();
+                if (_miniWindow == null)
+                {
+                    SwitchToMiniMode();
+                }
+            }
+        }
+
+        private void BtnMaximize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        }
+
+        private async void BtnCalibrateQuick_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (_engine != null)
+                    await _engine.StartCalibrationAsync();
+                ShowToast("Calibration started");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[MainWindow] Calibration start failed: {ex.Message}");
+                ShowToast($"Calibration failed: {ex.Message}", isError: true);
+            }
+        }
+
+        private void BtnTestInput_Click(object sender, RoutedEventArgs e)
+        {
+            if (_engine?.ControllerSvc != null)
+            {
+                var testWindow = new ControllerTestWindow(_engine.ControllerSvc);
+                testWindow.Owner = this;
+                testWindow.Show();
+            }
+            else
+            {
+                ShowToast("No controller connected", isError: true);
+            }
+        }
+
+        private void BtnOpenRemap_Click(object sender, RoutedEventArgs e)
+        {
+            var w = new ButtonRemappingWindow(_engine, _manager);
+            w.Owner = this;
+            w.Show();
+        }
+
+        // Missing event handlers for XAML
+        private void ProfileCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ProfileCombo.SelectedItem is Profile profile)
+            {
+                _profileService.ApplyProfile(profile);
+            }
+        }
+
+        private void BtnRadial_Click(object sender, RoutedEventArgs e)
+                {
+                    var queue = _engine?.CommandQueue ?? new InputCommandQueue();
+                    var w = new RadialMenuWindow(queue);
+                    w.Owner = this;
+                    w.Show();
+                }
+
+                private void OpenProfileLibrary()
+                {
+                    _profileService.OpenProfileLibrary(() =>
+                    {
+                        // Refresh profile list after library closed
+                        ProfileCombo.ItemsSource = null;
+                        ProfileCombo.ItemsSource = _profileService.GetAllProfiles();
+                    });
+                }
+
+        // Reset click handlers for double-click on labels
+        private void DeadzoneReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (_engine?.CurrentProfile != null)
+            {
+                _engine.CurrentProfile.Deadzone = 0.15f;
+                _engine.LiveUpdateDeadzone(0.15f);
+                var pm = new ProfileManager();
+                pm.SaveProfile(_engine.CurrentProfile);
+                ShowToast("Deadzone reset to default (0.15)");
+            }
+        }
+
+        private void CurveReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (_engine?.CurrentProfile != null)
+            {
+                _engine.CurrentProfile.MovementCurve = 1.0f;
+                _engine.LiveUpdateCurve(1.0f);
+                var pm = new ProfileManager();
+                pm.SaveProfile(_engine.CurrentProfile);
+                ShowToast("Curve reset to default (1.0)");
+            }
+        }
+
+        private void ActionSpeedReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (_engine?.CurrentProfile != null)
+            {
+                _engine.LiveUpdateActionSpeed(5.0f); // Default mid-point
+                var pm = new ProfileManager();
+                pm.SaveProfile(_engine.CurrentProfile);
+                ShowToast("Action Speed reset to default (5)");
+            }
+        }
+
+        private void SensitivityReset_Click(object sender, RoutedEventArgs e)
+        {
+            if (_engine?.CurrentProfile != null)
+            {
+                _engine.LiveUpdateCursorSpeed(1.0f);
+                var pm = new ProfileManager();
+                pm.SaveProfile(_engine.CurrentProfile);
+                ShowToast("Sensitivity reset to default (1.0)");
+            }
+        }
+
+        private void BtnClearLog_Click(object sender, RoutedEventArgs e)
+        {
+            _logBuffer.Clear();
+            if (LogTextBlock != null) LogTextBlock.Text = string.Empty;
+            if (LogTextBlock2 != null) LogTextBlock2.Text = string.Empty;
+            ShowToast("Log cleared");
+        }
+    }
+}

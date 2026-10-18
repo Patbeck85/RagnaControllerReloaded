@@ -3,6 +3,7 @@ using System.Linq;
 using RagnaController.Core;
 using RagnaController.Models;
 using RagnaController.Profiles;
+using RagnaController.Views.Dialogs;
 
 namespace RagnaController.Services
 {

@@ -1,0 +1,38 @@
+<Window x:Class="RagnaController.Views.Dialogs.DeveloperConsoleWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Developer Console" Width="900" Height="600"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        Topmost="False" WindowStartupLocation="CenterOwner" ResizeMode="CanResizeWithGrip">
+
+    
+
+    <Border Style="{StaticResource GlassPanel}" BorderBrush="{StaticResource Gold}" BorderThickness="1" CornerRadius="{StaticResource Radius2Xl}">
+        <Border.Effect>
+            <DropShadowEffect Color="{StaticResource Gold}" BlurRadius="25" ShadowDepth="0" Opacity="0.3"/>
+        </Border.Effect>
+
+        <Grid Margin="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0" Margin="0,0,0,10">
+                <TextBlock Text=">_ RAGNA_CONTROLLER LIVE DEBUG" FontFamily="JetBrains Mono, Consolas" FontSize="15" FontWeight="Bold" Foreground="{StaticResource Gold}" VerticalAlignment="Center" Effect="{StaticResource NeonGlow}"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Clear" Click="BtnClear_Click" Foreground="{StaticResource Gold}" Background="Transparent" BorderThickness="1" BorderBrush="{StaticResource Gold}" Padding="14,4" Margin="0,0,10,0" FontFamily="JetBrains Mono, Consolas" FontSize="12" Cursor="Hand" Style="{StaticResource GhostButton}" AutomationProperties.Name="Clear console output"/>
+                    <Button Content="&#xE8BB;" Click="BtnClose_Click" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close developer console" AutomationProperties.Name="Close developer console"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Console Output -->
+            <Border Grid.Row="1" Style="{StaticResource GlassPanel}" BorderBrush="{StaticResource BgBorder}" BorderThickness="1" CornerRadius="{StaticResource RadiusLg}" Background="{StaticResource BgDeep}">
+                <ScrollViewer x:Name="LogScroll" VerticalScrollBarVisibility="Auto" Padding="4">
+                    <TextBlock x:Name="LogText" FontFamily="JetBrains Mono, Consolas" FontSize="12" Foreground="{StaticResource Green}" TextWrapping="Wrap" Padding="12" LineHeight="18"/>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Border>
+</Window>
