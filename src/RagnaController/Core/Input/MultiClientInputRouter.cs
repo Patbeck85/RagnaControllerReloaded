@@ -17,7 +17,7 @@ namespace RagnaController.Core
     /// Architektur:
     /// - SendKeyToClient(hwnd, key, keyDown): PostMessage WM_KEYDOWN/WM_KEYUP
     ///   → funktioniert auch if RO nicht im Vordergrand is
-    ///   → keine Fokus-Diebstahl, no AttachThreadInput nötig
+    /// → no focus theft, no AttachThreadInput needed
     /// - SendMouseClickToClient(hwnd, x, y): PostMessage WM_LBUTTONDOWN/UP
     /// - GetClientHwnd(processName): about MultiClientWindowTracker (TASK-1602)
     /// - RoExePath aus Settings: Prozessname aus Dateipfad extrahieren (myRO.exe → myro)
@@ -101,10 +101,10 @@ namespace RagnaController.Core
             _windowTracker = windowTracker ?? throw new ArgumentNullException(nameof(windowTracker));
         }
 
-        #region Client-HWND Auflösung
+        #region Client HWND resolution
 
         /// <summary>
-        /// Löst den besten Client-HWND for einen Prozessnamen on.
+        /// Resolves best client HWND for a process name.
         /// Reihenfolge:
         /// 1. Bevorzugtes HWND (manuelle Auswahl durch User, SetPreferredClientHwnd)
         /// 2. Erstes lebendes HWND aus MultiClientWindowTracker
@@ -140,7 +140,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Löst den Client-HWND for den aktuell aktiven Prozessnamen (aus Settings).
+        /// Resolves client HWND for currently active process name (from Settings).
         /// </summary>
         public IntPtr ResolveActiveClientHwnd()
         {
@@ -154,7 +154,7 @@ namespace RagnaController.Core
 
         #endregion
 
-        #region Tastatur-Input (PostMessage primär)
+        #region Keyboard input (PostMessage primary)
 
         /// <summary>
         /// Sendet Tastendruck an einen bestimmten Client-HWND via PostMessage.
@@ -162,7 +162,7 @@ namespace RagnaController.Core
         /// PostMessage funktioniert auch if das Zielfenster nicht im Vordergrand is,
         /// and stiehlt keinen Fokus. Dies is der bevorzugte Pfad for Multi-Client-Betrieb.
         ///
-        /// Fallback: If PostMessage fehlschlägt (z.B. Spiel blockiert gesendete Nachrichten),
+        /// Fallback: if PostMessage fails (e.g. game blocks sent messages),
         /// is SendInput + AttachThreadInput verwendet (erfordert Vordergrand-Fenster kurzzeitig).
         /// </summary>
         public bool SendKeyToClient(IntPtr hwnd, VirtualKey key, bool keyDown)
@@ -174,7 +174,7 @@ namespace RagnaController.Core
             var msg = keyDown ? _native.WM_KEYDOWN : _native.WM_KEYUP;
             var lParam = MakeKeyLParam(keyDown ? 0 : 1);
 
-            // Primär: PostMessage (fokus-unabhängig)
+            // Primary: PostMessage (focus-independent)
             if (_native.PostMessage(hwnd, msg, new IntPtr(vk), new IntPtr(lParam)))
                 return true;
 
@@ -187,7 +187,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Sendet Tastendruck an den active ausgewählten Client (aus Settings).
+        /// Sends key press to active selected client (from Settings).
         /// </summary>
         public bool SendKeyToActiveClient(VirtualKey key, bool keyDown)
         {
@@ -199,7 +199,7 @@ namespace RagnaController.Core
 
         #endregion
 
-        #region Maus-Input (PostMessage primär)
+        #region Mouse input (PostMessage primary)
 
         /// <summary>
         /// Sendet Mausklick an einen bestimmten Client-HWND via PostMessage.
@@ -215,7 +215,7 @@ namespace RagnaController.Core
             var msgDown = leftButton ? _native.WM_LBUTTONDOWN : _native.WM_RBUTTONDOWN;
             var msgUp = leftButton ? _native.WM_LBUTTONUP : _native.WM_RBUTTONUP;
 
-            // Primär: PostMessage
+            // Primary: PostMessage
             if (_native.PostMessage(hwnd, msgDown, new IntPtr(leftButton ? 0x0001 : 0x0002), new IntPtr(lParam)) &&
                 _native.PostMessage(hwnd, msgUp, new IntPtr(leftButton ? 0x0000 : 0x0000), new IntPtr(lParam | 0x0002)))
             {
@@ -225,7 +225,7 @@ namespace RagnaController.Core
             System.Diagnostics.Debug.WriteLine(
                 $"[MultiClientInputRouter] PostMessage WM_LBUTTON{(leftButton ? "" : "R")} an HWND={hwnd} fehlgeschlagen.");
 
-            // Fallback nicht verfügbar for Maus (würden Cursor bewegen) → false
+            // Fallback not available for mouse (would move cursor) → false
             return false;
         }
 

@@ -8,8 +8,8 @@ namespace RagnaController.Core
     public interface IProcessNameResolver
     {
         /// <summary>
-        /// Gibt den Prozessnamen for die angegebene PID zurück, or
-        /// <c>null</c>, if der Prozess nicht existiert bzw. nicht auflösbar is.
+        /// Returns process name for given PID, or
+        /// <c>null</c>, if process does not exist or is not resolvable.
         /// </summary>
         string? GetProcessName(int pid);
     }

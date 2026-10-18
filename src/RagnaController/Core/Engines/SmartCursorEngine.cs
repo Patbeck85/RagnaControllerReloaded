@@ -42,28 +42,28 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Verarbeitet SmartCursor-Eingaben.
-        /// FIX: Keine Early Returns — all Tasten müssen an CombatEngine weitergegeben are,
+        /// FIX: no early returns — all keys must be passed to CombatEngine,
         /// damit offene Prozesse sauber abgebrochen are.
         /// </summary>
         public void Process(ParsedInput input)
         {
             if (_uiActive)
             {
-                // UI-Logik ausführen (z.B. D-Pad Grid-Hopping)
+                // execute UI logic (e.g. D-pad grid hopping)
                 // BUT: Button-Events NICHT blockieren — CombatEngine muss ALLE Tasten sehen!
 
                 // Example: D-Pad for Grid-Navigation
                 if (input.LeftX != 0 || input.LeftY != 0)
                 {
                     // Grid-Navigation
-                    // BUT: Auch Gameplay-Buttons müssen weitergegeben are!
+                    // BUT: gameplay buttons must also be passed!
                 }
 
                 // Example: Inventar-Tasten
                 if (input.BtnA || input.BtnB || input.BtnX || input.BtnY)
                 {
                     // UI-Aktionen
-                    // BUT: Auch Gameplay-Buttons müssen weitergegeben are!
+                    // BUT: gameplay buttons must also be passed!
                 }
             }
         }

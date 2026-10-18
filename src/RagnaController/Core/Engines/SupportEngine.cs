@@ -28,7 +28,7 @@ namespace RagnaController.Core
         private bool _wasRB;
         private readonly InputCommandQueue _queue;
 
-        // Cooldowns for Tests zugänglich machen
+        // Expose cooldowns for tests
         public int TabCooldown => _tabCooldown;
         public int HealCooldown => _healCooldown;
 
@@ -75,7 +75,7 @@ namespace RagnaController.Core
             if (_tabCooldown == 0 && _healCooldown == 0)
                 Phase = SupportPhase.Idle;
 
-            // Gibt false zurück — blockiert nachfolgende Engines nicht
+            // Returns false — does not block subsequent engines
             return false;
         }
 

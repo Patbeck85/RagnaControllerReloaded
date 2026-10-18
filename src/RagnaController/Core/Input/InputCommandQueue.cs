@@ -51,7 +51,7 @@ namespace RagnaController.Core
 
         public InputCmd(CmdType type, Action? callback) : this(type, 0, 0, callback) { }
 
-        // FIX (TEST-10): Wie bei der 2-Arg-Variante — Chaining hätte Key=0/X=key gesetzt.
+        // FIX (TEST-10): like 2-arg variant — chaining would have set Key=0/X=key.
         public InputCmd(CmdType type, ushort key, Action? callback)
         {
             Type = type;
@@ -175,11 +175,11 @@ namespace RagnaController.Core
         public List<InputCmd> Commands { get; } = new();
 
         // FIX (TEST-011): RecordCommand is from mehreren Enqueue-Threads aufgerufen —
-        // ungesehütztes List.Add wirft ArgumentException im Resize-Pfad.
+        // unguarded List.Add throws ArgumentException on resize path.
         private readonly object _commandsLock = new();
 
         // Bounded history in DEBUG and RELEASE: Replay/Inspection braucht they in beiden,
-        // CI testet with --configuration Release (2048→4096 Einträge ≈ 128 KB worst case, deterministisch).
+        // CI tests with --configuration Release (2048→4096 entries ≈ 128 KB worst case, deterministic).
         private const int MaxRecordedCommands = 4096;
 
         private void RecordCommand(InputCmd cmd)
@@ -359,7 +359,7 @@ namespace RagnaController.Core
                     inp.Data.ki.dwFlags = 0x0004;      // KEYEVENTF_UNICODE
                     SendInput(1, ref inp, InputSize);
 
-                    // Release-Befehl hinzufügen — verhindert permanent gedrückt gehaltene Tasten
+                    // add release command — prevents permanently held keys
                     INPUT inpUp = default;
                     inpUp.type            = INPUT_KEYBOARD;
                     inpUp.Data.ki.wVk     = 0;           // Must be 0 for KEYEVENTF_UNICODE
@@ -409,8 +409,8 @@ namespace RagnaController.Core
         public void Stop()
         {
             // FIX (TEST-011 class / race): CTS erst NACH dem Join des Consumer-Threads
-            // disponieren. The Consumer liest _cts.Token im Loop; ein frühes null!
-            // führte to NullReferenceException in Process().
+            // dispose. Consumer reads _cts.Token in loop; an early null!
+            // leads to NullReferenceException in Process().
             var cts = _cts;
             if (cts != null)
             {
@@ -436,7 +436,7 @@ namespace RagnaController.Core
 
         private void Process()
         {
-            // Lokaler Token-Snapshot: bleibt gültig, selbst if _cts später
+            // local token snapshot: remains valid even if _cts later
             // from Stop() on null gesetzt is (Join-Garantie).
             var token = _cts.Token;
             var enumerator = _queue!.GetConsumingEnumerable(token).GetEnumerator();

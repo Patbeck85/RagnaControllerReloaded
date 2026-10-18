@@ -20,7 +20,7 @@ namespace RagnaController.Core
         // FIX (ROB-002): Engine-Felder bewusst nicht mehr `readonly`, damit der
         // Failover-only-Konstruktor they leer lassen kann (Failover toucht keine Engine).
         // `= null!` = Deklarations-Init, damit CS8618 (TreatWarningsAsErrors) still is;
-        // die Produktion nutzt ausschließlich den Voll-Konstruktor, der all Engines setzt.
+        // production uses only full constructor, which sets all engines.
         private CombatEngine _combat = null!;
         private MovementEngine _movement = null!;
         private AutoTargetEngine _autoTarget = null!;
@@ -51,7 +51,7 @@ namespace RagnaController.Core
         /// <summary>The aktuell aktive Emulations-Strategie (SendInput or Kernel).</summary>
         public IMouseEmulationStrategy? ActiveStrategy => _failoverManager.ActiveStrategy;
 
-        /// <summary>ROB-002: Feuert bei jedem Failover-Switch (from, to, Auslöser-Zähler). For UI/Telemetrie.</summary>
+        /// <summary>ROB-002: fires on every failover switch (from, to, trigger counter). For UI/telemetry.</summary>
         public event Action<string, string, int>? FailoverSwitched
         {
             add => _failoverManager.FailoverSwitched += value;
@@ -60,7 +60,7 @@ namespace RagnaController.Core
 
                 /// <summary>
                 /// ROB-002: Initialisiert den Input-Emulation-Failover.
-                /// Primär = SendInput (Standard), Fallback = Kernel-Strategie (Interception).
+                /// primary = SendInput (default), fallback = kernel strategy (interception).
                 /// </summary>
                 public void InitializeFailover(IMouseEmulationStrategy primary, IMouseEmulationStrategy? fallback, Models.Settings settings)
                 {
@@ -71,7 +71,7 @@ namespace RagnaController.Core
         /// ROB-002: Failover-State-Machine. Is from InputCommandQueue.SendInputLatencyRecorded
         /// on dem Consumer-Thread aufgerufen (no UI-Zugriff → thread-sicher per Design).
         /// N aufeinanderfolgende Flushes about der Latenz-Schwelle → Switch on Kernel-Fallback.
-        /// M stabile Flushes danach → Recovery zurück to SendInput.
+        /// M stable flushes after → recovery back to SendInput.
         /// </summary>
         public void RecordSendInputLatency(double latencyMs)
         {
@@ -173,11 +173,11 @@ namespace RagnaController.Core
                             // UX-016: Gestenerkennung (Right-Stick Swipes for Radial Menu)
                             _gestureRecognizer?.Tick(input.RightX, input.RightY, input.R3);
 
-                            // If Radial Menu offen is: Right-Stick steuert das Menü, nicht den Cursor
+                            // if radial menu open: right stick controls menu, not cursor
                             if (_gestureRecognizer?.IsMenuOpen == true)
                             {
                                 // Menu-Input is vom GestureRecognizer verarbeitet (SelectNext/Previous/Activate)
-                                // Cursor-Bewegung überspringen if Menü offen
+                                // skip cursor movement if menu open
                                 if (routeSw != null) RecordRouteBudget(routeSw);
                                 return false;
                             }

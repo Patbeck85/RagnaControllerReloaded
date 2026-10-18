@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Interface for Win32-API-Aufrufe - ermöglicht Mocking in Unit-Tests.
+    /// Interface for Win32 API calls — enables mocking in unit tests.
     /// </summary>
     public interface INativeMethods
     {

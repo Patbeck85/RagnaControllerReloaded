@@ -17,9 +17,9 @@ namespace RagnaController.Core
 
         // Fenster-Mittelpunkt (vom WindowTracker gesetzt)
         private int   _cx, _cy;
-        private float _radiusScale = 1.0f;   // DPI × Auflösungs-Skalierung kombiniert
+        private float _radiusScale = 1.0f;   // DPI × resolution scaling combined
 
-        private const float BASE_RES_H = 1080f;  // Referenz-Auflösung (1080p)
+        private const float BASE_RES_H = 1080f;  // reference resolution (1080p)
 
         // Zustand
                 private bool  _isWalking;
@@ -28,8 +28,8 @@ namespace RagnaController.Core
                 // FEAT-007: Property for SkillOrchestrator condition evaluation
                 public bool IsMoving => _isWalking;
         private float _lastX, _lastY;
-        private int   _lastTx = -1; // letzte gesendete X-Koordinate (für Deduplizierung)
-        private int   _lastTy = -1; // letzte gesendete Y-Koordinate (für Deduplizierung)
+        private int   _lastTx = -1; // last sent X coordinate (for deduplication)
+        private int   _lastTy = -1; // last sent Y coordinate (for deduplication)
 
         // Konfiguration
         public float Deadzone      { get; set; } = 0.20f;
@@ -52,7 +52,7 @@ namespace RagnaController.Core
         {
             _cx = x;
             _cy = y;
-            // Auflösung relativ to 1080p × DPI → ein einziger multiplier
+            // resolution relative to 1080p × DPI → a single multiplier
             float resScale = clientH > 0 ? clientH / BASE_RES_H : 1.0f;
             _radiusScale   = resScale * (dpiScale > 0f ? dpiScale : 1.0f);
         }
@@ -68,15 +68,15 @@ namespace RagnaController.Core
                 if (_isWalking)
                 {
                     // CoastFrames = Anzahl der Deadzone-Frame, nach denen gestoppt is.
-                    // FIX Off-by-one: vorher stoppte erst Frame N+1 (Zähler wurde only bis N erhöht).
+                    // FIX off-by-one: previously stopped at frame N+1 (counter only increased to N).
                     _coastCounter++;
                     if (_coastCounter >= CoastFrames)
                     {
                         _queue.LeftUp();
                         _isWalking = false;
                         _coastCounter = 0;
-                        // Cursor zurück zur Fenstermitte — verhindert Fehlklicks
-                        // beim nächsten Stick-Impuls
+                        // cursor back to window center — prevents misclicks
+                        // on next stick impulse
                         _queue.MouseMoveAbsolute(_cx, _cy);
                     }
                 }
@@ -94,11 +94,11 @@ namespace RagnaController.Core
             // Radius: LeashRadius is in 1080p-Pixeln definiert → skalieren
             int radius = (int)(LeashRadius * _radiusScale);
 
-            // FIX: Begrenze den Klick on den tatsächlichen Innenraum des Fensters
+            // FIX: limit click to actual inner area of window
             int limitX = _tracker.ClientW / 2;
             int limitY = _tracker.ClientH / 2;
             
-            // Verhindere Klicks außerhalb des Game-Clients
+            // prevent clicks outside game client
             int tx = _cx + (int)(nx * radius * curved);
             int ty = _cy + (int)(ny * radius * curved);
             tx = Math.Clamp(tx, _cx - Math.Min(radius, limitX), _cx + Math.Min(radius, limitX));
@@ -114,7 +114,7 @@ namespace RagnaController.Core
             }
             else
             {
-                // FIX: Only senden, if sich die Koordinaten tatsächlich geändert have
+                // FIX: only send if coordinates actually changed
                 // Vermeidet 125x pro Sekunde identische WM_MOUSEMOVE-Nachrichten
                 if (tx != _lastTx || ty != _lastTy)
                 {
@@ -150,7 +150,7 @@ namespace RagnaController.Core
             _queue.MouseMoveAbsolute(lx, ly);
             _queue.LeftClick();
             // FIX: Nach LeftClick() muss _isWalking = false gesetzt are, damit die Engine
-            // im nächsten Tick weiß, dass they wieder einen LeftDown() Klick senden muss
+            // next tick knows they need to send LeftDown() click again
             _isWalking = false;
         }
 
