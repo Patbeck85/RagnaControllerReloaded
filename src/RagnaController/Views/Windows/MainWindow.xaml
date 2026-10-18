@@ -62,13 +62,13 @@
                     <!-- Center: Tab Navigation (Modern Pill Style) -->
                     <Border Grid.Column="1" Style="{StaticResource GlassPanel}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="4" CornerRadius="{StaticResource RadiusLg}">
                         <StackPanel x:Name="TabNavigation" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Button x:Name="TabBtnBase" Content="Base" Style="{StaticResource TabButton}" Click="TabBase_Click" Tag="Base"/>
-                            <Button x:Name="TabBtnL1" Content="L1+" Style="{StaticResource TabButton}" Click="TabL1_Click" Tag="L1+"/>
-                            <Button x:Name="TabBtnR1" Content="R1+" Style="{StaticResource TabButton}" Click="TabR1_Click" Tag="R1+"/>
-                            <Button x:Name="TabBtnL2" Content="L2+" Style="{StaticResource TabButton}" Click="TabL2_Click" Tag="L2+"/>
-                            <Button x:Name="TabBtnR2" Content="R2+" Style="{StaticResource TabButton}" Click="TabR2_Click" Tag="R2+"/>
-                            <Button x:Name="TabBtnHealth" Content="Health" Style="{StaticResource TabButton}" Click="TabHealth_Click" Tag="Health"/>
-                            <Button x:Name="TabBtnTelemetry" Content="Telemetrie" Style="{StaticResource TabButton}" Click="TabTelemetry_Click" Tag="Telemetry"/>
+                            <Button x:Name="TabBtnBase" Content="Base" Style="{StaticResource TabButton}" Click="TabBase_Click" Tag="Base" AutomationProperties.Name="Base tab"/>
+                            <Button x:Name="TabBtnL1" Content="L1+" Style="{StaticResource TabButton}" Click="TabL1_Click" Tag="L1+" AutomationProperties.Name="L1+ tab"/>
+                            <Button x:Name="TabBtnR1" Content="R1+" Style="{StaticResource TabButton}" Click="TabR1_Click" Tag="R1+" AutomationProperties.Name="R1+ tab"/>
+                            <Button x:Name="TabBtnL2" Content="L2+" Style="{StaticResource TabButton}" Click="TabL2_Click" Tag="L2+" AutomationProperties.Name="L2+ tab"/>
+                            <Button x:Name="TabBtnR2" Content="R2+" Style="{StaticResource TabButton}" Click="TabR2_Click" Tag="R2+" AutomationProperties.Name="R2+ tab"/>
+                            <Button x:Name="TabBtnHealth" Content="Health" Style="{StaticResource TabButton}" Click="TabHealth_Click" Tag="Health" AutomationProperties.Name="Health tab"/>
+                            <Button x:Name="TabBtnTelemetry" Content="Telemetrie" Style="{StaticResource TabButton}" Click="TabTelemetry_Click" Tag="Telemetry" AutomationProperties.Name="Telemetry tab"/>
                         </StackPanel>
                     </Border>
 
@@ -80,7 +80,7 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <ComboBox x:Name="ProfileCombo" Width="200" Style="{StaticResource DarkComboBox}" SelectionChanged="ProfileCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_ProfileCombo_Tooltip}" Grid.Column="0" Margin="8,4,0,4" VerticalAlignment="Center"/>
+                                                    <ComboBox x:Name="ProfileCombo" Width="200" Style="{StaticResource DarkComboBox}" SelectionChanged="ProfileCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_ProfileCombo_Tooltip}" AutomationProperties.Name="Profile selector" Grid.Column="0" Margin="8,4,0,4" VerticalAlignment="Center"/>
                                                     <Border Grid.Column="1" Width="36" Height="36" Background="{StaticResource AccentBlue}" CornerRadius="0,{StaticResource RadiusMd},{StaticResource RadiusMd},0" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Right" Effect="{StaticResource BlueGlow}">
                                                         <Path Data="M0,0 L4,4 L8,0" Stroke="{StaticResource TextPrimary}" StrokeThickness="1.8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                     </Border>
@@ -94,7 +94,7 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Text="Client:" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
-                                                    <ComboBox x:Name="ClientCombo" Width="140" Style="{StaticResource DarkComboBox}" SelectionChanged="ClientCombo_SelectionChanged" ToolTip="Select RO client window for input routing" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center"/>
+                                                    <ComboBox x:Name="ClientCombo" Width="140" Style="{StaticResource DarkComboBox}" SelectionChanged="ClientCombo_SelectionChanged" ToolTip="Select RO client window for input routing" AutomationProperties.Name="RO client selector" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center"/>
                                                     <Button x:Name="BtnRefreshClients" Content="&#xE72C;" Width="28" Height="28" Style="{StaticResource WindowControlButton}" Click="BtnRefreshClients_Click" ToolTip="Refresh client list" AutomationProperties.Name="Refresh clients" Grid.Column="2" VerticalAlignment="Center"/>
                                                 </Grid>
                                             </Border>
@@ -106,7 +106,7 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Text="Preset:" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
-                                                    <ComboBox x:Name="PresetCombo" Width="140" Style="{StaticResource DarkComboBox}" SelectionChanged="PresetCombo_SelectionChanged" ToolTip="Select saved profile preset for quick switch" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center"/>
+                                                    <ComboBox x:Name="PresetCombo" Width="140" Style="{StaticResource DarkComboBox}" SelectionChanged="PresetCombo_SelectionChanged" ToolTip="Select saved profile preset for quick switch" AutomationProperties.Name="Profile preset selector" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center"/>
                                                     <Button x:Name="BtnSavePreset" Content="&#xE74E;" Width="28" Height="28" Style="{StaticResource WindowControlButton}" Click="BtnSavePreset_Click" ToolTip="Save current profile as preset" AutomationProperties.Name="Save preset" Grid.Column="2" VerticalAlignment="Center"/>
                                                 </Grid>
                                             </Border>
@@ -118,7 +118,7 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Text="Class:" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
-                                                    <ComboBox x:Name="ClassCharacterCombo" Width="130" Style="{StaticResource DarkComboBox}" SelectionChanged="ClassCharacterCombo_SelectionChanged" ToolTip="Select character class for quick profile load" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center">
+                                                    <ComboBox x:Name="ClassCharacterCombo" Width="130" Style="{StaticResource DarkComboBox}" SelectionChanged="ClassCharacterCombo_SelectionChanged" ToolTip="Select character class for quick profile load" AutomationProperties.Name="Character class selector" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center">
                                                         <ComboBox.ItemTemplate>
                                                             <DataTemplate>
                                                                 <StackPanel Orientation="Horizontal" Margin="4,2">

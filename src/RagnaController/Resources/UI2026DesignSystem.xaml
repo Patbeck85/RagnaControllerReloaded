@@ -823,4 +823,43 @@
         <Setter Property="Tag" Value="{StaticResource FontScaleNormal}"/>
     </Style>
 
+    <!-- ============================================================
+         GAMEPAD FOCUS RING (TASK-1623: Accessibility)
+         Visueller Fokus-Indikator für Gamepad-Navigation.
+         Zeichnet einen farbigen Ring um das aktuell fokussierte Element.
+         ============================================================ -->
+    <Style x:Key="GamepadFocusVisualStyle" TargetType="Control">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border CornerRadius="{StaticResource RadiusMd}"
+                            BorderBrush="{StaticResource AccentBlue}"
+                            BorderThickness="2"
+                            Margin="-4"
+                            Padding="2"
+                            SnapsToDevicePixels="True">
+                        <Border.Effect>
+                            <DropShadowEffect Color="{StaticResource AccentBlue}" Direction="0" ShadowDepth="0" BlurRadius="12" Opacity="0.6"/>
+                        </Border.Effect>
+                        <ContentPresenter/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Wende Gamepad-Fokus-Ring auf alle interaktiven Steuerelemente an -->
+    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource GamepadFocusVisualStyle}"/>
+    </Style>
+    <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource GamepadFocusVisualStyle}"/>
+    </Style>
+    <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource GamepadFocusVisualStyle}"/>
+    </Style>
+    <Style TargetType="Slider" BasedOn="{StaticResource {x:Type Slider}}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource GamepadFocusVisualStyle}"/>
+    </Style>
+
 </ResourceDictionary>
