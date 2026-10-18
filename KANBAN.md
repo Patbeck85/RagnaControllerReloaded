@@ -14,8 +14,8 @@
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-1601** | Research: Win32 Multi-HWND Enum & Input-Isolation pro Client | Researcher | HIGH | — | ✅ RESEARCH_DONE |
 | **TASK-1602** | Multi-Client WindowTracker (pro HWND eigene ClientW/H, Prozessname) | Coder | HIGH | TASK-1601 | ✅ ERLEDIGT (2026-10-17) |
-| **TASK-1603** | Input-Router: Client-Auswahl per Dropdown/Hotkey | Coder | HIGH | TASK-1602 | 📋 IN_PROGRESS |
-| **TASK-1604** | UI: Client-Switcher in MainWindow Header | Designer | MEDIUM | TASK-1603 | 📋 OPEN |
+| **TASK-1603** | Input-Router: Client-Auswahl per Dropdown/Hotkey | Coder | HIGH | TASK-1602 | ✅ ERLEDIGT (2026-10-17) |
+| **TASK-1604** | UI: Client-Switcher in MainWindow Header | Designer | MEDIUM | TASK-1603 | 📋 IN_PROGRESS |
 
 ### Epic 2: Multi-Character Schnellwechsel (FEAT-024)
 
@@ -46,9 +46,9 @@
 
 ### 📋 Nächste sofortige Aktion
 
-**TASK-1603: Input-Router — Client-Auswahl per Dropdown/Hotkey**
+**TASK-1604: UI: Client-Switcher in MainWindow Header**
 
-Der `MultiClientWindowTracker` (TASK-1602) ist implementiert und liefert alle Client-HWNDs pro Prozessname. Jetzt muss der `InputRouter` erweitert werden, um Input gezielt an einen bestimmten Client-HWND zu senden (per `PostMessage` als primärer Pfad, `SendInput`+`AttachThreadInput` als Fallback). Das ausgewählte RO-.exe aus den Settings (`RoExePath` / `FocusLockProcess`) muss dabei als Prozessname-Filter verwendet werden.
+Der `MultiClientInputRouter` (TASK-1603) ist implementiert und sendet Input gezielt an bestimmte Client-HWNDs per PostMessage. Jetzt muss das UI in MainWindow ergänzt werden: ein Dropdown/Hotkey zur Auswahl des Ziel-Clients, der `SetPreferredClientHwnd` auf dem `MultiClientInputRouter` aufruft.
 
 ---
 

@@ -216,6 +216,7 @@
                 <Compile Include="Core\WindowSwitcher.cs" />
                 <Compile Include="Core\WindowTracker.cs" />
                 				<Compile Include="Core\MultiClientWindowTracker.cs" />
+				<Compile Include="Core\MultiClientInputRouter.cs" />
                 				<Compile Include="Core\EnumWindowsProcDelegate.cs" />
                 <Compile Include="Core\WpfTickProvider.cs" />
                 <Compile Include="Core\Benchmarks\BenchmarkHarness.cs" />

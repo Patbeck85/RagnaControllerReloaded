@@ -47,6 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🚀 Phase 16: Multi-Client & Profil-Switching (v2.4.0) — Partially Complete
 - **TASK-1601: Research: Win32 Multi-HWND Enum & Input-Isolation** — Research document created in `.workspace_temp/scratchpad/TASK-1601_Research_MultiHwnd.md`. Win32 APIs (EnumWindows, IsWindow, PostMessage) analyzed. MultiClientWindowTracker architecture designed with TTL caching (10s), PID→Name cache (TECH-020 pattern), and IProcessNameResolver integration for testability.
 - **TASK-1602: Multi-Client WindowTracker** — New `MultiClientWindowTracker` class tracks multiple RO client windows (same process name, different HWNDs) simultaneously. `INativeMethods` extended with `EnumWindows`, `IsWindow`, `PostMessage` + `WM_*` constants. `EnumWindowsProcDelegate` public delegate type. 5 Unit-Tests in `MultiClientWindowTrackerTests.cs`. Build: 0 Errors / 0 Warnings.
+- **TASK-1603: Multi-Client Input Router** — New `MultiClientInputRouter` class sends input targeted at specific client HWNDs via PostMessage (focus-independent) with SendInput fallback. Supports preferred HWND selection, active process name from Settings (RoExePath/FocusLockProcess), and process name extraction from executable path. 12 Unit-Tests in `MultiClientInputRouterTests.cs`. Build: 0 Errors / 0 Warnings. Tests: 664/664 PASS.
 
 --
 
