@@ -48,7 +48,7 @@ namespace RagnaController
                 if (settings.AutoRestartOnCrash)
                 {
                     settings.Save(); // Persist last known profile/settings
-                    MessageBox.Show($"⚠ Fataler Fehler — App wird automatisch neu gestartet.\n\nDetails: {CrashLog}",
+                    MessageBox.Show($"⚠ Fatal error — App will auto-restart.\n\nDetails: {CrashLog}",
                         "RagnaController – Auto-Restart", MessageBoxButton.OK, MessageBoxImage.Warning);
                     RestartApp();
                     return;
@@ -64,7 +64,7 @@ namespace RagnaController
                 if (settings.AutoRestartOnCrash)
                 {
                     settings.Save();
-                    MessageBox.Show($"⚠ UI-Fehler — App wird automatisch neu gestartet.\n\nDetails: {CrashLog}",
+                    MessageBox.Show($"⚠ UI error — App will auto-restart.\n\nDetails: {CrashLog}",
                         "RagnaController – Auto-Restart", MessageBoxButton.OK, MessageBoxImage.Warning);
                     RestartApp();
                     return;
@@ -188,8 +188,8 @@ namespace RagnaController
                 catch (Exception ex)
                 {
                     LogFatal("Engine Creation", ex.ToString());
-                    MessageBox.Show($"Fehler beim Erstellen der Engine:\\n{ex.Message}\\n\\nDetails: {CrashLog}",
-                        "RagnaController – Startfehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Error creating engine:\\n{ex.Message}\\n\\nDetails: {CrashLog}",
+                        "RagnaController – Start Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     Shutdown();
                     return;
                 }
@@ -198,7 +198,7 @@ namespace RagnaController
                 {
                     LogFatal("Engine Creation", "Engine or Manager is null after initialization");
                     MessageBox.Show("Error creating engine: Unknown error",
-                        "RagnaController – Startfehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                        "RagnaController – Start Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     Shutdown();
                     return;
                 }
@@ -270,8 +270,8 @@ namespace RagnaController
             catch (Exception ex)
             {
                 LogFatal("StartWorkflow", ex.ToString());
-                MessageBox.Show($"Fehler beim Start:\n{ex.Message}\n\nDetails: {CrashLog}",
-                    "RagnaController – Startfehler", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error starting:\n{ex.Message}\n\nDetails: {CrashLog}",
+                    "RagnaController – Start Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Shutdown();
             }
         }
