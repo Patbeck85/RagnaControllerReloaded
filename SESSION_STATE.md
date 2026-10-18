@@ -4,9 +4,9 @@
 ---
 
 ## 🎯 Current Milestone
-**Phase:** Release v2.3.0 — Deployed & Complete  
-**Status:** All major phases 1-15 COMPLETE | Build: 0 errors, 0 warnings | Tests: 644/644 PASS  
-**Git HEAD:** `791b251` (origin/main) — "TECH-020: WindowSwitcher leere catch-Blöcke ersetzt + PID-Cache Unit-Tests"  
+**Phase:** Phase 16: Multi-Client & Profil-Switching (v2.4.0) — IN PLANUNG
+**Status:** All major phases 1-15 COMPLETE | Build: 0 errors, 0 warnings | Tests: 644/644 PASS
+**Git HEAD:** `791b251` (origin/main)
 **Tag:** `v2.3.0` pushed to origin  
 **Release:** v2.3.0 (2026-10-17) — GitHub Release deployed mit ZIP-Asset  
 **Download:** https://github.com/Patbeck85/RagnaControllerReloaded/releases/download/v2.3.0/RagnaController_2.3.0.zip  
@@ -17,7 +17,17 @@
 
 | Task ID | Title | Priority | Status | Assigned | Dependencies | DoD Progress |
 |---------|-------|----------|--------|----------|--------------|--------------|
-| **TECH-020** | WindowSwitcher — Process.GetProcessById in EnumWindows Callback | S4 (Low) | ✅ COMPLETE | ROLE-003 Backend | — | 100% — Catch-Blöcke gefixt (ERROR-001), 3 PID-Cache Unit-Tests hinzugefügt |
+|| **TECH-020** | WindowSwitcher — Process.GetProcessById in EnumWindows Callback | S4 (Low) | ✅ COMPLETE | ROLE-003 Backend | — | 100% — Catch-Blöcke gefixt (ERROR-001), 3 PID-Cache Unit-Tests hinzugefügt ||
+|| **TASK-1601** | Research: Win32 Multi-HWND Enum & Input-Isolation pro Client | HIGH | 📋 OPEN | ROLE-004 Researcher | — | 0% ||
+|| **TASK-1602** | Multi-Client WindowTracker (pro HWND eigene ClientW/H, Prozessname) | HIGH | 📋 OPEN | ROLE-003 Backend | TASK-1601 | 0% ||
+|| **TASK-1603** | Input-Router: Client-Auswahl per Dropdown/Hotkey | HIGH | 📋 OPEN | ROLE-003 Backend | TASK-1602 | 0% ||
+|| **TASK-1604** | UI: Client-Switcher in MainWindow Header | MEDIUM | 📋 OPEN | ROLE-002 Frontend | TASK-1603 | 0% ||
+|| **TASK-1611** | Profil-Preset-System: Name-basierter Schnellwechsel | MEDIUM | 📋 OPEN | ROLE-003 Backend | — | 0% ||
+|| **TASK-1612** | UI: Charakter-Auswahl-Dropdown mit Klassen-Icon | MEDIUM | 📋 OPEN | ROLE-002 Frontend | TASK-1611 | 0% ||
+|| **TASK-1613** | Profil-Switch isoliert: State-Reset zwischen Charakteren | HIGH | 📋 OPEN | ROLE-003 Backend | TASK-1611 | 0% ||
+|| **TASK-1621** | Stryker-Scoping: pro-Datei Mutation-Score in CI | MEDIUM | 📋 OPEN | ROLE-004 QA | TEST-010, TEST-011 | 0% ||
+|| **TASK-1622** | Performance-Tests entflaken (flaky Timing) | LOW | 📋 OPEN | ROLE-004 QA | — | 0% ||
+|| **TASK-1623** | Accessibility: AutomationProperties + Gamepad-Fokus-Ring | LOW | 📋 OPEN | ROLE-002 Frontend | UI-010 | 0% ||
 | **TECH-021** | EngineOrchestrator — God Class / SRP Violation | S4 (Low) | 📋 OPEN | ROLE-001 Architect | — | 0% — 686 lines, 20+ engine fields; refactoring candidate |
 | **TECH-022** | SettingsWindow — Localization Keys Missing for New Controls | S4 (Low) | 📋 OPEN | ROLE-002 Frontend | TECH-017, TECH-019 | 0% — New controls from TECH-017/019 need keys in 41 locale files |
 
@@ -44,9 +54,9 @@
 ---
 
 ## 🚀 Next Actions (Autonomous Queue)
-1. **Evaluate TECH-021/022** — Assess ROI for S4 architectural improvements (TECH-020 is jetzt COMPLETE)
-2. **Select Next Task** — Per SOUL.md: only tackle if clear value, no risk to stability
-3. **Update Documentation** — Keep CHANGELOG/ROADMAP/KANBAN in sync if changes made
+1. **TASK-1601: Research Win32 Multi-HWND** — EnumWindows, GetWindowThreadProcessId, Input-Isolation pro Client
+2. **TASK-1602: Multi-Client WindowTracker** — Nach Research abgeschlossen
+3. **Update Documentation** — KANBAN.md, ROADMAP.md in Sync halten
 
 ---
 
