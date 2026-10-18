@@ -80,7 +80,7 @@ namespace RagnaController.Views.Overlays
         {
             try
             {
-                // Suche nach ragexe.exe / sakexe.exe in üblichen Pfaden
+                // Search for ragexe.exe / sakexe.exe in common paths
                 var candidates = new[]
                 {
                     @"C:\Program Files\Gravity\RO",

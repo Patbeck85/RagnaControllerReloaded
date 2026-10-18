@@ -78,7 +78,7 @@ namespace RagnaController.ControllerTest
     ///
     /// Runs a fixed sequence of <see cref="DiagnosticControl"/> controls. Per tick a
     /// <see cref="RecordingSample"/> fed via <see cref="FeedSample"/>; the active control
-    /// is bestanden, sobald ihr <c>Detect</c>-Prädikat wahr is (Detektion). The Reaktionszeit
+    /// is passed as soon as its <c>Detect</c> predicate true is (Detektion). The reaction time
     /// (activation → first detection) is measured and output as p50/p95 per control
     /// (guided self-test: n=1 per control, therefore p50 == p95 == reaction time). Without detection
     /// within the timeout the control counts as failed. So the user gets a
@@ -145,7 +145,7 @@ namespace RagnaController.ControllerTest
         /// <summary>Fires if all controls are completed.</summary>
         public event Action? Completed;
 
-        /// <summary>Startet den Selbsttest and setzt all Ergebnisse zurück.</summary>
+        /// <summary>Starts the self-test and resets all results.</summary>
         /// <param name="startMs">Optionale Startzeit (for deterministische Tests); default: jetzt.</param>
         public void Start(long? startMs = null)
         {
@@ -178,7 +178,7 @@ namespace RagnaController.ControllerTest
             long now = nowMs ?? Environment.TickCount64;
             _lastNowMs = now;
 
-            // Disconnect: keine Detektion möglich — only Timeout weiterlaufen lassen.
+            // Disconnect: no detection possible — only timeout keeps running.
             if (!sample.Connected)
             {
                 CheckTimeout(now);
@@ -188,7 +188,7 @@ namespace RagnaController.ControllerTest
             var control = _controls[_currentIndex];
 
             // Erste Detektion der aktiven Kontrolle → Reaktionszeit messen and bestanden.
-            // n=1 pro Kontrolle (geführter Selbsttest): p50 == p95 == Reaktionszeit.
+            // n=1 pro Kontrolle (geführter Selbsttest): p50 == p95 == reaction time.
             if (control.Detect(sample))
             {
                 _reactionMs = Math.Max(0, now - _activeSinceMs);
@@ -257,7 +257,7 @@ namespace RagnaController.ControllerTest
         {
             var control = _controls[_currentIndex];
 
-            // n=1 pro Kontrolle (geführter Selbsttest): p50 == p95 == gemessene Reaktionszeit.
+            // n=1 pro Kontrolle (geführter Selbsttest): p50 == p95 == measured reaction time.
             double reaction = passed ? _reactionMs : 0;
 
             var result = new DiagnosticControlResult(
@@ -267,8 +267,8 @@ namespace RagnaController.ControllerTest
 
             _results.Add(result);
 
-            // Nächste Kontrolle (or Ende). Zeitbasis: zuletzt beobachtete Zeit (Tests injizieren
-            // nowMs — realer Wanduhr-Zugriff hier würde deterministische Tests brechen).
+            // Next control (or end). Time base: last observed time (Tests injizieren
+            // nowMs — real wall-clock access here would break deterministic tests).
             if (_currentIndex + 1 < _controls.Length)
             {
                 _currentIndex++;
@@ -295,13 +295,13 @@ namespace RagnaController.ControllerTest
 
         // ---------------------------------------------------------------------
         // IDisposable (TECH-025): The Klasse is eine reine Zustandsmaschine ohne
-        // eigenen Timer/Thread, but they HÄLT per Event-Delegates on ihre
-        // Subscriber (z. B. das Window) → ein laufendes Fenster hält den Runner
+        // own timer/thread, but they hold per event-delegates on their
+        // subscribers (e.g. the window) → a running window keeps the runner
         // indirekt am Leben. Dispose() bricht die Referenzen and markiert den
         // Runner als beendet: danach are Start()/FeedSample() inert.
         // ---------------------------------------------------------------------
 
-        /// <summary>Runner is disposed — keine weiteren Aktionen mehr möglich.</summary>
+        /// <summary>Runner is disposed — no further actions possible.</summary>
         public bool IsDisposed { get; private set; }
 
         /// <summary>

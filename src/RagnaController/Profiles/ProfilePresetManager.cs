@@ -6,9 +6,9 @@ using System.Text.Json;
 namespace RagnaController.Profiles
 {
     /// <summary>
-    /// TASK-1611: ProfilePresetManager — verwaltet gespeicherte Profil-Presets für
+    /// TASK-1611: ProfilePresetManager — manages stored profile presets for
     /// schnellen Namens-basierten Profil-Wechsel.
-    /// Presets werden in <dir>/presets.json persistiert und über Neustarts erhalten.
+    /// Presets are persisted in <dir>/presets.json and retained across restarts.
     /// </summary>
     public sealed class ProfilePresetManager : IDisposable
     {
@@ -35,7 +35,7 @@ namespace RagnaController.Profiles
         public int Count => _presets.Count;
 
         /// <summary>
-        /// Speichert ein Preset (überschreibt bei bestehendem Namen).
+        /// Saves a preset (overwrites if name exists).
         /// </summary>
         public void SavePreset(ProfilePreset preset)
         {

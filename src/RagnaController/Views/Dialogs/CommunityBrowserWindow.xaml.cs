@@ -43,7 +43,7 @@ namespace RagnaController.Views.Dialogs
 
         /// <summary>
         /// Dispose des Singleton-Clients beim App-Shutdown (Socket-Cleanup, TECH-018).
-        /// Is from App.OnExit aufgerufen — danach is die App beendet, keine Wiederverwendung möglich.
+        /// Is called from App.OnExit — afterwards the app is ended, no reuse possible.
         /// </summary>
         /// <summary>
         /// DisposeRegistryClient method.
@@ -202,7 +202,7 @@ namespace RagnaController.Views.Dialogs
         {
             base.OnClosing(e);
             // _http is static/shared (application lifetime) — NICHT hier disposten,
-            // sonst ObjectDisposedException bei Wiederveröffnung. Cleanup erfolgt beim
+            // otherwise ObjectDisposedException on reopening. Cleanup happens on
             // App-Shutdown via CommunityBrowserWindow.DisposeRegistryClient() (TECH-018).
         }
 

@@ -8,8 +8,8 @@ namespace RagnaController.Profiles
     /// abbildet. Trennt die Zuordnungslogik (unit-testbar) from der Persistenz/Aktivierung
     /// im <see cref="ProfileManager"/>.
     ///
-    /// Normalisierung: RO-Client-Charakter-Namen können führende/nachgestellte Leerzeichen
-    /// and gemischte Groß-/Kleinschreibung enthalten (OCR-/Fenster-Lese-Rauschen). The Resolver
+    /// Normalization: RO client character names can have leading/trailing spaces
+    /// and mixed upper/lowercase included (OCR/window-read noise). The resolver
     /// normalisiert to "getrimmt + interne Leerzeichen on ein zusammengefasst" and vergleicht
     /// case-insensitiv, damit dieselbe Zuordnung auch bei Lese-Varianz stabil bleibt.
     /// </summary>
@@ -19,15 +19,15 @@ namespace RagnaController.Profiles
     public sealed class CharacterProfileResolver
     {
         // key = normalisierter Char-Name, value = Profil-Name.
-        // OrdinalIgnoreCase: OCR-/Fenster-Lese-Rauschen ändert häufig only die Großschreibung.
+        // OrdinalIgnoreCase: OCR/window-read noise ändert häufig only die Großschreibung.
         private readonly Dictionary<string, string> _map = new(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>Anzahl der gespeicherten Zuordnungen.</summary>
         public int Count => _map.Count;
 
         /// <summary>
-        /// Normalisiert einen Charakter-Namen: trims Außenleerzeichen and fasst interne
-        /// Leerzeichen-Läufe on ein einzelnes Leerzeichen zusammen. Leere/Null → leere Zeichenkette.
+        /// Normalizes a character name: trims outer spaces and combines internal
+        /// space sequences into a single space. Empty/null → empty string.
         /// </summary>
         public static string Normalize(string? characterName)
         {
@@ -36,7 +36,7 @@ namespace RagnaController.Profiles
             var trimmed = characterName.Trim();
             if (trimmed.Length == 0) return string.Empty;
 
-            // Interne Leerzeichen-Läufe on ein einzelnes Leerzeichen reduzieren.
+            // Internal space sequences reduce to a single space.
             var sb = new System.Text.StringBuilder(trimmed.Length);
             bool inRun = false;
             foreach (var ch in trimmed)
@@ -67,7 +67,7 @@ namespace RagnaController.Profiles
             _map[key] = profileName.Trim();
         }
 
-        /// <summary>Entfernt eine Zuordnung. Gibt zurück, ob something entfernt wurde.</summary>
+        /// <summary>Removes a mapping. Returns whether something was removed.</summary>
         public bool Unregister(string characterName)
         {
             var key = Normalize(characterName);
@@ -90,19 +90,19 @@ namespace RagnaController.Profiles
             return _map.TryGetValue(key, out var profileName) ? profileName : null;
         }
 
-        /// <summary>Prüft, ob for einen Charakter-Namen eine Zuordnung existiert.</summary>
+        /// <summary>Checks whether a mapping exists for a character name.</summary>
         public bool IsMapped(string? characterName) => Resolve(characterName) != null;
 
     /// <param name="characterName">characterName parameter.</param>
     /// <param name="characterName">characterName parameter.</param>
-        /// <summary>Schnappschuss aller Zuordnungen (normalisierte Schlüssel) — for Persistenz/Tests.</summary>
+        /// <summary>Snapshot of all mappings (normalized keys) — for persistence/tests.</summary>
         public IReadOnlyDictionary<string, string> Snapshot()
         {
             var copy = new Dictionary<string, string>(_map);
             return copy;
         }
 
-        /// <summary>Lädt ein vorher gespeichertes Mapping (z. B. nach Neustart).</summary>
+        /// <summary>Loads a previously saved mapping (e.g. after restart).</summary>
         public void LoadFrom(IReadOnlyDictionary<string, string> mappings)
         {
             _map.Clear();

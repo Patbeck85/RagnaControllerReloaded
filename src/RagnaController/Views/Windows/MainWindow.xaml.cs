@@ -316,7 +316,7 @@ public partial class MainWindow : Window
 
         /// <summary>
         /// Wendet das Big Picture Mode Layout an: 150% Font Scaling,
-        /// min. 44×44px Touch-Targets, größere Spacing for Touch-Bedienung.
+        /// min. 44×44px min. 44×44px touch targets, larger spacing for touch operation.
         /// </summary>
         private void ApplyBigPictureMode(bool enabled)
         {
@@ -330,19 +330,19 @@ public partial class MainWindow : Window
                 Application.Current.Resources["FontScaleNormal"] = Application.Current.Resources[scaleKey];
             }
 
-            // Touch-Targets for Haupt-Buttons vergrößern (min. 44×44px)
+            // Enlarge touch targets for main buttons (min. 44×44px)
             SetButtonMinSize(BtnCalibrateQuick, enabled ? 56 : 44);
             SetButtonMinSize(BtnTestInput, enabled ? 56 : 44);
             SetButtonMinSize(BtnOpenRemap, enabled ? 56 : 44);
             SetButtonMinSize(BtnRadial, enabled ? 56 : 44);
             SetButtonMinSize(BtnBigPicture, enabled ? 48 : 36);
 
-            // Fenster-Controls (Min/Max/Close) for Touch vergrößern
+            // Enlarge window controls (Min/Max/Close) for touch
             SetButtonMinSize(BtnMinimize, enabled ? 48 : 36);
             SetButtonMinSize(BtnMaximize, enabled ? 48 : 36);
             SetButtonMinSize(BtnClose, enabled ? 48 : 36);
 
-            // ComboBox for Touch vergrößern
+            // Enlarge ComboBox for touch
             if (ProfileCombo != null)
             {
                 ProfileCombo.MinHeight = enabled ? 44 : 32;
@@ -759,7 +759,7 @@ public partial class MainWindow : Window
             _navigator?.Stop();
             _navigator?.Dispose();
 
-            // UI-011: Telemetrie-Timer stoppen (MEMORY-001: keine hängenden DispatcherTimers)
+            // UI-011: Stop telemetry timer (MEMORY-001: no hanging DispatcherTimers)
             if (TelemetryPanelControl != null)
                 TelemetryPanelControl.StopUpdates();
 
@@ -1195,7 +1195,7 @@ public partial class MainWindow : Window
                 _presetComboUpdating = true;
                 ClassCharacterCombo.Items.Clear();
 
-                // Sammle alle eindeutigen Klassen aus den verfügbaren Profilen
+                // Collect all distinct classes from available profiles
                 var classes = _manager.Profiles
                     .Select(p => p.Class)
                     .Distinct()
@@ -1213,7 +1213,7 @@ public partial class MainWindow : Window
                     });
                 }
 
-                // Wähle die Klasse des aktuellen aktiven Profils
+                // Select class of current active profile
                 var activeClass = _manager.ActiveProfile?.Class;
                 if (!string.IsNullOrEmpty(activeClass))
                 {

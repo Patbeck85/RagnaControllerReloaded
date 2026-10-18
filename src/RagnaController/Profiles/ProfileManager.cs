@@ -36,10 +36,10 @@ namespace RagnaController.Profiles
         public string CurrentControllerGuid { get; private set; } = "";
 
         // FEAT-024: Name-basierte Char→Profil-Zuordnung (Charakter-Namen-Erkennung → Profil-Switch).
-        // Persistiert in <dir>/character_mappings.json, übersteht damit Neustarts.
+        // Persisted in <dir>/character_mappings.json, thus survives restarts.
         private readonly CharacterProfileResolver _charResolver = new();
 
-        /// <summary>FEAT-024: Schnappschuss aller Char→Profil-Zuordnungen (normalisierte Schlüssel).</summary>
+        /// <summary>FEAT-024: Snapshot of all char→profile mappings (normalized keys).</summary>
         public IReadOnlyDictionary<string, string> CharacterToProfileMap => _charResolver.Snapshot();
 
         /// <summary>v1.7.2: FIX #7 - Safe access to active profile with null protection.</summary>
@@ -118,7 +118,7 @@ namespace RagnaController.Profiles
 
         private string CharMappingsPath => Path.Combine(_dir, "character_mappings.json");
 
-        /// <summary>FEAT-024: Lädt die persistierten Char-Zuordnungen (nach Neustart).</summary>
+        /// <summary>FEAT-024: Loads persisted char mappings (after restart).</summary>
         public void LoadCharacterMappings()
         {
             _charResolver.Clear();
@@ -320,7 +320,7 @@ namespace RagnaController.Profiles
         /// <summary>
         /// Synchronous disk write — called by FlushProfile and Save().
         /// FIX #4: Safe-File-Save Pattern (wie bei Settings.cs): First in .tmp schreiben,
-        /// Stream sicher schließen, then per File.Move überschreiben. Verhindert korrupte 0-Byte-Dateien
+        /// Close stream safely, then overwrite via File.Move. Prevents corrupt 0-byte files
         /// bei OutOfMemory or Absturz from JsonSerializer.Serialize.
         /// </summary>
         private void WriteToDisk(Profile p)

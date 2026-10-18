@@ -230,7 +230,7 @@ namespace RagnaController.ControllerTest
             }
             catch
             {
-                // Snapshot-Lesefehler darf die UI nicht stören (Rohwerte bleiben 0).
+                // Snapshot read error darf die UI nicht stören (raw values remain 0).
             }
 
             var bs = _controllerProvider.ButtonStates;
@@ -240,7 +240,7 @@ namespace RagnaController.ControllerTest
         // ------------------------------------------------------------------ TEST-017: Eingabe-Selbsttest
 
         /// <summary>
-        /// Spielt ein Sample in den geführten Selbsttest ein (UI-Thread — Timer läuft on dem
+        /// Plays a sample into the guided self-test (UI-Thread — Timer running on the
         /// Dispatcher). The active control is displayed per prompt, on completion the
         /// Pass/Fail-Ergebnis with Latenz p50/p95.
         /// </summary>
@@ -249,7 +249,7 @@ namespace RagnaController.ControllerTest
             _diagnostic.FeedSample(sample);
 
             // Prompt only updated on switch of active control, so that the
-            // Bestehens-Feedback-Zeile (✓/✗ + Latenz) nicht sofort überschrieben is.
+            // passing feedback line (✓/✗ + Latenz) not immediately overwritten is.
             var current = _diagnostic.CurrentControl;
             int idx = _diagnostic.CurrentIndex;
             if (current != null && idx >= 0 && idx != _diagShownIndex)

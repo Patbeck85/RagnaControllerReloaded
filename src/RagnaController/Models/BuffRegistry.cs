@@ -19,7 +19,7 @@ namespace RagnaController.Models
         private static readonly Dictionary<int, DebuffEntry> _debuffById = new();
         private static readonly Dictionary<string, DebuffEntry> _debuffByName = new(StringComparer.OrdinalIgnoreCase);
 
-        /// <summary>Lädt die Registry aus der eingebetteten JSON-Ressource (einmalig, thread-safe).</summary>
+        /// <summary>Loads the registry from embedded JSON resource (once, thread-safe).</summary>
         public static void Initialize()
         {
             if (_data != null) return;
@@ -175,7 +175,7 @@ namespace RagnaController.Models
         {
             var buff = GetBuffByName(buffName);
             if (buff == null) return (false, VirtualKey.None);
-            // Autorecast only if SkillId bekannt and RecastKey gesetzt wäre — hier Default: false
+            // Autorecast only if SkillId known and RecastKey set would be — here default: false
             return (false, VirtualKey.None);
         }
     }

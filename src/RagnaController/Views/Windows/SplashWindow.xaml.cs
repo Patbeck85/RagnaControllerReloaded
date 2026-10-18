@@ -16,7 +16,7 @@ namespace RagnaController.Views.Windows
         private readonly DispatcherTimer _statusTimer = new();
         private int _statusPhase = 0;
 
-        // Splash überspringen per Klick
+        // Skip splash per click
         public readonly System.Threading.CancellationTokenSource SkipCts = new();
 
         public SplashWindow()
