@@ -69,27 +69,39 @@
                         </StackPanel>
                     </Border>
 
-                    <!-- Right: Profile Selector + Window Controls -->
-                    <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0">
-                        <Border x:Name="ProfileSelectorBorder" Style="{StaticResource GlassPanel}" Padding="0,0,8,0" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,12,0" Effect="{StaticResource CardShadow}">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <ComboBox x:Name="ProfileCombo" Width="200" Style="{StaticResource DarkComboBox}" SelectionChanged="ProfileCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_ProfileCombo_Tooltip}" Grid.Column="0" Margin="8,4,0,4" VerticalAlignment="Center"/>
-                                <Border Grid.Column="1" Width="36" Height="36" Background="{StaticResource AccentBlue}" CornerRadius="0,{StaticResource RadiusMd},{StaticResource RadiusMd},0" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Right" Effect="{StaticResource BlueGlow}">
-                                    <Path Data="M0,0 L4,4 L8,0" Stroke="{StaticResource TextPrimary}" StrokeThickness="1.8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                            </Grid>
-                        </Border>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Button x:Name="BtnMinimize" Content="&#xE921;" Style="{StaticResource WindowControlButton}" Click="BtnMinimize_Click" ToolTip="Minimize" AutomationProperties.Name="Minimize" Width="36" Height="36"/>
-                            <Button x:Name="BtnMaximize" Content="&#xE922;" Style="{StaticResource WindowControlButton}" Click="BtnMaximize_Click" ToolTip="Maximize" AutomationProperties.Name="Maximize" Width="36" Height="36"/>
-                            <Button x:Name="BtnClose" Content="&#xE8BB;" Style="{StaticResource WindowControlButtonClose}" Click="BtnClose_Click" ToolTip="Close" AutomationProperties.Name="Close" Width="36" Height="36"/>
-                            <Button x:Name="BtnBigPicture" Content="🎮" Style="{StaticResource WindowControlButton}" Click="BtnBigPicture_Click" ToolTip="Big Picture Mode (Steam Deck)" AutomationProperties.Name="Big Picture Mode" Width="36" Height="36" FontSize="16"/>
-                        </StackPanel>
-                    </StackPanel>
+                    <!-- Right: Profile Selector + Client Switcher + Window Controls -->
+                                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0">
+                                            <Border x:Name="ProfileSelectorBorder" Style="{StaticResource GlassPanel}" Padding="0,0,8,0" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,12,0" Effect="{StaticResource CardShadow}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <ComboBox x:Name="ProfileCombo" Width="200" Style="{StaticResource DarkComboBox}" SelectionChanged="ProfileCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_ProfileCombo_Tooltip}" Grid.Column="0" Margin="8,4,0,4" VerticalAlignment="Center"/>
+                                                    <Border Grid.Column="1" Width="36" Height="36" Background="{StaticResource AccentBlue}" CornerRadius="0,{StaticResource RadiusMd},{StaticResource RadiusMd},0" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Right" Effect="{StaticResource BlueGlow}">
+                                                        <Path Data="M0,0 L4,4 L8,0" Stroke="{StaticResource TextPrimary}" StrokeThickness="1.8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </Grid>
+                                            </Border>
+                                            <Border x:Name="ClientSelectorBorder" Style="{StaticResource GlassPanel}" Padding="0,0,8,0" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,12,0" Effect="{StaticResource CardShadow}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="Client:" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
+                                                    <ComboBox x:Name="ClientCombo" Width="140" Style="{StaticResource DarkComboBox}" SelectionChanged="ClientCombo_SelectionChanged" ToolTip="Select RO client window for input routing" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center"/>
+                                                    <Button x:Name="BtnRefreshClients" Content="&#xE72C;" Width="28" Height="28" Style="{StaticResource WindowControlButton}" Click="BtnRefreshClients_Click" ToolTip="Refresh client list" AutomationProperties.Name="Refresh clients" Grid.Column="2" VerticalAlignment="Center"/>
+                                                </Grid>
+                                            </Border>
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                                <Button x:Name="BtnMinimize" Content="&#xE921;" Style="{StaticResource WindowControlButton}" Click="BtnMinimize_Click" ToolTip="Minimize" AutomationProperties.Name="Minimize" Width="36" Height="36"/>
+                                                <Button x:Name="BtnMaximize" Content="&#xE922;" Style="{StaticResource WindowControlButton}" Click="BtnMaximize_Click" ToolTip="Maximize" AutomationProperties.Name="Maximize" Width="36" Height="36"/>
+                                                <Button x:Name="BtnClose" Content="&#xE8BB;" Style="{StaticResource WindowControlButtonClose}" Click="BtnClose_Click" ToolTip="Close" AutomationProperties.Name="Close" Width="36" Height="36"/>
+                                                <Button x:Name="BtnBigPicture" Content="🎮" Style="{StaticResource WindowControlButton}" Click="BtnBigPicture_Click" ToolTip="Big Picture Mode (Steam Deck)" AutomationProperties.Name="Big Picture Mode" Width="36" Height="36" FontSize="16"/>
+                                            </StackPanel>
+                                        </StackPanel>
                 </Grid>
 
                 <!-- Main Content Area -->

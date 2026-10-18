@@ -15,7 +15,7 @@
 | **TASK-1601** | Research: Win32 Multi-HWND Enum & Input-Isolation pro Client | Researcher | HIGH | — | ✅ RESEARCH_DONE |
 | **TASK-1602** | Multi-Client WindowTracker (pro HWND eigene ClientW/H, Prozessname) | Coder | HIGH | TASK-1601 | ✅ ERLEDIGT (2026-10-17) |
 | **TASK-1603** | Input-Router: Client-Auswahl per Dropdown/Hotkey | Coder | HIGH | TASK-1602 | ✅ ERLEDIGT (2026-10-17) |
-| **TASK-1604** | UI: Client-Switcher in MainWindow Header | Designer | MEDIUM | TASK-1603 | 📋 IN_PROGRESS |
+|| **TASK-1604** | UI: Client-Switcher in MainWindow Header | Designer | HIGH | TASK-1603 | ✅ CLOSED (2026-10-18) |
 
 ### Epic 2: Multi-Character Schnellwechsel (FEAT-024)
 

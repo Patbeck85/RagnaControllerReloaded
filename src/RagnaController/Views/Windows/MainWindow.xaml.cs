@@ -37,6 +37,13 @@ public partial class MainWindow : Window
         private readonly ToastService _toastService = new();
         private readonly ProfileService _profileService;
 
+        // ── TASK-1604: Multi-Client Client-Switcher ──
+        private readonly INativeMethods _nativeMethods = new NativeMethodsImpl();
+        private readonly IProcessNameResolver _processNames = new ProcessNameResolver();
+        private readonly MultiClientWindowTracker _windowTracker = null!;
+        private readonly MultiClientInputRouter _multiClientRouter = null!;
+        private bool _clientComboUpdating = false;
+
         private MainViewModel? _vm;
         private DiscordRpcService? _discordRpc;
         private TtsAnnouncerService? _ttsService;
@@ -235,6 +242,11 @@ public partial class MainWindow : Window
 
             // Select default tab (Base)
             SelectTab(PanelBase, null);
+
+            // ── TASK-1604: Multi-Client Router initialisieren ──
+            _windowTracker = new MultiClientWindowTracker(_nativeMethods, _processNames);
+            _multiClientRouter = new MultiClientInputRouter(_nativeMethods, _processNames, _windowTracker);
+            RefreshClientList();
         }
 
         public void SwitchFromMiniMode()
@@ -765,6 +777,10 @@ public partial class MainWindow : Window
             if (_restoreMainWindowRequestedHandler != null)
                 _engine.RestoreMainWindowRequested -= _restoreMainWindowRequestedHandler;
 
+            // Dispose multi-client router (MEMORY-001)
+            _multiClientRouter?.Dispose();
+            _windowTracker?.Dispose();
+
             // Save settings
             if (_manager.ActiveProfile != null)
                 _settings.LastProfileName = _manager.ActiveProfile.Name;
@@ -996,6 +1012,91 @@ public partial class MainWindow : Window
             if (LogTextBlock != null) LogTextBlock.Text = string.Empty;
             if (LogTextBlock2 != null) LogTextBlock2.Text = string.Empty;
             ShowToast("Log cleared");
+        }
+
+        // ── TASK-1604: Multi-Client Client-Switcher UI ──
+        private void RefreshClientList()
+        {
+            try
+            {
+                _clientComboUpdating = true;
+                ClientCombo.Items.Clear();
+
+                var clients = _windowTracker.GetClients(_engine?.CurrentProfile?.Name ?? "ragexe");
+                if (!clients.Any())
+                {
+                    // Fallback: alle bekannten Clients anzeigen
+                    clients = _windowTracker.GetClients("ragexe");
+                }
+
+                foreach (var client in clients)
+                {
+                    var item = new ClientComboItem
+                    {
+                        Hwnd = client.Hwnd,
+                        Pid = client.Pid,
+                        ProcessName = client.ProcessName,
+                        DisplayName = $"{client.ProcessName} (PID {client.Pid}, HWND 0x{client.Hwnd:X4})"
+                    };
+                    ClientCombo.Items.Add(item);
+                }
+
+                if (ClientCombo.Items.Count > 0)
+                {
+                    ClientCombo.SelectedIndex = 0;
+                    var first = ClientCombo.Items[0] as ClientComboItem;
+                    if (first != null)
+                    {
+                        _multiClientRouter.SetPreferredClientHwnd(first.ProcessName, first.Hwnd);
+                    }
+                }
+                else
+                {
+                    ClientCombo.Items.Add(new ClientComboItem
+                    {
+                        Hwnd = IntPtr.Zero,
+                        Pid = 0,
+                        ProcessName = "<none>",
+                        DisplayName = "<no RO client found>"
+                    });
+                    ClientCombo.SelectedIndex = 0;
+                    ClientCombo.IsEnabled = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[MainWindow] RefreshClientList failed: {ex.Message}");
+                ShowToast($"Client refresh failed: {ex.Message}", isError: true);
+            }
+            finally
+            {
+                _clientComboUpdating = false;
+            }
+        }
+
+        private void ClientCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_clientComboUpdating || ClientCombo.SelectedItem is not ClientComboItem item)
+                return;
+
+            _multiClientRouter.SetPreferredClientHwnd(item.ProcessName, item.Hwnd);
+            ShowToast($"Client switched to {item.ProcessName} (PID {item.Pid})");
+        }
+
+        private void BtnRefreshClients_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshClientList();
+            ShowToast("Client list refreshed");
+        }
+
+        private sealed class ClientComboItem
+        {
+            public IntPtr Hwnd { get; set; }
+            public uint Pid { get; set; }
+            public string ProcessName { get; set; } = "";
+            public string DisplayName { get; set; } = "";
+
+            public override string ToString() => DisplayName;
         }
     }
 }
