@@ -46,6 +46,9 @@ namespace RagnaController.Core
             _queue = queue;
         }
 
+        /// <summary>
+        /// Resets the combo step index, timer, and buffer window.
+        /// </summary>
         public void Reset()
         {
             _stepIndex    = 0;
@@ -58,8 +61,14 @@ namespace RagnaController.Core
         /// Prevents a false step-1 trigger when an overlay closes while the button
         /// is still physically held (the engine never saw the press-down).
         /// </summary>
+        /// <param name="currentlyHeld">Whether the button is currently held down.</param>
         public void SyncHeldState(bool currentlyHeld) => _wasHeld = currentlyHeld;
 
+        /// <summary>
+        /// Advances the combo engine by one tick.
+        /// </summary>
+        /// <param name="isHeld">Whether the combo button is currently held.</param>
+        /// <param name="ms">Milliseconds elapsed since the last tick.</param>
         public void Update(bool isHeld, int ms)
         {
             if (!Enabled || Sequence.Count == 0) return;

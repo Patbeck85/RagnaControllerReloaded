@@ -657,6 +657,10 @@ namespace RagnaController.Core
             }
         }
 
+        /// <summary>
+        /// Starts the 125Hz tick loop and all engine subsystems.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">If already running.</exception>
         public void Start()
                 {
                     _tickProvider.Start();
@@ -668,6 +672,9 @@ namespace RagnaController.Core
                     _partyManager.Start(); // FEAT-012: Auto-Heal nur bei aktivem Engine
                 }
 
+        /// <summary>
+        /// Stops the 125Hz tick loop and all engine subsystems.
+        /// </summary>
         public void Stop()
         {
             _tickProvider.Stop();
@@ -679,9 +686,9 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// ROB-001: Self-healing Restart des Engines (z. B. nach erkanntem Hang).
-        /// Stoppt die Tick-Schleife and startet they sofort wieder; Input-Queue bleibt laufen,
-        /// damit keine Tasten "stecken bleiben". Thread-sicher gegen parallele Restarts.
+        /// ROB-001: Self-healing Restart of the engine (e.g., after detected hang).
+        /// Stops the tick loop and starts it again immediately; Input-Queue keeps running
+        /// so no keys get "stuck". Thread-safe against parallel restarts.
         /// </summary>
         public void Restart()
         {
@@ -707,6 +714,9 @@ namespace RagnaController.Core
         private int _restartCount;
         private volatile bool _isShutDown;
 
+        /// <summary>
+        /// Pauses the tick loop without stopping subsystems.
+        /// </summary>
         public void Pause()
         {
             IsPaused = true;
@@ -714,12 +724,18 @@ namespace RagnaController.Core
             StatusChanged?.Invoke(EngineStatus.Stopped);
         }
 
+        /// <summary>
+        /// Resumes the tick loop after a pause.
+        /// </summary>
         public void Resume()
         {
             IsPaused = false;
             StatusChanged?.Invoke(EngineStatus.Running);
         }
 
+        /// <summary>
+        /// Shuts down the engine and releases all resources.
+        /// </summary>
         public void Shutdown()
                                         {
                                             if (_isShutDown) return; // idempotent: Dispose() ruft Shutdown() erneut auf
@@ -756,6 +772,9 @@ namespace RagnaController.Core
                                             _logger?.Dispose();
                                         }
 
+        /// <summary>
+        /// Disposes all engine resources and unhooks event handlers.
+        /// </summary>
         public void Dispose()
         {
             Shutdown();

@@ -217,9 +217,10 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Update all tracked buffs/debuffs - call every tick
+        /// Update all tracked buffs/debuffs - call every tick.
         /// Zero-allocation implementation using reusable lists.
         /// </summary>
+        /// <param name="deltaMs">Milliseconds elapsed since the last update.</param>
         public void Update(int deltaMs)
         {
             var now = DateTime.UtcNow;
@@ -281,7 +282,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Clear all tracked buffs and debuffs (e.g., on profile change)
+        /// Clear all tracked buffs and debuffs (e.g., on profile change).
         /// </summary>
         public void ClearAll()
         {

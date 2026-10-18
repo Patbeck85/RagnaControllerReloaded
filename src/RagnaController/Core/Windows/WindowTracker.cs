@@ -57,12 +57,18 @@ namespace RagnaController.Core
             _processNames  = processNames ?? new ProcessNameResolver();
         }
 
+        /// <summary>
+        /// Sets the process name to track (e.g., "ragexe").
+        /// </summary>
+        /// <param name="name">The process name without .exe extension.</param>
         public void SetProcessName(string name)
         {
             _procName = name.ToLowerInvariant().Replace(".exe", "");
         }
 
-        // ── Hook starten ──────────────────────────────────────────────────
+        /// <summary>
+        /// Starts the WinEvent hook to track RO client windows.
+        /// </summary>
         public void StartHook()
         {
             if (_hook != IntPtr.Zero) return;
@@ -75,6 +81,9 @@ namespace RagnaController.Core
             Refresh();
         }
 
+        /// <summary>
+        /// Stops and removes the WinEvent hook.
+        /// </summary>
         public void StopHook()
         {
             if (_hook == IntPtr.Zero) return;
@@ -96,6 +105,9 @@ namespace RagnaController.Core
         }
 
         // ── Manual auffrischen (z.B. beim Controller-Connect) ────────────
+        /// <summary>
+        /// Refreshes the window tracking by re-enumerating windows.
+        /// </summary>
         public void Refresh()
         {
             lock (_lock)
@@ -152,6 +164,9 @@ namespace RagnaController.Core
                 ForegroundChanged?.Invoke();
         }
 
+        /// <summary>
+        /// Disposes the window tracker and removes the hook.
+        /// </summary>
         public void Dispose() => StopHook();
     }
 }

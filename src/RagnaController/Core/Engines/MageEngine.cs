@@ -60,6 +60,9 @@ namespace RagnaController.Core
         /// <summary>
         /// Haupt-Eingabeverarbeitung.
         /// </summary>
+        /// <param name="input">The parsed input state for the current frame.</param>
+        /// <param name="deltaMs">Milliseconds elapsed since the last tick.</param>
+        /// <returns>True if input was consumed by the mage engine; false otherwise.</returns>
         public bool Handle(ParsedInput input, int deltaMs)
         {
             if (!IsActive || !MageEnabled) return false;
@@ -69,6 +72,9 @@ namespace RagnaController.Core
             return true;
         }
 
+        /// <summary>
+        /// Toggles mage mode on or off.
+        /// </summary>
         public void ToggleMageMode()
         {
             IsActive = !IsActive;
@@ -81,6 +87,8 @@ namespace RagnaController.Core
         /// <summary>
         /// Is vom HandheldModeManager aufgerufen, um Gyroskop-Daten einzuspeisen.
         /// </summary>
+        /// <param name="dx">Gyro X-axis delta.</param>
+        /// <param name="dy">Gyro Y-axis delta.</param>
         public void InjectGyroDelta(int dx, int dy)
         {
             if (!GyroAimEnabled) return;
@@ -127,6 +135,9 @@ namespace RagnaController.Core
         }
 
         // Reset: All Felder on Initialwerte setzen (important bei Profil-Reload!)
+        /// <summary>
+        /// Resets the mage engine state to idle.
+        /// </summary>
         public void Reset()
         {
             MageEnabled = false;

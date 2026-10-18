@@ -127,9 +127,13 @@ namespace RagnaController.Core
         internal InputRouter() { }
 
         /// <summary>
-                        /// Route input through the engine chain. Returns true if input was consumed.
-                        /// </summary>
-                        public bool RouteInput(ParsedInput input, int actualDeltaMs, bool rumbleEnabled)
+        /// Route input through the engine chain. Returns true if input was consumed.
+        /// </summary>
+        /// <param name="input">The parsed input state for the current frame.</param>
+        /// <param name="actualDeltaMs">Milliseconds elapsed since the last tick.</param>
+        /// <param name="rumbleEnabled">Whether haptic feedback/rumble is enabled.</param>
+        /// <returns>True if the input was consumed by an engine; false if it should pass through.</returns>
+        public bool RouteInput(ParsedInput input, int actualDeltaMs, bool rumbleEnabled)
                         {
                             // TECH-064: Validate engines are initialized — prevents NullReferenceException
                             // when RouteInput is accidentally called on a failover-only InputRouter instance.
