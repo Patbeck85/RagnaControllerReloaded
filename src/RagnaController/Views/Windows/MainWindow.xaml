@@ -95,6 +95,18 @@
                                                     <Button x:Name="BtnRefreshClients" Content="&#xE72C;" Width="28" Height="28" Style="{StaticResource WindowControlButton}" Click="BtnRefreshClients_Click" ToolTip="Refresh client list" AutomationProperties.Name="Refresh clients" Grid.Column="2" VerticalAlignment="Center"/>
                                                 </Grid>
                                             </Border>
+                                            <Border x:Name="PresetSelectorBorder" Style="{StaticResource GlassPanel}" Padding="0,0,8,0" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,12,0" Effect="{StaticResource CardShadow}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="Preset:" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
+                                                    <ComboBox x:Name="PresetCombo" Width="140" Style="{StaticResource DarkComboBox}" SelectionChanged="PresetCombo_SelectionChanged" ToolTip="Select saved profile preset for quick switch" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center"/>
+                                                    <Button x:Name="BtnSavePreset" Content="&#xE74E;" Width="28" Height="28" Style="{StaticResource WindowControlButton}" Click="BtnSavePreset_Click" ToolTip="Save current profile as preset" AutomationProperties.Name="Save preset" Grid.Column="2" VerticalAlignment="Center"/>
+                                                </Grid>
+                                            </Border>
                                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                                 <Button x:Name="BtnMinimize" Content="&#xE921;" Style="{StaticResource WindowControlButton}" Click="BtnMinimize_Click" ToolTip="Minimize" AutomationProperties.Name="Minimize" Width="36" Height="36"/>
                                                 <Button x:Name="BtnMaximize" Content="&#xE922;" Style="{StaticResource WindowControlButton}" Click="BtnMaximize_Click" ToolTip="Maximize" AutomationProperties.Name="Maximize" Width="36" Height="36"/>

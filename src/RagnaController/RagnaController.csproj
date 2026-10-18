@@ -242,6 +242,8 @@
     <Compile Include="Profiles\CharacterProfileResolver.cs" />
     <Compile Include="Profiles\Profile.cs" />
     <Compile Include="Profiles\ProfileManager.cs" />
+    <Compile Include="Profiles\ProfilePreset.cs" />
+    <Compile Include="Profiles\ProfilePresetManager.cs" />
     <Compile Include="Views\Dialogs\ProfileWizardWindow.xaml.cs" />
     <Compile Include="Views\Editors\RadialMenuWindow.xaml.cs" />
     <Compile Include="Views\Editors\RadialSetupWindow.xaml.cs" />

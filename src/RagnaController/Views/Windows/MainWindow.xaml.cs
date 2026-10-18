@@ -44,6 +44,10 @@ public partial class MainWindow : Window
         private readonly MultiClientInputRouter _multiClientRouter = null!;
         private bool _clientComboUpdating = false;
 
+        // ── TASK-1611: Profil-Preset-System ──
+        private readonly ProfilePresetManager _presetManager = null!;
+        private bool _presetComboUpdating = false;
+
         private MainViewModel? _vm;
         private DiscordRpcService? _discordRpc;
         private TtsAnnouncerService? _ttsService;
@@ -247,6 +251,10 @@ public partial class MainWindow : Window
             _windowTracker = new MultiClientWindowTracker(_nativeMethods, _processNames);
             _multiClientRouter = new MultiClientInputRouter(_nativeMethods, _processNames, _windowTracker);
             RefreshClientList();
+
+            // ── TASK-1611: Profil-Preset-Manager initialisieren ──
+            _presetManager = new ProfilePresetManager();
+            RefreshPresetList();
         }
 
         public void SwitchFromMiniMode()
@@ -1097,6 +1105,83 @@ public partial class MainWindow : Window
             public string DisplayName { get; set; } = "";
 
             public override string ToString() => DisplayName;
+        }
+
+        // ── TASK-1611: Profil-Preset-System UI ──
+        private void RefreshPresetList()
+        {
+            try
+            {
+                _presetComboUpdating = true;
+                PresetCombo.Items.Clear();
+
+                foreach (var kvp in _presetManager.Presets)
+                {
+                    var preset = kvp.Value;
+                    var display = preset.UseCount > 0
+                        ? $"{preset.PresetName} → {preset.TargetProfileName} (×{preset.UseCount})"
+                        : $"{preset.PresetName} → {preset.TargetProfileName}";
+                    PresetCombo.Items.Add(new { Key = preset.PresetName, Display = display });
+                }
+
+                if (PresetCombo.Items.Count > 0)
+                {
+                    PresetCombo.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[MainWindow] RefreshPresetList failed: {ex.Message}");
+            }
+            finally
+            {
+                _presetComboUpdating = false;
+            }
+        }
+
+        private void PresetCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_presetComboUpdating || PresetCombo.SelectedItem is not { } selected)
+                return;
+
+            var presetName = ((dynamic)selected).Key;
+            var preset = _presetManager.GetPreset(presetName);
+            if (preset == null) return;
+
+            // Ziel-Profil finden und anwenden
+            var targetProfile = _manager.Profiles.FirstOrDefault(p => p.Name == preset.TargetProfileName);
+            if (targetProfile != null)
+            {
+                _profileService.ApplyProfile(targetProfile);
+                _presetManager.MarkUsed(presetName);
+                RefreshPresetList(); // Refresh um UseCount zu aktualisieren
+                ShowToast($"Preset angewendet: {preset.PresetName} → {preset.TargetProfileName}");
+            }
+            else
+            {
+                ShowToast($"Profil '{preset.TargetProfileName}' nicht gefunden", isError: true);
+            }
+        }
+
+        private void BtnSavePreset_Click(object sender, RoutedEventArgs e)
+        {
+            var active = _manager.ActiveProfile;
+            if (active == null)
+            {
+                ShowToast("Kein aktives Profil zum Speichern", isError: true);
+                return;
+            }
+
+            var preset = new ProfilePreset
+            {
+                PresetName = active.Name,
+                TargetProfileName = active.Name,
+                Description = $"Saved from {active.Class}"
+            };
+
+            _presetManager.SavePreset(preset);
+            RefreshPresetList();
+            ShowToast($"Preset gespeichert: {preset.PresetName}");
         }
     }
 }
