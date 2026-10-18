@@ -187,6 +187,13 @@ namespace RagnaController.Core
         /// <param name="hTemplateFile">hTemplateFile parameter.</param>
         /// <returns>Result of CreateFile.</returns>
         /// </summary>
+        /// <summary>
+        /// CreateFile method.
+        /// <param name="lpFileName">lpFileName parameter.</param>
+        /// <param name="dwDesiredAccess">dwDesiredAccess parameter.</param>
+        /// <param name="dwShareMode">dwShareMode parameter.</param>
+        /// <param name="lpSecurityAttributes">lpSecurityAttributes parameter.</param>
+        /// </summary>
         public IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile) => NativeMethods.CreateFile(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
         /// <summary>
         /// WriteFile method.
@@ -196,6 +203,8 @@ namespace RagnaController.Core
         /// <param name="lpNumberOfBytesWritten">lpNumberOfBytesWritten parameter.</param>
         /// <param name="lpOverlapped">lpOverlapped parameter.</param>
         /// <returns>Result of WriteFile.</returns>
+    /// <param name="lpFileName">lpFileName parameter.</param>
+    /// <param name="dwDesiredAccess">dwDesiredAccess parameter.</param>
         /// </summary>
         /// <summary>
         /// WriteFile method.
@@ -280,11 +289,28 @@ namespace RagnaController.Core
         /// <param name="lpParam">lpParam parameter.</param>
         /// <returns>Result of CreateWindowEx.</returns>
         /// </summary>
+        /// <summary>
+        /// CreateWindowEx method.
+        /// <param name="dwExStyle">dwExStyle parameter.</param>
+        /// <param name="lpClassName">lpClassName parameter.</param>
+        /// <param name="lpWindowName">lpWindowName parameter.</param>
+        /// <param name="dwStyle">dwStyle parameter.</param>
+        /// <param name="x">x parameter.</param>
+        /// <param name="y">y parameter.</param>
+        /// <param name="nWidth">nWidth parameter.</param>
+        /// <param name="nHeight">nHeight parameter.</param>
+        /// <param name="hWndParent">hWndParent parameter.</param>
+        /// <param name="hMenu">hMenu parameter.</param>
+        /// <param name="hInstance">hInstance parameter.</param>
+        /// <param name="lpParam">lpParam parameter.</param>
+        /// <returns>Result of CreateWindowEx.</returns>
+        /// </summary>
         public IntPtr CreateWindowEx(uint dwExStyle, string lpClassName, string lpWindowName, uint dwStyle, int x, int y, int nWidth, int nHeight, IntPtr hWndParent, IntPtr hMenu, IntPtr hInstance, IntPtr lpParam) => NativeMethods.CreateWindowEx(dwExStyle, lpClassName, lpWindowName, dwStyle, x, y, nWidth, nHeight, hWndParent, hMenu, hInstance, lpParam);
         /// <summary>
         /// DestroyWindow method.
         /// <param name="hWnd">hWnd parameter.</param>
         /// <returns>Result of DestroyWindow.</returns>
+        /// </summary>
         /// </summary>
         public bool DestroyWindow(IntPtr hWnd) => NativeMethods.DestroyWindow(hWnd);
         /// <summary>

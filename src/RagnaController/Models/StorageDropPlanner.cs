@@ -64,7 +64,6 @@ namespace RagnaController.Models
         /// <summary>
         /// Plant die Befreiungs-Aktionen for ein volles Inventar.
         /// </summary>
-        /// <param name="capacity">Kapazität in Slots (Standard 24 = Classic-RO-Inventar).</param>
         /// <param name="usedSlots">Anzahl belegter Slots.</param>
         /// <param name="slots">Belegte Slots (indexiert wie im Inventar); darf leer/null sein.</param>
         /// <returns>Aktionsliste in Slot-Reihenfolge; leer, if das Inventar nicht voll is.</returns>

@@ -31,7 +31,6 @@ namespace RagnaController.Services
         /// <summary>
         /// Shows a toast notification that auto-hides after 3 seconds.
         /// </summary>
-        /// <param name="message">The message to display.</param>
         /// <param name="isError">Whether to show an error color (red) or success color (green).</param>
         public void Show(string message, bool isError = false)
         {

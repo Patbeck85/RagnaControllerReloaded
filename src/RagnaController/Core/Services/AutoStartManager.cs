@@ -13,7 +13,6 @@ namespace RagnaController.Core
         /// <summary>
         /// Enabled or disabled den automatischen Start beim Windows-Boot.
         /// </summary>
-        /// <param name="enable">true, um Auto-Start to aktivieren; false, um to deaktivieren.</param>
         public static void SetAutoStart(bool enable)
         {
             try

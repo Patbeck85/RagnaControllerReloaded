@@ -49,14 +49,12 @@ namespace RagnaController.Core
         /// <summary>
         /// Sets rumble/vibration on the controller.
         /// </summary>
-        /// <param name="left">Left motor speed (0.0 to 1.0).</param>
         /// <param name="right">Right motor speed (0.0 to 1.0).</param>
         void SetRumble(float left, float right);
 
         /// <summary>
         /// Sets LED color on the controller (if supported).
         /// </summary>
-        /// <param name="r">Red component (0-255).</param>
         /// <param name="g">Green component (0-255).</param>
         /// <param name="b">Blue component (0-255).</param>
         void SetLED(byte r, byte g, byte b);

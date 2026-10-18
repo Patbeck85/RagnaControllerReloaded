@@ -49,7 +49,6 @@ namespace RagnaController.Core
         /// Speist Right-Stick Werte and R3-Zustand ein.
         /// Is jeden Tick vom InputRouter aufgerufen.
         /// </summary>
-        /// <param name="rightX">Right-Stick X (-1..1)</param>
         /// <param name="rightY">Right-Stick Y (-1..1)</param>
         /// <param name="r3Pressed">R3 (Right Stick Click) gedrückt?</param>
         public void Tick(float rightX, float rightY, bool r3Pressed)

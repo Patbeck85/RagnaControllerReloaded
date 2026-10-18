@@ -60,7 +60,6 @@ namespace RagnaController.Core
         /// <summary>
         /// Sets the process name to track (e.g., "ragexe").
         /// </summary>
-        /// <param name="name">The process name without .exe extension.</param>
         public void SetProcessName(string name)
         {
             _procName = name.ToLowerInvariant().Replace(".exe", "");

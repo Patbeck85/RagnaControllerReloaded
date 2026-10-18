@@ -29,7 +29,6 @@ namespace RagnaController.Core
         /// <summary>
         /// Erzeugt die ItemManagerEngine.
         /// </summary>
-        /// <param name="queue">Input-Queue for das Firen der Hotkeys.</param>
         /// <param name="clock">Zeitquelle (Test-Injektion möglich; Default: Environment.TickCount64).</param>
         public ItemManagerEngine(InputCommandQueue queue, Func<long>? clock = null)
         {
@@ -73,7 +72,6 @@ namespace RagnaController.Core
         /// <summary>
         /// Tick-Pfad: prüft all Items gegen HP/SP-Schwellen. Zero-Allokation (only Array-Iteration).
         /// </summary>
-        /// <param name="hpPercent">Aktuelles HP in percent (0-100).</param>
         /// <param name="sp">Aktueller SP-Wert.</param>
         /// <param name="deltaMs">Delta des Ticks in ms (only zur Signatur-Konsistenz with anderen Engines).</param>
         public void Update(int hpPercent, int sp, int deltaMs)

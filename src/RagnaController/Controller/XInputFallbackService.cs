@@ -93,7 +93,6 @@ namespace RagnaController.Controller
         /// Attempts to read state from XInput device at the given index.
         /// Returns true if a controller was foand and state was read successfully.
         /// </summary>
-        /// <param name="deviceIndex">The XInput device index (0-based).</param>
         /// <param name="parsedInput">Output parsed input from the controller.</param>
         /// <returns>true if XInput device was foand and state read; false otherwise.</returns>
         public bool TryReadState(int deviceIndex, out ParsedInput parsedInput)
@@ -207,7 +206,6 @@ namespace RagnaController.Controller
         /// Reads the battery level from XInput for the specified device.
         /// XInput returns battery level as a percentage (0-100) or device power state.
         /// </summary>
-        /// <param name="deviceIndex">The XInput device index (0-based).</param>
         private void ReadBatteryLevel(int deviceIndex)
         {
             try
@@ -253,7 +251,6 @@ namespace RagnaController.Controller
         /// <summary>
         /// Sets vibration/motor feedback on the XInput controller.
         /// </summary>
-        /// <param name="leftMotorSpeed">Left motor speed (0-65535).</param>
         /// <param name="rightMotorSpeed">Right motor speed (0-65535).</param>
         public void SetVibration(uint leftMotorSpeed, uint rightMotorSpeed)
         {

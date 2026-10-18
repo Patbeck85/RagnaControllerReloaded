@@ -148,12 +148,11 @@ namespace RagnaController.Models
             }
         }
 
-        /// <summary>Validiert einen Buff-Namen gegen die Registry.</summary>
+        /// <summary>
+        /// Validiert einen Buff-Namen gegen die Registry.
+        /// <param name="name">name parameter.</param>
+        /// </summary>
         public static bool IsValidBuff(string name) => GetBuffByName(name) != null;
-
-    /// <param name="name">name parameter.</param>
-    /// <param name="name">name parameter.</param>
-    /// <param name="name">name parameter.</param>
         /// <summary>Validiert einen Debuff-Namen gegen die Registry.</summary>
         public static bool IsValidDebuff(string name) => GetDebuffByName(name) != null;
 

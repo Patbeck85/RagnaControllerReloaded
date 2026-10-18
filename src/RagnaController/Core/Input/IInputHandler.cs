@@ -15,7 +15,6 @@ namespace RagnaController.Core
         /// <summary>
         /// Verarbeitet den Input. 
         /// </summary>
-        /// <returns>True, if der Input konsumiert wurde.</returns>
         bool Handle(ParsedInput input, int deltaMs);
     }
 }

@@ -55,7 +55,6 @@ namespace RagnaController.Core
         /// Register a new buff or refresh existing one using registry defaults.
         /// Called when a buff skill is cast or refreshed.
         /// </summary>
-        /// <param name="buffName">Name of the buff (must match registry name or ButtonAction.Label in profile)</param>
         /// <param name="recastKey">VirtualKey to press for recast (if autoRecast). If None, auto-recast disabled.</param>
         /// <param name="autoRecast">Whether to auto-recast when expired. Default: false.</param>
         public void RegisterBuff(string buffName, VirtualKey recastKey = VirtualKey.None, bool autoRecast = false)
@@ -182,6 +181,7 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Check if a specific buff is active
+    /// <param name="buffName">buffName parameter.</param>
         /// </summary>
         public bool HasBuff(string buffName) => _activeBuffs.ContainsKey(buffName);
 
@@ -223,7 +223,6 @@ namespace RagnaController.Core
         /// Update all tracked buffs/debuffs - call every tick.
         /// Zero-allocation implementation using reusable lists.
         /// </summary>
-        /// <param name="deltaMs">Milliseconds elapsed since the last update.</param>
         public void Update(int deltaMs)
         {
             var now = DateTime.UtcNow;

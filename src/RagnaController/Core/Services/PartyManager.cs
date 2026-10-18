@@ -50,7 +50,6 @@ namespace RagnaController.Core
         /// <summary>
         /// Erzeugt den PartyManager.
         /// </summary>
-        /// <param name="queue">Input-Queue for Tab-Zyklen and Heal-Key.</param>
         /// <param name="clock">Zeitquelle (Test-Injektion möglich; Default: Environment.TickCount64).</param>
         public PartyManager(InputCommandQueue queue, Func<long>? clock = null)
         {

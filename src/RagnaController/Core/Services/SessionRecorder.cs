@@ -230,13 +230,12 @@ namespace RagnaController.Core
             }
         }
 
-        /// <summary>The gefeuerte Aktionssequenz einer Session (DoD: aufzeichnen → abspielen → identisch).</summary>
+        /// <summary>
+        /// The gefeuerte Aktionssequenz einer Session (DoD: aufzeichnen → abspielen → identisch).
+        /// <param name="events">events parameter.</param>
+        /// </summary>
         public static IReadOnlyList<string> ReplayedActions(IEnumerable<SessionEvent> events) =>
             events.Where(e => e.K == KAction).Select(e => e.Label ?? "").ToList();
-
-    /// <param name="events">events parameter.</param>
-    /// <param name="events">events parameter.</param>
-    /// <param name="events">events parameter.</param>
         /// <summary>The Input-Sequenz (CmdType-Namen) einer Session — for Roundtrip-Vergleich.</summary>
         public static IReadOnlyList<string> ReplayedInputs(IEnumerable<SessionEvent> events) =>
             events.Where(e => e.K == KInput).Select(e => e.Label ?? "").ToList();

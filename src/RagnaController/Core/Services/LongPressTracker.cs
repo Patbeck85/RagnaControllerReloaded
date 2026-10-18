@@ -37,7 +37,6 @@ namespace RagnaController.Core
         /// <summary>
         /// Process button state changes and return long-press events.
         /// </summary>
-        /// <param name="currentButtons">Currently pressed buttons.</param>
         /// <param name="prevButtons">Previously pressed buttons.</param>
         /// <returns>List of (button, isLongPress, isRepeat) tuples for buttons that triggered long-press.</returns>
         public List<(GamepadButtonFlags Button, bool IsFirstLongPress, bool IsRepeat)> Update(GamepadButtonFlags currentButtons, GamepadButtonFlags prevButtons)

@@ -241,6 +241,7 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Live update: Cursor speed
+    /// <param name="v">v parameter.</param>
         /// </summary>
         public void LiveUpdateCursorSpeed(float v) => _orchestrator.Cursor.MaxSpeed = v;
 
@@ -268,6 +269,7 @@ namespace RagnaController.Core
         public void LiveUpdateRightTrigger(float v) { /* Adaptive Trigger R2 - Placeholder */ }
 
         /// <summary>
+    /// <param name="enabled">enabled parameter.</param>
         /// Settings: Soand
         /// </summary>
         public void SetSoundEnabled(bool enabled) => _orchestrator.SoundEnabled = enabled;

@@ -24,7 +24,6 @@ public unsafe sealed class InputReader
         /// <summary>
         /// Update the deadzone and normalization settings from the active profile.
         /// </summary>
-        /// <param name="profile">The profile to read settings from, or null to use defaults.</param>
         public void UpdateProfileSettings(Profile? profile)
         {
             if (profile != null)
@@ -44,7 +43,6 @@ public unsafe sealed class InputReader
         /// <summary>
         /// Reads the current gamepad state and returns a normalized ParsedInput record.
         /// </summary>
-        /// <returns>A ParsedInput record with button states, stick positions, and trigger values.</returns>
         public ParsedInput Read()
         {
             try

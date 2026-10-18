@@ -94,15 +94,15 @@ namespace RagnaController.Profiles
                 SaveCharacterMappings();
         }
 
-        /// <summary>FEAT-024: Liefert den Profil-Namen for einen Charakter-Namen, or null.</summary>
+        /// <summary>
+        /// FEAT-024: Liefert den Profil-Namen for einen Charakter-Namen, or null.
+        /// <param name="characterName">characterName parameter.</param>
+        /// </summary>
         public string? GetProfileForCharacter(string characterName) => _charResolver.Resolve(characterName);
 
         /// <summary>
-        /// FEAT-024: Is aufgerufen, if ein Charakter erkannt wurde (z. B. via OCR-/Fenster-Lesung).
-        /// Schaltet automatic das zugeordnete Profil, falls eines existiert. Gibt true zurück,
-        /// if gewechselt wurde.
-    /// <param name="characterName">characterName parameter.</param>
-    /// <param name="characterName">characterName parameter.</param>
+        /// FEAT-024: Is called when a character is detected (e.g., via OCR/window reading).
+        /// Switches to the assigned profile if one exists. Returns true if switched.
         /// </summary>
         public bool OnCharacterDetected(string characterName)
         {

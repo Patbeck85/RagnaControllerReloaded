@@ -169,7 +169,6 @@ namespace RagnaController.Core
         /// Convert the current angular velocity to a cursor pixel delta for one engine tick.
         /// Call every tick while groand-spell aiming is active.
         /// </summary>
-        /// <param name="tickMs">Engine tick duration in milliseconds.</param>
         /// <param name="dx">Horizontal pixel delta (positive = right).</param>
         /// <param name="dy">Vertical pixel delta (positive = down).</param>
         public void GetCursorDelta(int tickMs, out int dx, out int dy)

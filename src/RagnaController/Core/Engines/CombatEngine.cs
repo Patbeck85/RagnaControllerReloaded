@@ -113,7 +113,6 @@ namespace RagnaController.Core
         /// <summary>
         /// Loads a character profile into the combat engine.
         /// </summary>
-        /// <param name="p">The profile to load.</param>
         /// <exception cref="ArgumentNullException">If profile is null.</exception>
         public void LoadProfile(Profile p)
         {
@@ -131,7 +130,6 @@ namespace RagnaController.Core
         /// Updates modifier layer prefixes (L1, R1, L2, R2).
         /// Handles release-to-cast for modifier layers.
         /// </summary>
-        /// <param name="l1">Whether L1 is active.</param>
         /// <param name="r1">Whether R1 is active.</param>
         /// <param name="l2">Whether L2 is active.</param>
         /// <param name="r2">Whether R2 is active.</param>
@@ -154,7 +152,6 @@ namespace RagnaController.Core
         /// <summary>
         /// Processes a single button press or release.
         /// </summary>
-        /// <param name="btn">The button name to process.</param>
         /// <param name="pressed">Whether the button is pressed (true) or released (false).</param>
         /// <param name="ms">Milliseconds elapsed since last call.</param>
         public void ProcessButton(string btn, bool pressed, int ms)

@@ -81,6 +81,7 @@ namespace RagnaController.Profiles
         /// <summary>
         /// Liefert den Profil-Namen for einen Charakter-Namen, or <c>null</c>, if keine
         /// Zuordnung existiert. Unbekannte/leere Namen → <c>null</c>.
+    /// <param name="characterName">characterName parameter.</param>
         /// </summary>
         public string? Resolve(string? characterName)
         {

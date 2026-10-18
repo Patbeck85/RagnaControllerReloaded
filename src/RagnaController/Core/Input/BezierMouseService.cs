@@ -8,7 +8,6 @@ namespace RagnaController.Core
         /// Moves the mouse smoothly along a quadratic Bezier curve.
         /// Enqueues intermediate positions instead of blocking the consumer thread.
         /// </summary>
-        /// <param name="x0">Start X</param>
         /// <param name="y0">Start Y</param>
         /// <param name="x1">End X</param>
         /// <param name="y1">End Y</param>

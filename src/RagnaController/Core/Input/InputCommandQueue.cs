@@ -197,7 +197,6 @@ namespace RagnaController.Core
         /// <summary>
         /// Creates a new InputCommandQueue with optional latency tracking.
         /// </summary>
-        /// <param name="latencyTracker">Optional latency tracker for PERF-005 end-to-end latency measurement.</param>
         /// <param name="controllerId">Identifier for the controller (used for per-controller latency tracking).</param>
         public InputCommandQueue(InputLatencyTracker? latencyTracker = null, string controllerId = "Default")
         {

@@ -81,70 +81,73 @@ namespace RagnaController.Core
         // ── Profile Management (Delegiert an ProfileApplier) ─────────────
         /// <summary>
         /// Loads a character profile into the engine.
+    /// <param name="p">p parameter.</param>
         /// </summary>
-        /// <param name="p">The profile to load.</param>
         public void LoadProfile(Profile p) => _orchestrator.ProfileApplier.LoadProfile(p);
         /// <summary>
+    /// <param name="isRenewal">isRenewal parameter.</param>
         /// Applies game mode (Pre-Renewal or Renewal timing).
         /// </summary>
-        /// <param name="isRenewal">Whether to use Renewal timing.</param>
         public void ApplyGameMode(bool isRenewal) => _orchestrator.ProfileApplier.ApplyGameMode(isRenewal);
+    /// <param name="enabled">enabled parameter.</param>
         /// <summary>
         /// Live-updates the Action RPG mode setting.
         /// </summary>
-        /// <param name="enabled">Whether Action RPG mode is enabled.</param>
+    /// <param name="v">v parameter.</param>
         public void LiveUpdateActionRpg(bool enabled) => _orchestrator.ProfileApplier.LiveUpdateActionRpg(enabled);
         /// <summary>
         /// Live-updates the stick deadzone value.
+    /// <param name="v">v parameter.</param>
         /// </summary>
-        /// <param name="v">Deadzone value (0.0 to 1.0).</param>
         public void LiveUpdateDeadzone(float v) => _orchestrator.ProfileApplier.LiveUpdateDeadzone(v);
         /// <summary>
+    /// <param name="v">v parameter.</param>
         /// Live-updates the curve sensitivity value.
         /// </summary>
-        /// <param name="v">Curve sensitivity value.</param>
         public void LiveUpdateCurve(float v) => _orchestrator.ProfileApplier.LiveUpdateCurve(v);
+    /// <param name="v">v parameter.</param>
         /// <summary>
         /// Live-updates the action speed multiplier.
         /// </summary>
-        /// <param name="v">Action speed multiplier.</param>
+    /// <param name="v">v parameter.</param>
         public void LiveUpdateActionSpeed(float v) => _orchestrator.ProfileApplier.LiveUpdateActionSpeed(v);
         /// <summary>
         /// Live-updates the cursor speed multiplier.
+    /// <param name="v">v parameter.</param>
         /// </summary>
-        /// <param name="v">Cursor speed multiplier.</param>
         public void LiveUpdateCursorSpeed(float v) => _orchestrator.ProfileApplier.LiveUpdateCursorSpeed(v);
         /// <summary>
+    /// <param name="v">v parameter.</param>
         /// Live-updates the left stick sensitivity.
         /// </summary>
-        /// <param name="v">Left stick sensitivity.</param>
         public void LiveUpdateLeftStick(float v) => _orchestrator.ProfileApplier.LiveUpdateLeftStick(v);
+    /// <param name="v">v parameter.</param>
         /// <summary>
         /// Live-updates the right stick sensitivity.
         /// </summary>
-        /// <param name="v">Right stick sensitivity.</param>
         public void LiveUpdateRightStick(float v) => _orchestrator.ProfileApplier.LiveUpdateRightStick(v);
         /// <summary>
+    /// <param name="enabled">enabled parameter.</param>
         /// Live-updates the left trigger sensitivity.
         /// </summary>
-        /// <param name="v">Left trigger sensitivity.</param>
         public void LiveUpdateLeftTrigger(float v) => _orchestrator.ProfileApplier.LiveUpdateLeftTrigger(v);
         /// <summary>
         /// Live-updates the right trigger sensitivity.
+        /// <param name="v">v parameter.</param>
         /// </summary>
-        /// <param name="v">Right trigger sensitivity.</param>
         public void LiveUpdateRightTrigger(float v) => _orchestrator.ProfileApplier.LiveUpdateRightTrigger(v);
 
         // ── Settings (Delegiert an ProfileApplier) ───────────────────────
         /// <summary>
+    /// <param name="enabled">enabled parameter.</param>
         /// Sets whether sound is enabled.
+    /// <param name="v">v parameter.</param>
         /// </summary>
-        /// <param name="enabled">Whether sound is enabled.</param>
         public void SetSoundEnabled(bool enabled) => _orchestrator.ProfileApplier.SetSoundEnabled(enabled);
         /// <summary>
+    /// <param name="pm">pm parameter.</param>
         /// Sets whether rumble is enabled.
         /// </summary>
-        /// <param name="enabled">Whether rumble is enabled.</param>
         public void SetRumbleEnabled(bool enabled) => _orchestrator.ProfileApplier.SetRumbleEnabled(enabled);
         /// <summary>
         /// Turns off the engine.
@@ -152,19 +155,20 @@ namespace RagnaController.Core
         public void TurnOff() => _orchestrator.ProfileApplier.TurnOff();
         /// <summary>
         /// Sets standby settings.
-        /// </summary>
-        /// <param name="enabled">Whether standby is enabled.</param>
+        /// <param name="enabled">enabled parameter.</param>
         /// <param name="timeoutMins">Standby timeout in minutes.</param>
+        /// </summary>
         public void SetStandbySettings(bool enabled, int timeoutMins) => _orchestrator.ProfileApplier.SetStandbySettings(enabled, timeoutMins);
         /// <summary>
         /// Attaches a profile manager logger.
+        /// <param name="pm">pm parameter.</param>
         /// </summary>
-        /// <param name="pm">The profile manager instance.</param>
         public void AttachProfileManagerLogger(ProfileManager pm) => _orchestrator.ProfileApplier.AttachProfileManagerLogger(pm);
 
         // ── Lifecycle (Delegiert an Orchestrator) ────────────────────────
         /// <summary>
         /// Starts the engine tick loop.
+    /// <param name="pm">pm parameter.</param>
         /// </summary>
         public void Start() => _orchestrator.Start();
         /// <summary>

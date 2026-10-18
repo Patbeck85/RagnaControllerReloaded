@@ -52,6 +52,8 @@ namespace RagnaController.Controller
 
         /// <summary>
         /// Creates a new ButtonState with the specified button toggled.
+    /// <param name="buttonName">buttonName parameter.</param>
+    /// <param name="value">value parameter.</param>
         /// </summary>
         public ButtonState With(string buttonName, bool value) => buttonName switch
         {
