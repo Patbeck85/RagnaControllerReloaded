@@ -151,6 +151,9 @@ namespace RagnaController.Core
             }
         }
 
+        /// <summary>
+        /// Dispose method.
+        /// </summary>
         public void Dispose() => Stop();
 
         private string PartPath(int index) =>

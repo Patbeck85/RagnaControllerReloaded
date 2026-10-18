@@ -116,6 +116,9 @@ namespace RagnaController.Core
             }
         }
 
+        /// <summary>
+        /// Dispose method.
+        /// </summary>
         public void Dispose() => Stop();
     }
 }

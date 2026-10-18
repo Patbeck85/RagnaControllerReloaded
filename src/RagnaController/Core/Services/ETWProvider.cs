@@ -14,6 +14,9 @@ public sealed class ETWProvider : EventSource
     public static readonly ETWProvider Log = new ETWProvider();
 
     // Keywords for event categorization
+    /// <summary>
+    /// Event keywords for categorizing ETW events.
+    /// </summary>
     public static class Keywords
     {
         public const EventKeywords Controller = (EventKeywords)1;

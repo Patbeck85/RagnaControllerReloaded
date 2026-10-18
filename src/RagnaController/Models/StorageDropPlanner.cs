@@ -5,9 +5,9 @@ using System.Linq;
 namespace RagnaController.Models
 {
     /// <summary>
-    /// FEAT-023: Ein belegter Inventar-Slot (reines Datenmodell, headless-testbar).
-    /// The eigentliche Erkennung „welches Item liegt im Slot" is ein separater
-    /// Integrationspunkt (OCR-/Fenster-Lesung der Game-UI) — analog FEAT-015/FEAT-024.
+    /// FEAT-023: An occupied inventory slot (pure data model, headless-testable).
+    /// The actual detection "which item is in the slot" is a separate
+    /// integration point (OCR/window reading of game UI) — analogous FEAT-015/FEAT-024.
     /// </summary>
     public readonly record struct InventorySlotItem(
         string Name,
@@ -15,30 +15,30 @@ namespace RagnaController.Models
         int StackCount);
 
     /// <summary>
-    /// FEAT-023: Prioritätsklasse eines Items for die Auto-Einlagerung (Storage-Drop).
-    /// Reihenfolge = Freigabe-Reihenfolge: erst Consumables einlagern, then Buffs dropen.
-    /// QuestItems and Equipment are niemals automatic freigegeben.
+    /// FEAT-023: Priority class of an item for auto-storage (Storage-Drop).
+    /// Order = release order: first Consumables stored, then Buffs dropped.
+    /// QuestItems and Equipment are never automatically released.
     /// </summary>
     public enum StorageDropPriority
     {
-        /// <summary>Potione/Tränke — are in die Storage eingelagert (no Value-Verlust).</summary>
+        /// <summary>Potions/elixirs — stored in storage (no value loss).</summary>
         Consumable = 0,
-        /// <summary>Buff-Items with abgelaufenem Nutzenwert — are gedroppt.</summary>
+        /// <summary>Buff items with expired value — dropped.</summary>
         BuffItem = 1,
-        /// <summary>Quest-Items — niemals automatic freigeben.</summary>
+        /// <summary>Quest items — never automatically released.</summary>
         QuestItem = 2,
-        /// <summary>Ausrüstung — niemals automatic freigeben.</summary>
+        /// <summary>Equipment — never automatically released.</summary>
         Equipment = 3
     }
 
-    /// <summary>FEAT-023: The geplante Aktion for einen Slot.</summary>
+    /// <summary>FEAT-023: The planned action for a slot.</summary>
     public enum StorageDropAction
     {
-        /// <summary>In die Storage einlagern (Storage-Drop).</summary>
+        /// <summary>Store in storage (Storage-Drop).</summary>
         Stash,
-        /// <summary>On dem Boden dropen.</summary>
+        /// <summary>Drop on the ground.</summary>
         Drop,
-        /// <summary>Belassen (geschützt).</summary>
+        /// <summary>Leave as-is (protected).</summary>
         Keep
     }
 

@@ -21,6 +21,9 @@ namespace RagnaController.Core
             public bool IsAvailable => true;
             public string DisplayName => "SendInput (Standard)";
 
+            /// <summary>
+            /// Dispose method.
+            /// </summary>
             public void Dispose() { } // Stateless, nothing to dispose
 
             /// <summary>
@@ -61,9 +64,21 @@ namespace RagnaController.Core
                     SendInput(1, new INPUT[] { input }, InputSize);
                 }
 
+        /// <summary>
+        /// LeftDown method.
+        /// </summary>
         public void LeftDown()  => SendMouse(MOUSEEVENTF_LEFTDOWN);
+        /// <summary>
+        /// LeftUp method.
+        /// </summary>
         public void LeftUp()    => SendMouse(MOUSEEVENTF_LEFTUP);
+        /// <summary>
+        /// RightDown method.
+        /// </summary>
         public void RightDown() => SendMouse(MOUSEEVENTF_RIGHTDOWN);
+        /// <summary>
+        /// RightUp method.
+        /// </summary>
         public void RightUp()   => SendMouse(MOUSEEVENTF_RIGHTUP);
 
         /// <summary>

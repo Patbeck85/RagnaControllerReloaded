@@ -25,7 +25,18 @@ namespace RagnaController.Models
             Modifier = modifier;
         }
 
+        /// <summary>
+        /// FromVirtualKey method.
+        /// <param name="key">key parameter.</param>
+        /// <returns>Result of FromVirtualKey.</returns>
+        /// </summary>
         public static ButtonKey FromVirtualKey(VirtualKey key) => new(key, VirtualKey.None);
+        /// <summary>
+        /// FromVirtualKeys method.
+        /// <param name="modifier">modifier parameter.</param>
+        /// <param name="key">key parameter.</param>
+        /// <returns>Result of FromVirtualKeys.</returns>
+        /// </summary>
         public static ButtonKey FromVirtualKeys(VirtualKey modifier, VirtualKey key) => new(key, modifier);
 
         public bool HasModifier => Modifier != VirtualKey.None;
@@ -66,8 +77,22 @@ namespace RagnaController.Models
             return Key.ToString();
         }
 
+        /// <summary>
+        /// Equals method.
+        /// <param name="other">other parameter.</param>
+        /// <returns>Result of Equals.</returns>
+        /// </summary>
         public bool Equals(ButtonKey other) => Key == other.Key && Modifier == other.Modifier;
+        /// <summary>
+        /// Equals method.
+        /// <param name="obj">obj parameter.</param>
+        /// <returns>Result of Equals.</returns>
+        /// </summary>
         public override bool Equals(object? obj) => obj is ButtonKey other && Equals(other);
+        /// <summary>
+        /// GetHashCode method.
+        /// <returns>Result of GetHashCode.</returns>
+        /// </summary>
         public override int GetHashCode() => HashCode.Combine(Key, Modifier);
         
         public int CompareTo(ButtonKey other)
@@ -84,6 +109,11 @@ namespace RagnaController.Models
         public static bool operator <=(ButtonKey left, ButtonKey right) => left.CompareTo(right) <= 0;
         public static bool operator >=(ButtonKey left, ButtonKey right) => left.CompareTo(right) >= 0;
 
+        /// <summary>
+        /// ButtonKey method.
+        /// <param name="key">key parameter.</param>
+        /// <returns>Result of ButtonKey.</returns>
+        /// </summary>
         public static implicit operator ButtonKey(VirtualKey key) => new(key);
         public static implicit operator ButtonKey((VirtualKey mod, VirtualKey key) tuple) => new(tuple.key, tuple.mod);
     }
@@ -130,8 +160,23 @@ namespace RagnaController.Models
         public static ButtonKey Home => VirtualKey.None; // Special handling
         
         // Modifiers
+        /// <summary>
+        /// Ctrl method.
+        /// <param name="key">key parameter.</param>
+        /// <returns>Result of Ctrl.</returns>
+        /// </summary>
         public static ButtonKey Ctrl(VirtualKey key) => new(key, VirtualKey.ControlLeft);
+        /// <summary>
+        /// Alt method.
+        /// <param name="key">key parameter.</param>
+        /// <returns>Result of Alt.</returns>
+        /// </summary>
         public static ButtonKey Alt(VirtualKey key) => new(key, VirtualKey.AltLeft);
+        /// <summary>
+        /// Shift method.
+        /// <param name="key">key parameter.</param>
+        /// <returns>Result of Shift.</returns>
+        /// </summary>
         public static ButtonKey Shift(VirtualKey key) => new(key, VirtualKey.ShiftLeft);
     }
 }

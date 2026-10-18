@@ -14,6 +14,10 @@ namespace RagnaController.Core
         public int MaxEntries { get; set; } = 20;
 
         // ActionFiredMessage is jetzt durch das projektweite Namespace-System gefunden
+        /// <summary>
+        /// Record method.
+        /// <param name="msg">msg parameter.</param>
+        /// </summary>
         public void Record(ActionFiredMessage msg) => Record(msg.Label, msg.Kind);
 
         public void Record(string label, ActionFiredKind kind)
@@ -36,6 +40,9 @@ namespace RagnaController.Core
         }
 
         public event Action<ActionEntry>? EntryAdded;
+        /// <summary>
+        /// Clear method.
+        /// </summary>
         public void Clear() { lock (_lock) _entries.Clear(); }
 
         public void Dispose()

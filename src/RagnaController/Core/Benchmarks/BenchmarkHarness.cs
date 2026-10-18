@@ -31,6 +31,9 @@ namespace RagnaController.Core.Benchmarks
         private ObjectPool<ControllerSnapshot> _pool = null!;
 
         [GlobalSetup]
+        /// <summary>
+        /// Setup method.
+        /// </summary>
         public void Setup() => _pool = new ObjectPool<ControllerSnapshot>(() => new ControllerSnapshot());
 
         [Benchmark(Baseline = true, Description = "Struct allocation (no pooling)")]
@@ -86,9 +89,15 @@ namespace RagnaController.Core.Benchmarks
         private InputCommandQueue _queue = null!;
 
         [GlobalSetup]
+        /// <summary>
+        /// Setup method.
+        /// </summary>
         public void Setup() => _queue = new InputCommandQueue();
 
         [GlobalCleanup]
+        /// <summary>
+        /// Cleanup method.
+        /// </summary>
         public void Cleanup() => _queue?.Dispose();
 
         [Benchmark(Description = "Enqueue KeyDown/Up (VirtualKey.A)")]
@@ -139,12 +148,21 @@ namespace RagnaController.Core.Benchmarks
         private ProfileManager _profileManager = null!;
 
         [GlobalSetup]
+        /// <summary>
+        /// Setup method.
+        /// </summary>
         public void Setup() => _profileManager = new ProfileManager();
 
         [Benchmark(Description = "GetAllProfiles (empty)")]
+        /// <summary>
+        /// GetAllProfiles method.
+        /// </summary>
         public void GetAllProfiles() => _ = _profileManager.Profiles;
 
         [Benchmark(Description = "GetActiveProfile")]
+        /// <summary>
+        /// GetActiveProfile method.
+        /// </summary>
         public void GetActiveProfile() => _ = _profileManager.ActiveProfileName;
     }
 
@@ -187,6 +205,9 @@ namespace RagnaController.Core.Benchmarks
         }
 
         [Benchmark(Description = "Get CommandQueue")]
+        /// <summary>
+        /// GetCommandQueue method.
+        /// </summary>
         public void GetCommandQueue() => _ = _orchestrator.CommandQueue;
     }
 

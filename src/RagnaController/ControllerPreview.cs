@@ -47,6 +47,10 @@ namespace RagnaController
             SetLeft(t, x); SetTop(t, y + (h / 2) - 9); _labels[id] = t; Children.Add(t);
         }
 
+        /// <summary>
+        /// HighlightButton method.
+        /// <param name="id">id parameter.</param>
+        /// </summary>
         public void HighlightButton(string id) {
             if (_highlight != null && _shapes.TryGetValue(_highlight, out var o)) { o.Fill = _off; o.Effect = null; if (_labels.TryGetValue(_highlight, out var l)) l.Foreground = o is Ellipse ? o.Stroke : _dim; }
             string mapped = id == "LeftThumb" ? "LeftStick" : id == "RightThumb" ? "RightStick" : id;

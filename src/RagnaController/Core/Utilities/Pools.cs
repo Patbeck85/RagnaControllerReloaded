@@ -11,9 +11,17 @@ namespace RagnaController.Core
     public static class ParsedInputPool
     {
         [Obsolete("Use 'new ParsedInput { ... }' or 'ParsedInput.Disconnected' directly.")]
+        /// <summary>
+        /// Get method.
+        /// <returns>Result of Get.</returns>
+        /// </summary>
         public static ParsedInput Get() => ParsedInput.Disconnected;
 
         [Obsolete("No-op for readonly record struct.")]
+        /// <summary>
+        /// Return method.
+        /// <param name="item">item parameter.</param>
+        /// </summary>
         public static void Return(ParsedInput item) { }
     }
 }

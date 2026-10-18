@@ -57,6 +57,11 @@ namespace RagnaController.Core
 
         public static RotationCondition HasTarget => new() { Type = ConditionType.HasTarget };
         
+        /// <summary>
+        /// TargetInRange method.
+        /// <param name="range">range parameter.</param>
+        /// <returns>Result of TargetInRange.</returns>
+        /// </summary>
         public static RotationCondition TargetInRange(float range) => new() 
         { 
             Type = ConditionType.TargetInRange, 
@@ -65,12 +70,22 @@ namespace RagnaController.Core
         
         public static RotationCondition NotMoving => new() { Type = ConditionType.NotMoving };
         
+        /// <summary>
+        /// SPAbove method.
+        /// <param name="sp">sp parameter.</param>
+        /// <returns>Result of SPAbove.</returns>
+        /// </summary>
         public static RotationCondition SPAbove(int sp) => new() 
         { 
             Type = ConditionType.SPAbove, 
             IntValue = sp 
         };
         
+        /// <summary>
+        /// HPAbove method.
+        /// <param name="hpPercent">hpPercent parameter.</param>
+        /// <returns>Result of HPAbove.</returns>
+        /// </summary>
         public static RotationCondition HPAbove(int hpPercent) => new() 
         { 
             Type = ConditionType.HPAbove, 
@@ -79,6 +94,12 @@ namespace RagnaController.Core
         
         public static RotationCondition FacingTarget => new() { Type = ConditionType.FacingTarget };
         
+        /// <summary>
+        /// EnemyCount method.
+        /// <param name="count">count parameter.</param>
+        /// <param name="radius">radius parameter.</param>
+        /// <returns>Result of EnemyCount.</returns>
+        /// </summary>
         public static RotationCondition EnemyCount(int count, float radius) => new() 
         { 
             Type = ConditionType.EnemyCount, 
@@ -86,18 +107,33 @@ namespace RagnaController.Core
             FloatValue = radius 
         };
         
+        /// <summary>
+        /// MissingBuff method.
+        /// <param name="buffName">buffName parameter.</param>
+        /// <returns>Result of MissingBuff.</returns>
+        /// </summary>
         public static RotationCondition MissingBuff(string buffName) => new() 
         { 
             Type = ConditionType.MissingBuff, 
             StringValue = buffName 
         };
         
+        /// <summary>
+        /// HasBuff method.
+        /// <param name="buffName">buffName parameter.</param>
+        /// <returns>Result of HasBuff.</returns>
+        /// </summary>
         public static RotationCondition HasBuff(string buffName) => new() 
         { 
             Type = ConditionType.HasBuff, 
             StringValue = buffName 
         };
         
+        /// <summary>
+        /// GroundSpellActive method.
+        /// <param name="spellName">spellName parameter.</param>
+        /// <returns>Result of GroundSpellActive.</returns>
+        /// </summary>
         public static RotationCondition GroundSpellActive(string spellName) => new() 
         { 
             Type = ConditionType.GroundSpellActive, 
@@ -106,6 +142,11 @@ namespace RagnaController.Core
         
         public static RotationCondition IsMoving => new() { Type = ConditionType.IsMoving };
         
+        /// <summary>
+        /// PartyMemberHasDebuff method.
+        /// <param name="debuff">debuff parameter.</param>
+        /// <returns>Result of PartyMemberHasDebuff.</returns>
+        /// </summary>
         public static RotationCondition PartyMemberHasDebuff(string debuff) => new() 
         { 
             Type = ConditionType.PartyMemberHasDebuff, 

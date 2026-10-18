@@ -55,9 +55,25 @@ namespace RagnaController.Core
         }
 
         // ── Öffentliche API ───────────────────────────────────────────────
+        /// <summary>
+        /// Debug method.
+        /// <param name="msg">msg parameter.</param>
+        /// </summary>
         public void Debug(string msg)  { if (LogLevel <= 0) Enqueue("[DBG]", msg, critical: false); }
+        /// <summary>
+        /// Info method.
+        /// <param name="msg">msg parameter.</param>
+        /// </summary>
         public void Info(string msg)   { if (LogLevel <= 1) Enqueue("[INF]", msg, critical: false); }
+        /// <summary>
+        /// Warn method.
+        /// <param name="msg">msg parameter.</param>
+        /// </summary>
         public void Warn(string msg)   { if (LogLevel <= 2) Enqueue("[WRN]", msg, critical: true); }
+        /// <summary>
+        /// Error method.
+        /// <param name="msg">msg parameter.</param>
+        /// </summary>
         public void Error(string msg)  { if (LogLevel <= 3) Enqueue("[ERR]", msg, critical: true); }
 
         private void Enqueue(string tag, string msg, bool critical)

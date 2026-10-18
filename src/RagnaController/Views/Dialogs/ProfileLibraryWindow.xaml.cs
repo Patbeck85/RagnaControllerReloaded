@@ -12,6 +12,11 @@ namespace RagnaController.Views.Dialogs
     public partial class ProfileLibraryWindow : Window
     {
         private static readonly Lazy<LocalizationManager> _localization = new(() => LocalizationManager.Instance);
+        /// <summary>
+        /// GetLocalizedString method.
+        /// <param name="key">key parameter.</param>
+        /// <returns>Result of GetLocalizedString.</returns>
+        /// </summary>
         public static string GetLocalizedString(string key) => LocalizationManager.GetLocalizedString(key);
 
         private readonly ProfileManager _manager;

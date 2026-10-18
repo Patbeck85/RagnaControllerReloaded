@@ -52,6 +52,11 @@ namespace RagnaController.Core
             }
         }
 
+        /// <summary>
+        /// GetLocalizedString method.
+        /// <param name="key">key parameter.</param>
+        /// <returns>Result of GetLocalizedString.</returns>
+        /// </summary>
         public static string GetLocalizedString(string key) => Instance[key];
 
         public void LoadLanguage(string langCode, bool isFallback = false)

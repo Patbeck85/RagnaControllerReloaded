@@ -35,7 +35,13 @@ namespace RagnaController.Core
             _queue = queue;
         }
 
+        /// <summary>
+        /// Activate method.
+        /// </summary>
         public void Activate()   => MobSweepEnabled = true;
+        /// <summary>
+        /// Deactivate method.
+        /// </summary>
         public void Deactivate() { MobSweepEnabled = false; Phase = SupportPhase.Idle; }
 
         public void Update(int deltaMs)

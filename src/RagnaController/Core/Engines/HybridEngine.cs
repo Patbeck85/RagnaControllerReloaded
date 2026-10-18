@@ -15,9 +15,9 @@ namespace RagnaController.Core
     /// - ProfileApplier: profile loading & live updates
     /// - StandbyManager: AFK detection & power management
     /// </summary>
-    /// <summary>
-    /// Gameplay engine for the 125Hz tick loop.
-    /// </summary>
+    /// <remarks>
+    /// Thread safety: Not thread-safe. Must be accessed from the engine tick thread.
+    /// </remarks>
     public class HybridEngine
     {
         private readonly EngineOrchestrator _orchestrator;
@@ -79,32 +79,114 @@ namespace RagnaController.Core
         public event Action<string>? VoiceStatusChanged;
 
         // ── Profile Management (Delegiert an ProfileApplier) ─────────────
+        /// <summary>
+        /// Loads a character profile into the engine.
+        /// </summary>
+        /// <param name="p">The profile to load.</param>
         public void LoadProfile(Profile p) => _orchestrator.ProfileApplier.LoadProfile(p);
+        /// <summary>
+        /// Applies game mode (Pre-Renewal or Renewal timing).
+        /// </summary>
+        /// <param name="isRenewal">Whether to use Renewal timing.</param>
         public void ApplyGameMode(bool isRenewal) => _orchestrator.ProfileApplier.ApplyGameMode(isRenewal);
+        /// <summary>
+        /// Live-updates the Action RPG mode setting.
+        /// </summary>
+        /// <param name="enabled">Whether Action RPG mode is enabled.</param>
         public void LiveUpdateActionRpg(bool enabled) => _orchestrator.ProfileApplier.LiveUpdateActionRpg(enabled);
+        /// <summary>
+        /// Live-updates the stick deadzone value.
+        /// </summary>
+        /// <param name="v">Deadzone value (0.0 to 1.0).</param>
         public void LiveUpdateDeadzone(float v) => _orchestrator.ProfileApplier.LiveUpdateDeadzone(v);
+        /// <summary>
+        /// Live-updates the curve sensitivity value.
+        /// </summary>
+        /// <param name="v">Curve sensitivity value.</param>
         public void LiveUpdateCurve(float v) => _orchestrator.ProfileApplier.LiveUpdateCurve(v);
+        /// <summary>
+        /// Live-updates the action speed multiplier.
+        /// </summary>
+        /// <param name="v">Action speed multiplier.</param>
         public void LiveUpdateActionSpeed(float v) => _orchestrator.ProfileApplier.LiveUpdateActionSpeed(v);
+        /// <summary>
+        /// Live-updates the cursor speed multiplier.
+        /// </summary>
+        /// <param name="v">Cursor speed multiplier.</param>
         public void LiveUpdateCursorSpeed(float v) => _orchestrator.ProfileApplier.LiveUpdateCursorSpeed(v);
+        /// <summary>
+        /// Live-updates the left stick sensitivity.
+        /// </summary>
+        /// <param name="v">Left stick sensitivity.</param>
         public void LiveUpdateLeftStick(float v) => _orchestrator.ProfileApplier.LiveUpdateLeftStick(v);
+        /// <summary>
+        /// Live-updates the right stick sensitivity.
+        /// </summary>
+        /// <param name="v">Right stick sensitivity.</param>
         public void LiveUpdateRightStick(float v) => _orchestrator.ProfileApplier.LiveUpdateRightStick(v);
+        /// <summary>
+        /// Live-updates the left trigger sensitivity.
+        /// </summary>
+        /// <param name="v">Left trigger sensitivity.</param>
         public void LiveUpdateLeftTrigger(float v) => _orchestrator.ProfileApplier.LiveUpdateLeftTrigger(v);
+        /// <summary>
+        /// Live-updates the right trigger sensitivity.
+        /// </summary>
+        /// <param name="v">Right trigger sensitivity.</param>
         public void LiveUpdateRightTrigger(float v) => _orchestrator.ProfileApplier.LiveUpdateRightTrigger(v);
 
         // ── Settings (Delegiert an ProfileApplier) ───────────────────────
+        /// <summary>
+        /// Sets whether sound is enabled.
+        /// </summary>
+        /// <param name="enabled">Whether sound is enabled.</param>
         public void SetSoundEnabled(bool enabled) => _orchestrator.ProfileApplier.SetSoundEnabled(enabled);
+        /// <summary>
+        /// Sets whether rumble is enabled.
+        /// </summary>
+        /// <param name="enabled">Whether rumble is enabled.</param>
         public void SetRumbleEnabled(bool enabled) => _orchestrator.ProfileApplier.SetRumbleEnabled(enabled);
+        /// <summary>
+        /// Turns off the engine.
+        /// </summary>
         public void TurnOff() => _orchestrator.ProfileApplier.TurnOff();
+        /// <summary>
+        /// Sets standby settings.
+        /// </summary>
+        /// <param name="enabled">Whether standby is enabled.</param>
+        /// <param name="timeoutMins">Standby timeout in minutes.</param>
         public void SetStandbySettings(bool enabled, int timeoutMins) => _orchestrator.ProfileApplier.SetStandbySettings(enabled, timeoutMins);
+        /// <summary>
+        /// Attaches a profile manager logger.
+        /// </summary>
+        /// <param name="pm">The profile manager instance.</param>
         public void AttachProfileManagerLogger(ProfileManager pm) => _orchestrator.ProfileApplier.AttachProfileManagerLogger(pm);
 
         // ── Lifecycle (Delegiert an Orchestrator) ────────────────────────
-                public void Start() => _orchestrator.Start();
-                public void Stop() => _orchestrator.Stop();
-                public void Pause() => _orchestrator.Pause();
-                public void Resume() => _orchestrator.Resume();
-                public void Shutdown() => _orchestrator.Shutdown();
-                public void Dispose() => _orchestrator.Dispose();
+        /// <summary>
+        /// Starts the engine tick loop.
+        /// </summary>
+        public void Start() => _orchestrator.Start();
+        /// <summary>
+        /// Stops the engine tick loop.
+        /// </summary>
+        public void Stop() => _orchestrator.Stop();
+        /// <summary>
+        /// Pauses the engine tick loop.
+        /// </summary>
+        public void Pause() => _orchestrator.Pause();
+        /// <summary>
+        /// Resumes the engine tick loop.
+        /// </summary>
+        public void Resume() => _orchestrator.Resume();
+        /// <summary>
+        /// Shuts down the engine and releases resources.
+        /// </summary>
+        public void Shutdown() => _orchestrator.Shutdown();
+        /// <summary>
+        /// Disposes all engine resources.
+        /// </summary>
+        public void Dispose() => _orchestrator.Dispose();
 
                 // ── Calibration (Delegiert an InputReader via Orchestrator) ────────────
                                 public async Task StartCalibrationAsync()

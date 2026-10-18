@@ -67,6 +67,9 @@ namespace RagnaController.Core
     {
         private Action? _action;
         public DisposableAction(Action action) => _action = action;
+        /// <summary>
+        /// Dispose method.
+        /// </summary>
         public void Dispose() { _action?.Invoke(); _action = null; }
     }
 }

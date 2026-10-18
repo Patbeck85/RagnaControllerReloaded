@@ -248,8 +248,20 @@ namespace RagnaController.Core
         /// Live updates for v1.7.0 stick/trigger settings
         /// </summary>
         public void LiveUpdateLeftStick(float v) => _orchestrator.Movement.Deadzone = v;
+        /// <summary>
+        /// LiveUpdateRightStick method.
+        /// <param name="v">v parameter.</param>
+        /// </summary>
         public void LiveUpdateRightStick(float v) => _orchestrator.Cursor.Deadzone = v;
+        /// <summary>
+        /// LiveUpdateLeftTrigger method.
+        /// <param name="v">v parameter.</param>
+        /// </summary>
         public void LiveUpdateLeftTrigger(float v) { /* Adaptive Trigger L2 - Placeholder */ }
+        /// <summary>
+        /// LiveUpdateRightTrigger method.
+        /// <param name="v">v parameter.</param>
+        /// </summary>
         public void LiveUpdateRightTrigger(float v) { /* Adaptive Trigger R2 - Placeholder */ }
 
         /// <summary>

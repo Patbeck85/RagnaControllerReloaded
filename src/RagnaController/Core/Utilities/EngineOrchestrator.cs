@@ -492,6 +492,10 @@ namespace RagnaController.Core
                                                                                                                                                                                                                                 public MemoryAllocationTracker MemoryTracker => _memoryTracker;
 
                                 // Public method for external log subscription - takes a message and invokes the event
+        /// <summary>
+        /// SubscribeToLog method.
+        /// <param name="message">message parameter.</param>
+        /// </summary>
         public void SubscribeToLog(string message) => LogMessage?.Invoke(message);
 
         private void OnTick(object? sender, EventArgs e)

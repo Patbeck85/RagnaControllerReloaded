@@ -17,6 +17,9 @@ namespace RagnaController.Core
         public bool IsAvailable => true;
         public string DisplayName => "SendInput (Standard)";
 
+        /// <summary>
+        /// Dispose method.
+        /// </summary>
         public void Dispose() { }
 
         public void KeyDown(ushort keyCode)

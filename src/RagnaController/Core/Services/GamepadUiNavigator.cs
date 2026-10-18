@@ -47,7 +47,13 @@ namespace RagnaController.Core
             _timer.Tick += OnTick;
         }
 
+        /// <summary>
+        /// Start method.
+        /// </summary>
         public void Start() => _timer.Start();
+        /// <summary>
+        /// Stop method.
+        /// </summary>
         public void Stop()  => _timer.Stop();
 
         private unsafe void OnTick(object? sender, EventArgs e)
@@ -132,6 +138,9 @@ namespace RagnaController.Core
             }
         }
 
+        /// <summary>
+        /// Dispose method.
+        /// </summary>
         public void Dispose() => _timer.Stop();
     }
 }

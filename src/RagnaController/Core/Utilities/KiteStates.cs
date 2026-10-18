@@ -4,11 +4,22 @@ using RagnaController.Core;
 
 namespace RagnaController.Core
 {
-    // ── Shared base ───────────────────────────────────────────────────────
+    /// <summary>
+    /// Shared base class for kite FSM states.
+    /// Implements ICombatState with abstract label, enter/exit, and update methods.
+    /// </summary>
     public abstract class KiteStateBase : ICombatState
     {
         public abstract string Label { get; }
+        /// <summary>
+        /// Enter method.
+        /// <param name="ctx">ctx parameter.</param>
+        /// </summary>
         public virtual void Enter(CombatContext ctx) { }
+        /// <summary>
+        /// Exit method.
+        /// <param name="ctx">ctx parameter.</param>
+        /// </summary>
         public virtual void Exit(CombatContext ctx)  { }
         public abstract ICombatState Update(ParsedInput input, int deltaMs, CombatContext ctx);
 
@@ -57,6 +68,13 @@ namespace RagnaController.Core
     {
         public static readonly KiteIdleState Instance = new();
         public override string Label => "IDLE";
+        /// <summary>
+        /// Update method.
+        /// <param name="input">input parameter.</param>
+        /// <param name="deltaMs">deltaMs parameter.</param>
+        /// <param name="ctx">ctx parameter.</param>
+        /// <returns>Result of Update.</returns>
+        /// </summary>
         public override ICombatState Update(ParsedInput input, int deltaMs, CombatContext ctx) => this;
     }
 
@@ -68,6 +86,10 @@ namespace RagnaController.Core
     {
         private int _t = 200;
         public override string Label => "LOCKING TARGET";
+        /// <summary>
+        /// Enter method.
+        /// <param name="ctx">ctx parameter.</param>
+        /// </summary>
         public override void Enter(CombatContext ctx) { _t = 200; ctx.AttacksThisCycle = 0; }
         public override ICombatState Update(ParsedInput input, int deltaMs, CombatContext ctx)
         {
@@ -87,6 +109,10 @@ namespace RagnaController.Core
     {
         private int _cd;
         public override string Label => "ATTACKING";
+        /// <summary>
+        /// Enter method.
+        /// <param name="ctx">ctx parameter.</param>
+        /// </summary>
         public override void Enter(CombatContext ctx) { ctx.AttacksThisCycle = 0; _cd = 0; }
         public override ICombatState Update(ParsedInput input, int deltaMs, CombatContext ctx)
         {
@@ -153,6 +179,10 @@ namespace RagnaController.Core
     {
         private int _t;
         public override string Label => "PIVOTING";
+        /// <summary>
+        /// Enter method.
+        /// <param name="ctx">ctx parameter.</param>
+        /// </summary>
         public override void Enter(CombatContext ctx) => _t = ctx.PivotDurationMs;
         public override ICombatState Update(ParsedInput input, int deltaMs, CombatContext ctx)
         {
@@ -169,6 +199,10 @@ namespace RagnaController.Core
     {
         private int _t;
         public override string Label => "RELOCKING";
+        /// <summary>
+        /// Enter method.
+        /// <param name="ctx">ctx parameter.</param>
+        /// </summary>
         public override void Enter(CombatContext ctx) => _t = ctx.RelockDelayMs;
         public override ICombatState Update(ParsedInput input, int deltaMs, CombatContext ctx)
         {

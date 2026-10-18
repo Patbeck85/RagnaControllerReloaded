@@ -108,6 +108,9 @@ namespace RagnaController.Core
         /// Request an immediate controller scan (signal the SDL thread).
         /// Safe to call from any thread.
         /// </summary>
+        /// <summary>
+        /// DetectController method.
+        /// </summary>
         public void DetectController() => _scanNow.Set();
 
         public SDLGameController* GetRawController() => _controller;

@@ -16,7 +16,9 @@ namespace RagnaController.Core
     {
         public static readonly RagnaControllerETW Log = new RagnaControllerETW();
 
-        // Keywords for event categorization
+        /// <summary>
+        /// Keywords for event categorization.
+        /// </summary>
         public static class Keywords
         {
             public const EventKeywords Controller = (EventKeywords)1;      // Controller lifecycle events

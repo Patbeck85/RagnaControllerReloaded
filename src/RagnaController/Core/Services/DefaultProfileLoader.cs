@@ -6,6 +6,10 @@ using RagnaController.Profiles;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// DefaultProfileLoader — Loads built-in default character profiles.
+    /// Reads JSON profile templates from DefaultProfiles/ folder.
+    /// </summary>
     public static class DefaultProfileLoader
     {
         public static List<Profile> Load()

@@ -12,8 +12,17 @@ namespace RagnaController.Core
         public static int Apply(int baseMs, int variance = 4)
             => Math.Max(1, baseMs + Random.Shared.Next(-variance, variance + 1));
 
+        /// <summary>
+        /// ClickHold method.
+        /// <returns>Result of ClickHold.</returns>
+        /// </summary>
         public static int ClickHold() => Random.Shared.Next(15, 46);
 
+        /// <summary>
+        /// Chance method.
+        /// <param name="probability">probability parameter.</param>
+        /// <returns>Result of Chance.</returns>
+        /// </summary>
         public static bool Chance(double probability) => Random.Shared.NextDouble() < probability;
     }
 }

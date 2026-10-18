@@ -175,6 +175,9 @@ namespace RagnaController.Core
             _hangTask = null;
         }
 
+        /// <summary>
+        /// Dispose method.
+        /// </summary>
         public void Dispose() => Stop();
 
         private async Task PollLoopAsync(CancellationToken ct)

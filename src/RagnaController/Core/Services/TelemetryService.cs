@@ -7,6 +7,10 @@ using RagnaController.Models;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// TelemetryService — Usage telemetry and analytics.
+    /// Collects anonymized usage statistics for product improvement.
+    /// </summary>
     public static class TelemetryService
     {
         // The developer will replace this with their actual Discord Webhook URL

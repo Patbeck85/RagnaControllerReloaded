@@ -59,6 +59,9 @@ namespace RagnaController.Core
             }
         }
 
+        /// <summary>
+        /// ResetAll method.
+        /// </summary>
         public void ResetAll() => _activeTrackers.Clear();
     }
 }

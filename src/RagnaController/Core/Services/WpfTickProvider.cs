@@ -30,7 +30,13 @@ namespace RagnaController.Core
             _timer.Tick += (s, e) => Tick?.Invoke(s, e);
         }
 
+        /// <summary>
+        /// Start method.
+        /// </summary>
         public void Start() => _timer.Start();
+        /// <summary>
+        /// Stop method.
+        /// </summary>
         public void Stop()  => _timer.Stop();
 
         public void Dispose()

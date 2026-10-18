@@ -35,6 +35,11 @@ namespace RagnaController.Views.Editors
     public partial class RadialSetupWindow : Window
     {
         private static readonly Lazy<LocalizationManager> _localization = new(() => LocalizationManager.Instance);
+        /// <summary>
+        /// GetLocalizedString method.
+        /// <param name="key">key parameter.</param>
+        /// <returns>Result of GetLocalizedString.</returns>
+        /// </summary>
         public static string GetLocalizedString(string key) => LocalizationManager.GetLocalizedString(key);
 
         private readonly List<RadialItem> _items;

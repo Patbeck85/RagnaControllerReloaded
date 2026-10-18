@@ -84,6 +84,9 @@ namespace RagnaController.Core
 
         public SkillOrchestrator? SkillOrch { get; set; }
 
+        /// <summary>
+        /// ToggleCombatMode method.
+        /// </summary>
         public void ToggleCombatMode() { if (State == CombatState.Idle) EnterSeek(); else EnterIdle(); }
 
         public int Priority => 10;

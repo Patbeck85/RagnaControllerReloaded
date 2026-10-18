@@ -84,6 +84,10 @@ namespace RagnaController.Core
 
         private static List<MonitorDisplayInfo> _currentMonitors = new();
 
+        /// <summary>
+        /// GetMonitorCount method.
+        /// <returns>Result of GetMonitorCount.</returns>
+        /// </summary>
         public static int GetMonitorCount() => GetMonitors().Count;
     }
 

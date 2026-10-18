@@ -129,6 +129,9 @@ namespace RagnaController.Core
             MemberHealed?.Invoke(weakest);
         }
 
+        /// <summary>
+        /// Dispose method.
+        /// </summary>
         public void Dispose() => Stop();
     }
 }

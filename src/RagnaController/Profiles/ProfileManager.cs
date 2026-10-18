@@ -207,6 +207,10 @@ namespace RagnaController.Profiles
             }
         }
 
+        /// <summary>
+        /// GetAllNames method.
+        /// <returns>Result of GetAllNames.</returns>
+        /// </summary>
         public IEnumerable<string> GetAllNames() => Profiles.Select(p => p.Name);
 
         /// <summary>Optional error logger — wired by HybridEngine after construction.</summary>

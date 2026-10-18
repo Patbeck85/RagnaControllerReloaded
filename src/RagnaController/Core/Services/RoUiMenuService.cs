@@ -45,6 +45,10 @@ namespace RagnaController.Core
         /// Returns an 8-item radial preset for navigating the core RO UI panels.
         /// Each item is assigned to one of the 8 compass directions.
         /// </summary>
+        /// <summary>
+        /// UiNavigationPreset method.
+        /// <returns>Result of UiNavigationPreset.</returns>
+        /// </summary>
         public static List<RadialItem> UiNavigationPreset() => new()
         {
             // ↑ UP — Inventory  (I — no modifier needed in most clients)

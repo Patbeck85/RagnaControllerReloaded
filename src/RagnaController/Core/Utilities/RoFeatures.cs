@@ -13,6 +13,11 @@ namespace RagnaController.Core
 
         public RoFeatures(InputCommandQueue queue) => _queue = queue;
 
+        /// <summary>
+        /// SetCenter method.
+        /// <param name="x">x parameter.</param>
+        /// <param name="y">y parameter.</param>
+        /// </summary>
         public void SetCenter(int x, int y) { _cx = x; _cy = y; }
 
         /// <summary>

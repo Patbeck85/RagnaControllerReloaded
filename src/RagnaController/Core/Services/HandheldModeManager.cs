@@ -46,6 +46,9 @@ namespace RagnaController.Core
             }
         }
 
+        /// <summary>
+        /// Dispose method.
+        /// </summary>
         public void Dispose() { _power.Dispose(); _gyro.Dispose(); }
     }
 }

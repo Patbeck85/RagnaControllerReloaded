@@ -128,6 +128,9 @@ namespace RagnaController.Core
             _lastY = ny;
         }
 
+        /// <summary>
+        /// Reset method.
+        /// </summary>
         public void Reset() => ForceStop();
 
         // ── Loot-Vacuum (kreist um Mittelpunkt) ───────────────────────────

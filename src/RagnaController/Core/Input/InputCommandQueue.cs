@@ -222,23 +222,83 @@ namespace RagnaController.Core
         }
 
         // Mouse
+        /// <summary>
+        /// LeftDown method.
+        /// </summary>
         public void LeftDown() => Enqueue(new InputCmd(CmdType.LeftDown));
+        /// <summary>
+        /// LeftUp method.
+        /// </summary>
         public void LeftUp() => Enqueue(new InputCmd(CmdType.LeftUp));
+        /// <summary>
+        /// RightDown method.
+        /// </summary>
         public void RightDown() => Enqueue(new InputCmd(CmdType.RightDown));
+        /// <summary>
+        /// RightUp method.
+        /// </summary>
         public void RightUp() => Enqueue(new InputCmd(CmdType.RightUp));
+        /// <summary>
+        /// LeftClick method.
+        /// </summary>
         public void LeftClick()   { Enqueue(new InputCmd(CmdType.LeftDown)); Interlocked.Increment(ref _savedClicks); }
+        /// <summary>
+        /// RightClick method.
+        /// </summary>
         public void RightClick()  { Enqueue(new InputCmd(CmdType.RightDown)); Interlocked.Increment(ref _savedClicks); }
+        /// <summary>
+        /// DoubleClick method.
+        /// </summary>
         public void DoubleClick() { Enqueue(new InputCmd(CmdType.AtomicLeftClick)); Interlocked.Add(ref _savedClicks, 2); }
+        /// <summary>
+        /// MoveMouseRelative method.
+        /// <param name="dx">dx parameter.</param>
+        /// <param name="dy">dy parameter.</param>
+        /// </summary>
         public void MoveMouseRelative(int dx, int dy) => Enqueue(new InputCmd(CmdType.MouseRel, dx, dy));
+        /// <summary>
+        /// MoveMouseAbsolute method.
+        /// <param name="x">x parameter.</param>
+        /// <param name="y">y parameter.</param>
+        /// </summary>
         public void MoveMouseAbsolute(int x, int y) => Enqueue(new InputCmd(CmdType.MouseAbs, x, y));
+        /// <summary>
+        /// MouseMove method.
+        /// <param name="dx">dx parameter.</param>
+        /// <param name="dy">dy parameter.</param>
+        /// </summary>
         public void MouseMove(int dx, int dy) => Enqueue(new InputCmd(CmdType.MouseRel, dx, dy));
+        /// <summary>
+        /// MouseAbs method.
+        /// <param name="x">x parameter.</param>
+        /// <param name="y">y parameter.</param>
+        /// </summary>
         public void MouseAbs(int x, int y) => Enqueue(new InputCmd(CmdType.MouseAbs, x, y));
+        /// <summary>
+        /// MouseMoveAbsolute method.
+        /// <param name="x">x parameter.</param>
+        /// <param name="y">y parameter.</param>
+        /// </summary>
         public void MouseMoveAbsolute(int x, int y) => Enqueue(new InputCmd(CmdType.MouseAbs, x, y));
+        /// <summary>
+        /// AtomicLeftClick method.
+        /// </summary>
         public void AtomicLeftClick() => Enqueue(new InputCmd(CmdType.AtomicLeftClick));
+        /// <summary>
+        /// AtomicRightClick method.
+        /// </summary>
         public void AtomicRightClick() => Enqueue(new InputCmd(CmdType.AtomicRightClick));
 
         // Keyboard
+        /// <summary>
+        /// KeyDown method.
+        /// <param name="k">k parameter.</param>
+        /// </summary>
         public void KeyDown(VirtualKey k) => Enqueue(new InputCmd(CmdType.KeyDown, (ushort)k));
+        /// <summary>
+        /// KeyUp method.
+        /// <param name="k">k parameter.</param>
+        /// </summary>
         public void KeyUp(VirtualKey k)   => Enqueue(new InputCmd(CmdType.KeyUp, (ushort)k));
         public void TapKey(VirtualKey k)
         {
@@ -259,10 +319,22 @@ namespace RagnaController.Core
             KeyUp(mod);
             Interlocked.Increment(ref _savedKeystrokes);
         }
+        /// <summary>
+        /// PanicHeal method.
+        /// <param name="k">k parameter.</param>
+        /// </summary>
         public void PanicHeal(VirtualKey k) { for (int i = 0; i < 10; i++) TapKey(k); }
 
         // Wheel
+                /// <summary>
+                /// Wheel method.
+                /// <param name="delta">delta parameter.</param>
+                /// </summary>
                 public void Wheel(int delta) => Enqueue(new InputCmd(CmdType.Wheel) { X = delta });
+                /// <summary>
+                /// ScrollWheel method.
+                /// <param name="delta">delta parameter.</param>
+                /// </summary>
                 public void ScrollWheel(int delta) => Enqueue(new InputCmd(CmdType.Wheel) { X = delta });
 
         // Chat
@@ -312,7 +384,15 @@ namespace RagnaController.Core
         }
 
         // Wait/Action helpers
+        /// <summary>
+        /// Wait method.
+        /// <param name="ms">ms parameter.</param>
+        /// </summary>
         public void Wait(int ms) => Enqueue(InputCmd.CreateWait(ms));
+        /// <summary>
+        /// Action method.
+        /// <param name="callback">callback parameter.</param>
+        /// </summary>
         public void Action(Action callback) => Enqueue(new InputCmd(CmdType.Action, callback));
 
         public void Start()

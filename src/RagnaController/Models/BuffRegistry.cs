@@ -6,9 +6,9 @@ namespace RagnaController.Models
 {
     /// <summary>
     /// FEAT-008 / GEX-011: RO Buff/Debuff Registry.
-    /// Zentrale Datenbank aller RO Buffs and Debuffs with IDs, Dauer, Stacks, Icons, Klassen.
-    /// Is zur Laufzeit aus Resources/BuffRegistry.json geladen and vom BuffManager
-    /// for Validierung, Defaults and Auto-Recast genutzt.
+    /// Central database of all RO Buffs and Debuffs with IDs, duration, stacks, icons, classes.
+    /// Loaded at runtime from Resources/BuffRegistry.json and used by BuffManager
+    /// for validation, defaults and auto-recast.
     /// </summary>
     public static class BuffRegistry
     {

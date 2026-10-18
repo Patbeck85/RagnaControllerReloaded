@@ -141,6 +141,9 @@ namespace RagnaController.Controller
             }
         }
 
+        /// <summary>
+        /// TurnOff method.
+        /// </summary>
         public void TurnOff() => SetHardwareState(0, 0, 0, AdaptiveTriggerMode.Off, AdaptiveTriggerMode.Off);
 
         /// <summary>

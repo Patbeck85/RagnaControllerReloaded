@@ -239,9 +239,11 @@ namespace RagnaController.Core
         }
     }
 
-    // ── Simple share-code registry ─────────────────────────────────────────────────
-    // Maps the 4-char suffix → full Gist ID, persisted to AppData.
-    // Built up as the user uploads/downloads profiles.
+    /// <summary>
+    /// Simple share-code registry.
+    /// Maps the 4-char suffix → full Gist ID, persisted to AppData.
+    /// Built up as the user uploads/downloads profiles.
+    /// </summary>
     public static class ShareCodeCache
     {
         private static readonly string CachePath = System.IO.Path.Combine(
@@ -256,6 +258,11 @@ namespace RagnaController.Core
             Save();
         }
 
+        /// <summary>
+        /// Resolve method.
+        /// <param name="suffix">suffix parameter.</param>
+        /// <returns>Result of Resolve.</returns>
+        /// </summary>
         public static string Resolve(string suffix) =>
             _map.TryGetValue(suffix.ToLowerInvariant(), out var id) ? id : string.Empty;
 
@@ -311,8 +318,20 @@ namespace RagnaController.Core
         public string Url { get; private set; } = "";
         public string Error { get; private set; } = "";
 
+        /// <summary>
+        /// Ok method.
+        /// <param name="code">code parameter.</param>
+        /// <param name="gistId">gistId parameter.</param>
+        /// <param name="url">url parameter.</param>
+        /// <returns>Result of Ok.</returns>
+        /// </summary>
         public static ShareResult Ok(string code, string gistId, string url) =>
             new() { Success = true, Code = code, GistId = gistId, Url = url };
+        /// <summary>
+        /// Fail method.
+        /// <param name="error">error parameter.</param>
+        /// <returns>Result of Fail.</returns>
+        /// </summary>
         public static ShareResult Fail(string error) =>
             new() { Success = false, Error = error };
     }
@@ -326,8 +345,18 @@ namespace RagnaController.Core
         public Profile? Profile { get; private set; }
         public string Error { get; private set; } = "";
 
+        /// <summary>
+        /// Ok method.
+        /// <param name="p">p parameter.</param>
+        /// <returns>Result of Ok.</returns>
+        /// </summary>
         public static DownloadResult Ok(Profile p) =>
             new() { Success = true, Profile = p };
+        /// <summary>
+        /// Fail method.
+        /// <param name="error">error parameter.</param>
+        /// <returns>Result of Fail.</returns>
+        /// </summary>
         public static DownloadResult Fail(string error) =>
             new() { Success = false, Error = error };
     }

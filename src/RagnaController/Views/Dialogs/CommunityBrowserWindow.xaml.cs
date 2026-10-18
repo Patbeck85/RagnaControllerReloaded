@@ -16,6 +16,11 @@ namespace RagnaController.Views.Dialogs
     public partial class CommunityBrowserWindow : Window
     {
         private static readonly Lazy<LocalizationManager> _localization = new(() => LocalizationManager.Instance);
+        /// <summary>
+        /// GetLocalizedString method.
+        /// <param name="key">key parameter.</param>
+        /// <returns>Result of GetLocalizedString.</returns>
+        /// </summary>
         public static string GetLocalizedString(string key) => LocalizationManager.GetLocalizedString(key);
 
         // Removed unused field: _engine (never used in this window)
@@ -39,6 +44,9 @@ namespace RagnaController.Views.Dialogs
         /// <summary>
         /// Dispose des Singleton-Clients beim App-Shutdown (Socket-Cleanup, TECH-018).
         /// Is from App.OnExit aufgerufen — danach is die App beendet, keine Wiederverwendung möglich.
+        /// </summary>
+        /// <summary>
+        /// DisposeRegistryClient method.
         /// </summary>
         public static void DisposeRegistryClient() => _http.Dispose();
 

@@ -3,6 +3,10 @@
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Localized string constants for XAML binding.
+    /// Auto-generated from localization resources.
+    /// </summary>
     public static class LocStrings
     {
         // MainWindow.xaml

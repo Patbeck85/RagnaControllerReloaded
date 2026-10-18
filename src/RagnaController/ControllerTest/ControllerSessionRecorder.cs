@@ -54,6 +54,11 @@ namespace RagnaController.ControllerTest
         /// entsprechen <see cref="ButtonState"/>; L2/R2 are analoge Trigger and NICHT Teil der Mask.
         /// Single Source of Truth for die Buttons-Bits — keine Kopie in anderen Klassen.
         /// </summary>
+        /// <summary>
+        /// HasButton method.
+        /// <param name="name">name parameter.</param>
+        /// <returns>Result of HasButton.</returns>
+        /// </summary>
         public bool HasButton(string name) => name switch
         {
             "A"         => (Buttons & BtnA) != 0,
