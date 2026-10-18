@@ -11,7 +11,11 @@ using RagnaController.Models;
 
 namespace RagnaController.Views.Dialogs
 {
-    public partial class ProfileWizardWindow : Window
+    /// <summary>
+/// ProfileWizardWindow — Guided profile creation wizard (FEAT-010).
+/// Walks the user through class selection, skill mapping, and auto-detection.
+/// </summary>
+public partial class ProfileWizardWindow : Window
     {
         private int _step = 1;
         private readonly ProfileManager _profileManager;

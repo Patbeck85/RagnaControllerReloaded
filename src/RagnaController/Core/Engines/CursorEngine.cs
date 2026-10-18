@@ -5,7 +5,9 @@ using static RagnaController.Core.NativeMethods;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Gameplay engine for the 125Hz tick loop.
+    /// CursorEngine — Free mouse movement using right stick input.
+    /// Applies deadzone, curve sensitivity, and precision factor for smooth cursor control.
+    /// Maintains virtual cursor position to prevent rubber-banding on async threads.
     /// </summary>
     public class CursorEngine : IInputHandler
     {

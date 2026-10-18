@@ -7,8 +7,7 @@ using static RagnaController.Core.NativeMethods;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// FEAT-013: Targeting-Strategie. Sticky hält das aktuelle Ziel, bis es verloren is
-    /// (tot / außer Reichweite); Nearest re-targetet zyklisch zum nächsten Ziel.
+    /// Targeting strategy enum: Sticky holds current target until lost; Nearest cycles through all targets.
     /// </summary>
     public enum TargetingMode
     {
@@ -18,6 +17,11 @@ namespace RagnaController.Core
         Nearest = 1
     }
 
+    /// <summary>
+    /// AutoTargetEngine — Sticky and nearest targeting strategy for auto-attack.
+    /// Holds target lock until lost (dead/out of range) or cycles through targets via Tab.
+    /// Supports party targeting exclusion to prevent accidental party member selection.
+    /// </summary>
     public class AutoTargetEngine : IInputHandler, IDisposable
         {
             public bool AutoAttackEnabled { get; set; } = true;

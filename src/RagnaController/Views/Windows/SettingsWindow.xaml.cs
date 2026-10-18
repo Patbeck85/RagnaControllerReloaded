@@ -14,7 +14,11 @@ using RagnaController.Views.Dialogs;
 
 namespace RagnaController.Views.Windows
 {
-    public partial class SettingsWindow : Window
+    /// <summary>
+/// SettingsWindow — General application settings window.
+/// Configures sound, rumble, window mode, language, deadzone, and input preferences.
+/// </summary>
+public partial class SettingsWindow : Window
     {
         private static readonly Lazy<LocalizationManager> _localization = new(() => LocalizationManager.Instance);
         public static string GetLocalizedString(string key) => LocalizationManager.GetLocalizedString(key);

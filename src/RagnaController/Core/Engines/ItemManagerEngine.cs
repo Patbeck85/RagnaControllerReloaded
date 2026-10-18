@@ -4,9 +4,9 @@ using RagnaController.Models;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// FEAT-011: Auto-Potion &amp; Item-Verwaltung.
-    /// Überwacht HP/SP-Schwellwerte pro konfiguriertem Item and feuert die Hotkeys,
-    /// respektiert Cooldowns (per-item) and Check-Intervall. Zero-Allokation im Tick-Pfad.
+    /// ItemManagerEngine — FEAT-011: Auto-potion and item management.
+    /// Monitors HP/SP thresholds per configured item and fires hotkeys with per-item cooldowns.
+    /// Zero-allocation tick path using parallel arrays for O(n) iteration.
     /// </summary>
     public class ItemManagerEngine : IDisposable
     {

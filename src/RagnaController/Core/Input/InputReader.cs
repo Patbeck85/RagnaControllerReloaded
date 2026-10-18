@@ -6,7 +6,12 @@ using RagnaController.Profiles;
 
 namespace RagnaController.Core
 {
-    public unsafe sealed class InputReader
+    /// <summary>
+/// InputReader — Normalizes raw XInput gamepad data into ParsedInput records.
+/// Handles button transitions (JustPressed/JustReleased), deadzone filtering,
+/// and stick normalization for consistent input across controllers.
+/// </summary>
+public unsafe sealed class InputReader
     {
         private readonly ControllerService _ctrl;
         private GamepadButtonFlags _prevRawButtons = GamepadButtonFlags.None;

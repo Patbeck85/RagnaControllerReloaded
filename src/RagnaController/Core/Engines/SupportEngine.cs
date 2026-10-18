@@ -4,7 +4,10 @@ using RagnaController.Models;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Gameplay engine for the 125Hz tick loop.
+    /// SupportEngine — Party targeting and healing cycle.
+    /// Manages party member tab-cycling and auto-heal with configurable cooldowns.
+    /// Implements IInputHandler with Priority 50 for engine chain routing.
+    /// Exposes ActiveBuffs and ActiveDebuffs for SkillOrchestrator condition evaluation.
     /// </summary>
     public class SupportEngine : IInputHandler
     {

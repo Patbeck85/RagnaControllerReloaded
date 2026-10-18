@@ -3,8 +3,9 @@ using RagnaController.Models;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Handhabt SmartCursor-Eingaben (D-Pad Grid-Hopping for UI Panels).
-    /// Verhindert, dass Gameplay-Engine Eingaben verarbeitet, if UI active is.
+    /// SmartCursorEngine — Smart D-Pad grid-hopping for UI panel navigation.
+    /// Prevents gameplay engines from processing input while UI is active.
+    /// Forwards all button events to CombatEngine even when UI mode is active.
     /// </summary>
     public sealed class SmartCursorEngine
     {

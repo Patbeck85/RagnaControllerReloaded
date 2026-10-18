@@ -6,7 +6,10 @@ using RagnaController.Models;
 namespace RagnaController.Controller
 {
     /// <summary>
-    /// Hardware interaction and controller service.
+    /// ControllerSnapshot — Controller state snapshot for UI binding.
+    /// Holds layer text, state label, button states, analog stick positions, triggers,
+    /// D-Pad, system buttons, combat state, and skill cooldown information.
+    /// Updated every tick by SnapshotBuilder from engine state.
     /// </summary>
     public sealed class ControllerSnapshot
     {

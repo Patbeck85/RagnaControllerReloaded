@@ -3,8 +3,9 @@ using System;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Bewegt den Charakter durch Click-to-Move (linke Maustaste halten).
-    /// Rechter Stick → Mauszeiger, linker Stick → Klick-Richtung.
+    /// MovementEngine — Click-to-move character movement using left stick.
+    /// Right stick moves mouse cursor, left stick sets click direction.
+    /// Supports DPI-aware scaling, deadzone, curve sensitivity, and action RPG mode.
     /// </summary>
     public class MovementEngine
     {

@@ -9,9 +9,8 @@ using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Core
 {
-    // Input Command Types (must match all switch cases)
     /// <summary>
-    /// Input processing and routing component.
+    /// Input command types for the SendInput queue.
     /// </summary>
     public enum CmdType
     {
@@ -118,7 +117,9 @@ namespace RagnaController.Core
     }
 
     /// <summary>
-    /// Input processing and routing component.
+    /// InputCommandQueue — Thread-safe SendInput queue for Win32 input injection.
+    /// Buffers input commands with DEBUG-only command list for inspection.
+    /// Ensures ordered delivery of mouse and keyboard input to the game client.
     /// </summary>
     public class InputCommandQueue : IInputDispatcher
     {

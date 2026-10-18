@@ -4,7 +4,9 @@ using RagnaController.Models;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Gameplay engine for the 125Hz tick loop.
+    /// MageEngine — Ground-spell aiming engine using right stick + gyro input.
+    /// Handles bolt casting with aim sensitivity, deadzone, and cast delay timing.
+    /// Supports gyro blending for handheld device aim assistance.
     /// </summary>
     public class MageEngine : IInputHandler
     {

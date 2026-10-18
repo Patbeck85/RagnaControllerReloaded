@@ -4,7 +4,9 @@ using RagnaController.Models;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Gameplay engine for the 125Hz tick loop.
+    /// KiteEngine — Ranged hit-and-run finite state machine (FSM).
+    /// Cycles through attack-retreat-pivot states with configurable timing.
+    /// Implements IInputHandler with Priority 30 for engine chain routing.
     /// </summary>
     public class KiteEngine : IInputHandler, IDisposable
     {

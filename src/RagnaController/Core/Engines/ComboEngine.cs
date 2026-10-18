@@ -5,7 +5,9 @@ using RagnaController.Models;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Gameplay engine for the 125Hz tick loop.
+    /// ComboEngine — Class-aware sequential skill chain execution.
+    /// Executes configured button sequences with per-step delays and auto-loop support.
+    /// Fires ComboStepFired event on each executed step for UI feedback.
     /// </summary>
     public class ComboEngine : IDisposable
     {

@@ -8,7 +8,10 @@ using static RagnaController.Core.NativeMethods;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Gameplay engine for the 125Hz tick loop.
+    /// CombatEngine — Combat state machine and targeting logic.
+    /// Handles action firing with strict LIFO input buffer to prevent panic button-mashing.
+    /// Manages release-to-cast ground spell (AoE) state tracking.
+    /// Exposes CurrentSP and CurrentHPPercent for SkillOrchestrator condition evaluation.
     /// </summary>
     public class CombatEngine : IDisposable
     {

@@ -4,7 +4,9 @@ using RagnaController.Models;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Gameplay engine for the 125Hz tick loop.
+    /// MobSweepEngine — Auto TAB-cycle and attack while moving.
+    /// Cycles through targets with Tab and fires attack key at configurable intervals.
+    /// Supports party tab cycle and sweep enable/disable toggling.
     /// </summary>
     public class MobSweepEngine
     {

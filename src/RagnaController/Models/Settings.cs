@@ -10,9 +10,9 @@ namespace RagnaController.Models
     /// </summary>
     public enum RightStickPolicy
     {
-        /// <summary>Right Stick steuert Maus/Cursor (Action Combat)</summary>
-        Camera,
-        /// <summary>Right Stick zielt (Target Lock / Aim Assist)</summary>
+        /// <summary>Right stick controls mouse/cursor (Action Combat)</summary>
+                Camera,
+                /// <summary>Right stick aims (Target Lock / Aim Assist)</summary>
         Aim,
         /// <summary>Hybrid: Target Lock active → Aim, sonst Camera</summary>
         Hybrid

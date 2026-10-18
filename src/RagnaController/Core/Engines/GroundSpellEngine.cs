@@ -6,13 +6,10 @@ using RagnaController.Profiles;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// FEAT-006: Groand Spell / AoE Engine
-    /// Manages persistent groand effects (Fire Wall, Frozen Groand, Heal Circle, Traps, etc.)
+    /// FEAT-006: Ground Spell / AoE Engine.
+    /// Manages persistent ground effects (Fire Wall, Frozen Ground, Heal Circle, Traps, etc.).
     /// Tracks position, duration, tick intervals, and auto-cleanup.
     /// Optimized: Zero allocations in hot path (GetActiveSpellNames reuses list).
-    /// </summary>
-    /// <summary>
-    /// Gameplay engine for the 125Hz tick loop.
     /// </summary>
     public class GroundSpellEngine : IInputHandler, IDisposable
     {

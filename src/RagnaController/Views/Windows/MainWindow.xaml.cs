@@ -19,7 +19,11 @@ using RagnaController.Views.Editors;
 
 namespace RagnaController.Views.Windows
 {
-    public partial class MainWindow : Window
+    /// <summary>
+/// MainWindow — Primary application window with tab navigation and status display.
+/// Hosts the main UI layout, engine status indicators, and window switching controls.
+/// </summary>
+public partial class MainWindow : Window
     {
         private readonly HybridEngine   _engine;
         private readonly ProfileManager _manager;

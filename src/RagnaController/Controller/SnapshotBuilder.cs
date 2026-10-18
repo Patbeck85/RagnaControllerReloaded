@@ -6,7 +6,10 @@ using RagnaController.Models;
 namespace RagnaController.Controller
 {
     /// <summary>
-    /// Hardware interaction and controller service.
+    /// SnapshotBuilder — Builds ControllerSnapshot from current engine state.
+    /// Aggregates data from AutoTargetEngine, MageEngine, ComboEngine, WindowTracker,
+    /// CursorEngine, SmartCursorService, and SkillOrchestrator into a single snapshot
+    /// for UI binding. Uses EngineOptimizationPool for zero-allocation string caching.
     /// </summary>
     public sealed class SnapshotBuilder
     {
