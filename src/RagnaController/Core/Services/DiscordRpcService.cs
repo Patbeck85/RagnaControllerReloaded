@@ -5,6 +5,9 @@ using RagnaController.Models;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public sealed class DiscordRpcService : IDisposable
     {
         // Placeholder ID. The developer will replace this later.

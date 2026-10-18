@@ -3,6 +3,9 @@ using RagnaController.Controller;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class SnapshotReadyMessage
     {
         public ControllerSnapshot Snapshot { get; }
@@ -14,6 +17,9 @@ namespace RagnaController.Core
         }
     }
 
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class EngineStatusMessage
     {
         public EngineStatus Status         { get; }
@@ -25,12 +31,18 @@ namespace RagnaController.Core
         }
     }
 
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class BatteryChangedMessage
     {
         public string Level { get; }
         public BatteryChangedMessage(string level) => Level = level;
     }
 
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class ActionFiredMessage
     {
         public string          Label { get; }
@@ -43,6 +55,9 @@ namespace RagnaController.Core
     }
 
     // NEW: Buff Warning Message
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class BuffWarningMessage
     {
         public string ActionLabel { get; }
@@ -50,6 +65,9 @@ namespace RagnaController.Core
     }
 
     // NEW: Profile Switched Message
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class ProfileSwitchedMessage
     {
         public string ProfileName { get; }
@@ -57,6 +75,9 @@ namespace RagnaController.Core
     }
 
     // FEAT-011: Item Manager — ein verwaltetes Item (Potion/Trank) wurde eingesetzt
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class ItemFiredMessage
     {
         public string ItemName { get; }

@@ -11,6 +11,9 @@ namespace RagnaController.Core
     /// Tracks position, duration, tick intervals, and auto-cleanup.
     /// Optimized: Zero allocations in hot path (GetActiveSpellNames reuses list).
     /// </summary>
+    /// <summary>
+    /// Gameplay engine for the 125Hz tick loop.
+    /// </summary>
     public class GroundSpellEngine : IInputHandler, IDisposable
     {
         private readonly InputCommandQueue _queue;
@@ -131,6 +134,9 @@ namespace RagnaController.Core
         }
     }
 
+    /// <summary>
+    /// Gameplay engine for the 125Hz tick loop.
+    /// </summary>
     public class ActiveGroundSpell
     {
         public string SkillName { get; set; } = "";

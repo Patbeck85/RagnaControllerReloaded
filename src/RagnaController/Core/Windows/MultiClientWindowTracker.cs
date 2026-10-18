@@ -19,6 +19,9 @@ namespace RagnaController.Core
     /// - TTL-basiertes Caching (10s), EnumWindows only außerhalb des Hot Paths.
     /// - INativeMethods-Injektion for Unit-Testbarkeit (Mock möglich).
     /// </summary>
+    /// <summary>
+    /// Window management and tracking component.
+    /// </summary>
     public sealed class MultiClientWindowTracker : IDisposable
     {
         private readonly INativeMethods _native;

@@ -11,6 +11,9 @@ namespace RagnaController.Core
     /// Optimized: Zero allocations in hot path (Update called every tick).
     /// GEX-011: Integrated with BuffRegistry for validated defaults and skill IDs.
     /// </summary>
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public class BuffManager : IDisposable
     {
         private readonly InputCommandQueue _queue;

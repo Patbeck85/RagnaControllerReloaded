@@ -13,6 +13,9 @@ namespace RagnaController.Core
     /// N consecutive slow flushes → switch to Kernel fallback.
     /// M stable flushes after switch → recover back to SendInput.
     /// </summary>
+    /// <summary>
+    /// Input processing and routing component.
+    /// </summary>
     public class InputFailoverManager
     {
         private IMouseEmulationStrategy? _primary;

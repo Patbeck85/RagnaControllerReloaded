@@ -5,6 +5,9 @@ using RagnaController.Models;
 
 namespace RagnaController.Profiles
 {
+    /// <summary>
+    /// Profile management class.
+    /// </summary>
     public class RadialItem
     {
         public string     Name      { get; set; } = "Empty";
@@ -16,6 +19,9 @@ namespace RagnaController.Profiles
         public string     ImagePath { get; set; } = "";
     }
 
+    /// <summary>
+    /// Profile management class.
+    /// </summary>
     public class Profile
     {
         public string Name { get; set; } = "New Profile";

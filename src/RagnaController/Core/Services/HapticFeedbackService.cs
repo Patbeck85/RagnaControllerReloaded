@@ -17,6 +17,9 @@ namespace RagnaController.Core
     ///   - Patterns laufen on einem separaten Timer-Thread (nicht blockierend)
     ///   - Only ein Pattern gleichzeitig (neues bricht altes ab)
     /// </summary>
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public sealed class HapticFeedbackService : IDisposable
     {
         private readonly IRumbleProvider _rumble;

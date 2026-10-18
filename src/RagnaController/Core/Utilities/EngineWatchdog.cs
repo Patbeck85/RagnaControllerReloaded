@@ -22,6 +22,9 @@ namespace RagnaController.Core
     ///   assumed hung (deadlock / infinite block) and HangDetected fires exactly once
     ///   until a tick resumes. The consumer (EngineOrchestrator) restarts the engine.
     /// </summary>
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class EngineWatchdog : IDisposable
     {
         // ── Tuning ────────────────────────────────────────────────────────

@@ -17,6 +17,9 @@ namespace RagnaController.Core
     /// Overhead im Hot-Path &lt;1ms: wiederverwendeter StringBuilder (no LOH-Churn),
     /// ein Lock, relative Zeitbasis via Stopwatch (keine DateTime.Now-Abrufe pro Event).
     /// </summary>
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public sealed class SessionRecorder : IDisposable
     {
         private const long DefaultMaxBytesPerPart = 50L * 1024 * 1024; // 50 MB → Rotation

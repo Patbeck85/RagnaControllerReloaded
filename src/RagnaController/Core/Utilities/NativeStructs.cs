@@ -10,9 +10,15 @@ namespace RagnaController.Core
     public struct POINT { public int X; public int Y; }
 
     [StructLayout(LayoutKind.Sequential)]
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public struct RECT { public int Left; public int Top; public int Right; public int Bottom; }
 
     [StructLayout(LayoutKind.Sequential)]
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public struct SP_DEVICE_INTERFACE_DATA
     {
         public uint cbSize;
@@ -22,6 +28,9 @@ namespace RagnaController.Core
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public struct DEV_BROADCAST_DEVICEINTERFACE
     {
         public int dbcc_size;
@@ -33,6 +42,9 @@ namespace RagnaController.Core
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public struct WNDCLASSEX
     {
         public uint cbSize;
@@ -50,15 +62,27 @@ namespace RagnaController.Core
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public struct MOUSEINPUT { public int dx; public int dy; public uint mouseData; public uint dwFlags; public uint time; public IntPtr dwExtraInfo; }
 
     [StructLayout(LayoutKind.Sequential)]
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public struct KEYBDINPUT { public ushort wVk; public ushort wScan; public uint dwFlags; public uint time; public IntPtr dwExtraInfo; }
 
     [StructLayout(LayoutKind.Explicit)]
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public struct INPUTUNION { [FieldOffset(0)] public MOUSEINPUT mi; [FieldOffset(0)] public KEYBDINPUT ki; }
 
     [StructLayout(LayoutKind.Explicit)]
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public struct INPUT
     {
         [FieldOffset(0)] public uint type;

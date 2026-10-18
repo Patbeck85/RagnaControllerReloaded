@@ -4,6 +4,9 @@ using RagnaController.Controller;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public class HandheldModeManager : IDisposable
     {
         private readonly PowerMonitor    _power;

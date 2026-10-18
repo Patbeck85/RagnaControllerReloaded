@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public sealed class BackgroundTickProvider : ITickProvider
     {
         public int  IntervalMs      { get; }

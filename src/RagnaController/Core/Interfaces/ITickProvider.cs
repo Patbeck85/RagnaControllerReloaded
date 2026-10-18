@@ -10,6 +10,9 @@ namespace RagnaController.Core
     ///  • <see cref="WpfTickProvider"/>        — DispatcherTimer on UI thread (legacy/fallback)
     ///  • <see cref="BackgroundTickProvider"/> — PeriodicTimer on backgroand thread (recommended)
     /// </summary>
+    /// <summary>
+    /// Contract interface for core subsystem.
+    /// </summary>
     public interface ITickProvider : IDisposable
     {
         event EventHandler Tick;

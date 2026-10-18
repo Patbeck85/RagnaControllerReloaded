@@ -5,6 +5,9 @@ using System.Windows.Data;
 
 namespace RagnaController
 {
+    /// <summary>
+    /// Application class.
+    /// </summary>
     public class BoolToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type t, object p, CultureInfo c)
@@ -14,6 +17,9 @@ namespace RagnaController
             => value is Visibility.Visible;
     }
 
+    /// <summary>
+    /// Application class.
+    /// </summary>
     public class InverseBoolToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type t, object p, CultureInfo c)

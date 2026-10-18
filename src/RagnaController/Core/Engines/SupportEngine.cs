@@ -3,6 +3,9 @@ using RagnaController.Models;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Gameplay engine for the 125Hz tick loop.
+    /// </summary>
     public class SupportEngine : IInputHandler
     {
         public bool        SupportEnabled  { get; set; }

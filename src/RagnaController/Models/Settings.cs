@@ -5,6 +5,9 @@ using System.Text.Json;
 
 namespace RagnaController.Models
 {
+    /// <summary>
+    /// Data model for application state.
+    /// </summary>
     public enum RightStickPolicy
     {
         /// <summary>Right Stick steuert Maus/Cursor (Action Combat)</summary>

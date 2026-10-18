@@ -9,6 +9,9 @@ using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Controller
 {
+    /// <summary>
+    /// Hardware interaction and controller service.
+    /// </summary>
     public sealed class DualSenseHardwareService : IDisposable
     {
         private const string DualSenseVid  = "VID_054C";

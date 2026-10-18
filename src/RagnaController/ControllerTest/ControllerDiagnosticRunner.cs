@@ -87,6 +87,9 @@ namespace RagnaController.ControllerTest
     /// Hardware-/UI-frei: Samples are injiziert, Zeit is about <c>nowMs</c> übergeben (default
     /// <see cref="Environment.TickCount64"/>), daher vollständig unit-testbar.
     /// </summary>
+    /// <summary>
+    /// Test harness class for controller validation.
+    /// </summary>
     public sealed class ControllerDiagnosticRunner : IDisposable
     {
         /// <summary>Timeout pro Kontrolle: danach gilt they als fehlgeschlagen, if nie detektiert.</summary>

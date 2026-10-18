@@ -3,6 +3,9 @@ using System.Collections.Concurrent;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Contract interface for core subsystem.
+    /// </summary>
     public interface IMessenger
     {
         void Publish<T>(T message) where T : class;

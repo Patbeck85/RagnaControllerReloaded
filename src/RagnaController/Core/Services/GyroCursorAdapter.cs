@@ -15,6 +15,9 @@ namespace RagnaController.Core
     ///   - Only active if GyroService.IsEnabled == true
     ///   - Vollständig headless-testbar (no echtes HID-Device nötig)
     /// </summary>
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public sealed class GyroCursorAdapter : IDisposable
     {
         private readonly GyroService _gyro;

@@ -16,6 +16,9 @@ namespace RagnaController.Core
     ///   - Bei Resume:  OnResume-Callback  (EngineOrchestrator.Resume)
     ///   - Beide Callbacks are injizierbar → unit-testbar ohne echtes Windows-Event
     /// </summary>
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public sealed class SleepModeService : IDisposable
     {
         private bool _disposed;

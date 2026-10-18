@@ -9,6 +9,9 @@ namespace RagnaController.Core
     /// Viewed in PerfView, WPA, or dotnet-counters.
     /// </summary>
     [EventSource(Name = "RagnaController-ETW", Guid = "7A3F8C2E-4D1B-4A9E-B8F2-1C6D9E3A7B5F")]
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class RagnaControllerETW : EventSource
     {
         public static readonly RagnaControllerETW Log = new RagnaControllerETW();

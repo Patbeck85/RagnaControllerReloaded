@@ -19,6 +19,9 @@ namespace RagnaController.Core
     ///   On Suspend → stop the engine cleanly.
     ///   On Resume  → schedule a re-init after a short delay (hardware needs ~2s to settle).
     /// </summary>
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public sealed class PowerModeService : IDisposable
     {
         private readonly HybridEngine    _engine;

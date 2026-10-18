@@ -2,6 +2,9 @@ using System.Text.Json.Serialization;
 
 namespace RagnaController.Models
 {
+    /// <summary>
+    /// Data model for application state.
+    /// </summary>
     public class CommunityEntry
     {
         public string Name { get; set; } = "";

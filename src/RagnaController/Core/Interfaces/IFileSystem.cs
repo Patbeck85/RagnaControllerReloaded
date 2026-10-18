@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Contract interface for core subsystem.
+    /// </summary>
     public interface IFileSystem
     {
         bool FileExists(string path);
@@ -11,6 +14,9 @@ namespace RagnaController.Core
         IEnumerable<string> GetFiles(string directory, string pattern);
     }
 
+    /// <summary>
+    /// Contract interface for core subsystem.
+    /// </summary>
     public sealed class RealFileSystem : IFileSystem
     {
         public bool FileExists(string path) => System.IO.File.Exists(path);

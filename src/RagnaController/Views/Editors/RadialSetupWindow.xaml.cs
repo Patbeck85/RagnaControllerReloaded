@@ -16,6 +16,9 @@ using RagnaController.Models;
 
 namespace RagnaController.Views.Editors
 {
+    /// <summary>
+    /// Configuration editor window.
+    /// </summary>
     public class RoEmote
     {
         public string Command       { get; set; } = "";

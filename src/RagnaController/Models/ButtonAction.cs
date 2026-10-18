@@ -3,13 +3,34 @@ using System.Collections.Generic;
 
 namespace RagnaController.Models
 {
+    /// <summary>
+    /// Data model for application state.
+    /// </summary>
     public enum ActionType { Key, LeftClick, RightClick, Scroll, Combo, SwitchWindow, RoFeature }
+    /// <summary>
+    /// Data model for application state.
+    /// </summary>
     public enum CombatState { Idle, Seeking, Engaged, Attacking }
+    /// <summary>
+    /// Data model for application state.
+    /// </summary>
     public enum EngineStatus { Stopped, Running, NoController }
+    /// <summary>
+    /// Data model for application state.
+    /// </summary>
     public enum MagePhase { Idle, GroundAiming, Casting, BoltSpamming }
+    /// <summary>
+    /// Data model for application state.
+    /// </summary>
     public enum SupportPhase { Idle, TargetingParty, Healing, SelfHealing, Rezzing, PlacingSanctuary, AutoCycling }
+    /// <summary>
+    /// Data model for application state.
+    /// </summary>
     public enum ActionFiredKind { Skill, Combo, Click, Special }
 
+    /// <summary>
+    /// Data model for application state.
+    /// </summary>
     public class ButtonAction
         {
             public ActionType Type { get; set; } = ActionType.Key;

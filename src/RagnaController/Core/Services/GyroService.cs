@@ -41,6 +41,9 @@ namespace RagnaController.Core
     ///   the default (8.696f ≈ 1/0.115 deg LSB) matches the majority of units.
     ///   If aiming feels too fast or slow, adjust <see cref="Sensitivity"/>.
     /// </summary>
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public sealed class GyroService : IDisposable
     {
         // ── HID report offsets ────────────────────────────────────────────

@@ -34,6 +34,9 @@ namespace RagnaController.Core
             "Super_Novice", "Taekwon", "Soul_Linker", "Soul_Reaper", "Kagerou_Oboro"
         };
 
+        /// <summary>
+        /// Background service for game functionality.
+        /// </summary>
         public sealed class ValidationResult
         {
             public string ProfileName { get; set; } = "";

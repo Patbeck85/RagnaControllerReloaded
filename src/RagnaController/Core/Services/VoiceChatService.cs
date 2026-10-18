@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public class VoiceChatService : IDisposable
     {
         private bool _isListening;

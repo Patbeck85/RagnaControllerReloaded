@@ -16,6 +16,9 @@ namespace RagnaController.Core
     ///   - PowerStatusChanged-Event bei Modus-Wechsel
     ///   - GetRecommendedTickRate() liefert Hz je nach Modus (AC: 125, Battery: 60)
     /// </summary>
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public sealed class BatteryOptimizationService : IDisposable
     {
         private bool _disposed;

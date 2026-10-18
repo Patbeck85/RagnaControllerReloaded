@@ -1,5 +1,8 @@
 namespace RagnaController.Models
 {
+    /// <summary>
+    /// Data model for application state.
+    /// </summary>
     public enum AdaptiveTriggerMode : byte
     {
         Off = 0x00,

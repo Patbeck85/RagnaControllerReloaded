@@ -300,6 +300,9 @@ namespace RagnaController.Core
     }
 
     // ── Result types ───────────────────────────────────────────────────────────────
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public class ShareResult
     {
         public bool Success { get; private set; }
@@ -314,6 +317,9 @@ namespace RagnaController.Core
             new() { Success = false, Error = error };
     }
 
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public class DownloadResult
     {
         public bool Success { get; private set; }

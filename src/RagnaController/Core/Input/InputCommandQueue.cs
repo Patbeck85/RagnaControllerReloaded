@@ -10,6 +10,9 @@ using static RagnaController.Core.NativeMethods;
 namespace RagnaController.Core
 {
     // Input Command Types (must match all switch cases)
+    /// <summary>
+    /// Input processing and routing component.
+    /// </summary>
     public enum CmdType
     {
         MouseRel, LeftDown, LeftUp, RightDown, RightUp,
@@ -18,6 +21,9 @@ namespace RagnaController.Core
     }
 
     // Input Command Struct (must match all constructor patterns)
+    /// <summary>
+    /// Input processing and routing component.
+    /// </summary>
     public sealed class InputCmd
     {
         public CmdType Type { get; init; }
@@ -111,6 +117,9 @@ namespace RagnaController.Core
         bool IsChatting { get; }
     }
 
+    /// <summary>
+    /// Input processing and routing component.
+    /// </summary>
     public class InputCommandQueue : IInputDispatcher
     {
         private BlockingCollection<InputCmd>? _queue;

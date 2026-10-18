@@ -9,6 +9,9 @@ using RagnaController.Models;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public class LocalizationManager : INotifyPropertyChanged
     {
         private static readonly LocalizationManager _instance = new();
@@ -86,6 +89,9 @@ namespace RagnaController.Core
     }
 
     // Custom Markup Extension for clean XAML usage
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public class LocExtension : MarkupExtension
     {
         public string Key { get; set; }

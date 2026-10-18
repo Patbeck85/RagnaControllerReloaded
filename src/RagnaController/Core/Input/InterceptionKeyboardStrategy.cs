@@ -10,6 +10,9 @@ namespace RagnaController.Core
     /// Must match SendInputKeyboardStrategy behavior EXACTLY for seamless failover.
     /// Uses shared InterceptionNative from SendInputMouseStrategy.cs
     /// </summary>
+    /// <summary>
+    /// Input processing and routing component.
+    /// </summary>
     public sealed class InterceptionKeyboardStrategy : IKeyboardEmulationStrategy
     {
         private readonly IntPtr _context;

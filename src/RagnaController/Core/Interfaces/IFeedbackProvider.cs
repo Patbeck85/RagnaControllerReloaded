@@ -16,6 +16,9 @@ namespace RagnaController.Core
         void StopRumble();
     }
 
+    /// <summary>
+    /// Contract interface for core subsystem.
+    /// </summary>
     public enum FeedbackType 
     { 
         CombatModeOn, 

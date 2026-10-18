@@ -11,6 +11,9 @@ namespace RagnaController.Models
     /// JSON serialization uses string format "VK" or "Mod+VK" for backward compatibility.
     /// </summary>
     [JsonConverter(typeof(ButtonKeyConverter))]
+    /// <summary>
+    /// Data model for application state.
+    /// </summary>
     public struct ButtonKey : IEquatable<ButtonKey>, IComparable<ButtonKey>
     {
         public readonly VirtualKey Key;

@@ -4,6 +4,9 @@ using RagnaController.Models; // WICHTIG für ActionFiredKind
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public sealed class ActionLogService : IDisposable
     {
         private readonly object _lock = new();

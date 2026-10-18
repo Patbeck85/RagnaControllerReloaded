@@ -11,6 +11,9 @@ namespace RagnaController.Core
     /// Zero-Allokation im Tick-Pfad (Fix-Size-Array, index-basiert).
     /// Manuelles Verhalten (Y/R1 in SupportEngine) bleibt unverändert.
     /// </summary>
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public class PartyManager : IDisposable
     {
         /// <summary>Maximale Anzahl verwalteter Party-Mitglieder (RO-Party-Limit).</summary>

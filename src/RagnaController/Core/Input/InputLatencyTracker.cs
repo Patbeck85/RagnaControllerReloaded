@@ -15,6 +15,9 @@ namespace RagnaController.Core
     /// Tracks adherence % and asserts budgets in hot path; fails CI if P99 exceeds.
     /// NOTE: Budget tracking is opt-in via EnableBudgetTracking to preserve zero-allocation hot path (PERF-010).
     /// </summary>
+    /// <summary>
+    /// Input processing and routing component.
+    /// </summary>
     public sealed class InputLatencyBudgets
     {
         public const double ParseMs = 1.0;
@@ -83,6 +86,9 @@ namespace RagnaController.Core
     /// Measures P50/P95/P99 percentiles with target P99 < 5ms.
     /// Integrates with ETW for real-time monitoring and regression detection.
     /// Thread-safe, lock-free design for production use at 125Hz tick rate.
+    /// </summary>
+    /// <summary>
+    /// Input processing and routing component.
     /// </summary>
     public sealed class InputLatencyTracker : IDisposable
     {

@@ -5,6 +5,9 @@ using RagnaController.Models;
 
 namespace RagnaController.Controller
 {
+    /// <summary>
+    /// Hardware interaction and controller service.
+    /// </summary>
     public sealed class SnapshotBuilder
     {
         private readonly AutoTargetEngine _autoTarget;

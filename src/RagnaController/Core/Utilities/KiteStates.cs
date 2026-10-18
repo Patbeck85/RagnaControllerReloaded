@@ -50,6 +50,9 @@ namespace RagnaController.Core
     }
 
     // ── Idle ──────────────────────────────────────────────────────────────
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class KiteIdleState : KiteStateBase
     {
         public static readonly KiteIdleState Instance = new();
@@ -58,6 +61,9 @@ namespace RagnaController.Core
     }
 
     // ── Locking ───────────────────────────────────────────────────────────
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class KiteLockingState : KiteStateBase
     {
         private int _t = 200;
@@ -74,6 +80,9 @@ namespace RagnaController.Core
     }
 
     // ── Attacking ─────────────────────────────────────────────────────────
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class KiteAttackingState : KiteStateBase
     {
         private int _cd;
@@ -98,6 +107,9 @@ namespace RagnaController.Core
     }
 
     // ── Retreating ────────────────────────────────────────────────────────
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class KiteRetreatingState : KiteStateBase
     {
         private int   _t, _clickT;
@@ -134,6 +146,9 @@ namespace RagnaController.Core
     }
 
     // ── Pivoting ──────────────────────────────────────────────────────────
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class KitePivotingState : KiteStateBase
     {
         private int _t;
@@ -147,6 +162,9 @@ namespace RagnaController.Core
     }
 
     // ── Relocking ─────────────────────────────────────────────────────────
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class KiteRelockingState : KiteStateBase
     {
         private int _t;

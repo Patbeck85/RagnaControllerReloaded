@@ -11,6 +11,9 @@ namespace RagnaController.Core
     public static class MonitorHelper
     {
         [StructLayout(LayoutKind.Sequential)]
+        /// <summary>
+        /// Background service for game functionality.
+        /// </summary>
         public struct Rect
         {
             public int Left;
@@ -20,6 +23,9 @@ namespace RagnaController.Core
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        /// <summary>
+        /// Background service for game functionality.
+        /// </summary>
         public struct MonitorInfo
         {
             public int cbSize;
@@ -81,6 +87,9 @@ namespace RagnaController.Core
         public static int GetMonitorCount() => GetMonitors().Count;
     }
 
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public class MonitorDisplayInfo
     {
         public IntPtr Handle { get; set; }

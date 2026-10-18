@@ -1,5 +1,8 @@
 namespace RagnaController.Models
 {
+    /// <summary>
+    /// Data model for application state.
+    /// </summary>
     public enum VirtualKey : ushort
     {
         None = 0,

@@ -8,6 +8,9 @@ using System.Windows.Media.Effects;
 
 namespace RagnaController
 {
+    /// <summary>
+    /// Application class.
+    /// </summary>
     public class ControllerPreview : Canvas
     {
         private readonly Dictionary<string, Shape> _shapes = new();

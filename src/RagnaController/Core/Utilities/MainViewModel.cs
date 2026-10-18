@@ -13,6 +13,9 @@ namespace RagnaController.Core
     /// Replaces hundreds of lines of imperative <c>if (XyzLabel != null) XyzLabel.Text = ...</c>
     /// in the code-behind.
     /// </summary>
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class MainViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;

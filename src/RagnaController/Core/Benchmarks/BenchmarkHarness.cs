@@ -23,6 +23,9 @@ namespace RagnaController.Core.Benchmarks
     [Config(typeof(BenchmarkConfig))]
     [MemoryDiagnoser]
     [SimpleJob(RuntimeMoniker.Net80, baseline: true)]
+    /// <summary>
+    /// Performance benchmark class.
+    /// </summary>
     public class MemoryAllocationBenchmarks
     {
         private ObjectPool<ControllerSnapshot> _pool = null!;
@@ -75,6 +78,9 @@ namespace RagnaController.Core.Benchmarks
     [Config(typeof(BenchmarkConfig))]
     [MemoryDiagnoser]
     [SimpleJob(RuntimeMoniker.Net80, baseline: true)]
+    /// <summary>
+    /// Performance benchmark class.
+    /// </summary>
     public class InputCommandQueueBenchmarks
     {
         private InputCommandQueue _queue = null!;
@@ -125,6 +131,9 @@ namespace RagnaController.Core.Benchmarks
     [Config(typeof(BenchmarkConfig))]
     [MemoryDiagnoser]
     [SimpleJob(RuntimeMoniker.Net80, baseline: true)]
+    /// <summary>
+    /// Performance benchmark class.
+    /// </summary>
     public class ProfileManagerBenchmarks
     {
         private ProfileManager _profileManager = null!;
@@ -142,6 +151,9 @@ namespace RagnaController.Core.Benchmarks
     [Config(typeof(BenchmarkConfig))]
     [MemoryDiagnoser]
     [SimpleJob(RuntimeMoniker.Net80, baseline: true)]
+    /// <summary>
+    /// Performance benchmark class.
+    /// </summary>
     public class EngineOrchestratorBenchmarks
     {
         private EngineOrchestrator _orchestrator = null!;
@@ -188,6 +200,9 @@ namespace RagnaController.Core.Benchmarks
     }
 
     // Configuration shared by all benchmarks
+    /// <summary>
+    /// Performance benchmark class.
+    /// </summary>
     public class BenchmarkConfig : ManualConfig
     {
         public BenchmarkConfig()

@@ -5,6 +5,9 @@ using RagnaController.Models;
 
 namespace RagnaController.Controller
 {
+    /// <summary>
+    /// Hardware interaction and controller service.
+    /// </summary>
     public sealed class ControllerSnapshot
     {
         // Layer text (COMBO/MAGE/AUTO/GRID MODE)

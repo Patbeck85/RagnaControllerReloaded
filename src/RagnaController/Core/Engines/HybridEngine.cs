@@ -15,6 +15,9 @@ namespace RagnaController.Core
     /// - ProfileApplier: profile loading & live updates
     /// - StandbyManager: AFK detection & power management
     /// </summary>
+    /// <summary>
+    /// Gameplay engine for the 125Hz tick loop.
+    /// </summary>
     public class HybridEngine
     {
         private readonly EngineOrchestrator _orchestrator;

@@ -25,6 +25,9 @@ namespace RagnaController.Core
         ///       : new SendInputMouseStrategy();
         /// </code>
         /// </summary>
+        /// <summary>
+        /// Input processing and routing component.
+        /// </summary>
         public interface IMouseEmulationStrategy : IDisposable
         {
             /// <summary>Move the cursor by a relative offset in physical screen pixels.</summary>

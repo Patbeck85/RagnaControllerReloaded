@@ -16,6 +16,9 @@ namespace RagnaController.Core
     ///
     /// Vollständig headless-testbar ohne echtes HID-Device.
     /// </summary>
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class GestureRecognizer : IDisposable
     {
         private bool _disposed;

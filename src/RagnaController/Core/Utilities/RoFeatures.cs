@@ -3,6 +3,9 @@ using RagnaController.Models;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Utility class for shared infrastructure.
+    /// </summary>
     public sealed class RoFeatures
     {
         private readonly InputCommandQueue _queue;

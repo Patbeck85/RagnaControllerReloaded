@@ -13,6 +13,9 @@ namespace RagnaController.Services
     /// Centralizes profile selection, persistence (LastProfileName), and application.
     /// Reduces MainWindow.xaml.cs God Class surface (~60 lines removed).
     /// </summary>
+    /// <summary>
+    /// Shared application service.
+    /// </summary>
     public class ProfileService
     {
         private readonly ProfileManager _manager;

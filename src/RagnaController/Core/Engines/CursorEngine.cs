@@ -4,6 +4,9 @@ using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Gameplay engine for the 125Hz tick loop.
+    /// </summary>
     public class CursorEngine : IInputHandler
     {
         public int   Priority     => 0;

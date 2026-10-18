@@ -4,6 +4,9 @@ using RagnaController.Models;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public sealed class CooldownManager
     {
         private readonly IMessenger _messenger;

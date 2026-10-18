@@ -10,6 +10,9 @@ using RagnaController.Models;
 
 namespace RagnaController.Profiles
 {
+    /// <summary>
+    /// Profile management class.
+    /// </summary>
     public class ProfileManager
     {
         private readonly string _dir;

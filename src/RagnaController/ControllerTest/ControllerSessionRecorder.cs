@@ -86,6 +86,9 @@ namespace RagnaController.ControllerTest
     /// eine reale Aufnahme direkt als Replay-Golden-Master-Wiedergabe nutzbar is. Unit-testbar ohne
     /// UI/SDL: Samples are injiziert, das JSON is deterministisch erzeugt.
     /// </summary>
+    /// <summary>
+    /// Test harness class for controller validation.
+    /// </summary>
     public sealed class ControllerSessionRecorder
     {
         private readonly List<RecordingSample> _frames = new();

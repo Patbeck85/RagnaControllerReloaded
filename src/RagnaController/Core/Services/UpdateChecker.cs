@@ -11,6 +11,9 @@ using System.Windows;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public class UpdateChecker
     {
         private static readonly HttpClient _http;
@@ -130,6 +133,9 @@ namespace RagnaController.Core
         }
     }
 
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public class UpdateInfo
     {
         public string CurrentVersion { get; set; } = "";

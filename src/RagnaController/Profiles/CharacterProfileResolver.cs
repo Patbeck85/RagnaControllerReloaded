@@ -13,6 +13,9 @@ namespace RagnaController.Profiles
     /// normalisiert to "getrimmt + interne Leerzeichen on ein zusammengefasst" and vergleicht
     /// case-insensitiv, damit dieselbe Zuordnung auch bei Lese-Varianz stabil bleibt.
     /// </summary>
+    /// <summary>
+    /// Profile management class.
+    /// </summary>
     public sealed class CharacterProfileResolver
     {
         // key = normalisierter Char-Name, value = Profil-Name.

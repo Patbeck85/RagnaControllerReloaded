@@ -27,6 +27,9 @@ namespace RagnaController.Core
     ///
     /// All Methoden are headless-testbar durch INativeMethods-Injektion.
     /// </summary>
+    /// <summary>
+    /// Input processing and routing component.
+    /// </summary>
     public sealed class MultiClientInputRouter : IDisposable
     {
         private readonly INativeMethods _native;

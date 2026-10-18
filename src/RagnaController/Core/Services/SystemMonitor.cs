@@ -2,6 +2,9 @@ using System;
 
 namespace RagnaController.Core
 {
+    /// <summary>
+    /// Background service for game functionality.
+    /// </summary>
     public sealed class SystemMonitor
     {
         private readonly WindowTracker _tracker;
