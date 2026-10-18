@@ -139,6 +139,12 @@ namespace RagnaController.Models
         public double OverlayOpacity { get; set; } = 0.9;
         public double OverlayFontScale { get; set; } = 1.0;
 
+        // ── UX-017: Accessibility — High-Contrast & Font Scaling ─────────────
+        /// <summary>High-Contrast-Modus aktivieren (für Sehbehinderte, Steam Deck im Sonnenlicht).</summary>
+        public bool HighContrastEnabled { get; set; } = false;
+        /// <summary>UI-Schrift-Skalierung: 0.85 = klein, 1.00 = normal, 1.25 = groß, 1.50 = sehr groß.</summary>
+        public double FontScale { get; set; } = 1.0;
+
         // ── Right Stick Policy (Action Combat) ──────────────────────────────
         /// <summary>Right Stick Policy: Camera (Action Combat), Aim (Target Lock), Hybrid (Lock=Aim, else Camera)</summary>
         public RightStickPolicy RightStickPolicy { get; set; } = RightStickPolicy.Hybrid;
