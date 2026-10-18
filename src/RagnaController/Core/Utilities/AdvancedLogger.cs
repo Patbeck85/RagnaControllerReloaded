@@ -164,7 +164,7 @@ namespace RagnaController.Core
 
                     await _writer!.FlushAsync();
 
-                    // Beide Kanäle abgeschlossen & leer → es kommt nothing mehr; sauber beenden.
+                    // Both channels completed & empty → nothing more coming; cleanly ending.
                     if (_channel.Reader.Completion.IsCompleted && _errorChannel.Reader.Completion.IsCompleted)
                         break;
                 }

@@ -22,7 +22,7 @@ namespace RagnaController.Core
         public void Start()
         {
             if (_loop != null) return;
-            NativeMethods.timeBeginPeriod(1); // Windows-Scheduler auf 1ms Präzision
+            NativeMethods.timeBeginPeriod(1); // Windows scheduler at 1ms precision
             _cts  = new CancellationTokenSource();
             var cts = _cts;
             _loop = _ = Task.Run(() => RunLoop(cts.Token));
@@ -38,12 +38,12 @@ namespace RagnaController.Core
             cts?.Cancel();
             try
             {
-                // Bounded wait: Loop läuft only Task.Delay/PeriodicTimer, bricht prompt ab.
+                // Bounded wait: loop runs only Task.Delay/PeriodicTimer, aborts promptly.
                 if (loop != null) loop.Wait(500);
             }
             catch (AggregateException)
             {
-                // Loop fängt intern all Exceptions; Abbruch-Exceptions are erwartet.
+                // Loop internally catches all exceptions; abort exceptions are expected.
             }
 
             cts?.Dispose(); // erst NACH dem Wait: Token wird nicht mehr gebraucht
@@ -54,9 +54,9 @@ namespace RagnaController.Core
 
         private async Task RunLoop(CancellationToken token)
         {
-            // Timer läuft immer with dem Basis-Intervall.
-            // BatteryThrottle überspringt jeden zweiten Tick intern —
-            // so ändert sich das Throttling zur Laufzeit ohne Timer-Neustart.
+            // Timer always runs with base interval.
+            // BatteryThrottle skips every second tick internally —
+            // so throttling changes at runtime without timer restart.
             using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(IntervalMs));
             try
             {
@@ -78,7 +78,7 @@ namespace RagnaController.Core
                         catch (Exception ex)
                         {
                             // CRITICAL: All Exceptions fangen, damit ein einzelner Bug in einem Makro or Profil
-                            // niemals den kompletten 125Hz-Thread tötet. Loggen and weiterlaufen.
+                            // never kills the entire 125Hz thread. Log and keep running.
                             System.Diagnostics.Debug.WriteLine($"[BackgroundTickProvider] Exception im Tick-Loop: {ex.GetType().Name}: {ex.Message}");
                         }
         }

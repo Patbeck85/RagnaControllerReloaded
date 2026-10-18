@@ -25,7 +25,7 @@ namespace RagnaController.Core
 
                 if (enable)
                 {
-                    // Pfad zur aktuellen Executable-Datei ermitteln and in Anführungszeichen einhüllen
+                    // Determine path to current executable and wrap in quotes
                     string exePath = $"\"{Environment.ProcessPath}\"";
                     key.SetValue(AppName, exePath);
                 }

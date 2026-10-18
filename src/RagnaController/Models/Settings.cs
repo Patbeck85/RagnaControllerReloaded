@@ -165,7 +165,7 @@ namespace RagnaController.Models
 
         public void Save()
         {
-            // FIX: If das Laden zuvor fehlgeschlagen has, nicht überschreiben!
+            // FIX: if loading previously failed, do not overwrite!
             if (_loadFailed)
             {
                 System.Diagnostics.Debug.WriteLine("[Settings] Speichern abgebrochen - Einstellungen konnten nicht geladen werden!");
@@ -178,7 +178,7 @@ namespace RagnaController.Models
                 {
                     string dir = Path.GetDirectoryName(SettingsPath)!;
                     if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                    // FileStream: no großer string im LOH, direkt on Disk
+                    // FileStream: no large string in LOH, directly on disk
                     string tmp = SettingsPath + ".tmp";
                     using (var fs = new System.IO.FileStream(tmp, System.IO.FileMode.Create,
                         System.IO.FileAccess.Write, System.IO.FileShare.None))

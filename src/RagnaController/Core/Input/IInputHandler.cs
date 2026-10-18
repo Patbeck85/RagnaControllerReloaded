@@ -8,7 +8,7 @@ namespace RagnaController.Core
     public interface IInputHandler
     {
         /// <summary>
-        /// The Priorität des Handlers. Höhere Werte are first verarbeitet.
+        /// The priority of the handler. Higher values are processed first.
         /// </summary>
         int Priority { get; }
 

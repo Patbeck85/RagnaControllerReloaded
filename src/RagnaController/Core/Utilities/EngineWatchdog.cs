@@ -73,7 +73,7 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Injizierbare Uhr (Stopwatch-Timestamp) for deterministische Tests. Default: Stopwatch.GetTimestamp().
-        /// ROB-001 CI-Härtung: Tests können die Zeit vorwärts treiben, statt Wall-Clock-Sleeps to riskieren.
+        /// ROB-001 CI hardening: tests can advance time instead of risking wall-clock sleeps.
         /// </summary>
         public Func<long>? TimeSource { get; set; }
 

@@ -4,8 +4,8 @@ namespace RagnaController.Core
 {
     /// <summary>
     /// Zentrale Versionsquelle — liest exakt den &lt;Version&gt;-Tag aus der .csproj.
-    /// Überall im Code only noch <c>AppVersion.Current</c> verwenden.
-    /// Versionsnummer aktualisieren: only noch in RagnaController.csproj nötig.
+    /// Use only <c>AppVersion.Current</c> everywhere in code.
+    /// Update version number: only needed in RagnaController.csproj.
     /// </summary>
     public static class AppVersion
     {
@@ -13,13 +13,13 @@ namespace RagnaController.Core
 
         static AppVersion()
         {
-            // AssemblyInformationalVersionAttribute enthält <Version> exakt wie in .csproj
+            // AssemblyInformationalVersionAttribute contains <Version> exactly as in .csproj
             var attr = Assembly.GetExecutingAssembly()
                 .GetCustomAttribute<AssemblyInformationalVersionAttribute>();
 
             if (attr != null && !string.IsNullOrEmpty(attr.InformationalVersion))
             {
-                // .NET 8 hängt Git-Commit-Hash an: "1.6.2+a1b2c3" → "1.6.2"
+                // .NET 8 appends Git commit hash: "1.6.2+a1b2c3" → "1.6.2"
                 string v = attr.InformationalVersion;
                 int plus = v.IndexOf('+');
                 Current  = plus > 0 ? v[..plus] : v;

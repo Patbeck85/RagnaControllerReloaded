@@ -32,7 +32,7 @@ namespace RagnaController.Core
         private readonly SnapshotBuilder _snapshot = default!;
         private readonly InputCommandQueue? _queue = default!;
 
-        // ROB-002: Input-Emulation-Failover — Kernel-Strategie hält einen Interception-Kontext
+        // ROB-002: input emulation failover — kernel strategy holds an interception context
         // (P/Invoke-Handle) and muss beim Shutdown deterministisch freigegeben are.
         private InterceptionMouseStrategy? _mouseEmulationFallback;
 

@@ -6,12 +6,12 @@ namespace RagnaController.Core
 {
     /// <summary>
     /// Battery-Optimierung for Steam Deck / Handheld.
-    /// Überwacht den Windows-Batterie-Status and empfiehlt aggressive
-    /// Tick-Rate-Reduktion sowie Smart-Standby-Verstärkung beim
-    /// Batterie-Betrieb (nicht am Netzteil), um Akkulaufzeit to verlängern.
+    /// Monitors Windows battery status and recommends aggressive
+    /// tick rate reduction and smart standby reinforcement on
+    /// battery operation (not on power), to extend battery life.
     ///
     /// Architektur:
-    ///   - SystemInformation.PowerStatus überwacht AC/Batterie
+    ///   - SystemInformation.PowerStatus monitors AC/battery
     ///   - Func<PowerStatus> is injizierbar → unit-testbar ohne echte Hardware
     ///   - PowerStatusChanged-Event bei Modus-Wechsel
     ///   - GetRecommendedTickRate() liefert Hz je nach Modus (AC: 125, Battery: 60)
@@ -30,13 +30,13 @@ namespace RagnaController.Core
 #pragma warning restore CS8618
         private readonly Func<PowerStatus>? _getPowerStatus;
 
-        /// <summary>True if das Gerät on Batterie läuft (nicht am Netzteil).</summary>
+        /// <summary>True if device runs on battery (not on power).</summary>
         public bool IsOnBattery => _isOnBattery;
 
         /// <summary>Aktueller Batterie-Ladezustand in percent (0–100).</summary>
         public int BatteryPercent => _batteryPercent;
 
-        /// <summary>True if das Gerät gerade geladen is.</summary>
+        /// <summary>True if device is currently charging.</summary>
         public bool IsCharging => _isCharging;
 
         /// <summary>Event bei PowerSource-Wechsel (AC ↔ Batterie).</summary>
@@ -89,8 +89,8 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Prüft ob sich der PowerStatus geändert has and feuert ggf. PowerStatusChanged.
-        /// Sollte regelmäßig (z. B. pro Tick or per Timer) aufgerufen are.
+        /// Checks if power status changed and fires PowerStatusChanged if so.
+        /// Should be called regularly (e.g. per tick or per timer).
         /// Nutzt only den injizierten Factory-Delegaten (nicht die einfachen Werte).
         /// </summary>
         public void PollPowerStatus()

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using RagnaController.Models; // WICHTIG für ActionFiredKind
+using RagnaController.Models; // IMPORTANT for ActionFiredKind
 
 namespace RagnaController.Core
 {
@@ -22,7 +22,7 @@ namespace RagnaController.Core
 
         public void Record(string label, ActionFiredKind kind)
         {
-            // Environment.TickCount64 for den heißen Pfad — DateTime.Now only for Anzeige
+            // Environment.TickCount64 for hot path — DateTime.Now only for display
             var entry = new ActionEntry(label, kind, DateTime.Now);
             lock (_lock)
             {

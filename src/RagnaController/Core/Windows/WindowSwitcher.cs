@@ -136,7 +136,7 @@ namespace RagnaController.Core
                         // (e.g. system-protected process, access denied) —
                         // is ignoriert, PID bleibt im Cache fehlen, Fallback funktioniert weiterhin.
                         System.Diagnostics.Debug.WriteLine(
-                            $"[WindowSwitcher] Prozessname für PID {p.Id} nicht lesbar: {ex.Message}");
+                            $"[WindowSwitcher] process name for PID {p.Id} not readable: {ex.Message}");
                     }
                     finally
                     {
@@ -148,7 +148,7 @@ namespace RagnaController.Core
             catch (Exception ex)
             {
                 // ERROR-001: no empty catch — System.Diagnostics not available
-                System.Diagnostics.Debug.WriteLine($"[WindowSwitcher] RefreshPidNameCache äußerer Fehler: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"[WindowSwitcher] RefreshPidNameCache outer error: {ex.Message}");
             }
         }
 

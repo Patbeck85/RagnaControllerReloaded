@@ -26,7 +26,7 @@ namespace RagnaController.Core
             set => GyroAimEnabled = value;
         }
         public float GyroBlend { get; set; } = 0.6f;
-        public float GyroSensitivity { get; set; } = 1.0f;  // Multiplikator für Gyro-Delta
+        public float GyroSensitivity { get; set; } = 1.0f;  // multiplier for gyro delta
 
         // --- Status ---
         public bool IsActive { get; private set; }

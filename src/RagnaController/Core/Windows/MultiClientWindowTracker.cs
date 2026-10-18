@@ -193,7 +193,7 @@ namespace RagnaController.Core
                     {
                         // ERROR-001: No leerer catch
                         System.Diagnostics.Debug.WriteLine(
-                            $"[MultiClientWindowTracker] Prozessname für PID {p.Id} nicht lesbar: {ex.Message}");
+                            $"[MultiClientWindowTracker] process name for PID {p.Id} not readable: {ex.Message}");
                     }
                     finally
                     {
@@ -209,7 +209,7 @@ namespace RagnaController.Core
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(
-                    $"[MultiClientWindowTracker] RefreshPidNameCache äußerer Fehler: {ex.Message}");
+                    $"[MultiClientWindowTracker] RefreshPidNameCache outer error: {ex.Message}");
             }
         }
 

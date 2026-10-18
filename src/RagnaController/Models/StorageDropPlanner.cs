@@ -42,7 +42,7 @@ namespace RagnaController.Models
         Keep
     }
 
-    /// <summary>FEAT-023: Ein einzelner Plan-Eintrag (Slot + Item + Aktion + Begründung).</summary>
+    /// <summary>FEAT-023: A single plan entry (slot + item + action + reason).</summary>
     public readonly record struct StorageDropIntent(
         int SlotIndex,
         InventorySlotItem Item,
@@ -55,7 +55,7 @@ namespace RagnaController.Models
     /// Consumables → Storage-Drop (Stash), Buffs → Drop, QuestItems/Equipment → Keep.
     /// </summary>
     /// <remarks>
-    /// Bewusst KEIN Cursor-/UI-Zugriff (KISS/YAGNI): The Ausführung (Cursor zur
+    /// Intentionally NO cursor/UI access (KISS/YAGNI): the execution (cursor to
     /// Storage-UI navigieren, Items physisch verschieben) is ein separater
     /// Integrationspunkt about RoUiMenuService/SmartCursorService.
     /// </remarks>
@@ -88,7 +88,7 @@ namespace RagnaController.Models
                         plan.Add(new StorageDropIntent(i, item, StorageDropAction.Drop, "Buff-Item ohne Nutzenwert → Drop"));
                         break;
                     default: // QuestItem, Equipment
-                        plan.Add(new StorageDropIntent(i, item, StorageDropAction.Keep, "Geschützt (Quest/Ausrüstung)"));
+                        plan.Add(new StorageDropIntent(i, item, StorageDropAction.Keep, "Protected (quest/equipment)"));
                         break;
                 }
             }
@@ -96,24 +96,24 @@ namespace RagnaController.Models
             return plan;
         }
 
-        /// <summary>FEAT-023: Standard-Kapazität eines Classic-RO-Inventars.</summary>
+        /// <summary>FEAT-023: Standard capacity of a Classic RO inventory.</summary>
         public const int DefaultCapacity = 24;
 
         /// <summary>
-        /// FEAT-023: Plant with der Standard-Kapazität (24 Slots).
+        /// FEAT-023: plans with standard capacity (24 slots).
         /// </summary>
         public static IReadOnlyList<StorageDropIntent> PlanDefault(int usedSlots, IReadOnlyList<InventorySlotItem>? slots)
             => Plan(DefaultCapacity, usedSlots, slots);
 
         /// <summary>
-        /// FEAT-023: Zählt die tatsächlich befreienden Aktionen (Stash + Drop) in einem Plan.
+        /// FEAT-023: counts the actually freeing actions (stash + drop) in a plan.
         /// </summary>
         public static int CountReleasingActions(IReadOnlyList<StorageDropIntent> plan)
             => plan.Count(x => x.Action != StorageDropAction.Keep);
 
         /// <summary>
-        /// FEAT-023: Prüft, ob ein Plan mindestens <paramref name="neededSlots"/> Slots befreit.
-        /// Standard 1 = „ein neuer Pickup is möglich".
+        /// FEAT-023: checks if a plan frees at least <paramref name="neededSlots"/> slots.
+        /// Standard 1 = "a new pickup is possible".
         /// </summary>
         public static bool FreesEnough(IReadOnlyList<StorageDropIntent> plan, int neededSlots = 1)
             => CountReleasingActions(plan) >= neededSlots;

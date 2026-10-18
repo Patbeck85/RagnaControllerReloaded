@@ -21,7 +21,7 @@ namespace RagnaController.Core
         public bool IsActive => MobSweepEnabled;
         public SupportPhase Phase { get; private set; } = SupportPhase.Idle;
 
-        // Cooldowns for Tests zugänglich machen
+        // Expose cooldowns for tests
         public int TabCooldown => _tabCooldown;
         public int HealCooldown => _healCooldown;
 
