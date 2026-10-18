@@ -207,6 +207,7 @@
         <Compile Include="Core\Services\PartyManager.cs" />
         <Compile Include="Core\Services\SessionRecorder.cs" />
         <Compile Include="Core\Services\FirstRunService.cs" />
+        <Compile Include="Core\Services\HighContrastService.cs" />
         <Compile Include="Core\Utilities\ShareCodeValidator.cs" />
 
                 <Compile Include="Core\Services\TtsAnnouncerService.cs" />
