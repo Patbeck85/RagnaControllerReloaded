@@ -246,6 +246,8 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Live updates for v1.7.0 stick/trigger settings
+    /// <param name="v">v parameter.</param>
+    /// <param name="v">v parameter.</param>
         /// </summary>
         public void LiveUpdateLeftStick(float v) => _orchestrator.Movement.Deadzone = v;
         /// <summary>

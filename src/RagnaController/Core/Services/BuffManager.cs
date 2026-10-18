@@ -187,6 +187,8 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Check if a specific debuff is active
+    /// <param name="buffName">buffName parameter.</param>
+    /// <param name="debuffName">debuffName parameter.</param>
         /// </summary>
         public bool HasDebuff(string debuffName) => _activeDebuffs.ContainsKey(debuffName);
 

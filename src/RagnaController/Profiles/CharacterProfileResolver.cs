@@ -92,6 +92,7 @@ namespace RagnaController.Profiles
         /// <summary>Prüft, ob for einen Charakter-Namen eine Zuordnung existiert.</summary>
         public bool IsMapped(string? characterName) => Resolve(characterName) != null;
 
+    /// <param name="characterName">characterName parameter.</param>
         /// <summary>Schnappschuss aller Zuordnungen (normalisierte Schlüssel) — for Persistenz/Tests.</summary>
         public IReadOnlyDictionary<string, string> Snapshot()
         {

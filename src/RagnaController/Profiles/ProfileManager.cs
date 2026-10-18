@@ -101,6 +101,7 @@ namespace RagnaController.Profiles
         /// FEAT-024: Is aufgerufen, if ein Charakter erkannt wurde (z. B. via OCR-/Fenster-Lesung).
         /// Schaltet automatic das zugeordnete Profil, falls eines existiert. Gibt true zurück,
         /// if gewechselt wurde.
+    /// <param name="characterName">characterName parameter.</param>
         /// </summary>
         public bool OnCharacterDetected(string characterName)
         {
