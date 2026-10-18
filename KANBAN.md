@@ -65,9 +65,12 @@
 
 ### 📋 Nächste sofortige Aktion
 
-**TASK-1604: UI: Client-Switcher in MainWindow Header**
+**Alle Epics abgeschlossen** — kein offener Task mehr in der KANBAN.md.
 
-Der `MultiClientInputRouter` (TASK-1603) ist implementiert und sendet Input gezielt an bestimmte Client-HWNDs per PostMessage. Jetzt muss das UI in MainWindow ergänzt werden: ein Dropdown/Hotkey zur Auswahl des Ziel-Clients, der `SetPreferredClientHwnd` auf dem `MultiClientInputRouter` aufruft.
+**Vorschläge für neue Epics (v2.5.0+):**
+- Epic 6: DualSense Lightbar pro Profil konfigurierbar
+- Epic 7: First-Run Wizard erweitern (Controller-Button-Mapping, Profil-Vorlagen)
+- Epic 8: Performance-Optimierung (Engine-Tick-Reduktion, Memory-Pooling)
 
 ---
 
