@@ -5,8 +5,8 @@
 
 ## 🎯 Current Milestone
 **Phase:** Phase 16: Multi-Client & Profil-Switching (v2.4.0) — IN PLANUNG
-**Status:** All major phases 1-15 COMPLETE | Build: 0 errors, 0 warnings | Tests: 644/644 PASS
-**Git HEAD:** `791b251` (origin/main)
+**Status:** All major phases 1-15 COMPLETE | Build: 0 errors, 0 warnings | Tests: 650/650 PASS
+**Git HEAD:** `650d20b` (origin/main) — "KANBAN.md: TASK-1602 als ERLEDIGT, TASK-1603 als IN_PROGRESS"
 **Tag:** `v2.3.0` pushed to origin  
 **Release:** v2.3.0 (2026-10-17) — GitHub Release deployed mit ZIP-Asset  
 **Download:** https://github.com/Patbeck85/RagnaControllerReloaded/releases/download/v2.3.0/RagnaController_2.3.0.zip  
@@ -17,9 +17,10 @@
 
 | Task ID | Title | Priority | Status | Assigned | Dependencies | DoD Progress |
 |---------|-------|----------|--------|----------|--------------|--------------|
-|| **TECH-020** | WindowSwitcher — Process.GetProcessById in EnumWindows Callback | S4 (Low) | ✅ COMPLETE | ROLE-003 Backend | — | 100% — Catch-Blöcke gefixt (ERROR-001), 3 PID-Cache Unit-Tests hinzugefügt ||
-|| **TASK-1601** | Research: Win32 Multi-HWND Enum & Input-Isolation pro Client | HIGH | 📋 OPEN | ROLE-004 Researcher | — | 0% ||
-|| **TASK-1602** | Multi-Client WindowTracker (pro HWND eigene ClientW/H, Prozessname) | HIGH | 📋 OPEN | ROLE-003 Backend | TASK-1601 | 0% ||
+| **TECH-020** | WindowSwitcher — Process.GetProcessById in EnumWindows Callback | S4 (Low) | ✅ COMPLETE | ROLE-003 Backend | — | 100% — Catch-Blöcke gefixt (ERROR-001), 3 PID-Cache Unit-Tests hinzugefügt |
+| **TASK-1601** | Research: Win32 Multi-HWND Enum & Input-Isolation pro Client | HIGH | ✅ RESEARCH_DONE | ROLE-004 Researcher | — | 100% — Win32 APIs, PostMessage/SendInput-Optionen, MultiClientWindowTracker-Architektur dokumentiert |
+| **TASK-1602** | Multi-Client WindowTracker (pro HWND eigene ClientW/H, Prozessname) | HIGH | ✅ COMPLETE | ROLE-003 Backend | TASK-1601 | 100% — MultiClientWindowTracker.cs erstellt, 5 Unit-Tests, INativeMethods erweitert |
+| **TASK-1603** | Input-Router: Client-Auswahl per Dropdown/Hotkey | HIGH | 📋 IN_PROGRESS | ROLE-003 Backend | TASK-1602 | 0% — RoExePath/FocusLockProcess aus Settings als processName an Refresh() übergeben |
 || **TASK-1603** | Input-Router: Client-Auswahl per Dropdown/Hotkey | HIGH | 📋 OPEN | ROLE-003 Backend | TASK-1602 | 0% ||
 || **TASK-1604** | UI: Client-Switcher in MainWindow Header | MEDIUM | 📋 OPEN | ROLE-002 Frontend | TASK-1603 | 0% ||
 || **TASK-1611** | Profil-Preset-System: Name-basierter Schnellwechsel | MEDIUM | 📋 OPEN | ROLE-003 Backend | — | 0% ||
