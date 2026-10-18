@@ -10,12 +10,12 @@ namespace RagnaController.Core
         private readonly LinkedList<ActionEntry> _entries = new();
         public int MaxEntries { get; set; } = 20;
 
-        // ActionFiredMessage wird jetzt durch das projektweite Namespace-System gefunden
+        // ActionFiredMessage is jetzt durch das projektweite Namespace-System gefunden
         public void Record(ActionFiredMessage msg) => Record(msg.Label, msg.Kind);
 
         public void Record(string label, ActionFiredKind kind)
         {
-            // Environment.TickCount64 für den heißen Pfad — DateTime.Now nur für Anzeige
+            // Environment.TickCount64 for den heißen Pfad — DateTime.Now only for Anzeige
             var entry = new ActionEntry(label, kind, DateTime.Now);
             lock (_lock)
             {

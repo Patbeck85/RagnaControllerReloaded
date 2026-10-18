@@ -99,7 +99,7 @@ namespace RagnaController.Core
             return true;
         }
 
-        // Reset: Alle Felder auf Initialwerte setzen (wichtig bei Profil-Reload!)
+        // Reset: All Felder on Initialwerte setzen (important bei Profil-Reload!)
         public void Reset()
         {
             KiteEnabled = false;

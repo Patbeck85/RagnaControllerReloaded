@@ -5,8 +5,8 @@ using System.Diagnostics.Tracing;
 namespace RagnaController.Core;
 
 /// <summary>
-/// ETW Provider für RagnaController Performance-Events.
-/// EventSource mit Keywords: Controller, Input, Profile, Macro, Overlay, Error
+/// ETW Provider for RagnaController Performance-Events.
+/// EventSource with Keywords: Controller, Input, Profile, Macro, Overlay, Error
 /// </summary>
 [EventSource(Name = "RagnaController", Guid = "00000000-0000-0000-0000-000000000001")]
 public sealed class ETWProvider : EventSource

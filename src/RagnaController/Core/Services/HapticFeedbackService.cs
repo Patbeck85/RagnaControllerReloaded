@@ -5,7 +5,7 @@ using System.Threading;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Haptic Feedback (Rumble) für Steam Deck / Handheld.
+    /// Haptic Feedback (Rumble) for Steam Deck / Handheld.
     /// Spielt vordefinierte Vibration-Patterns ab:
     ///   - Hit:         kurzer Einzelimpuls (ca. 100ms)
     ///   - Death:       langer Einzelimpuls (ca. 500ms)
@@ -13,9 +13,9 @@ namespace RagnaController.Core
     ///   - SkillCast:   mittlerer Einzelimpuls (ca. 250ms)
     ///
     /// Architektur:
-    ///   - IRumbleProvider ist injizierbar → unit-testbar ohne echte Hardware
-    ///   - Patterns laufen auf einem separaten Timer-Thread (nicht blockierend)
-    ///   - Nur ein Pattern gleichzeitig (neues bricht altes ab)
+    ///   - IRumbleProvider is injizierbar → unit-testbar ohne echte Hardware
+    ///   - Patterns laufen on einem separaten Timer-Thread (nicht blockierend)
+    ///   - Only ein Pattern gleichzeitig (neues bricht altes ab)
     /// </summary>
     public sealed class HapticFeedbackService : IDisposable
     {
@@ -63,13 +63,13 @@ namespace RagnaController.Core
             PlayPattern(new[] { 250 }, 0.5f, 0.5f);
         }
 
-        /// <summary>Custom Pattern: durationsMs abwechselnd an/aus, beide Motoren mit gleicher Intensität.</summary>
+        /// <summary>Custom Pattern: durationsMs abwechselnd an/aus, beide Motoren with gleicher Intensität.</summary>
         public void PlayCustom(int[] durationsMs, float intensity)
         {
             PlayPattern(durationsMs, intensity, intensity);
         }
 
-        /// <summary>Alle Vibration sofort stoppen.</summary>
+        /// <summary>All Vibration sofort stoppen.</summary>
         public void Stop()
         {
             lock (_lock)
@@ -127,7 +127,7 @@ namespace RagnaController.Core
 
             if (_patternStep % 2 == 0)
             {
-                // An-Phase: Rumble aktiv
+                // An-Phase: Rumble active
                 _rumble.SetRumble(_patternLeft, _patternRight);
             }
             else
@@ -138,7 +138,7 @@ namespace RagnaController.Core
 
             _patternStep++;
 
-            // Nächsten Tick nach dieser Dauer planen
+            // Nächsten Tick nach this Dauer planen
             _patternTimer?.Change(duration, Timeout.Infinite);
         }
 
@@ -153,12 +153,12 @@ namespace RagnaController.Core
     }
 
     /// <summary>
-    /// Abstraktion über Rumble/Hardware-Vibration.
+    /// Abstraktion about Rumble/Hardware-Vibration.
     /// Production: XInputFallbackService. Tests: Mock.
     /// </summary>
     public interface IRumbleProvider
     {
-        /// <summary>Linke und rechte Motor-Geschwindigkeit (0.0–1.0).</summary>
+        /// <summary>Linke and rechte Motor-Geschwindigkeit (0.0–1.0).</summary>
         void SetRumble(float left, float right);
     }
 }

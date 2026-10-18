@@ -27,7 +27,7 @@ namespace RagnaController.Core
         {
             // CRITICAL: Reset ALL state machines HARD!
             // Problem: If Sniper was in 'Kite' mode (running backwards),
-            // this state remains active in background. New Knight would
+            // this state remains active in backgroand. New Knight would
             // suddenly start running backwards uncontrollably!
 
             // 0. FeedbackSystem stop (prevents Rumble/LED ghosting on profile switch)
@@ -73,10 +73,10 @@ namespace RagnaController.Core
                 ApplyProfileSettings(p);
             }
 
-            // FEAT-011: Item Manager — in beiden Pfaden (Auto-Detect & manuell) anwenden
+            // FEAT-011: Item Manager — in beiden Pfaden (Auto-Detect & manual) anwenden
             ApplyItemManager(p);
 
-            // FEAT-012: Party Manager — in beiden Pfaden (Auto-Detect & manuell) anwenden
+            // FEAT-012: Party Manager — in beiden Pfaden (Auto-Detect & manual) anwenden
             ApplyPartyManager(p);
 
             _orchestrator.SubscribeToLog($"[Engine] Profil geladen: {p.Name} ({p.Class})");
@@ -155,7 +155,7 @@ namespace RagnaController.Core
 
         private void ApplyItemManager(Profile p)
         {
-            // FEAT-011: Items aus dem Profil laden und Engine aktivieren/deaktivieren.
+            // FEAT-011: Items aus dem Profil laden and Engine aktivieren/deaktivieren.
             _orchestrator.ItemManager.Configure(p.ManagedItems);
             if (p.ItemManagerEnabled)
                 _orchestrator.ItemManager.Start();
@@ -165,7 +165,7 @@ namespace RagnaController.Core
 
         private void ApplyPartyManager(Profile p)
         {
-            // FEAT-012: Party-Settings aus dem Profil laden und Auto-Heal-Loop aktivieren/deaktivieren.
+            // FEAT-012: Party-Settings aus dem Profil laden and Auto-Heal-Loop aktivieren/deaktivieren.
             var pm = _orchestrator.PartyManager;
             pm.MemberCount = Math.Clamp(p.PartyMemberCount, 1, PartyManager.MaxMembers);
             pm.HealThresholdPercent = Math.Clamp(p.PartyHealThresholdPercent, 0, 100);
@@ -253,7 +253,7 @@ namespace RagnaController.Core
         public void LiveUpdateRightTrigger(float v) { /* Adaptive Trigger R2 - Placeholder */ }
 
         /// <summary>
-        /// Settings: Sound
+        /// Settings: Soand
         /// </summary>
         public void SetSoundEnabled(bool enabled) => _orchestrator.SoundEnabled = enabled;
 

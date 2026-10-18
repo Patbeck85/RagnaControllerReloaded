@@ -7,7 +7,7 @@ using RagnaController.Profiles;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Interface für Profile-Management.
+    /// Interface for Profile-Management.
     /// </summary>
     public interface IProfileManager
     {

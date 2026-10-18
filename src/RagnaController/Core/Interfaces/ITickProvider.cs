@@ -8,7 +8,7 @@ namespace RagnaController.Core
     /// Timer abstraction — decouples the engine from WPF.
     /// Two implementations:
     ///  • <see cref="WpfTickProvider"/>        — DispatcherTimer on UI thread (legacy/fallback)
-    ///  • <see cref="BackgroundTickProvider"/> — PeriodicTimer on background thread (recommended)
+    ///  • <see cref="BackgroundTickProvider"/> — PeriodicTimer on backgroand thread (recommended)
     /// </summary>
     public interface ITickProvider : IDisposable
     {

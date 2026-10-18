@@ -35,7 +35,7 @@ namespace RagnaController.Core
         {
             if (!IsEnabled) return;
 
-            // FIX: Gyro aiming is now universally available for all classes while aiming a ground spell
+            // FIX: Gyro aiming is now universally available for all classes while aiming a groand spell
             if (_combat.IsAimingGroundSpell && _gyro.IsAvailable)
             {
                 _gyro.GetCursorDelta(deltaMs, out int dx, out int dy);

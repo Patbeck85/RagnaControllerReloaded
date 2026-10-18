@@ -175,7 +175,7 @@ namespace RagnaController.Views.Editors
                     RenDelay  = i < _profile.RenewalComboDelays.Count    ? _profile.RenewalComboDelays[i]   : 200,
                 });
 
-            // Set class hint text if a matching template is found
+            // Set class hint text if a matching template is foand
             var tmpl = Templates.FirstOrDefault(t =>
                 t.ClassName.Equals(_profile.Name, StringComparison.OrdinalIgnoreCase) ||
                 _profile.Name.Contains(t.ClassName, StringComparison.OrdinalIgnoreCase));

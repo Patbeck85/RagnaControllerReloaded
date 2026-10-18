@@ -62,19 +62,19 @@ namespace RagnaController.Profiles
         public int  SupportHealKeyVK     { get; set; } = 90;
 
         // ── FEAT-012: Party Manager (Auto-Heal-Loop) ─────────────────────
-        /// <summary>PartyManager aktiviert — autonomer Heal-Loop für Party-Mitglieder. Default: false.</summary>
+        /// <summary>PartyManager enabled — autonomer Heal-Loop for Party-Mitglieder. Default: false.</summary>
         public bool PartyManagerEnabled { get; set; } = false;
         /// <summary>Anzahl verwalteter Party-Mitglieder (1..5).</summary>
         public int PartyMemberCount { get; set; } = 1;
-        /// <summary>HP-Schwelle in Prozent: feuert erst ab unterschrittener Schwelle.</summary>
+        /// <summary>HP-Schwelle in percent: feuert erst ab unterschrittener Schwelle.</summary>
         public int PartyHealThresholdPercent { get; set; } = 70;
         /// <summary>Intervall in ms zwischen zwei autonomen Heals.</summary>
         public int PartyHealIntervalMs { get; set; } = 5000;
-        /// <summary>Hotkey für die Party-Heal-Aktion. Default: Z (90).</summary>
+        /// <summary>Hotkey for die Party-Heal-Aktion. Default: Z (90).</summary>
         public int PartyHealKeyVK { get; set; } = 90;
 
         // ── FEAT-011: Item Manager (Auto-Potion & Item-Verwaltung) ─────────
-        /// <summary>ItemManager aktiviert — verwaltet Items/Potions automatisch bei HP/SP-Schwelle. Default: false.</summary>
+        /// <summary>ItemManager enabled — verwaltet Items/Potions automatic bei HP/SP-Schwelle. Default: false.</summary>
         public bool ItemManagerEnabled { get; set; } = false;
         /// <summary>Konfigurierte Items (Potions), die die ItemManagerEngine verwaltet.</summary>
         public List<ItemConfig> ManagedItems { get; set; } = new();

@@ -28,7 +28,7 @@ namespace RagnaController.Core
             // Use injected RNG for deterministic paths (replay/testing), fallback to Random.Shared
             var random = rng ?? Random.Shared;
 
-            // Kontrollpunkte für eine natürliche Kurve
+            // Kontrollpunkte for eine natürliche Kurve
             // TECH-037: Use injected RNG for determinism
             float ctrlX = x0 + (x1 - x0) * 0.5f + random.Next(-20, 20);
             float ctrlY = y0 + (y1 - y0) * 0.5f + random.Next(-20, 20);

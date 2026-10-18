@@ -28,7 +28,7 @@ namespace RagnaController.Core
 
         public InputCmd(CmdType type) : this(type, 0, 0, null) { }
 
-        // FIX (TEST-10): Die alte Chaining-Variante `: this(type, key, 0, null)` hat
+        // FIX (TEST-10): The alte Chaining-Variante `: this(type, key, 0, null)` has
         // (type, int x, int y, Action?) gematcht → VK-Code landete in X statt Key.
         public InputCmd(CmdType type, ushort key)
         {
@@ -144,9 +144,9 @@ namespace RagnaController.Core
         public event Action<InputCmd>? OnCommandExecuted;
 
         /// <summary>
-        /// ROB-002: Feuert nach jedem SendInput-Flush mit der gemessenen API-Latenz in ms.
-        /// Wird vom Failover-Mechanismus (InputRouter) genutzt, um langsamere
-        /// Emulations-Pfade zu erkennen und auf die Kernel-Strategie zu wechseln.
+        /// ROB-002: Feuert nach jedem SendInput-Flush with der gemessenen API-Latenz in ms.
+        /// Is vom Failover-Mechanismus (InputRouter) genutzt, um langsamere
+        /// Emulations-Pfade to erkennen and on die Kernel-Strategie to wechseln.
         /// </summary>
         public event Action<double>? SendInputLatencyRecorded;
 
@@ -164,12 +164,12 @@ namespace RagnaController.Core
         // Commands collection for testing and inspection (bounded; both configurations).
         public List<InputCmd> Commands { get; } = new();
 
-        // FIX (TEST-011): RecordCommand wird von mehreren Enqueue-Threads aufgerufen —
+        // FIX (TEST-011): RecordCommand is from mehreren Enqueue-Threads aufgerufen —
         // ungesehütztes List.Add wirft ArgumentException im Resize-Pfad.
         private readonly object _commandsLock = new();
 
-        // Bounded history in DEBUG und RELEASE: Replay/Inspection braucht sie in beiden,
-        // CI testet mit --configuration Release (2048→4096 Einträge ≈ 128 KB worst case, deterministisch).
+        // Bounded history in DEBUG and RELEASE: Replay/Inspection braucht they in beiden,
+        // CI testet with --configuration Release (2048→4096 Einträge ≈ 128 KB worst case, deterministisch).
         private const int MaxRecordedCommands = 4096;
 
         private void RecordCommand(InputCmd cmd)
@@ -309,7 +309,7 @@ namespace RagnaController.Core
         {
             if (_consumerThread != null && _consumerThread.IsAlive) return;
 
-            // Nach Stop() ist der alte CTS disposed → für einen Restart neu erzeugen.
+            // Nach Stop() is der alte CTS disposed → for einen Restart neu erzeugen.
             if (_cts == null || _cts.IsCancellationRequested)
                 _cts = new CancellationTokenSource();
 
@@ -320,8 +320,8 @@ namespace RagnaController.Core
         public void Stop()
         {
             // FIX (TEST-011 class / race): CTS erst NACH dem Join des Consumer-Threads
-            // disponieren. Der Consumer liest _cts.Token im Loop; ein frühes null!
-            // führte zu NullReferenceException in Process().
+            // disponieren. The Consumer liest _cts.Token im Loop; ein frühes null!
+            // führte to NullReferenceException in Process().
             var cts = _cts;
             if (cts != null)
             {
@@ -334,7 +334,7 @@ namespace RagnaController.Core
                 _consumerThread = null;
             }
 
-            // Thread ist jetzt garantiert beendet → CTS sicher freigeben.
+            // Thread is jetzt garantiert beendet → CTS sicher freigeben.
             cts?.Dispose();
             _cts = null!;
         }
@@ -347,8 +347,8 @@ namespace RagnaController.Core
 
         private void Process()
         {
-            // Lokaler Token-Snapshot: bleibt gültig, selbst wenn _cts später
-            // von Stop() auf null gesetzt wird (Join-Garantie).
+            // Lokaler Token-Snapshot: bleibt gültig, selbst if _cts später
+            // from Stop() on null gesetzt is (Join-Garantie).
             var token = _cts.Token;
             var enumerator = _queue!.GetConsumingEnumerable(token).GetEnumerator();
 
@@ -378,7 +378,7 @@ namespace RagnaController.Core
                     }
                 }
             }
-            // Intentional: sauberer Shutdown des Consumer-Threads — kein Fehler, nur Logging-Kommentar (ERROR-001).
+            // Intentional: sauberer Shutdown des Consumer-Threads — no Fehler, only Logging-Kommentar (ERROR-001).
             catch (OperationCanceledException) { System.Diagnostics.Debug.WriteLine("[InputQueue] Consumer loop stopped (cancellation)."); }
             finally { enumerator.Dispose(); }
         }

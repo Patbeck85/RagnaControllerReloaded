@@ -6,28 +6,28 @@ namespace RagnaController.Core
 {
     /// <summary>
     /// Steam Deck / Handheld Sleep-Mode Handling.
-    /// Erkennt Windows-Power-Mode-Änderungen (Suspend/Resume) und pausiert/
-    /// setzt die Engine-Orchestrierung cleanly fort — damit kein Reconnect-
+    /// Erkennt Windows-Power-Mode-Änderungen (Suspend/Resume) and pausiert/
+    /// setzt die Engine-Orchestrierung cleanly fort — damit no Reconnect-
     /// Issue nach dem Aufwecken aus dem Sleep-Modus entsteht.
     ///
     /// Architektur:
     ///   - SystemEvents.PowerModeChanged überwacht Suspend/Resume
     ///   - Bei Suspend: OnSuspend-Callback (EngineOrchestrator.Pause)
     ///   - Bei Resume:  OnResume-Callback  (EngineOrchestrator.Resume)
-    ///   - Beide Callbacks sind injizierbar → unit-testbar ohne echtes Windows-Event
+    ///   - Beide Callbacks are injizierbar → unit-testbar ohne echtes Windows-Event
     /// </summary>
     public sealed class SleepModeService : IDisposable
     {
         private bool _disposed;
         private bool _isSuspended;
 
-        /// <summary>Callback beim Suspend (Sleep). Wird vom EngineOrchestrator gesetzt.</summary>
+        /// <summary>Callback beim Suspend (Sleep). Is vom EngineOrchestrator gesetzt.</summary>
         public Action? OnSuspend { get; set; }
 
-        /// <summary>Callback beim Resume (Aufwecken). Wird vom EngineOrchestrator gesetzt.</summary>
+        /// <summary>Callback beim Resume (Aufwecken). Is vom EngineOrchestrator gesetzt.</summary>
         public Action? OnResume { get; set; }
 
-        /// <summary>True wenn das System im Suspend/Sleep-Zustand ist.</summary>
+        /// <summary>True if das System im Suspend/Sleep-Zustand is.</summary>
         public bool IsSuspended => _isSuspended;
 
         public SleepModeService()
@@ -61,8 +61,8 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Simuliert einen Suspend (für Unit-Tests ohne echtes Windows-Event).
-        /// Löst OnSuspend aus und setzt _isSuspended = true.
+        /// Simuliert einen Suspend (for Unit-Tests ohne echtes Windows-Event).
+        /// Löst OnSuspend aus and setzt _isSuspended = true.
         /// </summary>
         public void SimulateSuspend()
         {
@@ -73,8 +73,8 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Simuliert einen Resume (für Unit-Tests ohne echtes Windows-Event).
-        /// Löst OnResume aus und setzt _isSuspended = false.
+        /// Simuliert einen Resume (for Unit-Tests ohne echtes Windows-Event).
+        /// Löst OnResume aus and setzt _isSuspended = false.
         /// </summary>
         public void SimulateResume()
         {

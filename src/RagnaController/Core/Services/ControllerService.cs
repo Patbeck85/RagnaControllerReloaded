@@ -9,7 +9,7 @@ namespace RagnaController.Core
 {
     /// <summary>
     /// SDL2 GameController wrapper.
-    /// All SDL calls run on a single dedicated background thread (_sdlThread)
+    /// All SDL calls run on a single dedicated backgroand thread (_sdlThread)
     /// because SDL2 is NOT thread-safe for event pumping — PumpEvents() must
     /// be called from the same OS thread that called SDL.Init().
     /// 
@@ -51,8 +51,8 @@ namespace RagnaController.Core
                             IsTestHostProcess();
 
                         /// <summary>
-                        /// GEX-013: Testhost-Erkennung — unter dotnet test / VS (testhost.exe) ist SDL_INIT_VIDEO
-                        /// unnötig und kann AccessViolationException auslösen. Hermetic: Tests laufen überall ohne Env-Variablen.
+                        /// GEX-013: Testhost-Erkennung — unter dotnet test / VS (testhost.exe) is SDL_INIT_VIDEO
+                        /// unnötig and kann AccessViolationException auslösen. Hermetic: Tests laufen überall ohne Env-Variablen.
                         /// </summary>
                         private static bool IsTestHostProcess()
                         {
@@ -389,7 +389,7 @@ namespace RagnaController.Core
                 return;
             }
 
-            // Nothing found — clear controller and snapshot
+            // Nothing foand — clear controller and snapshot
             _isConnected = false;
             ControllerName = "No Controller";
             ControllerType = "Unknown";

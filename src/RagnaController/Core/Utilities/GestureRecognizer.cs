@@ -4,12 +4,12 @@ using System.Diagnostics;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Erkennt Gesten über den Right-Stick für Handheld-Navigation.
+    /// Erkennt Gesten about den Right-Stick for Handheld-Navigation.
     ///
     /// Architektur:
-    ///   - Jeder Tick wird der aktuelle Right-Stick-Wert (RightX/RightY) eingespeist
-    ///   - Bei schneller Bewegung in eine Richtung wird ein Swipe erkannt
-    ///   - Richtung bestimmt welche Aktion ausgelöst wird:
+    ///   - Every Tick is der aktuelle Right-Stick-Wert (RightX/RightY) eingespeist
+    ///   - Bei schneller Bewegung in eine Richtung is ein Swipe erkannt
+    ///   - Richtung bestimmt welche Aktion ausgelöst is:
     ///     * Rechts → Radial Menu öffnen/schließen
     ///     * Oben/Unten → Im geöffneten Menü navigieren (SelectNext/Previous)
     ///   - R3-Drücken bestätigt die aktuelle Auswahl (ActivateSelection)
@@ -24,7 +24,7 @@ namespace RagnaController.Core
         private float _lastRightY;
         private GestureDirection _lastDirection = GestureDirection.None;
 
-        /// <summary>Schwelle für Richtungs-Erkennung (Stick-Wert -1..1). Default 0.6.</summary>
+        /// <summary>Schwelle for Richtungs-Erkennung (Stick-Wert -1..1). Default 0.6.</summary>
         public float DirectionThreshold { get; set; } = 0.6f;
 
         /// <summary>Radial Menu aktuell geöffnet?</summary>
@@ -43,8 +43,8 @@ namespace RagnaController.Core
         public event EventHandler? ItemActivate;
 
         /// <summary>
-        /// Speist Right-Stick Werte und R3-Zustand ein.
-        /// Wird jeden Tick vom InputRouter aufgerufen.
+        /// Speist Right-Stick Werte and R3-Zustand ein.
+        /// Is jeden Tick vom InputRouter aufgerufen.
         /// </summary>
         /// <param name="rightX">Right-Stick X (-1..1)</param>
         /// <param name="rightY">Right-Stick Y (-1..1)</param>
@@ -62,8 +62,8 @@ namespace RagnaController.Core
             // Aktuelle Richtung bestimmen (dominante Achse)
             var direction = DetectDirection(rightX, rightY);
 
-            // Edge-Detektion: Nur feuern wenn sich die Richtung ändert
-            // (von keiner Richtung zu einer spezifischen Richtung)
+            // Edge-Detektion: Only feuern if sich die Richtung ändert
+            // (from keiner Richtung to einer spezifischen Richtung)
             if (direction != GestureDirection.None && direction != _lastDirection)
             {
                 OnDirectionDetected(direction);
@@ -161,7 +161,7 @@ namespace RagnaController.Core
     }
 
     /// <summary>
-    /// Erkannte Stick-Richtung für Gesten-Steuerung.
+    /// Erkannte Stick-Richtung for Gesten-Steuerung.
     /// </summary>
     public enum GestureDirection
     {

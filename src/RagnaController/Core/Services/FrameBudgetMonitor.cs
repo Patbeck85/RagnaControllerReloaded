@@ -36,7 +36,7 @@ namespace RagnaController.Core
         private readonly RagnaControllerETW _etw = RagnaControllerETW.Log;
         private readonly AdvancedLogger? _logger;
 
-        // Background percentile calculation
+        // Backgroand percentile calculation
         private readonly Timer _percentileTimer;
         private readonly CancellationTokenSource _cts = new();
         private bool _disposed;

@@ -18,7 +18,7 @@ namespace RagnaController.Core
         private readonly InputCommandQueue _queue;
         private float _remainderX, _remainderY;
 
-                // FIX: Virtueller Cursor für asynchrones Threading (verhindert Rubber-Banding)
+                // FIX: Virtueller Cursor for asynchrones Threading (verhindert Rubber-Banding)
                 private float _virtualX, _virtualY;
                 private bool _wasInDeadzone = true;
 
@@ -35,8 +35,8 @@ namespace RagnaController.Core
                     _remainderY = 0f;
                 }
 
-                // TECH-020 Fix: Periodischer Resync des virtuellen Cursors mit echter Windows-Position
-        // Verhindert Desync bei physischer Maus-Bewegung oder Fensterwechsel
+                // TECH-020 Fix: Periodischer Resync des virtuellen Cursors with echter Windows-Position
+        // Verhindert Desync bei physischer Maus-Bewegung or Fensterwechsel
         private int _resyncCounter = 0;
         private const int RESYNC_INTERVAL_TICKS = 62; // ~500ms bei 125Hz (62 * 8ms ≈ 500ms)
         private const int MAX_DESYNC_PIXELS = 50; // Max erlaubte Abweichung vor Forced Resync
@@ -57,7 +57,7 @@ namespace RagnaController.Core
         {
             float sqMag = rx * rx + ry * ry;
 
-            // Wenn der Stick losgelassen wird (Deadzone)
+            // If der Stick losgelassen is (Deadzone)
             if (sqMag <= Deadzone * Deadzone)
             {
                 _remainderX = _remainderY = 0;
@@ -65,7 +65,7 @@ namespace RagnaController.Core
                 return;
             }
 
-            // Vektor Mathematik (Mit Square-Gate Fix)
+            // Vektor Mathematik (With Square-Gate Fix)
             float trueMag = MathF.Sqrt(sqMag);
             // FIX: Magnitude clamping vor curve calculation verhindert diagonal speed explosion
             float clampedMag = Math.Min(1.0f, trueMag);
@@ -100,7 +100,7 @@ namespace RagnaController.Core
                                     _wasInDeadzone = false;
                                 }
 
-                // Wende die Bewegung völlig flüssig auf unseren virtuellen Cursor an
+                // Wende die Bewegung völlig flüssig on unseren virtuellen Cursor an
                 _virtualX += mx;
                 _virtualY += my;
 
@@ -118,7 +118,7 @@ namespace RagnaController.Core
                                     targetX = Math.Clamp(targetX, _tracker.CenterX - limitX, _tracker.CenterX + limitX);
                                     targetY = Math.Clamp(targetY, _tracker.CenterY - limitY, _tracker.CenterY + limitY);
 
-                                    // Verhindert, dass der virtuelle Cursor den Bildschirmrand verlässt und sich aufstaut
+                                    // Verhindert, dass der virtuelle Cursor den Bildschirmrand verlässt and sich aufstaut
                                     _virtualX = targetX;
                                     _virtualY = targetY;
                                 }
@@ -127,7 +127,7 @@ namespace RagnaController.Core
             }
 
             // TECH-020: Periodischer Resync des virtuellen Cursors
-                        // Verhindert Desync bei physischer Maus-Bewegung, Fensterwechsel oder DPI-Änderungen
+                        // Verhindert Desync bei physischer Maus-Bewegung, Fensterwechsel or DPI-Änderungen
                         _resyncCounter++;
                         if (_resyncCounter >= RESYNC_INTERVAL_TICKS)
                         {
@@ -140,7 +140,7 @@ namespace RagnaController.Core
                                 int dy = Math.Abs(pt.Y - (int)_virtualY);
                                 if (dx > (int)(MAX_DESYNC_PIXELS * scale) || dy > (int)(MAX_DESYNC_PIXELS * scale))
                                 {
-                                    // Forced Resync bei zu großer Abweichung
+                                    // Forced Resync bei to großer Abweichung
                                     _virtualX = pt.X;
                                     _virtualY = pt.Y;
                                 }

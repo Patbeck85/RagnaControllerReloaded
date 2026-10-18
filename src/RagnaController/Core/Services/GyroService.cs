@@ -8,10 +8,10 @@ namespace RagnaController.Core
 {
     /// <summary>
     /// Reads the DualSense gyroscope via HID input reports and exposes
-    /// filtered angular velocity for use in ground-spell aiming.
+    /// filtered angular velocity for use in groand-spell aiming.
     ///
     /// Architecture:
-    ///   A dedicated background thread blocks on ReadFile(handle, report, 64).
+    ///   A dedicated backgroand thread blocks on ReadFile(handle, report, 64).
     ///   When a new report arrives (≈125 Hz), the gyro fields are extracted
     ///   and low-pass filtered to remove sensor drift and micro-vibration.
     ///   The engine reads <see cref="PitchDps"/> / <see cref="YawDps"/> each
@@ -47,7 +47,7 @@ namespace RagnaController.Core
         private const int  REPORT_SIZE   = 64;
         private const int  OFFSET_PITCH  = 13;   // tilt up/down    → cursor Y
         private const int  OFFSET_YAW    = 15;   // rotate L/R      → cursor X
-        // Roll (offset 17) is not used — device tilt around the Z-axis
+        // Roll (offset 17) is not used — device tilt aroand the Z-axis
 
         /// <summary>
         /// Raw-to-deg/s divisor for the DualSense gyro.
@@ -96,15 +96,15 @@ namespace RagnaController.Core
         /// <summary>Filtered yaw angular velocity in deg/s (positive = rotate right).</summary>
         public float YawDps   => _yawDps;
 
-        /// <summary>True when a DualSense HID device was found and the reader is running.</summary>
+        /// <summary>True when a DualSense HID device was foand and the reader is running.</summary>
         public bool IsAvailable { get; private set; }
 
-        /// <summary>Gyro-Eingabe aktiviert/deaktiviert (Software-Flag, unabhängig von Hardware-Verfügbarkeit).</summary>
+        /// <summary>Gyro-Eingabe enabled/disabled (Software-Flag, unabhängig from Hardware-Verfügbarkeit).</summary>
         public bool IsEnabled { get; set; }
 
         /// <summary>
-        /// Gyro-Daten manuell einspeisen (für Tests / Simulierte Input ohne echtes HID-Device).
-        /// Nimmt Angular Velocity in Grad/s entgegen und wendet Low-Pass-Filter an.
+        /// Gyro-Daten manual einspeisen (for Tests / Simulierte Input ohne echtes HID-Device).
+        /// Nimmt Angular Velocity in Grad/s entgegen and wendet Low-Pass-Filter an.
         /// </summary>
         public void FeedGyro(float pitchRateDegPerS, float yawRateDegPerS, float rollRateDegPerS, float deltaMs)
         {
@@ -120,7 +120,7 @@ namespace RagnaController.Core
             float scaledPitch = rawPitch / GyroScale;
             float scaledYaw   = rawYaw   / GyroScale;
 
-            // Low-pass filter (identisch zu ReadLoop)
+            // Low-pass filter (identisch to ReadLoop)
             float alpha = 1f - Smoothing;
             _pitchDps = _pitchDps * Smoothing + scaledPitch * alpha;
             _yawDps   = _yawDps   * Smoothing + scaledYaw   * alpha;
@@ -143,7 +143,7 @@ namespace RagnaController.Core
         // ── Public API ────────────────────────────────────────────────────
 
         /// <summary>
-        /// Starts the background reader thread.
+        /// Starts the backgroand reader thread.
         /// Safe to call multiple times; no-op if already running.
         /// </summary>
         public void Start()
@@ -164,7 +164,7 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Convert the current angular velocity to a cursor pixel delta for one engine tick.
-        /// Call every tick while ground-spell aiming is active.
+        /// Call every tick while groand-spell aiming is active.
         /// </summary>
         /// <param name="tickMs">Engine tick duration in milliseconds.</param>
         /// <param name="dx">Horizontal pixel delta (positive = right).</param>
@@ -192,7 +192,7 @@ namespace RagnaController.Core
             _subY -= dy;
         }
 
-        /// <summary>Akumuliertes Maus-Delta konsumieren und auf 0 zurücksetzen (Standard-Tick 16ms).</summary>
+        /// <summary>Akumuliertes Maus-Delta konsumieren and on 0 zurücksetzen (Standard-Tick 16ms).</summary>
         public (int dx, int dy) ConsumeDelta()
         {
             GetCursorDelta(16, out var dx, out var dy);
@@ -209,7 +209,7 @@ namespace RagnaController.Core
 
         private float _subX, _subY; // sub-pixel accumulators
 
-        // ── Background reader ─────────────────────────────────────────────
+        // ── Backgroand reader ─────────────────────────────────────────────
         private void ReadLoop()
         {
             float filtPitch = 0f, filtYaw = 0f;
@@ -328,13 +328,13 @@ namespace RagnaController.Core
             
             // FIX: Race Condition vermeiden!
             // 1. CancellationTokenSource canceln
-            // 2. Auf _reader?.Wait(500) warten, bis der Lese-Thread beendet ist
+            // 2. On _reader?.Wait(500) warten, bis der Lese-Thread beendet is
             // 3. DANN das Handle schließen
-            // Sonst wirft Windows eine Access Violation, wenn ReadFile auf dem Handle wartet,
-            // während es unter ihm weggerissen wird!
+            // Sonst wirft Windows eine Access Violation, if ReadFile on dem Handle wartet,
+            // während es unter ihm weggerissen is!
             Stop();
             
-            // Warten, bis der Reader-Thread beendet ist (max. 500ms)
+            // Warten, bis der Reader-Thread beendet is (max. 500ms)
             if (_reader != null)
             {
                 try
@@ -343,13 +343,13 @@ namespace RagnaController.Core
                 }
                 catch (TaskCanceledException)
                 {
-                    // Thread wurde gecancelt, aber nicht rechtzeitig beendet — Handle trotzdem schließen
+                    // Thread wurde gecancelt, but nicht rechtzeitig beendet — Handle trotzdem schließen
                 }
                 catch (AggregateException inner)
                 {
                     if (inner.InnerException is TaskCanceledException)
                     {
-                        // Ignorieren, wir warten nur auf den Thread-Exit
+                        // Ignorieren, wir warten only on den Thread-Exit
                     }
                     else
                     {
@@ -360,7 +360,7 @@ namespace RagnaController.Core
                 _reader = null;
             }
             
-            // Jetzt sicher das Handle schließen — Reader ist definitiv beendet!
+            // Jetzt sicher das Handle schließen — Reader is definitiv beendet!
             if (_handle != IntPtr.Zero)
             {
                 NativeMethods.CloseHandle(_handle);

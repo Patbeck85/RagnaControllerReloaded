@@ -92,7 +92,7 @@ namespace RagnaController.Views.Dialogs
             ProfilesList.ItemsSource = filtered;
             ProfileCount.Text = $"{filtered.Count} profiles found";
 
-            // UX-018: Empty State when no profiles found
+            // UX-018: Empty State when no profiles foand
             if (EmptyStatePanel != null)
                 EmptyStatePanel.Visibility = filtered.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
             if (ProfilesList != null)
@@ -166,7 +166,7 @@ namespace RagnaController.Views.Dialogs
             }
             catch (Exception ex)
             {
-                // ERROR-001: kein stiller Fehler
+                // ERROR-001: no stiller Fehler
                 System.Diagnostics.Debug.WriteLine($"[ProfileLibrary] Export all failed: {ex.Message}");
                 StatusText.Text = $"Export failed: {ex.Message}";
                 StatusText.Foreground = Brushes.OrangeRed;
@@ -181,7 +181,7 @@ namespace RagnaController.Views.Dialogs
 
         private async void BtnShare_Click(object sender, RoutedEventArgs e)
         {
-            // Sicheres Pattern Matching: Überprüfen, ob sender ein Button ist UND Tag ein Profile ist
+            // Sicheres Pattern Matching: Überprüfen, ob sender ein Button is UND Tag ein Profile is
             if (sender is not Button btn || btn.Tag is not Profile p) return;
             
             btn.IsEnabled = false;
@@ -191,7 +191,7 @@ namespace RagnaController.Views.Dialogs
                 var result = await RagnaController.Core.ProfileShareService.UploadAsync(p);
                 if (result.Success)
                 {
-                    // Sicherer Zugriff auf Code-Suffix (verhindert IndexOutOfRangeException)
+                    // Sicherer Zugriff on Code-Suffix (verhindert IndexOutOfRangeException)
                     string codeSuffix = result.Code.Length >= 4 ? result.Code[^4..] : "??";
                     RagnaController.Core.ShareCodeCache.Register(codeSuffix, result.GistId);
                     MessageBox.Show(
@@ -217,7 +217,7 @@ namespace RagnaController.Views.Dialogs
             string code = TxtShareCode?.Text?.Trim() ?? "";
             if (string.IsNullOrEmpty(code)) { MessageBox.Show("Enter a share code first.", "No Code", MessageBoxButton.OK, MessageBoxImage.Information); return; }
             
-            // Sicheres Pattern Matching: Compiler weiß ab hier 100%, dass 'btn' nicht null ist
+            // Sicheres Pattern Matching: Compiler weiß ab hier 100%, dass 'btn' nicht null is
             if (sender is not Button btn) return;
 
             btn.IsEnabled = false; 
@@ -231,11 +231,11 @@ namespace RagnaController.Views.Dialogs
                     _manager.AddAndSave(profile);
                     Refresh();
                     
-                    // Null-Check hinzugefügt, um CS8602 zu verhindern
+                    // Null-Check hinzugefügt, um CS8602 to verhindern
                     if (TxtShareCode != null) TxtShareCode.Text = "";
                     
-                    // Toast-Feedback (kein blockierendes MessageBox)
-                    // CS4014: Dispatcher.BeginInvoke ist synchron, kein Task - Warning ist falsch positiv
+                    // Toast-Feedback (no blockierendes MessageBox)
+                    // CS4014: Dispatcher.BeginInvoke is synchron, no Task - Warning is falsch positiv
 #pragma warning disable CS4014
                     Dispatcher.BeginInvoke(() => { if (StatusText != null) { StatusText.Text = $"✓ {profile.Name} downloaded"; StatusText.Foreground = (Brush)FindResource("Live"); } });
 #pragma warning restore CS4014

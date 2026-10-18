@@ -72,9 +72,9 @@ namespace RagnaController.Profiles
         }
 
         // ── FEAT-024: Name-basierte Char→Profil-Zuordnung ───────────────────────
-        // Die eigentliche Erkennung (OCR-/Fenster-Lesung des Game-Fensters) ist ein
-        // separater Integrationspunkt und ruft OnCharacterDetected(characterName) auf.
-        // Hier liegt der testbare Kern: Zuordnung + Persistenz über Neustart + Auto-Switch.
+        // The eigentliche Erkennung (OCR-/Fenster-Lesung des Game-Fensters) is ein
+        // separater Integrationspunkt and ruft OnCharacterDetected(characterName) on.
+        // Hier liegt der testbare Kern: Zuordnung + Persistenz about Neustart + Auto-Switch.
 
         /// <summary>FEAT-024: Registriert eine Zuordnung Charakter-Name → Profil-Name (persistiert).</summary>
         public void RegisterCharacterMapping(string characterName, string profileName)
@@ -91,13 +91,13 @@ namespace RagnaController.Profiles
                 SaveCharacterMappings();
         }
 
-        /// <summary>FEAT-024: Liefert den Profil-Namen für einen Charakter-Namen, oder null.</summary>
+        /// <summary>FEAT-024: Liefert den Profil-Namen for einen Charakter-Namen, or null.</summary>
         public string? GetProfileForCharacter(string characterName) => _charResolver.Resolve(characterName);
 
         /// <summary>
-        /// FEAT-024: Wird aufgerufen, wenn ein Charakter erkannt wurde (z. B. via OCR-/Fenster-Lesung).
-        /// Schaltet automatisch das zugeordnete Profil, falls eines existiert. Gibt true zurück,
-        /// wenn gewechselt wurde.
+        /// FEAT-024: Is aufgerufen, if ein Charakter erkannt wurde (z. B. via OCR-/Fenster-Lesung).
+        /// Schaltet automatic das zugeordnete Profil, falls eines existiert. Gibt true zurück,
+        /// if gewechselt wurde.
         /// </summary>
         public bool OnCharacterDetected(string characterName)
         {
@@ -130,7 +130,7 @@ namespace RagnaController.Profiles
             }
         }
 
-        /// <summary>FEAT-024: Persistiert die Char-Zuordnungen auf Disk.</summary>
+        /// <summary>FEAT-024: Persistiert die Char-Zuordnungen on Disk.</summary>
         public void SaveCharacterMappings()
         {
             try
@@ -310,9 +310,9 @@ namespace RagnaController.Profiles
 
         /// <summary>
         /// Synchronous disk write — called by FlushProfile and Save().
-        /// FIX #4: Safe-File-Save Pattern (wie bei Settings.cs): Zuerst in .tmp schreiben,
-        /// Stream sicher schließen, dann per File.Move überschreiben. Verhindert korrupte 0-Byte-Dateien
-        /// bei OutOfMemory oder Absturz von JsonSerializer.Serialize.
+        /// FIX #4: Safe-File-Save Pattern (wie bei Settings.cs): First in .tmp schreiben,
+        /// Stream sicher schließen, then per File.Move überschreiben. Verhindert korrupte 0-Byte-Dateien
+        /// bei OutOfMemory or Absturz from JsonSerializer.Serialize.
         /// </summary>
         private void WriteToDisk(Profile p)
         {
@@ -451,7 +451,7 @@ namespace RagnaController.Profiles
 
         public void Export(Profile p, string path)
         {
-            // FileStream: kein LOH-String
+            // FileStream: no LOH-String
             using var fs = new System.IO.FileStream(path, System.IO.FileMode.Create,
                 System.IO.FileAccess.Write, System.IO.FileShare.None);
             JsonSerializer.Serialize(fs, p, JsonCtx.Profile);

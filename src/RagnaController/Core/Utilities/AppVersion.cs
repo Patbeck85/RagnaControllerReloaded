@@ -4,8 +4,8 @@ namespace RagnaController.Core
 {
     /// <summary>
     /// Zentrale Versionsquelle — liest exakt den &lt;Version&gt;-Tag aus der .csproj.
-    /// Überall im Code nur noch <c>AppVersion.Current</c> verwenden.
-    /// Versionsnummer aktualisieren: nur noch in RagnaController.csproj nötig.
+    /// Überall im Code only noch <c>AppVersion.Current</c> verwenden.
+    /// Versionsnummer aktualisieren: only noch in RagnaController.csproj nötig.
     /// </summary>
     public static class AppVersion
     {
@@ -26,7 +26,7 @@ namespace RagnaController.Core
             }
             else
             {
-                // Absoluter Fallback über AssemblyName
+                // Absoluter Fallback about AssemblyName
                 var ver = Assembly.GetExecutingAssembly().GetName().Version;
                 Current  = ver != null ? $"{ver.Major}.{ver.Minor}.{ver.Build}" : "2.0";
             }

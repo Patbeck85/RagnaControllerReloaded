@@ -45,7 +45,7 @@ namespace RagnaController.Views.Editors
             if (e.LeftButton == MouseButtonState.Pressed) DragMove();
         }
 
-        // Event Handler für Buttons und Slider
+        // Event Handler for Buttons and Slider
         private void BtnCancel_Click(object sender, RoutedEventArgs e) => this.Close();
 
         private void Window_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
@@ -135,7 +135,7 @@ namespace RagnaController.Views.Editors
 
         private void UpdateSpellConfig()
         {
-            // Apply ground spell / self cast flags to active profile's selected button
+            // Apply groand spell / self cast flags to active profile's selected button
             var profile = _manager.ActiveProfile;
             if (profile == null) return;
             // These are global profile flags — update the profile and reload

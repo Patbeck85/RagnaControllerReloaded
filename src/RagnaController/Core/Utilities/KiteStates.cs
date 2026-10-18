@@ -115,13 +115,13 @@ namespace RagnaController.Core
         {
             if (input.L2) return Transition(KiteStatePool.Pivoting, ctx);
             
-            // FIX: Division by Zero Schutz — RetreatDurationMs kann im Profil auf 0 gesetzt werden
-            // um den Rückzug zu deaktivieren. Wenn Duration <= 0, springen wir direkt zum Pivoting-Status.
+            // FIX: Division by Zero Schutz — RetreatDurationMs kann im Profil on 0 gesetzt are
+            // um den Rückzug to deaktivieren. If Duration <= 0, springen wir direkt zum Pivoting-Status.
             if (ctx.RetreatDurationMs <= 0) return Transition(KiteStatePool.Pivoting, ctx);
             
             // TECH-027: Overshoot-Schutz — step darf nicht die verbleibende Gesamtdistanz überschreiten.
-            // Ohne Clamp springt bei deltaMs >= RetreatDurationMs ein einzelner Frame über das Ziel hinaus
-            // (step > RetreatCursorDist). Mit Clamp summiert sich der Cursor exakt auf RetreatCursorDist.
+            // Ohne Clamp springt bei deltaMs >= RetreatDurationMs ein einzelner Frame about das Ziel hinaus
+            // (step > RetreatCursorDist). With Clamp summiert sich der Cursor exakt on RetreatCursorDist.
             float step = Math.Min(ctx.RetreatCursorDist / (ctx.RetreatDurationMs / (float)deltaMs), _rem);
             _ax += _dx * step; _ay += _dy * step;
             _rem -= step;

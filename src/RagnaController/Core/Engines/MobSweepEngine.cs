@@ -16,7 +16,7 @@ namespace RagnaController.Core
         public bool IsActive => MobSweepEnabled;
         public SupportPhase Phase { get; private set; } = SupportPhase.Idle;
 
-        // Cooldowns für Tests zugänglich machen
+        // Cooldowns for Tests zugänglich machen
         public int TabCooldown => _tabCooldown;
         public int HealCooldown => _healCooldown;
 
@@ -24,7 +24,7 @@ namespace RagnaController.Core
         private int _healCooldown;
         private readonly InputCommandQueue _queue;
 
-        // Wird aus dem CombatRouter heraus gerufen wenn L2+R2 gehalten werden
+        // Is aus dem CombatRouter heraus gerufen if L2+R2 gehalten are
         public MobSweepEngine(InputCommandQueue queue)
         {
             _queue = queue;
@@ -84,7 +84,7 @@ namespace RagnaController.Core
             return false;
         }
 
-        // Reset: Alle Felder auf Initialwerte setzen (wichtig bei Profil-Reload!)
+        // Reset: All Felder on Initialwerte setzen (important bei Profil-Reload!)
         public void Reset()
         {
             SweepEnabled = false;

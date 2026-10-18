@@ -12,9 +12,9 @@ using RagnaController.Controller;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// FEAT-014: Session-Replay — JSONL-Recorder für deterministische Wiedergabe.
+    /// FEAT-014: Session-Replay — JSONL-Recorder for deterministische Wiedergabe.
     /// Eine Zeile pro Event (Input/Action/State), gepuffertes StreamWriter, 50 MB-Rotation.
-    /// Overhead im Hot-Path &lt;1ms: wiederverwendeter StringBuilder (kein LOH-Churn),
+    /// Overhead im Hot-Path &lt;1ms: wiederverwendeter StringBuilder (no LOH-Churn),
     /// ein Lock, relative Zeitbasis via Stopwatch (keine DateTime.Now-Abrufe pro Event).
     /// </summary>
     public sealed class SessionRecorder : IDisposable
@@ -34,14 +34,14 @@ namespace RagnaController.Core
         public SessionRecorder(string sessionDir, string sessionName)
             : this(sessionDir, sessionName, DefaultMaxBytesPerPart) { }
 
-        /// <summary>Test-Konstruktor mit konfigurierbarer Rotationsgröße.</summary>
+        /// <summary>Test-Konstruktor with konfigurierbarer Rotationsgröße.</summary>
         internal SessionRecorder(string sessionDir, string sessionName, long maxBytesPerPart)
         {
             _sessionDir = sessionDir;
             _maxBytesPerPart = maxBytesPerPart;
         }
 
-        /// <summary>Startet die Aufnahme: legt Ordner + Part 0 (mit Header-Zeile) an.</summary>
+        /// <summary>Startet die Aufnahme: legt Ordner + Part 0 (with Header-Zeile) an.</summary>
         public void Start()
         {
             lock (_lock)
@@ -104,7 +104,7 @@ namespace RagnaController.Core
             }
         }
 
-        /// <summary>JSON-String-Escape (Labels sind User-defined — Quotes/Backslash müssen weg).</summary>
+        /// <summary>JSON-String-Escape (Labels are User-defined — Quotes/Backslash müssen weg).</summary>
         private static void EscapeJson(StringBuilder sb, string s)
         {
             for (int i = 0; i < s.Length; i++)
@@ -129,7 +129,7 @@ namespace RagnaController.Core
             return sb.ToString();
         }
 
-        /// <summary>Stoppt die Aufnahme und flusht die Datei.</summary>
+        /// <summary>Stoppt die Aufnahme and flusht die Datei.</summary>
         public void Stop()
         {
             lock (_lock)
@@ -165,8 +165,8 @@ namespace RagnaController.Core
         {
             if (_writer == null) return;
             int len = Encoding.UTF8.GetByteCount(line) + 1;
-            // Rotation: Teildatei ist voll → nächster Part (KISS: keine Re-Kompression).
-            // ACHTUNG: nach OpenPart() ist _writer der NEUE Writer — nie einen gecachten Ref nutzen.
+            // Rotation: Teildatei is voll → nächster Part (KISS: keine Re-Kompression).
+            // WARNING: nach OpenPart() is _writer der NEUE Writer — nie einen gecachten Ref nutzen.
             if (_bytesInPart + len > _maxBytesPerPart && _partIndex < 999)
                 OpenPart(_partIndex + 1);
             _writer?.WriteLine(line);
@@ -177,9 +177,9 @@ namespace RagnaController.Core
     }
 
     /// <summary>
-    /// FEAT-014: Replay-Player — lädt eine aufgenommene Session (alle Parts, geordnet)
-    /// und liefert die deterministische Aktionssequenz für Regressionstests
-    /// und Bug-Report-Debugging.
+    /// FEAT-014: Replay-Player — lädt eine aufgenommene Session (all Parts, geordnet)
+    /// and liefert die deterministische Aktionssequenz for Regressionstests
+    /// and Bug-Report-Debugging.
     /// </summary>
     public static class SessionReplay
     {
@@ -193,7 +193,7 @@ namespace RagnaController.Core
         private sealed class ReplayLineDto
         {
             // KISS: Property-Namen = exakte JSONL-Schlüssel (lowercase) — System.Text.Json
-            // ist case-sensitive, das vermeidet Options-Konfiguration.
+            // is case-sensitive, das vermeidet Options-Konfiguration.
             public long t { get; set; }
             public byte k { get; set; }
             public string? l { get; set; }
@@ -202,7 +202,7 @@ namespace RagnaController.Core
             public int c { get; set; }
         }
 
-        /// <summary>Lädt alle Parts einer Session-Verzeichnis in deterministischer Reihenfolge.</summary>
+        /// <summary>Lädt all Parts einer Session-Verzeichnis in deterministischer Reihenfolge.</summary>
         public static List<SessionEvent> Load(string sessionDir)
         {
             var events = new List<SessionEvent>();
@@ -224,11 +224,11 @@ namespace RagnaController.Core
             }
         }
 
-        /// <summary>Die gefeuerte Aktionssequenz einer Session (DoD: aufzeichnen → abspielen → identisch).</summary>
+        /// <summary>The gefeuerte Aktionssequenz einer Session (DoD: aufzeichnen → abspielen → identisch).</summary>
         public static IReadOnlyList<string> ReplayedActions(IEnumerable<SessionEvent> events) =>
             events.Where(e => e.K == KAction).Select(e => e.Label ?? "").ToList();
 
-        /// <summary>Die Input-Sequenz (CmdType-Namen) einer Session — für Roundtrip-Vergleich.</summary>
+        /// <summary>The Input-Sequenz (CmdType-Namen) einer Session — for Roundtrip-Vergleich.</summary>
         public static IReadOnlyList<string> ReplayedInputs(IEnumerable<SessionEvent> events) =>
             events.Where(e => e.K == KInput).Select(e => e.Label ?? "").ToList();
     }

@@ -10,7 +10,7 @@ namespace RagnaController.Controller
         // Layer text (COMBO/MAGE/AUTO/GRID MODE)
         public string LayerText { get; set; } = "";
         
-        // State label and foreground color
+        // State label and foregroand color
         public string StateLabel { get; set; } = "";
         public SolidColorBrush StateForeground { get; set; } = new SolidColorBrush(Color.FromRgb(255, 255, 255));
         

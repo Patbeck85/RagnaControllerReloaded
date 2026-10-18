@@ -4,9 +4,9 @@ using RagnaController.Models;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// FEAT-012: Party Manager — verwaltet Party-Mitglieder (max. 12) und feuert den
-    /// autonomen Heal-Loop: ist ein Mitglied unter der HP-Schwelle, wird per Tab-Drücken
-    /// im Party-Ring zum schwächsten Member zyklisch navigiert und der konfigurierte
+    /// FEAT-012: Party Manager — verwaltet Party-Mitglieder (max. 12) and feuert den
+    /// autonomen Heal-Loop: is ein Mitglied unter der HP-Schwelle, is per Tab-Drücken
+    /// im Party-Ring zum schwächsten Member zyklisch navigiert and der konfigurierte
     /// Heal-Key gefeuert (konfigurierbares Intervall).
     /// Zero-Allokation im Tick-Pfad (Fix-Size-Array, index-basiert).
     /// Manuelles Verhalten (Y/R1 in SupportEngine) bleibt unverändert.
@@ -26,52 +26,52 @@ namespace RagnaController.Core
         private long _nextEligible;   // ms, TickCount64-Basis — nächster erlaubter Heal
         private int _currentIndex;    // aktuelle Zielposition im Party-Ring (0-basiert)
 
-        /// <summary>Anzahl verwalteter Mitglieder (1..12, wird bei Update geclampt).</summary>
+        /// <summary>Anzahl verwalteter Mitglieder (1..12, is bei Update geclampt).</summary>
         public int MemberCount { get; set; } = 1;
 
-        /// <summary>HP-Schwelle in Prozent: feuert erst ab unterschrittenem Wert (hp &lt;= Schwelle).</summary>
+        /// <summary>HP-Schwelle in percent: feuert erst ab unterschrittenem Wert (hp &lt;= Schwelle).</summary>
         public int HealThresholdPercent { get; set; } = 70;
 
         /// <summary>Intervall in ms zwischen zwei autonomen Heals.</summary>
         public int HealIntervalMs { get; set; } = 5000;
 
-        /// <summary>Hotkey für die Party-Heal-Aktion. Default: Z (90).</summary>
+        /// <summary>Hotkey for die Party-Heal-Aktion. Default: Z (90).</summary>
         public VirtualKey HealKeyVK { get; set; } = (VirtualKey)90;
 
-        /// <summary>True wenn der Auto-Heal-Loop aktiv ist (Start/Stop gesteuert).</summary>
+        /// <summary>True if der Auto-Heal-Loop active is (Start/Stop gesteuert).</summary>
         public bool IsRunning => _isRunning;
 
-        /// <summary>Feuert wenn ein Mitglied geheilt wurde (Index des schwächsten Members).</summary>
+        /// <summary>Feuert if ein Mitglied geheilt wurde (Index des schwächsten Members).</summary>
         public event Action<int>? MemberHealed;
 
         /// <summary>
         /// Erzeugt den PartyManager.
         /// </summary>
-        /// <param name="queue">Input-Queue für Tab-Zyklen und Heal-Key.</param>
+        /// <param name="queue">Input-Queue for Tab-Zyklen and Heal-Key.</param>
         /// <param name="clock">Zeitquelle (Test-Injektion möglich; Default: Environment.TickCount64).</param>
         public PartyManager(InputCommandQueue queue, Func<long>? clock = null)
         {
             _queue = queue;
             _clock = clock ?? (() => Environment.TickCount64);
-            // Unbekannter Zustand = voll (100 %), konsistent mit Reset():
-            // Auto-Heal feuert nicht für Mitglieder, deren HP noch nie geparst wurde.
+            // Unbekannter Zustand = voll (100 %), konsistent with Reset():
+            // Auto-Heal feuert nicht for Mitglieder, deren HP noch nie geparst wurde.
             for (int i = 0; i < MaxMembers; i++)
                 _memberHp[i] = 100;
         }
 
-        /// <summary>Aktiviert den Auto-Heal-Loop (Profil-Flag PartyManagerEnabled).</summary>
+        /// <summary>Enabled den Auto-Heal-Loop (Profil-Flag PartyManagerEnabled).</summary>
         public void Start()
         {
             _isRunning = true;
             _nextEligible = 0; // sofort feuern, wenn die Bedingung erfüllt ist (kein künstlicher Delay)
         }
 
-        /// <summary>Deaktiviert den Auto-Heal-Loop (Pause/Disconnect/Profil-Switch).</summary>
+        /// <summary>Disabled den Auto-Heal-Loop (Pause/Disconnect/Profil-Switch).</summary>
         public void Stop() => _isRunning = false;
 
         /// <summary>
         /// Setzt den HP-Wert eines Mitglieds (Index 0..MemberCount-1).
-        /// Out-of-Range-Indizes werden ignoriert (defensive, Zero-Cost).
+        /// Out-of-Range-Indizes are ignoriert (defensive, Zero-Cost).
         /// </summary>
         public void SetMemberHp(int index, int hpPercent)
         {
@@ -79,7 +79,7 @@ namespace RagnaController.Core
             _memberHp[index] = Math.Clamp(hpPercent, 0, 100);
         }
 
-        /// <summary>Reset: alle Mitglieder auf 100%, Loop gestoppt (Profil-Load / Shutdown).</summary>
+        /// <summary>Reset: all Mitglieder on 100%, Loop gestoppt (Profil-Load / Shutdown).</summary>
         public void Reset()
         {
             _isRunning = false;
@@ -90,8 +90,8 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Tick-Pfad: prüft alle Mitglieder gegen die HP-Schwelle und feuert den Heal-Loop.
-        /// Zero-Allokation (nur Fix-Size-Array-Iteration, n ≤ 12).
+        /// Tick-Pfad: prüft all Mitglieder gegen die HP-Schwelle and feuert den Heal-Loop.
+        /// Zero-Allokation (only Fix-Size-Array-Iteration, n ≤ 12).
         /// </summary>
         public void Update()
         {
@@ -109,11 +109,11 @@ namespace RagnaController.Core
                     weakest = i;
             }
 
-            // Kein Mitglied unter der Schwelle oder Intervall noch aktiv → kein Fire.
+            // No Mitglied unter der Schwelle or Intervall noch active → no Fire.
             if (weakest < 0 || now < _nextEligible) return;
 
             // Vorwärts-Zyklus im Party-Ring: Ctrl+Tab-Drücke bis zum schwächsten Member
-            // (RO-Konvention: Tab = Mob-Ziel, Ctrl+Tab = Party-Ziel — konsistent mit SupportEngine).
+            // (RO-Konvention: Tab = Mob-Ziel, Ctrl+Tab = Party-Ziel — konsistent with SupportEngine).
             int distance = (weakest - _currentIndex + count) % count;
             for (int i = 0; i < distance; i++)
                 _queue.TapKeyWithModifier(VirtualKey.ControlLeft, VirtualKey.Tab);

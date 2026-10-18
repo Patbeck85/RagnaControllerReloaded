@@ -5,14 +5,14 @@ namespace RagnaController.Core
 {
     /// <summary>
     /// FEAT-011: Auto-Potion &amp; Item-Verwaltung.
-    /// Überwacht HP/SP-Schwellwerte pro konfiguriertem Item und feuert die Hotkeys,
-    /// respektiert Cooldowns (per-item) und Check-Intervalle. Zero-Allokation im Tick-Pfad.
+    /// Überwacht HP/SP-Schwellwerte pro konfiguriertem Item and feuert die Hotkeys,
+    /// respektiert Cooldowns (per-item) and Check-Intervall. Zero-Allokation im Tick-Pfad.
     /// </summary>
     public class ItemManagerEngine : IDisposable
     {
         private readonly InputCommandQueue _queue;
 
-        // Parallel-Arrays zu _items → index-basierte Iteration ohne Allokation (PERF: O(n), n = Items)
+        // Parallel-Arrays to _items → index-basierte Iteration ohne Allokation (PERF: O(n), n = Items)
         private ItemConfig[] _items = Array.Empty<ItemConfig>();
         private long[] _nextCheck = Array.Empty<long>();     // nächstes erlaubtes Prüfen (ms, TickCount64-Basis)
         private long[] _nextEligible = Array.Empty<long>();  // Cooldown-Ende (ms, TickCount64-Basis)
@@ -20,16 +20,16 @@ namespace RagnaController.Core
         private volatile bool _isRunning;
         private readonly Func<long> _clock;
 
-        /// <summary>True wenn die Engine aktiv prüft (Start/Stop gesteuert).</summary>
+        /// <summary>True if die Engine active prüft (Start/Stop gesteuert).</summary>
         public bool IsRunning { get => _isRunning; }
 
-        /// <summary>Feuert wenn ein Item eingesetzt wurde (für Logging/Telemetrie).</summary>
+        /// <summary>Feuert if ein Item eingesetzt wurde (for Logging/Telemetrie).</summary>
         public event Action<ItemConfig>? ItemFired;
 
         /// <summary>
         /// Erzeugt die ItemManagerEngine.
         /// </summary>
-        /// <param name="queue">Input-Queue für das Firen der Hotkeys.</param>
+        /// <param name="queue">Input-Queue for das Firen der Hotkeys.</param>
         /// <param name="clock">Zeitquelle (Test-Injektion möglich; Default: Environment.TickCount64).</param>
         public ItemManagerEngine(InputCommandQueue queue, Func<long>? clock = null)
         {
@@ -38,9 +38,9 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Konfiguriert die verwalteten Items (Profil-Load). Setzt alle Timer zurück.
-        /// Thread-Hinweis: wird vom UI-Thread beim Profil-Load aufgerufen, Update() vom Tick-Thread —
-        /// Array-Referenz-Swap ist atomar, identisch mit dem etablierten Engine-Pattern (CombatEngine._profile).
+        /// Konfiguriert die verwalteten Items (Profil-Load). Setzt all Timer zurück.
+        /// Thread-Note: is vom UI-Thread beim Profil-Load aufgerufen, Update() vom Tick-Thread —
+        /// Array-Referenz-Swap is atomar, identisch with dem etablierten Engine-Pattern (CombatEngine._profile).
         /// </summary>
         public void Configure(IReadOnlyList<ItemConfig>? items)
         {
@@ -53,14 +53,14 @@ namespace RagnaController.Core
                 _items[i] = items![i];
         }
 
-        /// <summary>Aktiviert die Prüfung (Profil-Flag ItemManagerEnabled).</summary>
+        /// <summary>Enabled die Prüfung (Profil-Flag ItemManagerEnabled).</summary>
         public void Start() => _isRunning = true;
 
-        /// <summary>Deaktiviert die Prüfung (Pause/Disconnect/Profil-Switch).</summary>
+        /// <summary>Disabled die Prüfung (Pause/Disconnect/Profil-Switch).</summary>
         public void Stop() => _isRunning = false;
 
         /// <summary>
-        /// Reset: alle Items und Timer löschen (Profil-Load / Shutdown).
+        /// Reset: all Items and Timer löschen (Profil-Load / Shutdown).
         /// </summary>
         public void Reset()
         {
@@ -71,11 +71,11 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Tick-Pfad: prüft alle Items gegen HP/SP-Schwellen. Zero-Allokation (nur Array-Iteration).
+        /// Tick-Pfad: prüft all Items gegen HP/SP-Schwellen. Zero-Allokation (only Array-Iteration).
         /// </summary>
-        /// <param name="hpPercent">Aktuelles HP in Prozent (0-100).</param>
+        /// <param name="hpPercent">Aktuelles HP in percent (0-100).</param>
         /// <param name="sp">Aktueller SP-Wert.</param>
-        /// <param name="deltaMs">Delta des Ticks in ms (nur zur Signatur-Konsistenz mit anderen Engines).</param>
+        /// <param name="deltaMs">Delta des Ticks in ms (only zur Signatur-Konsistenz with anderen Engines).</param>
         public void Update(int hpPercent, int sp, int deltaMs)
         {
             if (!_isRunning) return;
@@ -88,7 +88,7 @@ namespace RagnaController.Core
                 if (now < _nextCheck[i]) continue;
 
                 // Schwelle: feuert erst ab UNTERSCHRITTENEM Wert (hp <= threshold).
-                // "Über" der Schwelle → nur Intervall-Timer setzen, kein Fire.
+                // "About" der Schwelle → only Intervall-Timer setzen, no Fire.
                 if (hpPercent > item.HpThresholdPercent)
                 {
                     _nextCheck[i] = now + Math.Max(1, item.CheckIntervalMs);
@@ -101,7 +101,7 @@ namespace RagnaController.Core
                     continue;
                 }
 
-                // Cooldown aktiv → exakt zum Cooldown-Ende erneut prüfen (kein Intervall-Verlust).
+                // Cooldown active → exakt zum Cooldown-Ende erneut prüfen (no Intervall-Verlust).
                 if (now < _nextEligible[i])
                 {
                     _nextCheck[i] = _nextEligible[i];

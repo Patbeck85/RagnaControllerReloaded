@@ -83,8 +83,8 @@ namespace RagnaController.Views.Dialogs
 
             for (int s = 0; s < 8; s++)
             {
-                // Korrektur: Winkel so setzen, dass Sektor 0 exakt OBEN ist
-                // -90 Grad ist der mathematische Norden, -22.5 ist die halbe Sektorbreite
+                // Korrektur: Winkel so setzen, dass Sektor 0 exakt OBEN is
+                // -90 Grad is der mathematische Norden, -22.5 is die halbe Sektorbreite
                 double startAngle = s * 45.0 - 90.0 - 22.5;
                 double endAngle = startAngle + 45.0;
                 double midAngle = (startAngle + endAngle) / 2.0;
@@ -152,7 +152,7 @@ namespace RagnaController.Views.Dialogs
                 _activeSector = -1;
             }
 
-            // Performance: Nur updaten, wenn sich der Sektor geändert hat
+            // Performance: Only updaten, if sich der Sektor geändert has
             if (_activeSector != _lastHighlightedSector)
             {
                 HighlightSector(_activeSector);
@@ -191,7 +191,7 @@ namespace RagnaController.Views.Dialogs
 
         private void HighlightSector(int active)
         {
-            // Performance: EINEN Invoke für die gesamte UI-Änderung
+            // Performance: EINEN Invoke for die gesamte UI-Änderung
             Dispatcher.BeginInvoke(() =>
             {
                 var goldBrush = TryFindResource("Gold") as SolidColorBrush ?? new SolidColorBrush(Colors.Gold);

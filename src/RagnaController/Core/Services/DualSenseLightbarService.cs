@@ -4,8 +4,8 @@ using System.Diagnostics;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// DualSense Light Bar Status — PS5 LED Farben via Raw HID (Platzhalter für Hardware-Integration).
-    /// Unterstützt Farbwechsel und Puls-Effekte für Spiel-Status-Feedback.
+    /// DualSense Light Bar Status — PS5 LED Farben via Raw HID (Platzhalter for Hardware-Integration).
+    /// Unterstützt Farbwechsel and Puls-Effekte for Spiel-Status-Feedback.
     /// </summary>
     public sealed class DualSenseLightbarService : IDisposable
     {
@@ -23,7 +23,7 @@ namespace RagnaController.Core
 
         public DualSenseLightbarService()
         {
-            // Platzhalter: Keine echte Hardware-Verbindung in dieser Implementierung
+            // Platzhalter: Keine echte Hardware-Verbindung in this Implementierung
             _isConnected = false;
             _red = 0;
             _green = 0;
@@ -32,7 +32,7 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Setzt die Light Bar Farbe (RGB).
-        /// Gibt true zurück wenn die Farbe erfolgreich gesetzt wurde (oder im Simulations-Modus).
+        /// Gibt true zurück if die Farbe erfolgreich gesetzt wurde (or im Simulations-Modus).
         /// </summary>
         public bool SetColor(byte red, byte green, byte blue)
         {
@@ -45,7 +45,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Setzt ein vordefiniertes Farbprofil basierend auf Spiel-Status.
+        /// Setzt ein vordefiniertes Farbprofil basierend on Spiel-Status.
         /// </summary>
         public bool SetStatusColor(LightBarStatus status)
         {
@@ -96,7 +96,7 @@ namespace RagnaController.Core
     }
 
     /// <summary>
-    /// Verfügbare Light Bar Status-Farben für DualSense Feedback.
+    /// Verfügbare Light Bar Status-Farben for DualSense Feedback.
     /// </summary>
     public enum LightBarStatus
     {

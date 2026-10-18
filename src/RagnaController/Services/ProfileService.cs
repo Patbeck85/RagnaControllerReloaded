@@ -31,8 +31,8 @@ namespace RagnaController.Services
         /// <summary>Gibt die Liste aller verfügbaren Profile zurück.</summary>
         public System.Collections.Generic.IEnumerable<Profile> GetAllProfiles() => _manager.Profiles;
 
-        /// <summary>Lädt das zuletzt verwendete Profil oder das erste verfügbare.</summary>
-        /// <returns>Das geladene Profil oder null, wenn keine Profile vorhanden.</summary>
+        /// <summary>Lädt das zuletzt verwendete Profil or das erste verfügbare.</summary>
+        /// <returns>The geladene Profil or null, if keine Profile available.</summary>
         public Profile? LoadLastOrFirst()
         {
             var lastProfile = _manager.Profiles.FirstOrDefault(p => p.Name == _settings.LastProfileName)
@@ -42,7 +42,7 @@ namespace RagnaController.Services
 
         /// <summary>
         /// Wendet ein Profil an: lädt es in die Engine, speichert LastProfileName,
-        /// und zeigt eine Toast-Benachrichtigung.
+        /// and zeigt eine Toast-Benachrichtigung.
         /// </summary>
         public void ApplyProfile(Profile profile)
         {
@@ -55,7 +55,7 @@ namespace RagnaController.Services
         }
 
         /// <summary>
-        /// Wechselt zum nächsten oder vorherigen Profil in der Liste (z. B. via D-Pad Quick-Switch).
+        /// Wechselt zum nächsten or vorherigen Profil in der Liste (z. B. via D-Pad Quick-Switch).
         /// </summary>
         public void SwitchProfile(int delta)
         {

@@ -6,8 +6,8 @@ using RagnaController.Profiles;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// FEAT-006: Ground Spell / AoE Engine
-    /// Manages persistent ground effects (Fire Wall, Frozen Ground, Heal Circle, Traps, etc.)
+    /// FEAT-006: Groand Spell / AoE Engine
+    /// Manages persistent groand effects (Fire Wall, Frozen Groand, Heal Circle, Traps, etc.)
     /// Tracks position, duration, tick intervals, and auto-cleanup.
     /// Optimized: Zero allocations in hot path (GetActiveSpellNames reuses list).
     /// </summary>
@@ -37,7 +37,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Called when a ground spell skill is fired - registers the effect
+        /// Called when a groand spell skill is fired - registers the effect
         /// </summary>
         public void RegisterGroundSpell(ButtonAction action, float worldX, float worldY, string skillName)
         {
@@ -97,12 +97,12 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Get all active ground spells for UI rendering
+        /// Get all active groand spells for UI rendering
         /// </summary>
         public IReadOnlyList<ActiveGroundSpell> GetActiveSpells() => _activeSpells.AsReadOnly();
 
         /// <summary>
-        /// Clear all ground spells (e.g., on map change)
+        /// Clear all groand spells (e.g., on map change)
         /// </summary>
         public void ClearAll() => _activeSpells.Clear();
 

@@ -131,7 +131,7 @@ namespace RagnaController.Views.Overlays
                 _overlay.Closed += (_, _) => _overlay = null;
             }
             if (!_overlay.IsVisible) _overlay.Show();
-            // Overlay open — Handheld UI stays in background
+            // Overlay open — Handheld UI stays in backgroand
         }
 
         private void BtnSettings_Click(object sender, RoutedEventArgs e)

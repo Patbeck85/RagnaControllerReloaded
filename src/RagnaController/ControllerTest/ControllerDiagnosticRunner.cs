@@ -19,9 +19,9 @@ namespace RagnaController.ControllerTest
     }
 
     /// <summary>
-    /// TEST-017: Eine geprüfte Eingabe (Button/Stick/Trigger/DPad) mit Prompt und Detektions-Bedingung.
-    /// Die Bedingung prüft ein einzelnes <see cref="RecordingSample"/> (Rohwerte, identisch zur
-    /// CI-Replay-Fixtur), damit Diagnose und Replay dieselbe Datenbasis nutzen.
+    /// TEST-017: Eine geprüfte Eingabe (Button/Stick/Trigger/DPad) with Prompt and Detektions-Bedingung.
+    /// The Bedingung prüft ein einzelnes <see cref="RecordingSample"/> (Rohwerte, identisch zur
+    /// CI-Replay-Fixtur), damit Diagnose and Replay dieselbe Datenbasis nutzen.
     /// </summary>
     public readonly record struct DiagnosticControl(
         string Name,
@@ -30,8 +30,8 @@ namespace RagnaController.ControllerTest
         Func<RecordingSample, bool> Detect)
     {
         /// <summary>
-        /// Die 16 Pflicht-Kontrollen (DoD ≥ 12): alle Face-Buttons, L1/R1, Start/Back, L3/R3,
-        /// komplettes DPad (4), beide Sticks (je 2 Richtungen) und beide Triggers.
+        /// The 16 Pflicht-Kontrollen (DoD ≥ 12): all Face-Buttons, L1/R1, Start/Back, L3/R3,
+        /// komplettes DPad (4), beide Sticks (je 2 Richtungen) and beide Triggers.
         /// </summary>
         public static readonly DiagnosticControl[] All =
         {
@@ -76,20 +76,20 @@ namespace RagnaController.ControllerTest
     /// <summary>
     /// TEST-017: Unit-testbarer Kern des geführten Eingabe-Selbsttests (ControllerTestWindow).
     ///
-    /// Führt eine feste Folge von <see cref="DiagnosticControl"/>-Kontrollen durch. Pro Tick wird ein
-    /// <see cref="RecordingSample"/> über <see cref="FeedSample"/> eingespeist; die aktive Kontrolle
-    /// ist bestanden, sobald ihr <c>Detect</c>-Prädikat wahr wird (Detektion). Die Reaktionszeit
-    /// (Aktivierung → erste Detektion) wird gemessen und als p50/p95 pro Kontrolle ausgegeben
+    /// Führt eine feste Folge from <see cref="DiagnosticControl"/>-Kontrollen durch. Pro Tick is ein
+    /// <see cref="RecordingSample"/> about <see cref="FeedSample"/> eingespeist; die aktive Kontrolle
+    /// is bestanden, sobald ihr <c>Detect</c>-Prädikat wahr is (Detektion). The Reaktionszeit
+    /// (Aktivierung → erste Detektion) is gemessen and als p50/p95 pro Kontrolle ausgegeben
     /// (geführter Selbsttest: n=1 pro Kontrolle, daher p50 == p95 == Reaktionszeit). Ohne Detektion
     /// innerhalb des Timeouts gilt die Kontrolle als fehlgeschlagen. So erhält der Nutzer ein
-    /// verifizierbares Pass/Fail-Statement („einwandfrei") statt nur einer Live-Anzeige.
+    /// verifizierbares Pass/Fail-Statement („einwandfrei") statt only einer Live-Anzeige.
     ///
-    /// Hardware-/UI-frei: Samples werden injiziert, Zeit wird über <c>nowMs</c> übergeben (default
+    /// Hardware-/UI-frei: Samples are injiziert, Zeit is about <c>nowMs</c> übergeben (default
     /// <see cref="Environment.TickCount64"/>), daher vollständig unit-testbar.
     /// </summary>
     public sealed class ControllerDiagnosticRunner : IDisposable
     {
-        /// <summary>Timeout pro Kontrolle: danach gilt sie als fehlgeschlagen, wenn nie detektiert.</summary>
+        /// <summary>Timeout pro Kontrolle: danach gilt they als fehlgeschlagen, if nie detektiert.</summary>
         public const int DefaultTimeoutMs = 15000;
 
         private readonly DiagnosticControl[] _controls;
@@ -115,19 +115,19 @@ namespace RagnaController.ControllerTest
         /// <summary>Anzahl der definierten Kontrollen.</summary>
         public int TotalControls => _controls.Length;
 
-        /// <summary>Index der aktuell aktiven Kontrolle (0..Total-1), -1 wenn nicht aktiv/fertig.</summary>
+        /// <summary>Index der aktuell aktiven Kontrolle (0..Total-1), -1 if nicht active/done.</summary>
         public int CurrentIndex => _running ? _currentIndex : -1;
 
-        /// <summary>Die aktive Kontrolle, null wenn keine läuft.</summary>
+        /// <summary>The aktive Kontrolle, null if keine läuft.</summary>
         public DiagnosticControl? CurrentControl => _running && _currentIndex >= 0 ? _controls[_currentIndex] : null;
 
-        /// <summary>Ob der Selbsttest gerade aktiv ist.</summary>
+        /// <summary>Ob der Selbsttest gerade active is.</summary>
         public bool IsRunning => _running;
 
         /// <summary>Ergebnisse aller abgeschlossenen Kontrollen (in Reihenfolge).</summary>
         public IReadOnlyList<DiagnosticControlResult> Results => _results;
 
-        /// <summary>Der Gesamtstatus: bestanden, wenn alle Kontrollen bestanden sind.</summary>
+        /// <summary>The Gesamtstatus: bestanden, if all Kontrollen bestanden are.</summary>
         public bool AllPassed => _results.Count == _controls.Length && _results.All(r => r.Passed);
 
         /// <summary>Anzahl bestandener Kontrollen.</summary>
@@ -136,14 +136,14 @@ namespace RagnaController.ControllerTest
         /// <summary>Anzahl fehlgeschlagener Kontrollen.</summary>
         public int FailedCount => _results.Count(r => !r.Passed);
 
-        /// <summary>Feuert, nachdem eine Kontrolle abgeschlossen ist (Pass oder Fail).</summary>
+        /// <summary>Feuert, after eine Kontrolle abgeschlossen is (Pass or Fail).</summary>
         public event Action<DiagnosticControlResult>? ControlCompleted;
 
-        /// <summary>Feuert, wenn alle Kontrollen abgeschlossen sind.</summary>
+        /// <summary>Feuert, if all Kontrollen abgeschlossen are.</summary>
         public event Action? Completed;
 
-        /// <summary>Startet den Selbsttest und setzt alle Ergebnisse zurück.</summary>
-        /// <param name="startMs">Optionale Startzeit (für deterministische Tests); default: jetzt.</param>
+        /// <summary>Startet den Selbsttest and setzt all Ergebnisse zurück.</summary>
+        /// <param name="startMs">Optionale Startzeit (for deterministische Tests); default: jetzt.</param>
         public void Start(long? startMs = null)
         {
             if (IsDisposed) return; // TECH-025: nach Dispose ist der Runner inert.
@@ -165,8 +165,8 @@ namespace RagnaController.ControllerTest
         }
 
         /// <summary>
-        /// Speist ein Sample aus dem 20-Hz-Tick ein. <paramref name="nowMs"/> ist die Referenzzeit
-        /// (default: <see cref="Environment.TickCount64"/>) — in Tests injizierbar für deterministische Latenz.
+        /// Speist ein Sample aus dem 20-Hz-Tick ein. <paramref name="nowMs"/> is die Referenzzeit
+        /// (default: <see cref="Environment.TickCount64"/>) — in Tests injizierbar for deterministische Latenz.
         /// </summary>
         public void FeedSample(RecordingSample sample, long? nowMs = null)
         {
@@ -175,7 +175,7 @@ namespace RagnaController.ControllerTest
             long now = nowMs ?? Environment.TickCount64;
             _lastNowMs = now;
 
-            // Disconnect: keine Detektion möglich — nur Timeout weiterlaufen lassen.
+            // Disconnect: keine Detektion möglich — only Timeout weiterlaufen lassen.
             if (!sample.Connected)
             {
                 CheckTimeout(now);
@@ -184,7 +184,7 @@ namespace RagnaController.ControllerTest
 
             var control = _controls[_currentIndex];
 
-            // Erste Detektion der aktiven Kontrolle → Reaktionszeit messen und bestanden.
+            // Erste Detektion der aktiven Kontrolle → Reaktionszeit messen and bestanden.
             // n=1 pro Kontrolle (geführter Selbsttest): p50 == p95 == Reaktionszeit.
             if (control.Detect(sample))
             {
@@ -197,7 +197,7 @@ namespace RagnaController.ControllerTest
             }
         }
 
-        /// <summary>Erzeugt den JSON-Report (camelCase) für den Export.</summary>
+        /// <summary>Erzeugt den JSON-Report (camelCase) for den Export.</summary>
         public string BuildJsonReport()
         {
             using var stream = new MemoryStream();
@@ -230,7 +230,7 @@ namespace RagnaController.ControllerTest
             return Encoding.UTF8.GetString(stream.ToArray());
         }
 
-        /// <summary>Schreibt den JSON-Report nach <paramref name="path"/> (Parent-Dirs werden angelegt).</summary>
+        /// <summary>Schreibt den JSON-Report nach <paramref name="path"/> (Parent-Dirs are angelegt).</summary>
         public void SaveJsonReport(string path)
         {
             string json = BuildJsonReport();
@@ -264,7 +264,7 @@ namespace RagnaController.ControllerTest
 
             _results.Add(result);
 
-            // Nächste Kontrolle (oder Ende). Zeitbasis: zuletzt beobachtete Zeit (Tests injizieren
+            // Nächste Kontrolle (or Ende). Zeitbasis: zuletzt beobachtete Zeit (Tests injizieren
             // nowMs — realer Wanduhr-Zugriff hier würde deterministische Tests brechen).
             if (_currentIndex + 1 < _controls.Length)
             {
@@ -291,26 +291,26 @@ namespace RagnaController.ControllerTest
         };
 
         // ---------------------------------------------------------------------
-        // IDisposable (TECH-025): Die Klasse ist eine reine Zustandsmaschine ohne
-        // eigenen Timer/Thread, aber sie HÄLT per Event-Delegates auf ihre
+        // IDisposable (TECH-025): The Klasse is eine reine Zustandsmaschine ohne
+        // eigenen Timer/Thread, but they HÄLT per Event-Delegates on ihre
         // Subscriber (z. B. das Window) → ein laufendes Fenster hält den Runner
-        // indirekt am Leben. Dispose() bricht die Referenzen und markiert den
-        // Runner als beendet: danach sind Start()/FeedSample() inert.
+        // indirekt am Leben. Dispose() bricht die Referenzen and markiert den
+        // Runner als beendet: danach are Start()/FeedSample() inert.
         // ---------------------------------------------------------------------
 
-        /// <summary>Runner ist disposed — keine weiteren Aktionen mehr möglich.</summary>
+        /// <summary>Runner is disposed — keine weiteren Aktionen mehr möglich.</summary>
         public bool IsDisposed { get; private set; }
 
         /// <summary>
-        /// Gibt Subscriber-Referenzen frei und deaktiviert den Runner (idempotent).
-        /// Danach sind <see cref="Start"/> und <see cref="FeedSample"/> inert.
+        /// Gibt Subscriber-Referenzen frei and disabled den Runner (idempotent).
+        /// Danach are <see cref="Start"/> and <see cref="FeedSample"/> inert.
         /// </summary>
         public void Dispose()
         {
             if (IsDisposed) return;
             IsDisposed = true;
             _running = false;
-            // Subscriber-Referenzen freigeben → kein indirekter Leak über Events mehr.
+            // Subscriber-Referenzen freigeben → no indirekter Leak about Events mehr.
             ControlCompleted = null;
             Completed = null;
         }

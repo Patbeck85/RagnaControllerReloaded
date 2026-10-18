@@ -27,10 +27,10 @@ namespace RagnaController.Core
         private readonly InputCommandQueue? _queue = default!;
 
         // ROB-002: Input-Emulation-Failover — Kernel-Strategie hält einen Interception-Kontext
-        // (P/Invoke-Handle) und muss beim Shutdown deterministisch freigegeben werden.
+        // (P/Invoke-Handle) and muss beim Shutdown deterministisch freigegeben are.
         private InterceptionMouseStrategy? _mouseEmulationFallback;
 
-        // FEAT-014: Session-Replay — JSONL-Aufzeichnung pro Engine-Session (nur wenn in Settings aktiviert).
+        // FEAT-014: Session-Replay — JSONL-Aufzeichnung pro Engine-Session (only if in Settings enabled).
         private SessionRecorder? _sessionRecorder;
 
         // ── Engines ──
@@ -53,7 +53,7 @@ namespace RagnaController.Core
                 private readonly CooldownManager _cooldownManager = default!;
                 private readonly DualSenseHardwareService _dualSense = default!;
 
-                // FEAT-006: Ground Spell Engine
+                // FEAT-006: Groand Spell Engine
                                 private readonly GroundSpellEngine _groundSpell = default!;
 
                                 // FEAT-007: Skill Orchestrator
@@ -66,7 +66,7 @@ namespace RagnaController.Core
                                                                         // FEAT-011: Item Manager (Auto-Potion & Item-Verwaltung)
                                                                         private readonly ItemManagerEngine _itemManager = default!;
 
-                                                                        // FEAT-012: Party Manager (Auto-Heal-Loop für Party-Mitglieder)
+                                                                        // FEAT-012: Party Manager (Auto-Heal-Loop for Party-Mitglieder)
                                                                         private readonly PartyManager _partyManager = default!;
 
                                                                 // PERF-004: Memory Allocation Tracking
@@ -213,9 +213,9 @@ namespace RagnaController.Core
                         };
 
                         // ROB-001: Hang-Erkennung → Auto-Restart des Engines.
-                        // WICHTIG: Restart läuft auf eigenem Task — der Handler feuert vom
+                        // WICHTIG: Restart läuft on eigenem Task — der Handler feuert vom
                         // Watchdog-Poll-Loop; ein direkter Stop() dort würde den eigenen
-                        // Poll-Task blockieren (Watchdog.Stop wartet auf den Loop).
+                        // Poll-Task blockieren (Watchdog.Stop wartet on den Loop).
                         _watchdog.HangDetected += msWithoutTick =>
                         {
                             RagnaControllerETW.Log.EngineHangDetected(msWithoutTick, _watchdog.HangThresholdMs);
@@ -261,7 +261,7 @@ namespace RagnaController.Core
                 _radialMenu, _gestureRecognizer);
             _profileApplier = new ProfileApplier(this, _messenger);
 
-            // TECH-059: Config Hot-Reload — überwacht settings.json und profiles.json
+            // TECH-059: Config Hot-Reload — überwacht settings.json and profiles.json
             var settingsPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                 "RagnaController", "settings.json");
@@ -272,9 +272,9 @@ namespace RagnaController.Core
             _configWatcher.ConfigChanged += OnConfigChanged;
 
             // ROB-002: Input-Emulation-Failover (SendInput ↔ Kernel).
-            // Primär = SendInput (Standard); Fallback = Interception-Treiber, nur wenn er
-            // auf dieser Maschine verfügbar ist. Ohne Treiber bleibt alles bei SendInput —
-            // der Failover-Schalter wird dann nie ausgelöst (KISS: kein No-Op-Overhead).
+            // Primär = SendInput (Standard); Fallback = Interception-Treiber, only if it
+            // on this Maschine verfügbar is. Ohne Treiber bleibt alles bei SendInput —
+            // der Failover-Schalter is then nie ausgelöst (KISS: no No-Op-Overhead).
             var primaryStrategy = new SendInputMouseStrategy();
             try { _mouseEmulationFallback = new InterceptionMouseStrategy(); }
                         catch (Exception ex)
@@ -315,7 +315,7 @@ namespace RagnaController.Core
                                         // FEAT-014: Session-Replay — gefeuerte Aktion aufzeichnen (deterministische Wiedergabe)
                                         _sessionRecorder?.RecordAction(action.Label, ActionFiredKind.Skill);
 
-                                        // FEAT-006: Register ground spell if applicable
+                                        // FEAT-006: Register groand spell if applicable
                                                                     if (action.IsGroundSpell && _winTracker.IsTracking && _groundSpell != null)
                                                                     {
                                                                         // Get current world position (mouse cursor position in game world)
@@ -364,8 +364,8 @@ namespace RagnaController.Core
                                     };
 
                                     // FEAT-013: Target-Management — Zielverlust (Tod/Reichweite) loggen.
-                                    // LostTarget feuert vom AutoTargetEngine.Update() auf dem Tick-Thread;
-                                    // nur Log + UI-Nachricht, keine Engine-Aktionen (KISS).
+                                    // LostTarget feuert vom AutoTargetEngine.Update() on dem Tick-Thread;
+                                    // only Log + UI-Nachricht, keine Engine-Aktionen (KISS).
                                     _autoTarget.LostTarget += reason =>
                                     {
                                         string label = reason == "dead" ? "Ziel tot" : "Ziel außerhalb der Reichweite";
@@ -463,7 +463,7 @@ namespace RagnaController.Core
                         public InputRouter InputRouter => _inputRouter;
                         public ProfileApplier ProfileApplier => _profileApplier;
 
-                        // FEAT-006: Ground Spell Engine
+                        // FEAT-006: Groand Spell Engine
                         public GroundSpellEngine GroundSpell => _groundSpell;
 
                         // FEAT-007: Skill Orchestrator
@@ -552,7 +552,7 @@ namespace RagnaController.Core
                 // Routing - delegate to InputRouter
                                 _inputRouter.RouteInput(input, _actualDeltaMs, _rumbleEnabled);
 
-                                // FEAT-006: Update ground spells
+                                // FEAT-006: Update groand spells
                                                                 _groundSpell?.Handle(input, _actualDeltaMs);
 
                                                                 // FEAT-007: Update skill orchestrator (class-specific rotations)
@@ -680,7 +680,7 @@ namespace RagnaController.Core
 
         /// <summary>
         /// ROB-001: Self-healing Restart des Engines (z. B. nach erkanntem Hang).
-        /// Stoppt die Tick-Schleife und startet sie sofort wieder; Input-Queue bleibt laufen,
+        /// Stoppt die Tick-Schleife and startet they sofort wieder; Input-Queue bleibt laufen,
         /// damit keine Tasten "stecken bleiben". Thread-sicher gegen parallele Restarts.
         /// </summary>
         public void Restart()

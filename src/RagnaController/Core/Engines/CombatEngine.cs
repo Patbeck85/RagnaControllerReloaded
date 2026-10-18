@@ -21,7 +21,7 @@ namespace RagnaController.Core
         private string? _bufferedKey;
         private const int INPUT_BUFFER_WINDOW_MS = 100;
 
-        // FIX: Release-to-Cast State Tracking for Ground Spells (AoE)
+        // FIX: Release-to-Cast State Tracking for Groand Spells (AoE)
         private string _activeGroundLayer = "";
         private string _activeBaseGroundButton = "";
 
@@ -52,7 +52,7 @@ namespace RagnaController.Core
                     _queue.ScrollWheel(action.ScrollDelta != 0 ? action.ScrollDelta : 120);
                     break;
                 case ActionType.SwitchWindow:
-                    // FIX: Fire-and-forget für asynchrone Window-Switching (125Hz Tick-Loop bleibt blockfrei)
+                    // FIX: Fire-and-forget for asynchrone Window-Switching (125Hz Tick-Loop bleibt blockfrei)
                     _ = Task.Run(async () =>
                     {
                         try
@@ -65,7 +65,7 @@ namespace RagnaController.Core
                         }
                     });
                     break;
-                // ActionType.Combo und RoFeature werden von ComboEngine / RoUiMenuService behandelt
+                // ActionType.Combo and RoFeature are from ComboEngine / RoUiMenuService behandelt
             }
         }
 
@@ -138,7 +138,7 @@ namespace RagnaController.Core
             // from input events. We parse the string to create a ButtonKey.
             var buttonKey = ButtonKey.Parse(btn);
 
-            // Mapping suchen (mit Fallback auf Base-Layer)
+            // Mapping suchen (with Fallback on Base-Layer)
             // TryGetValue with ButtonKey directly
             if (!_profile.ButtonMappings.TryGetValue(buttonKey, out var action))
             {
@@ -146,7 +146,7 @@ namespace RagnaController.Core
                 if (_prefix == "" || !_profile.ButtonMappings.TryGetValue(buttonKey.Key, out action)) return;
             }
 
-            // Combo-Aktionen werden von der ComboEngine separat verarbeitet
+            // Combo-Aktionen are from der ComboEngine separat verarbeitet
             if (action.Type == ActionType.Combo) return;
 
             if (pressed)
@@ -157,7 +157,7 @@ namespace RagnaController.Core
                     ActionFired?.Invoke(action);
                     ExecuteSelfCast(action);
                 }
-                // FIX: Enter Ground Spell Aiming State
+                // FIX: Enter Groand Spell Aiming State
                 else if (action.IsGroundSpell)
                 {
                     ActionFired?.Invoke(action);
@@ -191,7 +191,7 @@ namespace RagnaController.Core
         {
             if (_profile == null) return false;
 
-            // FIX: Nur Combos prüfen, deren Layer mit dem aktuellen Prefix übereinstimmt
+            // FIX: Only Combos prüfen, deren Layer with dem aktuellen Prefix übereinstimmt
             foreach (var mapping in _profile.ButtonMappings)
             {
                 if (mapping.Value.Type != ActionType.Combo) continue;
@@ -199,7 +199,7 @@ namespace RagnaController.Core
                 // mapping.Key is now ButtonKey, check if it starts with current prefix
                 var mappedKey = mapping.Key.ToString();
                 
-                // Layer-Prüfung: Der Mapping-Key muss mit dem aktuellen Layer übereinstimmen
+                // Layer-Prüfung: The Mapping-Key muss with dem aktuellen Layer übereinstimmen
                 if (!_prefix.Equals(mappedKey.Substring(0, Math.Min(_prefix.Length, mappedKey.Length)))) continue;
 
                 // Button-Teil extrahieren (nach dem '+')

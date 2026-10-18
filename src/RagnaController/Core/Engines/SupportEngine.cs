@@ -22,7 +22,7 @@ namespace RagnaController.Core
         private bool _wasRB;
         private readonly InputCommandQueue _queue;
 
-        // Cooldowns für Tests zugänglich machen
+        // Cooldowns for Tests zugänglich machen
         public int TabCooldown => _tabCooldown;
         public int HealCooldown => _healCooldown;
 
@@ -79,7 +79,7 @@ namespace RagnaController.Core
             if (!IsActive) Phase = SupportPhase.Idle;
         }
 
-        // Reset: Alle Felder auf Initialwerte setzen (wichtig bei Profil-Reload!)
+        // Reset: All Felder on Initialwerte setzen (important bei Profil-Reload!)
         public void Reset()
         {
             SupportEnabled = false;

@@ -14,7 +14,7 @@ namespace RagnaController.Core
 
         // --- Handheld / Gyro Support ---
         public bool GyroAimEnabled { get; set; } = false;
-        /// <summary>Alias für GyroAimEnabled — wird von HybridEngine.LoadProfile gesetzt.</summary>
+        /// <summary>Alias for GyroAimEnabled — is from HybridEngine.LoadProfile gesetzt.</summary>
         public bool GyroEnabled
         {
             get => GyroAimEnabled;
@@ -59,7 +59,7 @@ namespace RagnaController.Core
         {
             if (!IsActive || !MageEnabled) return false;
             Update(input, deltaMs);
-            // Engine aktiv → Input konsumiert (Priority-Chain: Support bekommt dann keinen Durchgang mehr).
+            // Engine active → Input konsumiert (Priority-Chain: Support bekommt then keinen Durchgang mehr).
             // CursorEngine handles the right stick aiming automatically!
             return true;
         }
@@ -74,7 +74,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Wird vom HandheldModeManager aufgerufen, um Gyroskop-Daten einzuspeisen.
+        /// Is vom HandheldModeManager aufgerufen, um Gyroskop-Daten einzuspeisen.
         /// </summary>
         public void InjectGyroDelta(int dx, int dy)
         {
@@ -93,8 +93,8 @@ namespace RagnaController.Core
         {
             _castCooldown = Math.Max(0, _castCooldown - ms);
 
-            // FIX: Release-to-Cast Architecture - CombatEngine zentralisiert Ground Spell State
-            // Wir melden den Cast-Zustand an die CombatEngine statt direkt zu casten
+            // FIX: Release-to-Cast Architecture - CombatEngine zentralisiert Groand Spell State
+            // Wir melden den Cast-Zustand an die CombatEngine statt direkt to casten
 
             // 2. Bolt-Spam Modus (Trigger R2 gehalten) — digital ODER analog
             if (input.R2 || input.TriggerRight > 0.5f)
@@ -121,7 +121,7 @@ namespace RagnaController.Core
             }
         }
 
-        // Reset: Alle Felder auf Initialwerte setzen (wichtig bei Profil-Reload!)
+        // Reset: All Felder on Initialwerte setzen (important bei Profil-Reload!)
         public void Reset()
         {
             MageEnabled = false;

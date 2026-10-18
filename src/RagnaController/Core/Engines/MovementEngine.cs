@@ -48,12 +48,12 @@ namespace RagnaController.Core
         {
             _cx = x;
             _cy = y;
-            // Auflösung relativ zu 1080p × DPI → ein einziger Multiplikator
+            // Auflösung relativ to 1080p × DPI → ein einziger multiplier
             float resScale = clientH > 0 ? clientH / BASE_RES_H : 1.0f;
             _radiusScale   = resScale * (dpiScale > 0f ? dpiScale : 1.0f);
         }
 
-        // ── Haupt-Update (jeder Tick) ─────────────────────────────────────
+        // ── Haupt-Update (every Tick) ─────────────────────────────────────
         public void Update(float x, float y)
         {
             if (!ActionRpgMode) { ForceStop(); return; }
@@ -63,8 +63,8 @@ namespace RagnaController.Core
             {
                 if (_isWalking)
                 {
-                    // CoastFrames = Anzahl der Deadzone-Frame, nach denen gestoppt wird.
-                    // FIX Off-by-one: vorher stoppte erst Frame N+1 (Zähler wurde nur bis N erhöht).
+                    // CoastFrames = Anzahl der Deadzone-Frame, nach denen gestoppt is.
+                    // FIX Off-by-one: vorher stoppte erst Frame N+1 (Zähler wurde only bis N erhöht).
                     _coastCounter++;
                     if (_coastCounter >= CoastFrames)
                     {
@@ -87,10 +87,10 @@ namespace RagnaController.Core
             float nx = x / mag;
             float ny = -y / mag;   // XInput Y+ = oben, Screen Y+ = unten
 
-            // Radius: LeashRadius ist in 1080p-Pixeln definiert → skalieren
+            // Radius: LeashRadius is in 1080p-Pixeln definiert → skalieren
             int radius = (int)(LeashRadius * _radiusScale);
 
-            // FIX: Begrenze den Klick auf den tatsächlichen Innenraum des Fensters
+            // FIX: Begrenze den Klick on den tatsächlichen Innenraum des Fensters
             int limitX = _tracker.ClientW / 2;
             int limitY = _tracker.ClientH / 2;
             
@@ -110,7 +110,7 @@ namespace RagnaController.Core
             }
             else
             {
-                // FIX: Nur senden, wenn sich die Koordinaten tatsächlich geändert haben
+                // FIX: Only senden, if sich die Koordinaten tatsächlich geändert have
                 // Vermeidet 125x pro Sekunde identische WM_MOUSEMOVE-Nachrichten
                 if (tx != _lastTx || ty != _lastTy)
                 {
@@ -134,8 +134,8 @@ namespace RagnaController.Core
             int ly = _cy + (int)(Math.Sin(angle) * 60);
             _queue.MouseMoveAbsolute(lx, ly);
             _queue.LeftClick();
-            // FIX: Nach LeftClick() muss _isWalking = false gesetzt werden, damit die Engine
-            // im nächsten Tick weiß, dass sie wieder einen LeftDown() Klick senden muss
+            // FIX: Nach LeftClick() muss _isWalking = false gesetzt are, damit die Engine
+            // im nächsten Tick weiß, dass they wieder einen LeftDown() Klick senden muss
             _isWalking = false;
         }
 

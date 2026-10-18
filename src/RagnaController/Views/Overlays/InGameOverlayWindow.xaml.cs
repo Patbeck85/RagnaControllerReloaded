@@ -125,7 +125,7 @@ namespace RagnaController.Views.Overlays
         // UX-021: Drag overlay with left mouse button (except on buttons)
         private void Overlay_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            // Only drag if clicking on the background border, not on interactive elements
+            // Only drag if clicking on the backgroand border, not on interactive elements
             if (e.OriginalSource is System.Windows.Controls.Button) return;
             this.DragMove();
         }

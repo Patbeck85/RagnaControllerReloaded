@@ -3,8 +3,8 @@ using RagnaController.Models;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Handhabt SmartCursor-Eingaben (D-Pad Grid-Hopping für UI Panels).
-    /// Verhindert, dass Gameplay-Engine Eingaben verarbeitet, wenn UI aktiv ist.
+    /// Handhabt SmartCursor-Eingaben (D-Pad Grid-Hopping for UI Panels).
+    /// Verhindert, dass Gameplay-Engine Eingaben verarbeitet, if UI active is.
     /// </summary>
     public sealed class SmartCursorEngine
     {
@@ -31,28 +31,28 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Verarbeitet SmartCursor-Eingaben.
-        /// FIX: Keine Early Returns — alle Tasten müssen an CombatEngine weitergegeben werden,
-        /// damit offene Prozesse sauber abgebrochen werden.
+        /// FIX: Keine Early Returns — all Tasten müssen an CombatEngine weitergegeben are,
+        /// damit offene Prozesse sauber abgebrochen are.
         /// </summary>
         public void Process(ParsedInput input)
         {
             if (_uiActive)
             {
                 // UI-Logik ausführen (z.B. D-Pad Grid-Hopping)
-                // ABER: Button-Events NICHT blockieren — CombatEngine muss ALLE Tasten sehen!
+                // BUT: Button-Events NICHT blockieren — CombatEngine muss ALLE Tasten sehen!
 
-                // Beispiel: D-Pad für Grid-Navigation
+                // Example: D-Pad for Grid-Navigation
                 if (input.LeftX != 0 || input.LeftY != 0)
                 {
                     // Grid-Navigation
-                    // ABER: Auch Gameplay-Buttons müssen weitergegeben werden!
+                    // BUT: Auch Gameplay-Buttons müssen weitergegeben are!
                 }
 
-                // Beispiel: Inventar-Tasten
+                // Example: Inventar-Tasten
                 if (input.BtnA || input.BtnB || input.BtnX || input.BtnY)
                 {
                     // UI-Aktionen
-                    // ABER: Auch Gameplay-Buttons müssen weitergegeben werden!
+                    // BUT: Auch Gameplay-Buttons müssen weitergegeben are!
                 }
             }
         }

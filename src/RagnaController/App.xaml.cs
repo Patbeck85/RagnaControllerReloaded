@@ -24,7 +24,7 @@ namespace RagnaController
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            // ── Alle Exception-Handler so früh wie möglich registrieren ──────
+            // ── All Exception-Handler so früh wie möglich registrieren ──────
             AppDomain.CurrentDomain.UnhandledException += (s, ex) =>
             {
                 LogFatal("UnhandledException", ex.ExceptionObject?.ToString() ?? "unknown");
@@ -103,7 +103,7 @@ namespace RagnaController
                         _ = Models.Settings.Load();
                     });
 
-                    // Splash dauert min. 1s, dann Voice, dann max. weitere 2.5s
+                    // Splash dauert min. 1s, then Voice, then max. weitere 2.5s
                     // — per Klick sofort überspringbar
                     var skipToken = splash.SkipCts.Token;
                     await Task.Delay(1000).ConfigureAwait(true);
@@ -111,7 +111,7 @@ namespace RagnaController
                     try { await Task.WhenAll(warmupTask, Task.Delay(2500, skipToken)); }
                     catch (TaskCanceledException)
                     {
-                        // Klick = Splash überspringen — erwartet, kein Fehler
+                        // Klick = Splash überspringen — erwartet, no Fehler
                         System.Diagnostics.Debug.WriteLine("[App] Splash skipped via click");
                     }
                 }
@@ -122,13 +122,13 @@ namespace RagnaController
                     await warmupTask.ConfigureAwait(true);
                 }
 
-                // Handheld-Erkennung im Hintergrund
+                // Handheld-Erkennung im Hintergrand
                 bool isHandheld = await Task.Run(() => Core.HandheldDetector.IsHandheldDevice())
                                   || settings.ForceHandheldMode;
 
-                // ── Engine + Manager im Hintergrund erstellen ────────────────
+                // ── Engine + Manager im Hintergrand erstellen ────────────────
                 // WICHTIG: HybridEngine erstellt ControllerService (SDL Init) —
-                // das MUSS im Background-Thread passieren, sonst hängt der UI-Thread!
+                // das MUSS im Backgroand-Thread passieren, sonst hängt der UI-Thread!
                 HybridEngine? engine = null;
                 ProfileManager? manager = null;
                 try

@@ -6,7 +6,7 @@ namespace RagnaController.Models
 {
     /// <summary>
     /// FEAT-023: Ein belegter Inventar-Slot (reines Datenmodell, headless-testbar).
-    /// Die eigentliche Erkennung „welches Item liegt im Slot" ist ein separater
+    /// The eigentliche Erkennung „welches Item liegt im Slot" is ein separater
     /// Integrationspunkt (OCR-/Fenster-Lesung der Game-UI) — analog FEAT-015/FEAT-024.
     /// </summary>
     public readonly record struct InventorySlotItem(
@@ -15,28 +15,28 @@ namespace RagnaController.Models
         int StackCount);
 
     /// <summary>
-    /// FEAT-023: Prioritätsklasse eines Items für die Auto-Einlagerung (Storage-Drop).
-    /// Reihenfolge = Freigabe-Reihenfolge: erst Consumables einlagern, dann Buffs dropen.
-    /// QuestItems und Equipment werden niemals automatisch freigegeben.
+    /// FEAT-023: Prioritätsklasse eines Items for die Auto-Einlagerung (Storage-Drop).
+    /// Reihenfolge = Freigabe-Reihenfolge: erst Consumables einlagern, then Buffs dropen.
+    /// QuestItems and Equipment are niemals automatic freigegeben.
     /// </summary>
     public enum StorageDropPriority
     {
-        /// <summary>Potione/Tränke — werden in die Storage eingelagert (kein Value-Verlust).</summary>
+        /// <summary>Potione/Tränke — are in die Storage eingelagert (no Value-Verlust).</summary>
         Consumable = 0,
-        /// <summary>Buff-Items mit abgelaufenem Nutzenwert — werden gedroppt.</summary>
+        /// <summary>Buff-Items with abgelaufenem Nutzenwert — are gedroppt.</summary>
         BuffItem = 1,
-        /// <summary>Quest-Items — niemals automatisch freigeben.</summary>
+        /// <summary>Quest-Items — niemals automatic freigeben.</summary>
         QuestItem = 2,
-        /// <summary>Ausrüstung — niemals automatisch freigeben.</summary>
+        /// <summary>Ausrüstung — niemals automatic freigeben.</summary>
         Equipment = 3
     }
 
-    /// <summary>FEAT-023: Die geplante Aktion für einen Slot.</summary>
+    /// <summary>FEAT-023: The geplante Aktion for einen Slot.</summary>
     public enum StorageDropAction
     {
         /// <summary>In die Storage einlagern (Storage-Drop).</summary>
         Stash,
-        /// <summary>Auf dem Boden dropen.</summary>
+        /// <summary>On dem Boden dropen.</summary>
         Drop,
         /// <summary>Belassen (geschützt).</summary>
         Keep
@@ -50,24 +50,24 @@ namespace RagnaController.Models
         string Reason);
 
     /// <summary>
-    /// FEAT-023: Reine, deterministische Planungslogik für die Auto-Item-Einlagerung.
-    /// Entscheidet, welche Inventar-Slots befreit werden, wenn das Inventar voll ist:
+    /// FEAT-023: Reine, deterministische Planungslogik for die Auto-Item-Einlagerung.
+    /// Entscheidet, welche Inventar-Slots befreit are, if das Inventar voll is:
     /// Consumables → Storage-Drop (Stash), Buffs → Drop, QuestItems/Equipment → Keep.
     /// </summary>
     /// <remarks>
-    /// Bewusst KEIN Cursor-/UI-Zugriff (KISS/YAGNI): Die Ausführung (Cursor zur
-    /// Storage-UI navigieren, Items physisch verschieben) ist ein separater
-    /// Integrationspunkt über RoUiMenuService/SmartCursorService.
+    /// Bewusst KEIN Cursor-/UI-Zugriff (KISS/YAGNI): The Ausführung (Cursor zur
+    /// Storage-UI navigieren, Items physisch verschieben) is ein separater
+    /// Integrationspunkt about RoUiMenuService/SmartCursorService.
     /// </remarks>
     public static class StorageDropPlanner
     {
         /// <summary>
-        /// Plant die Befreiungs-Aktionen für ein volles Inventar.
+        /// Plant die Befreiungs-Aktionen for ein volles Inventar.
         /// </summary>
         /// <param name="capacity">Kapazität in Slots (Standard 24 = Classic-RO-Inventar).</param>
         /// <param name="usedSlots">Anzahl belegter Slots.</param>
         /// <param name="slots">Belegte Slots (indexiert wie im Inventar); darf leer/null sein.</param>
-        /// <returns>Aktionsliste in Slot-Reihenfolge; leer, wenn das Inventar nicht voll ist.</returns>
+        /// <returns>Aktionsliste in Slot-Reihenfolge; leer, if das Inventar nicht voll is.</returns>
         public static IReadOnlyList<StorageDropIntent> Plan(
             int capacity,
             int usedSlots,
@@ -101,7 +101,7 @@ namespace RagnaController.Models
         public const int DefaultCapacity = 24;
 
         /// <summary>
-        /// FEAT-023: Plant mit der Standard-Kapazität (24 Slots).
+        /// FEAT-023: Plant with der Standard-Kapazität (24 Slots).
         /// </summary>
         public static IReadOnlyList<StorageDropIntent> PlanDefault(int usedSlots, IReadOnlyList<InventorySlotItem>? slots)
             => Plan(DefaultCapacity, usedSlots, slots);
@@ -114,7 +114,7 @@ namespace RagnaController.Models
 
         /// <summary>
         /// FEAT-023: Prüft, ob ein Plan mindestens <paramref name="neededSlots"/> Slots befreit.
-        /// Standard 1 = „ein neuer Pickup ist möglich".
+        /// Standard 1 = „ein neuer Pickup is möglich".
         /// </summary>
         public static bool FreesEnough(IReadOnlyList<StorageDropIntent> plan, int neededSlots = 1)
             => CountReleasingActions(plan) >= neededSlots;

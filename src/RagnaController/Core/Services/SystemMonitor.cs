@@ -13,7 +13,7 @@ namespace RagnaController.Core
         public bool IsTracking => _tracker.IsTracking;
         public float DpiScale => _tracker.DpiScale;
 
-        // Focus-Lock Einstellungen (von HybridEngine gesetzt, von MainWindow aus Settings geladen)
+        // Focus-Lock Einstellungen (from HybridEngine gesetzt, from MainWindow aus Settings geladen)
         public bool FocusLockEnabled { get; set; } = true;
 
         private string _focusLockProcess = "ragexe";
@@ -34,7 +34,7 @@ namespace RagnaController.Core
             _movement = movement;
             _native   = native ?? new NativeMethodsImpl();
 
-            // Sofort Center setzen wenn Fenster kommt — nicht auf nächsten Poll-Zyklus warten
+            // Sofort Center setzen if Fenster kommt — nicht on nächsten Poll-Zyklus warten
             _tracker.ForegroundChanged += () =>
             {
                 if (_tracker.IsTracking)
@@ -54,8 +54,8 @@ namespace RagnaController.Core
             }
             else
             {
-                // Nur sperren wenn FocusLock aktiv ist UND das Fenster nicht RO ist
-                // verhindert, dass der Cursor im RO-Fenster gesperrt wird
+                // Only sperren if FocusLock active is UND das Fenster nicht RO is
+                // verhindert, dass der Cursor im RO-Fenster gesperrt is
                 IsFocusLocked = FocusLockEnabled && !_tracker.IsTracking;
             }
         }

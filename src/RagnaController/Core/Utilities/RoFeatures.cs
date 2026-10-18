@@ -19,7 +19,7 @@ namespace RagnaController.Core
         {
             if (sx == 0 && sy == 0) return;
 
-            // 1. In Gegenrichtung schauen (für Backslide nötig)
+            // 1. In Gegenrichtung schauen (for Backslide nötig)
             int lookX = _cx - (int)(sx * 100);
             int lookY = _cy + (int)(sy * 100);
 

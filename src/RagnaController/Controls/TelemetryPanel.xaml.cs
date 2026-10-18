@@ -12,11 +12,11 @@ namespace RagnaController.Controls
     /// UI-011: Live-Telemetrie-Dashboard (Developer-Tab).
     /// Zeigt thread-safere Snapshots der Perf-Tracker in Echtzeit (2 Hz):
     /// Input-Latenz, Memory/GC, Frame-Budget, GPU-Overlay.
-    /// TRACKER-APIs sind Interlocked-basiert → keine UI-Blockaden (PERF-001).
+    /// TRACKER-APIs are Interlocked-basiert → keine UI-Blockaden (PERF-001).
     /// </summary>
     public partial class TelemetryPanel : UserControl
     {
-        // ── Theme colors (konsistent mit MainWindow) ───────────────────────
+        // ── Theme colors (konsistent with MainWindow) ───────────────────────
         private static readonly Color CfgText = Color.FromRgb(161, 176, 197);   // #A1B0C5
         private static readonly Color CfgMuted = Color.FromRgb(85, 94, 106);    // #555E6A
         private static readonly Color CfgGood = Color.FromRgb(57, 255, 20);     // #39FF14
@@ -40,7 +40,7 @@ namespace RagnaController.Controls
             _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(RefreshIntervalMs) };
             _timer.Tick += OnTimerTick;
 
-            // Timer nur laufen lassen, wenn Panel sichtbar ist (PERF-001: keine UI-Blockaden im Hintergrund).
+            // Timer only laufen lassen, if Panel sichtbar is (PERF-001: keine UI-Blockaden im Hintergrand).
             IsVisibleChanged += OnIsVisibleChanged;
         }
 
@@ -54,7 +54,7 @@ namespace RagnaController.Controls
 
         /// <summary>
         /// Verdrahtet die Engine (einmalig beim MainWindow-Start).
-        /// Startet sofort einen Refresh, falls ein Tracker vorhanden ist.
+        /// Startet sofort einen Refresh, falls ein Tracker available is.
         /// </summary>
         public void SetEngine(HybridEngine? engine)
         {
@@ -62,7 +62,7 @@ namespace RagnaController.Controls
             if (engine != null) RefreshNow();
         }
 
-        /// <summary>Stoppt den Timer explizit und räumt Ressourcen auf (Window_Closing, MEMORY-001).</summary>
+        /// <summary>Stoppt den Timer explizit and räumt Ressourcen on (Window_Closing, MEMORY-001).</summary>
         public void StopUpdates()
         {
             if (_updatesStopped) return;
@@ -78,12 +78,12 @@ namespace RagnaController.Controls
         {
             try
             {
-                // THREAD-001: DispatcherTimer läuft auf dem UI-Thread; Tracker-Snapshots sind Interlocked-basiert.
+                // THREAD-001: DispatcherTimer läuft on dem UI-Thread; Tracker-Snapshots are Interlocked-basiert.
                 UpdateTelemetry(_engine?.LatencyTracker, _engine?.MemoryTracker);
             }
             catch (Exception ex)
             {
-                // ERROR-001: Kein stilles Verschlucken — Fehler in die Karte zeigen, Timer läuft weiter.
+                // ERROR-001: No stilles Verschlucken — Fehler in die Karte zeigen, Timer läuft weiter.
                 try
                 {
                     var err = new TextBlock
@@ -98,14 +98,14 @@ namespace RagnaController.Controls
                 }
                 catch (Exception renderEx)
                 {
-                    // Panel-Rendering-Fehler dürfen den Timer nicht killen — aber loggen
+                    // Panel-Rendering-Fehler dürfen den Timer nicht killen — but loggen
                     System.Diagnostics.Debug.WriteLine($"[TelemetryPanel] Render error: {renderEx.Message}");
                 }
             }
         }
 
         /// <summary>
-        /// Füllt alle vier Karten aus den Tracker-Snapshots (public für Unit-Tests, thread-safe).
+        /// Füllt all vier Karten aus den Tracker-Snapshots (public for Unit-Tests, thread-safe).
         /// </summary>
         public void UpdateTelemetry(InputLatencyTracker? latency, MemoryAllocationTracker? memory)
         {
@@ -208,7 +208,7 @@ namespace RagnaController.Controls
             return card;
         }
 
-        /// <summary>Erzeugt eine Telemetrie-Karte mit Header + Zeilen. Gibt (Border, StackPanel) zurück.</summary>
+        /// <summary>Erzeugt eine Telemetrie-Karte with Header + Zeilen. Gibt (Border, StackPanel) zurück.</summary>
         private (Border Card, StackPanel Rows) MakeCard(string title, Color statusColor, params (string Label, string Value)[] rows)
         {
             var stack = new StackPanel();

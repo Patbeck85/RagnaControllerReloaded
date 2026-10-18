@@ -69,8 +69,8 @@ namespace RagnaController.Core
         private readonly object _hangLock = new();
 
         /// <summary>
-        /// Injizierbare Uhr (Stopwatch-Timestamp) für deterministische Tests. Default: Stopwatch.GetTimestamp().
-        /// ROB-001 CI-Härtung: Tests können die Zeit vorwärts treiben, statt Wall-Clock-Sleeps zu riskieren.
+        /// Injizierbare Uhr (Stopwatch-Timestamp) for deterministische Tests. Default: Stopwatch.GetTimestamp().
+        /// ROB-001 CI-Härtung: Tests können die Zeit vorwärts treiben, statt Wall-Clock-Sleeps to riskieren.
         /// </summary>
         public Func<long>? TimeSource { get; set; }
 

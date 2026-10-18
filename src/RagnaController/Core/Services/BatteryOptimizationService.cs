@@ -5,14 +5,14 @@ using System.Windows.Forms;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Battery-Optimierung für Steam Deck / Handheld.
-    /// Überwacht den Windows-Batterie-Status und empfiehlt aggressive
+    /// Battery-Optimierung for Steam Deck / Handheld.
+    /// Überwacht den Windows-Batterie-Status and empfiehlt aggressive
     /// Tick-Rate-Reduktion sowie Smart-Standby-Verstärkung beim
-    /// Batterie-Betrieb (nicht am Netzteil), um Akkulaufzeit zu verlängern.
+    /// Batterie-Betrieb (nicht am Netzteil), um Akkulaufzeit to verlängern.
     ///
     /// Architektur:
     ///   - SystemInformation.PowerStatus überwacht AC/Batterie
-    ///   - Func<PowerStatus> ist injizierbar → unit-testbar ohne echte Hardware
+    ///   - Func<PowerStatus> is injizierbar → unit-testbar ohne echte Hardware
     ///   - PowerStatusChanged-Event bei Modus-Wechsel
     ///   - GetRecommendedTickRate() liefert Hz je nach Modus (AC: 125, Battery: 60)
     /// </summary>
@@ -27,13 +27,13 @@ namespace RagnaController.Core
 #pragma warning restore CS8618
         private readonly Func<PowerStatus>? _getPowerStatus;
 
-        /// <summary>True wenn das Gerät auf Batterie läuft (nicht am Netzteil).</summary>
+        /// <summary>True if das Gerät on Batterie läuft (nicht am Netzteil).</summary>
         public bool IsOnBattery => _isOnBattery;
 
-        /// <summary>Aktueller Batterie-Ladezustand in Prozent (0–100).</summary>
+        /// <summary>Aktueller Batterie-Ladezustand in percent (0–100).</summary>
         public int BatteryPercent => _batteryPercent;
 
-        /// <summary>True wenn das Gerät gerade geladen wird.</summary>
+        /// <summary>True if das Gerät gerade geladen is.</summary>
         public bool IsCharging => _isCharging;
 
         /// <summary>Event bei PowerSource-Wechsel (AC ↔ Batterie).</summary>
@@ -61,7 +61,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Erzeugt Service mit einfachen Werten (für Unit-Tests).
+        /// Erzeugt Service with einfachen Werten (for Unit-Tests).
         /// </summary>
         public BatteryOptimizationService(bool isOnBattery, int batteryPercent = 100, bool isCharging = false)
         {
@@ -71,7 +71,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Konstruktor mit injizierbarem PowerStatus-Factory (für Unit-Tests).
+        /// Konstruktor with injizierbarem PowerStatus-Factory (for Unit-Tests).
         /// </summary>
         private BatteryOptimizationService(Func<PowerStatus> getPowerStatus)
         {
@@ -86,9 +86,9 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Prüft ob sich der PowerStatus geändert hat und feuert ggf. PowerStatusChanged.
-        /// Sollte regelmäßig (z. B. pro Tick oder per Timer) aufgerufen werden.
-        /// Nutzt nur den injizierten Factory-Delegaten (nicht die einfachen Werte).
+        /// Prüft ob sich der PowerStatus geändert has and feuert ggf. PowerStatusChanged.
+        /// Sollte regelmäßig (z. B. pro Tick or per Timer) aufgerufen are.
+        /// Nutzt only den injizierten Factory-Delegaten (nicht die einfachen Werte).
         /// </summary>
         public void PollPowerStatus()
         {

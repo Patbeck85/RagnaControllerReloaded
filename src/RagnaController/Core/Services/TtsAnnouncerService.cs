@@ -6,7 +6,7 @@ using RagnaController.Models;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// v1.7.2: TTS Announcer Service (ersetzt System.Speech mit Hexa.NET.TTS oder deaktiviert)
+    /// v1.7.2: TTS Announcer Service (ersetzt System.Speech with Hexa.NET.TTS or disabled)
     /// Fallback-Implementierung ohne externe Abhängigkeiten
     /// </summary>
     public sealed class TtsAnnouncerService : IDisposable
@@ -17,7 +17,7 @@ namespace RagnaController.Core
         public TtsAnnouncerService(Settings settings)
         {
             _isEnabled = settings.EnableVoiceAnnouncements;
-            // System.Speech wurde entfernt - TTS wird über Text-to-Speech API oder externe Bibliothek geladen
+            // System.Speech wurde entfernt - TTS is about Text-to-Speech API or externe Bibliothek geladen
         }
 
         public void SetEnabled(bool enable)
@@ -35,9 +35,9 @@ namespace RagnaController.Core
             {
                 try
                 {
-                    // Placeholder: TTS wird über externe Bibliothek (z.B. Hexa.NET.TTS) oder Text-to-Speech API geladen
+                    // Placeholder: TTS is about externe Bibliothek (z.B. Hexa.NET.TTS) or Text-to-Speech API geladen
                     // System.Speech wurde entfernt - implementiere hier die neue TTS-Logik
-                    // Beispiel: Hexa.NET.TTS oder andere TTS-Bibliothek
+                    // Example: Hexa.NET.TTS or andere TTS-Bibliothek
                 }
                 catch (Exception ex)
                 {

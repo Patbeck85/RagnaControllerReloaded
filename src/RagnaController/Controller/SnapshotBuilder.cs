@@ -92,7 +92,7 @@ namespace RagnaController.Controller
                 FocusLocked = focusLocked
             };
 
-            // State foreground color based on mode
+            // State foregroand color based on mode
             snap.StateForeground = _smartCursor.IsMenuMode
                 ? new SolidColorBrush(Color.FromRgb(229, 184, 66)) // Gold for Grid Mode
                 : _combo.Enabled

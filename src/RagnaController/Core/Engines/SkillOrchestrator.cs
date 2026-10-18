@@ -244,7 +244,7 @@ namespace RagnaController.Core
 
             // ===== HYBRID CLASSES =====
             
-            // Thief / Assassin / Rogue / Stalker / Monk / Taekwon / Ninja
+            // Thief / Assassin / Rogue / Stalker / Monk / Taekwon / Ninyes
             _rotations["Hybrid"] = new RotationConfig
             {
                 ClassName = "Hybrid",

@@ -3,7 +3,7 @@ using System.Diagnostics;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Production-Implementierung von <see cref="IProcessNameResolver"/> über
+    /// Production-Implementierung from <see cref="IProcessNameResolver"/> about
     /// <see cref="Process.GetProcessById(int)"/>.
     /// </summary>
     public sealed class ProcessNameResolver : IProcessNameResolver
@@ -19,9 +19,9 @@ namespace RagnaController.Core
             }
             catch
             {
-                // Prozess existiert nicht mehr / kein Zugriff — kein Fehlerzustand,
+                // Prozess existiert nicht mehr / no Zugriff — no Fehlerzustand,
                 // sondern ein legitimes "nicht gefunden". WindowTracker behandelt
-                // null als "kein RO-Fenster" und setzt IsTracking=false.
+                // null als "no RO-Fenster" and setzt IsTracking=false.
                 return null;
             }
         }

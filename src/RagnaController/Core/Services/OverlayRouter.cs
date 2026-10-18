@@ -4,7 +4,7 @@ namespace RagnaController.Core
 {
     /// <summary>
     /// Handhabt Overlay-Eingaben (Radial-Menu, Inventar, etc.).
-    /// Verhindert, dass Gameplay-Engine Eingaben verarbeitet, wenn Overlay aktiv ist.
+    /// Verhindert, dass Gameplay-Engine Eingaben verarbeitet, if Overlay active is.
     /// </summary>
     public sealed class OverlayRouter
     {
@@ -12,7 +12,7 @@ namespace RagnaController.Core
         private string _activeOverlay = "";
         private VoiceChatService? _voice;  // FIX: Nullable, da Konstruktor voice = null erlaubt
 
-        // Events für HybridEngine (nicht verwendet — Legacy-Signatur)
+        // Events for HybridEngine (nicht verwendet — Legacy-Signatur)
 #pragma warning disable CS0067 // Event 'ProfileQuickSwitch' is never used
         public event Action<int>? ProfileQuickSwitch;
 #pragma warning restore CS0067
@@ -49,55 +49,55 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Verarbeitet Overlay-Eingaben.
-        /// FIX: Keine Early Returns — alle Tasten müssen an CombatEngine weitergegeben werden,
-        /// damit offene Prozesse sauber abgebrochen werden.
+        /// FIX: Keine Early Returns — all Tasten müssen an CombatEngine weitergegeben are,
+        /// damit offene Prozesse sauber abgebrochen are.
         /// </summary>
         public void Process(ParsedInput input)
         {
             if (_overlayActive)
             {
                 // Overlay-Logik ausführen (z.B. Radial-Menu Navigation)
-                // ABER: Button-Events NICHT blockieren — CombatEngine muss ALLE Tasten sehen!
+                // BUT: Button-Events NICHT blockieren — CombatEngine muss ALLE Tasten sehen!
                 
-                // Beispiel: Radial-Menu Navigation (D-Pad)
+                // Example: Radial-Menu Navigation (D-Pad)
                 if (input.LeftX != 0 || input.LeftY != 0)
                 {
-                    // D-Pad für Radial-Menu Navigation
-                    // ABER: Auch Gameplay-Buttons müssen weitergegeben werden!
+                    // D-Pad for Radial-Menu Navigation
+                    // BUT: Auch Gameplay-Buttons müssen weitergegeben are!
                 }
 
-                // Beispiel: Inventar-Tasten
+                // Example: Inventar-Tasten
                 if (input.BtnA || input.BtnB || input.BtnX || input.BtnY)
                 {
                     // Inventar-Aktionen
-                    // ABER: Auch Gameplay-Buttons müssen weitergegeben werden!
+                    // BUT: Auch Gameplay-Buttons müssen weitergegeben are!
                 }
             }
         }
 
         /// <summary>
-        /// Versucht Overlay-Eingaben zu verarbeiten.
-        /// RETURN: true wenn Overlay den Input konsumiert hat (aber CombatEngine bekommt trotzdem alle Buttons!).
+        /// Versucht Overlay-Eingaben to verarbeiten.
+        /// RETURN: true if Overlay den Input konsumiert has (but CombatEngine bekommt trotzdem all Buttons!).
         /// </summary>
         public bool TryHandleInput(ParsedInput input)
         {
             if (_overlayActive)
             {
                 // Overlay-Logik ausführen
-                // ABER: Wir RETURNEN NICHT — CombatEngine muss ALLE Tasten sehen!
+                // BUT: Wir RETURNEN NICHT — CombatEngine muss ALLE Tasten sehen!
 
-                // Beispiel: Radial-Menu Navigation (D-Pad)
+                // Example: Radial-Menu Navigation (D-Pad)
                 if (input.LeftX != 0 || input.LeftY != 0)
                 {
-                    // D-Pad für Radial-Menu Navigation
-                    // ABER: Auch Gameplay-Buttons müssen weitergegeben werden!
+                    // D-Pad for Radial-Menu Navigation
+                    // BUT: Auch Gameplay-Buttons müssen weitergegeben are!
                 }
 
-                // Beispiel: Inventar-Tasten
+                // Example: Inventar-Tasten
                 if (input.BtnA || input.BtnB || input.BtnX || input.BtnY)
                 {
                     // Inventar-Aktionen
-                    // ABER: Auch Gameplay-Buttons müssen weitergegeben werden!
+                    // BUT: Auch Gameplay-Buttons müssen weitergegeben are!
                 }
 
                 // Voice-Chat Trigger: Back + L1 (laut CONTROLS_GUIDE.md)

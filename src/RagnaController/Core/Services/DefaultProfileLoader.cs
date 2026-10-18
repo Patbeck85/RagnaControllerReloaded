@@ -11,7 +11,7 @@ namespace RagnaController.Core
         public static List<Profile> Load()
         {
             var profiles = new List<Profile>();
-            // WICHTIG für Single-File EXE:
+            // WICHTIG for Single-File EXE:
             string folder = Path.Combine(AppContext.BaseDirectory, "DefaultProfiles");
 
             if (!Directory.Exists(folder)) return profiles;

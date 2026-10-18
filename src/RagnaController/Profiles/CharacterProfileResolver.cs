@@ -4,27 +4,27 @@ using System.Collections.Generic;
 namespace RagnaController.Profiles
 {
     /// <summary>
-    /// FEAT-024: Reiner Resolver, der einen in-game Charakter-Namen auf einen Profil-Namen
-    /// abbildet. Trennt die Zuordnungslogik (unit-testbar) von der Persistenz/Aktivierung
+    /// FEAT-024: Reiner Resolver, der einen in-game Charakter-Namen on einen Profil-Namen
+    /// abbildet. Trennt die Zuordnungslogik (unit-testbar) from der Persistenz/Aktivierung
     /// im <see cref="ProfileManager"/>.
     ///
     /// Normalisierung: RO-Client-Charakter-Namen können führende/nachgestellte Leerzeichen
-    /// und gemischte Groß-/Kleinschreibung enthalten (OCR-/Fenster-Lese-Rauschen). Der Resolver
-    /// normalisiert zu "getrimmt + interne Leerzeichen auf ein zusammengefasst" und vergleicht
+    /// and gemischte Groß-/Kleinschreibung enthalten (OCR-/Fenster-Lese-Rauschen). The Resolver
+    /// normalisiert to "getrimmt + interne Leerzeichen on ein zusammengefasst" and vergleicht
     /// case-insensitiv, damit dieselbe Zuordnung auch bei Lese-Varianz stabil bleibt.
     /// </summary>
     public sealed class CharacterProfileResolver
     {
         // key = normalisierter Char-Name, value = Profil-Name.
-        // OrdinalIgnoreCase: OCR-/Fenster-Lese-Rauschen ändert häufig nur die Großschreibung.
+        // OrdinalIgnoreCase: OCR-/Fenster-Lese-Rauschen ändert häufig only die Großschreibung.
         private readonly Dictionary<string, string> _map = new(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>Anzahl der gespeicherten Zuordnungen.</summary>
         public int Count => _map.Count;
 
         /// <summary>
-        /// Normalisiert einen Charakter-Namen: trims Außenleerzeichen und fasst interne
-        /// Leerzeichen-Läufe auf ein einzelnes Leerzeichen zusammen. Leere/Null → leere Zeichenkette.
+        /// Normalisiert einen Charakter-Namen: trims Außenleerzeichen and fasst interne
+        /// Leerzeichen-Läufe on ein einzelnes Leerzeichen zusammen. Leere/Null → leere Zeichenkette.
         /// </summary>
         public static string Normalize(string? characterName)
         {
@@ -33,7 +33,7 @@ namespace RagnaController.Profiles
             var trimmed = characterName.Trim();
             if (trimmed.Length == 0) return string.Empty;
 
-            // Interne Leerzeichen-Läufe auf ein einzelnes Leerzeichen reduzieren.
+            // Interne Leerzeichen-Läufe on ein einzelnes Leerzeichen reduzieren.
             var sb = new System.Text.StringBuilder(trimmed.Length);
             bool inRun = false;
             foreach (var ch in trimmed)
@@ -52,7 +52,7 @@ namespace RagnaController.Profiles
         }
 
         /// <summary>
-        /// Registriert eine Zuordnung Charakter-Name → Profil-Name. Leere Eingaben werden ignoriert.
+        /// Registriert eine Zuordnung Charakter-Name → Profil-Name. Leere Eingaben are ignoriert.
         /// </summary>
         public void RegisterMapping(string characterName, string profileName)
         {
@@ -64,7 +64,7 @@ namespace RagnaController.Profiles
             _map[key] = profileName.Trim();
         }
 
-        /// <summary>Entfernt eine Zuordnung. Gibt zurück, ob etwas entfernt wurde.</summary>
+        /// <summary>Entfernt eine Zuordnung. Gibt zurück, ob something entfernt wurde.</summary>
         public bool Unregister(string characterName)
         {
             var key = Normalize(characterName);
@@ -72,11 +72,11 @@ namespace RagnaController.Profiles
             return _map.Remove(key);
         }
 
-        /// <summary>Entfernt alle Zuordnungen.</summary>
+        /// <summary>Entfernt all Zuordnungen.</summary>
         public void Clear() => _map.Clear();
 
         /// <summary>
-        /// Liefert den Profil-Namen für einen Charakter-Namen, oder <c>null</c>, wenn keine
+        /// Liefert den Profil-Namen for einen Charakter-Namen, or <c>null</c>, if keine
         /// Zuordnung existiert. Unbekannte/leere Namen → <c>null</c>.
         /// </summary>
         public string? Resolve(string? characterName)
@@ -86,10 +86,10 @@ namespace RagnaController.Profiles
             return _map.TryGetValue(key, out var profileName) ? profileName : null;
         }
 
-        /// <summary>Prüft, ob für einen Charakter-Namen eine Zuordnung existiert.</summary>
+        /// <summary>Prüft, ob for einen Charakter-Namen eine Zuordnung existiert.</summary>
         public bool IsMapped(string? characterName) => Resolve(characterName) != null;
 
-        /// <summary>Schnappschuss aller Zuordnungen (normalisierte Schlüssel) — für Persistenz/Tests.</summary>
+        /// <summary>Schnappschuss aller Zuordnungen (normalisierte Schlüssel) — for Persistenz/Tests.</summary>
         public IReadOnlyDictionary<string, string> Snapshot()
         {
             var copy = new Dictionary<string, string>(_map);

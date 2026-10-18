@@ -17,7 +17,7 @@ namespace RagnaController.Models
             public string Label { get; set; } = "";
             public bool IsGroundSpell { get; set; } = false;
 
-            // NEW: Ground Spell Properties
+            // NEW: Groand Spell Properties
             public int GroundSpellDurationSec { get; set; } = 10;      // How long the ground effect persists
             public int GroundSpellTickIntervalMs { get; set; } = 1000; // Damage/heal tick interval
             public float GroundSpellRadius { get; set; } = 3f;         // AoE radius in meters/tiles

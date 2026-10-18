@@ -11,21 +11,21 @@ namespace RagnaController.Core
     /// TASK-1603: Multi-Client Input Router.
     ///
     /// Sendet Input gezielt an ein bestimmtes RO-Client-Fenster (HWND),
-    /// anstatt globale SendInput-Aufrufe zu verwenden die immer nur das
-    /// Vordergrund-Fenster treffen.
+    /// anstatt globale SendInput-Aufrufe to verwenden die immer only das
+    /// Vordergrand-Fenster treffen.
     ///
     /// Architektur:
     /// - SendKeyToClient(hwnd, key, keyDown): PostMessage WM_KEYDOWN/WM_KEYUP
-    ///   → funktioniert auch wenn RO nicht im Vordergrund ist
-    ///   → keine Fokus-Diebstahl, kein AttachThreadInput nötig
+    ///   → funktioniert auch if RO nicht im Vordergrand is
+    ///   → keine Fokus-Diebstahl, no AttachThreadInput nötig
     /// - SendMouseClickToClient(hwnd, x, y): PostMessage WM_LBUTTONDOWN/UP
-    /// - GetClientHwnd(processName): über MultiClientWindowTracker (TASK-1602)
+    /// - GetClientHwnd(processName): about MultiClientWindowTracker (TASK-1602)
     /// - RoExePath aus Settings: Prozessname aus Dateipfad extrahieren (myRO.exe → myro)
     /// - PreferredClientHwnd (WindowSwitcher.FEAT-015): manuelle Client-Auswahl
     ///
-    /// Fallback: SendInput + AttachThreadInput für Spiele die PostMessage blockieren.
+    /// Fallback: SendInput + AttachThreadInput for Spiele die PostMessage blockieren.
     ///
-    /// Alle Methoden sind headless-testbar durch INativeMethods-Injektion.
+    /// All Methoden are headless-testbar durch INativeMethods-Injektion.
     /// </summary>
     public sealed class MultiClientInputRouter : IDisposable
     {
@@ -41,8 +41,8 @@ namespace RagnaController.Core
         private string? _activeProcessName;
 
         /// <summary>
-        /// Setzt den bevorzugten Client-HWND für einen Prozessnamen.
-        /// Wenn gesetzt, wird bei Send*ToClient dieses HWND bevorzugt (sofern alive).
+        /// Setzt den bevorzugten Client-HWND for einen Prozessnamen.
+        /// If gesetzt, is bei Send*ToClient this HWND bevorzugt (sofern alive).
         /// </summary>
         public void SetPreferredClientHwnd(string processName, IntPtr hwnd)
         {
@@ -54,7 +54,7 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Setzt den aktiven Prozessname (z.B. "ragexe" aus Settings.FocusLockProcess
-        /// oder extrahiert aus Settings.RoExePath).
+        /// or extrahiert aus Settings.RoExePath).
         /// </summary>
         public void SetActiveProcessName(string? processName)
         {
@@ -66,7 +66,7 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Extrahiert den Prozessnamen aus einem Dateipfad (z.B. "C:\RO\myRO.exe" → "myro").
-        /// Wird verwendet um Settings.RoExePath in einen Fenster-Filter zu verwandeln.
+        /// Is verwendet um Settings.RoExePath in einen Fenster-Filter to verwandeln.
         /// </summary>
         public static string? ExtractProcessNameFromPath(string? exePath)
         {
@@ -101,11 +101,11 @@ namespace RagnaController.Core
         #region Client-HWND Auflösung
 
         /// <summary>
-        /// Löst den besten Client-HWND für einen Prozessnamen auf.
+        /// Löst den besten Client-HWND for einen Prozessnamen on.
         /// Reihenfolge:
         /// 1. Bevorzugtes HWND (manuelle Auswahl durch User, SetPreferredClientHwnd)
         /// 2. Erstes lebendes HWND aus MultiClientWindowTracker
-        /// 3. IntPtr.Zero (kein Client gefunden)
+        /// 3. IntPtr.Zero (no Client gefunden)
         /// </summary>
         public IntPtr ResolveClientHwnd(string processName)
         {
@@ -113,13 +113,13 @@ namespace RagnaController.Core
 
             lock (_lock)
             {
-                // 1. Bevorzugtes HWND (manuell gesetzt)
+                // 1. Bevorzugtes HWND (manual gesetzt)
                 if (_preferredHwndByProcess.TryGetValue(key, out var preferred) && preferred != IntPtr.Zero)
                 {
                     if (_windowTracker.IsAlive(preferred))
                         return preferred;
 
-                    // Bevorzugtes HWND ist tot → aus Cache entfernen
+                    // Bevorzugtes HWND is tot → aus Cache entfernen
                     _preferredHwndByProcess.Remove(key);
                 }
             }
@@ -137,7 +137,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Löst den Client-HWND für den aktuell aktiven Prozessnamen (aus Settings).
+        /// Löst den Client-HWND for den aktuell aktiven Prozessnamen (aus Settings).
         /// </summary>
         public IntPtr ResolveActiveClientHwnd()
         {
@@ -156,11 +156,11 @@ namespace RagnaController.Core
         /// <summary>
         /// Sendet Tastendruck an einen bestimmten Client-HWND via PostMessage.
         ///
-        /// PostMessage funktioniert auch wenn das Zielfenster nicht im Vordergrund ist,
-        /// und stiehlt keinen Fokus. Dies ist der bevorzugte Pfad für Multi-Client-Betrieb.
+        /// PostMessage funktioniert auch if das Zielfenster nicht im Vordergrand is,
+        /// and stiehlt keinen Fokus. Dies is der bevorzugte Pfad for Multi-Client-Betrieb.
         ///
-        /// Fallback: Wenn PostMessage fehlschlägt (z.B. Spiel blockiert gesendete Nachrichten),
-        /// wird SendInput + AttachThreadInput verwendet (erfordert Vordergrund-Fenster kurzzeitig).
+        /// Fallback: If PostMessage fehlschlägt (z.B. Spiel blockiert gesendete Nachrichten),
+        /// is SendInput + AttachThreadInput verwendet (erfordert Vordergrand-Fenster kurzzeitig).
         /// </summary>
         public bool SendKeyToClient(IntPtr hwnd, VirtualKey key, bool keyDown)
         {
@@ -179,12 +179,12 @@ namespace RagnaController.Core
             System.Diagnostics.Debug.WriteLine(
                 $"[MultiClientInputRouter] PostMessage WM_KEY{(keyDown ? "DOWN" : "UP")} VK={vk:x} an HWND={hwnd} fehlgeschlagen.");
 
-            // Fallback: SendInput (erfordert Vordergrund-Fenster)
+            // Fallback: SendInput (erfordert Vordergrand-Fenster)
             return SendKeyViaSendInput(key, keyDown);
         }
 
         /// <summary>
-        /// Sendet Tastendruck an den aktiv ausgewählten Client (aus Settings).
+        /// Sendet Tastendruck an den active ausgewählten Client (aus Settings).
         /// </summary>
         public bool SendKeyToActiveClient(VirtualKey key, bool keyDown)
         {
@@ -201,7 +201,7 @@ namespace RagnaController.Core
         /// <summary>
         /// Sendet Mausklick an einen bestimmten Client-HWND via PostMessage.
         ///
-        /// x, y sind Client-Koordinaten (relativ zum Client-Bereich des Fensters).
+        /// x, y are Client-Koordinaten (relativ zum Client-Bereich des Fensters).
         /// </summary>
         public bool SendMouseClickToClient(IntPtr hwnd, int x, int y, bool leftButton = true)
         {
@@ -222,12 +222,12 @@ namespace RagnaController.Core
             System.Diagnostics.Debug.WriteLine(
                 $"[MultiClientInputRouter] PostMessage WM_LBUTTON{(leftButton ? "" : "R")} an HWND={hwnd} fehlgeschlagen.");
 
-            // Fallback nicht verfügbar für Maus (würden Cursor bewegen) → false
+            // Fallback nicht verfügbar for Maus (würden Cursor bewegen) → false
             return false;
         }
 
         /// <summary>
-        /// Sendet Mausklick an den aktiv ausgewählten Client.
+        /// Sendet Mausklick an den active ausgewählten Client.
         /// </summary>
         public bool SendMouseClickToActiveClient(int x, int y, bool leftButton = true)
         {
@@ -242,7 +242,7 @@ namespace RagnaController.Core
         #region Helfer
 
         /// <summary>
-        /// Baut einen lParam Wert für PostMessage Maus-Nachrichten.
+        /// Baut einen lParam Wert for PostMessage Maus-Nachrichten.
         /// LOWORD = x (signed 16-bit), HIWORD = y (signed 16-bit).
         /// </summary>
         private static int MakeLParam(int x, int y)
@@ -254,7 +254,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Baut einen lParam Wert für PostMessage Tastatur-Nachrichten.
+        /// Baut einen lParam Wert for PostMessage Tastatur-Nachrichten.
         /// Bit 30 = Übergangszustand (1 bei KeyUp, 0 bei KeyDown).
         /// </summary>
         private static int MakeKeyLParam(int transitionState)
@@ -266,10 +266,10 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Fallback: SendInput für Tastatur (erfordert Vordergrund-Fenster / AttachThreadInput).
-        /// Hinweis: Der öffentliche INPUT-Typ wird vom INativeMethods-Interface verwendet.
-        /// Diese Implementierung nutzt den PostMessage-Pfad als primären Weg;
-        /// der SendInput-Fallback ist derzeit deaktiviert (gibt false zurück).
+        /// Fallback: SendInput for Tastatur (erfordert Vordergrand-Fenster / AttachThreadInput).
+        /// Note: The öffentliche INPUT-Typ is vom INativeMethods-Interface verwendet.
+        /// These Implementierung nutzt den PostMessage-Pfad als primären Weg;
+        /// der SendInput-Fallback is derzeit disabled (gibt false zurück).
         /// </summary>
         private bool SendKeyViaSendInput(VirtualKey key, bool keyDown)
         {

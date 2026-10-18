@@ -27,7 +27,7 @@ namespace RagnaController.Core
 
         public void Stop()
         {
-            // ROB-001: Loop deterministisch beenden BEVOR State nullt wird — sonst kann ein
+            // ROB-001: Loop deterministisch beenden BEVOR State nullt is — sonst kann ein
             // Watchdog-Restart (Stop→Start) zwei parallele Tick-Loops erzeugen.
             var cts = _cts;
             var loop = _loop;
@@ -35,12 +35,12 @@ namespace RagnaController.Core
             cts?.Cancel();
             try
             {
-                // Bounded wait: Loop läuft nur Task.Delay/PeriodicTimer, bricht prompt ab.
+                // Bounded wait: Loop läuft only Task.Delay/PeriodicTimer, bricht prompt ab.
                 if (loop != null) loop.Wait(500);
             }
             catch (AggregateException)
             {
-                // Loop fängt intern alle Exceptions; Abbruch-Exceptions sind erwartet.
+                // Loop fängt intern all Exceptions; Abbruch-Exceptions are erwartet.
             }
 
             cts?.Dispose(); // erst NACH dem Wait: Token wird nicht mehr gebraucht
@@ -51,7 +51,7 @@ namespace RagnaController.Core
 
         private async Task RunLoop(CancellationToken token)
         {
-            // Timer läuft immer mit dem Basis-Intervall.
+            // Timer läuft immer with dem Basis-Intervall.
             // BatteryThrottle überspringt jeden zweiten Tick intern —
             // so ändert sich das Throttling zur Laufzeit ohne Timer-Neustart.
             using var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(IntervalMs));
@@ -74,8 +74,8 @@ namespace RagnaController.Core
                         }
                         catch (Exception ex)
                         {
-                            // CRITICAL: Alle Exceptions fangen, damit ein einzelner Bug in einem Makro oder Profil
-                            // niemals den kompletten 125Hz-Thread tötet. Loggen und weiterlaufen.
+                            // CRITICAL: All Exceptions fangen, damit ein einzelner Bug in einem Makro or Profil
+                            // niemals den kompletten 125Hz-Thread tötet. Loggen and weiterlaufen.
                             System.Diagnostics.Debug.WriteLine($"[BackgroundTickProvider] Exception im Tick-Loop: {ex.GetType().Name}: {ex.Message}");
                         }
         }

@@ -3,7 +3,7 @@ using System;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Interface für Window-Tracking (Focus Lock, Foreground State).
+    /// Interface for Window-Tracking (Focus Lock, Foregroand State).
     /// </summary>
     public interface IWindowTracker
     {

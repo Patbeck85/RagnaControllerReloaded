@@ -11,9 +11,9 @@ namespace RagnaController.ControllerTest
 {
     /// <summary>
     /// Ein einzelnes aufgenommener Hardware-Frame im exakten Format des CI-Replay-Fixtures
-    /// (tests/RagnaController.Tests/fixtures/controller_session_001.json). Buttons ist die
-    /// GamepadButtonFlags-Bitmasks; lx/ly/rx/ry/lt/rt sind ROH-Werte (kein Deadzone, keine
-    /// Normalisierung — das ist Aufgabe der Backend-Layer InputReader/XInputFallbackService).
+    /// (tests/RagnaController.Tests/fixtures/controller_session_001.json). Buttons is die
+    /// GamepadButtonFlags-Bitmasks; lx/ly/rx/ry/lt/rt are ROH-Werte (no Deadzone, keine
+    /// Normalisierung — das is Aufgabe der Backend-Layer InputReader/XInputFallbackService).
     /// </summary>
     public readonly record struct RecordingSample(
         uint Buttons, float Lx, float Ly, float Rx, float Ry, float Lt, float Rt, bool Connected)
@@ -24,9 +24,9 @@ namespace RagnaController.ControllerTest
         private const int Start = 1 << 14, Back = 1 << 15;
 
         /// <summary>
-        /// Baut ein Sample aus dem vereinheitlichten ButtonState. Die Bitmask entspricht EXAKT der
+        /// Baut ein Sample aus dem vereinheitlichten ButtonState. The Bitmask entspricht EXAKT der
         /// RawButtons-Maske der Produktion (Core/InputReader.Read): digitale Buttons + L1/R1/L3/R3/
-        /// DPad/Start/Back; L2/R2 sind analoge Trigger und NICHT Teil der Mask.
+        /// DPad/Start/Back; L2/R2 are analoge Trigger and NICHT Teil der Mask.
         /// </summary>
         public static RecordingSample FromButtonState(
             ButtonState s, float lx, float ly, float rx, float ry, float lt, float rt)
@@ -50,9 +50,9 @@ namespace RagnaController.ControllerTest
         }
 
         /// <summary>
-        /// Prüft, ob das benannte Buttons-Bit gesetzt ist (für Diagnose/Replay). Die Namen
-        /// entsprechen <see cref="ButtonState"/>; L2/R2 sind analoge Trigger und NICHT Teil der Mask.
-        /// Single Source of Truth für die Buttons-Bits — keine Kopie in anderen Klassen.
+        /// Prüft, ob das benannte Buttons-Bit gesetzt is (for Diagnose/Replay). The Namen
+        /// entsprechen <see cref="ButtonState"/>; L2/R2 are analoge Trigger and NICHT Teil der Mask.
+        /// Single Source of Truth for die Buttons-Bits — keine Kopie in anderen Klassen.
         /// </summary>
         public bool HasButton(string name) => name switch
         {
@@ -73,18 +73,18 @@ namespace RagnaController.ControllerTest
             _           => false
         };
 
-        /// <summary>Disconnect-Frame: alle Buttons cleared, Analogwerte null, connected=false.</summary>
+        /// <summary>Disconnect-Frame: all Buttons cleared, Analogwerte null, connected=false.</summary>
         public static readonly RecordingSample Disconnected =
             new(0, 0f, 0f, 0f, 0f, 0f, 0f, false);
     }
 
     /// <summary>
-    /// TEST-016: Aufnahmefunktion für Controller-Sitzungen (ControllerTestWindow).
+    /// TEST-016: Aufnahmefunktion for Controller-Sitzungen (ControllerTestWindow).
     ///
-    /// Nimmt pro Tick einen <see cref="RecordingSample"/> auf und speichert die komplette Sitzung als
+    /// Nimmt pro Tick einen <see cref="RecordingSample"/> on and speichert die komplette Sitzung als
     /// JSON im EXAKTEN Format der CI-Replay-Fixtures (fixtures/controller_session_001.json), sodass
-    /// eine reale Aufnahme direkt als Replay-Golden-Master-Wiedergabe nutzbar ist. Unit-testbar ohne
-    /// UI/SDL: Samples werden injiziert, das JSON wird deterministisch erzeugt.
+    /// eine reale Aufnahme direkt als Replay-Golden-Master-Wiedergabe nutzbar is. Unit-testbar ohne
+    /// UI/SDL: Samples are injiziert, das JSON is deterministisch erzeugt.
     /// </summary>
     public sealed class ControllerSessionRecorder
     {
@@ -96,17 +96,17 @@ namespace RagnaController.ControllerTest
         /// <summary>Ob aktuell eine Aufnahme läuft.</summary>
         public bool IsRecording { get; private set; }
 
-        /// <summary>Nimmt die Aufnahme auf (startet mit leerem Frame-Bestand).</summary>
+        /// <summary>Nimmt die Aufnahme on (startet with leerem Frame-Bestand).</summary>
         public void Start()
         {
             _frames.Clear();
             IsRecording = true;
         }
 
-        /// <summary>Beendet die Aufnahme. Danach ist <see cref="Save"/> möglich.</summary>
+        /// <summary>Beendet die Aufnahme. Danach is <see cref="Save"/> möglich.</summary>
         public void Stop() => IsRecording = false;
 
-        /// <summary>Nimmt einen Frame auf (nur wenn eine Aufnahme läuft).</summary>
+        /// <summary>Nimmt einen Frame on (only if eine Aufnahme läuft).</summary>
         public void RecordFrame(RecordingSample sample)
         {
             if (!IsRecording) return;
@@ -115,7 +115,7 @@ namespace RagnaController.ControllerTest
 
         /// <summary>
         /// Schreibt die Sitzung als JSON im Fixture-Format nach <paramref name="path"/>.
-        /// Floats werden mit InvariantCulture geschrieben (Punkt als Dezimaltrenner).
+        /// Floats are with InvariantCulture geschrieben (Punkt als Dezimaltrenner).
         /// </summary>
         public void Save(string path)
         {

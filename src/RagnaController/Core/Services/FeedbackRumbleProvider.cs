@@ -3,15 +3,15 @@ using System;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Adaptiert <see cref="IFeedbackProvider"/> auf <see cref="IRumbleProvider"/>
-    /// für Haptic Feedback im Radial Menu (UX-016).
+    /// Adaptiert <see cref="IFeedbackProvider"/> on <see cref="IRumbleProvider"/>
+    /// for Haptic Feedback im Radial Menu (UX-016).
     ///
     /// Mapping:
-    ///   * Jeder nicht-Null-Rumble → TriggerSkillFired() (Rumble an)
+    ///   * Every nicht-Null-Rumble → TriggerSkillFired() (Rumble an)
     ///   * Beide null/0 → StopRumble() (Rumble aus)
     ///
-    /// Dies ist eine vereinfachte Brücke: Die echte DualSense-Rumble-Steuerung
-    /// erfolgt über den FeedbackProvider; hier wird nur ein/an aus unterschieden.
+    /// Dies is eine vereinfachte Brücke: The echte DualSense-Rumble-Steuerung
+    /// erfolgt about den FeedbackProvider; hier is only ein/an aus unterschieden.
     /// </summary>
     internal sealed class FeedbackRumbleProvider : IRumbleProvider
     {

@@ -5,8 +5,8 @@ using System.Diagnostics;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Steam Deck Quick-Access Radial Menu — Kreisradial-Menü für schnellen Zugriff
-    /// auf häufig verwendete Befehle (Calibrate, Remap, Profile, Telemetry, etc.).
+    /// Steam Deck Quick-Access Radial Menu — Kreisradial-Menü for schnellen Zugriff
+    /// on häufig verwendete Befehle (Calibrate, Remap, Profile, Telemetry, etc.).
     /// </summary>
     public sealed class RadialMenuService : IDisposable
     {

@@ -15,13 +15,13 @@ namespace RagnaController.Core
     /// </summary>
     public class Messenger : IMessenger
     {
-        // Starke Referenzen — Handler werden bis Dispose gehalten
+        // Starke Referenzen — Handler are bis Dispose gehalten
         private readonly System.Collections.Concurrent.ConcurrentDictionary<Type, Action<object>[]> _handlers = new();
 
         public void Publish<T>(T message) where T : class
         {
             if (!_handlers.TryGetValue(typeof(T), out var arr)) return;
-            // Snapshot-Referenz — keine Allokation (Array ist immutable nach CoW-Swap)
+            // Snapshot-Referenz — keine Allokation (Array is immutable nach CoW-Swap)
             foreach (var h in arr)
                 h(message);
         }

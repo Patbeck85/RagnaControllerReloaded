@@ -47,7 +47,7 @@ namespace RagnaController.Core
                 string jsonContent = JsonSerializer.Serialize(profile, AppJsonContext.Default.Profile);
                 string filename = SanitizeFilename(profile.Name) + ".ragnaprofile.json";
 
-                // Raw JSON string — anonymous types sind nicht AOT-kompatibel
+                // Raw JSON string — anonymous types are nicht AOT-kompatibel
                 string safeContent = jsonContent
                     .Replace("\\", "\\\\")
                     .Replace("\"", "\\\"")

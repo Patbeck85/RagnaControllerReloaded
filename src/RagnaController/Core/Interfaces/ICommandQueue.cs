@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Interface für synchrone Befehlsverarbeitung in Tests.
+    /// Interface for synchrone Befehlsverarbeitung in Tests.
     /// </summary>
     public interface ICommandQueue
     {

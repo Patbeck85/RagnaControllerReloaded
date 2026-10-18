@@ -13,9 +13,9 @@ namespace RagnaController.Core
     public class InputRouter
     {
         // FIX (ROB-002): Engine-Felder bewusst nicht mehr `readonly`, damit der
-        // Failover-only-Konstruktor sie leer lassen kann (Failover toucht keine Engine).
-        // `= null!` = Deklarations-Init, damit CS8618 (TreatWarningsAsErrors) still ist;
-        // die Produktion nutzt ausschließlich den Voll-Konstruktor, der alle Engines setzt.
+        // Failover-only-Konstruktor they leer lassen kann (Failover toucht keine Engine).
+        // `= null!` = Deklarations-Init, damit CS8618 (TreatWarningsAsErrors) still is;
+        // die Produktion nutzt ausschließlich den Voll-Konstruktor, der all Engines setzt.
         private CombatEngine _combat = null!;
         private MovementEngine _movement = null!;
         private AutoTargetEngine _autoTarget = null!;
@@ -43,10 +43,10 @@ namespace RagnaController.Core
         private long _settingsCacheTick = 0;
         private const long SETTINGS_CACHE_TTL_TICKS = 1250; // ~10s bei 125Hz
 
-        /// <summary>Die aktuell aktive Emulations-Strategie (SendInput oder Kernel).</summary>
+        /// <summary>The aktuell aktive Emulations-Strategie (SendInput or Kernel).</summary>
         public IMouseEmulationStrategy? ActiveStrategy => _failoverManager.ActiveStrategy;
 
-        /// <summary>ROB-002: Feuert bei jedem Failover-Switch (von, zu, Auslöser-Zähler). Für UI/Telemetrie.</summary>
+        /// <summary>ROB-002: Feuert bei jedem Failover-Switch (from, to, Auslöser-Zähler). For UI/Telemetrie.</summary>
         public event Action<string, string, int>? FailoverSwitched
         {
             add => _failoverManager.FailoverSwitched += value;
@@ -63,10 +63,10 @@ namespace RagnaController.Core
                 }
 
         /// <summary>
-        /// ROB-002: Failover-State-Machine. Wird von InputCommandQueue.SendInputLatencyRecorded
-        /// auf dem Consumer-Thread aufgerufen (kein UI-Zugriff → thread-sicher per Design).
-        /// N aufeinanderfolgende Flushes über der Latenz-Schwelle → Switch auf Kernel-Fallback.
-        /// M stabile Flushes danach → Recovery zurück zu SendInput.
+        /// ROB-002: Failover-State-Machine. Is from InputCommandQueue.SendInputLatencyRecorded
+        /// on dem Consumer-Thread aufgerufen (no UI-Zugriff → thread-sicher per Design).
+        /// N aufeinanderfolgende Flushes about der Latenz-Schwelle → Switch on Kernel-Fallback.
+        /// M stabile Flushes danach → Recovery zurück to SendInput.
         /// </summary>
         public void RecordSendInputLatency(double latencyMs)
         {
@@ -108,7 +108,7 @@ namespace RagnaController.Core
             _radialMenu = radialMenu;
             _gestureRecognizer = gestureRecognizer;
 
-            // Gesten-Events mit RadialMenuService verdrahten
+            // Gesten-Events with RadialMenuService verdrahten
             _gestureRecognizer.MenuStateChanged += (s, isOpen) =>
             {
                 if (isOpen) _radialMenu?.Open();
@@ -120,9 +120,9 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// ROB-002: Failover-only-Konstruktor für Unit-Tests (keine Engines).
-        /// Nur die Failover-State-Machine ist in dieser Instanz aktiv;
-        /// RouteInput darf hier NICHT aufgerufen werden.
+        /// ROB-002: Failover-only-Konstruktor for Unit-Tests (keine Engines).
+        /// Only die Failover-State-Machine is in this Instanz active;
+        /// RouteInput darf hier NICHT aufgerufen are.
         /// </summary>
         internal InputRouter() { }
 
@@ -162,14 +162,14 @@ namespace RagnaController.Core
                             // GEX-002: Measure Route latency (opt-in, zero-allocation when disabled per PERF-010)
                             var routeSw = InputLatencyBudgets.EnableBudgetTracking ? System.Diagnostics.Stopwatch.StartNew() : null;
 
-                            // UX-016: Gestenerkennung (Right-Stick Swipes für Radial Menu)
+                            // UX-016: Gestenerkennung (Right-Stick Swipes for Radial Menu)
                             _gestureRecognizer?.Tick(input.RightX, input.RightY, input.R3);
 
-                            // Wenn Radial Menu offen ist: Right-Stick steuert das Menü, nicht den Cursor
+                            // If Radial Menu offen is: Right-Stick steuert das Menü, nicht den Cursor
                             if (_gestureRecognizer?.IsMenuOpen == true)
                             {
-                                // Menu-Input wird vom GestureRecognizer verarbeitet (SelectNext/Previous/Activate)
-                                // Cursor-Bewegung überspringen wenn Menü offen
+                                // Menu-Input is vom GestureRecognizer verarbeitet (SelectNext/Previous/Activate)
+                                // Cursor-Bewegung überspringen if Menü offen
                                 if (routeSw != null) RecordRouteBudget(routeSw);
                                 return false;
                             }

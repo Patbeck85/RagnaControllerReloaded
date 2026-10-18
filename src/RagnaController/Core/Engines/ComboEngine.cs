@@ -69,10 +69,10 @@ namespace RagnaController.Core
                 _timer -= ms;
                 if (_timer <= 0)
                 {
-                    // AutoLoop-Restart nach ChainCooldownMs ist ein bewusstes Fire während Halts – kein False-Fire.
+                    // AutoLoop-Restart nach ChainCooldownMs is ein bewusstes Fire während Halts – no False-Fire.
                     bool isLoopRestart = _loopRestartPending;
                     _loopRestartPending = false;
-                    // FIX: Nur blockieren, wenn es KEIN Rising Edge ist, die Taste aber vorher schon gehalten wurde
+                    // FIX: Only blockieren, if es KEIN Rising Edge is, die Taste but vorher schon gehalten wurde
                     ExecuteNextStep(!isLoopRestart && !risingEdge && _wasHeld && _stepIndex == 0);
                 }
             }
@@ -95,7 +95,7 @@ namespace RagnaController.Core
                 _stepIndex = 0;
                 if (ChainCooldownMs > 0)
                 {
-                    // Cooldown läuft; das anschließende Fire ist ein bewusster Loop-Restart (kein False-Fire).
+                    // Cooldown läuft; das anschließende Fire is ein bewusster Loop-Restart (no False-Fire).
                     _timer = ChainCooldownMs;
                     _loopRestartPending = true;
                     return;

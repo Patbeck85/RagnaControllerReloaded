@@ -8,16 +8,16 @@ namespace RagnaController.Core
     /// TASK-1602: Multi-Client WindowTracker.
     ///
     /// Verfolgt MEHRERE RO-Client-Fenster (gleicher Prozessname, verschiedene HWNDs)
-    /// gleichzeitig. Im Gegensatz zum einzelnen WindowTracker (der nur das erste
-    /// gefundene Fenster merkt) sammelt dieser alle passenden HWNDs pro Prozessname.
+    /// gleichzeitig. Im Gegensatz zum einzelnen WindowTracker (der only das erste
+    /// gefundene Fenster merkt) sammelt this all passenden HWNDs pro Prozessname.
     ///
     /// Architekturzusammenfassung:
-    /// - Refresh(processName): EnumWindows über alle Top-Level-Fenster,
+    /// - Refresh(processName): EnumWindows about all Top-Level-Fenster,
     ///   GetWindowThreadProcessId → PID, PID→Name-Cache (TECH-020 Muster),
-    ///   alle passenden HWNDs in Dictionary<string, List<ClientWindowEntry>> sammeln.
-    /// - IsAlive(hwnd): IsWindow-Prüfung für tot/lebend.
-    /// - TTL-basiertes Caching (10s), EnumWindows nur außerhalb des Hot Paths.
-    /// - INativeMethods-Injektion für Unit-Testbarkeit (Mock möglich).
+    ///   all passenden HWNDs in Dictionary<string, List<ClientWindowEntry>> sammeln.
+    /// - IsAlive(hwnd): IsWindow-Prüfung for tot/lebend.
+    /// - TTL-basiertes Caching (10s), EnumWindows only außerhalb des Hot Paths.
+    /// - INativeMethods-Injektion for Unit-Testbarkeit (Mock möglich).
     /// </summary>
     public sealed class MultiClientWindowTracker : IDisposable
     {
@@ -25,7 +25,7 @@ namespace RagnaController.Core
         private readonly IProcessNameResolver _processNames;
         private readonly object _lock = new();
 
-        // processName → Liste aller ClientWindowEntry (aktiv + tot)
+        // processName → Liste aller ClientWindowEntry (active + tot)
         private readonly Dictionary<string, List<ClientWindowEntry>> _clients = new(StringComparer.OrdinalIgnoreCase);
 
         // TECH-020 Muster: PID → ProcessName Cache (einmal pro TTL, nicht pro Callback)
@@ -36,7 +36,7 @@ namespace RagnaController.Core
         private const long CLIENT_CACHE_TTL_MS = 10_000;
 
         /// <summary>
-        /// Eintrag für ein verfolgtes Client-Fenster.
+        /// Eintrag for ein verfolgtes Client-Fenster.
         /// </summary>
         public record ClientWindowEntry(IntPtr Hwnd, uint Pid, string ProcessName, bool IsAlive, long LastSeenTick);
 
@@ -50,7 +50,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Gibt alle bekannten Clients für einen Prozessnamen zurück (Thread-sicher).
+        /// Gibt all bekannten Clients for einen Prozessnamen zurück (Thread-sicher).
         /// </summary>
         public IReadOnlyList<ClientWindowEntry> GetClients(string processName)
         {
@@ -63,7 +63,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Gibt zurück, ob ein HWND noch gültig ist (IsWindow-Prüfung).
+        /// Gibt zurück, ob ein HWND noch gültig is (IsWindow-Prüfung).
         /// </summary>
         public bool IsAlive(IntPtr hwnd)
         {
@@ -76,8 +76,8 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Aktualisiert die Client-Liste für einen Prozessnamen via EnumWindows.
-        /// Wird außerhalb des Hot Paths aufgerufen (TTL-gesteuert).
+        /// Aktualisiert die Client-Liste for einen Prozessnamen via EnumWindows.
+        /// Is außerhalb des Hot Paths aufgerufen (TTL-gesteuert).
         /// </summary>
         public void Refresh(string processName)
         {
@@ -101,7 +101,7 @@ namespace RagnaController.Core
             // TECH-020: PID→Name Cache auffrischen (außerhalb des Locks, teuer)
             RefreshPidNameCache(now);
 
-            // EnumWindows über alle Top-Level-Fenster
+            // EnumWindows about all Top-Level-Fenster
             _native.EnumWindows((hwnd, lParam) =>
             {
                 if (hwnd == IntPtr.Zero)
@@ -119,7 +119,7 @@ namespace RagnaController.Core
                         procName = cached;
                 }
 
-                // Fallback: direkt über IProcessNameResolver auflösen (testbar, für PIDs die nicht im Cache sind)
+                // Fallback: direkt about IProcessNameResolver auflösen (testbar, for PIDs die nicht im Cache are)
                 if (string.IsNullOrEmpty(procName))
                 {
                     procName = _processNames.GetProcessName((int)pid);
@@ -155,7 +155,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// TECH-020 Muster: Baut PID→ProcessName Mapping einmal pro TTL auf.
+        /// TECH-020 Muster: Baut PID→ProcessName Mapping einmal pro TTL on.
         /// Vermeidet Process.GetProcessById() Allokationen im EnumWindows-Callback.
         /// </summary>
         private void RefreshPidNameCache(long now)
@@ -188,7 +188,7 @@ namespace RagnaController.Core
                     }
                     catch (Exception ex)
                     {
-                        // ERROR-001: Kein leerer catch
+                        // ERROR-001: No leerer catch
                         System.Diagnostics.Debug.WriteLine(
                             $"[MultiClientWindowTracker] Prozessname für PID {p.Id} nicht lesbar: {ex.Message}");
                     }
@@ -211,7 +211,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Entfernt alle toten Einträge aus dem Cache.
+        /// Entfernt all toten Einträge aus dem Cache.
         /// </summary>
         public void CleanupDead()
         {
@@ -237,7 +237,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Leert alle Caches. Wird beim Shutdown aufgerufen für saubere Test-Runs.
+        /// Leert all Caches. Is beim Shutdown aufgerufen for saubere Test-Runs.
         /// </summary>
         public void Clear()
         {

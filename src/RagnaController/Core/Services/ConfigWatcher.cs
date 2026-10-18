@@ -4,9 +4,9 @@ using System.IO;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// TECH-059: Überwacht settings.json und profiles.json auf Änderungen
-    /// und feuert ein Event, damit das Profil neu geladen werden kann,
-    /// ohne die Anwendung neu starten zu müssen (Config Hot-Reload).
+    /// TECH-059: Überwacht settings.json and profiles.json on Änderungen
+    /// and feuert ein Event, damit das Profil neu geladen are kann,
+    /// ohne die Anwendung neu starten to müssen (Config Hot-Reload).
     /// </summary>
     public class ConfigWatcher : IDisposable
     {

@@ -90,7 +90,7 @@ namespace RagnaController.Views.Windows
 
         private void InitializeOverlayCustomization()
                 {
-                    // OverlayThemeCombo — mit lokalisierten Strings
+                    // OverlayThemeCombo — with lokalisierten Strings
                     var themes = new[]
                     {
                         new ComboBoxItem { Content = LocalizationManager.GetLocalizedString("Settings_OverlayTheme_Neon"), Tag = Settings.OverlayThemeType.Neon },
@@ -345,8 +345,8 @@ namespace RagnaController.Views.Windows
         private void BtnCancel_Click(object sender, RoutedEventArgs e) => Close();
 
         /// <summary>
-        /// Kopiert alle aktuellen UI-Kontrollwerte in das Settings-Modell, persistiert und benachrichtigt den Caller.
-        /// Einzige Speicherpfad (DRY) — wird von BtnApply_Click UND Window_Closing aufgerufen (TECH-030).
+        /// Kopiert all aktuellen UI-Kontrollwerte in das Settings-Modell, persistiert and benachrichtigt den Caller.
+        /// Einzige Speicherpfad (DRY) — is from BtnApply_Click UND Window_Closing aufgerufen (TECH-030).
         /// </summary>
         private void SaveAllSettings()
         {
@@ -437,7 +437,7 @@ namespace RagnaController.Views.Windows
             // Use a short-lived ControllerService — properly disposed after calibration
             using var controllerSvc = new ControllerService();
            
-            // Wait briefly for background SDL init to complete
+            // Wait briefly for backgroand SDL init to complete
             await Task.Delay(800);
            
             if (!controllerSvc.IsConnected)
@@ -498,7 +498,7 @@ namespace RagnaController.Views.Windows
             }
             catch (Exception ex)
             {
-                // ERROR-001: kein stiller Fehler — Kalibrierung abbrechen, UI wieder freischalten.
+                // ERROR-001: no stiller Fehler — Kalibrierung abbrechen, UI wieder freischalten.
                 System.Diagnostics.Debug.WriteLine($"[SettingsWindow] Calibration failed: {ex.Message}");
                 EngineStateText.Foreground = Brushes.OrangeRed;
                 EngineStateText.Text = "Calibration failed";
@@ -635,7 +635,7 @@ namespace RagnaController.Views.Windows
             {
                 // Extract the process name (without ".exe") from the selected path
                 // and apply it as the FocusLock target — this is what actually
-                // gets matched against the foreground window's process name.
+                // gets matched against the foregroand window's process name.
                 string processName = System.IO.Path.GetFileNameWithoutExtension(dialog.FileName);
                 if (!string.IsNullOrWhiteSpace(processName))
                 {

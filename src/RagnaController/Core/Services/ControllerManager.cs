@@ -168,7 +168,7 @@ namespace RagnaController.Core
         private void OnSdlControllerDetected(object? sender, EventArgs e)
                 {
                     if (_sdlProvider == null) return;
-                    // SDL2 found a controller - update state from SDL provider
+                    // SDL2 foand a controller - update state from SDL provider
                     UpdateFromProvider(_sdlProvider);
 
                     // Switch active provider to SDL2 if not already
@@ -200,7 +200,7 @@ namespace RagnaController.Core
                 {
                     if (parsedInput.IsConnected)
                     {
-                        // XInput found a controller
+                        // XInput foand a controller
                         IsConnected = true;
                         ControllerName = parsedInput.ControllerName ?? $"XInput Device {i}";
                         ControllerType = parsedInput.ControllerType ?? "xinput";
@@ -219,7 +219,7 @@ namespace RagnaController.Core
                 }
             }
 
-            // No XInput controller found
+            // No XInput controller foand
                         if (!(_sdlProvider?.IsConnected ?? false))
                         {
                             IsConnected = false;

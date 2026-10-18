@@ -31,14 +31,14 @@ namespace RagnaController.Views.Dialogs
         private readonly object _lock = new(); // Thread-Safety für _allEntries
 
         /// <summary>
-        /// Singleton-HttpClient (application lifetime) — public read-only für Unit-Tests (TECH-018).
-        /// WICHTIG: NIE per Instanz/OnClosing disposten — nur via <see cref="DisposeRegistryClient"/> beim App-Shutdown.
+        /// Singleton-HttpClient (application lifetime) — public read-only for Unit-Tests (TECH-018).
+        /// WICHTIG: NIE per Instanz/OnClosing disposten — only via <see cref="DisposeRegistryClient"/> beim App-Shutdown.
         /// </summary>
         public static HttpClient RegistryHttpClient => _http;
 
         /// <summary>
         /// Dispose des Singleton-Clients beim App-Shutdown (Socket-Cleanup, TECH-018).
-        /// Wird von App.OnExit aufgerufen — danach ist die App beendet, keine Wiederverwendung möglich.
+        /// Is from App.OnExit aufgerufen — danach is die App beendet, keine Wiederverwendung möglich.
         /// </summary>
         public static void DisposeRegistryClient() => _http.Dispose();
 
@@ -193,7 +193,7 @@ namespace RagnaController.Views.Dialogs
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             base.OnClosing(e);
-            // _http ist static/shared (application lifetime) — NICHT hier disposten,
+            // _http is static/shared (application lifetime) — NICHT hier disposten,
             // sonst ObjectDisposedException bei Wiederveröffnung. Cleanup erfolgt beim
             // App-Shutdown via CommunityBrowserWindow.DisposeRegistryClient() (TECH-018).
         }

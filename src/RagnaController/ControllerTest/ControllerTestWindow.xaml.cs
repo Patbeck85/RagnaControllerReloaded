@@ -192,7 +192,7 @@ namespace RagnaController.ControllerTest
             }
             catch (Exception ex)
             {
-                // ERROR-001: kein stiller Fehler — Meldung im Status.
+                // ERROR-001: no stiller Fehler — Meldung im Status.
                 RecordingStatus.Text = $"Fehler: {ex.Message}";
                 RecordingStatus.Foreground = System.Windows.Media.Brushes.Red;
             }
@@ -201,7 +201,7 @@ namespace RagnaController.ControllerTest
 
         /// <summary>
         /// Baut aus dem aktuellen Controller-Zustand ein <see cref="RecordingSample"/>: Button-Maske
-        /// aus dem vereinheitlichten ButtonState + ROH-Achsen/Trigger (kein Deadzone, keine
+        /// aus dem vereinheitlichten ButtonState + ROH-Achsen/Trigger (no Deadzone, keine
         /// Normalisierung — exakt das Format der CI-Replay-Fixtures). Dient sowohl TEST-016
         /// (Aufnahme) als auch TEST-017 (Eingabe-Selbsttest) als gemeinsame Datenbasis.
         /// </summary>
@@ -240,16 +240,16 @@ namespace RagnaController.ControllerTest
         // ------------------------------------------------------------------ TEST-017: Eingabe-Selbsttest
 
         /// <summary>
-        /// Spielt ein Sample in den geführten Selbsttest ein (UI-Thread — Timer läuft auf dem
-        /// Dispatcher). Die aktive Kontrolle wird per Prompt angezeigt, bei Abschluss das
-        /// Pass/Fail-Ergebnis mit Latenz p50/p95.
+        /// Spielt ein Sample in den geführten Selbsttest ein (UI-Thread — Timer läuft on dem
+        /// Dispatcher). The aktive Kontrolle is per Prompt angezeigt, bei Abschluss das
+        /// Pass/Fail-Ergebnis with Latenz p50/p95.
         /// </summary>
         private void FeedDiagnostic(RecordingSample sample)
         {
             _diagnostic.FeedSample(sample);
 
-            // Prompt nur bei Wechsel der aktiven Kontrolle aktualisieren, damit die
-            // Bestehens-Feedback-Zeile (✓/✗ + Latenz) nicht sofort überschrieben wird.
+            // Prompt only bei Wechsel der aktiven Kontrolle aktualisieren, damit die
+            // Bestehens-Feedback-Zeile (✓/✗ + Latenz) nicht sofort überschrieben is.
             var current = _diagnostic.CurrentControl;
             int idx = _diagnostic.CurrentIndex;
             if (current != null && idx >= 0 && idx != _diagShownIndex)
@@ -278,7 +278,7 @@ namespace RagnaController.ControllerTest
 
         private void OnDiagnosticControlCompleted(DiagnosticControlResult result)
         {
-            // Dispatcher-safe: Timer läuft bereits auf dem UI-Thread, hier direkt updaten.
+            // Dispatcher-safe: Timer läuft bereits on dem UI-Thread, hier direkt updaten.
             string mark = result.Passed ? "✓" : "✗";
             DiagPrompt.Text = $"{mark} {result.Name} — {result.Prompt}" +
                               $"  (p50 {result.P50Ms:0.#} ms / p95 {result.P95Ms:0.#} ms)";
@@ -318,7 +318,7 @@ namespace RagnaController.ControllerTest
             }
             catch (Exception ex)
             {
-                // ERROR-001: kein stiller Fehler — Meldung im Status.
+                // ERROR-001: no stiller Fehler — Meldung im Status.
                 DiagStatus.Text = $"Export-Fehler: {ex.Message}";
                 DiagStatus.Foreground = System.Windows.Media.Brushes.Red;
             }

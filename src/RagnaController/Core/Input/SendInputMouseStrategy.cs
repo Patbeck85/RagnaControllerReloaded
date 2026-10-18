@@ -6,16 +6,16 @@ using static RagnaController.Core.NativeMethods;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Standard-Maus-Emulation über die Win32 SendInput API.
+    /// Standard-Maus-Emulation about die Win32 SendInput API.
     /// </summary>
     public sealed class SendInputMouseStrategy : IMouseEmulationStrategy
         {
-            // Die Größe der INPUT-Struktur für die Win32 API
+            // The Größe der INPUT-Struktur for die Win32 API
             private static readonly int InputSize = Marshal.SizeOf<INPUT>();
         
-            // Konstante für MOUSEEVENTF_MOVE_NOCOALESCE (0x2000)
+            // Konstante for MOUSEEVENTF_MOVE_NOCOALESCE (0x2000)
             // Prevents Windows from coalescing multiple small mouse movements.
-            // Wichtig für flüssige Kreise/Bezier-Kurven.
+            // Important for flüssige Kreise/Bezier-Kurven.
             private const uint MOUSEEVENTF_MOVE_NOCOALESCE = 0x2000;
 
             public bool IsAvailable => true;
@@ -36,12 +36,12 @@ namespace RagnaController.Core
             input.Data.mi.dy = dy;
             input.Data.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_MOVE_NOCOALESCE;
             
-            // Behebt CS1503: Wir übergeben ein Array mit einem Element
+            // Behebt CS1503: Wir übergeben ein Array with einem Element
             SendInput(1, new INPUT[] { input }, InputSize);
         }
 
         /// <summary>
-                /// Setzt die Maus auf eine absolute Bildschirmkoordinate.
+                /// Setzt die Maus on eine absolute Bildschirmkoordinate.
                 /// Uses SendInput with MOUSEEVENTF_ABSOLUTE for consistency with batching, latency tracking, and failover.
                 /// </summary>
                 public void MoveAbsolute(int x, int y)
@@ -67,7 +67,7 @@ namespace RagnaController.Core
         public void RightUp()   => SendMouse(MOUSEEVENTF_RIGHTUP);
 
         /// <summary>
-        /// Hilfsmethode zum Senden von Maustasten-Events.
+        /// Hilfsmethode zum Senden from Maustasten-Events.
         /// </summary>
         private void SendMouse(uint flags)
         {
@@ -81,8 +81,8 @@ namespace RagnaController.Core
     }
 
     /// <summary>
-    /// Kernel-Mode Maus-Emulation über den Interception-Treiber.
-    /// Bypasst LLMHF_INJECTED Flag für Anti-Cheat-Kompatibilität.
+    /// Kernel-Mode Maus-Emulation about den Interception-Treiber.
+    /// Bypasst LLMHF_INJECTED Flag for Anti-Cheat-Kompatibilität.
     /// </summary>
     public sealed class InterceptionMouseStrategy : IMouseEmulationStrategy
     {

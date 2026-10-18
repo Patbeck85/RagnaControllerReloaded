@@ -7,7 +7,7 @@ namespace RagnaController.Core
 {
     /// <summary>
     /// Pollt Windows-Batteriestatus via GetSystemPowerStatus.
-    /// Feuert PowerModeChanged wenn der Lade-Zustand wechselt (AC ↔ Batterie).
+    /// Feuert PowerModeChanged if der Lade-Zustand wechselt (AC ↔ Batterie).
     /// </summary>
     public sealed class PowerMonitor : IDisposable
     {
@@ -46,13 +46,13 @@ namespace RagnaController.Core
             }
         }
 
-        /// <summary>Feuert mit true wenn auf Batterie gewechselt, false wenn wieder am Netz.</summary>
+        /// <summary>Feuert with true if on Batterie gewechselt, false if wieder am Netz.</summary>
         public event Action<bool>? PowerModeChanged;
 
         public PowerMonitor()
         {
             _lastOnBattery = IsOnBattery;
-            // Alle 30 Sekunden prüfen — ausreichend für Netz/Batterie-Wechsel
+            // All 30 Sekunden prüfen — sufficient for Netz/Batterie-Wechsel
             _ = PollLoop(_cts.Token);
         }
 

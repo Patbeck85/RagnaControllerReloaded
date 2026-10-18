@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Gemeinsame Win32-Strukturen - referenziert von INativeMethods, NativeMethods und NativeMethodsImpl.
+    /// Gemeinsame Win32-Strukturen - referenziert from INativeMethods, NativeMethods and NativeMethodsImpl.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct POINT { public int X; public int Y; }

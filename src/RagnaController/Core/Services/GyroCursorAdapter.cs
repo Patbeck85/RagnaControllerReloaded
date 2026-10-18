@@ -4,16 +4,16 @@ using System.Diagnostics;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Verbindet <see cref="GyroService"/> mit einer <see cref="IMouseEmulationStrategy"/>:
-    /// Jeder Tick ruft <c>GyroService.GetCursorDelta</c> ab und führt
-    /// <c>MoveRelative(dx, dy)</c> aus — damit wird der DualSense-Gyro
-    /// zum Maus-Ersatz für Aim/Look in RO (Steam Deck Handheld).
+    /// Verbindet <see cref="GyroService"/> with einer <see cref="IMouseEmulationStrategy"/>:
+    /// Every Tick ruft <c>GyroService.GetCursorDelta</c> ab and führt
+    /// <c>MoveRelative(dx, dy)</c> aus — damit is der DualSense-Gyro
+    /// zum Maus-Ersatz for Aim/Look in RO (Steam Deck Handheld).
     ///
     /// Architektur:
     ///   - GyroService liefert Pitch/Yaw Angular Velocity (deg/s)
-    ///   - Adapter wandelt in Pixel-Delta um und emuliert Maus-Bewegung
-    ///   - Nur aktiv wenn GyroService.IsEnabled == true
-    ///   - Vollständig headless-testbar (kein echtes HID-Device nötig)
+    ///   - Adapter wandelt in Pixel-Delta um and emuliert Maus-Bewegung
+    ///   - Only active if GyroService.IsEnabled == true
+    ///   - Vollständig headless-testbar (no echtes HID-Device nötig)
     /// </summary>
     public sealed class GyroCursorAdapter : IDisposable
     {
@@ -28,7 +28,7 @@ namespace RagnaController.Core
             _mouse = mouse ?? throw new ArgumentNullException(nameof(mouse));
         }
 
-        /// <summary>Adapter aktiv? Nur dann werden Gyro-Delta emuliert.</summary>
+        /// <summary>Adapter active? Only then are Gyro-Delta emuliert.</summary>
         public bool Enabled
         {
             get => _enabled;
@@ -43,7 +43,7 @@ namespace RagnaController.Core
             }
         }
 
-        /// <summary>Einzelner Engine-Tick: Gyro-Delta abrufen und als Maus-Relative-Bewegung emulieren.</summary>
+        /// <summary>Einzelner Engine-Tick: Gyro-Delta abrufen and als Maus-Relative-Bewegung emulieren.</summary>
         /// <param name="tickMs">Engine-Tick-Dauer in Millisekunden (z. B. 16 @ 60 Hz).</param>
         public void Tick(int tickMs)
         {
@@ -59,7 +59,7 @@ namespace RagnaController.Core
             }
         }
 
-        /// <summary>Adapter zurücksetzen (z. B. nach Sleep/Resume oder Profil-Wechsel).</summary>
+        /// <summary>Adapter zurücksetzen (z. B. nach Sleep/Resume or Profil-Wechsel).</summary>
         public void Reset()
         {
             if (_disposed) return;

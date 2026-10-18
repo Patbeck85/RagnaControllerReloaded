@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Standard-Implementierung von INativeMethods - ruft die echten Win32-APIs auf.
+    /// Standard-Implementierung from INativeMethods - ruft die echten Win32-APIs on.
     /// </summary>
     public class NativeMethodsImpl : INativeMethods
     {

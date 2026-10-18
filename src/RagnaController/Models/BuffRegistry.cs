@@ -6,9 +6,9 @@ namespace RagnaController.Models
 {
     /// <summary>
     /// FEAT-008 / GEX-011: RO Buff/Debuff Registry.
-    /// Zentrale Datenbank aller RO Buffs und Debuffs mit IDs, Dauer, Stacks, Icons, Klassen.
-    /// Wird zur Laufzeit aus Resources/BuffRegistry.json geladen und vom BuffManager
-    /// für Validierung, Defaults und Auto-Recast genutzt.
+    /// Zentrale Datenbank aller RO Buffs and Debuffs with IDs, Dauer, Stacks, Icons, Klassen.
+    /// Is zur Laufzeit aus Resources/BuffRegistry.json geladen and vom BuffManager
+    /// for Validierung, Defaults and Auto-Recast genutzt.
     /// </summary>
     public static class BuffRegistry
     {
@@ -128,7 +128,7 @@ namespace RagnaController.Models
             return d;
         }
 
-        /// <summary>Alle Buffs (für Debug/UI).</summary>
+        /// <summary>All Buffs (for Debug/UI).</summary>
         public static IReadOnlyList<BuffEntry> AllBuffs
         {
             get
@@ -138,7 +138,7 @@ namespace RagnaController.Models
             }
         }
 
-        /// <summary>Alle Debuffs (für Debug/UI).</summary>
+        /// <summary>All Debuffs (for Debug/UI).</summary>
         public static IReadOnlyList<DebuffEntry> AllDebuffs
         {
             get
@@ -154,26 +154,26 @@ namespace RagnaController.Models
         /// <summary>Validiert einen Debuff-Namen gegen die Registry.</summary>
         public static bool IsValidDebuff(string name) => GetDebuffByName(name) != null;
 
-        /// <summary>Liefert Standard-Dauer für einen Buff (aus Registry oder Fallback 60s).</summary>
+        /// <summary>Liefert Standard-Dauer for einen Buff (aus Registry or Fallback 60s).</summary>
         public static int GetDefaultDuration(string buffName)
         {
             var buff = GetBuffByName(buffName);
             return buff?.DurationSec ?? 60;
         }
 
-        /// <summary>Liefert Standard-Warning-Schwelle für einen Buff (aus Registry oder Fallback 10s).</summary>
+        /// <summary>Liefert Standard-Warning-Schwelle for einen Buff (aus Registry or Fallback 10s).</summary>
         public static int GetDefaultWarningSec(string buffName)
         {
             var buff = GetBuffByName(buffName);
             return buff?.WarningSec ?? 10;
         }
 
-        /// <summary>Liefert Auto-Recast-Default für einen Buff (Key + enabled).</summary>
+        /// <summary>Liefert Auto-Recast-Default for einen Buff (Key + enabled).</summary>
         public static (bool AutoRecast, VirtualKey RecastKey) GetDefaultAutoRecast(string buffName)
         {
             var buff = GetBuffByName(buffName);
             if (buff == null) return (false, VirtualKey.None);
-            // Autorecast nur wenn SkillId bekannt und RecastKey gesetzt wäre — hier Default: false
+            // Autorecast only if SkillId bekannt and RecastKey gesetzt wäre — hier Default: false
             return (false, VirtualKey.None);
         }
     }
@@ -214,7 +214,7 @@ namespace RagnaController.Models
         [JsonPropertyName("skillId")]
         public string SkillId { get; set; } = "";
 
-        // Computed/Optional für Auto-Recast-Defaults
+        // Computed/Optional for Auto-Recast-Defaults
         [JsonPropertyName("warningSec")]
         public int WarningSec { get; set; } = 10;
 

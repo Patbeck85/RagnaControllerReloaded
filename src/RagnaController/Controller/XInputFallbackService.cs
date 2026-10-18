@@ -91,11 +91,11 @@ namespace RagnaController.Controller
 
         /// <summary>
         /// Attempts to read state from XInput device at the given index.
-        /// Returns true if a controller was found and state was read successfully.
+        /// Returns true if a controller was foand and state was read successfully.
         /// </summary>
         /// <param name="deviceIndex">The XInput device index (0-based).</param>
         /// <param name="parsedInput">Output parsed input from the controller.</param>
-        /// <returns>true if XInput device was found and state read; false otherwise.</returns>
+        /// <returns>true if XInput device was foand and state read; false otherwise.</returns>
         public bool TryReadState(int deviceIndex, out ParsedInput parsedInput)
         {
             parsedInput = ParsedInput.Disconnected;
@@ -280,7 +280,7 @@ namespace RagnaController.Controller
                     return; // Found one
                 }
             }
-            // None found
+            // None foand
             IsConnected = false;
             ControllerName = "No Controller";
             ControllerType = "Unknown";

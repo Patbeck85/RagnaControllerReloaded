@@ -6,7 +6,7 @@ namespace RagnaController.Core
 {
     /// <summary>
     /// Verfolgt das RO-Client-Fenster via WinEvent-Hook.
-    /// Liefert CenterX/Y, ClientW/H und DpiScale für Maus-Koordinaten.
+    /// Liefert CenterX/Y, ClientW/H and DpiScale for Maus-Koordinaten.
     /// </summary>
     public class WindowTracker : IDisposable
     {
@@ -48,8 +48,8 @@ namespace RagnaController.Core
         public event Action? ForegroundChanged;
 
         /// <summary>
-        /// Erstellt einen neuen WindowTracker mit der angegebenen Win32-Implementierung.
-        /// Für Production: <see cref="NativeMethodsImpl"/>. Für Tests: Mock&lt;INativeMethods&gt;.
+        /// Erstellt einen neuen WindowTracker with der angegebenen Win32-Implementierung.
+        /// For Production: <see cref="NativeMethodsImpl"/>. For Tests: Mock&lt;INativeMethods&gt;.
         /// </summary>
         public WindowTracker(INativeMethods? native = null, IProcessNameResolver? processNames = null)
         {
@@ -71,7 +71,7 @@ namespace RagnaController.Core
                 EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND,
                 IntPtr.Zero, _delegate, 0, 0, WINEVENT_OUTOFCONTEXT);
 
-            // Sofort einmal prüfen ob RO schon vorne ist
+            // Sofort einmal prüfen ob RO schon vorne is
             Refresh();
         }
 
@@ -95,7 +95,7 @@ namespace RagnaController.Core
             }
         }
 
-        // ── Manuell auffrischen (z.B. beim Controller-Connect) ────────────
+        // ── Manual auffrischen (z.B. beim Controller-Connect) ────────────
         public void Refresh()
         {
             lock (_lock)
@@ -134,8 +134,8 @@ namespace RagnaController.Core
             int newCy = pt.Y + newH / 2;
             bool nowTracking = newW > 0 && newH > 0;
 
-            // Nur feuern wenn sich etwas tatsächlich geändert hat —
-            // verhindert Endlosschleife wenn ForegroundChanged → Refresh() → UpdateGeometry()
+            // Only feuern if sich something tatsächlich geändert has —
+            // verhindert Endlosschleife if ForegroundChanged → Refresh() → UpdateGeometry()
             bool changed = nowTracking != IsTracking
                         || newCx != CenterX || newCy != CenterY
                         || newW  != ClientW  || newH  != ClientH

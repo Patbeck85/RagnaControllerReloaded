@@ -1,15 +1,15 @@
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Liefert den Prozessnamen zu einer PID ab. Abstraktion über
+    /// Liefert den Prozessnamen to einer PID ab. Abstraktion about
     /// <see cref="System.Diagnostics.Process"/> damit WindowTracker in Unit-Tests
-    /// deterministisch getestet werden kann (DIP / Testbarkeit).
+    /// deterministisch getestet are kann (DIP / Testbarkeit).
     /// </summary>
     public interface IProcessNameResolver
     {
         /// <summary>
-        /// Gibt den Prozessnamen für die angegebene PID zurück, oder
-        /// <c>null</c>, wenn der Prozess nicht existiert bzw. nicht auflösbar ist.
+        /// Gibt den Prozessnamen for die angegebene PID zurück, or
+        /// <c>null</c>, if der Prozess nicht existiert bzw. nicht auflösbar is.
         /// </summary>
         string? GetProcessName(int pid);
     }

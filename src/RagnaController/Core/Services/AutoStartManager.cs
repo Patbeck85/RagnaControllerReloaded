@@ -4,16 +4,16 @@ using Microsoft.Win32;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Windows Registry Integration für Auto-Start beim Systemstart.
+    /// Windows Registry Integration for Auto-Start beim Systemstart.
     /// </summary>
     public static class AutoStartManager
     {
         private const string AppName = "RagnaController";
 
         /// <summary>
-        /// Aktiviert oder deaktiviert den automatischen Start beim Windows-Boot.
+        /// Enabled or disabled den automatischen Start beim Windows-Boot.
         /// </summary>
-        /// <param name="enable">true, um Auto-Start zu aktivieren; false, um zu deaktivieren.</param>
+        /// <param name="enable">true, um Auto-Start to aktivieren; false, um to deaktivieren.</param>
         public static void SetAutoStart(bool enable)
         {
             try
@@ -26,7 +26,7 @@ namespace RagnaController.Core
 
                 if (enable)
                 {
-                    // Pfad zur aktuellen Executable-Datei ermitteln und in Anführungszeichen einhüllen
+                    // Pfad zur aktuellen Executable-Datei ermitteln and in Anführungszeichen einhüllen
                     string exePath = $"\"{Environment.ProcessPath}\"";
                     key.SetValue(AppName, exePath);
                 }

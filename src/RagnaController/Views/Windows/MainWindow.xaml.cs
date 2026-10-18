@@ -72,7 +72,7 @@ namespace RagnaController.Views.Windows
             PreviewKeyDown += Window_PreviewKeyDown;
 
             // UX-012: Gamepad-Navigation (DPad/Tab) — vor der VM-Guard-Klausel initialisieren,
-            // damit auch bei early return der Navigator sauber in Window_Closing disposed wird.
+            // damit auch bei early return der Navigator sauber in Window_Closing disposed is.
             _navigator = new GamepadUiNavigator(_engine.ControllerSvc) { ActiveWindow = this };
 
             // Initialize ViewModel first before setting up services
@@ -214,7 +214,7 @@ namespace RagnaController.Views.Windows
             // ── Profile Dropdown initialisieren (via ProfileService) ─────────────
             ProfileCombo.ItemsSource = _profileService.GetAllProfiles();
 
-            // Letztes Profil wiederherstellen oder erstes nehmen
+            // Letztes Profil wiederherstellen or erstes nehmen
             var lastProfile = _profileService.LoadLastOrFirst();
             if (lastProfile != null)
             {
@@ -225,7 +225,7 @@ namespace RagnaController.Views.Windows
             // Initialize tab button mapping
             InitTabBtnMap();
 
-            // UI-011: Telemetrie-Panel mit Engine verdrahten (einmalig)
+            // UI-011: Telemetrie-Panel with Engine verdrahten (einmalig)
             if (TelemetryPanelControl != null)
                 TelemetryPanelControl.SetEngine(_engine);
 
@@ -282,47 +282,47 @@ namespace RagnaController.Views.Windows
 
         private void BtnBigPicture_Click(object s, RoutedEventArgs e)
         {
-            // Big Picture Mode für Steam Deck: Maximieren + UI-Skalierung aktivieren
+            // Big Picture Mode for Steam Deck: Maximieren + UI-Skalierung aktivieren
             _isBigPictureMode = !_isBigPictureMode;
             ApplyBigPictureMode(_isBigPictureMode);
         }
 
         /// <summary>
         /// Wendet das Big Picture Mode Layout an: 150% Font Scaling,
-        /// min. 44×44px Touch-Targets, größere Spacing für Touch-Bedienung.
+        /// min. 44×44px Touch-Targets, größere Spacing for Touch-Bedienung.
         /// </summary>
         private void ApplyBigPictureMode(bool enabled)
         {
-            // Fenster maximiert für Big Picture
+            // Fenster maximiert for Big Picture
             WindowState = enabled ? WindowState.Maximized : WindowState.Normal;
 
-            // Design-System Resource für Font Scale setzen (über App.Resources)
+            // Design-System Resource for Font Scale setzen (about App.Resources)
             var scaleKey = enabled ? "FontScaleLarge" : "FontScaleNormal";
             if (Application.Current.Resources.Contains(scaleKey))
             {
                 Application.Current.Resources["FontScaleNormal"] = Application.Current.Resources[scaleKey];
             }
 
-            // Touch-Targets für Haupt-Buttons vergrößern (min. 44×44px)
+            // Touch-Targets for Haupt-Buttons vergrößern (min. 44×44px)
             SetButtonMinSize(BtnCalibrateQuick, enabled ? 56 : 44);
             SetButtonMinSize(BtnTestInput, enabled ? 56 : 44);
             SetButtonMinSize(BtnOpenRemap, enabled ? 56 : 44);
             SetButtonMinSize(BtnRadial, enabled ? 56 : 44);
             SetButtonMinSize(BtnBigPicture, enabled ? 48 : 36);
 
-            // Fenster-Controls (Min/Max/Close) für Touch vergrößern
+            // Fenster-Controls (Min/Max/Close) for Touch vergrößern
             SetButtonMinSize(BtnMinimize, enabled ? 48 : 36);
             SetButtonMinSize(BtnMaximize, enabled ? 48 : 36);
             SetButtonMinSize(BtnClose, enabled ? 48 : 36);
 
-            // ComboBox für Touch vergrößern
+            // ComboBox for Touch vergrößern
             if (ProfileCombo != null)
             {
                 ProfileCombo.MinHeight = enabled ? 44 : 32;
                 ProfileCombo.Height = enabled ? 44 : double.NaN;
             }
 
-            // Log-Buttons für Touch
+            // Log-Buttons for Touch
             SetButtonMinSize(BtnClearLog, enabled ? 44 : 28);
             SetButtonMinSize(BtnExportLog, enabled ? 44 : 28);
 
@@ -348,10 +348,10 @@ namespace RagnaController.Views.Windows
         private void TabHealth_Click(object s, RoutedEventArgs e) => SelectTab(PanelHealth, null);
         private void TabTelemetry_Click(object s, RoutedEventArgs e) => SelectTelemetryTab();
 
-        /// <summary>UI-011: Telemetrie-Tab aktivieren (kein Mapping-Panel → eigener Pfad).</summary>
+        /// <summary>UI-011: Telemetrie-Tab aktivieren (no Mapping-Panel → eigener Pfad).</summary>
         private void SelectTelemetryTab()
         {
-            // Alle Mapping-Panels ausblenden
+            // All Mapping-Panels ausblenden
             var allPanels = new[] { PanelBase, PanelL1, PanelR1, PanelL2, PanelR2, PanelHealth };
             foreach (var p2 in allPanels)
                 if (p2 != null) p2.Visibility = Visibility.Collapsed;
@@ -363,7 +363,7 @@ namespace RagnaController.Views.Windows
 
             if (TabBtnTelemetry != null) TabBtnTelemetry.Style = (Style)FindResource("TabButtonActive");
 
-            // Log-Panel ausblenden (konsistent mit Mapping-Tabs)
+            // Log-Panel ausblenden (konsistent with Mapping-Tabs)
             if (LogPanel != null)
                 LogPanel.Visibility = Visibility.Collapsed;
 

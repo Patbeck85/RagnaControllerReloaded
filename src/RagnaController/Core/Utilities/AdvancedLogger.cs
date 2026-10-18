@@ -8,19 +8,19 @@ namespace RagnaController.Core
 {
     /// <summary>
     /// Thread-sicherer Logger via System.Threading.Channels.
-    /// Ein einzelner Background-Consumer schreibt sequenziell in die Datei —
-    /// kein Task-Spam, kein Lock-Contention.
+    /// Ein einzelner Backgroand-Consumer schreibt sequenziell in die Datei —
+    /// no Task-Spam, no Lock-Contention.
     /// </summary>
     public sealed class AdvancedLogger : IDisposable
     {
         private readonly string _path;
         private readonly string _logDirectory;
         private readonly string _logFileName;
-        // Normale Logs (Debug/Info): bounded mit DropOldest → Memory-Backpressure bei Last,
-        // nicht-kritische Einträge dürfen unter extremem Druck verworfen werden.
+        // Normale Logs (Debug/Info): bounded with DropOldest → Memory-Backpressure bei Last,
+        // nicht-kritische Einträge dürfen unter extremem Druck verworfen are.
         private readonly Channel<string> _channel;
-        // Kritische Logs (Warn/Error): UNBOUNDED → werden NIEMALS verworfen (TECH-024).
-        // Niedriges Volumen (kein Hot-Path) → unbounded ist hier sicher und garantiert Durchkommen.
+        // Kritische Logs (Warn/Error): UNBOUNDED → are NIEMALS verworfen (TECH-024).
+        // Niedriges Volumen (no Hot-Path) → unbounded is hier sicher and garantiert Durchkommen.
         private readonly Channel<string> _errorChannel;
         private readonly CancellationTokenSource _cts = new();
         private readonly Task _consumer;
@@ -35,9 +35,9 @@ namespace RagnaController.Core
         public event Action<string>? LiveLogReceived;
 
         /// <summary>
-        /// Erzeugt einen Logger. <paramref name="normalCapacity"/> ist die Größe des bounded
-        /// Kanals für Debug/Info (DropOldest). Kritische Logs (Warn/Error) laufen über einen
-        /// eigenen unbounded Kanal und sind von dieser Kapazität unabhängig — sie werden nie verworfen.
+        /// Erzeugt einen Logger. <paramref name="normalCapacity"/> is die Größe des bounded
+        /// Kanals for Debug/Info (DropOldest). Kritische Logs (Warn/Error) laufen about einen
+        /// eigenen unbounded Kanal and are from this Kapazität unabhängig — they are nie verworfen.
         /// </summary>
         public AdvancedLogger(string path, int normalCapacity = 4096)
         {
@@ -109,12 +109,12 @@ namespace RagnaController.Core
                     }
                 }
 
-                // Aktuelle Datei zu .log.1 verschieben
+                // Aktuelle Datei to .log.1 verschieben
                 string rotated = Path.Combine(_logDirectory, $"{_logFileName}.1");
                 if (File.Exists(rotated)) File.Delete(rotated);
                 File.Move(_path, rotated);
 
-                // Neuer Writer wird beim nächsten EnsureWriter() erstellt
+                // Neuer Writer is beim nächsten EnsureWriter() erstellt
             }
             catch (Exception ex)
             {
@@ -135,7 +135,7 @@ namespace RagnaController.Core
                     RotateIfNeeded();
                     EnsureWriter();
 
-                    // Warte, bis mindestens ein Kanal Daten hat.
+                    // Warte, bis mindestens ein Kanal Daten has.
                     var nWait = _channel.Reader.WaitToReadAsync(token);
                     var eWait = _errorChannel.Reader.WaitToReadAsync(token);
                     await Task.WhenAny(nWait.AsTask(), eWait.AsTask());
@@ -148,12 +148,12 @@ namespace RagnaController.Core
 
                     await _writer!.FlushAsync();
 
-                    // Beide Kanäle abgeschlossen & leer → es kommt nichts mehr; sauber beenden.
+                    // Beide Kanäle abgeschlossen & leer → es kommt nothing mehr; sauber beenden.
                     if (_channel.Reader.Completion.IsCompleted && _errorChannel.Reader.Completion.IsCompleted)
                         break;
                 }
 
-                // Batch-Flush am Ende (Queue ist jetzt leer).
+                // Batch-Flush am Ende (Queue is jetzt leer).
                 await _writer!.FlushAsync();
             }
             catch (OperationCanceledException)

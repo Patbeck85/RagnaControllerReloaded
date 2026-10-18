@@ -4,8 +4,8 @@ using System.Runtime.InteropServices;
 namespace RagnaController.Core
 {
     /// <summary>
-    /// Erkennt Handheld-PCs (ROG Ally, Legion Go, Steam Deck, etc.) ohne UI-Thread zu blockieren.
-    /// Ergebnis wird gecacht — verwendet plattformunabhängige Erkennung.
+    /// Erkennt Handheld-PCs (ROG Ally, Legion Go, Steam Deck, etc.) ohne UI-Thread to blockieren.
+    /// Ergebnis is gecacht — verwendet plattformunabhängige Erkennung.
     /// </summary>
     public static class HandheldDetector
     {
@@ -23,7 +23,7 @@ namespace RagnaController.Core
 
                 try
                 {
-                    // Plattformunabhängige Erkennung — prüft auf bekannte Handheld-Modelle
+                    // Plattformunabhängige Erkennung — prüft on bekannte Handheld-Modelle
                     var deviceName = Environment.MachineName.ToLowerInvariant();
                     
                     // Steam Deck
@@ -75,7 +75,7 @@ namespace RagnaController.Core
             return result;
         }
 
-        /// <summary>Cache invalidieren — für Tests oder Settings-Override.</summary>
+        /// <summary>Cache invalidieren — for Tests or Settings-Override.</summary>
         public static void Reset()
         {
             lock (_lock)

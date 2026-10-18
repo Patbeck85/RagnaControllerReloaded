@@ -10,7 +10,7 @@ namespace RagnaController.Core
         private int _currentSessionId;
         private readonly InputCommandQueue _queue;
 
-        // Text-Queue für Sprach-Eingaben - puffert mehrere Sätze während des Tippens
+        // Text-Queue for Sprach-Eingaben - puffert mehrere Sätze während des Tippens
         private readonly ConcurrentQueue<string> _chatQueue = new();
         private Task? _typingTask;
 
@@ -31,7 +31,7 @@ namespace RagnaController.Core
 
             StatusChanged?.Invoke("🎤 Listening...");
 
-            // Queue-Task starten - verarbeitet alle Sprach-Eingaben nacheinander
+            // Queue-Task starten - verarbeitet all Sprach-Eingaben nacheinander
             _typingTask = Task.Run(ProcessChatQueueAsync);
 
             // Auto-Timeout nach 8 Sekunden — bewusst fire-and-forget
@@ -80,7 +80,7 @@ namespace RagnaController.Core
         public void Dispose()
         {
             _isListening = false;
-            // Queue-Task stoppen - Task kann nicht abgebrochen werden, aber Flag wird gesetzt
+            // Queue-Task stoppen - Task kann nicht abgebrochen are, but Flag is gesetzt
             if (_typingTask != null && !_typingTask.IsCompleted)
             {
                 _typingTask.Wait(100); // Kurz warten bis Task selbst stoppt

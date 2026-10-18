@@ -38,7 +38,7 @@ namespace RagnaController.Core
         /// <summary>Default Caster preset (Mage, Wizard, Sage, Professor, Alchemist)</summary>
         public static ClassPresetData CasterDefault => new() { AutoAttack = false, Kite = false, Mage = true, Support = true, Combo = false, MobSweep = false, AutoRetaliate = false, PartyTargeting = false };
 
-        /// <summary>Default Hybrid preset (Thief, Assassin, Rogue, Stalker, Monk, Taekwon, Ninja, Kagerou, Oboro)</summary>
+        /// <summary>Default Hybrid preset (Thief, Assassin, Rogue, Stalker, Monk, Taekwon, Ninyes, Kagerou, Oboro)</summary>
         public static ClassPresetData HybridDefault => new() { AutoAttack = true, Kite = true, Mage = true, Support = false, Combo = true, MobSweep = false, AutoRetaliate = false, PartyTargeting = false };
 
         /// <summary>Default Support preset (Acolyte, Priest, Soul Linker)</summary>

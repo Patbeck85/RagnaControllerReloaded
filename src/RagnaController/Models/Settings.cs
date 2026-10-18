@@ -11,7 +11,7 @@ namespace RagnaController.Models
         Camera,
         /// <summary>Right Stick zielt (Target Lock / Aim Assist)</summary>
         Aim,
-        /// <summary>Hybrid: Target Lock aktiv → Aim, sonst Camera</summary>
+        /// <summary>Hybrid: Target Lock active → Aim, sonst Camera</summary>
         Hybrid
     }
 
@@ -26,7 +26,7 @@ namespace RagnaController.Models
         // FIX: Flag to mark if loading settings failed
         private static bool _loadFailed = false;
 
-        // --- Die eigentlichen Einstellungen ---
+        // --- The eigentlichen Einstellungen ---
         public string LastProfileName { get; set; } = "Novice";
         public string LastGameMode { get; set; } = "Ren";
         public bool SoundEnabled { get; set; } = true;
@@ -40,7 +40,7 @@ namespace RagnaController.Models
 
                 /// <summary>
         /// Erzwingt Handheld-Modus unabhängig vom erkannten Gerät.
-        /// Nützlich für Desktop-Nutzer mit Controller die das Big-Picture-UI bevorzugen.
+        /// Nützlich for Desktop-Nutzer with Controller die das Big-Picture-UI bevorzugen.
         /// </summary>
         public bool ForceHandheldMode { get; set; } = false;
         public bool StartInMiniMode { get; set; } = false;
@@ -84,13 +84,13 @@ namespace RagnaController.Models
         // ── ROB-002: Input-Emulation-Failover (SendInput ↔ Kernel-Service) ───
         /// <summary>SendInput-Latenz-Schwelle in ms. Flushes darüber gelten als "langsam".</summary>
         public int FailoverLatencyThresholdMs { get; set; } = 5;
-        /// <summary>N aufeinanderfolgende langsame Flushes → Auto-Switch auf Kernel-Strategie.</summary>
+        /// <summary>N aufeinanderfolgende langsame Flushes → Auto-Switch on Kernel-Strategie.</summary>
         public int FailoverTriggerCount { get; set; } = 3;
-        /// <summary>M stabile (schnelle) Flushes nach Switch → Recovery zurück zu SendInput.</summary>
+        /// <summary>M stabile (schnelle) Flushes nach Switch → Recovery zurück to SendInput.</summary>
         public int FailoverRecoveryCount { get; set; } = 2;
 
-        // ── FEAT-014: Session-Replay (JSONL-Aufzeichnung für deterministische Wiedergabe) ──
-        /// <summary>Session-Replay aktiviert? Aufzeichnung läuft pro Engine-Session, Rotation bei 50 MB.</summary>
+        // ── FEAT-014: Session-Replay (JSONL-Aufzeichnung for deterministische Wiedergabe) ──
+        /// <summary>Session-Replay enabled? Aufzeichnung läuft pro Engine-Session, Rotation bei 50 MB.</summary>
         public bool EnableSessionRecording { get; set; } = false;
 
         // Fenster-Einstellungen (v1.6.0)
@@ -162,7 +162,7 @@ namespace RagnaController.Models
 
         public void Save()
         {
-            // FIX: Wenn das Laden zuvor fehlgeschlagen hat, nicht überschreiben!
+            // FIX: If das Laden zuvor fehlgeschlagen has, nicht überschreiben!
             if (_loadFailed)
             {
                 System.Diagnostics.Debug.WriteLine("[Settings] Speichern abgebrochen - Einstellungen konnten nicht geladen werden!");
@@ -175,7 +175,7 @@ namespace RagnaController.Models
                 {
                     string dir = Path.GetDirectoryName(SettingsPath)!;
                     if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                    // FileStream: kein großer string im LOH, direkt auf Disk
+                    // FileStream: no großer string im LOH, direkt on Disk
                     string tmp = SettingsPath + ".tmp";
                     using (var fs = new System.IO.FileStream(tmp, System.IO.FileMode.Create,
                         System.IO.FileAccess.Write, System.IO.FileShare.None))
