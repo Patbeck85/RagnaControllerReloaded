@@ -37,7 +37,7 @@
 
 || Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|------|-----------|----------------|--------|
-| **TASK-1631** | First-Run Wizard: Controller-Erkennung, RO-Pfad, erstes Profil | Designer | HIGH | — | 📋 OPEN |
+|| **TASK-1631** | First-Run Wizard: Controller-Erkennung, RO-Pfad, erstes Profil | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
 
 ---
 
