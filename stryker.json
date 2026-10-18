@@ -3,11 +3,19 @@
     "reporters": ["Html", "Json", "Progress"],
     "verbosity": "trace",
     "mutate": [
-      "src/RagnaController/Core/InputCommandQueue.cs",
-      "src/RagnaController/Core/EngineWatchdog.cs",
-      "src/RagnaController/Core/FrameBudgetMonitor.cs",
-      "src/RagnaController/Core/InputLatencyTracker.cs",
-      "src/RagnaController/Core/MemoryAllocationTracker.cs"
+      "src/RagnaController/Core/Engines/*.cs",
+      "src/RagnaController/Core/Input/*.cs",
+      "src/RagnaController/Core/Windows/*.cs",
+      "src/RagnaController/Core/Services/*.cs",
+      "src/RagnaController/Core/Interfaces/*.cs",
+      "src/RagnaController/Core/Utilities/*.cs"
+    ],
+    "exclude-mutation": [
+      "src/RagnaController/Core/Windows/*Window*.cs",
+      "src/RagnaController/Core/Windows/*Window*.xaml.cs",
+      "src/RagnaController/Core/App.xaml.cs",
+      "src/RagnaController/Core/DeviceNotificationWindow.cs",
+      "src/RagnaController/Core/*.g.cs"
     ],
     "test-runner": "vstest",
     "test-projects": ["tests/RagnaController.Tests/RagnaController.Tests.csproj"],

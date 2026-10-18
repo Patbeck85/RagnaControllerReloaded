@@ -111,9 +111,14 @@ jobs:
           --test-project "tests/RagnaController.Tests/RagnaController.Tests.csproj" `
           --reporter "html,progress,json" `
           --verbosity trace `
-          --mutate "src/RagnaController/Core/*.cs" `
-          --mutate "!src/RagnaController/Core/*Window*.cs" `
-          --mutate "!src/RagnaController/Core/*Window*.xaml.cs" `
+          --mutate "src/RagnaController/Core/Engines/*.cs" `
+          --mutate "src/RagnaController/Core/Input/*.cs" `
+          --mutate "src/RagnaController/Core/Windows/*.cs" `
+          --mutate "src/RagnaController/Core/Services/*.cs" `
+          --mutate "src/RagnaController/Core/Interfaces/*.cs" `
+          --mutate "src/RagnaController/Core/Utilities/*.cs" `
+          --mutate "!src/RagnaController/Core/Windows/*Window*.cs" `
+          --mutate "!src/RagnaController/Core/Windows/*Window*.xaml.cs" `
           --mutate "!src/RagnaController/Core/App.xaml.cs" `
           --mutate "!src/RagnaController/Core/DeviceNotificationWindow.cs" `
           --mutate "!src/RagnaController/Core/*.g.cs"
