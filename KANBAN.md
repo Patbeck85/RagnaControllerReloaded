@@ -33,6 +33,12 @@
 || **TASK-1622** | Performance-Tests entflaken (flaky Timing) | QA | LOW | — | ✅ CLOSED (2026-10-18) |
 || **TASK-1623** | Accessibility: AutomationProperties + Gamepad-Fokus-Ring | Designer | LOW | UI-010 | ✅ CLOSED (2026-10-18) |
 
+### Epic 4: UX & Onboarding (v2.5.0) — IN PLANUNG
+
+|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|------|-----------|----------------|--------|
+| **TASK-1631** | First-Run Wizard: Controller-Erkennung, RO-Pfad, erstes Profil | Designer | HIGH | — | 📋 OPEN |
+
 ---
 
 ### Workflow-Regeln (SOUL.md Compliance)
