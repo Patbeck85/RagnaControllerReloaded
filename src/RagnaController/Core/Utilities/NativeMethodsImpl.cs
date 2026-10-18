@@ -128,26 +128,7 @@ namespace RagnaController.Core
         /// <param name="DeviceInterfaceData">DeviceInterfaceData parameter.</param>
         /// <returns>Result of SetupDiEnumDeviceInterfaces.</returns>
         /// </summary>
-        /// <summary>
-        /// SetupDiEnumDeviceInterfaces method.
-        /// <param name="DeviceInfoSet">DeviceInfoSet parameter.</param>
-        /// <param name="DeviceInfoData">DeviceInfoData parameter.</param>
-        /// <param name="InterfaceClassGuid">InterfaceClassGuid parameter.</param>
-        /// <param name="MemberIndex">MemberIndex parameter.</param>
-        /// <param name="DeviceInterfaceData">DeviceInterfaceData parameter.</param>
-        /// <returns>Result of SetupDiEnumDeviceInterfaces.</returns>
-        /// </summary>
         public bool SetupDiEnumDeviceInterfaces(IntPtr DeviceInfoSet, IntPtr DeviceInfoData, ref Guid InterfaceClassGuid, uint MemberIndex, ref SP_DEVICE_INTERFACE_DATA DeviceInterfaceData) => NativeMethods.SetupDiEnumDeviceInterfaces(DeviceInfoSet, DeviceInfoData, ref InterfaceClassGuid, MemberIndex, ref DeviceInterfaceData);
-        /// <summary>
-        /// SetupDiGetDeviceInterfaceDetail method.
-        /// <param name="DeviceInfoSet">DeviceInfoSet parameter.</param>
-        /// <param name="DeviceInterfaceData">DeviceInterfaceData parameter.</param>
-        /// <param name="DeviceInterfaceDetailData">DeviceInterfaceDetailData parameter.</param>
-        /// <param name="DeviceInterfaceDetailDataSize">DeviceInterfaceDetailDataSize parameter.</param>
-        /// <param name="RequiredSize">RequiredSize parameter.</param>
-        /// <param name="DeviceInfoData">DeviceInfoData parameter.</param>
-        /// <returns>Result of SetupDiGetDeviceInterfaceDetail.</returns>
-        /// </summary>
         /// <summary>
         /// SetupDiGetDeviceInterfaceDetail method.
         /// <param name="DeviceInfoSet">DeviceInfoSet parameter.</param>
@@ -176,17 +157,6 @@ namespace RagnaController.Core
         /// <param name="hTemplateFile">hTemplateFile parameter.</param>
         /// <returns>Result of CreateFile.</returns>
         /// </summary>
-        /// <summary>
-        /// CreateFile method.
-        /// <param name="lpFileName">lpFileName parameter.</param>
-        /// <param name="dwDesiredAccess">dwDesiredAccess parameter.</param>
-        /// <param name="dwShareMode">dwShareMode parameter.</param>
-        /// <param name="lpSecurityAttributes">lpSecurityAttributes parameter.</param>
-        /// <param name="dwCreationDisposition">dwCreationDisposition parameter.</param>
-        /// <param name="dwFlagsAndAttributes">dwFlagsAndAttributes parameter.</param>
-        /// <param name="hTemplateFile">hTemplateFile parameter.</param>
-        /// <returns>Result of CreateFile.</returns>
-        /// </summary>
         public IntPtr CreateFile(string lpFileName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplateFile) => NativeMethods.CreateFile(lpFileName, dwDesiredAccess, dwShareMode, lpSecurityAttributes, dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
         /// <summary>
         /// WriteFile method.
@@ -197,25 +167,7 @@ namespace RagnaController.Core
         /// <param name="lpOverlapped">lpOverlapped parameter.</param>
         /// <returns>Result of WriteFile.</returns>
         /// </summary>
-        /// <summary>
-        /// WriteFile method.
-        /// <param name="hFile">hFile parameter.</param>
-        /// <param name="lpBuffer">lpBuffer parameter.</param>
-        /// <param name="nNumberOfBytesToWrite">nNumberOfBytesToWrite parameter.</param>
-        /// <param name="lpNumberOfBytesWritten">lpNumberOfBytesWritten parameter.</param>
-        /// <param name="lpOverlapped">lpOverlapped parameter.</param>
-        /// <returns>Result of WriteFile.</returns>
-        /// </summary>
         public bool WriteFile(IntPtr hFile, byte[] lpBuffer, uint nNumberOfBytesToWrite, out uint lpNumberOfBytesWritten, IntPtr lpOverlapped) => NativeMethods.WriteFile(hFile, lpBuffer, nNumberOfBytesToWrite, out lpNumberOfBytesWritten, lpOverlapped);
-        /// <summary>
-        /// ReadFile method.
-        /// <param name="hFile">hFile parameter.</param>
-        /// <param name="lpBuffer">lpBuffer parameter.</param>
-        /// <param name="nNumberOfBytesToRead">nNumberOfBytesToRead parameter.</param>
-        /// <param name="lpNumberOfBytesRead">lpNumberOfBytesRead parameter.</param>
-        /// <param name="lpOverlapped">lpOverlapped parameter.</param>
-        /// <returns>Result of ReadFile.</returns>
-        /// </summary>
         /// <summary>
         /// ReadFile method.
         /// <param name="hFile">hFile parameter.</param>
@@ -248,22 +200,6 @@ namespace RagnaController.Core
         /// </summary>
         public bool UnregisterDeviceNotification(IntPtr handle) => NativeMethods.UnregisterDeviceNotification(handle);
 
-        /// <summary>
-        /// CreateWindowEx method.
-        /// <param name="dwExStyle">dwExStyle parameter.</param>
-        /// <param name="lpClassName">lpClassName parameter.</param>
-        /// <param name="lpWindowName">lpWindowName parameter.</param>
-        /// <param name="dwStyle">dwStyle parameter.</param>
-        /// <param name="x">x parameter.</param>
-        /// <param name="y">y parameter.</param>
-        /// <param name="nWidth">nWidth parameter.</param>
-        /// <param name="nHeight">nHeight parameter.</param>
-        /// <param name="hWndParent">hWndParent parameter.</param>
-        /// <param name="hMenu">hMenu parameter.</param>
-        /// <param name="hInstance">hInstance parameter.</param>
-        /// <param name="lpParam">lpParam parameter.</param>
-        /// <returns>Result of CreateWindowEx.</returns>
-        /// </summary>
         /// <summary>
         /// CreateWindowEx method.
         /// <param name="dwExStyle">dwExStyle parameter.</param>

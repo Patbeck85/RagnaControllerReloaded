@@ -153,6 +153,7 @@ namespace RagnaController.Models
 
     /// <param name="name">name parameter.</param>
     /// <param name="name">name parameter.</param>
+    /// <param name="name">name parameter.</param>
         /// <summary>Validiert einen Debuff-Namen gegen die Registry.</summary>
         public static bool IsValidDebuff(string name) => GetDebuffByName(name) != null;
 

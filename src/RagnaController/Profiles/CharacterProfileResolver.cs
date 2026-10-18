@@ -93,6 +93,7 @@ namespace RagnaController.Profiles
         public bool IsMapped(string? characterName) => Resolve(characterName) != null;
 
     /// <param name="characterName">characterName parameter.</param>
+    /// <param name="characterName">characterName parameter.</param>
         /// <summary>Schnappschuss aller Zuordnungen (normalisierte Schlüssel) — for Persistenz/Tests.</summary>
         public IReadOnlyDictionary<string, string> Snapshot()
         {

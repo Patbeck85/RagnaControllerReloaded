@@ -102,6 +102,7 @@ namespace RagnaController.Profiles
         /// Schaltet automatic das zugeordnete Profil, falls eines existiert. Gibt true zurück,
         /// if gewechselt wurde.
     /// <param name="characterName">characterName parameter.</param>
+    /// <param name="characterName">characterName parameter.</param>
         /// </summary>
         public bool OnCharacterDetected(string characterName)
         {

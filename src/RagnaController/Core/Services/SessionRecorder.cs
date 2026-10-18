@@ -236,6 +236,7 @@ namespace RagnaController.Core
 
     /// <param name="events">events parameter.</param>
     /// <param name="events">events parameter.</param>
+    /// <param name="events">events parameter.</param>
         /// <summary>The Input-Sequenz (CmdType-Namen) einer Session — for Roundtrip-Vergleich.</summary>
         public static IReadOnlyList<string> ReplayedInputs(IEnumerable<SessionEvent> events) =>
             events.Where(e => e.K == KInput).Select(e => e.Label ?? "").ToList();

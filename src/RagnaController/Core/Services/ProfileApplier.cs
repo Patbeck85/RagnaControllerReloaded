@@ -248,6 +248,7 @@ namespace RagnaController.Core
         /// Live updates for v1.7.0 stick/trigger settings
     /// <param name="v">v parameter.</param>
     /// <param name="v">v parameter.</param>
+    /// <param name="v">v parameter.</param>
         /// </summary>
         public void LiveUpdateLeftStick(float v) => _orchestrator.Movement.Deadzone = v;
         /// <summary>
@@ -273,6 +274,7 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Settings: Rumble
+    /// <param name="enabled">enabled parameter.</param>
     /// <param name="enabled">enabled parameter.</param>
         /// </summary>
         public void SetRumbleEnabled(bool enabled)

@@ -21,13 +21,13 @@ namespace RagnaController.Core
         public void SetCenter(int x, int y) { _cx = x; _cy = y; }
 
         /// <summary>
-        /// Ermöglicht Ausweichen (Backslide) in Stick-Richtung.
+        /// Enables backslide dodge in stick direction..
         /// </summary>
         public void DodgeRoll(float sx, float sy, VirtualKey backSlideKey)
         {
             if (sx == 0 && sy == 0) return;
 
-            // 1. In Gegenrichtung schauen (for Backslide nötig)
+            // 1. Look in opposite direction (needed for backslide).
             int lookX = _cx - (int)(sx * 100);
             int lookY = _cy + (int)(sy * 100);
 
