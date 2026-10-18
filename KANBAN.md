@@ -40,6 +40,18 @@
 ||| **TASK-1631** | First-Run Wizard: Controller-Erkennung, RO-Pfad, erstes Profil | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
 ||| **TASK-1632** | High-Contrast-Modus Toggle + Schrift-Scaling (UX-017) | Designer | MEDIUM | UI-010 | ✅ CLOSED (2026-10-18) |
 
+### Epic 5: Code Quality & Error Handling (v2.5.0) — IN PLANUNG
+
+**Goal:** Fehlerbehandlung verbessern, fehlende UI-Einträge ergänzen, Code-Qualität sichern.
+
+|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-1701** | Error-Handling: Critical Exceptions via ToastService anzeigen (statt nur Debug.WriteLine) | Coder | HIGH | — | 📋 OPEN |
+| **TASK-1702** | SettingsWindow: Fehlende Settings-Einträge ergänzen (AutoRestartOnCrash, Failover-Thresholds, etc.) | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1703** | App.xaml.cs: Deutsche Fehlermeldungen auf Englisch vereinheitlichen | Coder | LOW | — | 📋 OPEN |
+| **TASK-1704** | Integration-Tests für FirstRunService Wizard-Flow | QA | MEDIUM | TASK-1631 | 📋 OPEN |
+| **TASK-1705** | HighContrastService: Unit-Test für DesignSystem-Integration | QA | LOW | TASK-1632 | 📋 OPEN |
+
 ---
 
 ### Workflow-Regeln (SOUL.md Compliance)
