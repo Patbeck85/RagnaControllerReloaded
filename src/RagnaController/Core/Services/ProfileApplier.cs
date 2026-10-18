@@ -273,6 +273,7 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Settings: Rumble
+    /// <param name="enabled">enabled parameter.</param>
         /// </summary>
         public void SetRumbleEnabled(bool enabled)
         {
