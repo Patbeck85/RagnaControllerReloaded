@@ -35,7 +35,7 @@ namespace RagnaController.Core
         private IntPtr  _hwnd = IntPtr.Zero;
         private string  _procName = "ragexe";
         private WinEventDelegate? _delegate; // GC-Anker — darf nicht gesammelt werden
-        private readonly object _lock = new object();  // FIX: Thread-Safety für Refresh()/UpdateGeometry()
+        private readonly object _lock = new object();  // FIX: Thread safety for Refresh()/UpdateGeometry()
 
         public int   CenterX   { get; private set; }
         public int   CenterY   { get; private set; }
@@ -76,7 +76,7 @@ namespace RagnaController.Core
                 EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND,
                 IntPtr.Zero, _delegate, 0, 0, WINEVENT_OUTOFCONTEXT);
 
-            // Sofort einmal prüfen ob RO schon vorne is
+            // Immediately check once if RO is already in front
             Refresh();
         }
 

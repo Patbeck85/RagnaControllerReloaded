@@ -230,7 +230,7 @@ namespace RagnaController.ControllerTest
             }
             catch
             {
-                // Snapshot read error darf die UI nicht stören (raw values remain 0).
+                // Snapshot read error must not disturb UI (raw values remain 0).
             }
 
             var bs = _controllerProvider.ButtonStates;

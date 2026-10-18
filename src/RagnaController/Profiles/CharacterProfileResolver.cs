@@ -19,7 +19,7 @@ namespace RagnaController.Profiles
     public sealed class CharacterProfileResolver
     {
         // key = normalisierter Char-Name, value = Profil-Name.
-        // OrdinalIgnoreCase: OCR/window-read noise ändert häufig only die Großschreibung.
+        // OrdinalIgnoreCase: OCR/window-read noise often changes only capitalization.
         private readonly Dictionary<string, string> _map = new(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>Anzahl der gespeicherten Zuordnungen.</summary>

@@ -48,7 +48,7 @@ namespace RagnaController.Profiles
         }
 
         /// <summary>
-        /// Löscht ein Preset. Gibt true zurück, wenn gelöscht wurde.
+        /// Deletes a preset. Returns true if deleted.
         /// </summary>
         public bool DeletePreset(string presetName)
         {
@@ -59,7 +59,7 @@ namespace RagnaController.Profiles
         }
 
         /// <summary>
-        /// Gibt ein Preset zurück oder null, wenn nicht gefunden.
+        /// Returns a preset or null if not found.
         /// </summary>
         public ProfilePreset? GetPreset(string presetName)
         {

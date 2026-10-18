@@ -17,7 +17,7 @@ namespace RagnaController.Core
         private readonly string _logDirectory;
         private readonly string _logFileName;
         // Normale Logs (Debug/Info): bounded with DropOldest → Memory-Backpressure bei Last,
-        // nicht-kritische Einträge dürfen unter extremem Druck verworfen are.
+        // non-critical entries may be dropped under extreme load.
         private readonly Channel<string> _channel;
         // Kritische Logs (Warn/Error): UNBOUNDED → are NIEMALS verworfen (TECH-024).
         // Niedriges Volumen (no Hot-Path) → unbounded is hier sicher and garantiert Durchkommen.
@@ -35,9 +35,9 @@ namespace RagnaController.Core
         public event Action<string>? LiveLogReceived;
 
         /// <summary>
-        /// Erzeugt einen Logger. <paramref name="normalCapacity"/> is die Größe des bounded
+        /// Creates a logger. <paramref name="normalCapacity"/> is the size of the bounded
         /// Kanals for Debug/Info (DropOldest). Kritische Logs (Warn/Error) laufen about einen
-        /// eigenen unbounded Kanal and are from this Kapazität unabhängig — they are nie verworfen.
+        /// own unbounded channel and are independent of this capacity — they are never dropped.
         /// </summary>
         public AdvancedLogger(string path, int normalCapacity = 4096)
         {
@@ -54,7 +54,7 @@ namespace RagnaController.Core
             _consumer     = _ = Task.Run(() => ConsumeAsync(_cts.Token));
         }
 
-        // ── Öffentliche API ───────────────────────────────────────────────
+        // ── Public API ───────────────────────────────────────────────
         /// <summary>
         /// Debug method.
         /// <param name="msg">msg parameter.</param>
@@ -106,12 +106,12 @@ namespace RagnaController.Core
                 var info = new FileInfo(_path);
                 if (info.Length < MaxLogSizeBytes) return;
 
-                // Schließe aktuellen Writer
+                // Close current writer
                 _writer?.Flush();
                 _writer?.Dispose();
                 _writer = null;
 
-                // Rotierte Dateien verschieben: .log.4 → .log.5 (löschen), .log.3 → .log.4, etc.
+                // Move rotated files: .log.4 → .log.5 (delete), .log.3 → .log.4, etc.
                 for (int i = MaxRotatedFiles - 1; i >= 1; i--)
                 {
                     string from = Path.Combine(_logDirectory, $"{_logFileName}.{i}");
@@ -119,7 +119,7 @@ namespace RagnaController.Core
                     if (File.Exists(from))
                     {
                         if (i == MaxRotatedFiles - 1)
-                            File.Delete(from); // älteste löschen
+                            File.Delete(from); // delete oldest
                         else
                             File.Move(from, to);
                     }
@@ -130,7 +130,7 @@ namespace RagnaController.Core
                 if (File.Exists(rotated)) File.Delete(rotated);
                 File.Move(_path, rotated);
 
-                // Neuer Writer is beim nächsten EnsureWriter() erstellt
+                // New writer is created on next EnsureWriter()
             }
             catch (Exception ex)
             {
@@ -138,7 +138,7 @@ namespace RagnaController.Core
             }
         }
 
-        // ── Consumer-Loop (einzelner Thread, drained beide Kanäle) ─────────
+        // ── Consumer loop (single thread, drains both channels) ─────────
         private async Task ConsumeAsync(CancellationToken token)
         {
             try
@@ -147,7 +147,7 @@ namespace RagnaController.Core
 
                 while (true)
                 {
-                    // TECH-066: Prüfe Rotation vor jedem Schreibzyklus
+                    // TECH-066: check rotation before every write cycle
                     RotateIfNeeded();
                     EnsureWriter();
 
@@ -156,7 +156,7 @@ namespace RagnaController.Core
                     var eWait = _errorChannel.Reader.WaitToReadAsync(token);
                     await Task.WhenAny(nWait.AsTask(), eWait.AsTask());
 
-                    // Alles Verfügbare aus BEIDEN Kanälen schreiben (pro Kanal Reihenfolge erhalten).
+                    // Write everything available from BOTH channels (preserve per-channel order).
                     while (_channel.Reader.TryRead(out string? n))
                         await _writer!.WriteLineAsync(n);
                     while (_errorChannel.Reader.TryRead(out string? e))

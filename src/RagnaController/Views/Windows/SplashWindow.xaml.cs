@@ -38,7 +38,7 @@ namespace RagnaController.Views.Windows
 
         private void SplashWindow_Click(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            SkipCts.Cancel(); // Signal an App.xaml.cs: Splash überspringen
+            SkipCts.Cancel(); // Signal to App.xaml.cs: skip splash
         }
 
         private void BtnSkipSplash_Click(object sender, RoutedEventArgs e)

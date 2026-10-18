@@ -28,7 +28,7 @@ namespace RagnaController.Models
             /// <summary>Cooldown in ms nach dem Einsatz, bevor das Item erneut gefeuert are darf.</summary>
             public int CooldownMs { get; set; } = 3000;
 
-            /// <summary>Globales Update-Intervall in ms (wie oft die Engine prüft, ob this Item feuern soll).</summary>
+            /// <summary>Global update interval in ms (how often engine checks if this item should fire).</summary>
             public int CheckIntervalMs { get; set; } = 1000;
 
             /// <summary>Ob das Item active verwaltet is. Default: true.</summary>

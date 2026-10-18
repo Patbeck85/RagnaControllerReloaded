@@ -26,8 +26,8 @@ namespace RagnaController.Core
         /// <summary>
         /// FEAT-015: Explizites Ziel-Fenster for Multi-Client-Betrieb (Alt-Char, Farming).
         /// If gesetzt and das Fenster noch existiert, are all SwitchWindow-Aktionen an
-        /// genau this HWND geroutet; sonst Fallback on die Prozessname-Auflösung (Legacy).
-        /// YAGNI: Override-Punkt for einen späteren Client-Selector — bewusst ohne UI/Settings.
+        /// routed to exactly this HWND; otherwise fallback to process name resolution (legacy).
+        /// YAGNI: override point for a later client selector — intentionally without UI/Settings.
         /// Thread-Note: is vom UI-Thread gesetzt, vom Switch-Task gelesen (benigne Race).
         /// </summary>
         public static IntPtr? PreferredClientHwnd { get; set; }
@@ -84,14 +84,14 @@ namespace RagnaController.Core
         /// <summary>
         /// FEAT-015: Reine Ziel-Auswahl (testbar ohne Win32-Seitenwirkung).
         /// 1) PreferredHwnd existiert noch → is verwendet (Multi-Client-Routing).
-        /// 2) Sonst Legacy: gecachte Prozessname-Auflösung.
+        /// 2) Otherwise legacy: cached process name resolution.
         /// </summary>
         internal static IntPtr SelectTargetHwnd(string processName, IntPtr preferredHwnd, Func<IntPtr, bool>? aliveCheck = null)
         {
             if (preferredHwnd != IntPtr.Zero && (aliveCheck == null || aliveCheck(preferredHwnd)))
                 return preferredHwnd;
 
-            // Legacy-Pfad: Prozessname-Auflösung (gewollt auch bei ungültigem PreferredHwnd)
+            // Legacy path: process name resolution (intended even with invalid PreferredHwnd)
             return GetCachedHwnd(processName);
         }
 
@@ -123,7 +123,7 @@ namespace RagnaController.Core
             _pidNameCache.Clear();
             try
             {
-                // Einmalig all Prozesse laden — außerhalb des Hot Paths
+                // Load all processes once — outside the hot path
                 foreach (var p in Process.GetProcesses())
                 {
                     try
@@ -133,7 +133,7 @@ namespace RagnaController.Core
                     catch (Exception ex)
                     {
                         // ERROR-001: No leerer catch. Prozessname-Lesen fehlgeschlagen
-                        // (z. B. systemgeschützter Prozess, Zugriff verweigert) —
+                        // (e.g. system-protected process, access denied) —
                         // is ignoriert, PID bleibt im Cache fehlen, Fallback funktioniert weiterhin.
                         System.Diagnostics.Debug.WriteLine(
                             $"[WindowSwitcher] Prozessname für PID {p.Id} nicht lesbar: {ex.Message}");
@@ -147,7 +147,7 @@ namespace RagnaController.Core
             }
             catch (Exception ex)
             {
-                // ERROR-001: No leerer catch — System.Diagnostics nicht verfügbar
+                // ERROR-001: no empty catch — System.Diagnostics not available
                 System.Diagnostics.Debug.WriteLine($"[WindowSwitcher] RefreshPidNameCache äußerer Fehler: {ex.Message}");
             }
         }

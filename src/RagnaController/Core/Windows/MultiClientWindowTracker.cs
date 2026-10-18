@@ -15,9 +15,9 @@ namespace RagnaController.Core
     /// - Refresh(processName): EnumWindows about all Top-Level-Fenster,
     ///   GetWindowThreadProcessId → PID, PID→Name-Cache (TECH-020 Muster),
     ///   all passenden HWNDs in Dictionary<string, List<ClientWindowEntry>> sammeln.
-    /// - IsAlive(hwnd): IsWindow-Prüfung for tot/lebend.
-    /// - TTL-basiertes Caching (10s), EnumWindows only außerhalb des Hot Paths.
-    /// - INativeMethods-Injektion for Unit-Testbarkeit (Mock möglich).
+    /// - IsAlive(hwnd): IsWindow check for dead/alive.
+    /// - TTL-based caching (10s), EnumWindows only outside the hot path.
+    /// - INativeMethods injection for unit testability (mock possible).
     /// </summary>
     /// <summary>
     /// Window management and tracking component.
@@ -53,7 +53,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Gibt all bekannten Clients for einen Prozessnamen zurück (Thread-sicher).
+        /// Returns all known clients for a process name (thread-safe).
         /// </summary>
         public IReadOnlyList<ClientWindowEntry> GetClients(string processName)
         {
@@ -66,7 +66,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Gibt zurück, ob ein HWND noch gültig is (IsWindow-Prüfung).
+        /// Returns whether an HWND is still valid (IsWindow check).
         /// </summary>
         public bool IsAlive(IntPtr hwnd)
         {
@@ -80,7 +80,7 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Aktualisiert die Client-Liste for einen Prozessnamen via EnumWindows.
-        /// Is außerhalb des Hot Paths aufgerufen (TTL-gesteuert).
+        /// Is called outside the hot path (TTL-controlled).
         /// </summary>
         public void Refresh(string processName)
         {
@@ -89,19 +89,19 @@ namespace RagnaController.Core
 
             lock (_lock)
             {
-                // TTL-Prüfung: Cache gültig?
+                // TTL check: cache valid?
                 if (_clients.TryGetValue(processName, out var existing) &&
                     existing.Count > 0 &&
                     existing[0].LastSeenTick > 0 &&
                     (now - existing[0].LastSeenTick) < CLIENT_CACHE_TTL_MS)
                 {
-                    return; // Cache noch gültig
+                    return; // cache still valid
                 }
 
                 found = new List<ClientWindowEntry>();
             }
 
-            // TECH-020: PID→Name Cache auffrischen (außerhalb des Locks, teuer)
+            // TECH-020: refresh PID→Name cache (outside the lock, expensive)
             RefreshPidNameCache(now);
 
             // EnumWindows about all Top-Level-Fenster
@@ -122,7 +122,7 @@ namespace RagnaController.Core
                         procName = cached;
                 }
 
-                // Fallback: direkt about IProcessNameResolver auflösen (testbar, for PIDs die nicht im Cache are)
+                // Fallback: resolve directly via IProcessNameResolver (testable, for PIDs not in cache)
                 if (string.IsNullOrEmpty(procName))
                 {
                     procName = _processNames.GetProcessName((int)pid);
@@ -214,7 +214,7 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Entfernt all toten Einträge aus dem Cache.
+        /// Removes all dead entries from the cache.
         /// </summary>
         public void CleanupDead()
         {

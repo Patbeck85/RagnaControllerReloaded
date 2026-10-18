@@ -7,7 +7,7 @@ using RagnaController.Profiles;
 namespace RagnaController.Profiles
 {
     /// <summary>
-    /// TASK-1611: Profil-Preset — eine benannt gespeicherte Profil-Zwischenablage für
+    /// TASK-1611: Profile preset — a named stored profile clipboard for
     /// schnellen Namens-basierten Wechsel zwischen Profilen.
     /// </summary>
     public sealed class ProfilePreset

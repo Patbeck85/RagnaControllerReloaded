@@ -188,7 +188,7 @@ namespace RagnaController.ControllerTest
             var control = _controls[_currentIndex];
 
             // Erste Detektion der aktiven Kontrolle → Reaktionszeit messen and bestanden.
-            // n=1 pro Kontrolle (geführter Selbsttest): p50 == p95 == reaction time.
+            // n=1 per control (guided self-test): p50 == p95 == reaction time.
             if (control.Detect(sample))
             {
                 _reactionMs = Math.Max(0, now - _activeSinceMs);
@@ -257,7 +257,7 @@ namespace RagnaController.ControllerTest
         {
             var control = _controls[_currentIndex];
 
-            // n=1 pro Kontrolle (geführter Selbsttest): p50 == p95 == measured reaction time.
+            // n=1 per control (guided self-test): p50 == p95 == measured reaction time.
             double reaction = passed ? _reactionMs : 0;
 
             var result = new DiagnosticControlResult(
