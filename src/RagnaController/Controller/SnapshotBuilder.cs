@@ -16,7 +16,7 @@ namespace RagnaController.Controller
         private readonly SkillOrchestrator? _skillOrchestrator;
         private bool _batteryThrottle = false;
 
-        public SnapshotBuilder(AutoTargetEngine autoTarget, MageEngine mage, ComboEngine combo, 
+        public SnapshotBuilder(AutoTargetEngine autoTarget, MageEngine mage, ComboEngine combo,
                                Core.WindowTracker winTracker, CursorEngine cursor, SmartCursorService smartCursor,
                                SkillOrchestrator? skillOrchestrator = null)
         {
@@ -35,13 +35,21 @@ namespace RagnaController.Controller
             set => _batteryThrottle = value;
         }
 
-        public ControllerSnapshot Build(ParsedInput input, int deltaMs, bool batteryThrottle)
+        public ControllerSnapshot Build(ParsedInput input, bool focusLocked, double elapsedMs)
         {
+            // FIX: Use cached strings to prevent allocations in hot path!
+            string layerKey = _combo.Enabled ? "COMBO" : (_mage.MageEnabled ? "MAGE" : (_autoTarget.AutoAttackEnabled ? "AUTO" : ""));
+            string layerText = EngineOptimizationPool.Instance.GetString(layerKey);
+
+            string stateRaw = _combo.Enabled ? "COMBO ACTIVE" : (_mage.MageEnabled ? "MAGE MODE" : (_autoTarget.AutoAttackEnabled ? "AUTO ATTACK" : "IDLE"));
+            string stateLabel = EngineOptimizationPool.Instance.GetString(stateRaw);
+
             var snap = new ControllerSnapshot
             {
-                LayerText = _combo.Enabled ? "COMBO" : (_mage.MageEnabled ? "MAGE" : (_autoTarget.AutoAttackEnabled ? "AUTO" : "")),
-                StateLabel = _combo.Enabled ? "COMBO ACTIVE" : (_mage.MageEnabled ? "MAGE MODE" : (_autoTarget.AutoAttackEnabled ? "AUTO ATTACK" : "IDLE")),
-                DeltaMs = deltaMs,
+                LayerText = layerText,
+                StateLabel = stateLabel,
+                DeltaMs = (int)elapsedMs,
+                TickMs = (int)elapsedMs,
                 LeftX = input.LeftX,
                 LeftY = input.LeftY,
                 RightX = input.RightX,
@@ -50,7 +58,7 @@ namespace RagnaController.Controller
                 R1 = input.R1,
                 L2 = input.L2,
                 R2 = input.R2,
-                L3 = input.L3,
+                BtnL3 = input.L3,
                 BtnA = input.BtnA,
                 BtnB = input.BtnB,
                 BtnX = input.BtnX,
@@ -63,7 +71,7 @@ namespace RagnaController.Controller
                 Back = input.Back,
                 ActionLabel = _combo.Enabled ? _combo.CurrentActionLabel : "",
                 ActionId = _combo.CurrentActionId,
-                
+
                 // Skill cooldown tracking (HW-005)
                 SkillCooldownMs = _skillOrchestrator?.GetActiveSkillCooldownMs() ?? 0,
                 ActiveSkillId = _skillOrchestrator?.GetActiveSkillId() ?? 0,
@@ -80,13 +88,14 @@ namespace RagnaController.Controller
                 MiniModeLabel = _combo.MiniModeLabel,
                 SmartCursorMenuMode = _smartCursor.IsMenuMode,
                 WindowTracked = _winTracker.WindowTracked,
-                BatteryThrottle = batteryThrottle
+                BatteryThrottle = _batteryThrottle,
+                FocusLocked = focusLocked
             };
 
             // State foreground color based on mode
-            snap.StateForeground = _smartCursor.IsMenuMode 
+            snap.StateForeground = _smartCursor.IsMenuMode
                 ? new SolidColorBrush(Color.FromRgb(229, 184, 66)) // Gold for Grid Mode
-                : _combo.Enabled 
+                : _combo.Enabled
                     ? new SolidColorBrush(Color.FromRgb(229, 66, 66)) // Red for Combo
                     : _mage.MageEnabled
                         ? new SolidColorBrush(Color.FromRgb(66, 166, 229)) // Blue for Mage
@@ -95,8 +104,7 @@ namespace RagnaController.Controller
                             : new SolidColorBrush(Color.FromRgb(255, 255, 255)); // White for Idle
 
             snap.CombatState = snap.StateLabel;
-            snap.ComboActive = _combo.IsActive;  // Use IsActive property from ComboEngine
-            // Note: PanicActive and VacuumActive not available in ComboEngine - using ComboActive instead
+            snap.ComboActive = _combo.IsActive;
 
             return snap;
         }

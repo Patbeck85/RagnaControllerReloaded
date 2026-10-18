@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Xunit;
 using RagnaController.Models;
 using RagnaController.Core;
+using RagnaController.Controller;
 
 namespace RagnaController.Tests
 {

@@ -6,6 +6,7 @@ using System.Threading;
 using Xunit;
 using RagnaController.Core;
 using RagnaController.Models;
+using RagnaController.Controller;
 
 namespace RagnaController.Tests
 {

@@ -14,7 +14,7 @@ using BenchmarkDotNet.Exporters;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Columns;
-using RagnaController.Core;
+using RagnaController.Controller;
 using RagnaController.Models;
 using RagnaController.Profiles;
 

@@ -49,7 +49,7 @@ namespace RagnaController.Controller
         }
 
         // Applies dynamic colors based on engine state
-        public void ApplySnapshot(Core.ControllerSnapshot snap, AdaptiveTriggerMode l2Mode, AdaptiveTriggerMode r2Mode)
+                public void ApplySnapshot(ControllerSnapshot snap, AdaptiveTriggerMode l2Mode, AdaptiveTriggerMode r2Mode)
         {
             if (!IsAvailable) return;
 
@@ -149,9 +149,9 @@ namespace RagnaController.Controller
             if (!IsAvailable) return;
             
             // Apply current snapshot with new trigger modes
-            // We need a dummy snapshot to preserve RGB behavior
-            var dummySnapshot = new Core.ControllerSnapshot();
-            ApplySnapshot(dummySnapshot, l2Mode, r2Mode);
+                        // We need a dummy snapshot to preserve RGB behavior
+                        var dummySnapshot = new ControllerSnapshot();
+                        ApplySnapshot(dummySnapshot, l2Mode, r2Mode);
         }
 
         /// <summary>

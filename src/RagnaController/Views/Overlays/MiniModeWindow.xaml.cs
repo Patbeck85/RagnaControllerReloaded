@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
+using RagnaController.Controller;
 using RagnaController.Core;
 
 namespace RagnaController.Views.Overlays

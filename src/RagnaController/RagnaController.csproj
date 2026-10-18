@@ -121,8 +121,7 @@
         <Compile Include="Core\Engines\ComboEngine.cs" />
         <Compile Include="Core\Services\ControllerManager.cs" />
         <Compile Include="Core\Services\ControllerService.cs" />
-        <Compile Include="Core\Utilities\ControllerSnapshot.cs" />
-        <Compile Include="Core\Services\CooldownManager.cs" />
+                <Compile Include="Core\Services\CooldownManager.cs" />
         <Compile Include="Core\Engines\CursorEngine.cs" />
         <Compile Include="Core\Services\DefaultProfileLoader.cs" />
         <Compile Include="Core\Windows\DeviceNotificationWindow.cs" />
@@ -194,8 +193,7 @@
                 <Compile Include="Core\Engines\SkillOrchestrator.cs" />
         <Compile Include="Core\Engines\SmartCursorEngine.cs" />
         <Compile Include="Core\Services\SmartCursorService.cs" />
-        <Compile Include="Core\Utilities\SnapshotBuilder.cs" />
-        <Compile Include="Core\Services\StandbyManager.cs" />
+                <Compile Include="Core\Services\StandbyManager.cs" />
         <Compile Include="Core\Engines\SupportEngine.cs" />
         <Compile Include="Core\Engines\GroundSpellEngine.cs" />
         <Compile Include="Core\Services\BuffManager.cs" />

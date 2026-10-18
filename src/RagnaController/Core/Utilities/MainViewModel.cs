@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using RagnaController.Models;
+using RagnaController.Controller;
 
 namespace RagnaController.Core
 {
