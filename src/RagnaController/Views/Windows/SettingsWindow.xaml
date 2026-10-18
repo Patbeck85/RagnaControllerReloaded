@@ -124,9 +124,25 @@
                                                                                                                                                                                       Click="ChkSkipSplash_Click"/>
 
                                                                                                                                                 <CheckBox x:Name="ChkTelemetry" Content="{core:Loc Settings_EnableTelemetry}"
-                                                                                                              Click="ChkTelemetry_Click"/>
+                                                                                                                                                                              Click="ChkTelemetry_Click"/>
 
-                                                                        <ComboBox x:Name="LanguageCombo" 
+                                                                                                                                                <!-- Crash Recovery & Session (FEAT-014, TECH-063) -->
+                                                                                                                                                <CheckBox x:Name="ChkAutoRestartOnCrash" Content="{core:Loc Settings_AutoRestartOnCrash}"
+                                                                                                                                                          Click="ChkAutoRestartOnCrash_Click"
+                                                                                                                                                          ToolTip="{core:Loc Settings_AutoRestartOnCrash_Tooltip}"/>
+                                                                                                                                                <CheckBox x:Name="ChkEnableSessionRecording" Content="{core:Loc Settings_EnableSessionRecording}"
+                                                                                                                                                          Click="ChkEnableSessionRecording_Click"
+                                                                                                                                                          ToolTip="{core:Loc Settings_EnableSessionRecording_Tooltip}"/>
+
+                                                                                                                                                <!-- Window Behavior -->
+                                                                                                                                                <CheckBox x:Name="ChkStartMinimized" Content="{core:Loc Settings_StartMinimized}"
+                                                                                                                                                          Click="ChkStartMinimized_Click"
+                                                                                                                                                          ToolTip="{core:Loc Settings_StartMinimized_Tooltip}"/>
+                                                                                                                                                <CheckBox x:Name="ChkShowControllerViz" Content="{core:Loc Settings_ShowControllerViz}"
+                                                                                                                                                          Click="ChkShowControllerViz_Click"
+                                                                                                                                                          ToolTip="{core:Loc Settings_ShowControllerViz_Tooltip}"/>
+
+                                                                                                                                                <ComboBox x:Name="LanguageCombo" 
                                                                                   Width="160" Margin="0,4"
                                                                                   Style="{StaticResource DarkComboBox}"
                                                                                   ToolTip="{core:Loc Settings_Language_Tooltip}"

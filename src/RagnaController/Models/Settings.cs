@@ -192,7 +192,12 @@ namespace RagnaController.Models
                     File.Move(tmp, SettingsPath, overwrite: true);
                 }
             }
-            catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[Settings] Save failed: {ex.Message}"); }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[Settings] Save failed: {ex.Message}");
+                // TASK-1701: Benutzer sichtbarer Fehler via Toast
+                try { RagnaController.App.ToastService?.Show($"Einstellungen konnten nicht gespeichert werden: {ex.Message}", isError: true); } catch { }
+            }
         }
     }
 }

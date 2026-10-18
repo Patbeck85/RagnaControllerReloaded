@@ -80,6 +80,7 @@ public partial class MainWindow : Window
             _vm     = vm; // Assign the passed ViewModel
             InitializeComponent();
             _toastService.Initialize(ToastBorder!, ToastText!, ToastBg!);
+            App.InitializeToastService(_toastService);
             _profileService = new ProfileService(_manager, _settings, _engine, msg => ShowToast(msg));
             DataContext = vm;
 
@@ -272,6 +273,7 @@ public partial class MainWindow : Window
                         catch (Exception ex)
                         {
                             System.Diagnostics.Debug.WriteLine($"[MainWindow] SwitchFromMiniMode Close failed: {ex.Message}");
+                            ShowToast($"Mini-Modus schließen fehlgeschlagen: {ex.Message}", isError: true);
                         }
                     }
                 }

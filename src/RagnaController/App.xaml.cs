@@ -8,6 +8,7 @@ using System.Windows.Media.Animation;
 using RagnaController.Core;
 using RagnaController.Core.Services;
 using RagnaController.Profiles;
+using RagnaController.Services;
 using RagnaController.Models;
 using RagnaController.Views.Windows;
 using RagnaController.Views.Overlays;
@@ -22,6 +23,20 @@ namespace RagnaController
     {
         private static readonly string CrashLog = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory, "crash.log");
+
+        /// <summary>
+        /// TASK-1701: Statischer ToastService-Zugriff für alle Klassen.
+        /// Wird in MainWindow.xaml.cs initialisiert.
+        /// </summary>
+        public static ToastService? ToastService { get; private set; }
+
+        /// <summary>
+        /// TASK-1701: Initialisiert den statischen ToastService.
+        /// </summary>
+        public static void InitializeToastService(ToastService toastService)
+        {
+            ToastService = toastService;
+        }
 
         protected override void OnStartup(StartupEventArgs e)
         {

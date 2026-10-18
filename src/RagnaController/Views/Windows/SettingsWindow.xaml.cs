@@ -81,6 +81,14 @@ public partial class SettingsWindow : Window
                                         ChkSkipSplash.IsChecked = _s.SkipSplash;
                                         ChkTelemetry.IsChecked = _s.EnableTelemetry;
 
+                    // Crash Recovery & Session
+                    ChkAutoRestartOnCrash.IsChecked = _s.AutoRestartOnCrash;
+                    ChkEnableSessionRecording.IsChecked = _s.EnableSessionRecording;
+
+                    // Window Behavior
+                    ChkStartMinimized.IsChecked = _s.StartMinimized;
+                    ChkShowControllerViz.IsChecked = _s.ShowControllerViz;
+
                     // Initialize LogLevelCombo
                     InitializeLogLevelCombo();
 
@@ -320,6 +328,32 @@ public partial class SettingsWindow : Window
                     _s.EnableTelemetry = ChkTelemetry.IsChecked == true;
                     _s.Save();
                 }
+
+        // ── Crash Recovery & Session (FEAT-014, TECH-063) ─────────
+        private void ChkAutoRestartOnCrash_Click(object sender, RoutedEventArgs e)
+        {
+            _s.AutoRestartOnCrash = ChkAutoRestartOnCrash.IsChecked == true;
+            _s.Save();
+        }
+
+        private void ChkEnableSessionRecording_Click(object sender, RoutedEventArgs e)
+        {
+            _s.EnableSessionRecording = ChkEnableSessionRecording.IsChecked == true;
+            _s.Save();
+        }
+
+        // ── Window Behavior ─────────
+        private void ChkStartMinimized_Click(object sender, RoutedEventArgs e)
+        {
+            _s.StartMinimized = ChkStartMinimized.IsChecked == true;
+            _s.Save();
+        }
+
+        private void ChkShowControllerViz_Click(object sender, RoutedEventArgs e)
+        {
+            _s.ShowControllerViz = ChkShowControllerViz.IsChecked == true;
+            _s.Save();
+        }
 
         // ── UX-017: Accessibility — High Contrast & Font Scale ─────────
         private void ChkHighContrast_Click(object sender, RoutedEventArgs e)
