@@ -50,7 +50,33 @@
 | **TASK-1702** | SettingsWindow: Fehlende Settings-Einträge ergänzen (AutoRestartOnCrash, Failover-Thresholds, etc.) | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1703** | App.xaml.cs: Deutsche Fehlermeldungen auf Englisch vereinheitlichen | Coder | LOW | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1704** | Integration-Tests für FirstRunService Wizard-Flow | QA | MEDIUM | TASK-1631 | ✅ CLOSED (2026-10-18) |
-| **TASK-1705** | HighContrastService: Unit-Test für DesignSystem-Integration | QA | LOW | TASK-1632 | 📋 OPEN |
+| **TASK-1705** | HighContrastService: Unit-Test für DesignSystem-Integration | QA | LOW | TASK-1632 | ✅ CLOSED (2026-10-18) |
+
+### Epic 6: UI/UX Polish & Accessibility (v2.5.0) — IN PLANUNG
+
+**Goal:** Alle Fenster nach optischen Verbesserungen, Barrierefreiheit und Funktionalität durchgehen. Jedes Fenster erhält: AutomationProperties, FocusVisualStyle, konsistente Styles, englische Texte, Tooltips, Validierung, leere Zustände.
+
+|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-1801** | MainWindow.xaml: AutomationProperties, FocusVisualStyle, englische Texte, Tastatur-Navigation | Designer | HIGH | — | 📋 OPEN |
+| **TASK-1802** | SettingsWindow.xaml: Deutsche Texte auf English, FocusVisualStyle, Slider-Labels, AutomationProperties | Designer | HIGH | — | 📋 OPEN |
+| **TASK-1803** | SplashWindow.xaml: Keyboard-Shortcuts anzeigen, Fortschritts-Prozent, AutomationProperties | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1804** | WizardWindow.xaml: Deutsche Texte auf English, Validierung-Feedback, AutomationProperties | Designer | HIGH | TASK-1631 | 📋 OPEN |
+| **TASK-1805** | ProfileLibraryWindow.xaml: Deutsche Texte auf English, Empty-State, AutomationProperties | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1806** | DaisyWheelWindow.xaml: Tastatur-Navigation, AutomationProperties, Focus-Ring | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1807** | CommunityBrowserWindow.xaml: Loading-Spinner, Empty-State, AutomationProperties | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1808** | TutorialWindow.xaml: Tastatur-Navigation, AutomationProperties, Media-Fallback | Designer | LOW | — | 📋 OPEN |
+| **TASK-1809** | DeveloperConsoleWindow.xaml: Copy-to-Clipboard, Log-Level-Farben, AutomationProperties | Designer | LOW | — | 📋 OPEN |
+| **TASK-1810** | ProfileWizardWindow.xaml: Validierung-Visual, AutomationProperties, Step-Dot-Labels | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1811** | HandheldWindow.xaml: Tastatur-Navigation, AutomationProperties, deutsche Tooltips | Designer | HIGH | — | 📋 OPEN |
+| **TASK-1812** | InGameOverlayWindow.xaml: Lesbarkeit verbessern, Tastatur-Navigation, AutomationProperties | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1813** | MiniModeWindow.xaml: Lesbarkeit, Tastatur-Shortcuts, Emoji-Fallback | Designer | LOW | — | 📋 OPEN |
+| **TASK-1814** | RadialSetupWindow.xaml: Emote-Gallery Tastatur, AutomationProperties, Emoji-Fallback | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1815** | RadialMenuWindow.xaml: Canvas Tastatur-Navigation, AutomationProperties, Focus-Ring | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1816** | ComboEditorWindow.xaml: Tab-Button AutomationProperties, Validierung-Feedback, Focus | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1817** | ButtonRemappingWindow.xaml: Falsche Tooltips auf Reset-Buttons, Slider-Accessibility, Tastatur | Designer | HIGH | — | 📋 OPEN |
+| **TASK-1818** | Globale UI-Styles: FocusVisualStyle für alle Controls, konsistente Button-Styles | Designer | HIGH | — | 📋 OPEN |
+| **TASK-1819** | Alle XAML: Missing Tooltips ergänzen, konsistente Margins/Paddings | Designer | MEDIUM | — | 📋 OPEN |
 
 ---
 

@@ -68,7 +68,7 @@
                             <Button x:Name="TabBtnL2" Content="L2+" Style="{StaticResource TabButton}" Click="TabL2_Click" Tag="L2+" AutomationProperties.Name="L2+ tab"/>
                             <Button x:Name="TabBtnR2" Content="R2+" Style="{StaticResource TabButton}" Click="TabR2_Click" Tag="R2+" AutomationProperties.Name="R2+ tab"/>
                             <Button x:Name="TabBtnHealth" Content="Health" Style="{StaticResource TabButton}" Click="TabHealth_Click" Tag="Health" AutomationProperties.Name="Health tab"/>
-                            <Button x:Name="TabBtnTelemetry" Content="Telemetrie" Style="{StaticResource TabButton}" Click="TabTelemetry_Click" Tag="Telemetry" AutomationProperties.Name="Telemetry tab"/>
+                            <Button x:Name="TabBtnTelemetry" Content="Telemetry" Style="{StaticResource TabButton}" Click="TabTelemetry_Click" Tag="Telemetry" AutomationProperties.Name="Telemetry tab"/>
                         </StackPanel>
                     </Border>
 
@@ -181,11 +181,11 @@
                                                     <ColumnDefinition Width="*"/>
                                                     <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
-                                                <Border x:Name="DpadUp" Grid.Row="0" Grid.Column="1" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Up"/>
-                                                <Border x:Name="DpadLeft" Grid.Row="1" Grid.Column="0" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Left"/>
-                                                <Border x:Name="DpadCenter" Grid.Row="1" Grid.Column="1" Background="{StaticResource BgPanel}" CornerRadius="4" Margin="4" BorderBrush="{StaticResource BgBorder}" BorderThickness="1"/>
-                                                <Border x:Name="DpadRight" Grid.Row="1" Grid.Column="2" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Right"/>
-                                                <Border x:Name="DpadDown" Grid.Row="2" Grid.Column="1" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Down"/>
+                                                <Border x:Name="DpadUp" Grid.Row="0" Grid.Column="1" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Up" AutomationProperties.Name="D-Pad Up"/>
+                                                                                                <Border x:Name="DpadLeft" Grid.Row="1" Grid.Column="0" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Left" AutomationProperties.Name="D-Pad Left"/>
+                                                                                                <Border x:Name="DpadCenter" Grid.Row="1" Grid.Column="1" Background="{StaticResource BgPanel}" CornerRadius="4" Margin="4" BorderBrush="{StaticResource BgBorder}" BorderThickness="1"/>
+                                                                                                <Border x:Name="DpadRight" Grid.Row="1" Grid.Column="2" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Right" AutomationProperties.Name="D-Pad Right"/>
+                                                                                                <Border x:Name="DpadDown" Grid.Row="2" Grid.Column="1" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Down" AutomationProperties.Name="D-Pad Down"/>
                                             </Grid>
                                         </Border>
 
@@ -206,10 +206,10 @@
                                         <Ellipse x:Name="RightStickPos" Canvas.Left="310" Canvas.Top="180" Width="10" Height="10" Fill="{StaticResource AccentPurple}" Effect="{StaticResource PurpleGlow}" IsHitTestVisible="False"/>
 
                                         <!-- Action Buttons (A/B/X/Y) - Modern styling -->
-                                        <Ellipse x:Name="BtnA" Canvas.Left="330" Canvas.Top="80" Width="42" Height="42" Fill="#ef4444" Effect="{StaticResource GoldGlow}" ToolTip="Button A"/>
-                                        <Ellipse x:Name="BtnB" Canvas.Left="380" Canvas.Top="30" Width="42" Height="42" Fill="#f59e0b" Effect="{StaticResource GoldGlow}" ToolTip="Button B"/>
-                                        <Ellipse x:Name="BtnX" Canvas.Left="280" Canvas.Top="30" Width="42" Height="42" Fill="#3b82f6" Effect="{StaticResource BlueGlow}" ToolTip="Button X"/>
-                                        <Ellipse x:Name="BtnY" Canvas.Left="330" Canvas.Top="-20" Width="42" Height="42" Fill="#a855f7" Effect="{StaticResource PurpleGlow}" ToolTip="Button Y"/>
+                                        <Ellipse x:Name="BtnA" Canvas.Left="330" Canvas.Top="80" Width="42" Height="42" Fill="#ef4444" Effect="{StaticResource GoldGlow}" ToolTip="Button A" AutomationProperties.Name="Button A"/>
+                                                                                <Ellipse x:Name="BtnB" Canvas.Left="380" Canvas.Top="30" Width="42" Height="42" Fill="#f59e0b" Effect="{StaticResource GoldGlow}" ToolTip="Button B" AutomationProperties.Name="Button B"/>
+                                                                                <Ellipse x:Name="BtnX" Canvas.Left="280" Canvas.Top="30" Width="42" Height="42" Fill="#3b82f6" Effect="{StaticResource BlueGlow}" ToolTip="Button X" AutomationProperties.Name="Button X"/>
+                                                                                <Ellipse x:Name="BtnY" Canvas.Left="330" Canvas.Top="-20" Width="42" Height="42" Fill="#a855f7" Effect="{StaticResource PurpleGlow}" ToolTip="Button Y" AutomationProperties.Name="Button Y"/>
                                         
                                         <TextBlock Canvas.Left="341" Canvas.Top="86" Text="A" Foreground="White" FontWeight="Bold" FontSize="14" IsHitTestVisible="False"/>
                                         <TextBlock Canvas.Left="391" Canvas.Top="36" Text="B" Foreground="White" FontWeight="Bold" FontSize="14" IsHitTestVisible="False"/>
@@ -243,10 +243,10 @@
 
                             <!-- Quick Actions -->
                             <StackPanel Grid.Row="2" Orientation="Vertical" Margin="16,0,16,16" HorizontalAlignment="Stretch">
-                                <Button x:Name="BtnCalibrateQuick" Content="Calibrate" Style="{StaticResource PrimaryButton}" Height="44" Margin="0,0,0,8" Click="BtnCalibrateQuick_Click"/>
-                                <Button x:Name="BtnTestInput" Content="Test Input" Style="{StaticResource GhostButton}" Height="44" Margin="0,0,0,8" Click="BtnTestInput_Click"/>
-                                <Button x:Name="BtnOpenRemap" Content="Button Remapping" Style="{StaticResource GhostButton}" Height="44" Click="BtnOpenRemap_Click"/>
-                                <Button x:Name="BtnRadial" Content="Radial Menu" Style="{StaticResource GhostButton}" Height="44" Margin="0,8,0,0" Click="BtnRadial_Click"/>
+                                <Button x:Name="BtnCalibrateQuick" Content="Calibrate" Style="{StaticResource PrimaryButton}" Height="44" Margin="0,0,0,8" Click="BtnCalibrateQuick_Click" AutomationProperties.Name="Quick calibrate"/>
+                                                                <Button x:Name="BtnTestInput" Content="Test Input" Style="{StaticResource GhostButton}" Height="44" Margin="0,0,0,8" Click="BtnTestInput_Click" AutomationProperties.Name="Test input"/>
+                                                                <Button x:Name="BtnOpenRemap" Content="Button Remapping" Style="{StaticResource GhostButton}" Height="44" Click="BtnOpenRemap_Click" AutomationProperties.Name="Button remapping"/>
+                                                                <Button x:Name="BtnRadial" Content="Radial Menu" Style="{StaticResource GhostButton}" Height="44" Margin="0,8,0,0" Click="BtnRadial_Click" AutomationProperties.Name="Radial menu"/>
                             </StackPanel>
                         </Grid>
                     </Border>
