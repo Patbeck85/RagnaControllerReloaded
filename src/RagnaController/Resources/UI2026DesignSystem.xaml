@@ -859,7 +859,19 @@
         <Setter Property="FocusVisualStyle" Value="{StaticResource GamepadFocusVisualStyle}"/>
     </Style>
     <Style TargetType="Slider" BasedOn="{StaticResource {x:Type Slider}}">
-        <Setter Property="FocusVisualStyle" Value="{StaticResource GamepadFocusVisualStyle}"/>
-    </Style>
+            <Setter Property="FocusVisualStyle" Value="{StaticResource GamepadFocusVisualStyle}"/>
+        </Style>
+        <Style TargetType="CheckBox" BasedOn="{StaticResource {x:Type CheckBox}}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource GamepadFocusVisualStyle}"/>
+        </Style>
+        <Style TargetType="RadioButton" BasedOn="{StaticResource {x:Type RadioButton}}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource GamepadFocusVisualStyle}"/>
+        </Style>
+        <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource GamepadFocusVisualStyle}"/>
+        </Style>
+        <Style TargetType="ToggleButton" BasedOn="{StaticResource {x:Type ToggleButton}}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource GamepadFocusVisualStyle}"/>
+        </Style>
 
 </ResourceDictionary>
