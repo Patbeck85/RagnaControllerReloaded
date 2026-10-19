@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using RagnaController.Core;
 using RagnaController.Models;
@@ -157,7 +158,9 @@ namespace RagnaController.Views.Editors
                             BorderBrush = borderBrush,
                             BorderThickness = new Thickness(1.5),
                             CornerRadius = cornerRadius,
-                            Child = stack
+                            Child = stack,
+                            RenderTransformOrigin = new Point(0.5, 0.5),
+                            RenderTransform = new ScaleTransform(1, 1)
                         };
 
                         Canvas.SetLeft(border, x);
@@ -196,6 +199,11 @@ namespace RagnaController.Views.Editors
                         b.BorderBrush = textPrimaryBrush;
                         b.Background = goldBrush;
                         if (SelectedText != null) SelectedText.Text = _items[_selectedIndex].Name;
+
+                        // TASK-2012: Start pulse animation on selected item
+                        var pulse = (Storyboard)FindResource("PulseAnimation");
+                        Storyboard.SetTarget(pulse, b.RenderTransform);
+                        pulse.Begin(b);
                     }
                 }
 
@@ -208,6 +216,10 @@ namespace RagnaController.Views.Editors
                     {
                         b.BorderBrush = borderBrush;
                         b.Background = bgSecondaryBrush;
+                        // Stop pulse and reset scale
+                        b.RenderTransform = new ScaleTransform(1, 1);
+                        var pulse = (Storyboard)FindResource("PulseAnimation");
+                        pulse.Stop(b);
                     }
                 }
 

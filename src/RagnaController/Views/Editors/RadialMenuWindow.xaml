@@ -8,6 +8,16 @@
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Topmost="True" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
 
+    <Window.Resources>
+        <ResourceDictionary>
+            <!-- Pulse animation for selected item -->
+            <Storyboard x:Key="PulseAnimation" RepeatBehavior="Forever" AutoReverse="True">
+                <DoubleAnimation Storyboard.TargetProperty="ScaleX" From="1.0" To="1.15" Duration="0:0:0.6"/>
+                <DoubleAnimation Storyboard.TargetProperty="ScaleY" From="1.0" To="1.15" Duration="0:0:0.6"/>
+            </Storyboard>
+        </ResourceDictionary>
+    </Window.Resources>
+
     
 
     <!-- Root: Glassmorphism radial container with animated entrance -->
