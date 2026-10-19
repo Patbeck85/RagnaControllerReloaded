@@ -73,7 +73,7 @@
                 <!-- ── TILE GRID ──────────────────────────────────────────────── -->
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="48,16" Padding="8">
                     <UniformGrid Columns="3" Rows="2" Margin="0,16">
-                        <Button x:Name="BtnPlay" Style="{StaticResource PrimaryButton}" Height="180" Click="BtnPlay_Click" ToolTip="Start Game">
+                        <Button x:Name="BtnPlay" Style="{StaticResource PrimaryButton}" Height="180" Click="BtnPlay_Click" ToolTip="Start Game" AutomationProperties.Name="Play game tile">
                             <StackPanel Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <TextBlock Text="▶" FontSize="56" Foreground="{StaticResource LiveColor}"
                                            HorizontalAlignment="Center" Effect="{StaticResource GoldGlow}"/>
@@ -85,7 +85,7 @@
                             </StackPanel>
                         </Button>
 
-                        <Button x:Name="BtnProfiles" Style="{StaticResource GhostButton}" Height="180" Click="BtnProfiles_Click" ToolTip="Profile Management">
+                        <Button x:Name="BtnProfiles" Style="{StaticResource GhostButton}" Height="180" Click="BtnProfiles_Click" ToolTip="Profile Management" AutomationProperties.Name="Profiles tile">
                             <StackPanel Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <TextBlock Text="👥" FontSize="56" HorizontalAlignment="Center" Effect="{StaticResource GoldGlow}"/>
                                 <TextBlock Text="PROFILES" FontSize="22" FontWeight="Black"
@@ -96,7 +96,7 @@
                             </StackPanel>
                         </Button>
 
-                        <Button x:Name="BtnOverlay" Style="{StaticResource GhostButton}" Height="180" Click="BtnOverlay_Click" ToolTip="Toggle Overlay">
+                        <Button x:Name="BtnOverlay" Style="{StaticResource GhostButton}" Height="180" Click="BtnOverlay_Click" ToolTip="Toggle Overlay" AutomationProperties.Name="Mini overlay tile">
                             <StackPanel Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <TextBlock Text="📺" FontSize="56" Foreground="{StaticResource AccentBlue}"
                                            HorizontalAlignment="Center" Effect="{StaticResource BlueGlow}"/>
@@ -108,7 +108,7 @@
                             </StackPanel>
                         </Button>
 
-                        <Button x:Name="BtnSettings" Style="{StaticResource GhostButton}" Height="180" Click="BtnSettings_Click" ToolTip="Settings">
+                        <Button x:Name="BtnSettings" Style="{StaticResource GhostButton}" Height="180" Click="BtnSettings_Click" ToolTip="Settings" AutomationProperties.Name="Settings tile">
                             <StackPanel Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <TextBlock Text="⚙" FontSize="56" Foreground="{StaticResource AccentPurple}"
                                            HorizontalAlignment="Center" Effect="{StaticResource PurpleGlow}"/>
@@ -120,7 +120,7 @@
                             </StackPanel>
                         </Button>
 
-                        <Button x:Name="BtnCommunity" Style="{StaticResource GhostButton}" Height="180" Click="BtnCommunity_Click" ToolTip="Community Hub">
+                        <Button x:Name="BtnCommunity" Style="{StaticResource GhostButton}" Height="180" Click="BtnCommunity_Click" ToolTip="Community Hub" AutomationProperties.Name="Community hub tile">
                             <StackPanel Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <TextBlock Text="🌐" FontSize="56" HorizontalAlignment="Center" Effect="{StaticResource GoldGlow}"/>
                                 <TextBlock Text="COMMUNITY" FontSize="22" FontWeight="Black"
@@ -131,7 +131,7 @@
                             </StackPanel>
                         </Button>
 
-                        <Button x:Name="BtnExit" Style="{StaticResource DangerButton}" Height="180" Click="BtnExit_Click" ToolTip="Exit Application">
+                        <Button x:Name="BtnExit" Style="{StaticResource DangerButton}" Height="180" Click="BtnExit_Click" ToolTip="Exit Application" AutomationProperties.Name="Exit application tile">
                             <StackPanel Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <TextBlock Text="⏻" FontSize="56" Foreground="#FF5252"
                                            HorizontalAlignment="Center" Effect="{StaticResource CardShadow}"/>
