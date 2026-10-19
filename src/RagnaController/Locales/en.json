@@ -971,5 +971,9 @@
   "Settings_HighContrastTooltip": "High contrast for better readability (black/white, bold accents)",
   "Settings_UIFontScale": "UI Font Scale:",
   "Settings_Btn_ResetAll": "Reset All Settings",
-  "Settings_Btn_ResetAll_Confirm": "Are you sure you want to reset all settings to defaults? This cannot be undone."
+  "Settings_Btn_ResetAll_Confirm": "Are you sure you want to reset all settings to defaults? This cannot be undone.",
+  "Splash_SkipButton": "Skip",
+  "Splash_SkipTooltip": "Skip splash screen",
+  "Splash_PressEsc": "Press ESC to skip",
+  "Splash_ErrorTitle": "Startup Error"
 }

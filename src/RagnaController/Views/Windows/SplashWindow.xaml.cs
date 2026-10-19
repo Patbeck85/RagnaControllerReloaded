@@ -16,6 +16,10 @@ namespace RagnaController.Views.Windows
         private readonly DispatcherTimer _statusTimer = new();
         private int _statusPhase = 0;
 
+        // TASK-2003: Progress percentage
+        private readonly DispatcherTimer _progressTimer = new();
+        private int _progressValue = 0;
+
         // Skip splash per click
         public readonly System.Threading.CancellationTokenSource SkipCts = new();
 
@@ -85,13 +89,28 @@ namespace RagnaController.Views.Windows
                 Play("LogoIn");
                 Play("ProgressAnim");
 
+                // TASK-2003: Progress percentage counter (0% → 100% over ~4 seconds)
+                _progressTimer.Interval = TimeSpan.FromMilliseconds(100);
+                _progressTimer.Tick += (s, e) =>
+                {
+                    _progressValue += 2;
+                    if (_progressValue >= 100)
+                    {
+                        _progressValue = 100;
+                        _progressTimer.Stop();
+                    }
+                    SplashProgressPercent.Text = $"{_progressValue}%";
+                };
+                _progressTimer.Start();
+
                 DoubleAnimation fadeInBottom = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(800));
                 BottomRow.BeginAnimation(OpacityProperty, fadeInBottom);
 
                 _statusTimer.Interval = TimeSpan.FromMilliseconds(700);
-                _statusTimer.Tick += (s, e) => {
+                _statusTimer.Tick += (s, e) =>
+                {
                     _statusPhase++;
-                    if (_statusPhase < StatusMessages?.Length && StatusMessages != null) 
+                    if (_statusPhase < StatusMessages?.Length && StatusMessages != null)
                         StatusText.Text = StatusMessages[_statusPhase];
                     else _statusTimer.Stop();
                 };
@@ -101,6 +120,15 @@ namespace RagnaController.Views.Windows
             {
                 System.Diagnostics.Debug.WriteLine($"[SplashWindow] Animation error: {ex.Message}");
             }
+        }
+
+        // TASK-2003: Show error details on splash screen
+        public void ShowError(string title, string details)
+        {
+            _progressTimer.Stop();
+            ErrorPanel.Visibility = Visibility.Visible;
+            ErrorTitle.Text = title;
+            ErrorDetails.Text = details;
         }
 
         public void FadeAndClose(int durationMs = 600)

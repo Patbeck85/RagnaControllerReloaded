@@ -971,5 +971,9 @@
   "Settings_HighContrastTooltip": "Hoher Kontrast für bessere Lesbarkeit (schwarz/weiß, fette Akzente)",
   "Settings_UIFontScale": "UI-Schriftgröße:",
   "Settings_Btn_ResetAll": "Alle Einstellungen zurücksetzen",
-  "Settings_Btn_ResetAll_Confirm": "Sind Sie sicher, dass Sie alle Einstellungen auf die Standardwerte zurücksetzen möchten? Dies kann nicht rückgängig gemacht werden."
+  "Settings_Btn_ResetAll_Confirm": "Sind Sie sicher, dass Sie alle Einstellungen auf die Standardwerte zurücksetzen möchten? Dies kann nicht rückgängig gemacht werden.",
+  "Splash_SkipButton": "Überspringen",
+  "Splash_SkipTooltip": "Splash-Screen überspringen",
+  "Splash_PressEsc": "ESC zum Überspringen drücken",
+  "Splash_ErrorTitle": "Startfehler"
 }
