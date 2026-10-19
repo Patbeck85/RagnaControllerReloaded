@@ -1,0 +1,37 @@
+{
+  "Id": "novice_renewal",
+  "DisplayName": "Novice (Renewal)",
+  "Description": "Startklasse – ausgewogene Einstellungen für alle Situationen (Renewal-Modus).",
+  "Class": "Melee",
+  "Mode": "Renewal",
+  "SkillRecommendations": ["Schlag", "Steigerung"],
+  "ClassTips": "Die Grundklasse. Gute Basiswerte, keine Spezialisierung. Renewal-Variante.",
+  "Engines": {
+    "AutoAttackEnabled": true,
+    "AutoRetargetEnabled": false,
+    "KiteEnabled": false,
+    "MageEnabled": false,
+    "SupportEnabled": false,
+    "ComboEnabled": false,
+    "SmartSkillEnabled": true,
+    "AutoAttackKeyVK": 90,
+    "KiteAttackKeyVK": 90,
+    "SupportHealKeyVK": 90,
+    "MageBoltKeyVK": 88,
+    "TabCycleMs": 60
+  },
+  "ButtonMappings": {
+    "A": 90,
+    "B": 88,
+    "X": 67,
+    "Y": 86
+  },
+  "Sensitivity": {
+    "MouseSensitivity": 1.2,
+    "Deadzone": 0.12,
+    "MovementCurve": 1.5,
+    "AimSensitivity": 22.0,
+    "AimDeadzone": 0.20,
+    "StickDeadzone": 0.2
+  }
+}

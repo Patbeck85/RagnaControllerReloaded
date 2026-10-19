@@ -1,0 +1,37 @@
+{
+  "Id": "archer",
+  "DisplayName": "Archer",
+  "Description": "Fernkampf-Klasse mit Kite-Unterstützung und schnellem Auto-Attack.",
+  "Class": "Ranged",
+  "Mode": "Pre-Renewal",
+  "SkillRecommendations": ["Double Strafe", "Arrow Storm", "Strafe"],
+  "ClassTips": "Bogenschütze. Fernkampf mit Kite – automatisch Abstand zum Gegner halten.",
+  "Engines": {
+    "AutoAttackEnabled": true,
+    "AutoRetargetEnabled": true,
+    "KiteEnabled": true,
+    "MageEnabled": false,
+    "SupportEnabled": false,
+    "ComboEnabled": false,
+    "SmartSkillEnabled": true,
+    "AutoAttackKeyVK": 90,
+    "KiteAttackKeyVK": 90,
+    "SupportHealKeyVK": 90,
+    "MageBoltKeyVK": 88,
+    "TabCycleMs": 60
+  },
+  "ButtonMappings": {
+    "A": 90,
+    "B": 88,
+    "X": 67,
+    "Y": 86
+  },
+  "Sensitivity": {
+    "MouseSensitivity": 1.4,
+    "Deadzone": 0.10,
+    "MovementCurve": 1.5,
+    "AimSensitivity": 28.0,
+    "AimDeadzone": 0.15,
+    "StickDeadzone": 0.15
+  }
+}

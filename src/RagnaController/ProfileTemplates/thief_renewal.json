@@ -1,0 +1,37 @@
+{
+  "Id": "thief_renewal",
+  "DisplayName": "Thief (Renewal)",
+  "Description": "Dieb-Klasse mit Kite-Unterstützung und schnellen Angriffen (Renewal-Modus).",
+  "Class": "Melee",
+  "Mode": "Renewal",
+  "SkillRecommendations": ["Double Attack", "Sonic Blow", "Bash", "Spear Quick Throw"],
+  "ClassTips": "Dieb. Schnelle Nahkampfangriffe mit Kite-Unterstützung für hohe Mobilität. Renewal-Variante.",
+  "Engines": {
+    "AutoAttackEnabled": true,
+    "AutoRetargetEnabled": true,
+    "KiteEnabled": true,
+    "MageEnabled": false,
+    "SupportEnabled": false,
+    "ComboEnabled": false,
+    "SmartSkillEnabled": true,
+    "AutoAttackKeyVK": 90,
+    "KiteAttackKeyVK": 90,
+    "SupportHealKeyVK": 90,
+    "MageBoltKeyVK": 88,
+    "TabCycleMs": 50
+  },
+  "ButtonMappings": {
+    "A": 90,
+    "B": 88,
+    "X": 67,
+    "Y": 86
+  },
+  "Sensitivity": {
+    "MouseSensitivity": 1.3,
+    "Deadzone": 0.10,
+    "MovementCurve": 1.5,
+    "AimSensitivity": 26.0,
+    "AimDeadzone": 0.15,
+    "StickDeadzone": 0.15
+  }
+}

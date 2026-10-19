@@ -7,10 +7,16 @@ using RagnaController.Models;
 namespace RagnaController.Profiles
 {
     /// <summary>
-    /// TASK-1911: ProfileTemplateManager — verwaltet alle eingebauten Profil-Vorlagen
-    /// für RO-Klassen (Novice, Swordsman, Mage, Archer, Acolyte, Merchant, Thief).
-    /// Jede Vorlage definiert Klasse, Engine-Einstellungen, Button-Mappings und
-    /// Sensitivität, die im First-Run Wizard ausgewählt werden können.
+    /// TASK-1911: ProfileTemplateManager — verwaltet alle verfügbaren Profil-Vorlagen
+    /// für RO-Klassen. Lädt Vorlagen aus JSON-Dateien im <DefaultProfiles/>-Ordner
+    /// (z.B. <novice_preremewal.json>, <mage_renewal.json>). Jede Vorlage definiert
+    /// Klasse, Engine-Einstellungen, Button-Mappings und Sensitivität, die im
+    /// First-Run Wizard (Epic 9) ausgewählt werden können.
+    ///
+    /// Hinweis: Statt hardcodierter Klassen werden Vorlagen aus JSON-Dateien geladen,
+    /// sodass du deine eigenen Pre-Renewal / Renewal Vorlagen einfach als
+    /// DefaultProfiles\*.json ablegen kannst. Später können Vorlagen auch über
+    /// GitHub Gists geteilt und heruntergeladen werden.
     /// </summary>
     public sealed class ProfileTemplateManager : IDisposable
     {
@@ -27,260 +33,44 @@ namespace RagnaController.Profiles
 
         public ProfileTemplateManager()
         {
-            LoadBuiltInTemplates();
+            LoadFromDefaultProfilesFolder();
         }
 
         /// <summary>
-        /// Lädt alle eingebauten Klassen-Vorlagen.
+        /// Lädt alle Profil-Vorlagen aus JSON-Dateien im DefaultProfiles-Ordner.
+        /// Dateinamenschema: <klasse>_<modus>.json (z.B. novice_preremewal.json, mage_renewal.json)
         /// </summary>
-        private void LoadBuiltInTemplates()
+        private void LoadFromDefaultProfilesFolder()
         {
             _templates.Clear();
 
-            // ── NOVICE ── Startklasse, keine Spezialisierung
-            RegisterTemplate(new ProfileTemplate
+            var templateDir = Path.Combine(AppContext.BaseDirectory, "ProfileTemplates");
+            if (!Directory.Exists(templateDir))
             {
-                Id = "novice",
-                DisplayName = "Novice",
-                Description = "Startklasse – ausgewogene Einstellungen für alle Situationen.",
-                Class = "Melee",
-                SkillRecommendations = new List<string> { "Schlag", "Steigerung" },
-                ClassTips = "Die Grundklasse. Gute Basiswerte, keine Spezialisierung.",
-                Engines = new TemplateEngineSettings
-                {
-                    AutoAttackEnabled = true,
-                    SmartSkillEnabled = true,
-                    AutoAttackKeyVK = 0x5A, // Z
-                    TabCycleMs = 80
-                },
-                ButtonMappings = new Dictionary<VirtualKey, VirtualKey>
-                {
-                    { VirtualKey.A, VirtualKey.Z }, // Angriff
-                    { VirtualKey.B, VirtualKey.X }, // Fähigkeit
-                    { VirtualKey.X, VirtualKey.C }, // Item
-                    { VirtualKey.Y, VirtualKey.V }  // Buff
-                },
-                Sensitivity = new TemplateSensitivity
-                {
-                    MouseSensitivity = 1.2f,
-                    Deadzone = 0.12f,
-                    AimSensitivity = 22f,
-                    AimDeadzone = 0.20f,
-                    StickDeadzone = 0.2f
-                }
-            });
+                Logger?.Invoke("[ProfileTemplateManager] ProfileTemplates-Ordner nicht gefunden — keine Vorlagen geladen.");
+                return;
+            }
 
-            // ── SWORDSMAN ── Nahkampf, Auto-Attack, Kite
-            RegisterTemplate(new ProfileTemplate
+            int loaded = 0;
+            foreach (var file in Directory.GetFiles(templateDir, "*.json"))
             {
-                Id = "swordsman",
-                DisplayName = "Swordsman",
-                Description = "Nahkampf-Klasse mit Auto-Attack und Kite-Unterstützung.",
-                Class = "Melee",
-                SkillRecommendations = new List<string> { "Schlag", "Steigerung", "Kriegerschrei" },
-                ClassTips = "Nahkampf-Spezialist. Automatischer Angriff und Kite-Unterstützung für distanzierte Feinde.",
-                Engines = new TemplateEngineSettings
+                try
                 {
-                    AutoAttackEnabled = true,
-                    AutoRetargetEnabled = true,
-                    KiteEnabled = true,
-                    SmartSkillEnabled = true,
-                    AutoAttackKeyVK = 0x5A, // Z
-                    KiteAttackKeyVK = 0x5A, // Z
-                    TabCycleMs = 80
-                },
-                ButtonMappings = new Dictionary<VirtualKey, VirtualKey>
-                {
-                    { VirtualKey.A, VirtualKey.Z }, // Auto-Attack
-                    { VirtualKey.B, VirtualKey.X }, // Fähigkeit
-                    { VirtualKey.X, VirtualKey.C }, // Item
-                    { VirtualKey.Y, VirtualKey.V }  // Buff
-                },
-                Sensitivity = new TemplateSensitivity
-                {
-                    MouseSensitivity = 1.1f,
-                    Deadzone = 0.10f,
-                    AimSensitivity = 20f,
-                    AimDeadzone = 0.18f,
-                    StickDeadzone = 0.18f
+                    var json = File.ReadAllText(file);
+                    var template = JsonSerializer.Deserialize<ProfileTemplate>(json, AppJsonContext.Default.ProfileTemplate);
+                    if (template != null && !string.IsNullOrWhiteSpace(template.Id))
+                    {
+                        _templates[template.Id] = template;
+                        loaded++;
+                    }
                 }
-            });
-
-            // ── MAGE ── Magie-Klasse, Mage Engine, Bodenzauber
-            RegisterTemplate(new ProfileTemplate
-            {
-                Id = "mage",
-                DisplayName = "Mage",
-                Description = "Magie-Klasse mit Mage Engine für automatisches Zaubern.",
-                Class = "Mage",
-                SkillRecommendations = new List<string> { "Fire Bolt", "Thunder Storm", "Storm Gust", "Meteor Storm" },
-                ClassTips = "Magier. Automatisches Zaubern mit Mage Engine. Bodenzauber mit Right-Stick zielen.",
-                Engines = new TemplateEngineSettings
+                catch (Exception ex)
                 {
-                    MageEnabled = true,
-                    SmartSkillEnabled = true,
-                    MageBoltKeyVK = 0x58, // X
-                    AutoAttackKeyVK = 0x5A, // Z
-                    TabCycleMs = 100
-                },
-                ButtonMappings = new Dictionary<VirtualKey, VirtualKey>
-                {
-                    { VirtualKey.A, VirtualKey.X }, // Fire Bolt
-                    { VirtualKey.B, VirtualKey.Z }, // Auto-Attack / Wand
-                    { VirtualKey.X, VirtualKey.C }, // Item
-                    { VirtualKey.Y, VirtualKey.V }  // Buff
-                },
-                Sensitivity = new TemplateSensitivity
-                {
-                    MouseSensitivity = 1.3f,
-                    Deadzone = 0.15f,
-                    AimSensitivity = 25f,
-                    AimDeadzone = 0.22f,
-                    StickDeadzone = 0.22f
+                    Logger?.Invoke($"[ProfileTemplateManager] Ungültige Vorlage '{Path.GetFileName(file)}': {ex.Message}");
                 }
-            });
+            }
 
-            // ── ARCHER ── Fernkampf, Kite, Auto-Attack
-            RegisterTemplate(new ProfileTemplate
-            {
-                Id = "archer",
-                DisplayName = "Archer",
-                Description = "Fernkampf-Klasse mit Kite-Unterstützung und schnellem Auto-Attack.",
-                Class = "Ranged",
-                SkillRecommendations = new List<string> { "Double Strafe", "Arrow Storm", "Strafe" },
-                ClassTips = "Bogenschütze. Fernkampf mit Kite – automatisch Abstand zum Gegner halten.",
-                Engines = new TemplateEngineSettings
-                {
-                    AutoAttackEnabled = true,
-                    AutoRetargetEnabled = true,
-                    KiteEnabled = true,
-                    SmartSkillEnabled = true,
-                    AutoAttackKeyVK = 0x5A, // Z
-                    KiteAttackKeyVK = 0x5A, // Z
-                    TabCycleMs = 60
-                },
-                ButtonMappings = new Dictionary<VirtualKey, VirtualKey>
-                {
-                    { VirtualKey.A, VirtualKey.Z }, // Auto-Attack
-                    { VirtualKey.B, VirtualKey.X }, // Fähigkeit
-                    { VirtualKey.X, VirtualKey.C }, // Item
-                    { VirtualKey.Y, VirtualKey.V }  // Buff
-                },
-                Sensitivity = new TemplateSensitivity
-                {
-                    MouseSensitivity = 1.4f,
-                    Deadzone = 0.10f,
-                    AimSensitivity = 28f,
-                    AimDeadzone = 0.15f,
-                    StickDeadzone = 0.15f
-                }
-            });
-
-            // ── ACOLYTE ── Support/Heilung, Support Engine
-            RegisterTemplate(new ProfileTemplate
-            {
-                Id = "acolyte",
-                DisplayName = "Acolyte",
-                Description = "Support-Klasse mit automatischer Heilung und Party-Unterstützung.",
-                Class = "Support",
-                SkillRecommendations = new List<string> { "Heal", "Increase AGI", "Gloria", "Resurrection" },
-                ClassTips = "Heiler. Automatische Party-Heilung mit Support Engine. Gruppenbuffs.",
-                Engines = new TemplateEngineSettings
-                {
-                    SupportEnabled = true,
-                    SmartSkillEnabled = true,
-                    SupportHealKeyVK = 0x5A, // Z
-                    AutoAttackKeyVK = 0x5A, // Z
-                    TabCycleMs = 100
-                },
-                ButtonMappings = new Dictionary<VirtualKey, VirtualKey>
-                {
-                    { VirtualKey.A, VirtualKey.Z }, // Heal
-                    { VirtualKey.B, VirtualKey.X }, // Buff
-                    { VirtualKey.X, VirtualKey.C }, // Item
-                    { VirtualKey.Y, VirtualKey.V }  // Rez / Party
-                },
-                Sensitivity = new TemplateSensitivity
-                {
-                    MouseSensitivity = 1.2f,
-                    Deadzone = 0.12f,
-                    AimSensitivity = 22f,
-                    AimDeadzone = 0.20f,
-                    StickDeadzone = 0.2f
-                }
-            });
-
-            // ── MERCHANT ── Händler, ItemManager, Auto-Attack
-            RegisterTemplate(new ProfileTemplate
-            {
-                Id = "merchant",
-                DisplayName = "Merchant",
-                Description = "Händler-Klasse mit ItemManager für automatisches Item-Management.",
-                Class = "Melee",
-                SkillRecommendations = new List<string> { "Mammonite", "Overcharge", "Cart Revolution" },
-                ClassTips = "Händler. ItemManager für automatische Potion-Verwaltung und Cart-Fähigkeiten.",
-                Engines = new TemplateEngineSettings
-                {
-                    AutoAttackEnabled = true,
-                    AutoRetargetEnabled = true,
-                    SmartSkillEnabled = true,
-                    AutoAttackKeyVK = 0x5A, // Z
-                    TabCycleMs = 80
-                },
-                ButtonMappings = new Dictionary<VirtualKey, VirtualKey>
-                {
-                    { VirtualKey.A, VirtualKey.Z }, // Auto-Attack
-                    { VirtualKey.B, VirtualKey.X }, // Fähigkeit
-                    { VirtualKey.X, VirtualKey.C }, // Item
-                    { VirtualKey.Y, VirtualKey.V }  // Buff
-                },
-                Sensitivity = new TemplateSensitivity
-                {
-                    MouseSensitivity = 1.2f,
-                    Deadzone = 0.12f,
-                    AimSensitivity = 22f,
-                    AimDeadzone = 0.20f,
-                    StickDeadzone = 0.2f
-                }
-            });
-
-            // ── THIEF ── Dieb, Kite, schnelle Angriffe
-            RegisterTemplate(new ProfileTemplate
-            {
-                Id = "thief",
-                DisplayName = "Thief",
-                Description = "Dieb-Klasse mit Kite-Unterstützung und schnellen Angriffen.",
-                Class = "Melee",
-                SkillRecommendations = new List<string> { "Double Attack", "Sonic Blow", "Bash", "Spear Quick Throw" },
-                ClassTips = "Dieb. Schnelle Nahkampfangriffe mit Kite-Unterstützung für hohe Mobilität.",
-                Engines = new TemplateEngineSettings
-                {
-                    AutoAttackEnabled = true,
-                    AutoRetargetEnabled = true,
-                    KiteEnabled = true,
-                    SmartSkillEnabled = true,
-                    AutoAttackKeyVK = 0x5A, // Z
-                    KiteAttackKeyVK = 0x5A, // Z
-                    TabCycleMs = 60
-                },
-                ButtonMappings = new Dictionary<VirtualKey, VirtualKey>
-                {
-                    { VirtualKey.A, VirtualKey.Z }, // Auto-Attack
-                    { VirtualKey.B, VirtualKey.X }, // Fähigkeit
-                    { VirtualKey.X, VirtualKey.C }, // Item
-                    { VirtualKey.Y, VirtualKey.V }  // Buff
-                },
-                Sensitivity = new TemplateSensitivity
-                {
-                    MouseSensitivity = 1.3f,
-                    Deadzone = 0.10f,
-                    AimSensitivity = 26f,
-                    AimDeadzone = 0.15f,
-                    StickDeadzone = 0.15f
-                }
-            });
-
-            Logger?.Invoke($"[ProfileTemplateManager] {_templates.Count} eingebaute Vorlagen geladen.");
+            Logger?.Invoke($"[ProfileTemplateManager] {loaded} Vorlagen aus ProfileTemplates geladen.");
         }
 
         /// <summary>

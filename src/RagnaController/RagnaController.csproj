@@ -261,6 +261,7 @@
       <None Include="startup_voice.mp3" CopyToOutputDirectory="PreserveNewest" Condition="Exists('startup_voice.mp3')" />
       <None Include="startup_voice.wav" CopyToOutputDirectory="PreserveNewest" Condition="Exists('startup_voice.wav')" />
       <Content Include="DefaultProfiles\*.json" CopyToOutputDirectory="PreserveNewest" />
+      <Content Include="ProfileTemplates\*.json" CopyToOutputDirectory="PreserveNewest" />
       <!-- i18n: Kopiert den kompletten Locales Ordner in den Release/Publish Ordner -->
       <None Update="Locales\**" CopyToOutputDirectory="PreserveNewest" />
       <!-- AntiCheat: Kopiert den kompletten AntiCheat Ordner in den Release/Publish Ordner -->
