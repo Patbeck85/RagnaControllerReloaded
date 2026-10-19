@@ -159,7 +159,7 @@
 | **TASK-2006** | ProfileLibraryWindow: Bulk-Operationen, Sortierung (Name/Datum/Downloads), Favoriten, "Einfügen aus Zwischenablage" für Share Code, Download-Fortschritt | Designer | HIGH | — | ✅ CLOSED (2026-10-19) |
 | **TASK-2007** | HandheldWindow: Mehr Tiles (Controller Test, Macro Editor), Tiles umordnen möglich | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
 | **TASK-2008** | InGameOverlayWindow: Größe anpassbar, Position speichern, Batterie dynamisch | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2009** | MiniModeWindow: Tastatur-Kurzbefehle anzeigen, Transparenz-Einstellung, Profil-Wechsel direkt | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2009** | MiniModeWindow: Tastatur-Kurzbefehle anzeigen, Transparenz-Einstellung, Profil-Wechsel direkt | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
 | **TASK-2010** | ComboEditorWindow: Drag-and-Drop für Schritte-Reihenfolge, Kopieren/Einfügen von Schritten, Vorschau | Designer | HIGH | — | 📋 OPEN |
 | **TASK-2011** | ButtonRemappingWindow: Duplikate entfernen (rechts/links identisch), falsche Reset-Button-Tooltips fixen, Preview-Bereich entfernen oder sinnvoll nutzen, Profil laden/speichern | Designer | HIGH | — | 📋 OPEN |
 | **TASK-2012** | RadialMenuWindow: Visuelle Rückmeldung bei Auswahl, Animation beim Drehen | Designer | MEDIUM | — | 📋 OPEN |
