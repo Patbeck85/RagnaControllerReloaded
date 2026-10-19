@@ -71,7 +71,7 @@
 | **TASK-1811** | HandheldWindow.xaml: Tastatur-Navigation, AutomationProperties, deutsche Tooltips | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1812** | InGameOverlayWindow.xaml: Lesbarkeit verbessern, Tastatur-Navigation, AutomationProperties | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1813** | MiniModeWindow.xaml: Lesbarkeit, Tastatur-Shortcuts, Emoji-Fallback | Designer | LOW | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1814** | RadialSetupWindow.xaml: Emote-Gallery Tastatur, AutomationProperties, Emoji-Fallback | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1814** | RadialSetupWindow.xaml: Emote-Gallery Tastatur, AutomationProperties, Emoji-Fallback | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1815** | RadialMenuWindow.xaml: Canvas Tastatur-Navigation, AutomationProperties, Focus-Ring | Designer | MEDIUM | — | 📋 OPEN |
 | **TASK-1816** | ComboEditorWindow.xaml: Tab-Button AutomationProperties, Validierung-Feedback, Focus | Designer | MEDIUM | — | 📋 OPEN |
 | **TASK-1817** | ButtonRemappingWindow.xaml: Falsche Tooltips auf Reset-Buttons, Slider-Accessibility, Tastatur | Designer | HIGH | — | 📋 OPEN |

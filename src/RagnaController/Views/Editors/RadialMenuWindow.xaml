@@ -16,7 +16,7 @@
                 BorderBrush="{StaticResource AccentBlue}" BorderThickness="2" Effect="{StaticResource BlueGlow}"
                 Background="{StaticResource GlassPanelGradient}">
             <Grid>
-                <Canvas x:Name="ItemsCanvas" Width="360" Height="360" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Canvas x:Name="ItemsCanvas" Width="360" Height="360" HorizontalAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Radial menu items"/>
                 
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBlock x:Name="SelectedText" Text="SELECT ITEM" Foreground="{StaticResource AccentBlue}" FontWeight="Black" FontSize="18" HorizontalAlignment="Center"
