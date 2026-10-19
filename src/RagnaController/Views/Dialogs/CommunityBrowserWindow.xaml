@@ -37,7 +37,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}" Height="44">
-                        <TextBox x:Name="SearchBox" TextChanged="SearchBox_TextChanged" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" Padding="14,10" FontSize="15" VerticalContentAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI"/>
+                        <TextBox x:Name="SearchBox" TextChanged="SearchBox_TextChanged" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" Padding="14,10" FontSize="15" VerticalContentAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" AutomationProperties.Name="Search community profiles"/>
                     </Border>
                     <Button Grid.Column="1" x:Name="BtnRefresh" Content="↻ Refresh" Click="BtnRefresh_Click" Style="{StaticResource GhostButton}" Width="110" Height="44" Margin="12,0,0,0" FontSize="14" AutomationProperties.Name="Refresh community profiles"/>
                 </Grid>
