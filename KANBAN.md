@@ -104,10 +104,46 @@
 
 **Alle Epics (1-7) abgeschlossen** — kein offener Task mehr in der KANBAN.md.
 
-**Vorschläge für neue Epics (v2.6.0+):**
-- Epic 8: DualSense Lightbar pro Profil konfigurierbar
-- Epic 9: First-Run Wizard erweitern (Controller-Button-Mapping, Profil-Vorlagen)
-- Epic 10: Performance-Optimierung (Engine-Tick-Reduktion, Memory-Pooling)
+**Neue Epics für v2.6.0+:**
+
+### Epic 8: DualSense Lightbar pro Profil konfigurierbar — 📋 PLANUNG
+
+**Goal:** Jedes Charakter-Profil bekommt eigene Lightbar-Farbe (z.B. Rot für Mage, Blau für Archer, Grün für Support).
+
+|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-1901** | Lightbar-Farb-Definition pro Profil (RGB-Werte in Profile-Model) | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-1902** | UI: Lightbar-Farb-Selektor in SettingsWindow / ProfileWizard | Designer | MEDIUM | TASK-1901 | 📋 OPEN |
+| **TASK-1903** | Engine: Lightbar-Farbe bei Profil-Wechsel anwenden | Coder | MEDIUM | TASK-1901 | 📋 OPEN |
+| **TASK-1904** | Unit-Tests für Lightbar-Farb-Logik | QA | LOW | TASK-1903 | 📋 OPEN |
+
+### Epic 9: First-Run Wizard erweitern (Controller-Button-Mapping, Profil-Vorlagen) — 📋 PLANUNG
+
+**Goal:** Wizard um Controller-Button-Mapping und Profil-Vorlagen (NOVICE, SWORDMAN, MAGER, ARCHER, ACOLYTE, MERCHANT, THIEF) erweitern.
+
+|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-1911** | Profil-Vorlagen-Definitionen (Default-Buttons, Engines, Klassen) erstellen | Coder | HIGH | — | ✅ CLOSED (2026-10-19) |
+| **TASK-1912** | UI: Profil-Vorlagen-Auswahl im Wizard (Schritt: Klasse + Vorlage) | Designer | HIGH | TASK-1911 | 📋 OPEN |
+| **TASK-1913** | UI: Controller-Button-Mapping im Wizard (A/B/X/Y, D-Pad, Trigger zuweisen) | Designer | HIGH | TASK-1912 | 📋 OPEN |
+| **TASK-1914** | Button-Mapping speichern und in Profile laden | Coder | HIGH | TASK-1913 | 📋 OPEN |
+| **TASK-1915** | Integration: Wizard-Fertigstellung erstellt Profil mit Vorlage + Mapping | Coder | HIGH | TASK-1914 | 📋 OPEN |
+| **TASK-1916** | Unit-Tests für Profil-Vorlagen und Button-Mapping | QA | MEDIUM | TASK-1915 | 📋 OPEN |
+
+### Epic 10: Performance-Optimierung (Engine-Tick-Reduktion, Memory-Pooling) — 📋 PLANUNG
+
+**Goal:** Engine-Tick optimieren, Memory-Pooling für häufige Objekte, CPU-Last senken.
+
+|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-1921** | Performance-Profiling: Engines mit höchsten Tick-Zeiten identifizieren | Coder | HIGH | — | 📋 OPEN |
+| **TASK-1922** | Memory-Pooling für häufige Objekte (ControllerSnapshot, InputEvents) | Coder | HIGH | TASK-1921 | 📋 OPEN |
+| **TASK-1923** | Engine-Tick-Reduktion: Idle-State erkennen, Tick-Frequenz senken | Coder | HIGH | TASK-1922 | 📋 OPEN |
+| **TASK-1924** | Performance-Regression-Tests (CPU-Last, Memory) | QA | MEDIUM | TASK-1923 | 📋 OPEN |
+
+---
+
+**Start mit Epic 9 (First-Run Wizard erweitern)** als erste Priorität.
 
 ---
 
