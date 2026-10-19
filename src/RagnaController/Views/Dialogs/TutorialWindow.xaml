@@ -48,7 +48,7 @@
                 <!-- Right: Media/GIF Placeholder -->
                 <Border Grid.Column="1" Style="{StaticResource GlassPanel}" BorderBrush="{StaticResource BgBorder}" BorderThickness="1" CornerRadius="{StaticResource RadiusXl}">
                     <!-- MediaElement is used here to potentially load GIFs/MP4s in the future -->
-                    <MediaElement x:Name="MediaPreview" LoadedBehavior="Play" UnloadedBehavior="Stop" Stretch="Uniform" Margin="8"/>
+                    <MediaElement x:Name="MediaPreview" LoadedBehavior="Play" UnloadedBehavior="Stop" Stretch="Uniform" Margin="8" AutomationProperties.Name="Tutorial media preview"/>
                 </Border>
             </Grid>
 
