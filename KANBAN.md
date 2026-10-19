@@ -62,7 +62,7 @@
 | **TASK-1802** | SettingsWindow.xaml: Deutsche Texte auf English, FocusVisualStyle, Slider-Labels, AutomationProperties | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1803** | SplashWindow.xaml: Keyboard-Shortcuts anzeigen, Fortschritts-Prozent, AutomationProperties | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1804** | WizardWindow.xaml: Deutsche Texte auf English, Validierung-Feedback, AutomationProperties | Designer | HIGH | TASK-1631 | ✅ CLOSED (2026-10-18) |
-| **TASK-1805** | ProfileLibraryWindow.xaml: Deutsche Texte auf English, Empty-State, AutomationProperties | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1805** | ProfileLibraryWindow.xaml: Deutsche Texte auf English, Empty-State, AutomationProperties | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1806** | DaisyWheelWindow.xaml: Tastatur-Navigation, AutomationProperties, Focus-Ring | Designer | MEDIUM | — | 📋 OPEN |
 | **TASK-1807** | CommunityBrowserWindow.xaml: Loading-Spinner, Empty-State, AutomationProperties | Designer | MEDIUM | — | 📋 OPEN |
 | **TASK-1808** | TutorialWindow.xaml: Tastatur-Navigation, AutomationProperties, Media-Fallback | Designer | LOW | — | 📋 OPEN |

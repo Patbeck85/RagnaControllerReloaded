@@ -24,7 +24,7 @@
                 </RadialGradientBrush>
             </Border.Background>
             <Grid>
-                <Canvas x:Name="WheelCanvas" Width="500" Height="500" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Canvas x:Name="WheelCanvas" Width="500" Height="500" HorizontalAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Radial menu wheel"/>
                 
                 <Border Width="180" Height="180" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="{StaticResource RadiusFull}" 
                         Background="{StaticResource BgSecondary}" BorderBrush="{StaticResource AccentBlue}" BorderThickness="2" Effect="{StaticResource BlueGlow}">
