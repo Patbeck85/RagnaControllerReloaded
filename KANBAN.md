@@ -157,7 +157,7 @@
 | **TASK-2004** | WizardWindow: Schritt 3 visueller Fortschritt bei Controller-Erkennung, Controller-Typ Auswahl, Schritt 4 D-Pad/Trigger Button-Mapping | Designer | HIGH | TASK-1911 | ✅ CLOSED (2026-10-19) |
 | **TASK-2005** | ProfileWizardWindow: Checkboxen mit Beschreibung, Vorschau vor Speichern, "Vorlage laden" Option | Designer | MEDIUM | TASK-1911 | ✅ CLOSED (2026-10-19) |
 | **TASK-2006** | ProfileLibraryWindow: Bulk-Operationen, Sortierung (Name/Datum/Downloads), Favoriten, "Einfügen aus Zwischenablage" für Share Code, Download-Fortschritt | Designer | HIGH | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2007** | HandheldWindow: Mehr Tiles (Controller Test, Macro Editor), Tiles umordnen möglich | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2007** | HandheldWindow: Mehr Tiles (Controller Test, Macro Editor), Tiles umordnen möglich | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
 | **TASK-2008** | InGameOverlayWindow: Größe anpassbar, Position speichern, Batterie dynamisch | Designer | MEDIUM | — | 📋 OPEN |
 | **TASK-2009** | MiniModeWindow: Tastatur-Kurzbefehle anzeigen, Transparenz-Einstellung, Profil-Wechsel direkt | Designer | MEDIUM | — | 📋 OPEN |
 | **TASK-2010** | ComboEditorWindow: Drag-and-Drop für Schritte-Reihenfolge, Kopieren/Einfügen von Schritten, Vorschau | Designer | HIGH | — | 📋 OPEN |
