@@ -37,10 +37,24 @@
                     </StackPanel>
 
                     <!-- Content -->
-                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                        <StackPanel>
+                                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                                                        <StackPanel x:Name="MainContentPanel">
 
-                            <!-- Profile Settings -->
+                                                <!-- Search & Reset -->
+                                                <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}" Height="44" Margin="0,0,0,16">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}">
+                                                            <TextBox x:Name="SettingsSearchBox" Height="44" Padding="14,10" TextChanged="SettingsSearchBox_TextChanged" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" FontSize="15" VerticalContentAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" AutomationProperties.Name="Search settings"/>
+                                                        </Border>
+                                                        <Button x:Name="BtnResetSettings" Content="{core:Loc Settings_Btn_ResetAll}" Grid.Column="1" Click="BtnResetSettings_Click" Style="{StaticResource GhostButton}" Height="40" Width="150" Margin="12,0,0,0" ToolTip="Reset all settings to default values" FontSize="13"/>
+                                                    </Grid>
+                                                </Border>
+
+                                                <!-- Profile Settings -->
                             <TextBlock Text="PROFILE" Style="{StaticResource Eyebrow}"/>
                             <Border Style="{StaticResource GlassPanel}">
                                 <StackPanel>
@@ -202,11 +216,11 @@
                                                                         <TextBlock Text="ACCESSIBILITY" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
                                                                         <Border Style="{StaticResource GlassPanel}">
                                                                             <StackPanel>
-                                                                                <CheckBox x:Name="ChkHighContrast" Content="High Contrast Mode"
-                                                                                                          Click="ChkHighContrast_Click"
-                                                                                                          ToolTip="High contrast for better readability (black/white, bold accents)"
-                                                                                                          Margin="0,0,0,8"/>
-                                                                                                    <TextBlock Text="UI Font Scale:" Style="{StaticResource BodyText}" Margin="0,0,0,4"/>
+                                                                                <CheckBox x:Name="ChkHighContrast" Content="{core:Loc Settings_HighContrastMode}"
+                                                                                                                                                              Click="ChkHighContrast_Click"
+                                                                                                                                                              ToolTip="{core:Loc Settings_HighContrastTooltip}"
+                                                                                                                                                              Margin="0,0,0,8"/>
+                                                                                                                    <TextBlock Text="{core:Loc Settings_UIFontScale}" Style="{StaticResource BodyText}" Margin="0,0,0,4"/>
                                                                                 <Slider x:Name="FontScaleSlider" Minimum="0.85" Maximum="1.50" Value="1.0"
                                                                                         SmallChange="0.05" LargeChange="0.1" IsSnapToTickEnabled="True" TickFrequency="0.05"
                                                                                         Margin="0,0,0,4" ValueChanged="FontScaleSlider_ValueChanged"/>

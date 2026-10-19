@@ -966,5 +966,10 @@
   "UI_Apply_Settings": "Apply settings",
   "UI_Apply": "Apply",
   "UI_Reset": "RESET",
-  "UI_Reset_To_Default": "RESET TO DEFAULT"
+  "UI_Reset_To_Default": "RESET TO DEFAULT",
+  "Settings_HighContrastMode": "High Contrast Mode",
+  "Settings_HighContrastTooltip": "High contrast for better readability (black/white, bold accents)",
+  "Settings_UIFontScale": "UI Font Scale:",
+  "Settings_Btn_ResetAll": "Reset All Settings",
+  "Settings_Btn_ResetAll_Confirm": "Are you sure you want to reset all settings to defaults? This cannot be undone."
 }

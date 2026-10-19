@@ -966,5 +966,10 @@
   "Wizard_Step4Desc": "Create your first character profile. You can add more profiles later.",
   "Wizard_Step4Title": "Step 4 of 4 — First Profile",
   "Wizard_WelcomeSubtitle": "Set up your RO controller setup in a few steps.",
-  "Wizard_WelcomeTitle": "Welcome to RagnaController"
+  "Wizard_WelcomeTitle": "Welcome to RagnaController",
+  "Settings_HighContrastMode": "Hoher Kontrast Modus",
+  "Settings_HighContrastTooltip": "Hoher Kontrast für bessere Lesbarkeit (schwarz/weiß, fette Akzente)",
+  "Settings_UIFontScale": "UI-Schriftgröße:",
+  "Settings_Btn_ResetAll": "Alle Einstellungen zurücksetzen",
+  "Settings_Btn_ResetAll_Confirm": "Sind Sie sicher, dass Sie alle Einstellungen auf die Standardwerte zurücksetzen möchten? Dies kann nicht rückgängig gemacht werden."
 }

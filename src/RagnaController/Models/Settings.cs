@@ -194,10 +194,61 @@ namespace RagnaController.Models
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[Settings] Save failed: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($@"[Settings] Save failed: {ex.Message}");
                 // TASK-1701: Benutzer sichtbarer Fehler via Toast
-                try { RagnaController.App.ToastService?.Show($"Einstellungen konnten nicht gespeichert werden: {ex.Message}", isError: true); } catch { }
+                try { RagnaController.App.ToastService?.Show($@"Einstellungen konnten nicht gespeichert werden: {ex.Message}", isError: true); } catch { }
             }
+        }
+
+        // TASK-2002: Reset all settings to defaults
+        public void ResetToDefaults()
+        {
+            var defaults = new Settings();
+            LastProfileName = defaults.LastProfileName;
+            LastGameMode = defaults.LastGameMode;
+            SoundEnabled = defaults.SoundEnabled;
+            RumbleEnabled = defaults.RumbleEnabled;
+            AutoStart = defaults.AutoStart;
+            MinimizeToTray = defaults.MinimizeToTray;
+            StartWithWindows = defaults.StartWithWindows;
+            ShowLatency = defaults.ShowLatency;
+            ForceHandheldMode = defaults.ForceHandheldMode;
+            StartInMiniMode = defaults.StartInMiniMode;
+            AppLanguage = defaults.AppLanguage;
+            RoExePath = defaults.RoExePath;
+            FocusLockEnabled = defaults.FocusLockEnabled;
+            FocusLockProcess = defaults.FocusLockProcess;
+            LogLevel = defaults.LogLevel;
+            EnableDiscordRPC = defaults.EnableDiscordRPC;
+            SkipSplash = defaults.SkipSplash;
+            EnableVoiceAnnouncements = defaults.EnableVoiceAnnouncements;
+            EnableHapticMetronome = defaults.EnableHapticMetronome;
+            EnableSmartStandby = defaults.EnableSmartStandby;
+            StandbyTimeoutMinutes = defaults.StandbyTimeoutMinutes;
+            EnableTelemetry = defaults.EnableTelemetry;
+            HasAskedForTelemetry = defaults.HasAskedForTelemetry;
+            AutoRestartOnCrash = defaults.AutoRestartOnCrash;
+            FailoverLatencyThresholdMs = defaults.FailoverLatencyThresholdMs;
+            FailoverTriggerCount = defaults.FailoverTriggerCount;
+            FailoverRecoveryCount = defaults.FailoverRecoveryCount;
+            EnableSessionRecording = defaults.EnableSessionRecording;
+            StartMinimized = defaults.StartMinimized;
+            ShowControllerViz = defaults.ShowControllerViz;
+            WindowPositionX = defaults.WindowPositionX;
+            WindowPositionY = defaults.WindowPositionY;
+            OverlayPositionX = defaults.OverlayPositionX;
+            OverlayPositionY = defaults.OverlayPositionY;
+            GyroDeadzone = defaults.GyroDeadzone;
+            AutoUpdateEnabled = defaults.AutoUpdateEnabled;
+            OverlayMonitorIndex = defaults.OverlayMonitorIndex;
+            LifetimeSavedClicks = defaults.LifetimeSavedClicks;
+            LifetimeSavedKeystrokes = defaults.LifetimeSavedKeystrokes;
+            OverlayTheme = defaults.OverlayTheme;
+            OverlayOpacity = defaults.OverlayOpacity;
+            OverlayFontScale = defaults.OverlayFontScale;
+            HighContrastEnabled = defaults.HighContrastEnabled;
+            FontScale = defaults.FontScale;
+            RightStickPolicy = defaults.RightStickPolicy;
         }
     }
 }

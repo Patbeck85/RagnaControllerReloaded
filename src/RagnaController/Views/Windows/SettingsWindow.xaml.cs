@@ -826,5 +826,87 @@ public partial class SettingsWindow : Window
             if (_onSave != null)
                 SaveAllSettings();
         }
+
+        // TASK-2002: Search settings
+        private void SettingsSearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var searchText = SettingsSearchBox.Text?.ToLowerInvariant() ?? "";
+            foreach (var child in GetAllChildren(MainContentPanel))
+            {
+                if (child is FrameworkElement fe)
+                {
+                    var text = (fe.ToolTip as string ?? "") + " " + (fe is TextBlock tb ? tb.Text : "") + " " + (fe is Button b ? b.Content?.ToString() ?? "" : "");
+                    fe.Visibility = string.IsNullOrWhiteSpace(searchText) || text.ToLowerInvariant().Contains(searchText)
+                        ? Visibility.Visible
+                        : Visibility.Collapsed;
+                }
+            }
+        }
+
+        // TASK-2002: Reset all settings
+        private void BtnResetSettings_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show(
+                LocalizationManager.GetLocalizedString("Settings_Btn_ResetAll_Confirm"),
+                LocalizationManager.GetLocalizedString("Settings_Btn_ResetAll"),
+                MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                _s.ResetToDefaults();
+                _s.Save();
+                InitializeSettings();
+                ShowToast("All settings reset to defaults");
+            }
+        }
+
+        // Helper: Get all child elements recursively
+        private IEnumerable<DependencyObject> GetAllChildren(DependencyObject root)
+        {
+            var queue = new Queue<DependencyObject>();
+            queue.Enqueue(root);
+            while (queue.Count > 0)
+            {
+                var current = queue.Dequeue();
+                yield return current;
+                int childrenCount = VisualTreeHelper.GetChildrenCount(current);
+                for (int i = 0; i < childrenCount; i++)
+                    queue.Enqueue(VisualTreeHelper.GetChild(current, i));
+            }
+        }
+
+        private void ShowToast(string message)
+        {
+            var toastWin = new System.Windows.Window
+            {
+                Width = 300, Height = 60,
+                WindowStyle = System.Windows.WindowStyle.None,
+                AllowsTransparency = true,
+                Background = System.Windows.Media.Brushes.Transparent,
+                ShowInTaskbar = false,
+                Topmost = true,
+                WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner,
+                Owner = this
+            };
+            var border = new System.Windows.Controls.Border
+            {
+                Background = System.Windows.Media.Brushes.DarkGreen,
+                CornerRadius = new System.Windows.CornerRadius(8),
+                Padding = new System.Windows.Thickness(16),
+                Child = new System.Windows.Controls.TextBlock
+                {
+                    Text = message,
+                    Foreground = System.Windows.Media.Brushes.White,
+                    FontSize = 13,
+                    VerticalAlignment = System.Windows.VerticalAlignment.Center
+                }
+            };
+            toastWin.Content = border;
+            toastWin.Show();
+            System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(2);
+            timer.Tick += (s, _) => { toastWin.Close(); timer.Stop(); };
+            timer.Start();
+        }
     }
 }
