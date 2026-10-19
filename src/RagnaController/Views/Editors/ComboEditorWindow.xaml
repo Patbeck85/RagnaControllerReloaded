@@ -63,26 +63,48 @@
                         <StackPanel x:Name="ChainPanel" AutomationProperties.Name="Combo chain steps"/>
                     </ScrollViewer>
                     <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,15,0,0" HorizontalAlignment="Center">
-                        <Button Content="+ Add Step" Click="BtnAdd_Click" Style="{StaticResource GhostButton}" Height="44" Padding="20,0" Margin="0,0,10,0" AutomationProperties.Name="Add combo step">
-                            <Button.ToolTip>
-                                <ToolTip Content="Add a new step to the combo sequence" Foreground="{StaticResource TextPrimary}" FontSize="11" Background="{StaticResource BgCard}" BorderBrush="{StaticResource BgBorder}"/>
-                            </Button.ToolTip>
-                        </Button>
-                        <Button Content="− Remove Last" Click="BtnRemove_Click" Style="{StaticResource DangerButton}" Height="44" Padding="20,0" AutomationProperties.Name="Remove combo step">
-                            <Button.ToolTip>
-                                <ToolTip Content="Remove the last step from the combo" Foreground="{StaticResource Danger}" FontSize="11" Background="{StaticResource BgCard}" BorderBrush="{StaticResource BgBorder}"/>
-                            </Button.ToolTip>
-                        </Button>
-                    </StackPanel>
+                                            <Button Content="+ Add Step" Click="BtnAdd_Click" Style="{StaticResource GhostButton}" Height="44" Padding="20,0" Margin="0,0,8,0" AutomationProperties.Name="Add combo step">
+                                                <Button.ToolTip>
+                                                    <ToolTip Content="Add a new step to the combo sequence" Foreground="{StaticResource TextPrimary}" FontSize="11" Background="{StaticResource BgCard}" BorderBrush="{StaticResource BgBorder}"/>
+                                                </Button.ToolTip>
+                                            </Button>
+                                            <Button Content="− Remove Last" Click="BtnRemove_Click" Style="{StaticResource DangerButton}" Height="44" Padding="20,0" Margin="0,0,8,0" AutomationProperties.Name="Remove combo step">
+                                                <Button.ToolTip>
+                                                    <ToolTip Content="Remove the last step from the combo" Foreground="{StaticResource Danger}" FontSize="11" Background="{StaticResource BgCard}" BorderBrush="{StaticResource BgBorder}"/>
+                                                </Button.ToolTip>
+                                            </Button>
+                                            <!-- TASK-2010: Copy/Paste -->
+                                            <Button Content="📋 Copy" Click="BtnCopyStep_Click" Style="{StaticResource GhostButton}" Height="44" Padding="20,0" Margin="0,0,8,0" AutomationProperties.Name="Copy combo step">
+                                                <Button.ToolTip>
+                                                    <ToolTip Content="Copy the currently selected step to clipboard" Foreground="{StaticResource TextPrimary}" FontSize="11" Background="{StaticResource BgCard}" BorderBrush="{StaticResource BgBorder}"/>
+                                                </Button.ToolTip>
+                                            </Button>
+                                            <Button Content="📋 Paste" Click="BtnPasteStep_Click" Style="{StaticResource GhostButton}" Height="44" Padding="20,0" Margin="0,0,8,0" AutomationProperties.Name="Paste combo step">
+                                                <Button.ToolTip>
+                                                    <ToolTip Content="Paste copied step into the combo sequence" Foreground="{StaticResource TextPrimary}" FontSize="11" Background="{StaticResource BgCard}" BorderBrush="{StaticResource BgBorder}"/>
+                                                </Button.ToolTip>
+                                            </Button>
+                                        </StackPanel>
                 </Grid>
             </Border>
             <Border Grid.Row="4" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,1,0,0" Margin="16,0,16,16" CornerRadius="0,0,{StaticResource Radius2Xl},{StaticResource Radius2Xl}" Padding="20,0">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <TextBlock Text="Trigger: Map a button to 'Class Combo' and HOLD it." Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="0,0,20,0"/>
-                    <Button Content="SAVE COMBO" Click="BtnSave_Click" Style="{StaticResource PrimaryButton}" Width="160" Height="44" Margin="0,0,10,0" ToolTip="Save settings and close window" AutomationProperties.Name="Save combo"/>
-                    <Button Content="Cancel" Click="BtnClose_Click" Style="{StaticResource GhostButton}" Width="100" Height="44" ToolTip="Discard changes and close window" AutomationProperties.Name="Close combo editor"/>
-                </StackPanel>
-            </Border>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <!-- TASK-2010: Combo Preview -->
+                                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,20,0">
+                                    <TextBlock Text="Preview:" Style="{StaticResource Eyebrow}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock x:Name="PreviewText" Foreground="{StaticResource TextSecondary}" FontSize="12" FontFamily="Consolas" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                    <TextBlock Text="Trigger: Map a button to 'Class Combo' and HOLD it." Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                                    <Button Content="SAVE COMBO" Click="BtnSave_Click" Style="{StaticResource PrimaryButton}" Width="160" Height="44" Margin="0,0,10,0" ToolTip="Save settings and close window" AutomationProperties.Name="Save combo"/>
+                                    <Button Content="Cancel" Click="BtnClose_Click" Style="{StaticResource GhostButton}" Width="100" Height="44" ToolTip="Discard changes and close window" AutomationProperties.Name="Close combo editor"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
         </Grid>
     </Border>
 </Window>

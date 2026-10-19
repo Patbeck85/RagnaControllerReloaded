@@ -88,6 +88,9 @@ namespace RagnaController.Views.Editors
         // Interne Step-Liste
         private readonly List<ComboStep> _steps = new();
 
+        // TASK-2010: Copy/Paste clipboard
+        private ComboStep? _copiedStep;
+
         private class ComboStep
         {
             public string    SkillName { get; set; } = "Skill";
@@ -220,6 +223,29 @@ namespace RagnaController.Views.Editors
                     CornerRadius    = radiusMd,
                     Padding         = new Thickness(12),
                     Margin          = new Thickness(0, 0, 0, 4),
+                    AllowDrop       = true,
+                    Tag             = idx,
+                    Cursor          = System.Windows.Input.Cursors.SizeAll,
+                };
+                card.PreviewMouseLeftButtonDown += (s, e) => DragDrop.DoDragDrop(card, new DataObject("ComboStepIndex", idx), DragDropEffects.Move);
+                card.DragOver += (s, e) =>
+                {
+                    if (e.Data.GetDataPresent("ComboStepIndex"))
+                        e.Effects = DragDropEffects.Move;
+                    else
+                        e.Effects = DragDropEffects.None;
+                    e.Handled = true;
+                };
+                card.Drop += (s, e) =>
+                {
+                    if (!e.Data.GetDataPresent("ComboStepIndex")) return;
+                    int sourceIdx = (int)e.Data.GetData("ComboStepIndex");
+                    int targetIdx = (int)card.Tag!;
+                    if (sourceIdx == targetIdx) return;
+                    var step = _steps[sourceIdx];
+                    _steps.RemoveAt(sourceIdx);
+                    _steps.Insert(targetIdx, step);
+                    RefreshChain();
                 };
 
                 var cardGrid = new Grid();
@@ -345,6 +371,22 @@ namespace RagnaController.Views.Editors
                     Foreground = textTertiary,
                     FontSize = 11, Margin = new Thickness(4, 10, 0, 0), TextWrapping = TextWrapping.Wrap
                 });
+
+            // TASK-2010: Update preview text
+            if (PreviewText != null)
+            {
+                if (_steps.Count == 0)
+                    PreviewText.Text = "No steps defined";
+                else
+                {
+                    var parts = _steps.Select((s, i) =>
+                    {
+                        string delay = _showRenewal ? s.RenDelay.ToString() : s.PreDelay.ToString();
+                        return $"{i + 1}. {s.SkillName} [{s.Key}] ({delay}ms)";
+                    });
+                    PreviewText.Text = string.Join("  →  ", parts);
+                }
+            }
         }
 
         // -------------------------------------------------------
@@ -378,6 +420,30 @@ namespace RagnaController.Views.Editors
         private void BtnRemove_Click(object sender, RoutedEventArgs e)
         {
             if (_steps.Count > 0) { _steps.RemoveAt(_steps.Count - 1); RefreshChain(); }
+        }
+
+        // -------------------------------------------------------
+        //  Copy / Paste (TASK-2010)
+        // -------------------------------------------------------
+        private void BtnCopyStep_Click(object sender, RoutedEventArgs e)
+        {
+            if (_steps.Count > 0)
+                _copiedStep = _steps[^1]; // Copy last step
+        }
+
+        private void BtnPasteStep_Click(object sender, RoutedEventArgs e)
+        {
+            if (_copiedStep != null)
+            {
+                _steps.Add(new ComboStep
+                {
+                    SkillName = _copiedStep.SkillName,
+                    Key = _copiedStep.Key,
+                    PreDelay = _copiedStep.PreDelay,
+                    RenDelay = _copiedStep.RenDelay,
+                });
+                RefreshChain();
+            }
         }
 
         // -------------------------------------------------------
