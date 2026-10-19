@@ -23,6 +23,7 @@ namespace RagnaController.Views.Dialogs
         private int _currentStep = 1;
         private readonly FirstRunService _firstRunService;
         private readonly ProfileManager _profileManager;
+        private readonly ProfileTemplateManager _templateManager;
         private bool _controllerDetected;
 
         public WizardWindow(FirstRunService firstRunService, ProfileManager profileManager)
@@ -30,6 +31,7 @@ namespace RagnaController.Views.Dialogs
             InitializeComponent();
             _firstRunService = firstRunService ?? throw new ArgumentNullException(nameof(firstRunService));
             _profileManager = profileManager ?? throw new ArgumentNullException(nameof(profileManager));
+            _templateManager = new ProfileTemplateManager();
             UpdateNavigation();
             DetectControllers();
         }
@@ -46,6 +48,11 @@ namespace RagnaController.Views.Dialogs
             BtnBack.IsEnabled = _currentStep > 1;
             BtnNext.Visibility = _currentStep < 4 ? Visibility.Visible : Visibility.Collapsed;
             BtnFinish.Visibility = _currentStep == 4 ? Visibility.Visible : Visibility.Collapsed;
+            BtnFinish.IsEnabled = false;
+
+            // Populate class template combo when entering step 4
+            if (_currentStep == 4)
+                PopulateTemplateCombo();
 
             Title = $"RagnaController — First-Run Wizard (Schritt {_currentStep} von 4)";
         }
@@ -171,6 +178,49 @@ namespace RagnaController.Views.Dialogs
             BtnNext_Click(sender, e);
         }
 
+        // ── Schritt 4: Template-Auswahl ─────────────────────────────────
+        private void PopulateTemplateCombo()
+        {
+            ClassTemplateCombo.Items.Clear();
+            foreach (var kvp in _templateManager.Templates)
+            {
+                var t = kvp.Value;
+                ClassTemplateCombo.Items.Add(new ComboBoxItem
+                {
+                    Content = $"{t.DisplayName} — {t.Class}",
+                    Tag = t.Id
+                });
+            }
+            ClassTemplateCombo.SelectedIndex = 0;
+        }
+
+        private void ClassTemplateCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var item = ClassTemplateCombo.SelectedItem as ComboBoxItem;
+            if (item == null) return;
+
+            var templateId = item.Tag?.ToString() ?? "novice";
+            var template = _templateManager.GetTemplate(templateId);
+            if (template == null) return;
+
+            TemplateDescription.Text = template.Description;
+            TemplateSkills.Text = "Recommended skills: " + string.Join(", ", template.SkillRecommendations);
+
+            UpdateCreateButtonState();
+        }
+
+        private void ProfileNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateCreateButtonState();
+        }
+
+        private void UpdateCreateButtonState()
+        {
+            bool hasName = !string.IsNullOrWhiteSpace(ProfileNameTextBox.Text?.Trim());
+            bool hasTemplate = ClassTemplateCombo.SelectedIndex >= 0;
+            BtnCreateProfile.IsEnabled = hasName && hasTemplate;
+        }
+
         // ── Schritt 4: Erstes Profil ────────────────────────────────────
 
         private void BtnCreateProfile_Click(object sender, RoutedEventArgs e)
@@ -178,29 +228,27 @@ namespace RagnaController.Views.Dialogs
             var profileName = ProfileNameTextBox.Text?.Trim();
             if (string.IsNullOrWhiteSpace(profileName))
             {
-                ProfileStatus.Text = "Bitte einen Profilnamen eingeben";
+                ProfileStatus.Text = "Please enter a profile name";
                 return;
             }
 
             try
             {
-                var profile = new Profile
-                {
-                    Name = profileName,
-                    Class = "Novice",
-                    IsEnabled = true
-                };
+                var item = ClassTemplateCombo.SelectedItem as ComboBoxItem;
+                var templateId = item?.Tag?.ToString() ?? "novice";
+
+                var profile = _templateManager.CreateProfileFromTemplate(templateId, profileName);
 
                 _profileManager.Profiles.Add(profile);
                 _profileManager.SetActive(profile.Name);
 
-                ProfileStatus.Text = $"✓ Profil '{profileName}' erstellt";
+                ProfileStatus.Text = $"✓ Profile '{profileName}' created ({profile.Class})";
                 ProfileStatus.Foreground = System.Windows.Media.Brushes.Green;
                 BtnFinish.IsEnabled = true;
             }
             catch (Exception ex)
             {
-                ProfileStatus.Text = $"✗ Fehler beim Erstellen: {ex.Message}";
+                ProfileStatus.Text = $"✗ Error creating profile: {ex.Message}";
                 ProfileStatus.Foreground = System.Windows.Media.Brushes.Red;
             }
         }

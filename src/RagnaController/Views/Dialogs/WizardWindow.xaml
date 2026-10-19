@@ -133,14 +133,32 @@
                     <TextBlock TextWrapping="Wrap" MaxWidth="520" Margin="0,0,16,16">
                         Create your first character profile. You can add more profiles later.
                     </TextBlock>
-                    <Grid Margin="0,0,0,16">
+                    <Grid Margin="0,0,0,12">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBox x:Name="ProfileNameTextBox" Style="{StaticResource WizardTextBox}"
                                  Grid.Column="0"
-                                 ToolTip="Name for your first profile (z.B. 'Magier', 'Ritter')"/>
+                                 ToolTip="Name for your first profile (e.g. 'Mage', 'Knight')"
+                                 AutomationProperties.Name="Profile name"
+                                 TextChanged="ProfileNameTextBox_TextChanged"/>
+                    </Grid>
+                    <!-- Class / Template Selection -->
+                    <TextBlock Text="CLASS / TEMPLATE" Style="{StaticResource Eyebrow}" Margin="0,4,0,4"/>
+                    <ComboBox x:Name="ClassTemplateCombo" Style="{StaticResource DarkComboBox}" Height="44"
+                              FontSize="15" FontFamily="Segoe UI Variable, Segoe UI"
+                              SelectionChanged="ClassTemplateCombo_SelectionChanged"
+                              AutomationProperties.Name="Class template"/>
+                    <TextBlock x:Name="TemplateDescription" Foreground="{StaticResource TextSecondary}" FontSize="12"
+                               TextWrapping="Wrap" MaxWidth="520" Margin="0,8,0,4"/>
+                    <TextBlock x:Name="TemplateSkills" Foreground="{StaticResource TextTertiary}" FontSize="12"
+                               TextWrapping="Wrap" MaxWidth="520" Margin="0,0,0,16"/>
+                    <Grid Margin="0,0,0,16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
                         <Button x:Name="BtnCreateProfile" Content="Create profile" Style="{StaticResource WizardPrimaryButton}"
                                 Grid.Column="1" Click="BtnCreateProfile_Click" IsEnabled="False"/>
                     </Grid>

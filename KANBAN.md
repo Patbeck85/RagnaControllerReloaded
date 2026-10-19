@@ -124,7 +124,7 @@
 || Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-1911** | Profil-Vorlagen-Definitionen (Default-Buttons, Engines, Klassen) erstellen | Coder | HIGH | — | ✅ CLOSED (2026-10-19) |
-| **TASK-1912** | UI: Profil-Vorlagen-Auswahl im Wizard (Schritt: Klasse + Vorlage) | Designer | HIGH | TASK-1911 | 📋 OPEN |
+| **TASK-1912** | UI: Profil-Vorlagen-Auswahl im Wizard (Schritt: Klasse + Vorlage) | Designer | HIGH | TASK-1911 | ✅ CLOSED (2026-10-19) |
 | **TASK-1913** | UI: Controller-Button-Mapping im Wizard (A/B/X/Y, D-Pad, Trigger zuweisen) | Designer | HIGH | TASK-1912 | 📋 OPEN |
 | **TASK-1914** | Button-Mapping speichern und in Profile laden | Coder | HIGH | TASK-1913 | 📋 OPEN |
 | **TASK-1915** | Integration: Wizard-Fertigstellung erstellt Profil mit Vorlage + Mapping | Coder | HIGH | TASK-1914 | 📋 OPEN |
