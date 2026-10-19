@@ -154,6 +154,46 @@
                                TextWrapping="Wrap" MaxWidth="520" Margin="0,8,0,4"/>
                     <TextBlock x:Name="TemplateSkills" Foreground="{StaticResource TextTertiary}" FontSize="12"
                                TextWrapping="Wrap" MaxWidth="520" Margin="0,0,0,16"/>
+                    <!-- Button Mapping Preview -->
+                    <TextBlock Text="BUTTON MAPPING" Style="{StaticResource Eyebrow}" Margin="0,4,0,4"/>
+                    <Border Style="{StaticResource GlassPanelCompact}" Padding="16" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,0,16">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <!-- A -->
+                            <TextBlock Text="A:" Foreground="{StaticResource AccentGold}" FontWeight="Bold" FontSize="15"
+                                       Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                            <ComboBox x:Name="BtnAMap" Style="{StaticResource DarkComboBox}" Height="40"
+                                      Grid.Row="0" Grid.Column="1" SelectionChanged="ButtonMap_SelectionChanged"
+                                      AutomationProperties.Name="Button A mapping"/>
+                            <!-- B -->
+                            <TextBlock Text="B:" Foreground="{StaticResource Danger}" FontWeight="Bold" FontSize="15"
+                                       Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Margin="16,0,12,0"/>
+                            <ComboBox x:Name="BtnBMap" Style="{StaticResource DarkComboBox}" Height="40"
+                                      Grid.Row="0" Grid.Column="3" SelectionChanged="ButtonMap_SelectionChanged"
+                                      AutomationProperties.Name="Button B mapping"/>
+                            <!-- X -->
+                            <TextBlock Text="X:" Foreground="{StaticResource AccentBlue}" FontWeight="Bold" FontSize="15"
+                                       Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,10,12,0"/>
+                            <ComboBox x:Name="BtnXMap" Style="{StaticResource DarkComboBox}" Height="40"
+                                      Grid.Row="1" Grid.Column="1" SelectionChanged="ButtonMap_SelectionChanged"
+                                      AutomationProperties.Name="Button X mapping"/>
+                            <!-- Y -->
+                            <TextBlock Text="Y:" Foreground="{StaticResource AccentGold}" FontWeight="Bold" FontSize="15"
+                                       Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="16,10,12,0"/>
+                            <ComboBox x:Name="BtnYMap" Style="{StaticResource DarkComboBox}" Height="40"
+                                      Grid.Row="1" Grid.Column="3" SelectionChanged="ButtonMap_SelectionChanged"
+                                      AutomationProperties.Name="Button Y mapping"/>
+                        </Grid>
+                    </Border>
                     <Grid Margin="0,0,0,16">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>

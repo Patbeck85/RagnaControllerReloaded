@@ -25,6 +25,8 @@ namespace RagnaController.Views.Dialogs
         private readonly ProfileManager _profileManager;
         private readonly ProfileTemplateManager _templateManager;
         private bool _controllerDetected;
+        private ProfileTemplate? _selectedTemplate;
+        private readonly Dictionary<VirtualKey, VirtualKey> _customButtonMappings = new();
 
         public WizardWindow(FirstRunService firstRunService, ProfileManager profileManager)
         {
@@ -200,13 +202,76 @@ namespace RagnaController.Views.Dialogs
             if (item == null) return;
 
             var templateId = item.Tag?.ToString() ?? "novice";
-            var template = _templateManager.GetTemplate(templateId);
-            if (template == null) return;
+            _selectedTemplate = _templateManager.GetTemplate(templateId);
+            if (_selectedTemplate == null) return;
 
-            TemplateDescription.Text = template.Description;
-            TemplateSkills.Text = "Recommended skills: " + string.Join(", ", template.SkillRecommendations);
+            TemplateDescription.Text = _selectedTemplate.Description;
+            TemplateSkills.Text = "Recommended skills: " + string.Join(", ", _selectedTemplate.SkillRecommendations);
+
+            // Load button mappings from template into custom mappings
+            _customButtonMappings.Clear();
+            foreach (var kvp in _selectedTemplate.ButtonMappings)
+                _customButtonMappings[kvp.Key] = kvp.Value;
+
+            // Populate button mapping combo boxes
+            PopulateButtonMapCombo(BtnAMap, VirtualKey.A);
+            PopulateButtonMapCombo(BtnBMap, VirtualKey.B);
+            PopulateButtonMapCombo(BtnXMap, VirtualKey.X);
+            PopulateButtonMapCombo(BtnYMap, VirtualKey.Y);
 
             UpdateCreateButtonState();
+        }
+
+        private void PopulateButtonMapCombo(ComboBox combo, VirtualKey controllerButton)
+        {
+            combo.Items.Clear();
+            var availableKeys = new[]
+            {
+                VirtualKey.Z, VirtualKey.X, VirtualKey.C, VirtualKey.V,
+                VirtualKey.A, VirtualKey.S, VirtualKey.D, VirtualKey.F,
+                VirtualKey.Q, VirtualKey.W, VirtualKey.E, VirtualKey.R,
+                VirtualKey.F1, VirtualKey.F2, VirtualKey.F3, VirtualKey.F4
+            };
+
+            foreach (var key in availableKeys)
+            {
+                combo.Items.Add(new ComboBoxItem { Content = key.ToString(), Tag = key });
+            }
+
+            // Select current mapping
+            if (_customButtonMappings.TryGetValue(controllerButton, out var mappedKey))
+            {
+                foreach (ComboBoxItem item in combo.Items)
+                {
+                    if ((VirtualKey)item.Tag == mappedKey)
+                    {
+                        combo.SelectedItem = item;
+                        break;
+                    }
+                }
+            }
+            if (combo.SelectedItem == null)
+                combo.SelectedIndex = 0;
+        }
+
+        private void ButtonMap_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_selectedTemplate == null) return;
+
+            var combo = sender as ComboBox;
+            if (combo?.SelectedItem is not ComboBoxItem item) return;
+
+            var mappedKey = (VirtualKey)item.Tag;
+
+            // Determine which controller button this combo represents
+            VirtualKey controllerButton;
+            if (combo == BtnAMap) controllerButton = VirtualKey.A;
+            else if (combo == BtnBMap) controllerButton = VirtualKey.B;
+            else if (combo == BtnXMap) controllerButton = VirtualKey.X;
+            else if (combo == BtnYMap) controllerButton = VirtualKey.Y;
+            else return;
+
+            _customButtonMappings[controllerButton] = mappedKey;
         }
 
         private void ProfileNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -238,6 +303,18 @@ namespace RagnaController.Views.Dialogs
                 var templateId = item?.Tag?.ToString() ?? "novice";
 
                 var profile = _templateManager.CreateProfileFromTemplate(templateId, profileName);
+
+                // Apply customized button mappings
+                profile.ButtonMappings.Clear();
+                foreach (var kvp in _customButtonMappings)
+                {
+                    profile.ButtonMappings[kvp.Key] = new ButtonAction
+                    {
+                        Type = ActionType.Key,
+                        Key = kvp.Value,
+                        Label = $"Quick Key {kvp.Key}"
+                    };
+                }
 
                 _profileManager.Profiles.Add(profile);
                 _profileManager.SetActive(profile.Name);
