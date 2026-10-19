@@ -46,7 +46,7 @@
                     </Grid.ColumnDefinitions>
                     
                     <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}" Height="44" Margin="0,0,12,0">
-                        <TextBox x:Name="SearchBox" Height="44" Padding="14,10" TextChanged="SearchBox_TextChanged" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" FontSize="15" VerticalContentAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI"/>
+                        <TextBox x:Name="SearchBox" Height="44" Padding="14,10" TextChanged="SearchBox_TextChanged" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" FontSize="15" VerticalContentAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" AutomationProperties.Name="Search profiles"/>
                     </Border>
                     
                     <ComboBox x:Name="FilterCombo" Grid.Column="1" Height="44" Style="{StaticResource DarkComboBox}" SelectedIndex="0" SelectionChanged="FilterCombo_SelectionChanged" FontSize="15" FontFamily="Segoe UI Variable, Segoe UI">
@@ -68,9 +68,9 @@
                                     <!-- Empty State (shown when no profiles found) -->
                                     <StackPanel x:Name="EmptyStatePanel" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Collapsed" Margin="40">
                                         <TextBlock Text="📭" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,16"/>
-                                        <TextBlock Text="Keine Profile gefunden" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" HorizontalAlignment="Center" Margin="0,0,0,8"/>
-                                        <TextBlock Text="Erstelle ein neues Profil oder importiere ein bestehendes." FontSize="13" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="300" Margin="0,0,0,24"/>
-                                        <Button Content="Neues Profil erstellen" Style="{StaticResource PrimaryButton}" Width="160" Height="44" HorizontalAlignment="Center" Click="BtnNew_Click"/>
+                                        <TextBlock Text="No profiles found" FontSize="18" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+                                                                                <TextBlock Text="Create a new profile or import an existing one." FontSize="13" Foreground="{StaticResource TextSecondary}" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="300" Margin="0,0,0,24"/>
+                                                                                <Button Content="Create New Profile" Style="{StaticResource PrimaryButton}" Width="160" Height="44" HorizontalAlignment="Center" Click="BtnNew_Click"/>
                                     </StackPanel>
 
                                     <ItemsControl x:Name="ProfilesList">
