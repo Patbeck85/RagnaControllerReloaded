@@ -56,27 +56,38 @@
 
 **Goal:** Alle Fenster nach optischen Verbesserungen, Barrierefreiheit und Funktionalität durchgehen. Jedes Fenster erhält: AutomationProperties, FocusVisualStyle, konsistente Styles, englische Texte, Tooltips, Validierung, leere Zustände.
 
-|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-1801** | MainWindow.xaml: AutomationProperties, FocusVisualStyle, englische Texte, Tastatur-Navigation | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1802** | SettingsWindow.xaml: Deutsche Texte auf English, FocusVisualStyle, Slider-Labels, AutomationProperties | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1803** | SplashWindow.xaml: Keyboard-Shortcuts anzeigen, Fortschritts-Prozent, AutomationProperties | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1804** | WizardWindow.xaml: Deutsche Texte auf English, Validierung-Feedback, AutomationProperties | Designer | HIGH | TASK-1631 | ✅ CLOSED (2026-10-18) |
 | **TASK-1805** | ProfileLibraryWindow.xaml: Deutsche Texte auf English, Empty-State, AutomationProperties | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1806** | DaisyWheelWindow.xaml: Tastatur-Navigation, AutomationProperties, Focus-Ring | Designer | MEDIUM | — | 📋 OPEN |
-| **TASK-1807** | CommunityBrowserWindow.xaml: Loading-Spinner, Empty-State, AutomationProperties | Designer | MEDIUM | — | 📋 OPEN |
-| **TASK-1808** | TutorialWindow.xaml: Tastatur-Navigation, AutomationProperties, Media-Fallback | Designer | LOW | — | 📋 OPEN |
-| **TASK-1809** | DeveloperConsoleWindow.xaml: Copy-to-Clipboard, Log-Level-Farben, AutomationProperties | Designer | LOW | — | 📋 OPEN |
-| **TASK-1810** | ProfileWizardWindow.xaml: Validierung-Visual, AutomationProperties, Step-Dot-Labels | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1806** | DaisyWheelWindow.xaml: Tastatur-Navigation, AutomationProperties, Focus-Ring | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
+| **TASK-1807** | CommunityBrowserWindow.xaml: Loading-Spinner, Empty-State, AutomationProperties | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
+| **TASK-1808** | TutorialWindow.xaml: Tastatur-Navigation, AutomationProperties, Media-Fallback | Designer | LOW | — | ✅ CLOSED (2026-10-18) |
+| **TASK-1809** | DeveloperConsoleWindow.xaml: Copy-to-Clipboard, Log-Level-Farben, AutomationProperties | Designer | LOW | — | ✅ CLOSED (2026-10-18) |
+| **TASK-1810** | ProfileWizardWindow.xaml: Validierung-Visual, AutomationProperties, Step-Dot-Labels | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1811** | HandheldWindow.xaml: Tastatur-Navigation, AutomationProperties, deutsche Tooltips | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1812** | InGameOverlayWindow.xaml: Lesbarkeit verbessern, Tastatur-Navigation, AutomationProperties | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1813** | MiniModeWindow.xaml: Lesbarkeit, Tastatur-Shortcuts, Emoji-Fallback | Designer | LOW | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1814** | RadialSetupWindow.xaml: Emote-Gallery Tastatur, AutomationProperties, Emoji-Fallback | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1815** | RadialMenuWindow.xaml: Canvas Tastatur-Navigation, AutomationProperties, Focus-Ring | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-1815** | RadialMenuWindow.xaml: Canvas Tastatur-Navigation, AutomationProperties, Focus-Ring | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1816** | ComboEditorWindow.xaml: Tab-Button AutomationProperties, Validierung-Feedback, Focus | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1817** | ButtonRemappingWindow.xaml: Falsche Tooltips auf Reset-Buttons, Slider-Accessibility, Tastatur | Designer | HIGH | — | 📋 OPEN |
+| **TASK-1817** | ButtonRemappingWindow.xaml: Falsche Tooltips auf Reset-Buttons, Slider-Accessibility, Tastatur | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1818** | Globale UI-Styles: FocusVisualStyle für alle Controls, konsistente Button-Styles | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1819** | Alle XAML: Missing Tooltips ergänzen, konsistente Margins/Paddings | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
+
+### Epic 7: Lokalisation & Internationalisierung (v2.5.0) — ✅ COMPLETE
+
+**Goal:** Alle XAML-Fenster auf fehlende Lokalisation prüfen, Tooltips und Texte in en.json erfassen, alle 38 Sprachen synchronisieren.
+
+|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-1820** | Alle XAML scannen: Fehlende ToolTip, Content, Text Attribute identifizieren | Designer | HIGH | — | ✅ CLOSED (2026-10-19) |
+| **TASK-1821** | en.json: 187 neue Keys hinzugefügt (Tooltips, UI-Texte, Wizard, Settings, Profile, etc.) | Designer | HIGH | TASK-1820 | ✅ CLOSED (2026-10-19) |
+| **TASK-1822** | Alle 38 Sprachdateien mit en.json synchronisiert (English als Fallback) | Designer | HIGH | TASK-1821 | ✅ CLOSED (2026-10-19) |
+| **TASK-1823** | Build & Tests verifiziert: 0 Errors, 0 Warnings, 706/706 PASS | QA | HIGH | TASK-1822 | ✅ CLOSED (2026-10-19) |
 
 ---
 
@@ -91,12 +102,12 @@
 
 ### 📋 Nächste sofortige Aktion
 
-**Alle Epics abgeschlossen** — kein offener Task mehr in der KANBAN.md.
+**Alle Epics (1-7) abgeschlossen** — kein offener Task mehr in der KANBAN.md.
 
-**Vorschläge für neue Epics (v2.5.0+):**
-- Epic 6: DualSense Lightbar pro Profil konfigurierbar
-- Epic 7: First-Run Wizard erweitern (Controller-Button-Mapping, Profil-Vorlagen)
-- Epic 8: Performance-Optimierung (Engine-Tick-Reduktion, Memory-Pooling)
+**Vorschläge für neue Epics (v2.6.0+):**
+- Epic 8: DualSense Lightbar pro Profil konfigurierbar
+- Epic 9: First-Run Wizard erweitern (Controller-Button-Mapping, Profil-Vorlagen)
+- Epic 10: Performance-Optimierung (Engine-Tick-Reduktion, Memory-Pooling)
 
 ---
 
