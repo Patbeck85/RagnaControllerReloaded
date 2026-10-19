@@ -33,7 +33,7 @@
             <!-- Console Output -->
             <Border Grid.Row="1" Style="{StaticResource GlassPanel}" BorderBrush="{StaticResource BgBorder}" BorderThickness="1" CornerRadius="{StaticResource RadiusLg}" Background="{StaticResource BgDeep}">
                 <ScrollViewer x:Name="LogScroll" VerticalScrollBarVisibility="Auto" Padding="4">
-                    <TextBlock x:Name="LogText" FontFamily="JetBrains Mono, Consolas" FontSize="12" Foreground="{StaticResource Green}" TextWrapping="Wrap" Padding="12" LineHeight="18"/>
+                    <TextBlock x:Name="LogText" FontFamily="JetBrains Mono, Consolas" FontSize="12" Foreground="{StaticResource Green}" TextWrapping="Wrap" Padding="12" LineHeight="18" AutomationProperties.Name="Console output"/>
                 </ScrollViewer>
             </Border>
         </Grid>
