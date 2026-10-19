@@ -58,7 +58,7 @@
 
 || Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-1801** | MainWindow.xaml: AutomationProperties, FocusVisualStyle, englische Texte, Tastatur-Navigation | Designer | HIGH | — | 📋 OPEN |
+| **TASK-1801** | MainWindow.xaml: AutomationProperties, FocusVisualStyle, englische Texte, Tastatur-Navigation | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
 | **TASK-1802** | SettingsWindow.xaml: Deutsche Texte auf English, FocusVisualStyle, Slider-Labels, AutomationProperties | Designer | HIGH | — | 📋 OPEN |
 | **TASK-1803** | SplashWindow.xaml: Keyboard-Shortcuts anzeigen, Fortschritts-Prozent, AutomationProperties | Designer | MEDIUM | — | 📋 OPEN |
 | **TASK-1804** | WizardWindow.xaml: Deutsche Texte auf English, Validierung-Feedback, AutomationProperties | Designer | HIGH | TASK-1631 | 📋 OPEN |

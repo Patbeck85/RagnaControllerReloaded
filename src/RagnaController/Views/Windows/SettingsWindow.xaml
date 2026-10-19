@@ -94,10 +94,12 @@
                                                                                                       Click="ChkHapticMetronome_Click"/>
 
                                                                 <CheckBox x:Name="ChkStartInMiniMode" Content="{core:Loc Settings_StartInMiniMode}"
-                                                                                                      Click="ChkStartInMiniMode_Click"/>
+                                                                                                      Click="ChkStartInMiniMode_Click"
+                                                                                                      AutomationProperties.Name="Start in mini mode"/>
 
                                                                 <CheckBox x:Name="ChkSmartStandby" Content="{core:Loc Settings_EnableSmartStandby}"
-                                                                                                                                                                      Click="ChkSmartStandby_Click"/>
+                                                                                                                                                                      Click="ChkSmartStandby_Click"
+                                                                                                                                                                      AutomationProperties.Name="Smart standby"/>
 
                                                                                                                                 <TextBlock Text="{core:Loc Settings_StandbyMinutes}" Style="{StaticResource BodyText}" Margin="0,0,0,4"/>
                                                                                                                                 <TextBox x:Name="TxtStandbyMinutes" Text="5"
@@ -200,11 +202,11 @@
                                                                         <TextBlock Text="ACCESSIBILITY" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
                                                                         <Border Style="{StaticResource GlassPanel}">
                                                                             <StackPanel>
-                                                                                <CheckBox x:Name="ChkHighContrast" Content="High-Contrast-Modus aktivieren"
-                                                                                          Click="ChkHighContrast_Click"
-                                                                                          ToolTip="Hoher Kontrast für bessere Lesbarkeit (Schwarz/Weiß, knallige Akzente)"
-                                                                                          Margin="0,0,0,8"/>
-                                                                                <TextBlock Text="UI-Schriftgröße:" Style="{StaticResource BodyText}" Margin="0,0,0,4"/>
+                                                                                <CheckBox x:Name="ChkHighContrast" Content="High Contrast Mode"
+                                                                                                          Click="ChkHighContrast_Click"
+                                                                                                          ToolTip="High contrast for better readability (black/white, bold accents)"
+                                                                                                          Margin="0,0,0,8"/>
+                                                                                                    <TextBlock Text="UI Font Scale:" Style="{StaticResource BodyText}" Margin="0,0,0,4"/>
                                                                                 <Slider x:Name="FontScaleSlider" Minimum="0.85" Maximum="1.50" Value="1.0"
                                                                                         SmallChange="0.05" LargeChange="0.1" IsSnapToTickEnabled="True" TickFrequency="0.05"
                                                                                         Margin="0,0,0,4" ValueChanged="FontScaleSlider_ValueChanged"/>
