@@ -19,12 +19,15 @@ public partial class ProfileWizardWindow : Window
     {
         private int _step = 1;
         private readonly ProfileManager _profileManager;
+        private readonly ProfileTemplateManager _templateManager;
         public Profile? CreatedProfile { get; private set; }
+        private ProfileTemplate? _loadedTemplate;
 
         public ProfileWizardWindow(ProfileManager profileManager)
         {
             InitializeComponent();
             _profileManager = profileManager;
+            _templateManager = new ProfileTemplateManager();
             PopulateCombos();
             UpdateUI();
         }
@@ -70,6 +73,25 @@ public partial class ProfileWizardWindow : Window
                 var selectedItem = ClassCombo.SelectedItem as ComboBoxItem;
                 string className = selectedItem?.Content?.ToString() ?? "Unknown";
                 ReviewClass.Text = "CLASS: " + className.ToUpper();
+
+                // Engines
+                var engines = new List<string>();
+                if (EnableMeleeCheck.IsChecked == true) engines.Add("Auto-Target");
+                if (EnableKiteCheck.IsChecked == true) engines.Add("Kite Engine");
+                if (EnableMageCheck.IsChecked == true) engines.Add("Mage System");
+                if (EnableSupportCheck.IsChecked == true) engines.Add("Support Mode");
+                ReviewEngines.Text = engines.Count > 0 ? "Engines: " + string.Join(", ", engines) : "Engines: None";
+
+                // Buttons
+                var btns = new List<string>();
+                if (AButtonCombo.SelectedItem is ComboBoxItem a) btns.Add($"A → {a.Tag}");
+                if (BButtonCombo.SelectedItem is ComboBoxItem b) btns.Add($"B → {b.Tag}");
+                if (XButtonCombo.SelectedItem is ComboBoxItem x) btns.Add($"X → {x.Tag}");
+                if (YButtonCombo.SelectedItem is ComboBoxItem y) btns.Add($"Y → {y.Tag}");
+                ReviewButtons.Text = "Quick Keys: " + string.Join(" | ", btns);
+
+                // Template info
+                ReviewTemplateInfo.Text = _loadedTemplate != null ? $"Template: {_loadedTemplate.DisplayName} ({_loadedTemplate.Class})" : "No template loaded";
             }
         }
 
@@ -201,6 +223,108 @@ public partial class ProfileWizardWindow : Window
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed) DragMove();
+        }
+
+        // TASK-2005: Load template
+        private void BtnLoadTemplate_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new TemplateSelectWindow(_templateManager);
+            if (dlg.ShowDialog() == true && dlg.SelectedTemplate != null)
+            {
+                _loadedTemplate = dlg.SelectedTemplate;
+
+                // Apply template engines to checkboxes
+                EnableMeleeCheck.IsChecked = _loadedTemplate.Engines.PreRenewal.AutoAttackEnabled;
+                EnableKiteCheck.IsChecked = _loadedTemplate.Engines.PreRenewal.KiteEnabled;
+                EnableMageCheck.IsChecked = _loadedTemplate.Engines.PreRenewal.MageEnabled;
+                EnableSupportCheck.IsChecked = _loadedTemplate.Engines.PreRenewal.SupportEnabled;
+
+                // Apply template button mappings
+                if (_loadedTemplate.ButtonMappings != null)
+                {
+                    foreach (var kvp in _loadedTemplate.ButtonMappings)
+                    {
+                        var targetCombo = kvp.Key switch
+                        {
+                            "A" => AButtonCombo,
+                            "B" => BButtonCombo,
+                            "X" => XButtonCombo,
+                            "Y" => YButtonCombo,
+                            _ => null
+                        };
+                        if (targetCombo != null)
+                        {
+                            foreach (ComboBoxItem item in targetCombo.Items)
+                            {
+                                if ((VirtualKey)item.Tag == kvp.Value)
+                                {
+                                    targetCombo.SelectedItem = item;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                MessageBox.Show($"Template '{_loadedTemplate.DisplayName}' loaded successfully!", "Template Loaded", MessageBoxButton.OK, MessageBoxImage.Information);
+                UpdateUI();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Simple template selection dialog for the ProfileWizard "Load Template" feature.
+    /// </summary>
+    public class TemplateSelectWindow : Window
+    {
+        public ProfileTemplate? SelectedTemplate { get; private set; }
+
+        public TemplateSelectWindow(ProfileTemplateManager templateManager)
+        {
+            Title = "Load Profile Template";
+            Width = 400;
+            Height = 300;
+            WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            WindowStyle = WindowStyle.SingleBorderWindow;
+            Background = (Brush)new BrushConverter().ConvertFrom("#1E1E1E")!;
+
+            var grid = new Grid { Margin = new Thickness(16) };
+            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+            var lbl = new TextBlock { Text = "Select a template to load:", FontSize = 14, Foreground = Brushes.White, Margin = new Thickness(0, 0, 0, 8) };
+            grid.Children.Add(lbl);
+
+            var list = new ListBox { FontSize = 13, Background = Brushes.Transparent, Foreground = Brushes.White, BorderBrush = Brushes.Gray, BorderThickness = new Thickness(1) };
+            foreach (var kvp in templateManager.Templates)
+            {
+                var t = kvp.Value;
+                list.Items.Add(new ComboBoxItem { Content = $"{t.DisplayName} — {t.Class}", Tag = t });
+            }
+            if (list.Items.Count > 0) list.SelectedIndex = 0;
+            grid.Children.Add(list);
+            Grid.SetRow(list, 1);
+
+            var btnPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 12, 0, 0) };
+            var btnCancel = new Button { Content = "Cancel", Width = 80, Height = 32, Margin = new Thickness(0, 0, 8, 0) };
+            btnCancel.Click += (s, _) => { DialogResult = false; Close(); };
+            var btnOk = new Button { Content = "Load", Width = 80, Height = 32, Background = (Brush)new BrushConverter().ConvertFrom("#4a90e2")!, BorderBrush = (Brush)new BrushConverter().ConvertFrom("#4a90e2")!, Foreground = Brushes.White };
+            btnOk.Click += (s, _) =>
+            {
+                if (list.SelectedItem is ComboBoxItem item && item.Tag is ProfileTemplate t)
+                {
+                    SelectedTemplate = t;
+                    DialogResult = true;
+                    Close();
+                }
+            };
+            btnPanel.Children.Add(btnCancel);
+            btnPanel.Children.Add(btnOk);
+            grid.Children.Add(btnPanel);
+            Grid.SetRow(btnPanel, 2);
+
+            Content = grid;
         }
     }
 }

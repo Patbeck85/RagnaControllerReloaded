@@ -35,19 +35,20 @@
                                     </Border>
                                     <TextBlock Text="CLASS" Style="{StaticResource Eyebrow}"/>
                                     <ComboBox x:Name="ClassCombo" Style="{StaticResource DarkComboBox}" Height="44" FontSize="15" SelectionChanged="ClassCombo_SelectionChanged" FontFamily="Segoe UI Variable, Segoe UI" AutomationProperties.Name="Class selector">
-                                        <ComboBoxItem Content="Melee" Tag="Melee"/>
-                                        <ComboBoxItem Content="Mage" Tag="Mage"/>
-                                        <ComboBoxItem Content="Ranged" Tag="Ranged"/>
-                                        <ComboBoxItem Content="Support" Tag="Support"/>
-                                    </ComboBox>
-                                </StackPanel>
+                                                                            <ComboBoxItem Content="Melee" Tag="Melee"/>
+                                                                            <ComboBoxItem Content="Mage" Tag="Mage"/>
+                                                                            <ComboBoxItem Content="Ranged" Tag="Ranged"/>
+                                                                            <ComboBoxItem Content="Support" Tag="Support"/>
+                                                                        </ComboBox>
+                                                                        <Button x:Name="BtnLoadTemplate" Content="Load Template…" Style="{StaticResource GhostButton}" Height="36" Margin="0,12,0,0" Click="BtnLoadTemplate_Click" ToolTip="Load a saved profile template as starting point" AutomationProperties.Name="Load template"/>
+                                                                    </StackPanel>
                 <StackPanel x:Name="Step2Panel" Visibility="Collapsed">
                     <TextBlock Text="COMBAT ENGINES" Style="{StaticResource Eyebrow}"/>
                     <StackPanel Margin="0,10">
-                        <CheckBox x:Name="EnableMeleeCheck" Content="Enable Auto-Target" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI"/>
-                        <CheckBox x:Name="EnableKiteCheck" Content="Enable Kite Engine" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI"/>
-                        <CheckBox x:Name="EnableMageCheck" Content="Enable Mage System" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI"/>
-                        <CheckBox x:Name="EnableSupportCheck" Content="Enable Support Mode" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI"/>
+                        <CheckBox x:Name="EnableMeleeCheck" Content="Enable Auto-Target" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI" ToolTip="Automatisch das nächste Ziel angreifen und Fähigkeiten einsetzen" AutomationProperties.Name="Auto-Target enable"/>
+                                                <CheckBox x:Name="EnableKiteCheck" Content="Enable Kite Engine" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI" ToolTip="Abstand zum Gegner automatisch halten (Kite-Modus)" AutomationProperties.Name="Kite engine enable"/>
+                                                <CheckBox x:Name="EnableMageCheck" Content="Enable Mage System" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI" ToolTip="Automatisch Zauber wirken basierend auf Cooldown und Mana" AutomationProperties.Name="Mage system enable"/>
+                                                <CheckBox x:Name="EnableSupportCheck" Content="Enable Support Mode" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI" ToolTip="Party-Mitglieder automatisch heilen und buffen" AutomationProperties.Name="Support mode enable"/>
                     </StackPanel>
                 </StackPanel>
                 <StackPanel x:Name="Step3Panel" Visibility="Collapsed">
@@ -74,15 +75,18 @@
                                     </Grid>
                                 </StackPanel>
                 <StackPanel x:Name="Step4Panel" Visibility="Collapsed">
-                    <TextBlock Text="REVIEW" Style="{StaticResource Eyebrow}"/>
-                    <Border Style="{StaticResource GlassPanel}" Padding="24" CornerRadius="{StaticResource RadiusLg}" Margin="0,10">
-                        <StackPanel>
-                            <TextBlock x:Name="ReviewName" Foreground="{StaticResource AccentGold}" FontSize="26" FontWeight="Black" Margin="0,0,0,8" Effect="{StaticResource GoldGlow}" FontFamily="Segoe UI Variable, Segoe UI"/>
-                            <TextBlock x:Name="ReviewClass" Foreground="{StaticResource TextSecondary}" FontSize="16" FontWeight="Bold" Margin="0,0,0,24" FontFamily="Segoe UI Variable, Segoe UI"/>
-                            <TextBlock Text="The profile will be created with default movement settings. You can tweak everything later." Foreground="{StaticResource TextTertiary}" FontSize="13" TextWrapping="Wrap" FontFamily="Segoe UI Variable, Segoe UI"/>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
+                                    <TextBlock Text="REVIEW" Style="{StaticResource Eyebrow}"/>
+                                    <Border Style="{StaticResource GlassPanel}" Padding="24" CornerRadius="{StaticResource RadiusLg}" Margin="0,10">
+                                        <StackPanel>
+                                            <TextBlock x:Name="ReviewName" Foreground="{StaticResource AccentGold}" FontSize="26" FontWeight="Black" Margin="0,0,0,8" Effect="{StaticResource GoldGlow}" FontFamily="Segoe UI Variable, Segoe UI"/>
+                                            <TextBlock x:Name="ReviewClass" Foreground="{StaticResource TextSecondary}" FontSize="16" FontWeight="Bold" Margin="0,0,0,16" FontFamily="Segoe UI Variable, Segoe UI"/>
+                                            <TextBlock x:Name="ReviewEngines" Foreground="{StaticResource TextSecondary}" FontSize="13" Margin="0,0,0,16" FontFamily="Segoe UI Variable, Segoe UI" TextWrapping="Wrap"/>
+                                            <TextBlock x:Name="ReviewButtons" Foreground="{StaticResource TextSecondary}" FontSize="13" Margin="0,0,0,16" FontFamily="Segoe UI Variable, Segoe UI" TextWrapping="Wrap"/>
+                                            <TextBlock x:Name="ReviewTemplateInfo" Foreground="{StaticResource TextTertiary}" FontSize="12" FontStyle="Italic" Margin="0,0,0,8" FontFamily="Segoe UI Variable, Segoe UI" TextWrapping="Wrap"/>
+                                            <TextBlock Text="You can tweak all settings later in the profile editor." Foreground="{StaticResource TextTertiary}" FontSize="13" TextWrapping="Wrap" FontFamily="Segoe UI Variable, Segoe UI"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
             </Grid>
             
             <!-- Footer with Step Indicators -->
