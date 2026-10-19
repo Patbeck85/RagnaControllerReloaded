@@ -145,8 +145,37 @@
 
 ---
 
-**Start mit Epic 10 (Performance-Optimierung)** als nächste Priorität.
+### Epic 11: UI/UX Deep-Dive & Funktionalität (v2.6.0) — 📋 PLANUNG
+
+**Goal:** Alle 22 XAML-Fenster nochmal detailliert durchgehen. Für jedes Fenster: optische Verbesserungen, fehlende Funktionalität, konsistente Bedienbarkeit, deutsche/englische Text-Mischung beheben, Tooltips vervollständigen, leere Zustände füllen.
+
+|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-2001** | MainWindow: D-Pad Center Tooltip, leere L1/R1/L2/R2 Panels füllen, Quick-Action Hotkeys anzeigen | Designer | HIGH | — | 📋 OPEN |
+| **TASK-2002** | SettingsWindow: Verbleibende deutsche Texte übersetzen (High Contrast, Gyro, etc.), Suchfunktion für Einstellungen, "Alle auf Standard zurücksetzen" | Designer | HIGH | — | 📋 OPEN |
+| **TASK-2003** | SplashWindow: Dynamische Prozent-Anzeige, Fehler-Details anzeigen, Skip-Button prominenter | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2004** | WizardWindow: Schritt 3 visueller Fortschritt bei Controller-Erkennung, Controller-Typ Auswahl, Schritt 4 D-Pad/Trigger Button-Mapping | Designer | HIGH | TASK-1911 | 📋 OPEN |
+| **TASK-2005** | ProfileWizardWindow: Checkboxen mit Beschreibung, Vorschau vor Speichern, "Vorlage laden" Option | Designer | MEDIUM | TASK-1911 | 📋 OPEN |
+| **TASK-2006** | ProfileLibraryWindow: Bulk-Operationen, Sortierung (Name/Datum/Downloads), Favoriten, "Einfügen aus Zwischenablage" für Share Code, Download-Fortschritt | Designer | HIGH | — | 📋 OPEN |
+| **TASK-2007** | HandheldWindow: Mehr Tiles (Controller Test, Macro Editor), Tiles umordnen möglich | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2008** | InGameOverlayWindow: Größe anpassbar, Position speichern, Batterie dynamisch | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2009** | MiniModeWindow: Tastatur-Kurzbefehle anzeigen, Transparenz-Einstellung, Profil-Wechsel direkt | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2010** | ComboEditorWindow: Drag-and-Drop für Schritte-Reihenfolge, Kopieren/Einfügen von Schritten, Vorschau | Designer | HIGH | — | 📋 OPEN |
+| **TASK-2011** | ButtonRemappingWindow: Duplikate entfernen (rechts/links identisch), falsche Reset-Button-Tooltips fixen, Preview-Bereich entfernen oder sinnvoll nutzen, Profil laden/speichern | Designer | HIGH | — | 📋 OPEN |
+| **TASK-2012** | RadialMenuWindow: Visuelle Rückmeldung bei Auswahl, Animation beim Drehen | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2013** | RadialSetupWindow: "Alle auswählen" für Emotes, Download-Fortschrittsbalken, Emote-Kategorien | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2014** | DaisyWheelWindow: Aktuelle Auswahl anzeigen, Rad-Items konfigurierbar | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2015** | CommunityBrowserWindow: Sortierung (Name/Datum/Downloads), Kategorien-Filter, Favoriten-Funktion | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2016** | DeveloperConsoleWindow: "Kopieren" Button für Logs, Log-Level-Filter, Zeitstempel anzeigen | Designer | LOW | — | 📋 OPEN |
+| **TASK-2017** | TutorialWindow: MediaPreview mit Inhalt füllen, "Alle Tutorials überspringen" Option, Fortschrittsanzeige | Designer | LOW | — | 📋 OPEN |
+| **TASK-2018** | ControllerTestWindow: Deutsch-Englisch Mix beheben, Tastatur-Kurzbefehle anzeigen, Resize möglich | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2019** | Controls/ControllerVisualization: Interaktive Rückmeldung bei Button-Druck, Hover-Effekte | Designer | LOW | — | 📋 OPEN |
+| **TASK-2020** | Controls/TelemetryPanel: Export-Funktion für Telemetriedaten, Auto-Scroll Toggle, Daten-Reset | Designer | LOW | — | 📋 OPEN |
 
 ---
 
-*Letzte Aktualisierung: 2026-10-19 | Alle Phasen 1-15 COMPLETE | Build: 0 Errors / 0 Warnings | Tests: 706/706 PASS*
+**Start mit TASK-2001 (MainWindow)** als nächste Priorität.
+
+---
+
+*Letzte Aktualisierung: 2026-10-19 | Alle Phasen 1-15 COMPLETE | Build: 0 Errors / 0 Warnings | Tests: 726/726 PASS*

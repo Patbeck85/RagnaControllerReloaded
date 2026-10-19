@@ -190,7 +190,7 @@
                                                 </Grid.ColumnDefinitions>
                                                 <Border x:Name="DpadUp" Grid.Row="0" Grid.Column="1" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Up" AutomationProperties.Name="D-Pad Up"/>
                                                                                                 <Border x:Name="DpadLeft" Grid.Row="1" Grid.Column="0" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Left" AutomationProperties.Name="D-Pad Left"/>
-                                                                                                <Border x:Name="DpadCenter" Grid.Row="1" Grid.Column="1" Background="{StaticResource BgPanel}" CornerRadius="4" Margin="4" BorderBrush="{StaticResource BgBorder}" BorderThickness="1"/>
+                                                                                                <Border x:Name="DpadCenter" Grid.Row="1" Grid.Column="1" Background="{StaticResource BgPanel}" CornerRadius="4" Margin="4" BorderBrush="{StaticResource BgBorder}" BorderThickness="1" ToolTip="D-Pad Center – L3 (⌫ Backspace)" AutomationProperties.Name="D-Pad Center"/>
                                                                                                 <Border x:Name="DpadRight" Grid.Row="1" Grid.Column="2" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Right" AutomationProperties.Name="D-Pad Right"/>
                                                                                                 <Border x:Name="DpadDown" Grid.Row="2" Grid.Column="1" Background="{StaticResource AccentBlueDim}" CornerRadius="4" Margin="4" ToolTip="D-Pad Down" AutomationProperties.Name="D-Pad Down"/>
                                             </Grid>
@@ -249,12 +249,12 @@
                             </Border>
 
                             <!-- Quick Actions -->
-                            <StackPanel Grid.Row="2" Orientation="Vertical" Margin="16,0,16,16" HorizontalAlignment="Stretch">
-                                <Button x:Name="BtnCalibrateQuick" Content="Calibrate" Style="{StaticResource PrimaryButton}" Height="44" Margin="0,0,0,8" Click="BtnCalibrateQuick_Click" AutomationProperties.Name="Quick calibrate"/>
-                                                                <Button x:Name="BtnTestInput" Content="Test Input" Style="{StaticResource GhostButton}" Height="44" Margin="0,0,0,8" Click="BtnTestInput_Click" AutomationProperties.Name="Test input"/>
-                                                                <Button x:Name="BtnOpenRemap" Content="Button Remapping" Style="{StaticResource GhostButton}" Height="44" Click="BtnOpenRemap_Click" AutomationProperties.Name="Button remapping"/>
-                                                                <Button x:Name="BtnRadial" Content="Radial Menu" Style="{StaticResource GhostButton}" Height="44" Margin="0,8,0,0" Click="BtnRadial_Click" AutomationProperties.Name="Radial menu"/>
-                            </StackPanel>
+                                                        <StackPanel Grid.Row="2" Orientation="Vertical" Margin="16,0,16,16" HorizontalAlignment="Stretch">
+                                                            <Button x:Name="BtnCalibrateQuick" Content="Calibrate" Style="{StaticResource PrimaryButton}" Height="44" Margin="0,0,0,8" Click="BtnCalibrateQuick_Click" AutomationProperties.Name="Quick calibrate" ToolTip="Calibrate gamepad deadzone\nHotkey: F1"/>
+                                                            <Button x:Name="BtnTestInput" Content="Test Input" Style="{StaticResource GhostButton}" Height="44" Margin="0,0,0,8" Click="BtnTestInput_Click" AutomationProperties.Name="Test input" ToolTip="Test gamepad button input\nHotkey: F2"/>
+                                                            <Button x:Name="BtnOpenRemap" Content="Button Remapping" Style="{StaticResource GhostButton}" Height="44" Click="BtnOpenRemap_Click" AutomationProperties.Name="Button remapping" ToolTip="Open button remapping settings\nHotkey: F3"/>
+                                                            <Button x:Name="BtnRadial" Content="Radial Menu" Style="{StaticResource GhostButton}" Height="44" Margin="0,8,0,0" Click="BtnRadial_Click" AutomationProperties.Name="Radial menu" ToolTip="Open radial menu configuration\nHotkey: F4"/>
+                                                        </StackPanel>
                         </Grid>
                     </Border>
 
@@ -268,32 +268,52 @@
                         </Border>
 
                         <!-- L1+ Panel -->
-                        <Border x:Name="PanelL1" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
-                                <StackPanel x:Name="L1PanelContent"/>
-                            </ScrollViewer>
-                        </Border>
+                                                <Border x:Name="PanelL1" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
+                                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
+                                                        <StackPanel x:Name="L1PanelContent">
+                                                            <TextBlock Text="L1+ Layer – Auto-Angriff &amp; Kite" Style="{StaticResource Eyebrow}" Margin="0,0,0,8"/>
+                                                            <Button Content="Auto-Target aktivieren" Style="{StaticResource GhostButton}" Height="40" Margin="0,0,0,8" ToolTip="Aktiviert automatischen Angriff auf das nächste Ziel" AutomationProperties.Name="Auto-Target enable"/>
+                                                            <Button Content="Kite-Modus aktivieren" Style="{StaticResource GhostButton}" Height="40" Margin="0,0,0,8" ToolTip="Aktiviert Kite-Modus (Abstand zum Gegner halten)" AutomationProperties.Name="Kite mode enable"/>
+                                                            <TextBlock Text="Noch keine Layer-spezifischen Belegungen konfiguriert. Nutzen Sie den Button-Remapping-Editor um Tasten diesem Layer zuzuweisen." Style="{StaticResource MutedText}" FontSize="11" TextWrapping="Wrap" Margin="0,16,0,0"/>
+                                                        </StackPanel>
+                                                    </ScrollViewer>
+                                                </Border>
 
                         <!-- R1+ Panel -->
-                        <Border x:Name="PanelR1" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
-                                <StackPanel x:Name="R1PanelContent"/>
-                            </ScrollViewer>
-                        </Border>
+                                                <Border x:Name="PanelR1" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
+                                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
+                                                        <StackPanel x:Name="R1PanelContent">
+                                                            <TextBlock Text="R1+ Layer – Mage System" Style="{StaticResource Eyebrow}" Margin="0,0,0,8"/>
+                                                            <Button Content="Mage-System aktivieren" Style="{StaticResource GhostButton}" Height="40" Margin="0,0,0,8" ToolTip="Aktiviert automatisches Zaubern (Mage Engine)" AutomationProperties.Name="Mage system enable"/>
+                                                            <Button Content="Boden-Zauber Modus" Style="{StaticResource GhostButton}" Height="40" Margin="0,0,0,8" ToolTip="Aktiviert Boden-Zauber mit R-Stick Zielung" AutomationProperties.Name="Ground spell mode"/>
+                                                            <TextBlock Text="Noch keine Layer-spezifischen Belegungen konfiguriert." Style="{StaticResource MutedText}" FontSize="11" TextWrapping="Wrap" Margin="0,16,0,0"/>
+                                                        </StackPanel>
+                                                    </ScrollViewer>
+                                                </Border>
 
                         <!-- L2+ Panel -->
-                        <Border x:Name="PanelL2" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
-                                <StackPanel x:Name="L2PanelContent"/>
-                            </ScrollViewer>
-                        </Border>
+                                                <Border x:Name="PanelL2" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
+                                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
+                                                        <StackPanel x:Name="L2PanelContent">
+                                                            <TextBlock Text="L2+ Layer – Items &amp; Potions" Style="{StaticResource Eyebrow}" Margin="0,0,0,8"/>
+                                                            <Button Content="Auto-Potion aktivieren" Style="{StaticResource GhostButton}" Height="40" Margin="0,0,0,8" ToolTip="Aktiviert automatische Item-Verwendung (ItemManager)" AutomationProperties.Name="Auto-potion enable"/>
+                                                            <Button Content="Quick-Item Slot 1" Style="{StaticResource GhostButton}" Height="40" Margin="0,0,0,8" ToolTip="Verwendet schnellen Item-Slot 1" AutomationProperties.Name="Quick item slot 1"/>
+                                                            <TextBlock Text="Noch keine Layer-spezifischen Belegungen konfiguriert." Style="{StaticResource MutedText}" FontSize="11" TextWrapping="Wrap" Margin="0,16,0,0"/>
+                                                        </StackPanel>
+                                                    </ScrollViewer>
+                                                </Border>
 
                         <!-- R2+ Panel -->
-                        <Border x:Name="PanelR2" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
-                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
-                                <StackPanel x:Name="R2PanelContent"/>
-                            </ScrollViewer>
-                        </Border>
+                                                <Border x:Name="PanelR2" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
+                                                    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="8">
+                                                        <StackPanel x:Name="R2PanelContent">
+                                                            <TextBlock Text="R2+ Layer – Support &amp; Buffs" Style="{StaticResource Eyebrow}" Margin="0,0,0,8"/>
+                                                            <Button Content="Support-Modus aktivieren" Style="{StaticResource GhostButton}" Height="40" Margin="0,0,0,8" ToolTip="Aktiviert Support-Modus (Auto-Heal Party)" AutomationProperties.Name="Support mode enable"/>
+                                                            <Button Content="Buff-Status anzeigen" Style="{StaticResource GhostButton}" Height="40" Margin="0,0,0,8" ToolTip="Zeigt aktuelle Buff-Status aller Party-Mitglieder" AutomationProperties.Name="Buff status show"/>
+                                                            <TextBlock Text="Noch keine Layer-spezifischen Belegungen konfiguriert." Style="{StaticResource MutedText}" FontSize="11" TextWrapping="Wrap" Margin="0,16,0,0"/>
+                                                        </StackPanel>
+                                                    </ScrollViewer>
+                                                </Border>
 
                         <!-- Health Panel -->
                         <Border x:Name="PanelHealth" Visibility="Collapsed" Style="{StaticResource GlassPanel}" Panel.ZIndex="10" Effect="{StaticResource CardShadow}">
