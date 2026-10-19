@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Microsoft.VisualBasic;
 using RagnaController.Core;
+using RagnaController.Models;
 using RagnaController.Profiles;
 
 namespace RagnaController.Views.Editors
@@ -35,9 +39,112 @@ namespace RagnaController.Views.Editors
             if (SldL1R1   != null) SldL1R1.Value   = 0;
             if (SldL2R2   != null) SldL2R2.Value   = 0;
 
+            // Populate profile combo
+            PopulateProfileCombo();
+
             // Activate Base layer by default
             ApplyLayer("");
             UpdatePreview();
+        }
+
+        // TASK-2011: Populate profile combo
+        private void PopulateProfileCombo()
+        {
+            ProfileCombo.Items.Clear();
+            foreach (var p in _manager.Profiles)
+            {
+                ProfileCombo.Items.Add(new System.Windows.Controls.ComboBoxItem
+                {
+                    Content = p.Name,
+                    Tag = p
+                });
+            }
+            var active = _manager.ActiveProfile;
+            if (active != null)
+            {
+                foreach (System.Windows.Controls.ComboBoxItem item in ProfileCombo.Items)
+                {
+                    if ((string)item.Tag == active.Name || (string)item.Content == active.Name)
+                    {
+                        ProfileCombo.SelectedItem = item;
+                        break;
+                    }
+                }
+            }
+            UpdateProfileInfo();
+        }
+
+        // TASK-2011: Profile selection changed
+        private void ProfileCombo_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (ProfileCombo.SelectedItem is System.Windows.Controls.ComboBoxItem item && item.Tag is Profile p)
+            {
+                _manager.SetActive(p.Name);
+                UpdateProfileInfo();
+                UpdatePreview();
+            }
+        }
+
+        // TASK-2011: Update profile info display
+        private void UpdateProfileInfo()
+        {
+            var profile = _manager.ActiveProfile;
+            if (profile == null)
+            {
+                ProfileInfoName.Text = "No profile selected";
+                ProfileInfoClass.Text = "Class: —";
+                ProfileInfoDeadzone.Text = "Deadzone: —";
+                ProfileInfoCursorDeadzone.Text = "Cursor Deadzone: —";
+                return;
+            }
+            ProfileInfoName.Text = profile.Name;
+            ProfileInfoClass.Text = $"Class: {profile.Class}";
+            ProfileInfoDeadzone.Text = $"Deadzone: {profile.Deadzone:P0}";
+            ProfileInfoCursorDeadzone.Text = $"Cursor Deadzone: {profile.CursorDeadzone:P0}";
+        }
+
+        // TASK-2011: Load selected profile
+        private void BtnLoadProfile_Click(object sender, RoutedEventArgs e)
+        {
+            if (ProfileCombo.SelectedItem is System.Windows.Controls.ComboBoxItem item && item.Tag is Profile p)
+            {
+                _manager.SetActive(p.Name);
+                _engine.LoadProfile(p);
+                UpdateProfileInfo();
+                UpdatePreview();
+                _hasUnsavedChanges = false;
+            }
+        }
+
+        // TASK-2011: Save profile as new
+        private void BtnSaveAsProfile_Click(object sender, RoutedEventArgs e)
+        {
+            var profile = _manager.ActiveProfile;
+            if (profile == null) return;
+
+            // Prompt for new name
+            var newName = Microsoft.VisualBasic.Interaction.InputBox(
+                "Enter new profile name:",
+                "Save Profile As",
+                profile.Name + " (copy)");
+            if (string.IsNullOrWhiteSpace(newName)) return;
+
+            var newProfile = new Profile
+            {
+                Name = newName,
+                Class = profile.Class,
+                Deadzone = profile.Deadzone,
+                CursorDeadzone = profile.CursorDeadzone,
+                ButtonMappings = new Dictionary<ButtonKey, ButtonAction>(profile.ButtonMappings),
+                ComboEnabled = profile.ComboEnabled,
+                ComboSkillNames = new List<string>(profile.ComboSkillNames),
+                ComboSequenceVK = new List<VirtualKey>(profile.ComboSequenceVK),
+                PreRenewalComboDelays = new List<int>(profile.PreRenewalComboDelays),
+                RenewalComboDelays = new List<int>(profile.RenewalComboDelays),
+            };
+            _manager.AddAndSave(newProfile);
+            PopulateProfileCombo();
+            MessageBox.Show($"Profile '{newName}' saved.", "Saved", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
