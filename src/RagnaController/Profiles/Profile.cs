@@ -204,6 +204,11 @@ namespace RagnaController.Profiles
         /// Whether this profile should auto-activate when its associated controller is connected.
         /// </summary>
         public bool AutoActivateOnControllerConnect { get; set; } = false;
+
+        /// <summary>When this profile was created.</summary>
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        /// <summary>Number of times this profile was downloaded via share code.</summary>
+        public int DownloadCount { get; set; } = 0;
     }
 
     /// <summary>

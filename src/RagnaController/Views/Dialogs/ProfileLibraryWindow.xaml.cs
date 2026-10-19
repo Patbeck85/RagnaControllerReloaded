@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 using RagnaController.Core;
 using RagnaController.Profiles;
 
@@ -92,20 +93,32 @@ namespace RagnaController.Views.Dialogs
                     _ => true
                 };
                 return matchesSearch && matchesType;
-            }).ToList();
+            });
 
-            ProfilesList.ItemsSource = filtered;
-            ProfileCount.Text = $"{filtered.Count} profiles found";
+            // Sortierung
+            string sort = (SortCombo.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "Name (A-Z)";
+            var sorted = sort switch
+            {
+                "Name (Z-A)" => filtered.OrderByDescending(p => p.Name),
+                "Date (Newest)" => filtered.OrderByDescending(p => p.CreatedAt),
+                "Downloads" => filtered.OrderByDescending(p => p.DownloadCount),
+                _ => filtered.OrderBy(p => p.Name)
+            };
+
+            var result = sorted.ToList();
+            ProfilesList.ItemsSource = result;
+            ProfileCount.Text = $"{result.Count} profiles found";
 
             // UX-018: Empty State when no profiles foand
             if (EmptyStatePanel != null)
-                EmptyStatePanel.Visibility = filtered.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
+                EmptyStatePanel.Visibility = result.Count == 0 ? Visibility.Visible : Visibility.Collapsed;
             if (ProfilesList != null)
-                ProfilesList.Visibility = filtered.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
+                ProfilesList.Visibility = result.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e) => ApplyFilter();
         private void FilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e) => ApplyFilter();
+        private void SortCombo_SelectionChanged(object sender, SelectionChangedEventArgs e) => ApplyFilter();
 
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
         {
@@ -221,26 +234,43 @@ namespace RagnaController.Views.Dialogs
         {
             string code = TxtShareCode?.Text?.Trim() ?? "";
             if (string.IsNullOrEmpty(code)) { MessageBox.Show("Enter a share code first.", "No Code", MessageBoxButton.OK, MessageBoxImage.Information); return; }
-            
+
             // Safe pattern matching: compiler knows from here 100% that 'btn' is not null
             if (sender is not Button btn) return;
 
-            btn.IsEnabled = false; 
+            btn.IsEnabled = false;
             btn.Content = "Downloading…";
+
+            // TASK-2006: Download progress indicator
+            DownloadProgress.Visibility = Visibility.Visible;
+            var progressTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
+            int progress = 0;
+            progressTimer.Tick += (s, ev) =>
+            {
+                progress += 5;
+                if (progress > 90) progress = 90;
+                DownloadProgress.Value = progress;
+            };
+            progressTimer.Start();
+
             try
             {
                 var result = await RagnaController.Core.ProfileShareService.DownloadAsync(code);
+                progressTimer.Stop();
+                DownloadProgress.Value = 100;
+                DownloadProgress.Visibility = Visibility.Collapsed;
+
                 if (result.Success && result.Profile != null)
                 {
-                    var profile = result.Profile; 
+                    var profile = result.Profile;
+                    profile.DownloadCount++;
                     _manager.AddAndSave(profile);
                     Refresh();
-                    
+
                     // Null check added to prevent CS8602
                     if (TxtShareCode != null) TxtShareCode.Text = "";
-                    
+
                     // Toast-Feedback (no blockierendes MessageBox)
-                    // CS4014: Dispatcher.BeginInvoke is synchron, no Task - Warning is falsch positiv
 #pragma warning disable CS4014
                     Dispatcher.BeginInvoke(() => { if (StatusText != null) { StatusText.Text = $"✓ {profile.Name} downloaded"; StatusText.Foreground = (Brush)FindResource("Live"); } });
 #pragma warning restore CS4014
@@ -256,7 +286,29 @@ namespace RagnaController.Views.Dialogs
                 System.Diagnostics.Debug.WriteLine($"[ProfileLibrary] Download failed: {ex.Message}");
                 MessageBox.Show($"Download error:\n{ex.Message}", "Download Failed", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            finally { btn.IsEnabled = true; btn.Content = "↓ Download"; }
+            finally
+            {
+                progressTimer.Stop();
+                DownloadProgress.Visibility = Visibility.Collapsed;
+                btn.IsEnabled = true;
+                btn.Content = "↓ Download";
+            }
+        }
+
+        // TASK-2006: Paste share code from clipboard
+        private void BtnPasteShareCode_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (System.Windows.Clipboard.ContainsText())
+                {
+                    TxtShareCode.Text = System.Windows.Clipboard.GetText().Trim();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ProfileLibrary] Paste failed: {ex.Message}");
+            }
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e) => Close();
