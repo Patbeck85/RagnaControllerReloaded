@@ -29,6 +29,10 @@ namespace RagnaController.Profiles
         [JsonInclude]
         public string Class { get; init; } = "Melee";
 
+        /// <summary>RO-Modus: Pre-Renewal oder Renewal.</summary>
+        [JsonInclude]
+        public string Mode { get; init; } = "Pre-Renewal";
+
         /// <summary>Empfohlene Skills für diese Klasse (vom Wizard angezeigt).</summary>
         [JsonInclude]
         public List<string> SkillRecommendations { get; init; } = new();

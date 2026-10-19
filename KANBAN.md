@@ -117,14 +117,14 @@
 | **TASK-1903** | Engine: Lightbar-Farbe bei Profil-Wechsel anwenden | Coder | MEDIUM | TASK-1901 | 📋 OPEN |
 | **TASK-1904** | Unit-Tests für Lightbar-Farb-Logik | QA | LOW | TASK-1903 | 📋 OPEN |
 
-### Epic 9: First-Run Wizard erweitern (Controller-Button-Mapping, Profil-Vorlagen) — 📋 PLANUNG
+### Epic 9: First-Run Wizard erweitern (Controller-Button-Mapping, Profil-Vorlagen) — ✅ COMPLETE
 
-**Goal:** Wizard um Controller-Button-Mapping und Profil-Vorlagen (NOVICE, SWORDMAN, MAGER, ARCHER, ACOLYTE, MERCHANT, THIEF) erweitern.
+**Goal:** Wizard um Controller-Button-Mapping und Profil-Vorlagen (alle 58 RO-Klassen aus DefaultProfiles/, Pre-Renewal & Renewal) erweitert.
 
 || Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-1911** | Profil-Vorlagen-Definitionen (Default-Buttons, Engines, Klassen) erstellen | Coder | HIGH | — | ✅ CLOSED (2026-10-19) |
-| **TASK-1912** | UI: Profil-Vorlagen-Auswahl im Wizard (Schritt: Klasse + Vorlage) | Designer | HIGH | TASK-1911 | ✅ CLOSED (2026-10-19) |
+| **TASK-1911** | Profil-Vorlagen aus DefaultProfiles/*.json laden (statt hardcodiert) | Coder | HIGH | — | ✅ CLOSED (2026-10-19) |
+| **TASK-1912** | UI: Profil-Vorlagen-Auswahl im Wizard (Dropdown, Beschreibung, Skills) | Designer | HIGH | TASK-1911 | ✅ CLOSED (2026-10-19) |
 | **TASK-1913** | UI: Controller-Button-Mapping im Wizard (A/B/X/Y, D-Pad, Trigger zuweisen) | Designer | HIGH | TASK-1912 | ✅ CLOSED (2026-10-19) |
 | **TASK-1914** | Button-Mapping speichern und in Profile laden | Coder | HIGH | TASK-1913 | ✅ CLOSED (2026-10-19) |
 | **TASK-1915** | Integration: Wizard-Fertigstellung erstellt Profil mit Vorlage + Mapping | Coder | HIGH | TASK-1914 | ✅ CLOSED (2026-10-19) |
@@ -143,8 +143,8 @@
 
 ---
 
-**Start mit Epic 9 (First-Run Wizard erweitern)** als erste Priorität.
+**Start mit Epic 10 (Performance-Optimierung)** als nächste Priorität.
 
 ---
 
-*Letzte Aktualisierung: 2026-10-17 | Alle Phasen 1-15 COMPLETE | Build: 0 Errors / 0 Warnings | Tests: 650/650 PASS*
+*Letzte Aktualisierung: 2026-10-19 | Alle Phasen 1-15 COMPLETE | Build: 0 Errors / 0 Warnings | Tests: 706/706 PASS*

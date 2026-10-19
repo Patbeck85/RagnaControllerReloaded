@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using RagnaController.Models;
 
@@ -9,14 +10,13 @@ namespace RagnaController.Profiles
     /// <summary>
     /// TASK-1911: ProfileTemplateManager — verwaltet alle verfügbaren Profil-Vorlagen
     /// für RO-Klassen. Lädt Vorlagen aus JSON-Dateien im <DefaultProfiles/>-Ordner
-    /// (z.B. <novice_preremewal.json>, <mage_renewal.json>). Jede Vorlage definiert
+    /// (z.B. <novice.json>, <mage.json>, <swordsman.json>). Jede Vorlage definiert
     /// Klasse, Engine-Einstellungen, Button-Mappings und Sensitivität, die im
     /// First-Run Wizard (Epic 9) ausgewählt werden können.
     ///
-    /// Hinweis: Statt hardcodierter Klassen werden Vorlagen aus JSON-Dateien geladen,
-    /// sodass du deine eigenen Pre-Renewal / Renewal Vorlagen einfach als
-    /// DefaultProfiles\*.json ablegen kannst. Später können Vorlagen auch über
-    /// GitHub Gists geteilt und heruntergeladen werden.
+    /// Die DefaultProfiles-Dateien sind bereits vollständige Profile-Objekte.
+    /// Dieser Manager konvertiert sie zu ProfileTemplate-Objekten für den Wizard.
+    /// Später können Vorlagen auch über GitHub Gists geteilt werden.
     /// </summary>
     public sealed class ProfileTemplateManager : IDisposable
     {
@@ -44,21 +44,24 @@ namespace RagnaController.Profiles
         {
             _templates.Clear();
 
-            var templateDir = Path.Combine(AppContext.BaseDirectory, "ProfileTemplates");
-            if (!Directory.Exists(templateDir))
+            var defaultProfilesDir = Path.Combine(AppContext.BaseDirectory, "DefaultProfiles");
+            if (!Directory.Exists(defaultProfilesDir))
             {
-                Logger?.Invoke("[ProfileTemplateManager] ProfileTemplates-Ordner nicht gefunden — keine Vorlagen geladen.");
+                Logger?.Invoke("[ProfileTemplateManager] DefaultProfiles-Ordner nicht gefunden — keine Vorlagen geladen.");
                 return;
             }
 
             int loaded = 0;
-            foreach (var file in Directory.GetFiles(templateDir, "*.json"))
+            foreach (var file in Directory.GetFiles(defaultProfilesDir, "*.json"))
             {
                 try
                 {
                     var json = File.ReadAllText(file);
-                    var template = JsonSerializer.Deserialize<ProfileTemplate>(json, AppJsonContext.Default.ProfileTemplate);
-                    if (template != null && !string.IsNullOrWhiteSpace(template.Id))
+                    var profile = JsonSerializer.Deserialize<Profile>(json, AppJsonContext.Default.Profile);
+                    if (profile == null) continue;
+
+                    var template = ProfileToTemplate(profile, Path.GetFileNameWithoutExtension(file));
+                    if (template != null)
                     {
                         _templates[template.Id] = template;
                         loaded++;
@@ -70,7 +73,74 @@ namespace RagnaController.Profiles
                 }
             }
 
-            Logger?.Invoke($"[ProfileTemplateManager] {loaded} Vorlagen aus ProfileTemplates geladen.");
+            Logger?.Invoke($"[ProfileTemplateManager] {loaded} Vorlagen aus DefaultProfiles geladen.");
+        }
+
+        /// <summary>
+        /// Konvertiert ein Profile-Objekt zu einem ProfileTemplate für den Wizard.
+        /// </summary>
+        private static ProfileTemplate? ProfileToTemplate(Profile profile, string fileNameWithoutExtension)
+        {
+            if (profile == null) return null;
+
+            // Id aus Dateinamen ableiten (z.B. "mage_renewal" → "mage_renewal")
+            var id = fileNameWithoutExtension.ToLowerInvariant();
+
+            // Modus aus Dateinamen erkennen: *_preremewal oder *_renewal
+            var mode = "Pre-Renewal";
+            var lowerName = fileNameWithoutExtension.ToLowerInvariant();
+            if (lowerName.EndsWith("_renewal")) mode = "Renewal";
+            else if (lowerName.EndsWith("_preremewal")) mode = "Pre-Renewal";
+
+            var template = new ProfileTemplate
+            {
+                Id = id,
+                DisplayName = profile.Name,
+                Description = profile.ClassTips ?? $"Profil für Klasse {profile.Class} ({mode})",
+                Class = profile.Class,
+                Mode = mode,
+                SkillRecommendations = new List<string>(profile.SkillRecommendations ?? new List<string>()),
+                ClassTips = profile.ClassTips ?? "",
+                Engines = new TemplateEngineSettings
+                {
+                    AutoAttackEnabled = profile.AutoAttackEnabled,
+                    AutoRetargetEnabled = profile.AutoRetargetEnabled,
+                    KiteEnabled = profile.KiteEnabled,
+                    MageEnabled = profile.MageEnabled,
+                    SupportEnabled = profile.SupportEnabled,
+                    ComboEnabled = profile.ComboEnabled,
+                    SmartSkillEnabled = profile.SmartSkillEnabled,
+                    AutoAttackKeyVK = profile.AutoAttackKeyVK,
+                    KiteAttackKeyVK = profile.KiteAttackKeyVK,
+                    SupportHealKeyVK = profile.SupportHealKeyVK,
+                    MageBoltKeyVK = profile.MageBoltKeyVK,
+                    TabCycleMs = profile.TabCycleMs
+                },
+                ButtonMappings = new Dictionary<VirtualKey, VirtualKey>(),
+                Sensitivity = new TemplateSensitivity
+                {
+                    MouseSensitivity = profile.MouseSensitivity,
+                    Deadzone = profile.Deadzone,
+                    MovementCurve = profile.MovementCurve,
+                    AimSensitivity = profile.AimSensitivity,
+                    AimDeadzone = profile.AimDeadzone,
+                    StickDeadzone = profile.StickDeadzone
+                }
+            };
+
+            // Konvertiere ButtonMappings (Dictionary<ButtonKey, ButtonAction>) → Dictionary<VirtualKey, VirtualKey>
+            if (profile.ButtonMappings != null)
+            {
+                foreach (var kvp in profile.ButtonMappings)
+                {
+                    if (kvp.Key.Key != VirtualKey.None)
+                    {
+                        template.ButtonMappings[kvp.Key.Key] = kvp.Value.Key;
+                    }
+                }
+            }
+
+            return template;
         }
 
         /// <summary>
