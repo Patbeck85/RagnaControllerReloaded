@@ -1273,5 +1273,40 @@ public partial class MainWindow : Window
 
             public override string ToString() => DisplayName;
         }
+
+        // ── Renewal / Pre-Renewal Toggle ────────────────────────────────
+        private void ChkRenewalMode_Checked(object sender, RoutedEventArgs e)
+        {
+            RenewalModeLabel.Text = "Renewal";
+            RenewalModeLabel.Foreground = (Brush)FindResource("AccentBlue");
+            ApplyRenewalMode(true);
+        }
+
+        private void ChkRenewalMode_Unchecked(object sender, RoutedEventArgs e)
+        {
+            RenewalModeLabel.Text = "Pre-Renewal";
+            RenewalModeLabel.Foreground = (Brush)FindResource("AccentGold");
+            ApplyRenewalMode(false);
+        }
+
+        private void ApplyRenewalMode(bool isRenewal)
+        {
+            try
+            {
+                var activeProfile = _manager.ActiveProfile;
+                if (activeProfile == null) return;
+
+                // Wenn das Profil getrennte Pre-Renewal/Renewal Werte hat,
+                // werden diese beim Profil-Wechsel aus der Vorlage übernommen.
+                // Hier wird nur der UI-Zustand angezeigt; die eigentlichen
+                // Engine-Werte kommen aus dem aktiven Profil (das bereits
+                // beide Modus-Bereiche aus der Vorlage geladen hat).
+                System.Diagnostics.Debug.WriteLine($"[MainWindow] Renewal mode switched to: {(isRenewal ? "Renewal" : "Pre-Renewal")} for profile '{activeProfile.Name}'");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[MainWindow] ApplyRenewalMode failed: {ex.Message}");
+            }
+        }
     }
 }

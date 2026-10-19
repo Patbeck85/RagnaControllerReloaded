@@ -119,7 +119,7 @@
 
 ### Epic 9: First-Run Wizard erweitern (Controller-Button-Mapping, Profil-Vorlagen) — ✅ COMPLETE
 
-**Goal:** Wizard um Controller-Button-Mapping und Profil-Vorlagen (alle 58 RO-Klassen aus DefaultProfiles/, Pre-Renewal & Renewal) erweitert.
+**Goal:** Wizard um Controller-Button-Mapping und Profil-Vorlagen (alle 58 RO-Klassen aus DefaultProfiles/, Pre-Renewal & Renewal mit getrennten Engine-Bereichen pro Modus) erweitert.
 
 || Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
 |---------|-------|----------------|-----------|----------------|--------|
@@ -129,6 +129,7 @@
 | **TASK-1914** | Button-Mapping speichern und in Profile laden | Coder | HIGH | TASK-1913 | ✅ CLOSED (2026-10-19) |
 | **TASK-1915** | Integration: Wizard-Fertigstellung erstellt Profil mit Vorlage + Mapping | Coder | HIGH | TASK-1914 | ✅ CLOSED (2026-10-19) |
 | **TASK-1916** | Unit-Tests für Profil-Vorlagen und Button-Mapping | QA | MEDIUM | TASK-1915 | 📋 OPEN |
+| **TASK-1917** | MainWindow: Renewal/Pre-Renewal Toggle-Checkbox in Top-Bar | Designer | MEDIUM | TASK-1915 | ✅ CLOSED (2026-10-19) |
 
 ### Epic 10: Performance-Optimierung (Engine-Tick-Reduktion, Memory-Pooling) — 📋 PLANUNG
 

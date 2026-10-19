@@ -103,18 +103,40 @@ namespace RagnaController.Profiles
                 ClassTips = profile.ClassTips ?? "",
                 Engines = new TemplateEngineSettings
                 {
-                    AutoAttackEnabled = profile.AutoAttackEnabled,
-                    AutoRetargetEnabled = profile.AutoRetargetEnabled,
-                    KiteEnabled = profile.KiteEnabled,
-                    MageEnabled = profile.MageEnabled,
-                    SupportEnabled = profile.SupportEnabled,
-                    ComboEnabled = profile.ComboEnabled,
-                    SmartSkillEnabled = profile.SmartSkillEnabled,
-                    AutoAttackKeyVK = profile.AutoAttackKeyVK,
-                    KiteAttackKeyVK = profile.KiteAttackKeyVK,
-                    SupportHealKeyVK = profile.SupportHealKeyVK,
-                    MageBoltKeyVK = profile.MageBoltKeyVK,
-                    TabCycleMs = profile.TabCycleMs
+                    PreRenewal = new TemplateEngineModeSettings
+                    {
+                        AutoAttackEnabled   = profile.AutoAttackEnabled,
+                        AutoRetargetEnabled = profile.AutoRetargetEnabled,
+                        KiteEnabled         = profile.KiteEnabled,
+                        MageEnabled         = profile.MageEnabled,
+                        SupportEnabled      = profile.SupportEnabled,
+                        ComboEnabled        = profile.ComboEnabled,
+                        SmartSkillEnabled   = profile.SmartSkillEnabled,
+                        AutoAttackKeyVK     = profile.AutoAttackKeyVK,
+                        KiteAttackKeyVK     = profile.KiteAttackKeyVK,
+                        SupportHealKeyVK    = profile.SupportHealKeyVK,
+                        MageBoltKeyVK       = profile.MageBoltKeyVK,
+                        TabCycleMs          = profile.TabCycleMs,
+                        AttackIntervalMs    = profile.PreRenewalAttackIntervalMs,
+                        SkillInterruptMs    = profile.PreRenewalSkillInterruptMs
+                    },
+                    Renewal = new TemplateEngineModeSettings
+                    {
+                        AutoAttackEnabled   = profile.AutoAttackEnabled,
+                        AutoRetargetEnabled = profile.AutoRetargetEnabled,
+                        KiteEnabled         = profile.KiteEnabled,
+                        MageEnabled         = profile.MageEnabled,
+                        SupportEnabled      = profile.SupportEnabled,
+                        ComboEnabled        = profile.ComboEnabled,
+                        SmartSkillEnabled   = profile.SmartSkillEnabled,
+                        AutoAttackKeyVK     = profile.AutoAttackKeyVK,
+                        KiteAttackKeyVK     = profile.KiteAttackKeyVK,
+                        SupportHealKeyVK    = profile.SupportHealKeyVK,
+                        MageBoltKeyVK       = profile.MageBoltKeyVK,
+                        TabCycleMs          = profile.TabCycleMs,
+                        AttackIntervalMs    = profile.RenewalAttackIntervalMs,
+                        SkillInterruptMs    = profile.RenewalSkillInterruptMs
+                    }
                 },
                 ButtonMappings = new Dictionary<VirtualKey, VirtualKey>(),
                 Sensitivity = new TemplateSensitivity
@@ -190,19 +212,27 @@ namespace RagnaController.Profiles
                 Class = template.Class,
                 IsEnabled = true,
 
-                // Engine-Einstellungen aus Vorlage
-                AutoAttackEnabled = template.Engines.AutoAttackEnabled,
-                AutoRetargetEnabled = template.Engines.AutoRetargetEnabled,
-                KiteEnabled = template.Engines.KiteEnabled,
-                MageEnabled = template.Engines.MageEnabled,
-                SupportEnabled = template.Engines.SupportEnabled,
-                ComboEnabled = template.Engines.ComboEnabled,
-                SmartSkillEnabled = template.Engines.SmartSkillEnabled,
-                AutoAttackKeyVK = template.Engines.AutoAttackKeyVK,
-                KiteAttackKeyVK = template.Engines.KiteAttackKeyVK,
-                SupportHealKeyVK = template.Engines.SupportHealKeyVK,
-                MageBoltKeyVK = template.Engines.MageBoltKeyVK,
-                TabCycleMs = template.Engines.TabCycleMs,
+                // Engine-Einstellungen aus Vorlage (geteilt für beide Modi)
+                AutoAttackEnabled   = template.Engines.PreRenewal.AutoAttackEnabled,
+                AutoRetargetEnabled = template.Engines.PreRenewal.AutoRetargetEnabled,
+                KiteEnabled         = template.Engines.PreRenewal.KiteEnabled,
+                MageEnabled         = template.Engines.PreRenewal.MageEnabled,
+                SupportEnabled      = template.Engines.PreRenewal.SupportEnabled,
+                ComboEnabled        = template.Engines.PreRenewal.ComboEnabled,
+                SmartSkillEnabled   = template.Engines.PreRenewal.SmartSkillEnabled,
+                AutoAttackKeyVK     = template.Engines.PreRenewal.AutoAttackKeyVK,
+                KiteAttackKeyVK     = template.Engines.PreRenewal.KiteAttackKeyVK,
+                SupportHealKeyVK    = template.Engines.PreRenewal.SupportHealKeyVK,
+                MageBoltKeyVK       = template.Engines.PreRenewal.MageBoltKeyVK,
+                TabCycleMs          = template.Engines.PreRenewal.TabCycleMs,
+
+                // Pre-Renewal spezifische Werte
+                PreRenewalAttackIntervalMs = template.Engines.PreRenewal.AttackIntervalMs,
+                PreRenewalSkillInterruptMs = template.Engines.PreRenewal.SkillInterruptMs,
+
+                // Renewal spezifische Werte
+                RenewalAttackIntervalMs = template.Engines.Renewal.AttackIntervalMs,
+                RenewalSkillInterruptMs = template.Engines.Renewal.SkillInterruptMs,
 
                 // Sensitivität aus Vorlage
                 MouseSensitivity = template.Sensitivity.MouseSensitivity,

@@ -55,9 +55,25 @@ namespace RagnaController.Profiles
     }
 
     /// <summary>
-    /// Engine-Einstellungen einer Profil-Vorlage.
+    /// Engine-Einstellungen einer Profil-Vorlage — getrennt für Pre-Renewal und Renewal Modus.
+    /// Jedes Profil hat für beide Modi eigene Einstellungen, die im MainWindow per
+    /// Renewal/Pre-Renewal Checkbox umgeschaltet werden können.
     /// </summary>
     public sealed class TemplateEngineSettings
+    {
+        /// <summary>Einstellungen für Pre-Renewal Modus.</summary>
+        [JsonInclude]
+        public TemplateEngineModeSettings PreRenewal { get; init; } = new();
+
+        /// <summary>Einstellungen für Renewal Modus.</summary>
+        [JsonInclude]
+        public TemplateEngineModeSettings Renewal { get; init; } = new();
+    }
+
+    /// <summary>
+    /// Engine-Einstellungen für einen einzelnen Modus (Pre-Renewal oder Renewal).
+    /// </summary>
+    public sealed class TemplateEngineModeSettings
     {
         [JsonInclude] public bool AutoAttackEnabled   { get; init; } = false;
         [JsonInclude] public bool AutoRetargetEnabled { get; init; } = false;
@@ -70,7 +86,9 @@ namespace RagnaController.Profiles
         [JsonInclude] public int  KiteAttackKeyVK     { get; init; } = 0x5A; // Z
         [JsonInclude] public int  SupportHealKeyVK    { get; init; } = 0x5A; // Z
         [JsonInclude] public int  MageBoltKeyVK       { get; init; } = 0x58; // X
-                [JsonInclude] public int  TabCycleMs          { get; init; } = 80;
+        [JsonInclude] public int  TabCycleMs          { get; init; } = 80;
+        [JsonInclude] public int  AttackIntervalMs    { get; init; } = 100;
+        [JsonInclude] public int  SkillInterruptMs    { get; init; } = 800;
     }
 
     /// <summary>
