@@ -16,5 +16,7 @@ namespace RagnaController.Models
         // Gamepad bumper/trigger aliases for combined button mappings (e.g. "L1+A", "R1+B")
         L1 = 0xA6,
         R1 = 0xA7,
+        L2 = 0xA8,
+        R2 = 0xA9,
     }
 }

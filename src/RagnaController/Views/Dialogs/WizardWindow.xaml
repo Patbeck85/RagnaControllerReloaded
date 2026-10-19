@@ -105,26 +105,40 @@
                 </StackPanel>
 
                 <!-- Schritt 3: Controller-Erkennung -->
-                <StackPanel x:Name="StepController" Visibility="Collapsed">
-                    <TextBlock Text="Step 3 of 4 — Detect Controller" FontSize="14" FontWeight="SemiBold"
-                               Foreground="{StaticResource TextPrimary}" Margin="0,0,16,0"/>
-                    <TextBlock TextWrapping="Wrap" MaxWidth="520" Margin="0,0,16,16">
-                        Connect your gamepad (Xbox, DualSense, etc.). RagnaController detects it automatically.
-                    </TextBlock>
-                    <Border Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusMd}" Padding="20" Margin="0,0,0,16">
-                        <StackPanel Orientation="Horizontal">
-                            <Ellipse x:Name="ControllerStatusIndicator" Width="16" Height="16"
-                                     Fill="{StaticResource Danger}" HorizontalAlignment="Left" Margin="0,0,12,0"/>
-                            <TextBlock x:Name="ControllerStatusText"
-                                       Text="Kein Controller erkannt — verbinde deinen Gamepad und klicke auf Aktualisieren"
-                                       VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}"/>
-                        </StackPanel>
-                    </Border>
-                    <Button x:Name="BtnRefreshController" Content="Refresh" Style="{StaticResource WizardButton}"
-                            Click="BtnRefreshController_Click"/>
-                    <Button x:Name="BtnSkipController" Content="Skip" Style="{StaticResource WizardButton}"
-                            Click="BtnSkipController_Click"/>
-                </StackPanel>
+                                <StackPanel x:Name="StepController" Visibility="Collapsed">
+                                    <TextBlock Text="Step 3 of 4 — Detect Controller" FontSize="14" FontWeight="SemiBold"
+                                               Foreground="{StaticResource TextPrimary}" Margin="0,0,16,0"/>
+                                    <TextBlock TextWrapping="Wrap" MaxWidth="520" Margin="0,0,16,16">
+                                        Connect your gamepad (Xbox, DualSense, etc.). RagnaController detects it automatically.
+                                    </TextBlock>
+                                    <Border Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusMd}" Padding="20" Margin="0,0,0,16">
+                                        <StackPanel Orientation="Vertical">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Ellipse x:Name="ControllerStatusIndicator" Width="16" Height="16"
+                                                         Fill="{StaticResource Danger}" HorizontalAlignment="Left" Margin="0,0,12,0"/>
+                                                <TextBlock x:Name="ControllerStatusText"
+                                                           Text="Kein Controller erkannt — verbinde deinen Gamepad und klicke auf Aktualisieren"
+                                                           VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}"/>
+                                            </StackPanel>
+                                            <ProgressBar x:Name="ControllerProgressBar" Height="6" Margin="0,12,0,0" Minimum="0" Maximum="100" Value="0" Visibility="Collapsed"/>
+                                            <TextBlock x:Name="ControllerProgressText" FontSize="11" Foreground="{StaticResource TextTertiary}" Margin="0,4,0,0" Visibility="Collapsed"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <Grid Margin="0,0,0,16">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="Controller Type:" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <ComboBox x:Name="ControllerTypeCombo" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="36"
+                                                  SelectionChanged="ControllerTypeCombo_SelectionChanged"
+                                                  AutomationProperties.Name="Controller type"/>
+                                    </Grid>
+                                    <Button x:Name="BtnRefreshController" Content="Refresh" Style="{StaticResource WizardButton}"
+                                            Click="BtnRefreshController_Click"/>
+                                    <Button x:Name="BtnSkipController" Content="Skip" Style="{StaticResource WizardButton}"
+                                            Click="BtnSkipController_Click"/>
+                                </StackPanel>
 
                 <!-- Schritt 4: Erstes Profil -->
                 <StackPanel x:Name="StepProfile" Visibility="Collapsed">
@@ -155,45 +169,97 @@
                     <TextBlock x:Name="TemplateSkills" Foreground="{StaticResource TextTertiary}" FontSize="12"
                                TextWrapping="Wrap" MaxWidth="520" Margin="0,0,0,16"/>
                     <!-- Button Mapping Preview -->
-                    <TextBlock Text="BUTTON MAPPING" Style="{StaticResource Eyebrow}" Margin="0,4,0,4"/>
-                    <Border Style="{StaticResource GlassPanelCompact}" Padding="16" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,0,16">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <!-- A -->
-                            <TextBlock Text="A:" Foreground="{StaticResource AccentGold}" FontWeight="Bold" FontSize="15"
-                                       Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,12,0"/>
-                            <ComboBox x:Name="BtnAMap" Style="{StaticResource DarkComboBox}" Height="40"
-                                      Grid.Row="0" Grid.Column="1" SelectionChanged="ButtonMap_SelectionChanged"
-                                      AutomationProperties.Name="Button A mapping"/>
-                            <!-- B -->
-                            <TextBlock Text="B:" Foreground="{StaticResource Danger}" FontWeight="Bold" FontSize="15"
-                                       Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Margin="16,0,12,0"/>
-                            <ComboBox x:Name="BtnBMap" Style="{StaticResource DarkComboBox}" Height="40"
-                                      Grid.Row="0" Grid.Column="3" SelectionChanged="ButtonMap_SelectionChanged"
-                                      AutomationProperties.Name="Button B mapping"/>
-                            <!-- X -->
-                            <TextBlock Text="X:" Foreground="{StaticResource AccentBlue}" FontWeight="Bold" FontSize="15"
-                                       Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,10,12,0"/>
-                            <ComboBox x:Name="BtnXMap" Style="{StaticResource DarkComboBox}" Height="40"
-                                      Grid.Row="1" Grid.Column="1" SelectionChanged="ButtonMap_SelectionChanged"
-                                      AutomationProperties.Name="Button X mapping"/>
-                            <!-- Y -->
-                            <TextBlock Text="Y:" Foreground="{StaticResource AccentGold}" FontWeight="Bold" FontSize="15"
-                                       Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="16,10,12,0"/>
-                            <ComboBox x:Name="BtnYMap" Style="{StaticResource DarkComboBox}" Height="40"
-                                      Grid.Row="1" Grid.Column="3" SelectionChanged="ButtonMap_SelectionChanged"
-                                      AutomationProperties.Name="Button Y mapping"/>
-                        </Grid>
-                    </Border>
+                                        <TextBlock Text="BUTTON MAPPING" Style="{StaticResource Eyebrow}" Margin="0,4,0,4"/>
+                                        <Border Style="{StaticResource GlassPanelCompact}" Padding="16" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,0,16">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+                                                <!-- A -->
+                                                <TextBlock Text="A:" Foreground="{StaticResource AccentGold}" FontWeight="Bold" FontSize="15"
+                                                           Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                                                <ComboBox x:Name="BtnAMap" Style="{StaticResource DarkComboBox}" Height="40"
+                                                          Grid.Row="0" Grid.Column="1" SelectionChanged="ButtonMap_SelectionChanged"
+                                                          AutomationProperties.Name="Button A mapping"/>
+                                                <!-- B -->
+                                                <TextBlock Text="B:" Foreground="{StaticResource Danger}" FontWeight="Bold" FontSize="15"
+                                                           Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Margin="16,0,12,0"/>
+                                                <ComboBox x:Name="BtnBMap" Style="{StaticResource DarkComboBox}" Height="40"
+                                                          Grid.Row="0" Grid.Column="3" SelectionChanged="ButtonMap_SelectionChanged"
+                                                          AutomationProperties.Name="Button B mapping"/>
+                                                <!-- X -->
+                                                <TextBlock Text="X:" Foreground="{StaticResource AccentBlue}" FontWeight="Bold" FontSize="15"
+                                                           Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Margin="0,10,12,0"/>
+                                                <ComboBox x:Name="BtnXMap" Style="{StaticResource DarkComboBox}" Height="40"
+                                                          Grid.Row="1" Grid.Column="1" SelectionChanged="ButtonMap_SelectionChanged"
+                                                          AutomationProperties.Name="Button X mapping"/>
+                                                <!-- Y -->
+                                                <TextBlock Text="Y:" Foreground="{StaticResource AccentGold}" FontWeight="Bold" FontSize="15"
+                                                           Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="16,10,12,0"/>
+                                                <ComboBox x:Name="BtnYMap" Style="{StaticResource DarkComboBox}" Height="40"
+                                                          Grid.Row="1" Grid.Column="3" SelectionChanged="ButtonMap_SelectionChanged"
+                                                          AutomationProperties.Name="Button Y mapping"/>
+                                                <!-- D-Pad Up -->
+                                                <TextBlock Text="D-Pad ↑:" Foreground="{StaticResource TextPrimary}" FontWeight="Bold" FontSize="13"
+                                                           Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Margin="0,10,12,0"/>
+                                                <ComboBox x:Name="BtnDpadUpMap" Style="{StaticResource DarkComboBox}" Height="40"
+                                                          Grid.Row="2" Grid.Column="1" SelectionChanged="ButtonMap_SelectionChanged"
+                                                          AutomationProperties.Name="D-Pad Up mapping"/>
+                                                <!-- D-Pad Down -->
+                                                <TextBlock Text="D-Pad ↓:" Foreground="{StaticResource TextPrimary}" FontWeight="Bold" FontSize="13"
+                                                           Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Margin="16,10,12,0"/>
+                                                <ComboBox x:Name="BtnDpadDownMap" Style="{StaticResource DarkComboBox}" Height="40"
+                                                          Grid.Row="2" Grid.Column="3" SelectionChanged="ButtonMap_SelectionChanged"
+                                                          AutomationProperties.Name="D-Pad Down mapping"/>
+                                                <!-- D-Pad Left -->
+                                                <TextBlock Text="D-Pad ←:" Foreground="{StaticResource TextPrimary}" FontWeight="Bold" FontSize="13"
+                                                           Grid.Row="3" Grid.Column="0" VerticalAlignment="Center" Margin="0,10,12,0"/>
+                                                <ComboBox x:Name="BtnDpadLeftMap" Style="{StaticResource DarkComboBox}" Height="40"
+                                                          Grid.Row="3" Grid.Column="1" SelectionChanged="ButtonMap_SelectionChanged"
+                                                          AutomationProperties.Name="D-Pad Left mapping"/>
+                                                <!-- D-Pad Right -->
+                                                <TextBlock Text="D-Pad →:" Foreground="{StaticResource TextPrimary}" FontWeight="Bold" FontSize="13"
+                                                           Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" Margin="16,10,12,0"/>
+                                                <ComboBox x:Name="BtnDpadRightMap" Style="{StaticResource DarkComboBox}" Height="40"
+                                                          Grid.Row="3" Grid.Column="3" SelectionChanged="ButtonMap_SelectionChanged"
+                                                          AutomationProperties.Name="D-Pad Right mapping"/>
+                                                <!-- L1 -->
+                                                <TextBlock Text="L1:" Foreground="{StaticResource AccentBlue}" FontWeight="Bold" FontSize="15"
+                                                           Grid.Row="4" Grid.Column="0" VerticalAlignment="Center" Margin="0,10,12,0"/>
+                                                <ComboBox x:Name="BtnL1Map" Style="{StaticResource DarkComboBox}" Height="40"
+                                                          Grid.Row="4" Grid.Column="1" SelectionChanged="ButtonMap_SelectionChanged"
+                                                          AutomationProperties.Name="Button L1 mapping"/>
+                                                <!-- R1 -->
+                                                <TextBlock Text="R1:" Foreground="{StaticResource AccentGold}" FontWeight="Bold" FontSize="15"
+                                                           Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" Margin="16,10,12,0"/>
+                                                <ComboBox x:Name="BtnR1Map" Style="{StaticResource DarkComboBox}" Height="40"
+                                                          Grid.Row="4" Grid.Column="3" SelectionChanged="ButtonMap_SelectionChanged"
+                                                          AutomationProperties.Name="Button R1 mapping"/>
+                                                <!-- L2 -->
+                                                <TextBlock Text="L2:" Foreground="{StaticResource AccentBlue}" FontWeight="Bold" FontSize="15"
+                                                           Grid.Row="5" Grid.Column="0" VerticalAlignment="Center" Margin="0,10,12,0"/>
+                                                <ComboBox x:Name="BtnL2Map" Style="{StaticResource DarkComboBox}" Height="40"
+                                                          Grid.Row="5" Grid.Column="1" SelectionChanged="ButtonMap_SelectionChanged"
+                                                          AutomationProperties.Name="Button L2 mapping"/>
+                                                <!-- R2 -->
+                                                <TextBlock Text="R2:" Foreground="{StaticResource AccentGold}" FontWeight="Bold" FontSize="15"
+                                                           Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" Margin="16,10,12,0"/>
+                                                <ComboBox x:Name="BtnR2Map" Style="{StaticResource DarkComboBox}" Height="40"
+                                                          Grid.Row="5" Grid.Column="3" SelectionChanged="ButtonMap_SelectionChanged"
+                                                          AutomationProperties.Name="Button R2 mapping"/>
+                                            </Grid>
+                                        </Border>
                     <Grid Margin="0,0,0,16">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>

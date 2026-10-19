@@ -1,7 +1,9 @@
 using System;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using Microsoft.Win32;
 using RagnaController.Core;
 using RagnaController.Core.Services;
@@ -25,6 +27,7 @@ namespace RagnaController.Views.Dialogs
         private readonly ProfileManager _profileManager;
         private readonly ProfileTemplateManager _templateManager;
         private bool _controllerDetected;
+        private string? _selectedControllerType;
         private ProfileTemplate? _selectedTemplate;
         private readonly Dictionary<string, VirtualKey> _customButtonMappings = new();
 
@@ -135,6 +138,22 @@ namespace RagnaController.Views.Dialogs
         {
             try
             {
+                // ProgressBar anzeigen und animieren
+                ControllerProgressBar.Visibility = Visibility.Visible;
+                ControllerProgressText.Visibility = Visibility.Visible;
+                ControllerProgressText.Text = "Scanning for controllers…";
+
+                var progressTimer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(50) };
+                int progress = 0;
+                progressTimer.Tick += (s, e) =>
+                {
+                    progress += 5;
+                    if (progress > 100) progress = 100;
+                    ControllerProgressBar.Value = progress;
+                    if (progress >= 100) progressTimer.Stop();
+                };
+                progressTimer.Start();
+
                 // Prüfe über SDL2 / XInput ob Controller verbunden sind
                 using var controllerService = new ControllerService();
                 bool detected = false;
@@ -144,8 +163,18 @@ namespace RagnaController.Views.Dialogs
                 // Kurze Wartezeit für Event-Feuerung (Controller-Scan)
                 System.Threading.Thread.Sleep(200);
 
-                _controllerDetected = detected;
+                progressTimer.Stop();
+                ControllerProgressBar.Value = 100;
 
+                // Controller-Type ComboBox initialisieren
+                ControllerTypeCombo.Items.Clear();
+                ControllerTypeCombo.Items.Add(new ComboBoxItem { Content = "Auto-detect", Tag = "auto" });
+                ControllerTypeCombo.Items.Add(new ComboBoxItem { Content = "Xbox Controller", Tag = "xbox" });
+                ControllerTypeCombo.Items.Add(new ComboBoxItem { Content = "DualSense (PS5)", Tag = "dualsense" });
+                ControllerTypeCombo.Items.Add(new ComboBoxItem { Content = "Generic/DInput", Tag = "generic" });
+                ControllerTypeCombo.SelectedIndex = 0;
+
+                _controllerDetected = detected;
                 ControllerStatusIndicator.Fill = detected
                     ? System.Windows.Media.Brushes.Green
                     : System.Windows.Media.Brushes.Orange;
@@ -162,11 +191,19 @@ namespace RagnaController.Views.Dialogs
             {
                 // Fehler bei der Erkennung ist nicht kritisch — einfach fortfahren
                 _controllerDetected = false;
+                ControllerProgressBar.Visibility = Visibility.Collapsed;
+                ControllerProgressText.Visibility = Visibility.Collapsed;
                 ControllerStatusIndicator.Fill = System.Windows.Media.Brushes.Orange;
                 ControllerStatusText.Text = "Controller-Erkennung nicht verfügbar — fortfahren möglich";
                 ControllerStatusText.Foreground = System.Windows.Media.Brushes.Orange;
                 BtnNext.IsEnabled = true;
             }
+        }
+
+        private void ControllerTypeCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ControllerTypeCombo.SelectedItem is ComboBoxItem item)
+                _selectedControllerType = item.Tag?.ToString() ?? "auto";
         }
 
         private void BtnRefreshController_Click(object sender, RoutedEventArgs e)
@@ -218,6 +255,14 @@ namespace RagnaController.Views.Dialogs
             PopulateButtonMapCombo(BtnBMap, VirtualKey.B);
             PopulateButtonMapCombo(BtnXMap, VirtualKey.X);
             PopulateButtonMapCombo(BtnYMap, VirtualKey.Y);
+            PopulateButtonMapCombo(BtnDpadUpMap, VirtualKey.ArrowUp);
+            PopulateButtonMapCombo(BtnDpadDownMap, VirtualKey.ArrowDown);
+            PopulateButtonMapCombo(BtnDpadLeftMap, VirtualKey.ArrowLeft);
+            PopulateButtonMapCombo(BtnDpadRightMap, VirtualKey.ArrowRight);
+            PopulateButtonMapCombo(BtnL1Map, VirtualKey.L1);
+            PopulateButtonMapCombo(BtnR1Map, VirtualKey.R1);
+            PopulateButtonMapCombo(BtnL2Map, VirtualKey.L2);
+            PopulateButtonMapCombo(BtnR2Map, VirtualKey.R2);
 
             UpdateCreateButtonState();
         }
@@ -269,6 +314,14 @@ namespace RagnaController.Views.Dialogs
             else if (combo == BtnBMap) controllerButton = VirtualKey.B.ToString();
             else if (combo == BtnXMap) controllerButton = VirtualKey.X.ToString();
             else if (combo == BtnYMap) controllerButton = VirtualKey.Y.ToString();
+            else if (combo == BtnDpadUpMap) controllerButton = VirtualKey.ArrowUp.ToString();
+            else if (combo == BtnDpadDownMap) controllerButton = VirtualKey.ArrowDown.ToString();
+            else if (combo == BtnDpadLeftMap) controllerButton = VirtualKey.ArrowLeft.ToString();
+            else if (combo == BtnDpadRightMap) controllerButton = VirtualKey.ArrowRight.ToString();
+            else if (combo == BtnL1Map) controllerButton = VirtualKey.L1.ToString();
+            else if (combo == BtnR1Map) controllerButton = VirtualKey.R1.ToString();
+            else if (combo == BtnL2Map) controllerButton = VirtualKey.L2.ToString();
+            else if (combo == BtnR2Map) controllerButton = VirtualKey.R2.ToString();
             else return;
 
             _customButtonMappings[controllerButton] = mappedKey;
