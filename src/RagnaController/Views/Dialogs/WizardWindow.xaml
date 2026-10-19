@@ -53,8 +53,8 @@
         <StackPanel Grid.Row="0" Margin="0,0,0,32">
             <Ellipse Width="48" Height="48" Fill="{StaticResource AccentBlue}"
                      HorizontalAlignment="Left" Margin="0,0,16,12"/>
-            <TextBlock Text="Willkommen bei RagnaController" Style="{StaticResource WizardTitle}"/>
-            <TextBlock Text="Richte deine RO-Controller-Einrichtung in wenigen Schritten ein."
+            <TextBlock Text="Welcome to RagnaController" Style="{StaticResource WizardTitle}"/>
+            <TextBlock Text="Set up your RO controller setup in a few steps."
                        Style="{StaticResource WizardSubtitle}"/>
         </StackPanel>
 
@@ -64,29 +64,29 @@
             <Grid>
                 <!-- Schritt 1: Willkommen -->
                 <StackPanel x:Name="StepWelcome" Visibility="Visible">
-                    <TextBlock Text="Schritt 1 von 4 — Einrichtung" FontSize="14" FontWeight="SemiBold"
+                    <TextBlock Text="Step 1 of 4 — Setup" FontSize="14" FontWeight="SemiBold"
                                Foreground="{StaticResource TextPrimary}" Margin="0,0,16,0"/>
                     <TextBlock TextWrapping="Wrap" LineHeight="1.6" MaxWidth="520">
-                        <Run Text="RagnaController steuert Ragnarok Online mit deinem Gamepad. "/>
-                        <Run Text="Lass uns kurz prüfen, ob alles bereit ist:"/>
+                        <Run Text="RagnaController controls Ragnarok Online with your gamepad. "/>
+                        <Run Text="Let us quickly check if everything is ready:"/>
                         <LineBreak/><LineBreak/>
                         <Run FontWeight="SemiBold" Foreground="{StaticResource Live}">✓</Run>
-                        <Run Text=" Controller-Erkennung (XInput / DualSense)"/>
+                        <Run Text=" Controller detection (XInput / DualSense)"/>
                         <LineBreak/>
                         <Run FontWeight="SemiBold" Foreground="{StaticResource Live}">✓</Run>
-                        <Run Text=" RO-Client-Pfad (ragexe.exe / sakexe.exe)"/>
+                        <Run Text=" RO client path (ragexe.exe / sakexe.exe)"/>
                         <LineBreak/>
                         <Run FontWeight="SemiBold" Foreground="{StaticResource Live}">✓</Run>
-                        <Run Text=" Erstes Profil für deinen Charakter"/>
+                        <Run Text=" First profile for your character"/>
                     </TextBlock>
                 </StackPanel>
 
                 <!-- Schritt 2: RO-Client-Pfad -->
                 <StackPanel x:Name="StepRoPath" Visibility="Collapsed">
-                    <TextBlock Text="Schritt 2 von 4 — RO-Client auswählen" FontSize="14" FontWeight="SemiBold"
+                    <TextBlock Text="Step 2 of 4 — Select RO Client" FontSize="14" FontWeight="SemiBold"
                                Foreground="{StaticResource TextPrimary}" Margin="0,0,16,0"/>
                     <TextBlock TextWrapping="Wrap" MaxWidth="520" Margin="0,0,16,16">
-                        Wähle deine Ragnarok Online Client-Executable (z.B. ragexe.exe oder sakexe.exe).
+                        Select your Ragnarok Online client executable (e.g. ragexe.exe or sakexe.exe).
                     </TextBlock>
                     <Grid Margin="0,0,0,16">
                         <Grid.ColumnDefinitions>
@@ -96,8 +96,9 @@
                         <TextBox x:Name="RoExePathTextBox" Style="{StaticResource WizardTextBox}"
                                  Grid.Column="0"
                                  TextChanged="RoExePathTextBox_TextChanged"
-                                 ToolTip="Pfad zur ragexe.exe oder sakexe.exe"/>
-                        <Button x:Name="BtnBrowseRoExe" Content="Durchsuchen…" Style="{StaticResource WizardButton}"
+                                 ToolTip="Path to ragexe.exe or sakexe.exe"
+                                 AutomationProperties.Name="RO client path"/>
+                        <Button x:Name="BtnBrowseRoExe" Content="Browse…" Style="{StaticResource WizardButton}"
                                 Grid.Column="1" Click="BtnBrowseRoExe_Click"/>
                     </Grid>
                     <TextBlock x:Name="RoPathStatus" Foreground="{StaticResource Danger}" FontSize="12" Margin="0,8,0,0"/>
@@ -105,10 +106,10 @@
 
                 <!-- Schritt 3: Controller-Erkennung -->
                 <StackPanel x:Name="StepController" Visibility="Collapsed">
-                    <TextBlock Text="Schritt 3 von 4 — Controller erkennen" FontSize="14" FontWeight="SemiBold"
+                    <TextBlock Text="Step 3 of 4 — Detect Controller" FontSize="14" FontWeight="SemiBold"
                                Foreground="{StaticResource TextPrimary}" Margin="0,0,16,0"/>
                     <TextBlock TextWrapping="Wrap" MaxWidth="520" Margin="0,0,16,16">
-                        Verbinde deinen Gamepad (Xbox, DualSense, etc.). RagnaController erkennt ihn automatisch.
+                        Connect your gamepad (Xbox, DualSense, etc.). RagnaController detects it automatically.
                     </TextBlock>
                     <Border Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusMd}" Padding="20" Margin="0,0,0,16">
                         <StackPanel Orientation="Horizontal">
@@ -119,18 +120,18 @@
                                        VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}"/>
                         </StackPanel>
                     </Border>
-                    <Button x:Name="BtnRefreshController" Content="Aktualisieren" Style="{StaticResource WizardButton}"
+                    <Button x:Name="BtnRefreshController" Content="Refresh" Style="{StaticResource WizardButton}"
                             Click="BtnRefreshController_Click"/>
-                    <Button x:Name="BtnSkipController" Content="Überspringen" Style="{StaticResource WizardButton}"
+                    <Button x:Name="BtnSkipController" Content="Skip" Style="{StaticResource WizardButton}"
                             Click="BtnSkipController_Click"/>
                 </StackPanel>
 
                 <!-- Schritt 4: Erstes Profil -->
                 <StackPanel x:Name="StepProfile" Visibility="Collapsed">
-                    <TextBlock Text="Schritt 4 von 4 — Erstes Profil" FontSize="14" FontWeight="SemiBold"
+                    <TextBlock Text="Step 4 of 4 — First Profile" FontSize="14" FontWeight="SemiBold"
                                Foreground="{StaticResource TextPrimary}" Margin="0,0,16,0"/>
                     <TextBlock TextWrapping="Wrap" MaxWidth="520" Margin="0,0,16,16">
-                        Erstelle dein erstes Charakter-Profil. Du kannst später weitere Profile hinzufügen.
+                        Create your first character profile. You can add more profiles later.
                     </TextBlock>
                     <Grid Margin="0,0,0,16">
                         <Grid.ColumnDefinitions>
@@ -139,8 +140,8 @@
                         </Grid.ColumnDefinitions>
                         <TextBox x:Name="ProfileNameTextBox" Style="{StaticResource WizardTextBox}"
                                  Grid.Column="0"
-                                 ToolTip="Name für dein erstes Profil (z.B. 'Magier', 'Ritter')"/>
-                        <Button x:Name="BtnCreateProfile" Content="Profil erstellen" Style="{StaticResource WizardPrimaryButton}"
+                                 ToolTip="Name for your first profile (z.B. 'Magier', 'Ritter')"/>
+                        <Button x:Name="BtnCreateProfile" Content="Create profile" Style="{StaticResource WizardPrimaryButton}"
                                 Grid.Column="1" Click="BtnCreateProfile_Click" IsEnabled="False"/>
                     </Grid>
                     <TextBlock x:Name="ProfileStatus" Foreground="{StaticResource Danger}" FontSize="12" Margin="0,8,0,0"/>
@@ -151,11 +152,11 @@
         <!-- Navigation Footer -->
         <Border Grid.Row="2" Padding="0,24,0,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="BtnBack" Content="Zurück" Style="{StaticResource WizardButton}"
+                <Button x:Name="BtnBack" Content="Back" Style="{StaticResource WizardButton}"
                         Click="BtnBack_Click" IsEnabled="False"/>
-                <Button x:Name="BtnNext" Content="Weiter" Style="{StaticResource WizardPrimaryButton}"
+                <Button x:Name="BtnNext" Content="Next" Style="{StaticResource WizardPrimaryButton}"
                         Click="BtnNext_Click"/>
-                <Button x:Name="BtnFinish" Content="Fertigstellen" Style="{StaticResource WizardPrimaryButton}"
+                <Button x:Name="BtnFinish" Content="Finish" Style="{StaticResource WizardPrimaryButton}"
                         Click="BtnFinish_Click" Visibility="Collapsed"/>
             </StackPanel>
         </Border>
