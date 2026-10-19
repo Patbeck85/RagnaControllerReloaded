@@ -8,12 +8,14 @@ using System.Windows.Media;
 using System.Windows.Media.Effects;
 using RagnaController.Controller;
 using RagnaController.Core;
+using RagnaController.Profiles;
 
 namespace RagnaController.Views.Overlays
 {
     public partial class MiniModeWindow : Window
     {
         private bool _clickThrough = false;
+        public ProfileManager? ProfileManager { get; set; }
 
         public MiniModeWindow()
         {
@@ -163,6 +165,52 @@ namespace RagnaController.Views.Overlays
                     e.Handled = true;
                 }
             }
+            // TASK-2009: P key = Quick profile switch
+            else if (e.Key == Key.P)
+            {
+                CycleProfile();
+                e.Handled = true;
+            }
+        }
+
+        // TASK-2009: Quick profile switch button
+        private void BtnProfileSwitch_Click(object sender, RoutedEventArgs e)
+        {
+            CycleProfile();
+        }
+
+        // TASK-2009: Cycle to next profile
+        private void CycleProfile()
+        {
+            if (ProfileManager == null) return;
+            var names = ProfileManager.GetAllNames().ToList();
+            if (names.Count < 2) return;
+            int idx = names.IndexOf(ProfileManager.ActiveProfileName);
+            string next = names[(idx + 1) % names.Count];
+            ProfileManager.SetActive(next);
+            UpdateSnapshotText(ProfileManager.ActiveProfileName);
+        }
+
+        // TASK-2009: Update profile text only
+        private void UpdateSnapshotText(string profileName)
+        {
+            if (ProfileText != null)
+                ProfileText.Text = profileName.ToUpperInvariant();
+        }
+
+        // TASK-2009: Help / shortcuts button
+        private void BtnHelp_Click(object sender, RoutedEventArgs e)
+        {
+            var shortcuts = @"RagnaController Mini — Keyboard Shortcuts:
+
+Drag window ........... Left-click + drag
+Click-Through toggle .... Right-click
+Exit Click-Through ...... Esc (1st press)
+Close window ............ Esc (2nd press)
+Switch profile .......... P key / P button
+
+Tip: Click-through lets you click through the widget to the game.";
+            MessageBox.Show(shortcuts, "Keyboard Shortcuts", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }
