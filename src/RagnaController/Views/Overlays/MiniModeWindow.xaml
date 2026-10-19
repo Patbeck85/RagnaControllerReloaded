@@ -37,13 +37,13 @@
 
             <!-- 2. Profile Info (Center) -->
             <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                <TextBlock x:Name="ProfileText" Text="NOVICE" Foreground="{StaticResource TextPrimary}" FontSize="14" FontWeight="Black" TextTrimming="CharacterEllipsis" FontFamily="Segoe UI Variable, Segoe UI"/>
-                <TextBlock x:Name="StateText" Text="READY" Foreground="{StaticResource Gold}" FontSize="9" FontWeight="Bold" FontFamily="JetBrains Mono, Consolas"/>
+                <TextBlock x:Name="ProfileText" Text="NOVICE" Foreground="{StaticResource TextPrimary}" FontSize="14" FontWeight="Black" TextTrimming="CharacterEllipsis" FontFamily="Segoe UI Variable, Segoe UI" AutomationProperties.Name="Profile name"/>
+                <TextBlock x:Name="StateText" Text="READY" Foreground="{StaticResource Gold}" FontSize="9" FontWeight="Bold" FontFamily="JetBrains Mono, Consolas" AutomationProperties.Name="Connection state"/>
             </StackPanel>
 
             <!-- 3. Battery Info (Right) -->
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBlock x:Name="BatteryText" Text="100%" Foreground="{StaticResource TextSecondary}" FontSize="10" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <TextBlock x:Name="BatteryText" Text="100%" Foreground="{StaticResource TextSecondary}" FontSize="10" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,6,0" AutomationProperties.Name="Battery level"/>
                 <!-- Battery Icon (SVG) -->
                 <Viewbox Width="18" Height="11" VerticalAlignment="Center">
                     <Grid>
