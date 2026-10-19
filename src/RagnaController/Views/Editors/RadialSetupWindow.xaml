@@ -97,24 +97,24 @@
                                        Style="{StaticResource BodyText}" FontSize="10" FontWeight="SemiBold"
                                        VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}"/>
                             <Button Grid.Column="1"
-                                    Content="⬇ Download from iROWiki"
-                                    Click="BtnDownloadWiki_Click"
-                                    Style="{StaticResource PrimaryButton}"
-                                    Height="36" Padding="15,0"
-                                    FontSize="11"
-                                    ToolTip="Download emote images from iROWiki to improve gallery"/>
+                                                         Content="⬇ Download from iROWiki"
+                                                         Click="BtnDownloadWiki_Click"
+                                                         Style="{StaticResource PrimaryButton}"
+                                                         Height="36" Padding="15,0"
+                                                         FontSize="11"
+                                                         ToolTip="Download emote images from iROWiki to improve gallery" AutomationProperties.Name="Download emotes from iROWiki"/>
                         </Grid>
 
                         <!-- Search / Filter -->
                         <Border Grid.Row="2" Margin="0,0,0,10">
                             <TextBox x:Name="EmoteSearchBox"
-                                       Height="36" Padding="12,0"
-                                       FontSize="12" FontWeight="SemiBold"
-                                       Background="#121620" Foreground="#F0F4F8"
-                                       BorderThickness="0"
-                                       VerticalContentAlignment="Center"
-                                       TextChanged="EmoteSearchBox_TextChanged"
-                                       ToolTip="Search emotes by name or command"/>
+                                                                   Height="36" Padding="12,0"
+                                                                   FontSize="12" FontWeight="SemiBold"
+                                                                   Background="#121620" Foreground="#F0F4F8"
+                                                                   BorderThickness="0"
+                                                                   VerticalContentAlignment="Center"
+                                                                   TextChanged="EmoteSearchBox_TextChanged"
+                                                                   ToolTip="Search emotes by name or command" AutomationProperties.Name="Search emotes"/>
                         </Border>
 
                         <!-- Emote-Galerie -->
