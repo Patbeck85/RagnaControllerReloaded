@@ -5,10 +5,12 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using RagnaController.Core;
+using RagnaController.ControllerTest;
 using RagnaController.Profiles;
 using RagnaController.Models;
 using RagnaController.Views.Windows;
 using RagnaController.Views.Dialogs;
+using RagnaController.Views.Editors;
 
 namespace RagnaController.Views.Overlays
 {
@@ -152,6 +154,39 @@ namespace RagnaController.Views.Overlays
             _navigator.ActiveWindow = win;
             win.ShowDialog();
             _navigator.ActiveWindow = this;
+        }
+
+        // TASK-2007: Controller Test tile
+        private void BtnControllerTest_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new ControllerTestWindow(_engine.ControllerSvc)
+            {
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+            _navigator.ActiveWindow = win;
+            win.ShowDialog();
+            _navigator.ActiveWindow = this;
+        }
+
+        // TASK-2007: Macro Editor tile
+        private void BtnMacroEditor_Click(object sender, RoutedEventArgs e)
+        {
+            var activeProfile = _manager.ActiveProfile ?? new Profile { Name = "New Macro Profile" };
+            var win = new ComboEditorWindow(activeProfile)
+            {
+                Owner = this,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+            _navigator.ActiveWindow = win;
+            win.ShowDialog();
+            _navigator.ActiveWindow = this;
+        }
+
+        // TASK-2007: Quick Profile tile
+        private void BtnQuickProfile_Click(object sender, RoutedEventArgs e)
+        {
+            CycleProfile();
         }
 
         private void BtnExit_Click(object sender, RoutedEventArgs e)
