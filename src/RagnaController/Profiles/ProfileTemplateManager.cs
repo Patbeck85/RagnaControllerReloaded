@@ -138,7 +138,7 @@ namespace RagnaController.Profiles
                         SkillInterruptMs    = profile.RenewalSkillInterruptMs
                     }
                 },
-                ButtonMappings = new Dictionary<VirtualKey, VirtualKey>(),
+                ButtonMappings = new Dictionary<string, VirtualKey>(),
                 Sensitivity = new TemplateSensitivity
                 {
                     MouseSensitivity = profile.MouseSensitivity,
@@ -150,14 +150,14 @@ namespace RagnaController.Profiles
                 }
             };
 
-            // Konvertiere ButtonMappings (Dictionary<ButtonKey, ButtonAction>) → Dictionary<VirtualKey, VirtualKey>
+            // Konvertiere ButtonMappings (Dictionary<ButtonKey, ButtonAction>) → Dictionary<string, VirtualKey>
             if (profile.ButtonMappings != null)
             {
                 foreach (var kvp in profile.ButtonMappings)
                 {
                     if (kvp.Key.Key != VirtualKey.None)
                     {
-                        template.ButtonMappings[kvp.Key.Key] = kvp.Value.Key;
+                        template.ButtonMappings[kvp.Key.ToString()] = kvp.Value.Key;
                     }
                 }
             }
@@ -246,19 +246,23 @@ namespace RagnaController.Profiles
                 SkillRecommendations = new List<string>(template.SkillRecommendations),
                 ClassTips = template.ClassTips,
 
-                // Button-Mappings aus Vorlage (VirtualKey → ButtonAction)
+                // Button-Mappings aus Vorlage (string → ButtonKey)
                 ButtonMappings = new Dictionary<ButtonKey, ButtonAction>()
             };
 
-            // Konvertiere ButtonMappings (Dictionary<VirtualKey, VirtualKey>)
+            // Konvertiere ButtonMappings (Dictionary<string, VirtualKey> → Dictionary<ButtonKey, ButtonAction>)
             foreach (var kvp in template.ButtonMappings)
             {
-                profile.ButtonMappings[kvp.Key] = new ButtonAction
+                var buttonKey = ButtonKey.Parse(kvp.Key);
+                if (buttonKey.Key != VirtualKey.None)
                 {
-                    Type = ActionType.Key,
-                    Key = kvp.Value,
-                    Label = $"Quick Key {kvp.Key}"
-                };
+                    profile.ButtonMappings[buttonKey] = new ButtonAction
+                    {
+                        Type = ActionType.Key,
+                        Key = kvp.Value,
+                        Label = $"Quick Key {kvp.Key}"
+                    };
+                }
             }
 
             return profile;

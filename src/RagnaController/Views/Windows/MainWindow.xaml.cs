@@ -1293,15 +1293,8 @@ public partial class MainWindow : Window
         {
             try
             {
-                var activeProfile = _manager.ActiveProfile;
-                if (activeProfile == null) return;
-
-                // Wenn das Profil getrennte Pre-Renewal/Renewal Werte hat,
-                // werden diese beim Profil-Wechsel aus der Vorlage übernommen.
-                // Hier wird nur der UI-Zustand angezeigt; die eigentlichen
-                // Engine-Werte kommen aus dem aktiven Profil (das bereits
-                // beide Modus-Bereiche aus der Vorlage geladen hat).
-                System.Diagnostics.Debug.WriteLine($"[MainWindow] Renewal mode switched to: {(isRenewal ? "Renewal" : "Pre-Renewal")} for profile '{activeProfile.Name}'");
+                _engine.ApplyGameMode(isRenewal);
+                System.Diagnostics.Debug.WriteLine($"[MainWindow] Renewal mode switched to: {(isRenewal ? "Renewal" : "Pre-Renewal")}");
             }
             catch (Exception ex)
             {

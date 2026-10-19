@@ -45,9 +45,9 @@ namespace RagnaController.Profiles
         [JsonInclude]
         public TemplateEngineSettings Engines { get; init; } = new();
 
-        /// <summary>Standard-Button-Mappings für A/B/X/Y (VirtualKey → Action).</summary>
+        /// <summary>Standard-Button-Mappings für A/B/X/Y (Key-String → Action-Key). Key-String kann "A", "L1+A", "R1+B" etc. sein.</summary>
         [JsonInclude]
-        public Dictionary<VirtualKey, VirtualKey> ButtonMappings { get; init; } = new();
+        public Dictionary<string, VirtualKey> ButtonMappings { get; init; } = new();
 
         /// <summary>Standard-Sensitivitätswerte der Vorlage.</summary>
         [JsonInclude]

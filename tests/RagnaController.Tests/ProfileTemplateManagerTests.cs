@@ -169,7 +169,7 @@ namespace RagnaController.Tests
                         SkillInterruptMs = profile.RenewalSkillInterruptMs
                     }
                 },
-                ButtonMappings = new Dictionary<VirtualKey, VirtualKey>(),
+                ButtonMappings = new Dictionary<string, VirtualKey>(),
                 Sensitivity = new TemplateSensitivity
                 {
                     MouseSensitivity = profile.MouseSensitivity,

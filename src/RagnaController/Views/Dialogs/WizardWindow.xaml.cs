@@ -26,7 +26,7 @@ namespace RagnaController.Views.Dialogs
         private readonly ProfileTemplateManager _templateManager;
         private bool _controllerDetected;
         private ProfileTemplate? _selectedTemplate;
-        private readonly Dictionary<VirtualKey, VirtualKey> _customButtonMappings = new();
+        private readonly Dictionary<string, VirtualKey> _customButtonMappings = new();
 
         public WizardWindow(FirstRunService firstRunService, ProfileManager profileManager)
         {
@@ -239,7 +239,7 @@ namespace RagnaController.Views.Dialogs
             }
 
             // Select current mapping
-            if (_customButtonMappings.TryGetValue(controllerButton, out var mappedKey))
+            if (_customButtonMappings.TryGetValue(controllerButton.ToString(), out var mappedKey))
             {
                 foreach (ComboBoxItem item in combo.Items)
                 {
@@ -264,11 +264,11 @@ namespace RagnaController.Views.Dialogs
             var mappedKey = (VirtualKey)item.Tag;
 
             // Determine which controller button this combo represents
-            VirtualKey controllerButton;
-            if (combo == BtnAMap) controllerButton = VirtualKey.A;
-            else if (combo == BtnBMap) controllerButton = VirtualKey.B;
-            else if (combo == BtnXMap) controllerButton = VirtualKey.X;
-            else if (combo == BtnYMap) controllerButton = VirtualKey.Y;
+            string controllerButton;
+            if (combo == BtnAMap) controllerButton = VirtualKey.A.ToString();
+            else if (combo == BtnBMap) controllerButton = VirtualKey.B.ToString();
+            else if (combo == BtnXMap) controllerButton = VirtualKey.X.ToString();
+            else if (combo == BtnYMap) controllerButton = VirtualKey.Y.ToString();
             else return;
 
             _customButtonMappings[controllerButton] = mappedKey;
@@ -308,12 +308,16 @@ namespace RagnaController.Views.Dialogs
                 profile.ButtonMappings.Clear();
                 foreach (var kvp in _customButtonMappings)
                 {
-                    profile.ButtonMappings[kvp.Key] = new ButtonAction
+                    var buttonKey = ButtonKey.Parse(kvp.Key);
+                    if (buttonKey.Key != VirtualKey.None)
                     {
-                        Type = ActionType.Key,
-                        Key = kvp.Value,
-                        Label = $"Quick Key {kvp.Key}"
-                    };
+                        profile.ButtonMappings[buttonKey] = new ButtonAction
+                        {
+                            Type = ActionType.Key,
+                            Key = kvp.Value,
+                            Label = $"Quick Key {kvp.Key}"
+                        };
+                    }
                 }
 
                 _profileManager.Profiles.Add(profile);
