@@ -33,7 +33,7 @@ namespace RagnaController.Tests
         public void FullFlow_CompleteFirstRun_PersistsToSettingsFile()
         {
             // Arrange - use temp file to avoid touching real settings
-            var tempDir = Path.Combine(Path.GetTempPath(), "RagnaControllerTests");
+            var tempDir = Path.Combine(Path.GetTempPath(), "RagnaControllerTests", Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(tempDir);
             var tempSettingsPath = Path.Combine(tempDir, "settings.json");
 
@@ -63,7 +63,7 @@ namespace RagnaController.Tests
         public void IsValidRoClient_RecognizesValidAndInvalidExecutables(string path, bool expected)
         {
             // Arrange - create temp file
-            var tempDir = Path.Combine(Path.GetTempPath(), "RagnaControllerTests");
+            var tempDir = Path.Combine(Path.GetTempPath(), "RagnaControllerTests", Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(tempDir);
             var tempFile = Path.Combine(tempDir, Path.GetFileName(path));
             File.WriteAllBytes(tempFile, Array.Empty<byte>());
