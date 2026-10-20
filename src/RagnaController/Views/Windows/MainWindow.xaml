@@ -250,10 +250,10 @@
 
                             <!-- Quick Actions -->
                                                         <StackPanel Grid.Row="2" Orientation="Vertical" Margin="16,0,16,16" HorizontalAlignment="Stretch">
-                                                            <Button x:Name="BtnCalibrateQuick" Content="Calibrate" Style="{StaticResource PrimaryButton}" Height="44" Margin="0,0,0,8" Click="BtnCalibrateQuick_Click" AutomationProperties.Name="Quick calibrate" ToolTip="Calibrate gamepad deadzone\nHotkey: F1"/>
-                                                            <Button x:Name="BtnTestInput" Content="Test Input" Style="{StaticResource GhostButton}" Height="44" Margin="0,0,0,8" Click="BtnTestInput_Click" AutomationProperties.Name="Test input" ToolTip="Test gamepad button input\nHotkey: F2"/>
-                                                            <Button x:Name="BtnOpenRemap" Content="Button Remapping" Style="{StaticResource GhostButton}" Height="44" Click="BtnOpenRemap_Click" AutomationProperties.Name="Button remapping" ToolTip="Open button remapping settings\nHotkey: F3"/>
-                                                            <Button x:Name="BtnRadial" Content="Radial Menu" Style="{StaticResource GhostButton}" Height="44" Margin="0,8,0,0" Click="BtnRadial_Click" AutomationProperties.Name="Radial menu" ToolTip="Open radial menu configuration\nHotkey: F4"/>
+                                                            <Button x:Name="BtnCalibrateQuick" Content="Calibrate" Style="{StaticResource PrimaryButton}" Height="44" Margin="0,0,0,8" Click="BtnCalibrateQuick_Click" AutomationProperties.Name="Quick calibrate" ToolTip="Calibrate gamepad deadzone&#x0a;Hotkey: F1"/>
+                                                            <Button x:Name="BtnTestInput" Content="Test Input" Style="{StaticResource GhostButton}" Height="44" Margin="0,0,0,8" Click="BtnTestInput_Click" AutomationProperties.Name="Test input" ToolTip="Test gamepad button input&#x0a;Hotkey: F2"/>
+                                                            <Button x:Name="BtnOpenRemap" Content="Button Remapping" Style="{StaticResource GhostButton}" Height="44" Click="BtnOpenRemap_Click" AutomationProperties.Name="Button remapping" ToolTip="Open button remapping settings&#x0a;Hotkey: F3"/>
+                                                            <Button x:Name="BtnRadial" Content="Radial Menu" Style="{StaticResource GhostButton}" Height="44" Margin="0,8,0,0" Click="BtnRadial_Click" AutomationProperties.Name="Radial menu" ToolTip="Open radial menu configuration&#x0a;Hotkey: F4"/>
                                                         </StackPanel>
                         </Grid>
                     </Border>
