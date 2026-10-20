@@ -187,8 +187,9 @@ namespace RagnaController.Views.Dialogs
 
                 BtnNext.IsEnabled = true;
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($@"[WizardWindow] Controller detection failed: {ex.Message}");
                 // Fehler bei der Erkennung ist nicht kritisch — einfach fortfahren
                 _controllerDetected = false;
                 ControllerProgressBar.Visibility = Visibility.Collapsed;

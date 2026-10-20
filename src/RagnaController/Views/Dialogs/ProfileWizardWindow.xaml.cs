@@ -189,7 +189,7 @@ public partial class ProfileWizardWindow : Window
             string safeName = string.Concat(name.Split(Path.GetInvalidFileNameChars())).Trim();
             if (string.IsNullOrWhiteSpace(safeName))
             {
-                MessageBox.Show("Profile name contains only invalid characters.\\nUse letters, numbers or spaces.", "Invalid Name", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Profile name contains only invalid characters.{Environment.NewLine}Use letters, numbers or spaces.", "Invalid Name", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
