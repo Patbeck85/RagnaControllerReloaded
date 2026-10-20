@@ -50,20 +50,24 @@ namespace RagnaController.Views.Dialogs
             if (TxtProgress != null) TxtProgress.Text = $"Slide {_currentSlide + 1} of {TOTAL_SLIDES}";
 
             // Try to load media (fails silently if file doesn't exist yet)
-            bool mediaLoaded = false;
-            try
-            {
-                string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Tutorials", _mediaPaths[_currentSlide]);
-                if (System.IO.File.Exists(path))
-                {
-                    if (MediaPreview != null) { MediaPreview.Source = new Uri(path, UriKind.Absolute); MediaPreview.Play(); }
-                    mediaLoaded = true;
-                }
-                else
-                {
-                    if (MediaPreview != null) MediaPreview.Source = null;
-                }
-            }
+                        bool mediaLoaded = false;
+                        try
+                        {
+                            string? mediaPath = _currentSlide < _mediaPaths.Length ? _mediaPaths[_currentSlide] : null;
+                            if (mediaPath != null)
+                            {
+                                string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Tutorials", mediaPath);
+                                if (System.IO.File.Exists(path))
+                                {
+                                    if (MediaPreview != null) { MediaPreview.Source = new Uri(path, UriKind.Absolute); MediaPreview.Play(); }
+                                    mediaLoaded = true;
+                                }
+                                else
+                                {
+                                    if (MediaPreview != null) MediaPreview.Source = null;
+                                }
+                            }
+                        }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($@"[TutorialWindow] Media load failed: {ex.Message}");
