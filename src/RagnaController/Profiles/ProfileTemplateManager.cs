@@ -86,11 +86,11 @@ namespace RagnaController.Profiles
             // Id aus Dateinamen ableiten (z.B. "mage_renewal" → "mage_renewal")
             var id = fileNameWithoutExtension.ToLowerInvariant();
 
-            // Modus aus Dateinamen erkennen: *_preremewal oder *_renewal
+            // Modus aus Dateinamen erkennen: *_prerenewal oder *_renewal
             var mode = "Pre-Renewal";
             var lowerName = fileNameWithoutExtension.ToLowerInvariant();
             if (lowerName.EndsWith("_renewal")) mode = "Renewal";
-            else if (lowerName.EndsWith("_preremewal")) mode = "Pre-Renewal";
+            else if (lowerName.EndsWith("_prerenewal")) mode = "Pre-Renewal";
 
             var template = new ProfileTemplate
             {
