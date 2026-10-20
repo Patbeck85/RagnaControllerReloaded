@@ -157,10 +157,10 @@ namespace RagnaController.ControllerTest
                     }
                 }
             }
-            catch
-            {
-                // Ignore errors reading raw snapshot
-            }
+            catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($@"[ControllerTestWindow] Snapshot read error: {ex.Message}");
+                        }
         }
 
         // ------------------------------------------------------------------ TEST-016: Recording
@@ -230,10 +230,10 @@ namespace RagnaController.ControllerTest
                     }
                 }
             }
-            catch
-            {
-                // Snapshot read error must not disturb UI (raw values remain 0).
-            }
+            catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($@"[ControllerTestWindow] Build sample error: {ex.Message}");
+                        }
 
             var bs = _controllerProvider.ButtonStates;
             return RecordingSample.FromButtonState(bs, lx, ly, rx, ry, lt, rt);
