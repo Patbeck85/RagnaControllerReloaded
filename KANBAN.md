@@ -184,7 +184,7 @@
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-2101** | Research: EngineOrchestrator Multi-Instanz-Architektur (Thread-Safety, Resource-Sharing) | Researcher | HIGH | — | 📋 OPEN |
+| **TASK-2101** | Research: EngineOrchestrator Multi-Instanz-Architektur (Thread-Safety, Resource-Sharing) | Researcher | HIGH | — | ✅ RESEARCH_DONE |
 | **TASK-2102** | MultiClientEngineOrchestrator: Dictionary<HWND, EngineInstance> Management | Coder | HIGH | TASK-2101 | 📋 OPEN |
 | **TASK-2103** | InputRouter pro Client-Instanz (Isolation, Fokus-basiertes Routing) | Coder | HIGH | TASK-2102 | 📋 OPEN |
 | **TASK-2104** | Profil pro HWND: Dictionary<HWND, Profile> statt einzelnes CurrentProfile | Coder | HIGH | TASK-2102 | 📋 OPEN |
