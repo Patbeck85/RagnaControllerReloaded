@@ -162,61 +162,93 @@ namespace RagnaController
                 {
                     // Skip splash entirely - still do warmup
                     var warmupTask = Task.Run(() => { _ = Models.Settings.Load(); });
-                    await warmupTask.ConfigureAwait(true);
-                }
+                                    await warmupTask.ConfigureAwait(true);
+                                }
 
-                // Handheld-Erkennung im Hintergrand
-                bool isHandheld = await Task.Run(() => Core.HandheldDetector.IsHandheldDevice())
-                                  || settings.ForceHandheldMode;
+                                // Handheld-Erkennung im Hintergrand
+                                bool isHandheld = await Task.Run(() => Core.HandheldDetector.IsHandheldDevice())
+                                                      || settings.ForceHandheldMode;
 
-                // ── Engine + Manager im Hintergrand erstellen ────────────────
-                // WICHTIG: HybridEngine erstellt ControllerService (SDL Init) —
-                // this MUST happen on background thread, otherwise UI thread hangs!
-                HybridEngine? engine = null;
-                ProfileManager? manager = null;
-                try
-                {
-                    await Task.Run(() =>
-                    {
-#pragma warning disable CS8625
-                        engine = new HybridEngine(new BackgroundTickProvider(8), new Messenger(), null, null);
-#pragma warning restore CS8625
-                        // TASK-1631: Verwende den vor-erstellten ProfileManager vom Wizard, falls vorhanden
-                        manager = preCreatedProfileManager ?? new ProfileManager();
-                    });
-                }
-                catch (Exception ex)
-                {
-                    LogFatal("Engine Creation", ex.ToString());
-                    MessageBox.Show($"Error creating engine:\\n{ex.Message}\\n\\nDetails: {CrashLog}",
-                        "RagnaController – Start Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Shutdown();
-                    return;
-                }
+                                // ── Multi-Client Engine + Manager im Hintergrand erstellen ────────────────
+                                // Create shared services for multi-client architecture
+                                MultiClientEngineOrchestrator? multiEngine = null;
+                                ProfileManager? manager = null;
+                                try
+                                {
+                                    await Task.Run(() =>
+                                    {
+                    #pragma warning disable CS8625
+                                        var controllerService = new ControllerService();
+                                        var profileManager = preCreatedProfileManager ?? new ProfileManager();
+                                        var messenger = new Messenger();
+                                        var logger = new AdvancedLogger(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RagnaController", "logs", "engine.log"));
+                                        var settingsObj = Models.Settings.Load();
 
-                if (engine == null || manager == null)
-                {
-                    LogFatal("Engine Creation", "Engine or Manager is null after initialization");
-                    MessageBox.Show("Error creating engine: Unknown error",
-                        "RagnaController – Start Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Shutdown();
-                    return;
-                }
+                                        var nativeMethods = new NativeMethodsImpl();
+                                        var processNames = new ProcessNameResolver();
+                                        var windowTracker = new MultiClientWindowTracker(nativeMethods, processNames);
+                                        var multiClientRouter = new MultiClientInputRouter(nativeMethods, processNames, windowTracker);
 
-                var viewModel = new MainViewModel();
+                                        multiEngine = new MultiClientEngineOrchestrator(
+                                            controllerService,
+                                            profileManager,
+                                            settingsObj,
+                                            messenger,
+                                            logger,
+                                            multiClientRouter,
+                                            windowTracker);
+                                        manager = profileManager;
+                    #pragma warning restore CS8625
+                                    });
+                                }
+                                catch (Exception ex)
+                                {
+                                    LogFatal("Engine Creation", ex.ToString());
+                                    MessageBox.Show($"Error creating engine:\n{ex.Message}\n\nDetails: {CrashLog}",
+                                        "RagnaController – Start Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    Shutdown();
+                                    return;
+                                }
 
-                Window main;
-                if (isHandheld)
-                {
-                    System.Diagnostics.Debug.WriteLine(
-                        $"[App] Handheld erkannt: {Core.HandheldDetector.DeviceName} → HandheldWindow");
-                    main = new HandheldWindow(engine, manager);
-                }
-                else
-                {
-                    main = new MainWindow(engine, manager, viewModel);
-                }
-                MainWindow = main;
+                                if (multiEngine == null || manager == null)
+                                {
+                                    LogFatal("Engine Creation", "Engine or Manager is null after initialization");
+                                    MessageBox.Show("Error creating engine: Unknown error",
+                                        "RagnaController – Start Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                    Shutdown();
+                                    return;
+                                }
+
+                                var viewModel = new MainViewModel();
+
+                                Window main;
+                                if (isHandheld)
+                                                                {
+                                                                    System.Diagnostics.Debug.WriteLine(
+                                                                        $"[App] Handheld erkannt: {Core.HandheldDetector.DeviceName} → HandheldWindow");
+                                                                    // For handheld, create a single HybridEngine (multi-client not needed for handheld mode)
+                                                                    HybridEngine? handheldEngine = null;
+                                                                    await Task.Run(() =>
+                                                                    {
+                                #pragma warning disable CS8625
+                                                                        handheldEngine = new HybridEngine(new BackgroundTickProvider(8), new Messenger(), null, null);
+                                #pragma warning restore CS8625
+                                                                    });
+                                                                    main = new HandheldWindow(handheldEngine!, manager);
+                                                                }
+                                                                else
+                                                                                                                                {
+                                                                                                                                    // Create a HybridEngine for MainWindow (uses first client from multiEngine)
+                                                                                                                                    HybridEngine? mainEngine = null;
+                                                                                                                                    await Task.Run(() =>
+                                                                                                                                    {
+                                                                #pragma warning disable CS8625
+                                                                                                                                        mainEngine = new HybridEngine(new BackgroundTickProvider(8), new Messenger(), null, null);
+                                                                #pragma warning restore CS8625
+                                                                                                                                    });
+                                                                                                                                    main = new MainWindow(mainEngine!, manager, viewModel);
+                                                                                                                                }
+                                MainWindow = main;
 
                 // ── Silent Mode ──────────────────────────────────────────────
                 if (settings.StartMinimized || settings.StartWithWindows)
