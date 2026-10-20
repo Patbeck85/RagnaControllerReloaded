@@ -1,6 +1,6 @@
 # RagnaController v2.3.0 — Autonomous Multi-Agent Development
 
-**Version:** 2.3.0 | **Release:** 2026-10-18 | **Build:** 0 errors, 0 warnings | **Tests:** 664/664 passing
+**Version:** 2.3.0 | **Release:** 2026-10-20 | **Build:** 0 errors, 0 warnings | **Tests:** 726/726 passing
 
 ---
 
@@ -26,6 +26,29 @@ This release represents a complete autonomous development cycle executed per **S
 - **Phase 8: Complete UI Modernization** — Cyber-Gaming 2026 design system across all 18 WPF windows
 - **Phase 9: Performance & Observability** — Frame Budget Monitor (PERF-003) with P50/P95/P99 tracking, ETW events
 - **All 7 SOUL.md Golden Rules** verified satisfied
+
+### 🔴 Recent Fixes (Error Scan & Quality Assurance)
+
+| # | File | Issue | Severity | Fix |
+|---|------|-------|----------|-----|
+| 1 | `ProfileManager.cs` | `WriteToDisk` omitted 13 profile properties → data loss on save | Critical | All 13 properties added to `pCopy` |
+| 2 | `ControllerService.cs` | SDL calls directly from UI thread → AccessViolationException/Race condition | Critical | Values cached on SDL thread |
+| 3 | `Settings.cs` | Empty `catch { }` without logging (SOUL.md ERROR-001) | High | Exception logged |
+| 4 | `ProfileManager.cs` | Empty `catch` without logging (SOUL.md ERROR-001) | High | Exception logged |
+| 5 | `InGameOverlayWindow.xaml.cs` | Empty `catch` in `UpdateClassIcon` (SOUL.md ERROR-001) | High | Exception logged |
+| 6 | `WizardWindow.xaml.cs` | Empty `catch` in `DetectControllers` (SOUL.md ERROR-001) | High | Exception logged |
+| 7 | `ControllerTestWindow.xaml.cs` | 2× empty `catch` (SOUL.md ERROR-001) | High | Both replaced with logging |
+| 8 | `ProfileTemplateManager.cs` | Typo `"_preremewal"` instead of `"_prerenewal"` | Medium | Fixed comment and code |
+| 9 | `ProfileTemplateManager.cs` | `ButtonKey.Parse()` without Try-Catch → invalid strings throw Exception | Medium | Try-Catch with logging |
+| 10 | `MainWindow.xaml` | `\n` in 4 ToolTips shown literally | Medium | `&#x0a;` for correct XML line break |
+| 11 | `SettingsWindow.xaml.cs` | Obsolete `Process.Start` API | Medium | `ProcessStartInfo` with `UseShellExecute` |
+| 12 | `SettingsWindow.xaml.cs` | ShowToast DispatcherTimer leak after window close | Medium | `toastWin.Closed` stops timer |
+| 13 | `ProfileWizardWindow.xaml.cs` | `\\\\n` in MessageBox shown literally | Low | `Environment.NewLine` used |
+| 14 | `TutorialWindow.xaml.cs` | `IndexOutOfRangeException` at Slide 5 | High | Bounds-check added |
+
+**Build:** 0 Errors, 0 Warnings
+**Tests:** 726/726 passing
+**Empty catch blocks:** 0 remaining in entire project (SOUL.md ERROR-001 fully satisfied)
 
 ---
 
@@ -375,14 +398,14 @@ Located in `tests/RagnaController.Tests/`:
 - No Win32 calls during tests (isolated from OS)
 - xUnit framework with NSubstitute and FluentAssertions
 
-**Current Test Suite:** 664 tests passing across all core engines and integration tests.
+**Current Test Suite:** 726 tests passing across all core engines and integration tests.
 
 ### Build Verification
 
 Before any deployment:
 
 1. **Compile** project (`dotnet build`) — **0 errors, 0 warnings** ✅
-2. **Run tests** (`dotnet test`) — **325/325 passing** ✅
+2. **Run tests** (`dotnet test`) — **726/726 passing** ✅
 3. **Manual Windows testing** (VS Code / Visual Studio)
 4. **Verify release isolation** — `release_final/` contains only end products ✅
 

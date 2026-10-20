@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --
 
+## [2.3.1] - 2026-10-20
+
+### 🔴 Critical Bug Fixes (Error Scan)
+
+- **ProfileManager.WriteToDisk** — Added 13 missing profile properties (ControllerGuid, Priority, IsEnabled, LongPress*, Stick*, ControllerConfigs, LastControllerGuid, AutoActivateOnControllerConnect, CreatedAt, DownloadCount). Fixes data loss on profile save.
+- **ControllerService** — BatteryLevel and GetButtonStates() now read from SDL-thread-cached values instead of calling SDL directly from UI thread. Fixes AccessViolationException/race condition.
+- **SOUL.md ERROR-001 compliance** — Eliminated all empty `catch { }` blocks across the project:
+  - `Settings.cs` — Exception logged via Debug.WriteLine
+  - `ProfileManager.cs` — Exception logged with backup fallback context
+  - `InGameOverlayWindow.xaml.cs` — Exception logged in `UpdateClassIcon`
+  - `WizardWindow.xaml.cs` — Exception logged in `DetectControllers`
+  - `ControllerTestWindow.xaml.cs` — 2× empty catch blocks replaced with logging
+- **ProfileTemplateManager.cs** — Fixed typo `"_preremewal"` → `"_prerenewal"`; wrapped `ButtonKey.Parse()` in Try-Catch
+- **MainWindow.xaml** — Fixed `\n` in 4 ToolTips (replaced with `&#x0a;` for correct XML line break)
+- **SettingsWindow.xaml.cs** — Replaced obsolete `Process.Start("explorer.exe", path)` with `ProcessStartInfo`; ShowToast DispatcherTimer now stopped on manual window close
+- **ProfileWizardWindow.xaml.cs** — Fixed `\\\\n` literal in MessageBox (replaced with `Environment.NewLine`)
+- **TutorialWindow.xaml.cs** — Fixed `IndexOutOfRangeException` at Slide 5 (`_mediaPaths` has 4 entries for 5 slides)
+
+**Build:** 0 Errors / 0 Warnings  
+**Tests:** 726/726 passing  
+**Empty catch blocks:** 0 remaining (SOUL.md ERROR-001 fully satisfied)
+
+---
+
 ## [2.3.0] - 2026-10-17
 
 ### 🟥 SPRINT 15A — Critical Bug Fixes
