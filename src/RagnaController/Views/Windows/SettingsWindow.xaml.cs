@@ -482,7 +482,7 @@ public partial class SettingsWindow : Window
                     try 
                     { 
                         var path = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RagnaController");
-                        Process.Start("explorer.exe", path); 
+                                            Process.Start(new ProcessStartInfo { FileName = "explorer.exe", Arguments = path, UseShellExecute = true });
                     }
                     catch (Exception ex)
                     {
@@ -902,11 +902,12 @@ public partial class SettingsWindow : Window
                 }
             };
             toastWin.Content = border;
-            toastWin.Show();
-            System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
-            timer.Interval = TimeSpan.FromSeconds(2);
-            timer.Tick += (s, _) => { toastWin.Close(); timer.Stop(); };
-            timer.Start();
+                        toastWin.Show();
+                        System.Windows.Threading.DispatcherTimer timer = new System.Windows.Threading.DispatcherTimer();
+                        timer.Interval = TimeSpan.FromSeconds(2);
+                        timer.Tick += (s, _) => { toastWin.Close(); timer.Stop(); };
+                        toastWin.Closed += (s, _) => timer.Stop();
+                        timer.Start();
         }
     }
 }
