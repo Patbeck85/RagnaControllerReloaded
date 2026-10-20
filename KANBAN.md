@@ -167,7 +167,7 @@
 | **TASK-2014** | DaisyWheelWindow: Aktuelle Auswahl anzeigen, Rad-Items konfigurierbar | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
 | **TASK-2015** | CommunityBrowserWindow: Sortierung (Name/Datum/Downloads), Kategorien-Filter, Favoriten-Funktion | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
 | **TASK-2016** | DeveloperConsoleWindow: "Kopieren" Button für Logs, Log-Level-Filter, Zeitstempel anzeigen | Designer | LOW | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2017** | TutorialWindow: MediaPreview mit Inhalt füllen, "Alle Tutorials überspringen" Option, Fortschrittsanzeige | Designer | LOW | — | 📋 OPEN |
+| **TASK-2017** | TutorialWindow: MediaPreview mit Inhalt füllen, "Alle Tutorials überspringen" Option, Fortschrittsanzeige | Designer | LOW | — | ✅ CLOSED (2026-10-19) |
 | **TASK-2018** | ControllerTestWindow: Deutsch-Englisch Mix beheben, Tastatur-Kurzbefehle anzeigen, Resize möglich | Designer | MEDIUM | — | 📋 OPEN |
 | **TASK-2019** | Controls/ControllerVisualization: Interaktive Rückmeldung bei Button-Druck, Hover-Effekte | Designer | LOW | — | 📋 OPEN |
 | **TASK-2020** | Controls/TelemetryPanel: Export-Funktion für Telemetriedaten, Auto-Scroll Toggle, Daten-Reset | Designer | LOW | — | 📋 OPEN |
