@@ -178,4 +178,208 @@
 
 ---
 
-*Letzte Aktualisierung: 2026-10-19 | Alle Phasen 1-15 COMPLETE | Build: 0 Errors / 0 Warnings | Tests: 726/726 PASS*
+### Epic 12: Multi-Client Engine Execution (v2.4.0) — 📋 PLANUNG
+
+**Goal:** Echte Multi-Boxing-Unterstützung — pro RO-Client eigene Engine-Instanz mit isoliertem Profil, Input-Routing & Tick-Loop.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-2101** | Research: EngineOrchestrator Multi-Instanz-Architektur (Thread-Safety, Resource-Sharing) | Researcher | HIGH | — | 📋 OPEN |
+| **TASK-2102** | MultiClientEngineOrchestrator: Dictionary<HWND, EngineInstance> Management | Coder | HIGH | TASK-2101 | 📋 OPEN |
+| **TASK-2103** | InputRouter pro Client-Instanz (Isolation, Fokus-basiertes Routing) | Coder | HIGH | TASK-2102 | 📋 OPEN |
+| **TASK-2104** | Profil pro HWND: Dictionary<HWND, Profile> statt einzelnes CurrentProfile | Coder | HIGH | TASK-2102 | 📋 OPEN |
+| **TASK-2105** | Tick-Loop: Iteration aller aktiven Client-Engines (Load-Balancing, Priority) | Coder | HIGH | TASK-2102 | 📋 OPEN |
+| **TASK-2106** | UI: Client-Tabs in MainWindow mit je eigener Engine-Status-Anzeige | Designer | HIGH | TASK-2103 | 📋 OPEN |
+| **TASK-2107** | Client-spezifische Overlay-Instanzen (pro HWND eigenes Overlay) | Coder | MEDIUM | TASK-2105 | 📋 OPEN |
+| **TASK-2108** | Unit-Tests: Multi-Client Engine Isolation, Input-Routing, Profil-Switch | QA | MEDIUM | TASK-2105 | 📋 OPEN |
+| **TASK-2109** | Integration-Test: 2+ RO-Clients gleichzeitig steuern | QA | HIGH | TASK-2107 | 📋 OPEN |
+
+---
+
+### Epic 13: In-Game Overlay Completeness (v2.5.0) — 📋 PLANUNG
+
+**Goal:** Alle wichtigen Spielinformationen direkt im Overlay — Cooldowns, Buffs, HP/SP, Target-Info.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-2201** | Skill-Cooldown-Overlay: Visuelle Balken für F1-F12 (Config: Position, Größe, Opacity) | Coder | HIGH | — | 📋 OPEN |
+| **TASK-2202** | Buff/Debuff Timer Overlay: Integration mit BuffManager (aktive Buffs + Countdown) | Coder | HIGH | — | 📋 OPEN |
+| **TASK-2203** | HP/SP Overlay (OCR-basiert): Windows OCR / Tesseract für HP/SP-Balken lesen | Coder | HIGH | — | 📋 OPEN |
+| **TASK-2204** | Target-Info Overlay (OCR): Ziel-HP, Level, Name, Distanz | Coder | MEDIUM | TASK-2203 | 📋 OPEN |
+| **TASK-2205** | Overlay-Designer: Drag & Drop Positionierung, Presets speichern/laden | Designer | HIGH | TASK-2201 | 📋 OPEN |
+| **TASK-2206** | Overlay-Themes: Dark/Light/HighContrast per Profil wählbar | Designer | MEDIUM | TASK-2205 | 📋 OPEN |
+| **TASK-2207** | Damage Numbers Overlay (Optional): Eigene Schadensanzeige über Ziel | Coder | LOW | TASK-2204 | 📋 OPEN |
+| **TASK-2208** | Unit-Tests: Overlay-Rendering, OCR-Accuracy, Performance | QA | MEDIUM | TASK-2205 | 📋 OPEN |
+
+---
+
+### Epic 14: Profile System Advanced Features (v2.5.0) — 📋 PLANUNG
+
+**Goal:** Profile verwalten wie Profis — Vererbung, Versionierung, Migration, Diff, Tags.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-2301** | Profile Inheritance: BaseProfile → ClassProfile → CharProfile (Override-Mechanik) | Coder | HIGH | — | 📋 OPEN |
+| **TASK-2302** | Profile Versioning: Schema-Version in JSON, automatische Migration auf Load | Coder | HIGH | TASK-2301 | 📋 OPEN |
+| **TASK-2303** | Profile Validation UI: Visueller Validator (fehlende Keys, ungültige VK, Engine-Konflikte) | Designer | HIGH | TASK-2301 | 📋 OPEN |
+| **TASK-2304** | Profile Diff/Compare: Zwei Profile nebeneinander, Unterschiede hervorheben | Designer | MEDIUM | TASK-2303 | 📋 OPEN |
+| **TASK-2305** | Profile Tags/Filter: Tags (PvP, WoE, Leveling, MVP) + Filter-UI in ProfileLibrary | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2306** | Cloud Sync: GitHub Gist / OneDrive / Google Drive Sync (optional, User-Config) | Coder | LOW | TASK-2301 | 📋 OPEN |
+| **TASK-2307** | Profile Collections: "Meine WoE-Profile", "Meine Leveling-Profile" als Sammlungen | Designer | LOW | TASK-2305 | 📋 OPEN |
+| **TASK-2308** | Unit-Tests: Inheritance, Migration, Validation, Diff | QA | MEDIUM | TASK-2304 | 📋 OPEN |
+
+---
+
+### Epic 15: Controller Hardware Advanced Features (v2.5.0) — 📋 PLANUNG
+
+**Goal:** Controller-Hardware voll ausnutzen — Gyro, Trigger, Rumble, Drift, Lightbar.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-2401** | Gyro Calibration Wizard: Schritt-für-Schritt im First-Run Wizard + Visualisierung | Designer | HIGH | — | 📋 OPEN |
+| **TASK-2402** | Stick Drift Compensation: Automatische Erkennung & Kompensation (Deadzone-Adjustment) | Coder | HIGH | — | 📋 OPEN |
+| **TASK-2403** | Trigger Deadzone Curves: Nicht-linear Kurven (Bow-Charging, Spell-Charge) | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-2404** | Rumble Editor: Waveform-Editor für eigene Rumble-Patterns (Frequency, Amplitude, Duration) | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2405** | Motion Aim Assist: Gyro-basiertes Aiming für Mage/Archer (Konfigurierbar: Sensitivität, Blend) | Coder | MEDIUM | TASK-2401 | 📋 OPEN |
+| **TASK-2406** | Steam Input Integration: Steam Controller Configs importieren/exportieren | Coder | LOW | — | 📋 OPEN |
+| **TASK-2407** | DualSense Lightbar pro Profil (aus Epic 8): TASK-1901 bis TASK-1904 | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-2408** | Unit-Tests: Gyro Calibration, Drift Detection, Trigger Curves, Rumble Patterns | QA | MEDIUM | TASK-2404 | 📋 OPEN |
+
+---
+
+### Epic 16: Smart Cursor Extensions (v2.6.0) — 📋 PLANUNG
+
+**Goal:** Smart Cursor für alle UI-Interaktionen — Shop, Storage, Skill Tree, Chat.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-2501** | Shop/NPC Navigation: Automatisches Navigieren in Shop-Menüs (Kaufen/Verkaufen) | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-2502** | Storage/Cart Organization: Items sortieren, Stacks zusammenführen, Kategorien | Coder | MEDIUM | TASK-2501 | 📋 OPEN |
+| **TASK-2503** | Skill Tree Navigation: Skill-Punkte per Controller verteilen (Grid-Navigation) | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-2504** | Chat Macro Integration: Schnelltexte per D-Pad in Chat einfügen (Emotes, Befehle) | Designer | LOW | — | 📋 OPEN |
+| **TASK-2505** | Unit-Tests: Smart Cursor in verschiedenen UI-Kontexten | QA | LOW | TASK-2503 | 📋 OPEN |
+
+---
+
+### Epic 17: AI-Assisted Features (White-Hat) (v2.6.0) — 📋 PLANUNG
+
+**Goal:** KI-Unterstützung rein client-seitig — OCR, Build-Optimizer, Monster-DB.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-2601** | OCR-based HP/SP Reading: Windows ML / Tesseract Integration für Overlay | Coder | HIGH | TASK-2203 | 📋 OPEN |
+| **TASK-2602** | Skill Recommendation Engine: Class + Level + Equipment → Skill-Build vorschlagen | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-2603** | Auto-Build Optimizer: Stat-Allokation (Str/Agi/Vit/Int/Dex/Luk) für Builds | Coder | MEDIUM | TASK-2602 | 📋 OPEN |
+| **TASK-2604** | Monster Database Integration: iRO/kRO DB laden → Element, Drops, Spawns im Overlay | Coder | LOW | — | 📋 OPEN |
+| **TASK-2605** | Market Price Overlay: Item-Preise aus öffentlichen RO-Market-APIs | Coder | LOW | TASK-2604 | 📋 OPEN |
+| **TASK-2606** | Unit-Tests: OCR Accuracy, Build Recommendations, DB Queries | QA | MEDIUM | TASK-2603 | 📋 OPEN |
+
+---
+
+### Epic 18: Community & Social Features (v2.6.0) — 📋 PLANUNG
+
+**Goal:** Community-Verbindung stärken — Discord, Party, Guild, Profile-Ratings.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-2701** | Discord Rich Presence: Class, Map, Party, Status anzeigen (DiscordRpcService erweitern) | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-2702** | Party Voice Chat: Opus/WebRTC Implementation (VoiceChatService vervollständigen) | Coder | LOW | — | 📋 OPEN |
+| **TASK-2703** | Guild/Party Overlay: Party-Member Status (HP, SP, Buffs) im Overlay | Coder | MEDIUM | TASK-2202 | 📋 OPEN |
+| **TASK-2704** | Profile Rating/Reviews: Community-Bewertungen für Gist-Profile (Sterne, Kommentare) | Designer | LOW | — | 📋 OPEN |
+| **TASK-2705** | Profile Collections UI: Sammlungen verwalten, teilen, abonnieren | Designer | LOW | TASK-2307 | 📋 OPEN |
+| **TASK-2706** | Unit-Tests: Discord RPC, Voice Chat, Party Overlay Sync | QA | LOW | TASK-2703 | 📋 OPEN |
+
+---
+
+### Epic 19: Accessibility & UX Polish (v2.6.0) — 📋 PLANUNG
+
+**Goal:** Barrierefreiheit auf AAA-Niveau — Screenreader, Color Blind, Reduced Motion, Gamepad-Only.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-2801** | Screen Reader Support: Vollständige AutomationProperties, Live Regions, ARIA | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2802** | Color Blind Modes: Deuteranopie/Protanopie/Tritanopie Paletten im DesignSystem | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2803** | Reduced Motion: Animationen global deaktivieren (Respects Windows Setting) | Designer | MEDIUM | — | 📋 OPEN |
+| **TASK-2804** | Gamepad-Only Navigation: Alle Fenster per Controller bedienbar (Focus-Management) | Designer | HIGH | — | 📋 OPEN |
+| **TASK-2805** | High Contrast Themes: Mehrere Themes (Dark, Light, HighContrast, Sepia) | Designer | LOW | TASK-2802 | 📋 OPEN |
+| **TASK-2806** | Font Scaling pro Fenster: Unabhängig speicherbar (nicht nur global) | Designer | LOW | — | 📋 OPEN |
+| **TASK-2807** | Unit-Tests: Accessibility Tree, Color Contrast Ratios, Focus Order | QA | MEDIUM | TASK-2804 | 📋 OPEN |
+
+---
+
+### Epic 20: Developer & Power-User Tools (v2.7.0) — 📋 PLANUNG
+
+**Goal:** Tools für Power-User & Entwickler — Scripting, REPL, Profiling, Latency.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-2901** | Lua Scripting API: EngineOrchestrator Events expose'en (OnTick, OnInput, OnAction) | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-2902** | REPL Console: DeveloperConsoleWindow → Interactive C#/Lua REPL | Designer | LOW | TASK-2901 | 📋 OPEN |
+| **TASK-2903** | Performance Profiler UI: GpuOverlayProfiler Daten im Overlay visualisieren | Designer | LOW | — | 📋 OPEN |
+| **TASK-2904** | Input Latency Visualizer: Echtzeit-Graph Input → Engine → SendInput | Coder | LOW | — | 📋 OPEN |
+| **TASK-2905** | Automated Test Recorder: User-Aktionen aufzeichnen → Integration-Test generieren | QA | LOW | TASK-2901 | 📋 OPEN |
+| **TASK-2906** | Unit-Tests: Scripting API Sandbox, REPL, Recorder | QA | LOW | TASK-2905 | 📋 OPEN |
+
+---
+
+### Epic 21: RO-Specific Game Knowledge (v2.7.0) — 📋 PLANUNG
+
+**Goal:** Integriertes RO-Wissen — Monster, Maps, Items, Skills, Stats, XP.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-3001** | Monster Database: Element, Size, Race, Drops, MVP/Miniboss, Spawn-Locations | Coder | LOW | — | 📋 OPEN |
+| **TASK-3002** | Map Database: Warp-Punkte, Kafra, Dungeon-Eingänge, Levelling-Spots | Coder | LOW | TASK-3001 | 📋 OPEN |
+| **TASK-3003** | Item Database: Suche mit Filtern (Type, Slot, Weight, Price, Drop-Monster) | Designer | LOW | TASK-3001 | 📋 OPEN |
+| **TASK-3004** | Skill Simulator: Skill-Punkte verteilen → Build-Code für Forums/Guides | Designer | LOW | TASK-3001 | 📋 OPEN |
+| **TASK-3005** | Stat Calculator: Base/Job Level → Stats (mit Equipment, Blessings, Foods) | Coder | LOW | TASK-3001 | 📋 OPEN |
+| **TASK-3006** | Experience Calculator: Kill-Count für Level-Up, Optimal Maps per Level-Range | Coder | LOW | TASK-3002 | 📋 OPEN |
+| **TASK-3007** | Unit-Tests: DB Integrity, Calculator Accuracy, Simulator Export | QA | LOW | TASK-3005 | 📋 OPEN |
+
+---
+
+### Epic 22: Advanced Input Features (v2.7.0) — 📋 PLANUNG
+
+**Goal:** Next-Level Input — Chords, Sequences, Hold/Tap, Analog Zones, Gestures.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-3101** | Chorded Input: L1+R1+A ≠ L1+A + R1+A (eigene Actions für Kombis) | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-3102** | Sequential Chords: A→B→X (500ms) = Combo-Action | Coder | MEDIUM | TASK-3101 | 📋 OPEN |
+| **TASK-3103** | Hold+Tap Distinction: Kurz drücken = Aktion A, Halten = Aktion B | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-3104** | Analog Trigger Zones: 0-30% Walk, 30-70% Run, 70-100% Sprint | Coder | LOW | — | 📋 OPEN |
+| **TASK-3105** | Stick Gesture Recognition: Kreis, Zick-Zack, Tippen → Actions | Coder | LOW | TASK-3101 | 📋 OPEN |
+| **TASK-3106** | Unit-Tests: Chord Detection, Sequence Timing, Gesture Classification | QA | MEDIUM | TASK-3105 | 📋 OPEN |
+
+---
+
+### Epic 23: Streaming / Content Creator Features (v2.8.0) — 📋 PLANUNG
+
+**Goal:** Streamer-Tools — Stream Deck, OBS, Viewer Interaction, Replay.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-3201** | Stream Deck Integration: Elgato Plugin für Profil-Switch, Overlay-Toggle, Macros | Coder | LOW | — | 📋 OPEN |
+| **TASK-3202** | OBS WebSocket: Overlay-Sichtbarkeit, Szenen-Wechsel per OBS steuern | Coder | LOW | — | 📋 OPEN |
+| **TASK-3203** | Viewer Interaction: Chat-Commands → Profil-Switch / Emote / Sound / Overlay | Coder | LOW | TASK-3201 | 📋 OPEN |
+| **TASK-3204** | Replay System: Session aufzeichnen → Video/JSON Export (für Guides/Reviews) | Coder | LOW | — | 📋 OPEN |
+| **TASK-3205** | Unit-Tests: Stream Deck Plugin, OBS Commands, Replay Export | QA | LOW | TASK-3204 | 📋 OPEN |
+
+---
+
+### Epic 24: Platform & Deployment (v2.8.0) — 📋 PLANUNG
+
+**Goal:** Professionelle Distribution — MSIX, Auto-Update, Portable, Steam Deck, Linux.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-3301** | MSIX / Store Package: Windows Store, Winget, Chocolatey, Scoop | DevOps | MEDIUM | — | 📋 OPEN |
+| **TASK-3302** | Auto-Update: Silent/Delta-Update, Background-Download, Restart-Prompt | DevOps | HIGH | — | 📋 OPEN |
+| **TASK-3303** | Portable Mode: Vollständig portable (keine Registry, AppData optional) | DevOps | MEDIUM | — | 📋 OPEN |
+| **TASK-3304** | Linux/Wine Support: .NET 8 + SDL2 testen, Dokumentation, Known Issues | DevOps | LOW | — | 📋 OPEN |
+| **TASK-3305** | Steam Deck Verified: Offizielles Badge anstreben (Performance, Input, UI) | DevOps | MEDIUM | TASK-3303 | 📋 OPEN |
+| **TASK-3306** | CI/CD Pipeline: GitHub Actions Matrix (Win10/11, x64/ARM64), Stryker, Signing | DevOps | HIGH | TASK-3301 | 📋 OPEN |
+
+---
+
+*Letzte Aktualisierung: 2026-10-20 | Epics 12-24 hinzugefügt basierend auf FEATURE_GAP_ANALYSIS.md | Build: 0 Errors / 0 Warnings | Tests: 726/726 PASS*
