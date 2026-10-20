@@ -28,6 +28,11 @@ namespace RagnaController.Core
         // reads the snapshot without locking — single-writer / single-reader pattern.
         private volatile SDLGameController* _controllerSnapshot = null;
 
+        // ── Gecachte Werte für thread-sicheren Zugriff vom UI-Thread ─────
+        // Wird vom SDL-Thread aktualisiert, vom UI-Thread ohne Lock gelesen (single-writer/single-reader).
+        private volatile string _cachedBatteryLevel = "Unknown";
+                private ButtonState _cachedButtonStates = default;
+
         // ── Thread synchronization ─────────────────────────────────────────
                 private readonly Thread? _sdlThread;
                 private readonly ManualResetEventSlim _scanNow = new ManualResetEventSlim(false);
@@ -80,9 +85,8 @@ namespace RagnaController.Core
         public event EventHandler? ControllerDetected;
         public event EventHandler? ControllerDisconnected;
 
-        // Button state
-        private ButtonState _buttonStates;
-        public ButtonState ButtonStates => _buttonStates;
+        // ── Button state (cached) ──
+        public ButtonState ButtonStates => _cachedButtonStates;
 
         public ControllerService()
                 {
@@ -123,25 +127,9 @@ namespace RagnaController.Core
         public SDLGameController* GetControllerSnapshot() => _controllerSnapshot;
 
         public string BatteryLevel
-        {
-            get
-            {
-                if (!_isConnected || _controller == null) return "Unknown";
-                // NOTE: must only be called from the SDL thread — callers must use Dispatcher
-                SDLJoystick* joy = SDL.GameControllerGetJoystick(_controller);
-                if (joy == null) return "Unknown";
-                SDLJoystickPowerLevel level = SDL.JoystickCurrentPowerLevel(joy);
-                return level switch
                 {
-                    SDLJoystickPowerLevel.Empty => "Empty",
-                    SDLJoystickPowerLevel.Low => "Low",
-                    SDLJoystickPowerLevel.Medium => "Mid",
-                    SDLJoystickPowerLevel.Full => "Full",
-                    SDLJoystickPowerLevel.Wired => "Wired",
-                    _ => "Unknown"
-                };
-            }
-        }
+                    get => _cachedBatteryLevel;
+                }
 
         public void SetRumble(float left, float right)
         {
@@ -162,41 +150,7 @@ namespace RagnaController.Core
         /// Get current button states from the controller.
         /// Must be called from the SDL thread or via Dispatcher.
         /// </summary>
-        public ButtonState GetButtonStates()
-        {
-            if (!_isConnected || _controller == null) return default;
-            SDLJoystick* joy = SDL.GameControllerGetJoystick(_controller);
-            if (joy == null) return default;
-
-            // Pump events first to ensure button states are updated
-            SDL.PumpEvents();
-
-            // Read each button state via SDL_GameControllerGetButton
-            // Triggers are read as axes (0-32767), threshold at > 0
-            float lt = SDL.GameControllerGetAxis(_controller, SDLGameControllerAxis.Triggerleft) / 32767f;
-            float rt = SDL.GameControllerGetAxis(_controller, SDLGameControllerAxis.Triggerright) / 32767f;
-
-            _buttonStates = new ButtonState
-            {
-                APressed = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.A) == 1,
-                BPressed = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.B) == 1,
-                XPressed = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.X) == 1,
-                YPressed = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.Y) == 1,
-                L1Pressed = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.Leftshoulder) == 1,
-                R1Pressed = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.Rightshoulder) == 1,
-                L2Pressed = lt > 0.15f,
-                R2Pressed = rt > 0.15f,
-                StartPressed = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.Start) == 1,
-                BackPressed = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.Back) == 1,
-                DPadUp = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.DpadUp) == 1,
-                DPadDown = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.DpadDown) == 1,
-                DPadLeft = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.DpadLeft) == 1,
-                DPadRight = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.DpadRight) == 1,
-                L3Pressed = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.Leftstick) == 1,
-                R3Pressed = SDL.GameControllerGetButton(_controller, SDLGameControllerButton.Rightstick) == 1
-            };
-            return _buttonStates;
-        }
+        public ButtonState GetButtonStates() => _cachedButtonStates;
 
         /// <summary>
         /// Get the GUID of the connected joystick as a hex string.
@@ -384,6 +338,44 @@ namespace RagnaController.Core
                 // Update the read-only snapshot for main-thread access (lock-free, single-writer)
                 _controllerSnapshot = ctrl;
 
+                // ── Cache battery & button states for thread-safe UI access (MEMORY-001, THREAD-001) ──
+                SDLJoystick* cacheJoy = SDL.GameControllerGetJoystick(ctrl);
+                if (cacheJoy != null)
+                {
+                    SDLJoystickPowerLevel batLevel = SDL.JoystickCurrentPowerLevel(cacheJoy);
+                    _cachedBatteryLevel = batLevel switch
+                    {
+                        SDLJoystickPowerLevel.Empty => "Empty",
+                        SDLJoystickPowerLevel.Low => "Low",
+                        SDLJoystickPowerLevel.Medium => "Mid",
+                        SDLJoystickPowerLevel.Full => "Full",
+                        SDLJoystickPowerLevel.Wired => "Wired",
+                        _ => "Unknown"
+                    };
+
+                    float lt = SDL.GameControllerGetAxis(ctrl, SDLGameControllerAxis.Triggerleft) / 32767f;
+                    float rt = SDL.GameControllerGetAxis(ctrl, SDLGameControllerAxis.Triggerright) / 32767f;
+                    _cachedButtonStates = new ButtonState
+                    {
+                        APressed = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.A) == 1,
+                        BPressed = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.B) == 1,
+                        XPressed = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.X) == 1,
+                        YPressed = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.Y) == 1,
+                        L1Pressed = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.Leftshoulder) == 1,
+                        R1Pressed = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.Rightshoulder) == 1,
+                        L2Pressed = lt > 0.15f,
+                        R2Pressed = rt > 0.15f,
+                        StartPressed = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.Start) == 1,
+                        BackPressed = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.Back) == 1,
+                        DPadUp = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.DpadUp) == 1,
+                        DPadDown = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.DpadDown) == 1,
+                        DPadLeft = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.DpadLeft) == 1,
+                        DPadRight = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.DpadRight) == 1,
+                        L3Pressed = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.Leftstick) == 1,
+                        R3Pressed = SDL.GameControllerGetButton(ctrl, SDLGameControllerButton.Rightstick) == 1
+                    };
+                }
+
                 System.Diagnostics.Debug.WriteLine(
                     $"[ControllerService] Connected: {name} (GUID: {ControllerGuid})");
 
@@ -398,6 +390,8 @@ namespace RagnaController.Core
             ControllerType = "Unknown";
             ControllerGuid = "";
             _controllerSnapshot = null;
+            _cachedBatteryLevel = "Unknown";
+            _cachedButtonStates = default;
         }
 
         private void VerifyStillConnected()
@@ -415,6 +409,8 @@ namespace RagnaController.Core
                 ControllerName = "No Controller";
                 ControllerType = "Unknown";
                 ControllerGuid = "";
+                _cachedBatteryLevel = "Unknown";
+                _cachedButtonStates = default;
 
                 // Update snapshot for main-thread access
                 _controllerSnapshot = null;
