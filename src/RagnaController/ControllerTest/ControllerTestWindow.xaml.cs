@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 using RagnaController.Controller;
 using RagnaController.Core;
@@ -175,7 +177,7 @@ namespace RagnaController.ControllerTest
         {
             if (!_recorder.IsRecording)
             {
-                RecordingStatus.Text = "nichts aktiv";
+                RecordingStatus.Text = "nothing active";
                 return;
             }
             _recorder.Stop();
@@ -187,7 +189,7 @@ namespace RagnaController.ControllerTest
             try
             {
                 _recorder.Save(path);
-                RecordingStatus.Text = $"gespeichert: {_recorder.FrameCount} Frames";
+                RecordingStatus.Text = $"saved: {_recorder.FrameCount} frames";
                 RecordingStatus.Foreground = System.Windows.Media.Brushes.LimeGreen;
             }
             catch (Exception ex)
@@ -291,14 +293,14 @@ namespace RagnaController.ControllerTest
 
             if (_diagnostic.AllPassed)
             {
-                DiagPrompt.Text = $"✓ Alle {_diagnostic.TotalControls} Eingaben einwandfrei.";
-                DiagStatus.Text = $"PASS — {_diagnostic.PassedCount}/{_diagnostic.TotalControls} bestanden";
+                DiagPrompt.Text = $"✓ All {_diagnostic.TotalControls} inputs passed.";
+                DiagStatus.Text = $"PASS — {_diagnostic.PassedCount}/{_diagnostic.TotalControls} passed";
                 DiagStatus.Foreground = System.Windows.Media.Brushes.LimeGreen;
             }
             else
             {
-                DiagPrompt.Text = "✗ Selbsttest abgeschlossen — einige Eingaben nicht erkannt.";
-                DiagStatus.Text = $"FAIL — {_diagnostic.PassedCount}/{_diagnostic.TotalControls} bestanden";
+                DiagPrompt.Text = "✗ Self-test completed — some inputs not detected.";
+                DiagStatus.Text = $"FAIL — {_diagnostic.PassedCount}/{_diagnostic.TotalControls} passed";
                 DiagStatus.Foreground = System.Windows.Media.Brushes.Red;
             }
             EnsureTimerState();
@@ -313,7 +315,7 @@ namespace RagnaController.ControllerTest
             try
             {
                 _diagnostic.SaveJsonReport(path);
-                DiagStatus.Text = $"Report exportiert: {Path.GetFileName(path)}";
+                DiagStatus.Text = $"Report exported: {Path.GetFileName(path)}";
                 DiagStatus.Foreground = System.Windows.Media.Brushes.LimeGreen;
             }
             catch (Exception ex)
@@ -329,7 +331,7 @@ namespace RagnaController.ControllerTest
         {
             _updateTimer?.Stop();
             _updateTimer = null;
-            
+
             if (_controllerProvider is ControllerService cs)
             {
                 cs.ControllerDetected -= OnControllerDetected;
@@ -340,6 +342,36 @@ namespace RagnaController.ControllerTest
             _diagnostic?.Dispose();
 
             base.OnClosed(e);
+        }
+
+        // TASK-2018: Keyboard shortcuts
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Escape)
+            {
+                Close();
+                e.Handled = true;
+            }
+            else if (e.Key == Key.R && !_recorder.IsRecording)
+            {
+                BtnRecordStart_Click(sender, e);
+                e.Handled = true;
+            }
+            else if (e.Key == Key.S && _recorder.IsRecording)
+            {
+                BtnRecordStopSave_Click(sender, e);
+                e.Handled = true;
+            }
+            else if (e.Key == Key.D && !_diagnostic.IsRunning)
+            {
+                BtnDiagStart_Click(sender, e);
+                e.Handled = true;
+            }
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed) DragMove();
         }
     }
 }

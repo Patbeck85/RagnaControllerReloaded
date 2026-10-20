@@ -10,7 +10,10 @@
         mc:Ignorable="d"
         Title="Controller Test" Height="620" Width="380"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
-        Topmost="True" ShowInTaskbar="False">
+        Topmost="True" ShowInTaskbar="False"
+        ResizeMode="CanResizeWithGrip"
+        KeyDown="Window_KeyDown"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
     <Border Background="#CC080A0F" BorderBrush="#44E5B842" BorderThickness="1" CornerRadius="6"
             Padding="10">
         <Grid>
@@ -121,56 +124,60 @@
             <Border Grid.Row="3" Margin="0,8,0,0" Padding="10,8" CornerRadius="6"
                     Background="#1AFFFFFF">
                 <StackPanel Orientation="Horizontal">
-                    <Button x:Name="BtnRecordStart" Content="● Aufnahme"
-                            Width="92" Height="28" Margin="0,0,8,0"
-                            Click="BtnRecordStart_Click"
-                            Background="#2E7D32" Foreground="White" BorderThickness="0"
-                            FontFamily="Consolas" FontSize="11"/>
-                    <Button x:Name="BtnRecordStopSave" Content="■ Stop &amp; speichern"
-                            Width="120" Height="28" Margin="0,0,8,0"
-                            Click="BtnRecordStopSave_Click"
-                            Background="#C62828" Foreground="White" BorderThickness="0"
-                            FontFamily="Consolas" FontSize="11"/>
-                    <TextBlock x:Name="RecordingStatus" Text="bereit" VerticalAlignment="Center"
-                               Foreground="#FFB300" FontFamily="Consolas" FontSize="11" FontWeight="Bold"/>
+                    <Button x:Name="BtnRecordStart" Content="● Record"
+                                                Width="92" Height="28" Margin="0,0,8,0"
+                                                Click="BtnRecordStart_Click"
+                                                Background="#2E7D32" Foreground="White" BorderThickness="0"
+                                                FontFamily="Consolas" FontSize="11"
+                                                ToolTip="Start recording (Shortcut: R)" AutomationProperties.Name="Start recording"/>
+                                        <Button x:Name="BtnRecordStopSave" Content="■ Stop &amp; Save"
+                                                                    Width="120" Height="28" Margin="0,0,8,0"
+                                                                    Click="BtnRecordStopSave_Click"
+                                                                    Background="#C62828" Foreground="White" BorderThickness="0"
+                                                                    FontFamily="Consolas" FontSize="11"
+                                                                    ToolTip="Stop recording &amp; save (Shortcut: S)" AutomationProperties.Name="Stop &amp; save recording"/>
+                                        <TextBlock x:Name="RecordingStatus" Text="ready" VerticalAlignment="Center"
+                                                   Foreground="#FFB300" FontFamily="Consolas" FontSize="11" FontWeight="Bold"/>
                 </StackPanel>
             </Border>
 
             <!-- TEST-017: Eingabe-Selbsttest (geführte Pass/Fail-Diagnose + Latenz p50/p95) -->
             <Border Grid.Row="4" Margin="0,8,0,0" Padding="10,8" CornerRadius="6"
-                    Background="#1AFFFFFF">
-                <StackPanel>
-                    <TextBlock Text="Eingabe-Selbsttest" FontFamily="Consolas" FontSize="12"
-                               FontWeight="Bold" Foreground="#E5B842" Margin="0,0,0,6"/>
+                                Background="#1AFFFFFF">
+                            <StackPanel>
+                                <TextBlock Text="Input Self-Test" FontFamily="Consolas" FontSize="12"
+                                           FontWeight="Bold" Foreground="#E5B842" Margin="0,0,0,6"/>
 
-                    <!-- Steuerung -->
-                    <StackPanel Orientation="Horizontal">
-                        <Button x:Name="BtnDiagStart" Content="▶ Selbsttest starten"
-                                Width="132" Height="28" Margin="0,0,8,0"
-                                Click="BtnDiagStart_Click"
-                                Background="#2E7D32" Foreground="White" BorderThickness="0"
-                                FontFamily="Consolas" FontSize="11"/>
-                        <Button x:Name="BtnDiagExport" Content="⤓ JSON-Report"
-                                Width="112" Height="28" Margin="0,0,8,0" IsEnabled="False"
-                                Click="BtnDiagExport_Click"
-                                Background="#37474F" Foreground="White" BorderThickness="0"
-                                FontFamily="Consolas" FontSize="11"/>
-                    </StackPanel>
+                                <!-- Steuerung -->
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="BtnDiagStart" Content="▶ Start Self-Test"
+                                                                    Width="132" Height="28" Margin="0,0,8,0"
+                                                                    Click="BtnDiagStart_Click"
+                                                                    Background="#2E7D32" Foreground="White" BorderThickness="0"
+                                                                    FontFamily="Consolas" FontSize="11"
+                                                                    ToolTip="Start input self-test (Shortcut: D)" AutomationProperties.Name="Start self-test"/>
+                                                            <Button x:Name="BtnDiagExport" Content="⤓ JSON Report"
+                                                                    Width="112" Height="28" Margin="0,0,8,0" IsEnabled="False"
+                                                                    Click="BtnDiagExport_Click"
+                                                                    Background="#37474F" Foreground="White" BorderThickness="0"
+                                                                    FontFamily="Consolas" FontSize="11"
+                                                                    ToolTip="Export diagnostic report to JSON" AutomationProperties.Name="Export diagnostic report"/>
+                                </StackPanel>
 
-                    <!-- Aktiver Prompt (geführter Test) -->
-                    <Border Margin="0,8,0,0" Padding="8,6" CornerRadius="4"
-                            Background="#22E5B842">
-                        <TextBlock x:Name="DiagPrompt" Text="Drücke Selbsttest starten"
-                                   FontFamily="Consolas" FontSize="11" Foreground="#FFFFFF"
-                                   TextWrapping="Wrap"/>
-                    </Border>
+                                <!-- Aktiver Prompt (geführter Test) -->
+                                <Border Margin="0,8,0,0" Padding="8,6" CornerRadius="4"
+                                        Background="#22E5B842">
+                                    <TextBlock x:Name="DiagPrompt" Text="Press Start Self-Test"
+                                               FontFamily="Consolas" FontSize="11" Foreground="#FFFFFF"
+                                               TextWrapping="Wrap"/>
+                                </Border>
 
-                    <!-- Status / Ergebnis -->
-                    <TextBlock x:Name="DiagStatus" Text="bereit" Margin="0,6,0,0"
-                               FontFamily="Consolas" FontSize="11" FontWeight="Bold"
-                               Foreground="#FFB300"/>
-                </StackPanel>
-            </Border>
+                                <!-- Status / Ergebnis -->
+                                <TextBlock x:Name="DiagStatus" Text="ready" Margin="0,6,0,0"
+                                           FontFamily="Consolas" FontSize="11" FontWeight="Bold"
+                                           Foreground="#FFB300"/>
+                            </StackPanel>
+                        </Border>
         </Grid>
     </Border>
 </Window>
