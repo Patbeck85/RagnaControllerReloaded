@@ -196,7 +196,7 @@ namespace RagnaController.Models
             {
                 System.Diagnostics.Debug.WriteLine($@"[Settings] Save failed: {ex.Message}");
                 // TASK-1701: Benutzer sichtbarer Fehler via Toast
-                try { RagnaController.App.ToastService?.Show($@"Einstellungen konnten nicht gespeichert werden: {ex.Message}", isError: true); } catch { }
+                try { RagnaController.App.ToastService?.Show($@"Einstellungen konnten nicht gespeichert werden: {ex.Message}", isError: true); } catch (Exception toastEx) { System.Diagnostics.Debug.WriteLine($@"[Settings] Toast notification failed: {toastEx.Message}"); }
             }
         }
 
