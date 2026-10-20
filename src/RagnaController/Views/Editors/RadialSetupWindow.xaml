@@ -96,6 +96,7 @@
                                        Text="Emoji fallback active"
                                        Style="{StaticResource BodyText}" FontSize="10" FontWeight="SemiBold"
                                        VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}"/>
+                            <ProgressBar x:Name="DownloadProgressBar" Grid.Column="0" Height="4" Margin="0,24,0,0" Minimum="0" Maximum="100" Value="0" Visibility="Collapsed"/>
                             <Button Grid.Column="1"
                                                          Content="⬇ Download from iROWiki"
                                                          Click="BtnDownloadWiki_Click"
@@ -103,6 +104,13 @@
                                                          Height="36" Padding="15,0"
                                                          FontSize="11"
                                                          ToolTip="Download emote images from iROWiki to improve gallery" AutomationProperties.Name="Download emotes from iROWiki"/>
+                            <Button Grid.Column="1"
+                                                         Content="☑ Select All"
+                                                         Click="BtnSelectAllEmotes_Click"
+                                                         Style="{StaticResource GhostButton}"
+                                                         Height="36" Padding="15,0" Margin="12,0,0,0"
+                                                         FontSize="11"
+                                                         ToolTip="Select all visible emotes into the 8 slots" AutomationProperties.Name="Select all emotes"/>
                         </Grid>
 
                         <!-- Search / Filter -->
@@ -115,6 +123,18 @@
                                                                    VerticalContentAlignment="Center"
                                                                    TextChanged="EmoteSearchBox_TextChanged"
                                                                    ToolTip="Search emotes by name or command" AutomationProperties.Name="Search emotes"/>
+                        </Border>
+
+                        <!-- Category Filter -->
+                        <Border Grid.Row="2" Margin="0,44,0,0" Visibility="Collapsed">
+                            <StackPanel Orientation="Horizontal">
+                                <Button x:Name="BtnCatAll" Content="ALL" Style="{StaticResource PrimaryButton}" Height="30" Padding="10,0" FontSize="10" Click="BtnCatFilter_Click" Tag="ALL" AutomationProperties.Name="Filter All emotes"/>
+                                <Button x:Name="BtnCatEmotions" Content="EMOTIONS" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="EMOTIONS" AutomationProperties.Name="Filter Emotions"/>
+                                <Button x:Name="BtnCatActions" Content="ACTIONS" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="ACTIONS" AutomationProperties.Name="Filter Actions"/>
+                                <Button x:Name="BtnCatReactions" Content="REACTIONS" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="REACTIONS" AutomationProperties.Name="Filter Reactions"/>
+                                <Button x:Name="BtnCatSocial" Content="SOCIAL" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="SOCIAL" AutomationProperties.Name="Filter Social"/>
+                                <Button x:Name="BtnCatGame" Content="GAME" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="GAME" AutomationProperties.Name="Filter Game"/>
+                            </StackPanel>
                         </Border>
 
                         <!-- Emote-Galerie -->

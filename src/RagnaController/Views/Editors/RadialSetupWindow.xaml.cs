@@ -26,6 +26,7 @@ namespace RagnaController.Views.Editors
         public string ImagePath     { get; set; } = "";
         public string FallbackEmoji { get; set; } = "❓";
         public string WikiUrl       { get; set; } = "";   // iROWiki GIF-URL
+        public string Category      { get; set; } = "ALL"; // Emote-Kategorie für Filter
 
         public bool       HasImage        => !string.IsNullOrEmpty(ImagePath) && File.Exists(ImagePath);
         public Visibility ImageVisibility => HasImage ? Visibility.Visible   : Visibility.Collapsed;
@@ -76,68 +77,70 @@ namespace RagnaController.Views.Editors
             { "↑ UP", "↗ UP-R", "→ RIGHT", "↘ DN-R", "↓ DOWN", "↙ DN-L", "← LEFT", "↖ UP-L" };
 
         // Full emote list with iROWiki GIF URLs (source: irowiki.org/cl/images/)
-        private static readonly (string cmd, string name, string emoji, string wikiGif)[] EmoteTable =
+        // Format: (cmd, name, emoji, wikiGif, category)
+        // Categories: EMOTIONS, ACTIONS, REACTIONS, SOCIAL, GAME
+        private static readonly (string cmd, string name, string emoji, string wikiGif, string category)[] EmoteTable =
         {
-            ("!",     "SURPRISE",   "😱", "https://irowiki.org/cl/images/7/70/Exc.gif"),
-            ("?",     "QUESTION",   "🤔", "https://irowiki.org/cl/images/8/82/Que.gif"),
-            ("lv",    "LOVE",       "❤️", "https://irowiki.org/cl/images/b/b6/Lov.gif"),
-            ("lv2",   "BIG LOVE",   "💕", "https://irowiki.org/cl/images/c/ce/Lov2.gif"),
-            ("swt",   "SWEAT",      "💦", "https://irowiki.org/cl/images/1/17/Swt.gif"),
-            ("swt2",  "SWEAT2",     "😰", "https://irowiki.org/cl/images/9/98/Swt2.gif"),
-            ("ic",    "IDEA",       "💡", "https://irowiki.org/cl/images/b/be/Lit.gif"),
-            ("an",    "ANGER",      "😤", "https://irowiki.org/cl/images/d/df/Ang.gif"),
-            ("ag",    "FRUSTRATE",  "🌩️", "https://irowiki.org/cl/images/8/8b/Agh.gif"),
-            ("$",     "MONEY",      "💰", "https://irowiki.org/cl/images/6/66/Money.gif"),
-            ("...",   "SPEECHLESS", "💬", "https://irowiki.org/cl/images/0/05/....gif"),
-            ("ho",    "WHISTLE",    "🎵", "https://irowiki.org/cl/images/8/86/Hoe.gif"),
-            ("thx",   "THANKS",     "👍", "https://irowiki.org/cl/images/e/e9/Thx.gif"),
-            ("wah",   "PANIC",      "😨", "https://irowiki.org/cl/images/5/5c/Wah.gif"),
-            ("sry",   "SORRY",      "🙏", "https://irowiki.org/cl/images/0/0c/Sry.gif"),
-            ("heh",   "HAHA",       "😄", "https://irowiki.org/cl/images/5/57/Heh.gif"),
-            ("hmm",   "THINKING",   "🤔", "https://irowiki.org/cl/images/4/47/Hmm.gif"),
-            ("no1",   "THUMBS UP",  "👌", "https://irowiki.org/cl/images/1/16/No1.gif"),
-            ("ok",    "OKAY",       "✅", "https://irowiki.org/cl/images/b/ba/Ok.gif"),
-            ("omg",   "SHOCK",      "😱", "https://irowiki.org/cl/images/8/80/Omg.gif"),
-            ("oh",    "OH!",        "⭕", "https://irowiki.org/cl/images/c/c7/Ohh.gif"),
-            ("x",     "NO",         "❌", "https://irowiki.org/cl/images/8/86/Ecks.gif"),
-            ("hlp",   "HELP",       "❓", "https://irowiki.org/cl/images/2/21/Hlp.gif"),
-            ("go",    "GO!",        "🏃", "https://irowiki.org/cl/images/b/bb/Goo.gif"),
-            ("sob",   "CRY",        "😢", "https://irowiki.org/cl/images/1/1d/Sob.gif"),
-            ("gg",    "GG",         "😈", "https://irowiki.org/cl/images/e/e4/Ggg.gif"),
-            ("kis",   "KISS",       "💋", "https://irowiki.org/cl/images/6/68/Kis.gif"),
-            ("kis2",  "KISS2",      "💋", "https://irowiki.org/cl/images/5/51/Kis2.gif"),
-            ("pif",   "PIF",        "😏", "https://irowiki.org/cl/images/e/e0/Pif.gif"),
-            ("??",    "SHAKING",    "😕", "https://irowiki.org/cl/images/f/f8/Ono.gif"),
-            ("bzz",   "ANGRY",      "😡", "https://irowiki.org/cl/images/0/00/Bzz.gif"),
-            ("rice",  "DROOL",      "🤤", "https://irowiki.org/cl/images/5/5e/Rice.gif"),
-            ("awsm",  "AWESOME",    "😍", "https://irowiki.org/cl/images/2/26/Awsm.gif"),
-            ("meh",   "MEH",        "😛", "https://irowiki.org/cl/images/b/bb/Meh.gif"),
-            ("shy",   "SHY",        "😊", "https://irowiki.org/cl/images/9/97/Shy.gif"),
-            ("pat",   "PAT",        "🤝", "https://irowiki.org/cl/images/e/e3/Pat.gif"),
-            ("mp",    "LOW SP",     "🔵", "https://irowiki.org/cl/images/1/1c/Mep.gif"),
-            ("slur",  "LUSTFUL",    "😋", "https://irowiki.org/cl/images/4/4c/Slur.gif"),
-            ("com",   "COME HERE",  "☝️", "https://irowiki.org/cl/images/e/e6/Come.gif"),
-            ("yawn",  "YAWN",       "🥱", "https://irowiki.org/cl/images/8/83/Yawn.gif"),
-            ("grat",  "CONGRATS",   "🎉", "https://irowiki.org/cl/images/f/fa/Grat.gif"),
-            ("hp",    "LOW HP",     "❤️", "https://irowiki.org/cl/images/e/eb/Hep.gif"),
-            ("fsh",   "SHINY EYES", "✨", "https://irowiki.org/cl/images/e/e2/Fsh.gif"),
-            ("spin",  "DIZZY",      "😵", "https://irowiki.org/cl/images/7/71/Spin.gif"),
-            ("sigh",  "SIGH",       "😮‍💨", "https://irowiki.org/cl/images/7/7a/Sigh.gif"),
-            ("dum",   "DUMB",       "😐", "https://irowiki.org/cl/images/c/ce/Dum.gif"),
-            ("crwd",  "CLAMOR",     "📢", "https://irowiki.org/cl/images/3/3b/Crwd.gif"),
-            ("desp",  "OTL",        "🙇", "https://irowiki.org/cl/images/7/71/Desp.gif"),
-            ("dice",  "DICE",       "🎲", "https://irowiki.org/cl/images/3/3e/Dice.gif"),
-            ("e20",   "POINT UP",   "☝️", "https://irowiki.org/cl/images/7/7f/E20.gif"),
-            ("hum",   "ANNOYED",    "😒", "https://irowiki.org/cl/images/7/75/Hum.gif"),
-            ("abs",   "SOUL OUT",   "👻", "https://irowiki.org/cl/images/2/21/Abs.gif"),
-            ("oops",  "OOPS",       "😳", "https://irowiki.org/cl/images/f/fe/Oops.gif"),
-            ("spit",  "SPIT",       "🤢", "https://irowiki.org/cl/images/7/78/Spit.gif"),
-            ("ene",   "BLESSED",    "😇", "https://irowiki.org/cl/images/2/20/Ene.gif"),
-            ("panic", "PANIC",      "😱", "https://irowiki.org/cl/images/8/8b/Panic.gif"),
-            ("whisp", "WHISPER",    "🤫", "https://irowiki.org/cl/images/c/cd/Whisp.gif"),
-            ("bawi",  "ROCK",       "✊", "https://irowiki.org/cl/images/d/d1/Emote_bawi.png"),
-            ("bo",    "PAPER",      "🖐️", "https://irowiki.org/cl/images/6/69/Emote_bo.png"),
-            ("gawi",  "SCISSORS",   "✌️", "https://irowiki.org/cl/images/a/a3/Emote_gawi.png"),
+            ("!",     "SURPRISE",   "😱", "https://irowiki.org/cl/images/7/70/Exc.gif",        "REACTIONS"),
+            ("?",     "QUESTION",   "🤔", "https://irowiki.org/cl/images/8/82/Que.gif",        "REACTIONS"),
+            ("lv",    "LOVE",       "❤️", "https://irowiki.org/cl/images/b/b6/Lov.gif",        "EMOTIONS"),
+            ("lv2",   "BIG LOVE",   "💕", "https://irowiki.org/cl/images/c/ce/Lov2.gif",       "EMOTIONS"),
+            ("swt",   "SWEAT",      "💦", "https://irowiki.org/cl/images/1/17/Swt.gif",        "EMOTIONS"),
+            ("swt2",  "SWEAT2",     "😰", "https://irowiki.org/cl/images/9/98/Swt2.gif",       "EMOTIONS"),
+            ("ic",    "IDEA",       "💡", "https://irowiki.org/cl/images/b/be/Lit.gif",        "REACTIONS"),
+            ("an",    "ANGER",      "😤", "https://irowiki.org/cl/images/d/df/Ang.gif",        "EMOTIONS"),
+            ("ag",    "FRUSTRATE",  "🌩️", "https://irowiki.org/cl/images/8/8b/Agh.gif",        "EMOTIONS"),
+            ("$",     "MONEY",      "💰", "https://irowiki.org/cl/images/6/66/Money.gif",      "SOCIAL"),
+            ("...",   "SPEECHLESS", "💬", "https://irowiki.org/cl/images/0/05/....gif",        "REACTIONS"),
+            ("ho",    "WHISTLE",    "🎵", "https://irowiki.org/cl/images/8/86/Hoe.gif",        "ACTIONS"),
+            ("thx",   "THANKS",     "👍", "https://irowiki.org/cl/images/e/e9/Thx.gif",        "SOCIAL"),
+            ("wah",   "PANIC",      "😨", "https://irowiki.org/cl/images/5/5c/Wah.gif",        "EMOTIONS"),
+            ("sry",   "SORRY",      "🙏", "https://irowiki.org/cl/images/0/0c/Sry.gif",        "SOCIAL"),
+            ("heh",   "HAHA",       "😄", "https://irowiki.org/cl/images/5/57/Heh.gif",        "REACTIONS"),
+            ("hmm",   "THINKING",   "🤔", "https://irowiki.org/cl/images/4/47/Hmm.gif",        "REACTIONS"),
+            ("no1",   "THUMBS UP",  "👌", "https://irowiki.org/cl/images/1/16/No1.gif",        "SOCIAL"),
+            ("ok",    "OKAY",       "✅", "https://irowiki.org/cl/images/b/ba/Ok.gif",         "SOCIAL"),
+            ("omg",   "SHOCK",      "😱", "https://irowiki.org/cl/images/8/80/Omg.gif",        "REACTIONS"),
+            ("oh",    "OH!",        "⭕", "https://irowiki.org/cl/images/c/c7/Ohh.gif",        "REACTIONS"),
+            ("x",     "NO",         "❌", "https://irowiki.org/cl/images/8/86/Ecks.gif",        "REACTIONS"),
+            ("hlp",   "HELP",       "❓", "https://irowiki.org/cl/images/2/21/Hlp.gif",        "ACTIONS"),
+            ("go",    "GO!",        "🏃", "https://irowiki.org/cl/images/b/bb/Goo.gif",        "ACTIONS"),
+            ("sob",   "CRY",        "😢", "https://irowiki.org/cl/images/1/1d/Sob.gif",        "EMOTIONS"),
+            ("gg",    "GG",         "😈", "https://irowiki.org/cl/images/e/e4/Ggg.gif",        "SOCIAL"),
+            ("kis",   "KISS",       "💋", "https://irowiki.org/cl/images/6/68/Kis.gif",        "EMOTIONS"),
+            ("kis2",  "KISS2",      "💋", "https://irowiki.org/cl/images/5/51/Kis2.gif",       "EMOTIONS"),
+            ("pif",   "PIF",        "😏", "https://irowiki.org/cl/images/e/e0/Pif.gif",        "EMOTIONS"),
+            ("??",    "SHAKING",    "😕", "https://irowiki.org/cl/images/f/f8/Ono.gif",        "REACTIONS"),
+            ("bzz",   "ANGRY",      "😡", "https://irowiki.org/cl/images/0/00/Bzz.gif",        "EMOTIONS"),
+            ("rice",  "DROOL",      "🤤", "https://irowiki.org/cl/images/5/5e/Rice.gif",       "EMOTIONS"),
+            ("awsm",  "AWESOME",    "😍", "https://irowiki.org/cl/images/2/26/Awsm.gif",       "EMOTIONS"),
+            ("meh",   "MEH",        "😛", "https://irowiki.org/cl/images/b/bb/Meh.gif",        "EMOTIONS"),
+            ("shy",   "SHY",        "😊", "https://irowiki.org/cl/images/9/97/Shy.gif",        "EMOTIONS"),
+            ("pat",   "PAT",        "🤝", "https://irowiki.org/cl/images/e/e3/Pat.gif",        "SOCIAL"),
+            ("mp",    "LOW SP",     "🔵", "https://irowiki.org/cl/images/1/1c/Mep.gif",        "GAME"),
+            ("slur",  "LUSTFUL",    "😋", "https://irowiki.org/cl/images/4/4c/Slur.gif",       "EMOTIONS"),
+            ("com",   "COME HERE",  "☝️", "https://irowiki.org/cl/images/e/e6/Come.gif",       "ACTIONS"),
+            ("yawn",  "YAWN",       "🥱", "https://irowiki.org/cl/images/8/83/Yawn.gif",       "EMOTIONS"),
+            ("grat",  "CONGRATS",   "🎉", "https://irowiki.org/cl/images/f/fa/Grat.gif",       "SOCIAL"),
+            ("hp",    "LOW HP",     "❤️", "https://irowiki.org/cl/images/e/eb/Hep.gif",        "GAME"),
+            ("fsh",   "SHINY EYES", "✨", "https://irowiki.org/cl/images/e/e2/Fsh.gif",        "EMOTIONS"),
+            ("spin",  "DIZZY",      "😵", "https://irowiki.org/cl/images/7/71/Spin.gif",       "EMOTIONS"),
+            ("sigh",  "SIGH",       "😮‍💨", "https://irowiki.org/cl/images/7/7a/Sigh.gif",     "EMOTIONS"),
+            ("dum",   "DUMB",       "😐", "https://irowiki.org/cl/images/c/ce/Dum.gif",        "EMOTIONS"),
+            ("crwd",  "CLAMOR",     "📢", "https://irowiki.org/cl/images/3/3b/Crwd.gif",       "ACTIONS"),
+            ("desp",  "OTL",        "🙇", "https://irowiki.org/cl/images/7/71/Desp.gif",       "EMOTIONS"),
+            ("dice",  "DICE",       "🎲", "https://irowiki.org/cl/images/3/3e/Dice.gif",       "GAME"),
+            ("e20",   "POINT UP",   "☝️", "https://irowiki.org/cl/images/7/7f/E20.gif",        "ACTIONS"),
+            ("hum",   "ANNOYED",    "😒", "https://irowiki.org/cl/images/7/75/Hum.gif",        "EMOTIONS"),
+            ("abs",   "SOUL OUT",   "👻", "https://irowiki.org/cl/images/2/21/Abs.gif",        "EMOTIONS"),
+            ("oops",  "OOPS",       "😳", "https://irowiki.org/cl/images/f/fe/Oops.gif",       "REACTIONS"),
+            ("spit",  "SPIT",       "🤢", "https://irowiki.org/cl/images/7/78/Spit.gif",       "EMOTIONS"),
+            ("ene",   "BLESSED",    "😇", "https://irowiki.org/cl/images/2/20/Ene.gif",        "EMOTIONS"),
+            ("panic", "PANIC",      "😱", "https://irowiki.org/cl/images/8/8b/Panic.gif",      "EMOTIONS"),
+            ("whisp", "WHISPER",    "🤫", "https://irowiki.org/cl/images/c/cd/Whisp.gif",      "SOCIAL"),
+            ("bawi",  "ROCK",       "✊", "https://irowiki.org/cl/images/d/d1/Emote_bawi.png", "GAME"),
+            ("bo",    "PAPER",      "🖐️", "https://irowiki.org/cl/images/6/69/Emote_bo.png",   "GAME"),
+            ("gawi",  "SCISSORS",   "✌️", "https://irowiki.org/cl/images/a/a3/Emote_gawi.png", "GAME"),
         };
 
         public RadialSetupWindow(List<RadialItem> currentItems)
@@ -154,6 +157,8 @@ namespace RagnaController.Views.Editors
             BuildUI();
         }
 
+        private string _emoteCategoryFilter = "ALL"; // "ALL" oder spezifische Kategorie
+
         private void EmoteSearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             _emoteViewSource?.View?.Refresh();
@@ -169,12 +174,14 @@ namespace RagnaController.Views.Editors
             string query = EmoteSearchBox?.Text?.Trim() ?? "";
             if (string.IsNullOrEmpty(query))
             {
-                e.Accepted = true;
+                // Nur Kategorie-Filter anwenden
+                e.Accepted = _emoteCategoryFilter == "ALL" || emote.Category == _emoteCategoryFilter;
                 return;
             }
             query = query.ToLowerInvariant();
-            e.Accepted = (emote.Name != null && emote.Name.ToLowerInvariant().Contains(query)) ||
-                         (emote.Command != null && emote.Command.ToLowerInvariant().Contains(query));
+            e.Accepted = ((emote.Name != null && emote.Name.ToLowerInvariant().Contains(query)) ||
+                         (emote.Command != null && emote.Command.ToLowerInvariant().Contains(query))) &&
+                         (_emoteCategoryFilter == "ALL" || emote.Category == _emoteCategoryFilter);
         }
 
         // ─── Emote-Datenbank ────────────────────────────────────────────────
@@ -187,7 +194,7 @@ namespace RagnaController.Views.Editors
 
             _roEmotes.Clear();
 
-            foreach (var (cmd, name, emoji, wikiGif) in EmoteTable)
+            foreach (var (cmd, name, emoji, wikiGif, category) in EmoteTable)
             {
                 // Search for local file (by command name or emotion_XX index)
                 string? found = FindEmoteLocal(emoteFolder, cmd, wikiGif);
@@ -197,7 +204,8 @@ namespace RagnaController.Views.Editors
                     Name          = name,
                     ImagePath     = found ?? "",
                     FallbackEmoji = emoji,
-                    WikiUrl       = wikiGif
+                    WikiUrl       = wikiGif,
+                    Category      = category
                 });
             }
 
@@ -237,18 +245,22 @@ namespace RagnaController.Views.Editors
         }
 
         // ─── iROWiki Download ────────────────────────────────────────────────
-
         private async void BtnDownloadWiki_Click(object sender, RoutedEventArgs e)
         {
             try
             {
             if (sender is Button btn) btn.IsEnabled = false;
+            DownloadProgressBar.Visibility = Visibility.Visible;
+            DownloadProgressBar.Value = 0;
             EmoteStatusText.Text = GetLocalizedString("RadialSetup_Downloading");
 
             string dest = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Emotes");
             Directory.CreateDirectory(dest);
 
             int ok = 0, fail = 0;
+            int total = _roEmotes.Count(e => !e.HasImage && !string.IsNullOrEmpty(e.WikiUrl));
+            int processed = 0;
+
             foreach (var emote in _roEmotes)
             {
                 if (emote.HasImage) { ok++; continue; }
@@ -272,7 +284,10 @@ namespace RagnaController.Views.Editors
                     System.Diagnostics.Debug.WriteLine($"[RadialSetupWindow] Emote copy failed: {ex.Message}");
                 }
 
-                EmoteStatusText.Text = $"⏳ {ok}/{_roEmotes.Count}...";
+                processed++;
+                double pct = total > 0 ? (double)processed / total * 100.0 : 100.0;
+                DownloadProgressBar.Value = pct;
+                EmoteStatusText.Text = $"⏳ {ok}/{total}...";
                 await Task.Delay(80); // Brief delay — polite to the server
             }
 
@@ -280,6 +295,7 @@ namespace RagnaController.Views.Editors
             _emoteViewSource?.View?.Refresh();
 
             if (sender is Button b) b.IsEnabled = true;
+            DownloadProgressBar.Visibility = Visibility.Collapsed;
             EmoteStatusText.Text = fail == 0
                 ? $"✓ {ok} images loaded"
                 : $"✓ {ok} loaded, {fail} failed";
@@ -287,6 +303,7 @@ namespace RagnaController.Views.Editors
             catch (Exception ex)
             {
                 EmoteStatusText.Text = $"Download error: {ex.Message}";
+                DownloadProgressBar.Visibility = Visibility.Collapsed;
                 if (sender is Button bErr) bErr.IsEnabled = true;
             }
         }
@@ -418,6 +435,45 @@ namespace RagnaController.Views.Editors
                 _keyCombos[_currentRowEditing].SelectedIndex = 0;
                 _selectedImages[_currentRowEditing] = emote.ImagePath; // Store image path for this slot
                 EmoteGalleryOverlay.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        // TASK-2013: Select all visible emotes into the 8 slots
+        private void BtnSelectAllEmotes_Click(object sender, RoutedEventArgs e)
+        {
+            if (_emoteViewSource?.View == null) return;
+
+            var visibleEmotes = _emoteViewSource.View.Cast<RoEmote>().Take(8).ToList();
+            if (visibleEmotes.Count == 0) return;
+
+            for (int i = 0; i < 8 && i < visibleEmotes.Count; i++)
+            {
+                var emote = visibleEmotes[i];
+                _nameBoxes[i].Text = emote.Name;
+                _cmdBoxes[i].Text  = emote.Command;
+                _keyCombos[i].SelectedIndex = 0;
+                _selectedImages[i] = emote.ImagePath;
+            }
+            EmoteGalleryOverlay.Visibility = Visibility.Collapsed;
+        }
+
+        // TASK-2013: Category filter
+        private void BtnCatFilter_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is string category)
+            {
+                _emoteCategoryFilter = category;
+
+                // Update button styles
+                foreach (var b in new[] { BtnCatAll, BtnCatEmotions, BtnCatActions, BtnCatReactions, BtnCatSocial, BtnCatGame })
+                {
+                    if (b == btn)
+                        b.Style = (Style)Application.Current.Resources["PrimaryButton"];
+                    else
+                        b.Style = (Style)Application.Current.Resources["GhostButton"];
+                }
+
+                _emoteViewSource?.View?.Refresh();
             }
         }
 
