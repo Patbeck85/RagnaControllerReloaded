@@ -187,8 +187,8 @@
 | **TASK-2101** | Research: EngineOrchestrator Multi-Instanz-Architektur (Thread-Safety, Resource-Sharing) | Researcher | HIGH | — | ✅ RESEARCH_DONE |
 | **TASK-2102** | MultiClientEngineOrchestrator: Dictionary<HWND, EngineInstance> Management | Coder | HIGH | TASK-2101 | ✅ CLOSED (2026-10-20) |
 | **TASK-2103** | InputRouter pro Client-Instanz (Isolation, Fokus-basiertes Routing) | Coder | HIGH | TASK-2102 | ✅ CLOSED (2026-10-20) |
-| **TASK-2104** | Profil pro HWND: Dictionary<HWND, Profile> statt einzelnes CurrentProfile | Coder | HIGH | TASK-2102 | 📋 OPEN |
-| **TASK-2105** | Tick-Loop: Iteration aller aktiven Client-Engines (Load-Balancing, Priority) | Coder | HIGH | TASK-2102 | 📋 OPEN |
+| **TASK-2104** | Profil pro HWND: Dictionary<HWND, Profile> statt einzelnes CurrentProfile | Coder | HIGH | TASK-2102 | ✅ CLOSED (2026-10-20) — via EngineInstance.Activate(profile) |
+| **TASK-2105** | Tick-Loop: Iteration aller aktiven Client-Engines (Load-Balancing, Priority) | Coder | HIGH | TASK-2102 | ✅ CLOSED (2026-10-20) — each EngineInstance has own BackgroundTickProvider |
 | **TASK-2106** | UI: Client-Tabs in MainWindow mit je eigener Engine-Status-Anzeige | Designer | HIGH | TASK-2103 | 📋 OPEN |
 | **TASK-2107** | Client-spezifische Overlay-Instanzen (pro HWND eigenes Overlay) | Coder | MEDIUM | TASK-2105 | 📋 OPEN |
 | **TASK-2108** | Unit-Tests: Multi-Client Engine Isolation, Input-Routing, Profil-Switch | QA | MEDIUM | TASK-2105 | 📋 OPEN |
