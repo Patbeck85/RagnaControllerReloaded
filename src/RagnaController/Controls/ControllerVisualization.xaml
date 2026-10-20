@@ -21,75 +21,76 @@
         </Style>
 
         <!-- D-Pad Button -->
-        <Style x:Key="DpadButton" TargetType="Button">
-            <Setter Property="Background" Value="LinearGradientBrush, StartPoint=145deg,#3a3a45,#2a2a30"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                                CornerRadius="8"
-                                Padding="8" Margin="2">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{StaticResource AccentBlue}"/>
-                                <Setter Property="Effect" Value="{StaticResource BlueGlow}"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="RenderTransform">
-                                    <Setter.Value>
-                                        <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="0.95" ScaleY="0.95"/>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+                <Style x:Key="DpadButton" TargetType="Button">
+                    <Setter Property="Background" Value="LinearGradientBrush, StartPoint=145deg,#3a3a45,#2a2a30"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Border" Background="{TemplateBinding Background}"
+                                        CornerRadius="8"
+                                        Padding="8" Margin="2">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource AccentBlue}"/>
+                                        <Setter Property="Effect" Value="{StaticResource BlueGlow}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource Gold}"/>
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="0.9" ScaleY="0.9"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
 
         <!-- Action Button (ABXY) -->
-        <Style x:Key="ActionButton" TargetType="Button">
-            <Setter Property="Width" Value="42"/>
-            <Setter Property="Height" Value="42"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="12"
-                                Padding="8" Margin="2">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="RenderTransform">
-                                    <Setter.Value>
-                                        <TranslateTransform Y="-4"/>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
-                                <Setter Property="Effect" Value="{StaticResource BlueGlow}"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="RenderTransform">
-                                    <Setter.Value>
-                                        <TransformGroup>
-                                            <TranslateTransform Y="-2"/>
-                                            <ScaleTransform ScaleX="1.02" ScaleY="1.02"/>
-                                        </TransformGroup>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+                <Style x:Key="ActionButton" TargetType="Button">
+                    <Setter Property="Width" Value="42"/>
+                    <Setter Property="Height" Value="42"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Border" Background="{TemplateBinding Background}"
+                                        CornerRadius="12"
+                                        Padding="8" Margin="2">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <TranslateTransform Y="-4"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                                        <Setter Property="Effect" Value="{StaticResource BlueGlow}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <TransformGroup>
+                                                    <TranslateTransform Y="-2"/>
+                                                    <ScaleTransform ScaleX="0.9" ScaleY="0.9"/>
+                                                </TransformGroup>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
 
         <!-- Touchpad -->
         <Style x:Key="Touchpad" TargetType="Border">
@@ -101,50 +102,68 @@
         </Style>
 
         <!-- Sticky Button -->
-        <Style x:Key="StickyButton" TargetType="Button">
-            <Setter Property="Width" Value="45"/>
-            <Setter Property="Height" Value="45"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="#374151" CornerRadius="50"
-                                Padding="8" Margin="2">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{StaticResource AccentBlue}"/>
-                                <Setter Property="Effect" Value="{StaticResource BlueGlow}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+                <Style x:Key="StickyButton" TargetType="Button">
+                    <Setter Property="Width" Value="45"/>
+                    <Setter Property="Height" Value="45"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Border" Background="#374151" CornerRadius="50"
+                                        Padding="8" Margin="2">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource AccentBlue}"/>
+                                        <Setter Property="Effect" Value="{StaticResource BlueGlow}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource Gold}"/>
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="0.9" ScaleY="0.9"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
 
         <!-- Start/Select Button -->
-        <Style x:Key="StartSelectButton" TargetType="Button">
-            <Setter Property="Width" Value="50"/>
-            <Setter Property="Height" Value="50"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="#6b7280" CornerRadius="12"
-                                Padding="8" Margin="2">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{StaticResource AccentPurple}"/>
-                                <Setter Property="Effect" Value="{StaticResource PurpleGlow}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
+                <Style x:Key="StartSelectButton" TargetType="Button">
+                    <Setter Property="Width" Value="50"/>
+                    <Setter Property="Height" Value="50"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="Border" Background="#6b7280" CornerRadius="12"
+                                        Padding="8" Margin="2">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource AccentPurple}"/>
+                                        <Setter Property="Effect" Value="{StaticResource PurpleGlow}"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="{StaticResource Gold}"/>
+                                        <Setter Property="RenderTransform">
+                                            <Setter.Value>
+                                                <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="0.9" ScaleY="0.9"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
 
         <!-- Individual Action Button Colors -->
         <SolidColorBrush x:Key="BtnAColor" Color="#ef4444"/>  <!-- Red -->
@@ -157,17 +176,17 @@
     <Grid>
         <!-- D-Pad -->
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,30">
-            <Button Style="{StaticResource DpadButton}" Width="70" Height="70" AutomationProperties.Name="D-Pad Up">
-                <Grid>
-                    <Path Data="M 35,5 L 35,65" Stroke="#8A95AC" StrokeThickness="2" StrokeLineJoin="Round"/>
-                </Grid>
-            </Button>
+            <Button Style="{StaticResource DpadButton}" Width="70" Height="70" AutomationProperties.Name="D-Pad Up" ToolTip="D-Pad ↑ (Keyboard: ArrowUp)">
+                            <Grid>
+                                <Path Data="M 35,5 L 35,65" Stroke="#8A95AC" StrokeThickness="2" StrokeLineJoin="Round"/>
+                            </Grid>
+                        </Button>
             <StackPanel HorizontalAlignment="Center">
-                <Button Style="{StaticResource DpadButton}" Width="70" Height="70" AutomationProperties.Name="D-Pad Left">
-                    <Path Data="M 15,35 L 65,35" Stroke="#8A95AC" StrokeThickness="2" StrokeLineJoin="Round"/>
-                </Button>
-                <Button Style="{StaticResource DpadButton}" Width="70" Height="70" AutomationProperties.Name="D-Pad Right">
-                    <Path Data="M 15,35 L 65,35" Stroke="#8A95AC" StrokeThickness="2" StrokeLineJoin="Round"/>
+                <Button Style="{StaticResource DpadButton}" Width="70" Height="70" AutomationProperties.Name="D-Pad Left" ToolTip="D-Pad ← (Keyboard: ArrowLeft)">
+                                    <Path Data="M 15,35 L 65,35" Stroke="#8A95AC" StrokeThickness="2" StrokeLineJoin="Round"/>
+                                </Button>
+                                <Button Style="{StaticResource DpadButton}" Width="70" Height="70" AutomationProperties.Name="D-Pad Right" ToolTip="D-Pad → (Keyboard: ArrowRight)">
+                                    <Path Data="M 15,35 L 65,35" Stroke="#8A95AC" StrokeThickness="2" StrokeLineJoin="Round"/>
                 </Button>
             </StackPanel>
         </StackPanel>
@@ -175,20 +194,20 @@
         <!-- Action Buttons ABXY -->
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="30,30">
             <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnAColor}" AutomationProperties.Name="Button A">
-                    <TextBlock Text="A" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF"/>
-                </Button>
-                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnBColor}" AutomationProperties.Name="Button B">
-                    <TextBlock Text="B" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF"/>
-                </Button>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnXColor}" AutomationProperties.Name="Button X">
-                    <TextBlock Text="X" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF"/>
-                </Button>
-                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnYColor}" AutomationProperties.Name="Button Y">
-                    <TextBlock Text="Y" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF"/>
-                </Button>
+                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnAColor}" AutomationProperties.Name="Button A" ToolTip="A / Cross (Keyboard: Z)">
+                                    <TextBlock Text="A" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF"/>
+                                </Button>
+                                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnBColor}" AutomationProperties.Name="Button B" ToolTip="B / Circle (Keyboard: X)">
+                                    <TextBlock Text="B" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF"/>
+                                </Button>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnXColor}" AutomationProperties.Name="Button X" ToolTip="X / Square (Keyboard: C)">
+                                    <TextBlock Text="X" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF"/>
+                                </Button>
+                                <Button Style="{StaticResource ActionButton}" Background="{StaticResource BtnYColor}" AutomationProperties.Name="Button Y" ToolTip="Y / Triangle (Keyboard: V)">
+                                    <TextBlock Text="Y" FontSize="14" FontWeight="Bold" Foreground="#FFFFFF"/>
+                                </Button>
             </StackPanel>
         </StackPanel>
 
@@ -205,45 +224,45 @@
 
         <!-- Sticky Buttons -->
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,20">
-            <Button Style="{StaticResource StickyButton}" Width="45" Height="45" AutomationProperties.Name="Left Stick Button">
-                <Path Data="M 15,15 L 25,25 M 25,15 L 15,25" 
-                      Stroke="#FFFFFF" 
-                      StrokeThickness="2" 
-                      HorizontalAlignment="Center" 
-                      VerticalAlignment="Center"/>
-            </Button>
-            <Button Style="{StaticResource StickyButton}" Width="45" Height="45" AutomationProperties.Name="Right Stick Button">
-                <Path Data="M 15,15 L 25,25 M 25,15 L 15,25" 
-                      Stroke="#FFFFFF" 
-                      StrokeThickness="2" 
-                      HorizontalAlignment="Center" 
-                      VerticalAlignment="Center"/>
-            </Button>
-            <Button Style="{StaticResource StickyButton}" Width="45" Height="45" AutomationProperties.Name="Touchpad Button">
-                <Path Data="M 18,15 L 22,15 M 18,18 L 18,22" 
-                      Stroke="#FFFFFF" 
-                      StrokeThickness="2" 
-                      HorizontalAlignment="Center" 
-                      VerticalAlignment="Center"/>
-            </Button>
+            <Button Style="{StaticResource StickyButton}" Width="45" Height="45" AutomationProperties.Name="Left Stick Button" ToolTip="L3 / Left Stick Press (Keyboard: L)">
+                            <Path Data="M 15,15 L 25,25 M 25,15 L 15,25"
+                                  Stroke="#FFFFFF"
+                                  StrokeThickness="2"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Button>
+                        <Button Style="{StaticResource StickyButton}" Width="45" Height="45" AutomationProperties.Name="Right Stick Button" ToolTip="R3 / Right Stick Press (Keyboard: R)">
+                            <Path Data="M 15,15 L 25,25 M 25,15 L 15,25"
+                                  Stroke="#FFFFFF"
+                                  StrokeThickness="2"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Button>
+                        <Button Style="{StaticResource StickyButton}" Width="45" Height="45" AutomationProperties.Name="Touchpad Button" ToolTip="Touchpad Press (Keyboard: T)">
+                            <Path Data="M 18,15 L 22,15 M 18,18 L 18,22"
+                                  Stroke="#FFFFFF"
+                                  StrokeThickness="2"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Button>
         </StackPanel>
 
         <!-- Start/Select -->
         <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,20">
-            <Button Style="{StaticResource StartSelectButton}" Width="50" Height="50" AutomationProperties.Name="Share Button">
-                <Path Data="M 15,15 L 35,15 M 15,18 L 35,18" 
-                      Stroke="#FFFFFF" 
-                      StrokeThickness="2" 
-                      HorizontalAlignment="Center" 
-                      VerticalAlignment="Center"/>
-            </Button>
-            <Button Style="{StaticResource StartSelectButton}" Width="50" Height="50" AutomationProperties.Name="Options Button">
-                <Path Data="M 18,15 L 22,15 M 18,18 L 18,22" 
-                      Stroke="#FFFFFF" 
-                      StrokeThickness="2" 
-                      HorizontalAlignment="Center" 
-                      VerticalAlignment="Center"/>
-            </Button>
+            <Button Style="{StaticResource StartSelectButton}" Width="50" Height="50" AutomationProperties.Name="Share Button" ToolTip="Share / Create (Keyboard: Shift+S)">
+                            <Path Data="M 15,15 L 35,15 M 15,18 L 35,18"
+                                  Stroke="#FFFFFF"
+                                  StrokeThickness="2"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Button>
+                        <Button Style="{StaticResource StartSelectButton}" Width="50" Height="50" AutomationProperties.Name="Options Button" ToolTip="Options / Menu (Keyboard: Shift+O)">
+                            <Path Data="M 18,15 L 22,15 M 18,18 L 18,22"
+                                  Stroke="#FFFFFF"
+                                  StrokeThickness="2"
+                                  HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"/>
+                        </Button>
         </StackPanel>
 
     </Grid>
