@@ -80,7 +80,7 @@ namespace RagnaController.Core
             ProcessId = pid;
 
             // Create per-instance InputCommandQueue bound to this client's HWND for PostMessage routing
-            var instanceQueue = new InputCommandQueue(null, hwnd.ToString());
+            var instanceQueue = new InputCommandQueue(null, hwnd.ToString(), multiClientRouter);
 
             // Create EngineOrchestrator with per-instance dependencies
             _orchestrator = new EngineOrchestrator(tickProvider, messenger, instanceQueue, logger);

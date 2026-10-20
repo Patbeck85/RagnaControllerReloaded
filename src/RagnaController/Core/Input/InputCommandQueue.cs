@@ -147,10 +147,14 @@ namespace RagnaController.Core
         private volatile bool _shutdownRequested;
 
         // PERF-005: Input Latency Tracker
-        private readonly InputLatencyTracker? _latencyTracker;
-        private readonly string _controllerId;
+                private readonly InputLatencyTracker? _latencyTracker;
+                private readonly string _controllerId;
 
-        public event Action<InputCmd>? OnCommandEnqueued;
+                // TASK-2103: Multi-Client Input Routing via PostMessage
+                private readonly MultiClientInputRouter? _multiClientRouter;
+                private readonly IntPtr _targetHwnd;
+
+                public event Action<InputCmd>? OnCommandEnqueued;
         public event Action<InputCmd>? OnCommandExecuted;
 
         /// <summary>
@@ -195,15 +199,39 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Creates a new InputCommandQueue with optional latency tracking.
-        /// </summary>
-        /// <param name="controllerId">Identifier for the controller (used for per-controller latency tracking).</param>
-        public InputCommandQueue(InputLatencyTracker? latencyTracker = null, string controllerId = "Default")
-        {
-            _latencyTracker = latencyTracker;
-            _controllerId = controllerId;
-            _queue = new BlockingCollection<InputCmd>();
-        }
+                /// Creates a new InputCommandQueue with optional latency tracking.
+                /// </summary>
+                /// <param name="controllerId">Identifier for the controller (used for per-controller latency tracking). Can be HWND string for multi-client routing.</param>
+                /// <param name="multiClientRouter">Optional MultiClientInputRouter for per-HWND PostMessage routing.</param>
+                public InputCommandQueue(InputLatencyTracker? latencyTracker = null, string controllerId = "Default", MultiClientInputRouter? multiClientRouter = null)
+                {
+                    _latencyTracker = latencyTracker;
+                    _controllerId = controllerId;
+                    _multiClientRouter = multiClientRouter;
+
+                    // Parse target HWND from controllerId (format: "HWND_0x123456" or just "0x123456")
+                    if (_multiClientRouter != null && !string.IsNullOrEmpty(controllerId))
+                    {
+                        try
+                        {
+                            string hwndStr = controllerId;
+                            if (hwndStr.StartsWith("HWND_", StringComparison.OrdinalIgnoreCase))
+                                hwndStr = hwndStr.Substring(5);
+                            if (hwndStr.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+                                hwndStr = hwndStr.Substring(2);
+                            if (long.TryParse(hwndStr, System.Globalization.NumberStyles.HexNumber, null, out long hwndVal))
+                            {
+                                _targetHwnd = new IntPtr(hwndVal);
+                            }
+                        }
+                        catch
+                        {
+                            _targetHwnd = IntPtr.Zero;
+                        }
+                    }
+
+                    _queue = new BlockingCollection<InputCmd>();
+                }
 
         public void Enqueue(InputCmd cmd)
         {
@@ -559,32 +587,87 @@ namespace RagnaController.Core
                 }
 
         private void FlushBatch(ref List<INPUT> batch, ref int batchCount)
-                {
-                    if (batchCount == 0) return;
+                        {
+                            if (batchCount == 0) return;
 
-                    // GEX-002: Measure Emulation (SendInput) latency (opt-in, zero-allocation when disabled per PERF-010)
-                    var emulationSw = InputLatencyBudgets.EnableBudgetTracking ? System.Diagnostics.Stopwatch.StartNew() : null;
+                            // TASK-2103: If we have a target HWND and MultiClientInputRouter, use PostMessage instead of SendInput
+                            if (_multiClientRouter != null && _targetHwnd != IntPtr.Zero)
+                            {
+                                FlushBatchViaPostMessage(ref batch, ref batchCount);
+                                return;
+                            }
 
-                    // PERF-005: Measure SendInput latency
-                    var sendInputSw = System.Diagnostics.Stopwatch.StartNew();
+                            // GEX-002: Measure Emulation (SendInput) latency (opt-in, zero-allocation when disabled per PERF-010)
+                            var emulationSw = InputLatencyBudgets.EnableBudgetTracking ? System.Diagnostics.Stopwatch.StartNew() : null;
 
-                    // Send all gathered inputs to the Windows Kernel in a single API call
-                    SendInput((uint)batchCount, batch.ToArray(), InputSize);
+                            // PERF-005: Measure SendInput latency
+                            var sendInputSw = System.Diagnostics.Stopwatch.StartNew();
 
-                    sendInputSw.Stop();
-                    double elapsedMs = sendInputSw.Elapsed.TotalMilliseconds;
-                    _latencyTracker?.RecordSendInputLatency(elapsedMs, batchCount, _controllerId);
+                            // Send all gathered inputs to the Windows Kernel in a single API call
+                            SendInput((uint)batchCount, batch.ToArray(), InputSize);
 
-                    // ROB-002: Failover-Mechanismus bekommt die gemessene Flush-Latenz.
-                    SendInputLatencyRecorded?.Invoke(elapsedMs);
+                            sendInputSw.Stop();
+                            double elapsedMs = sendInputSw.Elapsed.TotalMilliseconds;
+                            _latencyTracker?.RecordSendInputLatency(elapsedMs, batchCount, _controllerId);
 
-                    // GEX-002: Record Emulation latency
-                    if (emulationSw != null) RecordEmulationBudget(emulationSw);
+                            // ROB-002: Failover-Mechanismus bekommt die gemessene Flush-Latenz.
+                            SendInputLatencyRecorded?.Invoke(elapsedMs);
 
-                    // Clear the batch for next accumulation
-                    batch.Clear();
-                    batchCount = 0;
-                }
+                            // GEX-002: Record Emulation latency
+                            if (emulationSw != null) RecordEmulationBudget(emulationSw);
+
+                            // Clear the batch for next accumulation
+                            batch.Clear();
+                            batchCount = 0;
+                        }
+
+                /// <summary>
+                /// TASK-2103: Flush batched inputs via PostMessage to specific HWND (multi-client mode).
+                /// </summary>
+                private void FlushBatchViaPostMessage(ref List<INPUT> batch, ref int batchCount)
+                                        {
+                                            foreach (var input in batch)
+                                            {
+                                                if (input.type == INPUT_KEYBOARD)
+                                                {
+                                                    var vk = (VirtualKey)input.Data.ki.wVk;
+                                                    bool keyDown = (input.Data.ki.dwFlags & KEYEVENTF_KEYUP) == 0;
+                                                    _multiClientRouter!.SendKeyToClient(_targetHwnd, vk, keyDown);
+                                                }
+                                                else if (input.type == INPUT_MOUSE)
+                                                {
+                                                    // For mouse, we need to extract coordinates
+                                                    int x = input.Data.mi.dx;
+                                                    int y = input.Data.mi.dy;
+                                                    bool leftButton = (input.Data.mi.dwFlags & MOUSEEVENTF_LEFTDOWN) != 0 || 
+                                                                     (input.Data.mi.dwFlags & MOUSEEVENTF_LEFTUP) != 0;
+                                                    bool isDown = (input.Data.mi.dwFlags & MOUSEEVENTF_LEFTDOWN) != 0 || 
+                                                                 (input.Data.mi.dwFlags & MOUSEEVENTF_RIGHTDOWN) != 0;
+                           
+                                                    if ((input.Data.mi.dwFlags & MOUSEEVENTF_MOVE) != 0)
+                                                    {
+                                                        // Mouse move - use relative or absolute
+                                                        if ((input.Data.mi.dwFlags & MOUSEEVENTF_ABSOLUTE) != 0)
+                                                        {
+                                                            _multiClientRouter!.SendMouseClickToClient(_targetHwnd, x, y, leftButton);
+                                                        }
+                                                        else
+                                                        {
+                                                            // Relative move - would need cursor position tracking
+                                                            // For now, skip relative moves in multi-client mode
+                                                        }
+                                                    }
+                                                    else if ((input.Data.mi.dwFlags & (MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP | MOUSEEVENTF_RIGHTDOWN | MOUSEEVENTF_RIGHTUP)) != 0)
+                                                    {
+                                                        _multiClientRouter!.SendMouseClickToClient(_targetHwnd, x, y, leftButton);
+                                                    }
+                                                }
+                                            }
+
+                                            // Clear the batch for next accumulation
+                                            batch.Clear();
+                                            batchCount = 0;
+                                        }
 
                 /// <summary>
                 /// GEX-002: Record Emulation (SendInput) latency budget.
