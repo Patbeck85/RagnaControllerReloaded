@@ -47,8 +47,12 @@
 
                 <!-- Right: Media/GIF Placeholder -->
                 <Border Grid.Column="1" Style="{StaticResource GlassPanel}" BorderBrush="{StaticResource BgBorder}" BorderThickness="1" CornerRadius="{StaticResource RadiusXl}">
-                    <!-- MediaElement is used here to potentially load GIFs/MP4s in the future -->
-                    <MediaElement x:Name="MediaPreview" LoadedBehavior="Play" UnloadedBehavior="Stop" Stretch="Uniform" Margin="8" AutomationProperties.Name="Tutorial media preview"/>
+                    <Grid>
+                        <!-- MediaElement is used here to potentially load GIFs/MP4s in the future -->
+                        <MediaElement x:Name="MediaPreview" LoadedBehavior="Play" UnloadedBehavior="Stop" Stretch="Uniform" Margin="8" AutomationProperties.Name="Tutorial media preview"/>
+                        <!-- Placeholder when no media file exists -->
+                        <TextBlock x:Name="MediaPlaceholder" Text="Tutorial Video\nKommt bald" Foreground="{StaticResource TextTertiary}" FontSize="14" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" TextAlignment="Center" TextWrapping="Wrap" Visibility="Collapsed"/>
+                    </Grid>
                 </Border>
             </Grid>
 
@@ -57,9 +61,11 @@
                 <Grid VerticalAlignment="Center">
                     <!-- Progress Dots -->
                     <StackPanel x:Name="DotPanel" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-
+                    <!-- Progress Text -->
+                    <TextBlock x:Name="TxtProgress" Text="" Foreground="{StaticResource TextSecondary}" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20,0" FontFamily="Segoe UI Variable, Segoe UI"/>
                     <!-- Buttons -->
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button x:Name="BtnSkipAll" Content="{core:Loc Tut_Btn_SkipAll}" Click="BtnSkipAll_Click" Style="{StaticResource GhostButton}" Width="140" Height="44" Margin="0,0,12,0" FontFamily="Segoe UI Variable, Segoe UI" AutomationProperties.Name="Skip all tutorials"/>
                         <Button x:Name="BtnPrev" Content="{core:Loc Tut_Btn_Prev}" Click="BtnPrev_Click" Style="{StaticResource GhostButton}" Width="130" Height="44" Margin="0,0,12,0" IsEnabled="False"/>
                         <Button x:Name="BtnNext" Content="{core:Loc Tut_Btn_Next}" Click="BtnNext_Click" Style="{StaticResource PrimaryButton}" Width="160" Height="44"/>
                     </StackPanel>

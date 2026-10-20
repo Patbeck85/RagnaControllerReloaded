@@ -46,13 +46,18 @@ namespace RagnaController.Views.Dialogs
             if (TxtTitle != null) TxtTitle.Text = LocalizationManager.Instance[_titles[_currentSlide]];
             if (TxtDesc != null) TxtDesc.Text = LocalizationManager.Instance[_descs[_currentSlide]];
 
+            // TASK-2017: Progress text
+            if (TxtProgress != null) TxtProgress.Text = $"Slide {_currentSlide + 1} of {TOTAL_SLIDES}";
+
             // Try to load media (fails silently if file doesn't exist yet)
+            bool mediaLoaded = false;
             try
             {
                 string path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Tutorials", _mediaPaths[_currentSlide]);
                 if (System.IO.File.Exists(path))
                 {
                     if (MediaPreview != null) { MediaPreview.Source = new Uri(path, UriKind.Absolute); MediaPreview.Play(); }
+                    mediaLoaded = true;
                 }
                 else
                 {
@@ -61,8 +66,12 @@ namespace RagnaController.Views.Dialogs
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[TutorialWindow] Media load failed: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($@"[TutorialWindow] Media load failed: {ex.Message}");
             }
+
+            // TASK-2017: Show placeholder when no media file
+            if (MediaPlaceholder != null)
+                MediaPlaceholder.Visibility = mediaLoaded ? Visibility.Collapsed : Visibility.Visible;
 
             // Update UI Buttons
             if (BtnPrev != null) BtnPrev.IsEnabled = _currentSlide > 0;
@@ -102,6 +111,12 @@ namespace RagnaController.Views.Dialogs
                 _currentSlide--;
                 UpdateSlide();
             }
+        }
+
+        // TASK-2017: Skip all tutorials
+        private void BtnSkipAll_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
 
         private void BtnClose_Click(object sender, RoutedEventArgs e) => Close();
