@@ -315,10 +315,11 @@ namespace RagnaController.Views.Overlays
                 var brush = (ImageBrush)FindResource("ClassIconBrush");
                 brush.ImageSource = new System.Windows.Media.ImageSourceConverter().ConvertFromString(imagePath) as System.Windows.Media.ImageSource;
             }
-            catch
-            {
-                // Fallback to novice icon
-                var brush = (ImageBrush)FindResource("ClassIconBrush");
+            catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($@"[InGameOverlay] Icon load failed for '{classType}': {ex.Message} — fallback to novice icon");
+                            // Fallback to novice icon
+                            var brush = (ImageBrush)FindResource("ClassIconBrush");
                 brush.ImageSource = new System.Windows.Media.Imaging.BitmapImage(new System.Uri("/Assets/Classes/Novice.png", System.UriKind.Relative));
             }
         }
