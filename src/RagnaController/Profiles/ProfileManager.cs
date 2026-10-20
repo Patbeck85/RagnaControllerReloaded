@@ -348,6 +348,7 @@ namespace RagnaController.Profiles
                 var pCopy = new Profile { 
                     Name = p.Name,
                     Class = p.Class,
+                    ControllerGuid = p.ControllerGuid,
                     MouseSensitivity = p.MouseSensitivity,
                     Deadzone = p.Deadzone,
                     MovementCurve = p.MovementCurve,
@@ -400,9 +401,22 @@ namespace RagnaController.Profiles
                     RightTriggerMode = p.RightTriggerMode,
                     ComboAutoLoop = p.ComboAutoLoop,
                     ComboChainCooldownMs = p.ComboChainCooldownMs,
+                    LongPressThresholdMs = p.LongPressThresholdMs,
+                    LongPressRepeatIntervalMs = p.LongPressRepeatIntervalMs,
+                    LongPressButtons = new List<ButtonKey>(p.LongPressButtons),
+                    StickDeadzone = p.StickDeadzone,
+                    TriggerDeadzone = p.TriggerDeadzone,
+                    StickNormalization = p.StickNormalization,
                     ButtonMappings = new Dictionary<ButtonKey, ButtonAction>(p.ButtonMappings),
                     SkillRecommendations = new List<string>(p.SkillRecommendations),
                     ClassTips = p.ClassTips,
+                    Priority = p.Priority,
+                    IsEnabled = p.IsEnabled,
+                    ControllerConfigs = new Dictionary<string, ControllerConfig>(p.ControllerConfigs),
+                    LastControllerGuid = p.LastControllerGuid,
+                    AutoActivateOnControllerConnect = p.AutoActivateOnControllerConnect,
+                    CreatedAt = p.CreatedAt,
+                    DownloadCount = p.DownloadCount,
                     IsBuiltIn = false // Always false for saved profiles
                 };
                 
