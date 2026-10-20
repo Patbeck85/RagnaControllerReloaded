@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 using RagnaController.Core;
 
@@ -11,6 +14,10 @@ namespace RagnaController.Views.Dialogs
         private readonly AdvancedLogger _logger;
         private readonly List<string> _buffer = new();
         private const int MAX_LINES = 500;
+        
+        // TASK-2016: Log level & timestamp filter state
+        private string _logLevelFilter = "ALL";
+        private bool _showTimestamps = true;
         
         // Throttling timer to prevent UI thread flooding
         private readonly DispatcherTimer _flushTimer;
@@ -58,12 +65,62 @@ namespace RagnaController.Views.Dialogs
             string content;
             lock (_buffer)
             {
-                content = string.Join("\n", _buffer);
+                // TASK-2016: Apply log level filter + timestamp toggle
+                var filtered = _buffer.Where(line =>
+                {
+                    if (_logLevelFilter == "ALL") return true;
+                    return line.Contains($"[{_logLevelFilter}]");
+                });
+
+                if (!_showTimestamps)
+                {
+                    // Strip timestamp prefix "HH:mm:ss.fff " from each line
+                    filtered = filtered.Select(line =>
+                    {
+                        var tsMatch = System.Text.RegularExpressions.Regex.Match(line, @"^\d{2}:\d{2}:\d{2}\.\d{3}\s");
+                        return tsMatch.Success ? line[tsMatch.Length..] : line;
+                    });
+                }
+
+                content = string.Join("\n", filtered);
                 _isDirty = false;
             }
 
             LogText.Text = content;
             LogScroll.ScrollToEnd();
+        }
+
+        // TASK-2016: Log level filter changed
+        private void LogLevelFilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (LogLevelFilterCombo.SelectedItem is ComboBoxItem item)
+                _logLevelFilter = item.Content?.ToString() ?? "ALL";
+            _isDirty = true;
+        }
+
+        // TASK-2016: Timestamp toggle
+        private void ChkShowTimestamps_Checked(object sender, RoutedEventArgs e)
+        {
+            _showTimestamps = ChkShowTimestamps.IsChecked == true;
+            _isDirty = true;
+        }
+
+        // TASK-2016: Copy logs to clipboard
+        private void BtnCopyLogs_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string content = LogText.Text;
+                if (!string.IsNullOrEmpty(content))
+                {
+                    Clipboard.SetText(content);
+                    System.Windows.MessageBox.Show("Log output copied to clipboard.", "Copied", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Failed to copy: {ex.Message}", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+            }
         }
 
         private void BtnClear_Click(object sender, RoutedEventArgs e)

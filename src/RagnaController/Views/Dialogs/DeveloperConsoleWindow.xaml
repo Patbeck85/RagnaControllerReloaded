@@ -25,6 +25,18 @@
             <Grid Grid.Row="0" Margin="0,0,0,10">
                 <TextBlock Text=">_ RAGNA_CONTROLLER LIVE DEBUG" FontFamily="JetBrains Mono, Consolas" FontSize="15" FontWeight="Bold" Foreground="{StaticResource Gold}" VerticalAlignment="Center" Effect="{StaticResource NeonGlow}"/>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <!-- TASK-2016: Log level filter -->
+                    <ComboBox x:Name="LogLevelFilterCombo" Height="32" Style="{StaticResource DarkComboBox}" SelectedIndex="0" SelectionChanged="LogLevelFilterCombo_SelectionChanged" FontSize="11" FontFamily="Segoe UI Variable, Segoe UI" Margin="0,0,8,0" AutomationProperties.Name="Log level filter">
+                        <ComboBoxItem Content="ALL"/>
+                        <ComboBoxItem Content="DBG"/>
+                        <ComboBoxItem Content="INF"/>
+                        <ComboBoxItem Content="WRN"/>
+                        <ComboBoxItem Content="ERR"/>
+                    </ComboBox>
+                    <!-- TASK-2016: Timestamp toggle -->
+                    <CheckBox x:Name="ChkShowTimestamps" Content="Timestamps" Foreground="{StaticResource TextSecondary}" FontSize="11" FontFamily="Segoe UI Variable, Segoe UI" IsChecked="True" Checked="ChkShowTimestamps_Checked" Unchecked="ChkShowTimestamps_Checked" Margin="0,0,8,0" AutomationProperties.Name="Show timestamps checkbox" ToolTip="Show/hide timestamps in log output"/>
+                    <!-- TASK-2016: Copy logs -->
+                    <Button Content="Copy" Click="BtnCopyLogs_Click" Foreground="{StaticResource Gold}" Background="Transparent" BorderThickness="1" BorderBrush="{StaticResource Gold}" Padding="14,4" Margin="0,0,10,0" FontFamily="JetBrains Mono, Consolas" FontSize="12" Cursor="Hand" Style="{StaticResource GhostButton}" AutomationProperties.Name="Copy console output to clipboard" ToolTip="Copy all log output to clipboard"/>
                     <Button Content="Clear" Click="BtnClear_Click" Foreground="{StaticResource Gold}" Background="Transparent" BorderThickness="1" BorderBrush="{StaticResource Gold}" Padding="14,4" Margin="0,0,10,0" FontFamily="JetBrains Mono, Consolas" FontSize="12" Cursor="Hand" Style="{StaticResource GhostButton}" AutomationProperties.Name="Clear console output"/>
                     <Button Content="&#xE8BB;" Click="BtnClose_Click" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close developer console" AutomationProperties.Name="Close developer console"/>
                 </StackPanel>
