@@ -250,8 +250,9 @@ namespace RagnaController.Profiles
                         if (i >= 0) Profiles[i] = p; else Profiles.Add(p);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine($@"[ProfileManager] Primary JSON corrupt for {f}: {ex.Message} — trying backup");
                     string bak = Path.ChangeExtension(f, ".bak.json");
                     if (!File.Exists(bak)) continue;
                     try
@@ -264,9 +265,9 @@ namespace RagnaController.Profiles
                             if (i >= 0) Profiles[i] = pBak; else Profiles.Add(pBak);
                         }
                     }
-                    catch (Exception ex)
+                    catch (Exception bakEx)
                     {
-                        System.Diagnostics.Debug.WriteLine($"[ProfileManager] Backup restore failed for {bak}: {ex.Message}");
+                        System.Diagnostics.Debug.WriteLine($@"[ProfileManager] Backup restore failed for {bak}: {bakEx.Message}");
                     }
                 }
             }
