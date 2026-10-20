@@ -262,5 +262,115 @@ namespace RagnaController.Views.Dialogs
             geo.Figures.Add(fig);
             return new Path { Data = geo };
         }
+
+        // TASK-2014: Configure radial wheel items
+        private void BtnConfigureRadial_Click(object sender, RoutedEventArgs e)
+        {
+            var configWin = new Window
+            {
+                Title = "Configure Daisy Wheel Items",
+                Width = 600,
+                Height = 500,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                Owner = this,
+                Background = TryFindResource("BgPrimary") as Brush ?? Brushes.Black,
+                WindowStyle = WindowStyle.SingleBorderWindow
+            };
+
+            var grid = new Grid { Margin = new Thickness(16) };
+            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+
+            var lbl = new TextBlock
+            {
+                Text = "Configure the 4 letters/symbols for each of the 8 wheel sectors:",
+                FontSize = 13,
+                Foreground = Brushes.White,
+                Margin = new Thickness(0, 0, 0, 12)
+            };
+            grid.Children.Add(lbl);
+
+            var scroll = new ScrollViewer { VerticalScrollBarVisibility = ScrollBarVisibility.Auto };
+            var panel = new StackPanel { Margin = new Thickness(0, 0, 0, 8) };
+            var sectorBoxes = new List<TextBox[]>();
+
+            var dirs = new[] { "N (↑)", "NE (↗)", "E (→)", "SE (↘)", "S (↓)", "SW (↙)", "W (←)", "NW (↖)" };
+
+            for (int s = 0; s < 8; s++)
+            {
+                var row = new DockPanel { Margin = new Thickness(0, 0, 0, 8), LastChildFill = true };
+                var dirLabel = new TextBlock
+                {
+                    Text = dirs[s],
+                    Foreground = Brushes.Gold,
+                    FontWeight = FontWeights.Bold,
+                    FontSize = 12,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    Width = 80
+                };
+                DockPanel.SetDock(dirLabel, Dock.Left);
+                row.Children.Add(dirLabel);
+
+                var boxes = new TextBox[4];
+                var boxPanel = new StackPanel { Orientation = Orientation.Horizontal };
+                for (int b = 0; b < 4; b++)
+                {
+                    var tb = new TextBox
+                    {
+                        Text = Sectors[s, b],
+                        Width = 40,
+                        Height = 32,
+                        FontSize = 12,
+                        FontWeight = FontWeights.Bold,
+                        FontFamily = new FontFamily("Consolas"),
+                        MaxLength = 2,
+                        VerticalContentAlignment = VerticalAlignment.Center,
+                        HorizontalContentAlignment = HorizontalAlignment.Center,
+                        Margin = new Thickness(4, 0, 0, 0),
+                        Background = Brushes.Transparent,
+                        Foreground = Brushes.White,
+                        BorderBrush = TryFindResource("BgBorder") as Brush ?? Brushes.Gray,
+                        BorderThickness = new Thickness(1)
+                    };
+                    boxes[b] = tb;
+                    boxPanel.Children.Add(tb);
+                }
+                DockPanel.SetDock(boxPanel, Dock.Right);
+                row.Children.Add(boxPanel);
+                panel.Children.Add(row);
+                sectorBoxes.Add(boxes);
+            }
+
+            scroll.Content = panel;
+            grid.Children.Add(scroll);
+            Grid.SetRow(scroll, 1);
+
+            var btnPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 12, 0, 0) };
+            var btnCancel = new Button { Content = "Cancel", Width = 90, Height = 34, Margin = new Thickness(0, 0, 12, 0) };
+            btnCancel.Click += (s, _) => configWin.Close();
+            var btnSave = new Button { Content = "Save Config", Width = 110, Height = 34, Background = TryFindResource("AccentBlue") as Brush ?? Brushes.Blue, BorderBrush = TryFindResource("AccentBlue") as Brush ?? Brushes.Blue, Foreground = Brushes.White };
+            btnSave.Click += (_, _) =>
+            {
+                for (int sec = 0; sec < 8; sec++)
+                {
+                    for (int b = 0; b < 4; b++)
+                    {
+                        var val = sectorBoxes[sec][b].Text?.Trim();
+                        if (!string.IsNullOrEmpty(val) && val.Length <= 2)
+                            Sectors[sec, b] = val;
+                    }
+                }
+                DrawWheel(); // Redraw with new labels
+                configWin.Close();
+            };
+            btnPanel.Children.Add(btnCancel);
+            btnPanel.Children.Add(btnSave);
+            grid.Children.Add(btnPanel);
+            Grid.SetRow(btnPanel, 2);
+
+            configWin.Content = grid;
+            configWin.ShowDialog();
+        }
     }
 }

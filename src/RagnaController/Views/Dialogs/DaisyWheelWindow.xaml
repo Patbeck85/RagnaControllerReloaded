@@ -11,39 +11,53 @@
     
 
     <!-- Root: Glassmorphism radial container with animated entrance -->
-    <Grid x:Name="RootGrid">
-        <Border Width="520" Height="520" HorizontalAlignment="Center" VerticalAlignment="Center"
-                Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusFull}"
-                BorderBrush="{StaticResource AccentBlue}" BorderThickness="2" Effect="{StaticResource BlueGlow}">
-            <Border.Background>
-                <RadialGradientBrush>
-                    <GradientStop Color="#00000000" Offset="0.4"/>
-                    <GradientStop Color="{StaticResource AccentBlue}" Offset="0.7"/>
-                    <GradientStop Color="{StaticResource AccentPurple}" Offset="0.85"/>
-                    <GradientStop Color="#00000000" Offset="1.0"/>
-                </RadialGradientBrush>
-            </Border.Background>
-            <Grid>
-                <Canvas x:Name="WheelCanvas" Width="500" Height="500" HorizontalAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Radial menu wheel"/>
+        <Grid x:Name="RootGrid">
+            <Border Width="520" Height="520" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusFull}"
+                    BorderBrush="{StaticResource AccentBlue}" BorderThickness="2" Effect="{StaticResource BlueGlow}">
+                <Border.Background>
+                    <RadialGradientBrush>
+                        <GradientStop Color="#00000000" Offset="0.4"/>
+                        <GradientStop Color="{StaticResource AccentBlue}" Offset="0.7"/>
+                        <GradientStop Color="{StaticResource AccentPurple}" Offset="0.85"/>
+                        <GradientStop Color="#00000000" Offset="1.0"/>
+                    </RadialGradientBrush>
+                </Border.Background>
+                <Grid>
+                    <Canvas x:Name="WheelCanvas" Width="500" Height="500" HorizontalAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Radial menu wheel"/>
                 
-                <Border Width="180" Height="180" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="{StaticResource RadiusFull}" 
-                        Background="{StaticResource BgSecondary}" BorderBrush="{StaticResource AccentBlue}" BorderThickness="2" Effect="{StaticResource BlueGlow}">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <TextBlock x:Name="CurrentTextBlock" Text="" Foreground="{StaticResource TextPrimary}" FontSize="20" FontWeight="Black" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="150" TextAlignment="Center"
-                                   FontFamily="Segoe UI Variable, Segoe UI"/>
-                        <TextBlock Text="▌" Foreground="{StaticResource AccentBlue}" FontSize="18" HorizontalAlignment="Center" Margin="0,4,0,0" Effect="{StaticResource BlueGlow}"/>
-                    </StackPanel>
-                </Border>
-            </Grid>
-        </Border>
+                    <Border Width="180" Height="180" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="{StaticResource RadiusFull}" 
+                            Background="{StaticResource BgSecondary}" BorderBrush="{StaticResource AccentBlue}" BorderThickness="2" Effect="{StaticResource BlueGlow}">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock x:Name="CurrentTextBlock" Text="" Foreground="{StaticResource TextPrimary}" FontSize="20" FontWeight="Black" HorizontalAlignment="Center" TextWrapping="Wrap" MaxWidth="150" TextAlignment="Center"
+                                       FontFamily="Segoe UI Variable, Segoe UI">
+                                <ToolTipService.ToolTip>
+                                    <ToolTip Content="Current selection — release triggers to send" 
+                                             Style="{StaticResource GlassPanel}"
+                                             Foreground="{StaticResource TextPrimary}"
+                                             FontSize="11"
+                                             Background="{StaticResource BgTertiary}"
+                                             BorderBrush="{StaticResource BgBorder}"/>
+                                </ToolTipService.ToolTip>
+                            </TextBlock>
+                            <TextBlock Text="▌" Foreground="{StaticResource AccentBlue}" FontSize="18" HorizontalAlignment="Center" Margin="0,4,0,0" Effect="{StaticResource BlueGlow}"/>
+                        </StackPanel>
+                    </Border>
+                
+                    <!-- Config button for Radial Items -->
+                    <Button x:Name="BtnConfigureRadial" Content="⚙ Configure Items" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16"
+                            Style="{StaticResource GhostButton}" Height="36" Width="140" FontSize="11"
+                            Click="BtnConfigureRadial_Click" ToolTip="Configure radial wheel items (letters/symbols per sector)" AutomationProperties.Name="Configure radial items"/>
+                </Grid>
+            </Border>
         
-        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,20">
-            <TextBlock Foreground="{StaticResource TextSecondary}" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Center"
-                       FontFamily="Segoe UI Variable, Segoe UI">
-                <Run Text="L3 = ⌫   R3 = Space   "/>
-                <Run Foreground="{StaticResource Live}" Text="Start = Send"/>
-                <Run Text="   B = Cancel"/>
-            </TextBlock>
-        </StackPanel>
-    </Grid>
-</Window>
+            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,70">
+                <TextBlock Foreground="{StaticResource TextSecondary}" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Center"
+                           FontFamily="Segoe UI Variable, Segoe UI">
+                    <Run Text="L3 = ⌫   R3 = Space   "/>
+                    <Run Foreground="{StaticResource Live}" Text="Start = Send"/>
+                    <Run Text="   B = Cancel"/>
+                </TextBlock>
+            </StackPanel>
+        </Grid>
+    </Window>
