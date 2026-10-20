@@ -23,17 +23,30 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-            <Ellipse x:Name="LiveDot" Width="8" Height="8" Fill="#FF39FF14" VerticalAlignment="Center" Margin="0,0,8,0"/>
-            <TextBlock Text="LIVE TELEMETRY" FontFamily="Consolas" FontSize="12" FontWeight="Bold"
-                       Foreground="#FFA1B0C5" VerticalAlignment="Center"/>
-            <TextBlock x:Name="UpdateStamp" Text="" Margin="12,0,0,0" FontFamily="Consolas" FontSize="9"
-                       Foreground="#FF555E6A" VerticalAlignment="Center"/>
-        </StackPanel>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                    <Ellipse x:Name="LiveDot" Width="8" Height="8" Fill="#FF39FF14" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="LIVE TELEMETRY" FontFamily="Consolas" FontSize="12" FontWeight="Bold"
+                               Foreground="#FFA1B0C5" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="UpdateStamp" Text="" Margin="12,0,0,0" FontFamily="Consolas" FontSize="9"
+                               Foreground="#FF555E6A" VerticalAlignment="Center"/>
+
+                    <!-- TASK-2020: Controls -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="20,0,0,0">
+                        <CheckBox x:Name="ChkAutoScroll" Content="Auto-Scroll" Foreground="#FFA1B0C5" FontSize="9" FontFamily="Consolas"
+                                              IsChecked="True" VerticalAlignment="Center" Margin="0,0,8,0" ToolTip="Auto-scroll to latest data" AutomationProperties.Name="Auto-scroll toggle"
+                                              Checked="ChkAutoScroll_Checked" Unchecked="ChkAutoScroll_Checked"/>
+                        <Button x:Name="BtnExportTelemetry" Content="Export" Click="BtnExportTelemetry_Click" Foreground="#FFA1B0C5" Background="Transparent"
+                                BorderThickness="1" BorderBrush="#FFA1B0C5" Padding="8,3" Margin="0,0,8,0" FontFamily="Consolas" FontSize="9"
+                                ToolTip="Export telemetry data to JSON" AutomationProperties.Name="Export telemetry data"/>
+                        <Button x:Name="BtnResetTelemetry" Content="Reset" Click="BtnResetTelemetry_Click" Foreground="#FFA1B0C5" Background="Transparent"
+                                BorderThickness="1" BorderBrush="#FFA1B0C5" Padding="8,3" FontFamily="Consolas" FontSize="9"
+                                ToolTip="Reset all telemetry counters" AutomationProperties.Name="Reset telemetry data"/>
+                    </StackPanel>
+                </StackPanel>
 
         <!-- Scrollable card stack -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
-            <StackPanel x:Name="CardStack"/>
-        </ScrollViewer>
+                <ScrollViewer x:Name="TelemetryScroll" Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="0,0,4,0">
+                    <StackPanel x:Name="CardStack"/>
+                </ScrollViewer>
     </Grid>
 </UserControl>

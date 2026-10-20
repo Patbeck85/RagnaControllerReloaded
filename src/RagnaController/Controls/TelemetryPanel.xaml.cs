@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -32,6 +34,9 @@ namespace RagnaController.Controls
         private readonly DispatcherTimer _timer;
         private HybridEngine? _engine;
         private bool _updatesStopped;
+        
+        // TASK-2020: Auto-scroll and export state
+        private bool _autoScrollEnabled = true;
 
         public TelemetryPanel()
         {
@@ -72,6 +77,70 @@ namespace RagnaController.Controls
             _timer.Tick -= OnTimerTick;
             IsVisibleChanged -= OnIsVisibleChanged;
             _engine = null;
+        }
+
+        // TASK-2020: Auto-scroll toggle
+        private void ChkAutoScroll_Checked(object sender, RoutedEventArgs e)
+        {
+            _autoScrollEnabled = ChkAutoScroll.IsChecked == true;
+        }
+
+        // TASK-2020: Export telemetry to JSON
+        private void BtnExportTelemetry_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                var exportData = new Dictionary<string, object>
+                {
+                    ["exportedAt"] = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ"),
+                    ["latencyTargetMs"] = LatencyTargetMs,
+                    ["cards"] = new List<object>()
+                };
+
+                foreach (var child in CardStack.Children)
+                {
+                    if (child is Border card)
+                    {
+                        var cardInfo = new Dictionary<string, object>();
+                        foreach (var gridChild in ((StackPanel)card.Child).Children)
+                        {
+                            if (gridChild is Grid rowGrid)
+                            {
+                                var label = ((TextBlock)rowGrid.Children[0]).Text;
+                                var value = ((TextBlock)rowGrid.Children[1]).Text;
+                                cardInfo[label] = value;
+                            }
+                        }
+                        var title = ((TextBlock)((Grid)((StackPanel)card.Child).Children[0]).Children[0]).Text;
+                        ((List<object>)exportData["cards"]).Add(new Dictionary<string, object> { ["title"] = title, ["data"] = cardInfo });
+                    }
+                }
+
+                string json = JsonSerializer.Serialize(exportData, new JsonSerializerOptions { WriteIndented = true });
+
+                var sfd = new Microsoft.Win32.SaveFileDialog
+                {
+                    Filter = "JSON files (*.json)|*.json|All files (*.*)|*.*",
+                    FileName = $"Telemetry_{DateTime.Now:yyyyMMdd_HHmmss}.json",
+                    DefaultExt = "json"
+                };
+                if (sfd.ShowDialog() == true)
+                {
+                    File.WriteAllText(sfd.FileName, json);
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[TelemetryPanel] Export error: {ex.Message}");
+            }
+        }
+
+        // TASK-2020: Reset telemetry data
+        private void BtnResetTelemetry_Click(object sender, RoutedEventArgs e)
+        {
+            CardStack.Children.Clear();
+            UpdateStamp.Text = "reset";
+            System.Diagnostics.Debug.WriteLine("[TelemetryPanel] Telemetry data reset by user");
         }
 
         private void RefreshNow()
@@ -116,6 +185,12 @@ namespace RagnaController.Controls
             CardStack.Children.Add(BuildGpuOverlayCard());
 
             UpdateStamp.Text = $"updated {DateTime.Now:HH:mm:ss}";
+
+            // TASK-2020: Auto-scroll to bottom when new data arrives
+            if (_autoScrollEnabled && TelemetryScroll != null)
+            {
+                TelemetryScroll.ScrollToBottom();
+            }
         }
 
         // ── Card 1: Input Latency (PERF-005) ────────────────────────────────
