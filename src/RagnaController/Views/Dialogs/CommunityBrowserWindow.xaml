@@ -34,12 +34,33 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="200"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}" Height="44">
                         <TextBox x:Name="SearchBox" TextChanged="SearchBox_TextChanged" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" Padding="14,10" FontSize="15" VerticalContentAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" AutomationProperties.Name="Search community profiles"/>
                     </Border>
-                    <Button Grid.Column="1" x:Name="BtnRefresh" Content="↻ Refresh" Click="BtnRefresh_Click" Style="{StaticResource GhostButton}" Width="110" Height="44" Margin="12,0,0,0" FontSize="14" AutomationProperties.Name="Refresh community profiles"/>
+                    <!-- TASK-2015: Category Filter -->
+                    <ComboBox x:Name="CategoryFilterCombo" Grid.Column="1" Height="44" Style="{StaticResource DarkComboBox}" SelectedIndex="0" SelectionChanged="CategoryFilterCombo_SelectionChanged" FontSize="13" FontFamily="Segoe UI Variable, Segoe UI" Margin="12,0,0,0" AutomationProperties.Name="Filter community profiles by category">
+                        <ComboBoxItem Content="All Categories"/>
+                        <ComboBoxItem Content="General"/>
+                        <ComboBoxItem Content="PvP"/>
+                        <ComboBoxItem Content="PvM"/>
+                        <ComboBoxItem Content="Support"/>
+                        <ComboBoxItem Content="Mage"/>
+                        <ComboBoxItem Content="Melee"/>
+                        <ComboBoxItem Content="Ranged"/>
+                    </ComboBox>
+                    <!-- TASK-2015: Sort -->
+                    <ComboBox x:Name="SortCombo" Grid.Column="2" Height="44" Style="{StaticResource DarkComboBox}" SelectedIndex="0" SelectionChanged="SortCombo_SelectionChanged" FontSize="13" FontFamily="Segoe UI Variable, Segoe UI" Margin="12,0,0,0" AutomationProperties.Name="Sort community profiles">
+                        <ComboBoxItem Content="Name (A-Z)"/>
+                        <ComboBoxItem Content="Name (Z-A)"/>
+                        <ComboBoxItem Content="Downloads (High)"/>
+                        <ComboBoxItem Content="Downloads (Low)"/>
+                        <ComboBoxItem Content="Date (Newest)"/>
+                    </ComboBox>
+                    <Button Grid.Column="3" x:Name="BtnRefresh" Content="↻ Refresh" Click="BtnRefresh_Click" Style="{StaticResource GhostButton}" Width="110" Height="44" Margin="12,0,0,0" FontSize="14" AutomationProperties.Name="Refresh community profiles"/>
                 </Grid>
             </Border>
 
@@ -54,6 +75,7 @@
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0">
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
@@ -64,8 +86,15 @@
                                             </StackPanel>
                                             <TextBlock Text="{Binding Author, StringFormat='by {0}'}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AccentGold}" Margin="0,0,0,10" FontFamily="Segoe UI Variable, Segoe UI"/>
                                             <TextBlock Text="{Binding Description}" FontSize="14" Foreground="{StaticResource TextSecondary}" TextWrapping="Wrap" FontFamily="Segoe UI Variable, Segoe UI"/>
+                                            <!-- TASK-2015: Category & Downloads -->
+                                            <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                                                <TextBlock Text="{Binding Category}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource AccentBlue}" FontFamily="Segoe UI Variable, Segoe UI" Margin="0,0,8,0"/>
+                                                <TextBlock Text="{Binding DownloadCount, StringFormat='↓ {0}'}" FontSize="10" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" FontFamily="Segoe UI Variable, Segoe UI"/>
+                                            </StackPanel>
                                         </StackPanel>
-                                        <Button Grid.Column="1" Content="↓ DOWNLOAD" Tag="{Binding ShareCode}" Click="BtnDownload_Click" Style="{StaticResource PrimaryButton}" Width="140" Height="44" VerticalAlignment="Center" Margin="18,0,0,0" FontSize="14" FontWeight="SemiBold"/>
+                                        <!-- TASK-2015: Favorite star -->
+                                        <Button x:Name="BtnFavorite" Content="★" Click="BtnFavorite_Click" Tag="{Binding ShareCode}" Style="{StaticResource GhostButton}" Width="44" Height="44" VerticalAlignment="Center" FontSize="16" AutomationProperties.Name="Toggle favorite" ToolTip="Add/remove favorite"/>
+                                        <Button Grid.Column="2" Content="↓ DOWNLOAD" Tag="{Binding ShareCode}" Click="BtnDownload_Click" Style="{StaticResource PrimaryButton}" Width="140" Height="44" VerticalAlignment="Center" Margin="18,0,0,0" FontSize="14" FontWeight="SemiBold"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>

@@ -35,6 +35,10 @@ namespace RagnaController.Views.Dialogs
         private List<CommunityEntry> _allEntries = new();
         private readonly object _lock = new(); // Thread safety for _allEntries
 
+        // TASK-2015: Sort & Category filter state
+        private string _sortMode = "Name (A-Z)";
+        private string _categoryFilter = "All Categories";
+
         /// <summary>
         /// Singleton-HttpClient (application lifetime) — public read-only for Unit-Tests (TECH-018).
         /// WICHTIG: NIE per Instanz/OnClosing disposten — only via <see cref="DisposeRegistryClient"/> beim App-Shutdown.
@@ -118,6 +122,39 @@ namespace RagnaController.Views.Dialogs
             CommunityList.Visibility = Visibility.Visible;
         }
 
+        // TASK-2015: Category filter changed
+        private void CategoryFilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CategoryFilterCombo.SelectedItem is ComboBoxItem item)
+                _categoryFilter = item.Content?.ToString() ?? "All Categories";
+            ApplyFilter();
+        }
+
+        // TASK-2015: Sort changed
+        private void SortCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (SortCombo.SelectedItem is ComboBoxItem item)
+                _sortMode = item.Content?.ToString() ?? "Name (A-Z)";
+            ApplyFilter();
+        }
+
+        // TASK-2015: Toggle favorite
+        private void BtnFavorite_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is string shareCode)
+            {
+                lock (_lock)
+                {
+                    var entry = _allEntries.FirstOrDefault(x => x.ShareCode == shareCode);
+                    if (entry != null)
+                    {
+                        entry.IsFavorite = !entry.IsFavorite;
+                        ApplyFilter();
+                    }
+                }
+            }
+        }
+
         private void ApplyFilter()
         {
             string query = SearchBox.Text.ToLowerInvariant();
@@ -125,12 +162,31 @@ namespace RagnaController.Views.Dialogs
             List<CommunityEntry> snapshot;
             lock (_lock) { snapshot = _allEntries; }
 
-            var filtered = string.IsNullOrWhiteSpace(query)
-                ? snapshot
-                : snapshot.Where(x =>
+            var filtered = snapshot.Where(x =>
+            {
+                // Category filter
+                if (_categoryFilter != "All Categories" && x.Category != _categoryFilter)
+                    return false;
+
+                // Search query
+                if (string.IsNullOrWhiteSpace(query))
+                    return true;
+
+                return
                     (!string.IsNullOrEmpty(x.Name) && x.Name.ToLowerInvariant().Contains(query)) ||
                     (!string.IsNullOrEmpty(x.Class) && x.Class.ToLowerInvariant().Contains(query)) ||
-                    (!string.IsNullOrEmpty(x.Author) && x.Author.ToLowerInvariant().Contains(query))).ToList();
+                    (!string.IsNullOrEmpty(x.Author) && x.Author.ToLowerInvariant().Contains(query));
+            }).ToList();
+
+            // TASK-2015: Sort
+            filtered = _sortMode switch
+            {
+                "Name (Z-A)" => filtered.OrderByDescending(x => x.Name).ToList(),
+                "Downloads (High)" => filtered.OrderByDescending(x => x.DownloadCount).ToList(),
+                "Downloads (Low)" => filtered.OrderBy(x => x.DownloadCount).ToList(),
+                "Date (Newest)" => filtered.OrderByDescending(x => x.CreatedAt).ToList(),
+                _ => filtered.OrderBy(x => x.Name).ToList()
+            };
 
             CommunityList.ItemsSource = filtered;
 
@@ -173,6 +229,15 @@ namespace RagnaController.Views.Dialogs
                         {
                             // Overwrite existing profile if name matches, or create new
                             _manager.AddAndSave(result.Profile);
+
+                            // TASK-2015: Increment download count
+                            lock (_lock)
+                            {
+                                var entry = _allEntries.FirstOrDefault(x => x.ShareCode == shareCode);
+                                if (entry != null)
+                                    entry.DownloadCount++;
+                            }
+                            ApplyFilter();
 
                             btn.Content = GetLocalizedString("CommunityBrowser_Installed");
                             btn.Foreground = TryFindResource("Live") as Brush ?? Brushes.LimeGreen;

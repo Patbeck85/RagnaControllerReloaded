@@ -12,5 +12,11 @@ namespace RagnaController.Models
         public string Author { get; set; } = "";
         public string Description { get; set; } = "";
         public string ShareCode { get; set; } = ""; // Can be the 6-char code or the full Gist ID
+
+        // TASK-2015: CommunityBrowser enhancements
+        public string Category { get; set; } = "General";
+        public int DownloadCount { get; set; } = 0;
+        public bool IsFavorite { get; set; } = false;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
