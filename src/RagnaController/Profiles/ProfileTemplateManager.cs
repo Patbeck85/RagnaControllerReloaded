@@ -253,15 +253,22 @@ namespace RagnaController.Profiles
             // Konvertiere ButtonMappings (Dictionary<string, VirtualKey> → Dictionary<ButtonKey, ButtonAction>)
             foreach (var kvp in template.ButtonMappings)
             {
-                var buttonKey = ButtonKey.Parse(kvp.Key);
-                if (buttonKey.Key != VirtualKey.None)
+                try
                 {
-                    profile.ButtonMappings[buttonKey] = new ButtonAction
+                    var buttonKey = ButtonKey.Parse(kvp.Key);
+                    if (buttonKey.Key != VirtualKey.None)
                     {
-                        Type = ActionType.Key,
-                        Key = kvp.Value,
-                        Label = $"Quick Key {kvp.Key}"
-                    };
+                        profile.ButtonMappings[buttonKey] = new ButtonAction
+                        {
+                            Type = ActionType.Key,
+                            Key = kvp.Value,
+                            Label = $"Quick Key {kvp.Key}"
+                        };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger?.Invoke($"[ProfileTemplateManager] Ungültiger Button-Mapping-Key '{kvp.Key}' in Vorlage '{template.Id}': {ex.Message}");
                 }
             }
 
