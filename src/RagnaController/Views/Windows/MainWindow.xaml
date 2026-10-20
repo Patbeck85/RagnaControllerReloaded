@@ -8,6 +8,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RagnaController"
+        xmlns:views="clr-namespace:RagnaController.Views.Windows"
         xmlns:ctrl="clr-namespace:RagnaController.Controls"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:core="clr-namespace:RagnaController.Core"
@@ -19,6 +20,13 @@
         MouseLeftButtonDown="Window_MouseLeftButtonDown">
     <Window.Resources>
         <local:ClassToIconConverter x:Key="ClassToIconConverter"/>
+        <DataTemplate x:Key="ClientTabTemplate" DataType="{x:Type views:ClientTabItem}">
+            <StackPanel Orientation="Horizontal" Margin="4,0">
+                <Ellipse Width="8" Height="8" Fill="{Binding StatusColor}" VerticalAlignment="Center" Margin="0,0,8,0" Effect="{StaticResource GoldGlow}"/>
+                <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center" FontSize="12" FontWeight="Medium" Foreground="{StaticResource TextPrimary}"/>
+                <TextBlock Text="{Binding ProfileName}" VerticalAlignment="Center" FontSize="10" Foreground="{StaticResource TextTertiary}" Margin="8,0,0,0"/>
+            </StackPanel>
+        </DataTemplate>
     </Window.Resources>
 
     
@@ -40,40 +48,74 @@
                 </Grid.RowDefinitions>
 
                 <!-- Top Bar (Modern Header) -->
-                <Grid x:Name="TopBar" Grid.Row="0" Height="56" Background="Transparent" Margin="16,12,16,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                                                <Grid x:Name="TopBar" Grid.Row="0" Height="56" Background="Transparent" Margin="16,12,16,0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>      <!-- 0: Brand + Status -->
+                                                        <ColumnDefinition Width="Auto"/>      <!-- 1: Client Tabs -->
+                                                        <ColumnDefinition Width="Auto"/>      <!-- 2: Layer Tabs -->
+                                                        <ColumnDefinition Width="*"/>         <!-- 3: Right panel (spacer) -->
+                                                        <ColumnDefinition Width="Auto"/>      <!-- 4: Profile/Client/Window controls -->
+                                                    </Grid.ColumnDefinitions>
 
-                    <!-- Brand + Status -->
-                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Border Width="4" Height="28" Background="{StaticResource AccentBlue}" Effect="{StaticResource BlueGlow}" Margin="0,0,12,0" CornerRadius="2"/>
-                        <TextBlock Text="RAGNACONTROLLER" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
-                        <Border Style="{StaticResource GlassPanel}" Margin="16,0,0,0" Padding="10,4" CornerRadius="{StaticResource RadiusSm}">
-                            <StackPanel Orientation="Horizontal">
-                                <Ellipse Width="8" Height="8" Fill="{StaticResource LiveColor}" VerticalAlignment="Center" Margin="0,0,6,0" Effect="{StaticResource GoldGlow}"/>
-                                <TextBlock Text="SYSTEM ONLINE" Foreground="{StaticResource LiveColor}" FontSize="9" FontWeight="SemiBold" FontFamily="Segoe UI Variable, Segoe UI" VerticalAlignment="Center" Typography.Capitals="AllSmallCaps"/>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
+                                                    <!-- Brand + Status -->
+                                                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                                        <Border Width="4" Height="28" Background="{StaticResource AccentBlue}" Effect="{StaticResource BlueGlow}" Margin="0,0,12,0" CornerRadius="2"/>
+                                                        <TextBlock Text="RAGNACONTROLLER" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
+                                                        <Border Style="{StaticResource GlassPanel}" Margin="16,0,0,0" Padding="10,4" CornerRadius="{StaticResource RadiusSm}">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <Ellipse Width="8" Height="8" Fill="{StaticResource LiveColor}" VerticalAlignment="Center" Margin="0,0,6,0" Effect="{StaticResource GoldGlow}"/>
+                                                                <TextBlock Text="SYSTEM ONLINE" Foreground="{StaticResource LiveColor}" FontSize="9" FontWeight="SemiBold" FontFamily="Segoe UI Variable, Segoe UI" VerticalAlignment="Center" Typography.Capitals="AllSmallCaps"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </StackPanel>
 
-                    <!-- Center: Tab Navigation (Modern Pill Style) -->
-                    <Border Grid.Column="1" Style="{StaticResource GlassPanel}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="4" CornerRadius="{StaticResource RadiusLg}">
-                        <StackPanel x:Name="TabNavigation" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Button x:Name="TabBtnBase" Content="Base" Style="{StaticResource TabButton}" Click="TabBase_Click" Tag="Base" AutomationProperties.Name="Base tab"/>
-                            <Button x:Name="TabBtnL1" Content="L1+" Style="{StaticResource TabButton}" Click="TabL1_Click" Tag="L1+" AutomationProperties.Name="L1+ tab"/>
-                            <Button x:Name="TabBtnR1" Content="R1+" Style="{StaticResource TabButton}" Click="TabR1_Click" Tag="R1+" AutomationProperties.Name="R1+ tab"/>
-                            <Button x:Name="TabBtnL2" Content="L2+" Style="{StaticResource TabButton}" Click="TabL2_Click" Tag="L2+" AutomationProperties.Name="L2+ tab"/>
-                            <Button x:Name="TabBtnR2" Content="R2+" Style="{StaticResource TabButton}" Click="TabR2_Click" Tag="R2+" AutomationProperties.Name="R2+ tab"/>
-                            <Button x:Name="TabBtnHealth" Content="Health" Style="{StaticResource TabButton}" Click="TabHealth_Click" Tag="Health" AutomationProperties.Name="Health tab"/>
-                            <Button x:Name="TabBtnTelemetry" Content="Telemetry" Style="{StaticResource TabButton}" Click="TabTelemetry_Click" Tag="Telemetry" AutomationProperties.Name="Telemetry tab"/>
-                        </StackPanel>
-                    </Border>
+                                                    <!-- Client Tabs (Multi-Client) -->
+                                                    <Border Grid.Column="1" Style="{StaticResource GlassPanel}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="4" CornerRadius="{StaticResource RadiusLg}" Margin="12,0,12,0">
+                                                        <TabControl x:Name="ClientTabControl" 
+                                                                    ItemTemplate="{StaticResource ClientTabTemplate}"
+                                                                    SelectionChanged="ClientTabControl_SelectionChanged"
+                                                                    Background="Transparent" BorderThickness="0"
+                                                                    Padding="0" Margin="0"
+                                                                    AutomationProperties.Name="Client tabs">
+                                                            <TabControl.ItemContainerStyle>
+                                                                <Style TargetType="TabItem" BasedOn="{StaticResource {x:Type TabItem}}">
+                                                                    <Setter Property="Template">
+                                                                        <Setter.Value>
+                                                                            <ControlTemplate TargetType="TabItem">
+                                                                                <Border x:Name="TabBorder" Background="Transparent" CornerRadius="{StaticResource RadiusMd}" Padding="12,6" Margin="2">
+                                                                                    <ContentPresenter ContentSource="Header" VerticalAlignment="Center"/>
+                                                                                </Border>
+                                                                                <ControlTemplate.Triggers>
+                                                                                    <Trigger Property="IsSelected" Value="True">
+                                                                                        <Setter TargetName="TabBorder" Property="Background" Value="{StaticResource AccentBlueDim}"/>
+                                                                                    </Trigger>
+                                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                                        <Setter TargetName="TabBorder" Property="Background" Value="{StaticResource BgTertiary}"/>
+                                                                                    </Trigger>
+                                                                                </ControlTemplate.Triggers>
+                                                                            </ControlTemplate>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Style>
+                                                            </TabControl.ItemContainerStyle>
+                                                        </TabControl>
+                                                    </Border>
+
+                                                    <!-- Center: Layer Tab Navigation (Modern Pill Style) -->
+                                                    <Border Grid.Column="2" Style="{StaticResource GlassPanel}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="4" CornerRadius="{StaticResource RadiusLg}" Margin="0,0,0,0" x:Name="LayerTabNavigationBorder">
+                                                            <StackPanel x:Name="TabNavigation" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                <Button x:Name="TabBtnBase" Content="Base" Style="{StaticResource TabButton}" Click="TabBase_Click" Tag="Base" AutomationProperties.Name="Base tab"/>
+                                                                <Button x:Name="TabBtnL1" Content="L1+" Style="{StaticResource TabButton}" Click="TabL1_Click" Tag="L1+" AutomationProperties.Name="L1+ tab"/>
+                                                                <Button x:Name="TabBtnR1" Content="R1+" Style="{StaticResource TabButton}" Click="TabR1_Click" Tag="R1+" AutomationProperties.Name="R1+ tab"/>
+                                                                <Button x:Name="TabBtnL2" Content="L2+" Style="{StaticResource TabButton}" Click="TabL2_Click" Tag="L2+" AutomationProperties.Name="L2+ tab"/>
+                                                                <Button x:Name="TabBtnR2" Content="R2+" Style="{StaticResource TabButton}" Click="TabR2_Click" Tag="R2+" AutomationProperties.Name="R2+ tab"/>
+                                                                <Button x:Name="TabBtnHealth" Content="Health" Style="{StaticResource TabButton}" Click="TabHealth_Click" Tag="Health" AutomationProperties.Name="Health tab"/>
+                                                                <Button x:Name="TabBtnTelemetry" Content="Telemetry" Style="{StaticResource TabButton}" Click="TabTelemetry_Click" Tag="Telemetry" AutomationProperties.Name="Telemetry tab"/>
+                                                            </StackPanel>
+                                                        </Border>
 
                     <!-- Right: Profile Selector + Client Switcher + Window Controls -->
-                                        <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0">
+                                        <StackPanel Grid.Column="4" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0">
                                             <Border x:Name="ProfileSelectorBorder" Style="{StaticResource GlassPanel}" Padding="0,0,8,0" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,12,0" Effect="{StaticResource CardShadow}">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>

@@ -17,11 +17,11 @@ namespace RagnaController.Views.Editors
     /// </summary>
     public partial class ButtonRemappingWindow : Window
     {
-        private readonly HybridEngine _engine;
+        private readonly EngineOrchestrator _engine;
         private ProfileManager _manager;
         private bool _hasUnsavedChanges = false;
 
-        public ButtonRemappingWindow(HybridEngine engine, ProfileManager manager)
+        public ButtonRemappingWindow(EngineOrchestrator engine, ProfileManager manager)
         {
             InitializeComponent();
             _engine = engine;

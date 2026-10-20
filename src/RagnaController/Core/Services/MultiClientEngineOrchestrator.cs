@@ -52,6 +52,15 @@ namespace RagnaController.Core
             }
         }
 
+        // Public accessors for shared services
+        public ControllerService SharedControllerService => _sharedControllerService;
+        public ProfileManager SharedProfileManager => _sharedProfileManager;
+        public Models.Settings SharedSettings => _sharedSettings;
+        public IMessenger Messenger => _messenger;
+        public AdvancedLogger Logger => _logger;
+        public MultiClientInputRouter MultiClientRouter => _multiClientRouter;
+        public MultiClientWindowTracker WindowTracker => _windowTracker;
+
         /// <summary>Total number of managed instances.</summary>
         public int TotalCount
         {

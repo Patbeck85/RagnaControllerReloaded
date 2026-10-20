@@ -735,18 +735,72 @@ namespace RagnaController.Core
         }
 
         /// <summary>
-        /// Resumes the tick loop after a pause.
-        /// </summary>
-        public void Resume()
-        {
-            IsPaused = false;
-            StatusChanged?.Invoke(EngineStatus.Running);
-        }
+                /// Resumes the tick loop after a pause.
+                /// </summary>
+                public void Resume()
+                {
+                    IsPaused = false;
+                    StatusChanged?.Invoke(EngineStatus.Running);
+                }
 
-        /// <summary>
-        /// Shuts down the engine and releases all resources.
-        /// </summary>
-        public void Shutdown()
+                /// <summary>
+                /// Alias for Controller property for compatibility with HybridEngine API.
+                /// </summary>
+                public ControllerService ControllerSvc => Controller;
+
+                /// <summary>
+                        /// Applies game mode (Renewal / Pre-Renewal) to current profile.
+                        /// </summary>
+                        public void ApplyGameMode(bool isRenewal)
+                        {
+                            _profileApplier.ApplyGameMode(isRenewal);
+                        }
+
+                        /// <summary>
+                        /// Loads a profile into the engine (delegates to ProfileApplier).
+                        /// </summary>
+                        public void LoadProfile(Profile p, bool autoDetectClass = false)
+                        {
+                            _profileApplier.LoadProfile(p, autoDetectClass);
+                        }
+
+                        /// <summary>
+                        /// Starts controller calibration (samples stick drift for 3 seconds).
+                        /// </summary>
+                        public async Task StartCalibrationAsync()
+                        {
+                            var controller = Controller;
+                            if (controller == null) return;
+
+                            // Create a temporary InputReader for calibration
+                            var inputReader = new InputReader(controller);
+                            float maxDrift = 0f;
+
+                            // Sample for 3 seconds
+                            for (int i = 0; i < 30; i++)
+                            {
+                                var input = inputReader.Read();
+                                if (input.IsConnected)
+                                {
+                                    float highest = Math.Max(Math.Max(Math.Abs(input.LeftX), Math.Abs(input.LeftY)),
+                                                             Math.Max(Math.Abs(input.RightX), Math.Abs(input.RightY)));
+                                    if (highest > maxDrift) maxDrift = highest;
+                                }
+                                await Task.Delay(100);
+                            }
+
+                            // Apply calibration result
+                            if (CurrentProfile != null)
+                            {
+                                CurrentProfile.Deadzone = Math.Max(0.1f, maxDrift * 1.2f);
+                                _profileApplier.LiveUpdateDeadzone(CurrentProfile.Deadzone);
+                            }
+                        }
+
+                /// <summary>
+                /// Shuts down the engine and releases all resources.
+                /// </summary>
+                public void Shutdown()
                                         {
                                             if (_isShutDown) return; // idempotent: Dispose() ruft Shutdown() erneut auf
                                             _isShutDown = true;

@@ -1,8 +1,10 @@
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -20,15 +22,45 @@ using RagnaController.Views.Editors;
 namespace RagnaController.Views.Windows
 {
     /// <summary>
-/// MainWindow — Primary application window with tab navigation and status display.
-/// Hosts the main UI layout, engine status indicators, and window switching controls.
-/// </summary>
-public partial class MainWindow : Window
+    /// TASK-2106: ClientTabItem — represents a single RO client in the multi-client tab bar.
+    /// </summary>
+    public class ClientTabItem : INotifyPropertyChanged
     {
-        private readonly HybridEngine   _engine;
+        public IntPtr Hwnd { get; set; }
+        public string ProcessName { get; set; } = "";
+        public uint Pid { get; set; }
+        public string DisplayName => $"{ProcessName} (PID {Pid})";
+        public string ProfileName { get; set; } = "—";
+
+        private EngineStatus _status = EngineStatus.Stopped;
+        public EngineStatus Status
+        {
+            get => _status;
+            set { _status = value; OnPropertyChanged(nameof(Status)); OnPropertyChanged(nameof(StatusColor)); }
+        }
+
+        public System.Windows.Media.Brush StatusColor => Status switch
+        {
+            EngineStatus.Running => System.Windows.Media.Brushes.LimeGreen,
+            EngineStatus.NoController => System.Windows.Media.Brushes.Gray,
+            _ => System.Windows.Media.Brushes.Red
+        };
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+
+    /// <summary>
+    /// MainWindow — Primary application window with multi-client tab navigation and status display.
+    /// Hosts the main UI layout, engine status indicators, and window switching controls.
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        // ── Multi-Client Engine Orchestrator ──
+        private readonly MultiClientEngineOrchestrator _multiEngine;
         private readonly ProfileManager _manager;
-        private Settings       _settings = Settings.Load();
-        private readonly System.Collections.Generic.List<IDisposable> _subs = new();
+        private Settings _settings = Settings.Load();
+        private readonly List<IDisposable> _subs = new();
         private bool _isMiniMode = false;
         private bool _isBigPictureMode = false;
         private readonly List<string> _logBuffer = new();
@@ -36,6 +68,10 @@ public partial class MainWindow : Window
         private bool _wasFocusLocked;
         private readonly ToastService _toastService = new();
         private readonly ProfileService _profileService;
+
+        // Client Tab Management
+        public ObservableCollection<ClientTabItem> ClientTabs { get; } = new();
+        private ClientTabItem? _selectedClientTab;
 
         // ── TASK-1604: Multi-Client Client-Switcher ──
         private readonly INativeMethods _nativeMethods = new NativeMethodsImpl();
@@ -57,9 +93,9 @@ public partial class MainWindow : Window
         private GamepadUiNavigator? _navigator;
 
         // Event handler delegates for proper cleanup in Window_Closing (MEMORY-001: no leaked references)
-        private Action<EngineStatus>? _statusChangedHandler;
+        private Action<EngineInstance, EngineStatus>? _statusChangedHandler;
         private Action<int>? _profileQuickSwitchHandler;
-        private Action<string>? _logMessageHandler;
+        private Action<EngineInstance, string>? _logMessageHandler;
         private Action<string>? _batteryChangedHandler;
         private Action<string>? _controllerConnectedHandler;
         private Action? _controllerDisconnectedHandler;
@@ -70,26 +106,31 @@ public partial class MainWindow : Window
         private Border? ToastBorder;
         private TextBlock? ToastText;
         private SolidColorBrush? ToastBg;
-
 #pragma warning restore CS0649
 
-        public MainWindow(HybridEngine engine, ProfileManager manager, MainViewModel vm)
+        /// <summary>
+        /// Constructor for multi-client mode (uses MultiClientEngineOrchestrator)
+        /// </summary>
+        public MainWindow(MultiClientEngineOrchestrator multiEngine, ProfileManager manager, MainViewModel vm)
         {
-            _engine  = engine;
+            _multiEngine = multiEngine;
             _manager = manager;
-            _vm     = vm; // Assign the passed ViewModel
+            _vm = vm;
             InitializeComponent();
             _toastService.Initialize(ToastBorder!, ToastText!, ToastBg!);
             App.InitializeToastService(_toastService);
-            _profileService = new ProfileService(_manager, _settings, _engine, msg => ShowToast(msg));
+            _profileService = new ProfileService(_manager, _settings, null, msg => ShowToast(msg));
             DataContext = vm;
+
+            // Bind ClientTabs to TabControl
+            ClientTabControl.ItemsSource = ClientTabs;
 
             // UX-019: Keyboard shortcuts
             PreviewKeyDown += Window_PreviewKeyDown;
 
             // UX-012: Gamepad-Navigation (DPad/Tab) — vor der VM-Guard-Klausel initialisieren,
             // damit auch bei early return der Navigator sauber in Window_Closing disposed is.
-            _navigator = new GamepadUiNavigator(_engine.ControllerSvc) { ActiveWindow = this };
+            _navigator = new GamepadUiNavigator(_multiEngine.SharedControllerService) { ActiveWindow = this };
 
             // Initialize ViewModel first before setting up services
             if (vm == null)
@@ -101,182 +142,168 @@ public partial class MainWindow : Window
             _discordRpc = new DiscordRpcService(_settings);
             _ttsService = new TtsAnnouncerService(_settings);
 
-            _statusChangedHandler = (s) => Dispatcher.BeginInvoke(() =>
-            {
-                // Status displayed in Health tab panel
-                _vm?.ApplyEngineStatus(s, _engine.ControllerName);
-            });
-            _engine.StatusChanged += _statusChangedHandler;
+            // Subscribe to MultiClientEngineOrchestrator events
+            _multiEngine.ClientStarted += (sender, instance) => Dispatcher.BeginInvoke(() => AddClientTab(instance));
+            _multiEngine.ClientStopped += (sender, hwnd) => Dispatcher.BeginInvoke(() => RemoveClientTab(hwnd));
+            _multiEngine.LogMessage += (instance, msg) => Dispatcher.BeginInvoke(() => ShowToast($"[{instance.ProcessName}] {msg}"));
 
-            _subs.Add(_engine.Messenger.Subscribe<SnapshotReadyMessage>(msg =>
-            {
-                Dispatcher.BeginInvoke(() =>
-                {
-                    _vm?.ApplySnapshot(msg.Snapshot);
+            // Subscribe to active client instance events
+            _multiEngine.ClientStarted += (sender, instance) => SubscribeToInstanceEvents(instance);
 
-                    if (msg.Snapshot.FocusLocked && !_wasFocusLocked)
-                    {
-                        _ttsService?.Speak("Game Paused");
-                        _wasFocusLocked = true;
-                    }
-                    else if (!msg.Snapshot.FocusLocked && _wasFocusLocked)
-                    {
-                        _ttsService?.Speak("Game Resumed");
-                        _wasFocusLocked = false;
-                    }
-                    if (_isMiniMode && _miniWindow != null)
-                    {
-                        // Battery read must happen on UI thread — SDL calls aren't thread-safe
-                        // from the engine tick context. Cache via Dispatcher.
-                        Dispatcher.BeginInvoke(() =>
-                        {
-                            string pName = (ProfileCombo?.SelectedItem is Profiles.Profile pf2) ? pf2.Name : "—";
-                            string battery = _engine.ControllerSvc?.BatteryLevel ?? "-";
-                            _miniWindow?.UpdateSnapshot(msg.Snapshot, pName, _engine.IsRunning, battery);
-                        });
-                    }
-                });
-            }));
-
-            _subs.Add(_engine.Messenger.Subscribe<EngineStatusMessage>(msg =>
-            {
-                Dispatcher.BeginInvoke(() =>
-                {
-                    _vm?.ApplyEngineStatus(msg.Status, msg.ControllerName);
-                });
-            }));
-
-            _subs.Add(_engine.Messenger.Subscribe<BatteryChangedMessage>(msg =>
-            {
-                // Battery changed - handled internally
-            }));
-
-            _subs.Add(_engine.Messenger.Subscribe<BuffWarningMessage>(msg => Dispatcher.BeginInvoke(() =>
-            {
-                _ttsService?.Speak($"Warning: {msg.ActionLabel} expiring.");
-                ShowToast($"⏳ Buff expiring soon: {msg.ActionLabel}", isError: true);
-            })));
-
-            _profileQuickSwitchHandler = delta => Dispatcher.BeginInvoke(() =>
-            {
-                if (_manager.Profiles.Count == 0) return;
-                int idx  = _manager.Profiles.IndexOf(ProfileCombo.SelectedItem as Profile ?? _manager.Profiles[0]);
-                int next = (idx + delta + _manager.Profiles.Count) % _manager.Profiles.Count;
-                ProfileCombo.SelectedItem = _manager.Profiles[next];
-                if (ProfileCombo.SelectedItem is Profile p)
-                {
-                    _vm?.UpdateClassImage(p.Class);
-                }
-            });
-            _engine.ProfileQuickSwitch += _profileQuickSwitchHandler;
-
-            _logMessageHandler = msg => Dispatcher.BeginInvoke(() =>
-            {
-                if (LogTextBlock != null)
-                {
-                    _logBuffer.Add(msg);
-                    if (_logBuffer.Count > 500) _logBuffer.RemoveRange(0, 100);
-                    ApplyLogFilter();
-                    LogScrollViewer?.ScrollToEnd();
-                }
-                if (LogTextBlock2 != null)
-                {
-                    LogScrollViewer2?.ScrollToEnd();
-                }
-            });
-            _engine.LogMessage += _logMessageHandler;
-
-            _batteryChangedHandler = level => Dispatcher.BeginInvoke(() =>
-            {
-                // Battery level updated - could show in status or toast
-            });
-            _engine.BatteryChanged += _batteryChangedHandler;
-
-            _controllerConnectedHandler = name => Dispatcher.BeginInvoke(() =>
-            {
-                _ttsService?.Speak("Controller connected");
-                SetFooterButtonsEnabled(true);
-                
-                // Show controller test window when controller connects
-                ShowControllerTestWindow();
-                
-                // Refresh health tab if visible
-                if (_activeTabPanel == PanelHealth)
-                    PopulateTabPanel(PanelHealth);
-            });
-            _engine.ControllerConnected += _controllerConnectedHandler;
-
-            _controllerDisconnectedHandler = () => Dispatcher.BeginInvoke(() =>
-            {
-                _ttsService?.Speak("Controller disconnected");
-                SetFooterButtonsEnabled(false);
-                
-                // Close controller test window when controller disconnects
-                _controllerTestWindow?.Close();
-                _controllerTestWindow = null;
-                
-                // Refresh health tab if visible
-                if (_activeTabPanel == PanelHealth)
-                    PopulateTabPanel(PanelHealth);
-            });
-            _engine.ControllerDisconnected += _controllerDisconnectedHandler;
-
-            _restoreMainWindowRequestedHandler = () => Dispatcher.BeginInvoke(() =>
-            {
-                if (_isMiniMode) SwitchFromMiniMode();
-            });
-            _engine.RestoreMainWindowRequested += _restoreMainWindowRequestedHandler;
-
-            // ── Profile Dropdown initialisieren (via ProfileService) ─────────────
-            ProfileCombo.ItemsSource = _profileService.GetAllProfiles();
-
-            // Letztes Profil wiederherstellen or erstes nehmen
-            var lastProfile = _profileService.LoadLastOrFirst();
-            if (lastProfile != null)
-            {
-                ProfileCombo.SelectedItem = lastProfile;
-                _profileService.ApplyProfile(lastProfile);
-            }
-
-            // Initialize tab button mapping
-            InitTabBtnMap();
-
-            // UI-011: Telemetrie-Panel with Engine verdrahten (einmalig)
-            if (TelemetryPanelControl != null)
-                TelemetryPanelControl.SetEngine(_engine);
-
-            // Select default tab (Base)
-            SelectTab(PanelBase, null);
-
-            // ── TASK-1604: Multi-Client Router initialisieren ──
+            // Initialize multi-client services
             _windowTracker = new MultiClientWindowTracker(_nativeMethods, _processNames);
             _multiClientRouter = new MultiClientInputRouter(_nativeMethods, _processNames, _windowTracker);
             RefreshClientList();
 
-            // ── TASK-1611: Profil-Preset-Manager initialisieren ──
+            // Initialize preset manager
             _presetManager = new ProfilePresetManager();
             RefreshPresetList();
 
-            // ── TASK-1612: Charakter-Klasse Auswahl initialisieren ──
+            // Initialize character class list
             RefreshClassList();
         }
 
-        public void SwitchFromMiniMode()
-                {
-                    _isMiniMode = false;
-                    Show(); WindowState = WindowState.Normal; Activate();
-                    if (_miniWindow != null)
-                    {
-                        var w = _miniWindow;
-                        _miniWindow = null;
-                        try { w.Close(); } 
-                        catch (Exception ex)
+        /// <summary>
+        /// Constructor for single-client mode (uses HybridEngine) - backwards compatibility
+        /// </summary>
+        public MainWindow(HybridEngine engine, ProfileManager manager, MainViewModel vm)
+        {
+            _manager = manager;
+            _vm = vm;
+            InitializeComponent();
+            _toastService.Initialize(ToastBorder!, ToastText!, ToastBg!);
+            App.InitializeToastService(_toastService);
+            _profileService = new ProfileService(_manager, _settings, engine, msg => ShowToast(msg));
+            DataContext = vm;
+
+            // Bind ClientTabs to TabControl (empty in single-client mode)
+            ClientTabControl.ItemsSource = ClientTabs;
+
+            // UX-019: Keyboard shortcuts
+            PreviewKeyDown += Window_PreviewKeyDown;
+
+            // UX-012: Gamepad-Navigation (DPad/Tab)
+            _navigator = new GamepadUiNavigator(engine.ControllerSvc) { ActiveWindow = this };
+
+            if (vm == null)
+            {
+                ShowToast("ViewModel not initialized", isError: true);
+                return;
+            }
+
+            _discordRpc = new DiscordRpcService(_settings);
+            _ttsService = new TtsAnnouncerService(_settings);
+
+            // Initialize multi-client services (for client switcher UI)
+            _windowTracker = new MultiClientWindowTracker(_nativeMethods, _processNames);
+            _multiClientRouter = new MultiClientInputRouter(_nativeMethods, _processNames, _windowTracker);
+            RefreshClientList();
+
+            // Initialize preset manager
+            _presetManager = new ProfilePresetManager();
+            RefreshPresetList();
+
+            // Initialize character class list
+            RefreshClassList();
+        }
+
+        private void SubscribeToInstanceEvents(EngineInstance instance)
+        {
+            instance.StatusChanged += (inst, status) => Dispatcher.BeginInvoke(() =>
+            {
+                var tab = ClientTabs.FirstOrDefault(t => t.Hwnd == inst.ClientHwnd);
+                if (tab != null) tab.Status = status;
+            });
+
+            instance.SnapshotUpdated += (inst, snap) => Dispatcher.BeginInvoke(() =>
                         {
-                            System.Diagnostics.Debug.WriteLine($"[MainWindow] SwitchFromMiniMode Close failed: {ex.Message}");
-                            ShowToast($"Mini-Modus schließen fehlgeschlagen: {ex.Message}", isError: true);
-                        }
-                    }
+                            if (inst.ClientHwnd == _selectedClientTab?.Hwnd)
+                            {
+                                _vm?.ApplySnapshot(snap);
+                            }
+                        });
+
+                        instance.LogMessage += (inst, msg) => Dispatcher.BeginInvoke(() =>
+                        {
+                            if (inst.ClientHwnd == _selectedClientTab?.Hwnd)
+                            {
+                                _logBuffer.Add($"[{inst.ProcessName}] {msg}");
+                                if (_logBuffer.Count > 500) _logBuffer.RemoveRange(0, 100);
+                                ApplyLogFilter();
+                                LogScrollViewer?.ScrollToEnd();
+                            }
+                        });
+        }
+
+        private void AddClientTab(EngineInstance instance)
+        {
+            var tab = new ClientTabItem
+            {
+                Hwnd = instance.ClientHwnd,
+                ProcessName = instance.ProcessName,
+                Pid = instance.ProcessId,
+                Status = instance.Status
+            };
+            ClientTabs.Add(tab);
+
+            // Auto-select first tab
+            if (ClientTabs.Count == 1)
+            {
+                ClientTabControl.SelectedItem = tab;
+            }
+        }
+
+        private void RemoveClientTab(IntPtr hwnd)
+        {
+            var tab = ClientTabs.FirstOrDefault(t => t.Hwnd == hwnd);
+            if (tab != null) ClientTabs.Remove(tab);
+        }
+
+        private void ClientTabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ClientTabControl.SelectedItem is ClientTabItem selectedTab)
+            {
+                _selectedClientTab = selectedTab;
+                var instance = _multiEngine.GetInstance(selectedTab.Hwnd);
+                if (instance != null)
+                {
+                    // Update MultiClientInputRouter to route to this client
+                    _multiClientRouter.SetPreferredClientHwnd(selectedTab.ProcessName, selectedTab.Hwnd);
+                    _multiClientRouter.SetActiveProcessName(selectedTab.ProcessName);
+
+                    // Update UI for selected client
+                    UpdateUIForClient(instance);
                 }
+            }
+        }
+
+        private void UpdateUIForClient(EngineInstance instance)
+        {
+            // Update profile combo for this client
+            ProfileCombo.ItemsSource = _profileService.GetAllProfiles();
+            var profile = _profileService.LoadLastOrFirst();
+            if (profile != null)
+            {
+                ProfileCombo.SelectedItem = profile;
+            }
+        }
+
+        public void SwitchFromMiniMode()
+        {
+            _isMiniMode = false;
+            Show(); WindowState = WindowState.Normal; Activate();
+            if (_miniWindow != null)
+            {
+                var w = _miniWindow;
+                _miniWindow = null;
+                try { w.Close(); }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[MainWindow] SwitchFromMiniMode Close failed: {ex.Message}");
+                    ShowToast($"Mini-Modus schließen fehlgeschlagen: {ex.Message}", isError: true);
+                }
+            }
+        }
 
         private void RestoreWindow()
         {
@@ -318,7 +345,7 @@ public partial class MainWindow : Window
 
         /// <summary>
         /// Wendet das Big Picture Mode Layout an: 150% Font Scaling,
-        /// min. 44×44px min. 44×44px touch targets, larger spacing for touch operation.
+        /// min. 44×44px touch targets, larger spacing for touch operation.
         /// </summary>
         private void ApplyBigPictureMode(bool enabled)
         {
@@ -401,15 +428,14 @@ public partial class MainWindow : Window
         }
 
         private Border? _activeTabPanel;
-
         private readonly Dictionary<object, Button?> _panelToTabBtn = new();
         private void InitTabBtnMap()
         {
             _panelToTabBtn[PanelBase] = TabBtnBase;
-            _panelToTabBtn[PanelL1]   = TabBtnL1;
-            _panelToTabBtn[PanelR1]   = TabBtnR1;
-            _panelToTabBtn[PanelL2]   = TabBtnL2;
-            _panelToTabBtn[PanelR2]   = TabBtnR2;
+            _panelToTabBtn[PanelL1] = TabBtnL1;
+            _panelToTabBtn[PanelR1] = TabBtnR1;
+            _panelToTabBtn[PanelL2] = TabBtnL2;
+            _panelToTabBtn[PanelR2] = TabBtnR2;
             _panelToTabBtn[PanelHealth] = TabBtnHealth;
         }
 
@@ -433,10 +459,10 @@ public partial class MainWindow : Window
             Button? activeBtn = panel switch
             {
                 _ when panel == PanelBase => TabBtnBase,
-                _ when panel == PanelL1   => TabBtnL1,
-                _ when panel == PanelR1   => TabBtnR1,
-                _ when panel == PanelL2   => TabBtnL2,
-                _ when panel == PanelR2   => TabBtnR2,
+                _ when panel == PanelL1 => TabBtnL1,
+                _ when panel == PanelR1 => TabBtnR1,
+                _ when panel == PanelL2 => TabBtnL2,
+                _ when panel == PanelR2 => TabBtnR2,
                 _ when panel == PanelHealth => TabBtnHealth,
                 _ => null
             };
@@ -451,7 +477,7 @@ public partial class MainWindow : Window
             if (panel != null)
             {
                 panel.Visibility = Visibility.Visible;
-                _activeTabPanel  = panel;
+                _activeTabPanel = panel;
                 PopulateTabPanel(panel);
             }
         }
@@ -523,21 +549,25 @@ public partial class MainWindow : Window
             if (panel == PanelHealth)
             {
                 var healthStack = new StackPanel();
-                
+
                 // Engine Status
                 var engineStack = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal };
-                engineStack.Children.Add(new TextBlock { 
-                    Text = "Engine:", 
-                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)), 
+                engineStack.Children.Add(new TextBlock
+                {
+                    Text = "Engine:",
+                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)),
                     FontSize = 10.5, FontWeight = System.Windows.FontWeights.SemiBold, Margin = new Thickness(0, 0, 8, 0)
                 });
-                engineStack.Children.Add(new TextBlock { 
-                    Text = _engine.IsRunning ? "RUNNING" : "STOPPED", 
-                    Foreground = Brushes.Lime, 
-                    FontSize = 13, FontWeight = System.Windows.FontWeights.Bold 
+                var activeInstance = _multiEngine?.GetActiveInstance();
+                engineStack.Children.Add(new TextBlock
+                {
+                    Text = activeInstance?.Orchestrator.IsRunning == true ? "RUNNING" : "STOPPED",
+                    Foreground = Brushes.Lime,
+                    FontSize = 13, FontWeight = System.Windows.FontWeights.Bold
                 });
-                var engineBorder = new Border { 
-                    Background = new SolidColorBrush(Color.FromRgb(10, 12, 20)), 
+                var engineBorder = new Border
+                {
+                    Background = new SolidColorBrush(Color.FromRgb(10, 12, 20)),
                     CornerRadius = new CornerRadius(4), Padding = new Thickness(12), Margin = new Thickness(0, 0, 0, 8),
                     Child = engineStack
                 };
@@ -545,36 +575,42 @@ public partial class MainWindow : Window
 
                 // Profile Info
                 var profileStack = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal };
-                profileStack.Children.Add(new TextBlock { 
-                    Text = "Profile:", 
-                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)), 
+                profileStack.Children.Add(new TextBlock
+                {
+                    Text = "Profile:",
+                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)),
                     FontSize = 10.5, FontWeight = System.Windows.FontWeights.SemiBold, Margin = new Thickness(0, 0, 8, 0)
                 });
-                profileStack.Children.Add(new TextBlock { 
-                    Text = p.Name ?? "None", 
-                    Foreground = Brushes.White, 
-                    FontSize = 11, FontWeight = System.Windows.FontWeights.SemiBold 
+                profileStack.Children.Add(new TextBlock
+                {
+                    Text = p.Name ?? "None",
+                    Foreground = Brushes.White,
+                    FontSize = 11, FontWeight = System.Windows.FontWeights.SemiBold
                 });
-                var profileBorder = new Border { 
-                    Background = new SolidColorBrush(Color.FromRgb(10, 12, 20)), 
+                var profileBorder = new Border
+                {
+                    Background = new SolidColorBrush(Color.FromRgb(10, 12, 20)),
                     CornerRadius = new CornerRadius(4), Padding = new Thickness(12), Margin = new Thickness(0, 0, 0, 8),
                     Child = profileStack
                 };
                 healthStack.Children.Add(profileBorder);
 
                 var classStack = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal };
-                classStack.Children.Add(new TextBlock { 
-                    Text = "Class:", 
-                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)), 
+                classStack.Children.Add(new TextBlock
+                {
+                    Text = "Class:",
+                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)),
                     FontSize = 10.5, FontWeight = System.Windows.FontWeights.SemiBold, Margin = new Thickness(0, 0, 8, 0)
                 });
-                classStack.Children.Add(new TextBlock { 
-                    Text = p.Class ?? "N/A", 
-                    Foreground = new SolidColorBrush(Color.FromRgb(229, 184, 66)), 
-                    FontSize = 11, FontWeight = System.Windows.FontWeights.SemiBold 
+                classStack.Children.Add(new TextBlock
+                {
+                    Text = p.Class ?? "N/A",
+                    Foreground = new SolidColorBrush(Color.FromRgb(229, 184, 66)),
+                    FontSize = 11, FontWeight = System.Windows.FontWeights.SemiBold
                 });
-                var classBorder = new Border { 
-                    Background = new SolidColorBrush(Color.FromRgb(10, 12, 20)), 
+                var classBorder = new Border
+                {
+                    Background = new SolidColorBrush(Color.FromRgb(10, 12, 20)),
                     CornerRadius = new CornerRadius(4), Padding = new Thickness(12), Margin = new Thickness(0, 0, 0, 8),
                     Child = classStack
                 };
@@ -582,31 +618,35 @@ public partial class MainWindow : Window
 
                 // Battery Status
                 var batteryStack = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal };
-                batteryStack.Children.Add(new TextBlock { 
-                    Text = "Battery:", 
-                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)), 
+                batteryStack.Children.Add(new TextBlock
+                {
+                    Text = "Battery:",
+                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)),
                     FontSize = 10.5, FontWeight = System.Windows.FontWeights.SemiBold, Margin = new Thickness(0, 0, 8, 0)
                 });
-                batteryStack.Children.Add(new Ellipse { Width = 7, Height = 7, VerticalAlignment = System.Windows.VerticalAlignment.Center, 
-                    Fill = new SolidColorBrush(_engine.ControllerSvc?.BatteryLevel switch {
+                var activeInst = _multiEngine?.GetActiveInstance();
+                batteryStack.Children.Add(new Ellipse { Width = 7, Height = 7, VerticalAlignment = System.Windows.VerticalAlignment.Center,
+                    Fill = new SolidColorBrush(activeInst?.Orchestrator.Controller?.BatteryLevel switch {
                         "Full" or "High" => Color.FromRgb(57, 255, 20),
                         "Mid" => Color.FromRgb(255, 184, 0),
                         "Low" or "Empty" => Color.FromRgb(255, 58, 82),
                         _ => Color.FromRgb(85, 94, 106)
                     })
                 });
-                batteryStack.Children.Add(new TextBlock { 
-                    Text = _engine.ControllerSvc?.BatteryLevel ?? "-", 
-                    Foreground = new SolidColorBrush(_engine.ControllerSvc?.BatteryLevel switch {
+                batteryStack.Children.Add(new TextBlock
+                {
+                    Text = activeInst?.Orchestrator.Controller?.BatteryLevel ?? "-",
+                    Foreground = new SolidColorBrush(activeInst?.Orchestrator.Controller?.BatteryLevel switch {
                         "Full" or "High" => Color.FromRgb(57, 255, 20),
                         "Mid" => Color.FromRgb(255, 184, 0),
                         "Low" or "Empty" => Color.FromRgb(255, 58, 82),
                         _ => Color.FromRgb(85, 94, 106)
-                    }), 
-                    FontSize = 11, VerticalAlignment = System.Windows.VerticalAlignment.Center 
+                    }),
+                    FontSize = 11, VerticalAlignment = System.Windows.VerticalAlignment.Center
                 });
-                var batteryBorder = new Border { 
-                    Background = new SolidColorBrush(Color.FromRgb(10, 12, 20)), 
+                var batteryBorder = new Border
+                {
+                    Background = new SolidColorBrush(Color.FromRgb(10, 12, 20)),
                     CornerRadius = new CornerRadius(4), Padding = new Thickness(12), Margin = new Thickness(0, 0, 0, 8),
                     Child = batteryStack
                 };
@@ -627,29 +667,29 @@ public partial class MainWindow : Window
             }
 
             var relevantMappings = p.ButtonMappings
-                            .Where(kv => layerKey == "" 
-                                ? !kv.Key.ToString().Contains('+') 
+                            .Where(kv => layerKey == ""
+                                ? !kv.Key.ToString().Contains('+')
                                 : kv.Key.ToString().StartsWith(layerKey))
                             .OrderBy(kv => kv.Key.ToString());
 
-                        foreach (var kv in relevantMappings)
-                        {
-                            var row = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal, Margin = new Thickness(0, 2, 0, 2) };
-                            row.Children.Add(new TextBlock
-                            {
-                                Text = kv.Key.ToString().Replace(layerKey, "") + ":",
-                                Width = 60,
-                                Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)),
-                                FontSize = 11
-                            });
-                            row.Children.Add(new TextBlock
-                            {
-                                Text = kv.Value.Label ?? kv.Value.Type.ToString(),
-                                Foreground = new SolidColorBrush(Color.FromRgb(229, 184, 66)),
-                                FontSize = 11
-                            });
-                            stack.Children.Add(row);
-                        }
+            foreach (var kv in relevantMappings)
+            {
+                var row = new StackPanel { Orientation = System.Windows.Controls.Orientation.Horizontal, Margin = new Thickness(0, 2, 0, 2) };
+                row.Children.Add(new TextBlock
+                {
+                    Text = kv.Key.ToString().Replace(layerKey, "") + ":",
+                    Width = 60,
+                    Foreground = new SolidColorBrush(Color.FromRgb(161, 176, 197)),
+                    FontSize = 11
+                });
+                row.Children.Add(new TextBlock
+                {
+                    Text = kv.Value.Label ?? kv.Value.Type.ToString(),
+                    Foreground = new SolidColorBrush(Color.FromRgb(229, 184, 66)),
+                    FontSize = 11
+                });
+                stack.Children.Add(row);
+            }
 
             if (!stack.Children.OfType<UIElement>().Any())
             {
@@ -670,8 +710,8 @@ public partial class MainWindow : Window
         {
             if (LogTextBlock == null || _logBuffer.Count == 0) return;
 
-            bool showEngine  = LogFilterEngine?.IsChecked  ?? true;
-            bool showInput   = LogFilterInput?.IsChecked   ?? true;
+            bool showEngine = LogFilterEngine?.IsChecked ?? true;
+            bool showInput = LogFilterInput?.IsChecked ?? true;
             bool showProfile = LogFilterProfile?.IsChecked ?? true;
 
             var filtered = _logBuffer.Where(msg =>
@@ -710,6 +750,7 @@ public partial class MainWindow : Window
             }
             catch (Exception ex) { ShowToast($"Export failed: {ex.Message}", isError: true); }
         }
+
         private void DeadzoneLabel_DblClick(object s, RoutedEventArgs e) => DeadzoneReset_Click(null!, null!);
         private void CurveLabel_DblClick(object s, RoutedEventArgs e) => CurveReset_Click(null!, null!);
         private void ActionSpeedLabel_DblClick(object s, RoutedEventArgs e) => ActionSpeedReset_Click(null!, null!);
@@ -720,7 +761,12 @@ public partial class MainWindow : Window
         {
             if (_gameOverlay == null)
             {
-                _gameOverlay = new InGameOverlayWindow(_engine.Messenger, _engine.WindowTracker, _engine.ControllerManager, _settings);
+                var activeInstance = _multiEngine?.GetActiveInstance();
+                _gameOverlay = new InGameOverlayWindow(
+                    activeInstance?.Orchestrator.Messenger,
+                    activeInstance?.Orchestrator.WinTracker,
+                    activeInstance?.Orchestrator.ControllerManager,
+                    _settings);
                 _gameOverlay.Show();
             }
             else
@@ -738,20 +784,14 @@ public partial class MainWindow : Window
             if (BtnRadial != null) BtnRadial.IsEnabled = enabled;
         }
 
-
         private void ShowControllerTestWindow()
         {
-            if (_controllerTestWindow == null && _engine?.ControllerSvc != null)
+            var activeInstance = _multiEngine?.GetActiveInstance();
+            if (_controllerTestWindow == null && activeInstance?.Orchestrator.ControllerSvc != null)
             {
-                // Use the public ControllerSvc property instead of reflection
-                var sdlProvider = _engine.ControllerSvc;
-                
-                if (sdlProvider != null)
-                {
-                    _controllerTestWindow = new ControllerTestWindow(sdlProvider);
-                    _controllerTestWindow.Closed += (s, e) => _controllerTestWindow = null;
-                    _controllerTestWindow.Show();
-                }
+                _controllerTestWindow = new ControllerTestWindow(activeInstance.Orchestrator.ControllerSvc);
+                _controllerTestWindow.Closed += (s, e) => _controllerTestWindow = null;
+                _controllerTestWindow.Show();
             }
         }
 
@@ -766,29 +806,16 @@ public partial class MainWindow : Window
                 TelemetryPanelControl.StopUpdates();
 
             // Cleanup subscriptions
-                        foreach (var sub in _subs)
-                            try { sub.Dispose(); } 
-                            catch (Exception ex)
-                            {
-                                System.Diagnostics.Debug.WriteLine($"[MainWindow] Subscription dispose failed: {ex.Message}");
-                            }
-                        _subs.Clear();
+            foreach (var sub in _subs)
+                try { sub.Dispose(); }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[MainWindow] Subscription dispose failed: {ex.Message}");
+                }
+            _subs.Clear();
 
             // Unsubscribe engine events (MEMORY-001: prevent leaked references)
-            if (_statusChangedHandler != null)
-                _engine.StatusChanged -= _statusChangedHandler;
-            if (_profileQuickSwitchHandler != null)
-                _engine.ProfileQuickSwitch -= _profileQuickSwitchHandler;
-            if (_logMessageHandler != null)
-                _engine.LogMessage -= _logMessageHandler;
-            if (_batteryChangedHandler != null)
-                _engine.BatteryChanged -= _batteryChangedHandler;
-            if (_controllerConnectedHandler != null)
-                _engine.ControllerConnected -= _controllerConnectedHandler;
-            if (_controllerDisconnectedHandler != null)
-                _engine.ControllerDisconnected -= _controllerDisconnectedHandler;
-            if (_restoreMainWindowRequestedHandler != null)
-                _engine.RestoreMainWindowRequested -= _restoreMainWindowRequestedHandler;
+            // Note: MultiClientEngineOrchestrator doesn't have LogMessage event, it's on EngineInstance
 
             // Dispose multi-client router (MEMORY-001)
             _multiClientRouter?.Dispose();
@@ -803,11 +830,11 @@ public partial class MainWindow : Window
             _gameOverlay?.Close();
         }
 
-        // Helper methods to fix missing methods
+        // Helper methods
         private void ShowToast(string message, bool isError = false)
-                {
-                    _toastService.Show(message, isError);
-                }
+        {
+            _toastService.Show(message, isError);
+        }
 
         private static string GetLocalizedString(string key) => LocalizationManager.GetLocalizedString(key);
 
@@ -862,36 +889,25 @@ public partial class MainWindow : Window
 
         private void BtnScanController_Click(object s, RoutedEventArgs e)
         {
-            _engine?.Start();
+            var activeInstance = _multiEngine?.GetActiveInstance();
+            activeInstance?.Start();
             ShowToast("Controller scan initiated");
         }
 
         private void BtnSettings_Click(object s, RoutedEventArgs e)
-        {
-            var settings = new SettingsWindow(_engine, _manager, _settings, s =>
-            {
-                _engine.FocusLockEnabled = s.FocusLockEnabled;
-                _engine.FocusLockProcess = s.FocusLockProcess;
-                _settings = s; // Update local reference
-            });
-            settings.Show();
-        }
+                {
+                    var activeInstance = _multiEngine?.GetActiveInstance();
+                    var settings = new SettingsWindow(activeInstance?.Orchestrator, _manager, _settings, s =>
+                    {
+                        // Settings are applied via onSave callback
+                        _settings = s; // Update local reference
+                    });
+                    settings.Show();
+                }
 
-        private void ResetBtn_MouseEnter(object s, RoutedEventArgs e)
-        {
-            // Mouse enter handler for reset button
-        }
+        private void ResetBtn_MouseEnter(object s, RoutedEventArgs e) { }
+        private void ResetBtn_MouseLeave(object s, RoutedEventArgs e) { }
 
-        private void ResetBtn_MouseLeave(object s, RoutedEventArgs e)
-        {
-            // Mouse leave handler for reset button
-        }
-
-
-
-        
-
-        // Missing event handlers for XAML
         private void Window_StateChanged(object sender, EventArgs e)
         {
             if (WindowState == WindowState.Minimized && _settings.MinimizeToTray)
@@ -913,8 +929,9 @@ public partial class MainWindow : Window
         {
             try
             {
-                if (_engine != null)
-                    await _engine.StartCalibrationAsync();
+                var activeInstance = _multiEngine?.GetActiveInstance();
+                if (activeInstance != null)
+                    await activeInstance.Orchestrator.StartCalibrationAsync();
                 ShowToast("Calibration started");
             }
             catch (Exception ex)
@@ -926,9 +943,10 @@ public partial class MainWindow : Window
 
         private void BtnTestInput_Click(object sender, RoutedEventArgs e)
         {
-            if (_engine?.ControllerSvc != null)
+            var activeInstance = _multiEngine?.GetActiveInstance();
+            if (activeInstance?.Orchestrator.ControllerSvc != null)
             {
-                var testWindow = new ControllerTestWindow(_engine.ControllerSvc);
+                var testWindow = new ControllerTestWindow(activeInstance.Orchestrator.ControllerSvc);
                 testWindow.Owner = this;
                 testWindow.Show();
             }
@@ -940,12 +958,12 @@ public partial class MainWindow : Window
 
         private void BtnOpenRemap_Click(object sender, RoutedEventArgs e)
         {
-            var w = new ButtonRemappingWindow(_engine, _manager);
+            var activeInstance = _multiEngine?.GetActiveInstance();
+            var w = new ButtonRemappingWindow(activeInstance?.Orchestrator, _manager);
             w.Owner = this;
             w.Show();
         }
 
-        // Missing event handlers for XAML
         private void ProfileCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ProfileCombo.SelectedItem is Profile profile)
@@ -955,66 +973,69 @@ public partial class MainWindow : Window
         }
 
         private void BtnRadial_Click(object sender, RoutedEventArgs e)
-                {
-                    var queue = _engine?.CommandQueue ?? new InputCommandQueue();
-                    var w = new RadialMenuWindow(queue);
-                    w.Owner = this;
-                    w.Show();
-                }
+        {
+            var activeInstance = _multiEngine?.GetActiveInstance();
+            var queue = activeInstance?.Orchestrator.CommandQueue ?? new InputCommandQueue();
+            var w = new RadialMenuWindow(queue);
+            w.Owner = this;
+            w.Show();
+        }
 
-                private void OpenProfileLibrary()
-                {
-                    _profileService.OpenProfileLibrary(() =>
-                    {
-                        // Refresh profile list after library closed
-                        ProfileCombo.ItemsSource = null;
-                        ProfileCombo.ItemsSource = _profileService.GetAllProfiles();
-                    });
-                }
+        private void OpenProfileLibrary()
+        {
+            _profileService.OpenProfileLibrary(() =>
+            {
+                // Refresh profile list after library closed
+                ProfileCombo.ItemsSource = null;
+                ProfileCombo.ItemsSource = _profileService.GetAllProfiles();
+            });
+        }
 
         // Reset click handlers for double-click on labels
         private void DeadzoneReset_Click(object sender, RoutedEventArgs e)
         {
-            if (_engine?.CurrentProfile != null)
+            var activeInstance = _multiEngine?.GetActiveInstance();
+            if (activeInstance?.Orchestrator.ProfileApplier != null)
             {
-                _engine.CurrentProfile.Deadzone = 0.15f;
-                _engine.LiveUpdateDeadzone(0.15f);
+                activeInstance.Orchestrator.ProfileApplier.LiveUpdateDeadzone(0.15f);
                 var pm = new ProfileManager();
-                pm.SaveProfile(_engine.CurrentProfile);
+                pm.SaveProfile(activeInstance.Orchestrator.CurrentProfile);
                 ShowToast("Deadzone reset to default (0.15)");
             }
         }
 
         private void CurveReset_Click(object sender, RoutedEventArgs e)
         {
-            if (_engine?.CurrentProfile != null)
+            var activeInstance = _multiEngine?.GetActiveInstance();
+            if (activeInstance?.Orchestrator.ProfileApplier != null)
             {
-                _engine.CurrentProfile.MovementCurve = 1.0f;
-                _engine.LiveUpdateCurve(1.0f);
+                activeInstance.Orchestrator.ProfileApplier.LiveUpdateCurve(1.0f);
                 var pm = new ProfileManager();
-                pm.SaveProfile(_engine.CurrentProfile);
+                pm.SaveProfile(activeInstance.Orchestrator.CurrentProfile);
                 ShowToast("Curve reset to default (1.0)");
             }
         }
 
         private void ActionSpeedReset_Click(object sender, RoutedEventArgs e)
         {
-            if (_engine?.CurrentProfile != null)
+            var activeInstance = _multiEngine?.GetActiveInstance();
+            if (activeInstance?.Orchestrator.ProfileApplier != null)
             {
-                _engine.LiveUpdateActionSpeed(5.0f); // Default mid-point
+                activeInstance.Orchestrator.ProfileApplier.LiveUpdateActionSpeed(5.0f); // Default mid-point
                 var pm = new ProfileManager();
-                pm.SaveProfile(_engine.CurrentProfile);
+                pm.SaveProfile(activeInstance.Orchestrator.CurrentProfile);
                 ShowToast("Action Speed reset to default (5)");
             }
         }
 
         private void SensitivityReset_Click(object sender, RoutedEventArgs e)
         {
-            if (_engine?.CurrentProfile != null)
+            var activeInstance = _multiEngine?.GetActiveInstance();
+            if (activeInstance?.Orchestrator.ProfileApplier != null)
             {
-                _engine.LiveUpdateCursorSpeed(1.0f);
+                activeInstance.Orchestrator.ProfileApplier.LiveUpdateCursorSpeed(1.0f);
                 var pm = new ProfileManager();
-                pm.SaveProfile(_engine.CurrentProfile);
+                pm.SaveProfile(activeInstance.Orchestrator.CurrentProfile);
                 ShowToast("Sensitivity reset to default (1.0)");
             }
         }
@@ -1035,7 +1056,7 @@ public partial class MainWindow : Window
                 _clientComboUpdating = true;
                 ClientCombo.Items.Clear();
 
-                var clients = _windowTracker.GetClients(_engine?.CurrentProfile?.Name ?? "ragexe");
+                var clients = _windowTracker.GetClients(_multiEngine?.SharedProfileManager?.ActiveProfile?.Name ?? "ragexe");
                 if (!clients.Any())
                 {
                     // Fallback: alle bekannten Clients anzeigen
@@ -1293,7 +1314,8 @@ public partial class MainWindow : Window
         {
             try
             {
-                _engine.ApplyGameMode(isRenewal);
+                var activeInstance = _multiEngine?.GetActiveInstance();
+                activeInstance?.Orchestrator.ApplyGameMode(isRenewal);
                 System.Diagnostics.Debug.WriteLine($"[MainWindow] Renewal mode switched to: {(isRenewal ? "Renewal" : "Pre-Renewal")}");
             }
             catch (Exception ex)
