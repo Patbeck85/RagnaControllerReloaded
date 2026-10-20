@@ -211,8 +211,10 @@
         <Compile Include="Core\Utilities\ShareCodeValidator.cs" />
 
                 <Compile Include="Core\Services\TtsAnnouncerService.cs" />
-                <Compile Include="Core\Services\UpdateChecker.cs" />
-                <Compile Include="Core\Services\VoiceChatService.cs" />
+                            <Compile Include="Core\Services\UpdateChecker.cs" />
+                            <Compile Include="Core\Services\VoiceChatService.cs" />
+                            <Compile Include="Core\Services\EngineInstance.cs" />
+                            <Compile Include="Core\Services\MultiClientEngineOrchestrator.cs" />
                 <Compile Include="Core\Windows\WindowSwitcher.cs" />
                 <Compile Include="Core\Windows\WindowTracker.cs" />
                 				<Compile Include="Core\Windows\MultiClientWindowTracker.cs" />
