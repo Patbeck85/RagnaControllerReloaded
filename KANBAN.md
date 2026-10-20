@@ -170,7 +170,7 @@
 | **TASK-2017** | TutorialWindow: MediaPreview mit Inhalt füllen, "Alle Tutorials überspringen" Option, Fortschrittsanzeige | Designer | LOW | — | ✅ CLOSED (2026-10-19) |
 | **TASK-2018** | ControllerTestWindow: Deutsch-Englisch Mix beheben, Tastatur-Kurzbefehle anzeigen, Resize möglich | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
 | **TASK-2019** | Controls/ControllerVisualization: Interaktive Rückmeldung bei Button-Druck, Hover-Effekte | Designer | LOW | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2020** | Controls/TelemetryPanel: Export-Funktion für Telemetriedaten, Auto-Scroll Toggle, Daten-Reset | Designer | LOW | — | 📋 OPEN |
+| **TASK-2020** | Controls/TelemetryPanel: Export-Funktion für Telemetriedaten, Auto-Scroll Toggle, Daten-Reset | Designer | LOW | — | ✅ CLOSED (2026-10-19) |
 
 ---
 
