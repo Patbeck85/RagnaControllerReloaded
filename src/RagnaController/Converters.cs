@@ -52,8 +52,9 @@ namespace RagnaController
             {
                 return new BitmapImage(new Uri(iconPath));
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine("[Converters] ClassToIconConverter-Fehler: " + ex.Message);
                 return new BitmapImage(new Uri("pack://application:,,,/Assets/Classes/unknown.png"));
             }
         }
@@ -74,8 +75,9 @@ namespace RagnaController
                 {
                     return new SolidColorBrush((Color)ColorConverter.ConvertFromString(colorString));
                 }
-                catch
+                catch (Exception ex)
                 {
+                    System.Diagnostics.Debug.WriteLine("[Converters] StringToBrushConverter-Fehler: " + ex.Message);
                     return new SolidColorBrush(Colors.Red);
                 }
             }

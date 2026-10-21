@@ -174,8 +174,9 @@ namespace RagnaController.Core.Services
                 var rect = new Rectangle(x, y, w, h);
                 return source.Clone(rect, source.PixelFormat);
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine("[OcrService] CropRegion-Fehler: " + ex.Message);
                 return null;
             }
         }
@@ -212,8 +213,9 @@ namespace RagnaController.Core.Services
 
                 return bmp;
             }
-            catch
+            catch (Exception ex)
             {
+                Debug.WriteLine("[OcrService] CaptureWindow-Fehler: " + ex.Message);
                 return null;
             }
         }

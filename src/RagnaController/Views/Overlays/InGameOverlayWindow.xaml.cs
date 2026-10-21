@@ -344,8 +344,9 @@ namespace RagnaController.Views.Overlays
                         if (this.Left < 0 || this.Top < 0)
                             ApplyMonitorPosition();
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        System.Diagnostics.Debug.WriteLine("[InGameOverlay] PositionNearClient Fehler: " + ex.Message);
                         ApplyMonitorPosition();
                     }
                 }
