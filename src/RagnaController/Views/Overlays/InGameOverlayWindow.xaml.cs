@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -33,32 +34,41 @@ namespace RagnaController.Views.Overlays
         private long _lastRenderTick = -1;
 
         // Backing fields for overlay display
-        private string _profileName = "NOVICE";
-        private string _classType = "Novice";
-        private string _batteryLevel = "100%";
-        private int _cooldownRemaining = 0;
-        private string _currentLayer = "BASE";
+                private string _profileName = "NOVICE";
+                private string _classType = "Novice";
+                private string _batteryLevel = "100%";
+                private int _cooldownRemaining = 0;
+                private string _currentLayer = "BASE";
+
+                /// <summary>HWND des RO-Clients, dem dieses Overlay zugeordnet ist.</summary>
+                public IntPtr ClientHwnd { get; private set; } = IntPtr.Zero;
 
         // Constructor with ControllerManager (for new code using unified abstraction)
-                #pragma warning disable CS8625
-                public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker, ControllerManager? controllerManager, Settings settings = null) : base()
-                #pragma warning restore CS8625
-        {
-            InitializeComponent();
-            _controllerManager = controllerManager;
-            _settings = settings;
+                        #pragma warning disable CS8625
+                        public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker, ControllerManager? controllerManager, Settings settings = null, IntPtr clientHwnd = default) : base()
+                        #pragma warning restore CS8625
+                {
+                    InitializeComponent();
+                    ClientHwnd = clientHwnd;
+                    _controllerManager = controllerManager;
+                    _settings = settings;
 
-            // UX-021: Restore saved overlay position
-            if (_settings?.OverlayPositionX.HasValue == true && _settings.OverlayPositionY.HasValue)
-            {
-                this.Left = _settings.OverlayPositionX.Value;
-                this.Top = _settings.OverlayPositionY.Value;
-            }
-            else
-            {
-                // FEAT-030: Position overlay on selected monitor
-                ApplyMonitorPosition();
-            }
+                    // UX-021: Restore saved overlay position OR position near client window
+                    if (_settings?.OverlayPositionX.HasValue == true && _settings.OverlayPositionY.HasValue)
+                    {
+                        this.Left = _settings.OverlayPositionX.Value;
+                        this.Top = _settings.OverlayPositionY.Value;
+                    }
+                    else if (clientHwnd != IntPtr.Zero)
+                    {
+                        // FEAT-030: Position overlay near its client window (top-right with offset)
+                        PositionNearClient(clientHwnd);
+                    }
+                    else
+                    {
+                        // FEAT-030: Position overlay on selected monitor
+                        ApplyMonitorPosition();
+                    }
 
             // Subscribe to controller manager events
             if (_controllerManager != null)
@@ -159,18 +169,52 @@ namespace RagnaController.Views.Overlays
                 }
         
         // FEAT-030: Position overlay on selected monitor
-        private void ApplyMonitorPosition()
-        {
-            if (_settings == null) return;
+                private void ApplyMonitorPosition()
+                {
+                    if (_settings == null) return;
 
-            var monitors = Core.MonitorHelper.GetMonitors();
-            int index = Math.Clamp(_settings.OverlayMonitorIndex, 0, monitors.Count - 1);
-            var monitor = monitors[index];
+                    var monitors = Core.MonitorHelper.GetMonitors();
+                    int index = Math.Clamp(_settings.OverlayMonitorIndex, 0, monitors.Count - 1);
+                    var monitor = monitors[index];
 
-            // Position overlay at top-right of selected monitor with some margin
-            this.Left = monitor.Right - this.Width - 20;
-            this.Top = monitor.Top + 20;
-        }
+                    // Position overlay at top-right of selected monitor with some margin
+                    this.Left = monitor.Right - this.Width - 20;
+                    this.Top = monitor.Top + 20;
+                }
+
+                /// <summary>
+                /// Positioniert das Overlay oben rechts neben dem angegebenen Client-HWND.
+                /// Fällt auf Monitor-Positionierung zurück, wenn Client nicht auffindbar ist.
+                /// </summary>
+                private void PositionNearClient(IntPtr clientHwnd)
+                {
+                    try
+                    {
+                        if (clientHwnd == IntPtr.Zero) { ApplyMonitorPosition(); return; }
+
+                        var rect = new RECT();
+                        if (!NativeMethods.GetWindowRect(clientHwnd, out rect)) { ApplyMonitorPosition(); return; }
+
+                        // Überlay rechts oben vom Client-Fenster, mit 20px Abstand
+                        double clientRight = rect.Right;
+                        double clientTop = rect.Top;
+
+                        // Stellen wir sicher, dass das Overlay innerhalb des primären Monitors bleibt
+                        double overlayWidth = this.Width > 0 ? this.Width : 300;
+                        double overlayHeight = this.Height > 0 ? this.Height : 200;
+
+                        this.Left = clientRight - overlayWidth - 20;
+                        this.Top = clientTop + 20;
+
+                        // Fallback falls außerhalb des Bildschirms
+                        if (this.Left < 0 || this.Top < 0)
+                            ApplyMonitorPosition();
+                    }
+                    catch
+                    {
+                        ApplyMonitorPosition();
+                    }
+                }
 
         private void ApplyThemeSettings()
                 {

@@ -190,7 +190,7 @@
 | **TASK-2104** | Profil pro HWND: Dictionary<HWND, Profile> statt einzelnes CurrentProfile | Coder | HIGH | TASK-2102 | ✅ CLOSED (2026-10-20) — via EngineInstance.Activate(profile) |
 | **TASK-2105** | Tick-Loop: Iteration aller aktiven Client-Engines (Load-Balancing, Priority) | Coder | HIGH | TASK-2102 | ✅ CLOSED (2026-10-20) — each EngineInstance has own BackgroundTickProvider |
 || **TASK-2106** | UI: Client-Tabs in MainWindow mit je eigener Engine-Status-Anzeige | Designer | HIGH | TASK-2103 | ✅ CLOSED (2026-10-20) |
-| **TASK-2107** | Client-spezifische Overlay-Instanzen (pro HWND eigenes Overlay) | Coder | MEDIUM | TASK-2105 | 📋 OPEN |
+| **TASK-2107** | Client-spezifische Overlay-Instanzen (pro HWND eigenes Overlay) | Coder | MEDIUM | TASK-2105 | ✅ CLOSED (2026-10-20) |
 | **TASK-2108** | Unit-Tests: Multi-Client Engine Isolation, Input-Routing, Profil-Switch | QA | MEDIUM | TASK-2105 | 📋 OPEN |
 | **TASK-2109** | Integration-Test: 2+ RO-Clients gleichzeitig steuern | QA | HIGH | TASK-2107 | 📋 OPEN |
 

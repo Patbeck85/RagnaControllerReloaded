@@ -103,7 +103,8 @@ namespace RagnaController.Core
                 messenger,
                 _orchestrator.WinTracker,
                 _orchestrator.ControllerManager,
-                sharedSettings)
+                sharedSettings,
+                hwnd)
             {
                 Owner = System.Windows.Application.Current?.MainWindow
             };
