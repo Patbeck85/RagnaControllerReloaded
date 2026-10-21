@@ -160,9 +160,6 @@ namespace RagnaController.Core
                 _multiClientRouter.SetPreferredClientHwnd(processName, hwnd);
                 _multiClientRouter.SetActiveProcessName(processName);
 
-                // Show overlay
-                instance.ShowOverlay();
-
                 _logger?.Info($"[MultiClientEngineOrchestrator] Started client: {processName} (PID {pid}) HWND={hwnd}");
 
                 ClientStarted?.Invoke(this, instance);

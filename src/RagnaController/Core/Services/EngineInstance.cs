@@ -15,7 +15,9 @@ namespace RagnaController.Core
     public sealed class EngineInstance : IDisposable
     {
         private readonly EngineOrchestrator _orchestrator;
-        private readonly InGameOverlayWindow? _overlayWindow;
+        private readonly IMessenger _messenger;
+        private readonly Models.Settings _sharedSettings;
+        private InGameOverlayWindow? _overlayWindow;
         private readonly object _lock = new();
         private bool _isDisposed;
         private bool _isActive;
@@ -78,6 +80,8 @@ namespace RagnaController.Core
             ClientHwnd = hwnd;
             ProcessName = processName;
             ProcessId = pid;
+            _messenger = messenger;
+            _sharedSettings = sharedSettings;
 
             // Create per-instance InputCommandQueue bound to this client's HWND for PostMessage routing
             var instanceQueue = new InputCommandQueue(null, hwnd.ToString(), multiClientRouter);
@@ -98,16 +102,8 @@ namespace RagnaController.Core
             _orchestrator.StatusChanged += status => StatusChanged?.Invoke(this, status);
             _orchestrator.LogMessage += msg => LogMessage?.Invoke(this, msg);
 
-            // Create per-client overlay window with correct constructor signature
-            _overlayWindow = new InGameOverlayWindow(
-                messenger,
-                _orchestrator.WinTracker,
-                _orchestrator.ControllerManager,
-                sharedSettings,
-                hwnd)
-            {
-                Owner = System.Windows.Application.Current?.MainWindow
-            };
+            // Overlay created lazily on first ShowOverlay() (avoids STA thread requirement in unit tests)
+            _overlayWindow = null!;
 
             IsActive = false;
         }
@@ -151,10 +147,22 @@ namespace RagnaController.Core
             _orchestrator.IsolateProfileSwitch(); // Reset all engine state
         }
 
-        /// <summary>Shows the overlay window for this client.</summary>
+        /// <summary>Shows the overlay window for this client (creates it lazily on first call).</summary>
         public void ShowOverlay()
         {
-            _overlayWindow?.Show();
+            if (_overlayWindow == null)
+            {
+                _overlayWindow = new InGameOverlayWindow(
+                    _messenger,
+                    _orchestrator.WinTracker,
+                    _orchestrator.ControllerManager,
+                    _sharedSettings,
+                    ClientHwnd)
+                {
+                    Owner = System.Windows.Application.Current?.MainWindow
+                };
+            }
+            _overlayWindow.Show();
         }
 
         /// <summary>Hides the overlay window for this client.</summary>
@@ -170,7 +178,7 @@ namespace RagnaController.Core
 
             try
             {
-                _orchestrator.Dispose();
+                _orchestrator.Stop(); // Don't dispose shared logger here — MultiClientEngineOrchestrator owns it
                 _overlayWindow?.Close();
             }
             finally
