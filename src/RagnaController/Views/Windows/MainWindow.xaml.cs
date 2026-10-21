@@ -766,7 +766,8 @@ namespace RagnaController.Views.Windows
                     activeInstance?.Orchestrator.Messenger,
                     activeInstance?.Orchestrator.WinTracker,
                     activeInstance?.Orchestrator.ControllerManager,
-                    _settings);
+                    _settings,
+                    buffManager: activeInstance?.Orchestrator.BuffManager);
                 _gameOverlay.Show();
             }
             else

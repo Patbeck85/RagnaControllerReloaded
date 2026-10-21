@@ -179,30 +179,56 @@
                         </Grid>
 
                         <!-- Row 3: Skill Cooldown Bars (F1-F12) - FEAT-031 -->
-                        <Border Grid.Row="3" Margin="0,8,0,0" 
-                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownsEnabled, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <StackPanel Margin="0,2">
-                                <TextBlock Text="SKILL COOLDOWNS" Style="{StaticResource Eyebrow}" Margin="0,0,0,4"/>
-                                <ItemsControl ItemsSource="{Binding SkillCooldowns}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Vertical" Margin="2,0" Width="44">
-                                                <TextBlock Text="{Binding KeyName}" FontSize="8" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" TextAlignment="Center" Margin="0,0,0,2"/>
-                                                <Border Width="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownBarWidth}" Height="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownBarHeight}" CornerRadius="2" Background="#2A2A3A" BorderBrush="{StaticResource BgBorder}" BorderThickness="0.5">
-                                                                                        <Border Width="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownBarWidth}" Background="{Binding Color}" CornerRadius="2" Opacity="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownOpacity}"/>
-                                                                                    </Border>
-                                                <TextBlock Text="{Binding RemainingTime, StringFormat='{}{0}s'}" FontSize="7" FontFamily="Consolas" Foreground="{StaticResource TextSecondary}" TextAlignment="Center" Margin="0,2,0,0"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </Border>
-                    </Grid>
-                </Border>
-            </Window>
+                                    <Border Grid.Row="3" Margin="0,8,0,0" 
+                                            Visibility="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownsEnabled, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <StackPanel Margin="0,2">
+                                            <TextBlock Text="SKILL COOLDOWNS" Style="{StaticResource Eyebrow}" Margin="0,0,0,4"/>
+                                            <ItemsControl ItemsSource="{Binding SkillCooldowns}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel Orientation="Horizontal"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Vertical" Margin="2,0" Width="44">
+                                                            <TextBlock Text="{Binding KeyName}" FontSize="8" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" TextAlignment="Center" Margin="0,0,0,2"/>
+                                                            <Border Width="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownBarWidth}" Height="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownBarHeight}" CornerRadius="2" Background="#2A2A3A" BorderBrush="{StaticResource BgBorder}" BorderThickness="0.5">
+                                                                <Border Width="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownBarWidth}" Background="{Binding Color}" CornerRadius="2" Opacity="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownOpacity}"/>
+                                                            </Border>
+                                                            <TextBlock Text="{Binding RemainingTime, StringFormat='{}{0}s'}" FontSize="7" FontFamily="Consolas" Foreground="{StaticResource TextSecondary}" TextAlignment="Center" Margin="0,2,0,0"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <!-- Row 4: Buff/Debuff Timers - FEAT-032 -->
+                                    <Border Grid.Row="4" Margin="0,8,0,0" 
+                                            Visibility="{Binding Source={x:Static local:Settings.Default}, Path=OverlayBuffTimersEnabled, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <StackPanel Margin="0,2">
+                                            <TextBlock Text="BUFFS / DEBUFFS" Style="{StaticResource Eyebrow}" Margin="0,0,0,4"/>
+                                            <ItemsControl ItemsSource="{Binding BuffTimers}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel Orientation="Horizontal"/>
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Vertical" Margin="2,0" Width="52">
+                                                            <TextBlock Text="{Binding Name}" FontSize="8" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="48" Margin="0,0,0,2"/>
+                                                            <Border Width="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownBarWidth}" Height="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownBarHeight}" CornerRadius="2" Background="#2A2A3A" BorderBrush="{StaticResource BgBorder}" BorderThickness="0.5">
+                                                                                                    <Border Width="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownBarWidth}" Background="{Binding BarColor}" CornerRadius="2" Opacity="{Binding Source={x:Static local:Settings.Default}, Path=OverlayCooldownOpacity}"/>
+                                                                                                </Border>
+                                                                                                <TextBlock Text="{Binding RemainingText}" FontSize="7" FontFamily="Consolas" Foreground="{Binding BarColor}" TextAlignment="Center" Margin="0,2,0,0"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Window>

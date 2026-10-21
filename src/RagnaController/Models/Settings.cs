@@ -167,6 +167,14 @@ namespace RagnaController.Models
                 /// <summary>Opacity der Cooldown-Balken (0.0 = unsichtbar, 1.0 = deckend).</summary>
                 public double OverlayCooldownOpacity { get; set; } = 0.8;
 
+                // ── FEAT-032: Buff/Debuff Timer Overlay ───────────────────────────
+                /// <summary>Buff/Debuff-Timer im Overlay anzeigen.</summary>
+                public bool OverlayBuffTimersEnabled { get; set; } = true;
+                /// <summary>Warnung anzeigen wenn Buff innerhalb von X Sekunden abläuft.</summary>
+                public int OverlayBuffWarnSec { get; set; } = 5;
+                /// <summary>Maximale Anzahl sichtbarer Buffs im Overlay.</summary>
+                public int OverlayBuffMaxVisible { get; set; } = 8;
+
         // ── UX-017: Accessibility — High-Contrast & Font Scaling ─────────────
         /// <summary>High-Contrast-Modus aktivieren (für Sehbehinderte, Steam Deck im Sonnenlicht).</summary>
         public bool HighContrastEnabled { get; set; } = false;

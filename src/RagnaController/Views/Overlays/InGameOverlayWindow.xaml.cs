@@ -25,8 +25,9 @@ namespace RagnaController.Views.Overlays
         public static string GetLocalizedString(string key) => LocalizationManager.GetLocalizedString(key);
 
         // Controller state from ControllerManager
-        private readonly ControllerManager? _controllerManager;
-        private readonly Settings? _settings;
+                private readonly ControllerManager? _controllerManager;
+                private readonly Settings? _settings;
+                private readonly BuffManager? _buffManager;
 
         // PERF-008: GPU/Overlay render profiling (registry-backed, one per overlay type)
         private GpuOverlayProfiler? _gpuProfiler;
@@ -59,21 +60,72 @@ namespace RagnaController.Views.Overlays
                 }
 
                 /// <summary>Clears all skill cooldowns.</summary>
-                public void ClearSkillCooldowns()
-                {
-                    _skillCooldowns.Clear();
-                }
+                                public void ClearSkillCooldowns()
+                                {
+                                    _skillCooldowns.Clear();
+                                }
 
-        // Constructor with ControllerManager (for new code using unified abstraction)
+                                // FEAT-032: Buff/Debuff timer tracking
+                                private readonly Dictionary<string, BuffTimerViewModel> _buffTimers = new(StringComparer.OrdinalIgnoreCase);
+                                public IEnumerable<BuffTimerViewModel> BuffTimers => _buffTimers.Values.OrderByDescending(b => b.RemainingSec).ThenBy(b => b.Name);
+
+                                /// <summary>Sets or updates a buff/debuff timer.</summary>
+                                public void SetBuffTimer(string name, bool isDebuff, int remainingSec, int maxSec, int warnSec = 5)
+                                {
+                                    var btv = new BuffTimerViewModel(name, isDebuff, remainingSec, maxSec, warnSec);
+                                    _buffTimers[name] = btv;
+                                }
+
+                                /// <summary>Clears all buff/debuff timers.</summary>
+                                public void ClearBuffTimers()
+                                {
+                                    _buffTimers.Clear();
+                                }
+
+                                /// <summary>Updates all buff timers from BuffManager.</summary>
+                                public void UpdateBuffTimersFromManager()
+                                {
+                                    if (_buffManager == null) return;
+
+                                    ClearBuffTimers();
+
+                                    int count = 0;
+                                    foreach (var name in _buffManager.ActiveBuffNames)
+                                    {
+                                        if (count >= (_settings?.OverlayBuffMaxVisible ?? 8)) break;
+                                        var remaining = _buffManager.GetBuffRemainingSec(name);
+                                        if (remaining > 0)
+                                        {
+                                            var duration = BuffRegistry.GetDefaultDuration(name);
+                                            SetBuffTimer(name, false, (int)remaining, duration, (_settings?.OverlayBuffWarnSec ?? 5));
+                                            count++;
+                                        }
+                                    }
+
+                                    foreach (var name in _buffManager.ActiveDebuffNames)
+                                    {
+                                        if (count >= (_settings?.OverlayBuffMaxVisible ?? 8)) break;
+                                        var remaining = _buffManager.GetDebuffRemainingSec(name);
+                                        if (remaining > 0)
+                                        {
+                                            var duration = BuffRegistry.GetDefaultDuration(name);
+                                            SetBuffTimer(name, true, (int)remaining, duration, (_settings?.OverlayBuffWarnSec ?? 5));
+                                            count++;
+                                        }
+                                    }
+                                }
+
+                        // Constructor with ControllerManager (for new code using unified abstraction)
                         #pragma warning disable CS8625
-                        public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker, ControllerManager? controllerManager, Settings settings = null, IntPtr clientHwnd = default) : base()
+                        public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker, ControllerManager? controllerManager, Settings settings = null, IntPtr clientHwnd = default, BuffManager? buffManager = null) : base()
                         #pragma warning restore CS8625
                 {
                     InitializeComponent();
-                    DataContext = this;
-                    ClientHwnd = clientHwnd;
-                    _controllerManager = controllerManager;
-                    _settings = settings;
+                                DataContext = this;
+                                ClientHwnd = clientHwnd;
+                                _controllerManager = controllerManager;
+                                _settings = settings;
+                                _buffManager = buffManager;
 
                     // UX-021: Restore saved overlay position OR position near client window
                     if (_settings?.OverlayPositionX.HasValue == true && _settings.OverlayPositionY.HasValue)
@@ -423,11 +475,10 @@ namespace RagnaController.Views.Overlays
         }
 
         // PropertyChanged helper (simplified)
-                private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null) { }
-            }
-        }
+        private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null) { }
+    }
 
-        // FEAT-031: Skill cooldown data model for overlay binding
+    // FEAT-031: Skill cooldown data model for overlay binding
         public class SkillCooldown : System.ComponentModel.INotifyPropertyChanged
         {
             public string KeyName { get; }
@@ -468,4 +519,59 @@ namespace RagnaController.Views.Overlays
             public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
             private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
                 => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+                }
+
+    // FEAT-032: Buff/Debuff timer data model for overlay binding
+    public class BuffTimerViewModel : System.ComponentModel.INotifyPropertyChanged
+    {
+        public string Name { get; }
+        public bool IsDebuff { get; }
+        public int MaxSec { get; }
+
+        private int _remainingSec;
+        public int RemainingSec
+        {
+            get => _remainingSec;
+            set
+            {
+                if (_remainingSec != value)
+                {
+                    _remainingSec = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(RemainingText));
+                    OnPropertyChanged(nameof(RemainingPercent));
+                    OnPropertyChanged(nameof(IsWarning));
+                }
+            }
         }
+
+        public string RemainingText => RemainingSec > 0 ? $"{RemainingSec}s" : "0s";
+
+        public double RemainingPercent => MaxSec > 0
+            ? Math.Clamp((double)RemainingSec / MaxSec, 0.0, 1.0)
+            : 0.0;
+
+        public bool IsWarning => RemainingSec > 0 && RemainingSec <= WarnSec;
+
+        public int WarnSec { get; }
+
+        public System.Windows.Media.Color BarColor => IsDebuff
+            ? System.Windows.Media.Color.FromRgb(239, 68, 68)   // Red for debuffs
+            : System.Windows.Media.Color.FromRgb(59, 130, 246); // Blue for buffs
+
+        public System.Windows.Media.Color WarnColor => System.Windows.Media.Color.FromRgb(250, 204, 21); // Amber for warning
+
+        public BuffTimerViewModel(string name, bool isDebuff, int remainingSec, int maxSec, int warnSec = 5)
+        {
+            Name = name;
+            IsDebuff = isDebuff;
+            MaxSec = maxSec;
+            WarnSec = warnSec;
+            _remainingSec = remainingSec;
+        }
+
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+        private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
+            => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+    }
+}

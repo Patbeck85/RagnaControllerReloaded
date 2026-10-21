@@ -157,7 +157,8 @@ namespace RagnaController.Core
                     _orchestrator.WinTracker,
                     _orchestrator.ControllerManager,
                     _sharedSettings,
-                    ClientHwnd)
+                    ClientHwnd,
+                    _orchestrator.BuffManager)
                 {
                     Owner = System.Windows.Application.Current?.MainWindow
                 };
