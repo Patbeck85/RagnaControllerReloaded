@@ -72,7 +72,40 @@ namespace RagnaController.Core.Services
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"[OcrService] OCR-Fehler: {ex.Message}");
+                    Debug.WriteLine("[OcrService] OCR-Fehler: " + ex.Message);
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Extrahiert Text aus einer Bildregion (z.B. Ziel-Name).
+        /// Gibt den erkannten Text zurück oder null.
+        /// </summary>
+        public string? ExtractText(Bitmap image, Rectangle region)
+        {
+            if (_engine == null || _disposed) return null;
+
+            lock (_lock)
+            {
+                try
+                {
+                    var sw = Stopwatch.StartNew();
+
+                    using var cropped = CropRegion(image, region);
+                    if (cropped == null) return null;
+
+                    using var pix = Pix.LoadFromMemory(BitmapToPngBytes(cropped));
+                    using var page = _engine.Process(pix);
+                    var text = page.GetText();
+
+                    LastOcrDurationMs = sw.ElapsedMilliseconds;
+
+                    return string.IsNullOrWhiteSpace(text) ? null : text.Trim();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("[OcrService] OCR-Text-Fehler: " + ex.Message);
                     return null;
                 }
             }

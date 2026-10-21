@@ -163,6 +163,7 @@ namespace RagnaController.Views.Overlays
             var timer = new System.Windows.Threading.DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(100);
             int ocrTick = 0;
+            int targetOcrTick = 0;
             timer.Tick += (s, e) =>
             {
                 UpdateCooldownTimer();
@@ -175,6 +176,17 @@ namespace RagnaController.Views.Overlays
                     {
                         ocrTick = 0;
                         ReadHpSpViaOcr();
+                    }
+                }
+
+                // Target-Info OCR alle 3 Sekunden (30 Ticks * 100ms)
+                if (_settings?.OverlayTargetInfoEnabled == true && _ocrService?.IsAvailable == true && ClientHwnd != IntPtr.Zero)
+                {
+                    targetOcrTick++;
+                    if (targetOcrTick >= 30)
+                    {
+                        targetOcrTick = 0;
+                        ReadTargetInfoViaOcr();
                     }
                 }
             };
@@ -531,7 +543,66 @@ namespace RagnaController.Views.Overlays
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"[InGameOverlay] OCR HP/SP Fehler: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine("[InGameOverlay] OCR HP/SP Fehler: " + ex.Message);
+            }
+        }
+
+        // FEAT-034: Target-Info via OCR aus RO-Client-Fenster auslesen
+        private void ReadTargetInfoViaOcr()
+        {
+            if (_ocrService == null || _settings == null || ClientHwnd == IntPtr.Zero) return;
+
+            try
+            {
+                using var screenshot = OcrService.CaptureWindow(ClientHwnd);
+                if (screenshot == null) return;
+
+                var sw = screenshot.Width;
+                var sh = screenshot.Height;
+
+                // Target-Name (Text, nicht nur Zahl)
+                var nameRegion = new System.Drawing.Rectangle(
+                    (int)(sw * _settings.OverlayTargetNameRegionX),
+                    (int)(sh * _settings.OverlayTargetNameRegionY),
+                    (int)(sw * _settings.OverlayTargetNameRegionW),
+                    (int)(sh * _settings.OverlayTargetNameRegionH));
+                var targetName = _ocrService.ExtractText(screenshot, nameRegion);
+
+                // Target-Level (Zahl)
+                var levelRegion = new System.Drawing.Rectangle(
+                    (int)(sw * _settings.OverlayTargetLevelRegionX),
+                    (int)(sh * _settings.OverlayTargetLevelRegionY),
+                    (int)(sw * _settings.OverlayTargetLevelRegionW),
+                    (int)(sh * _settings.OverlayTargetLevelRegionH));
+                var targetLevel = _ocrService.ExtractNumber(screenshot, levelRegion);
+
+                // Target-HP (Zahl)
+                var targetHpRegion = new System.Drawing.Rectangle(
+                    (int)(sw * _settings.OverlayTargetHpRegionX),
+                    (int)(sh * _settings.OverlayTargetHpRegionY),
+                    (int)(sw * _settings.OverlayTargetHpRegionW),
+                    (int)(sh * _settings.OverlayTargetHpRegionH));
+                var targetHp = _ocrService.ExtractNumber(screenshot, targetHpRegion);
+
+                // Target-Distanz (Zahl)
+                var targetDistRegion = new System.Drawing.Rectangle(
+                    (int)(sw * _settings.OverlayTargetDistRegionX),
+                    (int)(sh * _settings.OverlayTargetDistRegionY),
+                    (int)(sw * _settings.OverlayTargetDistRegionW),
+                    (int)(sh * _settings.OverlayTargetDistRegionH));
+                var targetDist = _ocrService.ExtractNumber(screenshot, targetDistRegion);
+
+                Dispatcher.Invoke(() =>
+                {
+                    TargetNameText.Text = !string.IsNullOrWhiteSpace(targetName) ? targetName : "--";
+                    TargetLevelText.Text = targetLevel.HasValue ? targetLevel.Value.ToString() : "--";
+                    TargetHpText.Text = targetHp.HasValue ? targetHp.Value.ToString() : "--";
+                    TargetDistText.Text = targetDist.HasValue ? targetDist.Value.ToString() : "--";
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("[InGameOverlay] OCR Target-Info Fehler: " + ex.Message);
             }
         }
 

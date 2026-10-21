@@ -41,6 +41,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- Row 0: Class Icon + Profile Name + Layer indicator -->
@@ -246,7 +247,25 @@
                                                 <TextBlock x:Name="SpText" Text="--" FontSize="10" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource AccentBlue}" Margin="0,0,0,0"/>
                                             </StackPanel>
                                         </StackPanel>
-                                    </Border>
-                                </Grid>
-                            </Border>
-                        </Window>
+                                        </Border>
+
+                                        <!-- Row 6: Target-Info Overlay (OCR) - FEAT-034 -->
+                                        <Border Grid.Row="6" Margin="0,8,0,0" 
+                                        Visibility="{Binding Source={x:Static local:Settings.Default}, Path=OverlayTargetInfoEnabled, Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <StackPanel Margin="0,2">
+                                        <TextBlock Text="TARGET" Style="{StaticResource Eyebrow}" Margin="0,0,0,4"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="Name:" FontSize="8" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" Margin="0,0,4,0"/>
+                                            <TextBlock x:Name="TargetNameText" Text="--" FontSize="9" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,8,0"/>
+                                            <TextBlock Text="Lvl:" FontSize="8" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" Margin="0,0,4,0"/>
+                                            <TextBlock x:Name="TargetLevelText" Text="--" FontSize="9" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,8,0"/>
+                                            <TextBlock Text="HP:" FontSize="8" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" Margin="0,0,4,0"/>
+                                            <TextBlock x:Name="TargetHpText" Text="--" FontSize="9" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource AccentRed}" Margin="0,0,8,0"/>
+                                            <TextBlock Text="Dist:" FontSize="8" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" Margin="0,0,4,0"/>
+                                            <TextBlock x:Name="TargetDistText" Text="--" FontSize="9" FontFamily="Consolas" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,0"/>
+                                        </StackPanel>
+                                        </StackPanel>
+                                        </Border>
+                                        </Grid>
+                                        </Border>
+                                        </Window>

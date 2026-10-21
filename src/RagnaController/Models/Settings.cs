@@ -195,6 +195,42 @@ namespace RagnaController.Models
                 /// <summary>OCR-Region Höhe für SP-Wert (relativ, 0-1).</summary>
                 public double OverlaySpRegionH { get; set; } = 0.05;
 
+                // ── FEAT-034: Target-Info Overlay (OCR) ─────────────────────────
+                /// <summary>Target-Info-Overlay via OCR aus RO-Client auslesen.</summary>
+                public bool OverlayTargetInfoEnabled { get; set; } = true;
+                /// <summary>OCR-Region X für Ziel-Name (relativ, 0-1).</summary>
+                public double OverlayTargetNameRegionX { get; set; } = 0.35;
+                /// <summary>OCR-Region Y für Ziel-Name (relativ, 0-1).</summary>
+                public double OverlayTargetNameRegionY { get; set; } = 0.05;
+                /// <summary>OCR-Region Breite für Ziel-Name (relativ, 0-1).</summary>
+                public double OverlayTargetNameRegionW { get; set; } = 0.20;
+                /// <summary>OCR-Region Höhe für Ziel-Name (relativ, 0-1).</summary>
+                public double OverlayTargetNameRegionH { get; set; } = 0.04;
+                /// <summary>OCR-Region X für Ziel-Level (relativ, 0-1).</summary>
+                public double OverlayTargetLevelRegionX { get; set; } = 0.35;
+                /// <summary>OCR-Region Y für Ziel-Level (relativ, 0-1).</summary>
+                public double OverlayTargetLevelRegionY { get; set; } = 0.09;
+                /// <summary>OCR-Region Breite für Ziel-Level (relativ, 0-1).</summary>
+                public double OverlayTargetLevelRegionW { get; set; } = 0.08;
+                /// <summary>OCR-Region Höhe für Ziel-Level (relativ, 0-1).</summary>
+                public double OverlayTargetLevelRegionH { get; set; } = 0.04;
+                /// <summary>OCR-Region X für Ziel-HP (relativ, 0-1).</summary>
+                public double OverlayTargetHpRegionX { get; set; } = 0.35;
+                /// <summary>OCR-Region Y für Ziel-HP (relativ, 0-1).</summary>
+                public double OverlayTargetHpRegionY { get; set; } = 0.13;
+                /// <summary>OCR-Region Breite für Ziel-HP (relativ, 0-1).</summary>
+                public double OverlayTargetHpRegionW { get; set; } = 0.10;
+                /// <summary>OCR-Region Höhe für Ziel-HP (relativ, 0-1).</summary>
+                public double OverlayTargetHpRegionH { get; set; } = 0.04;
+                /// <summary>OCR-Region X für Ziel-Distanz (relativ, 0-1).</summary>
+                public double OverlayTargetDistRegionX { get; set; } = 0.35;
+                /// <summary>OCR-Region Y für Ziel-Distanz (relativ, 0-1).</summary>
+                public double OverlayTargetDistRegionY { get; set; } = 0.17;
+                /// <summary>OCR-Region Breite für Ziel-Distanz (relativ, 0-1).</summary>
+                public double OverlayTargetDistRegionW { get; set; } = 0.08;
+                /// <summary>OCR-Region Höhe für Ziel-Distanz (relativ, 0-1).</summary>
+                public double OverlayTargetDistRegionH { get; set; } = 0.04;
+
         // ── UX-017: Accessibility — High-Contrast & Font Scaling ─────────────
         /// <summary>High-Contrast-Modus aktivieren (für Sehbehinderte, Steam Deck im Sonnenlicht).</summary>
         public bool HighContrastEnabled { get; set; } = false;
