@@ -41,6 +41,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Tesseract" Version="5.2.0" />
     <Using Remove="System.Drawing" />
     <!-- v1.7.0: System.Windows.Forms for Tray Icon support -->
     <PackageReference Include="System.Windows.Forms" Version="4.0.0" />
@@ -78,12 +79,12 @@
     </PropertyGroup>
 
   <ItemGroup>
-      <Resource Include="Assets\icon.ico"            Condition="Exists('Assets\icon.ico')" />
-      <Resource Include="Assets\splash_bg.png"       Condition="Exists('Assets\splash_bg.png')" />
+      <Resource Include="Assets\icon.ico" Condition="Exists('Assets\icon.ico')" />
+      <Resource Include="Assets\splash_bg.png" Condition="Exists('Assets\splash_bg.png')" />
       <Resource Include="Assets\character_color.png" Condition="Exists('Assets\character_color.png')" />
-      <Resource Include="Assets\character_gray.png"  Condition="Exists('Assets\character_gray.png')" />
-      <Resource Include="Assets\controller.png"      Condition="Exists('Assets\controller.png')" />
-      <Resource Include="Assets\splash_logo.png"     Condition="Exists('Assets\splash_logo.png')" />
+      <Resource Include="Assets\character_gray.png" Condition="Exists('Assets\character_gray.png')" />
+      <Resource Include="Assets\controller.png" Condition="Exists('Assets\controller.png')" />
+      <Resource Include="Assets\splash_logo.png" Condition="Exists('Assets\splash_logo.png')" />
       <Resource Include="Resources\BuffRegistry.json" />
     </ItemGroup>
 
@@ -215,6 +216,7 @@
                             <Compile Include="Core\Services\VoiceChatService.cs" />
                             <Compile Include="Core\Services\EngineInstance.cs" />
                             <Compile Include="Core\Services\MultiClientEngineOrchestrator.cs" />
+<Compile Include="Core\Services\OcrService.cs" />
                 <Compile Include="Core\Windows\WindowSwitcher.cs" />
                 <Compile Include="Core\Windows\WindowTracker.cs" />
                 				<Compile Include="Core\Windows\MultiClientWindowTracker.cs" />
@@ -272,8 +274,7 @@
     </ItemGroup>
 
   <Target Name="CopySDL2NativeLib" AfterTargets="Build" Condition="Exists('$(NuGetPackageRoot)\SDL2-CS\2.0.0\runtimes\win-x64\native\SDL2.dll')">
-    <Copy SourceFiles="$(NuGetPackageRoot)\SDL2-CS\2.0.0\runtimes\win-x64\native\SDL2.dll"
-          DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(NuGetPackageRoot)\SDL2-CS\2.0.0\runtimes\win-x64\native\SDL2.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
   </Target>
 
   <Target Name="CopyBatAfterPublish" AfterTargets="Publish">

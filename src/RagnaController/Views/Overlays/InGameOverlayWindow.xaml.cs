@@ -7,6 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using RagnaController.Controller;
 using RagnaController.Core;
+using RagnaController.Core.Services;
 using RagnaController.Models;
 
 namespace RagnaController.Views.Overlays
@@ -28,6 +29,7 @@ namespace RagnaController.Views.Overlays
                 private readonly ControllerManager? _controllerManager;
                 private readonly Settings? _settings;
                 private readonly BuffManager? _buffManager;
+                private readonly OcrService? _ocrService;
 
         // PERF-008: GPU/Overlay render profiling (registry-backed, one per overlay type)
         private GpuOverlayProfiler? _gpuProfiler;
@@ -126,6 +128,7 @@ namespace RagnaController.Views.Overlays
                                 _controllerManager = controllerManager;
                                 _settings = settings;
                                 _buffManager = buffManager;
+                                _ocrService = new OcrService();
 
                     // UX-021: Restore saved overlay position OR position near client window
                     if (_settings?.OverlayPositionX.HasValue == true && _settings.OverlayPositionY.HasValue)
@@ -159,7 +162,22 @@ namespace RagnaController.Views.Overlays
             // Initialize timer for cooldown tracking
             var timer = new System.Windows.Threading.DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(100);
-            timer.Tick += (s, e) => UpdateCooldownTimer();
+            int ocrTick = 0;
+            timer.Tick += (s, e) =>
+            {
+                UpdateCooldownTimer();
+
+                // OCR nur alle 2 Sekunden (20 Ticks * 100ms) um CPU zu schonen
+                if (_settings?.OverlayHpSpEnabled == true && _ocrService?.IsAvailable == true && ClientHwnd != IntPtr.Zero)
+                {
+                    ocrTick++;
+                    if (ocrTick >= 20)
+                    {
+                        ocrTick = 0;
+                        ReadHpSpViaOcr();
+                    }
+                }
+            };
             timer.Start();
 
             // PERF-008: GPU/Overlay render profiling — one profiler + frame-budget monitor
@@ -471,6 +489,49 @@ namespace RagnaController.Views.Overlays
                 _cooldownRemaining--;
                 if (_cooldownRemaining < 0) _cooldownRemaining = 0;
                 CooldownText.Text = _cooldownRemaining + "s";
+            }
+        }
+
+        // FEAT-033: HP/SP via OCR aus RO-Client-Fenster auslesen
+        private void ReadHpSpViaOcr()
+        {
+            if (_ocrService == null || _settings == null || ClientHwnd == IntPtr.Zero) return;
+
+            try
+            {
+                using var screenshot = OcrService.CaptureWindow(ClientHwnd);
+                if (screenshot == null) return;
+
+                var sw = screenshot.Width;
+                var sh = screenshot.Height;
+
+                // HP-Region
+                var hpRegion = new System.Drawing.Rectangle(
+                    (int)(sw * _settings.OverlayHpRegionX),
+                    (int)(sh * _settings.OverlayHpRegionY),
+                    (int)(sw * _settings.OverlayHpRegionW),
+                    (int)(sh * _settings.OverlayHpRegionH));
+
+                var hp = _ocrService.ExtractNumber(screenshot, hpRegion);
+
+                // SP-Region
+                var spRegion = new System.Drawing.Rectangle(
+                    (int)(sw * _settings.OverlaySpRegionX),
+                    (int)(sh * _settings.OverlaySpRegionY),
+                    (int)(sw * _settings.OverlaySpRegionW),
+                    (int)(sh * _settings.OverlaySpRegionH));
+
+                var sp = _ocrService.ExtractNumber(screenshot, spRegion);
+
+                Dispatcher.Invoke(() =>
+                {
+                    HpText.Text = hp.HasValue ? hp.Value.ToString() : "--";
+                    SpText.Text = sp.HasValue ? sp.Value.ToString() : "--";
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[InGameOverlay] OCR HP/SP Fehler: {ex.Message}");
             }
         }
 

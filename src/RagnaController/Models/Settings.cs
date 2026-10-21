@@ -175,6 +175,26 @@ namespace RagnaController.Models
                 /// <summary>Maximale Anzahl sichtbarer Buffs im Overlay.</summary>
                 public int OverlayBuffMaxVisible { get; set; } = 8;
 
+                // ── FEAT-033: HP/SP Overlay (OCR) ──────────────────────────────
+                /// <summary>HP/SP-Overlay via OCR aus RO-Client auslesen.</summary>
+                public bool OverlayHpSpEnabled { get; set; } = true;
+                /// <summary>OCR-Region X für HP-Wert (relativ zur Client-Fenster-Größe, 0-1).</summary>
+                public double OverlayHpRegionX { get; set; } = 0.05;
+                /// <summary>OCR-Region Y für HP-Wert (relativ zur Client-Fenster-Größe, 0-1).</summary>
+                public double OverlayHpRegionY { get; set; } = 0.85;
+                /// <summary>OCR-Region Breite für HP-Wert (relativ, 0-1).</summary>
+                public double OverlayHpRegionW { get; set; } = 0.10;
+                /// <summary>OCR-Region Höhe für HP-Wert (relativ, 0-1).</summary>
+                public double OverlayHpRegionH { get; set; } = 0.05;
+                /// <summary>OCR-Region X für SP-Wert (relativ zur Client-Fenster-Größe, 0-1).</summary>
+                public double OverlaySpRegionX { get; set; } = 0.05;
+                /// <summary>OCR-Region Y für SP-Wert (relativ zur Client-Fenster-Größe, 0-1).</summary>
+                public double OverlaySpRegionY { get; set; } = 0.91;
+                /// <summary>OCR-Region Breite für SP-Wert (relativ, 0-1).</summary>
+                public double OverlaySpRegionW { get; set; } = 0.10;
+                /// <summary>OCR-Region Höhe für SP-Wert (relativ, 0-1).</summary>
+                public double OverlaySpRegionH { get; set; } = 0.05;
+
         // ── UX-017: Accessibility — High-Contrast & Font Scaling ─────────────
         /// <summary>High-Contrast-Modus aktivieren (für Sehbehinderte, Steam Deck im Sonnenlicht).</summary>
         public bool HighContrastEnabled { get; set; } = false;
