@@ -209,6 +209,9 @@ namespace RagnaController.Profiles
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         /// <summary>Number of times this profile was downloaded via share code.</summary>
         public int DownloadCount { get; set; } = 0;
+
+        /// <summary>Overlay-Theme für dieses Profil (Neon, Soft, Dark). Standard: Neon.</summary>
+        public Settings.OverlayThemeType OverlayTheme { get; set; } = Settings.OverlayThemeType.Neon;
     }
 
     /// <summary>

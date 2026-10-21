@@ -418,6 +418,7 @@ namespace RagnaController.Profiles
                     AutoActivateOnControllerConnect = p.AutoActivateOnControllerConnect,
                     CreatedAt = p.CreatedAt,
                     DownloadCount = p.DownloadCount,
+                    OverlayTheme = p.OverlayTheme,
                     IsBuiltIn = false // Always false for saved profiles
                 };
                 
