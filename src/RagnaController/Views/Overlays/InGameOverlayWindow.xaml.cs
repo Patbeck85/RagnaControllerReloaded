@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -49,6 +50,35 @@ namespace RagnaController.Views.Overlays
                 // FEAT-031: Skill cooldown tracking (F1-F12)
                 private readonly Dictionary<string, SkillCooldown> _skillCooldowns = new();
                 public IEnumerable<SkillCooldown> SkillCooldowns => _skillCooldowns.Values;
+
+                // FEAT-036: Damage Numbers
+                private readonly ObservableCollection<DamageNumber> _damageNumbers = new();
+                public ObservableCollection<DamageNumber> DamageNumbers => _damageNumbers;
+
+                /// <summary>Zeigt eine Schadenszahl am angegebenen Punkt an.</summary>
+                public void ShowDamageNumber(int amount, double x, double y)
+                {
+                    if (!_settings?.OverlayDamageNumbersEnabled == true) return;
+
+                    var dmg = new DamageNumber(amount, x, y);
+                    _damageNumbers.Add(dmg);
+
+                    // Entferne nach Ablauf der Dauer
+                    var removeTimer = new System.Windows.Threading.DispatcherTimer();
+                    removeTimer.Interval = TimeSpan.FromMilliseconds(_settings.OverlayDamageDurationMs);
+                    removeTimer.Tick += (s, e) =>
+                    {
+                        _damageNumbers.Remove(dmg);
+                        removeTimer.Stop();
+                    };
+                    removeTimer.Start();
+
+                    // Begrenze maximale Anzahl
+                    while (_damageNumbers.Count > _settings.OverlayDamageMaxVisible)
+                    {
+                        _damageNumbers.RemoveAt(0);
+                    }
+                }
 
                 /// <summary>Sets or updates a skill cooldown.</summary>
                 public void SetSkillCooldown(string keyName, int remainingSeconds, int maxSeconds, System.Windows.Media.Color color)
@@ -700,6 +730,52 @@ namespace RagnaController.Views.Overlays
             MaxSec = maxSec;
             WarnSec = warnSec;
             _remainingSec = remainingSec;
+        }
+
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+        private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
+            => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+    }
+
+    // FEAT-036: Damage Number data model for overlay binding
+    public class DamageNumber : System.ComponentModel.INotifyPropertyChanged
+    {
+        public int Amount { get; }
+        public string AmountText => Amount > 0 ? "-" + Amount : Amount.ToString();
+        public double X { get; }
+        public double Y { get; }
+
+        private double _opacity = 1.0;
+        public double Opacity
+        {
+            get => _opacity;
+            set
+            {
+                if (_opacity != value)
+                {
+                    _opacity = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public DamageNumber(int amount, double x, double y)
+        {
+            Amount = amount;
+            X = x;
+            Y = y;
+
+            // Fade out over time
+            var fadeTimer = new System.Windows.Threading.DispatcherTimer();
+            fadeTimer.Interval = TimeSpan.FromMilliseconds(50);
+            int fadeStep = 0;
+            fadeTimer.Tick += (s, e) =>
+            {
+                fadeStep++;
+                Opacity = Math.Max(0, 1.0 - (fadeStep / 20.0));
+                if (Opacity <= 0) fadeTimer.Stop();
+            };
+            fadeTimer.Start();
         }
 
         public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;

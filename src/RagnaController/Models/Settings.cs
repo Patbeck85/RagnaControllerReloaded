@@ -231,6 +231,18 @@ namespace RagnaController.Models
                 /// <summary>OCR-Region Höhe für Ziel-Distanz (relativ, 0-1).</summary>
                 public double OverlayTargetDistRegionH { get; set; } = 0.04;
 
+                // ── FEAT-036: Damage Numbers Overlay (Optional) ───────────────
+                /// <summary>Schadenszahlen-Overlay über Ziel anzeigen.</summary>
+                public bool OverlayDamageNumbersEnabled { get; set; } = true;
+                /// <summary>Schriftgröße der Schadenszahlen.</summary>
+                public double OverlayDamageFontSize { get; set; } = 16.0;
+                /// <summary>Farbe der Schadenszahlen (Hex).</summary>
+                public string OverlayDamageColor { get; set; } = "#FF5252";
+                /// <summary>Anzeigedauer einer Schadenszahl in Millisekunden.</summary>
+                public int OverlayDamageDurationMs { get; set; } = 1200;
+                /// <summary>Maximale Anzahl gleichzeitiger Schadenszahlen.</summary>
+                public int OverlayDamageMaxVisible { get; set; } = 10;
+
         // ── UX-017: Accessibility — High-Contrast & Font Scaling ─────────────
         /// <summary>High-Contrast-Modus aktivieren (für Sehbehinderte, Steam Deck im Sonnenlicht).</summary>
         public bool HighContrastEnabled { get; set; } = false;

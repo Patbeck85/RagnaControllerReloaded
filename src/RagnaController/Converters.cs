@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace RagnaController
@@ -59,5 +60,27 @@ namespace RagnaController
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
             => Binding.DoNothing;
-    }
-}
+        }
+
+        /// <summary>
+        /// TASK-2207: Converts a hex color string to a SolidColorBrush.
+        /// </summary>
+        public class StringToBrushConverter : IValueConverter
+        {
+            public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            {
+                var colorString = value?.ToString() ?? "#FF5252";
+                try
+                {
+                    return new SolidColorBrush((Color)ColorConverter.ConvertFromString(colorString));
+                }
+                catch
+                {
+                    return new SolidColorBrush(Colors.Red);
+                }
+            }
+
+            public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+                => Binding.DoNothing;
+        }
+        }

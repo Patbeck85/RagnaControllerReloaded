@@ -42,6 +42,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- Row 0: Class Icon + Profile Name + Layer indicator -->
@@ -266,6 +267,33 @@
                                         </StackPanel>
                                         </StackPanel>
                                         </Border>
-                                        </Grid>
+
+                                        <!-- Row 7: Damage Numbers Overlay (FEAT-036) -->
+                                        <Border Grid.Row="7" Margin="0,8,0,0" 
+                                                Visibility="{Binding Source={x:Static local:Settings.Default}, Path=OverlayDamageNumbersEnabled, Converter={StaticResource BoolToVisibilityConverter}}">
+                                            <StackPanel Margin="0,2">
+                                                <TextBlock Text="DAMAGE" Style="{StaticResource Eyebrow}" Margin="0,0,0,4"/>
+                                                <ItemsControl x:Name="DamageNumbersItems" ItemsSource="{Binding DamageNumbers}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <Canvas/>
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemContainerStyle>
+                                                        <Style TargetType="ContentPresenter">
+                                                            <Setter Property="Canvas.Left" Value="{Binding X}"/>
+                                                            <Setter Property="Canvas.Top" Value="{Binding Y}"/>
+                                                            <Setter Property="Opacity" Value="{Binding Opacity}"/>
+                                                        </Style>
+                                                    </ItemsControl.ItemContainerStyle>
+                                                    <ItemsControl.ItemTemplate>
+                                                                                                            <DataTemplate>
+                                                                                                                <TextBlock Text="{Binding AmountText}" FontSize="{Binding Source={x:Static local:Settings.Default}, Path=OverlayDamageFontSize}" FontWeight="Bold" Foreground="{Binding Source={x:Static local:Settings.Default}, Path=OverlayDamageColor, Converter={StaticResource StringToBrushConverter}}" FontFamily="Consolas"/>
+                                                                                                            </DataTemplate>
+                                                                                                        </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
                                         </Border>
-                                        </Window>
+                                </Grid>
+                            </Border>
+                        </Window>
