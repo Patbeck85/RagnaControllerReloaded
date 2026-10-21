@@ -209,7 +209,7 @@
 | **TASK-2205** | Overlay-Designer: Drag & Drop Positionierung, Presets speichern/laden | Designer | HIGH | TASK-2201 | ✅ CLOSED (2026-10-21) |
 | **TASK-2206** | Overlay-Themes: Dark/Light/HighContrast per Profil wählbar | Designer | MEDIUM | TASK-2205 | ✅ CLOSED (2026-10-21) |
 | **TASK-2207** | Damage Numbers Overlay (Optional): Eigene Schadensanzeige über Ziel | Coder | LOW | TASK-2204 | ✅ CLOSED (2026-10-21) |
-| **TASK-2208** | Unit-Tests: Overlay-Rendering, OCR-Accuracy, Performance | QA | MEDIUM | TASK-2205 | 📋 OPEN |
+| **TASK-2208** | Unit-Tests: Overlay-Rendering, OCR-Accuracy, Performance | QA | MEDIUM | TASK-2205 | ✅ CLOSED (2026-10-21) |
 
 ---
 
