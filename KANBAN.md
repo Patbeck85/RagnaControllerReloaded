@@ -263,15 +263,14 @@
 
 ### Epic 17: AI-Assisted Features (White-Hat) (v2.6.0) — 📋 PLANUNG
 
-**Goal:** KI-Unterstützung rein client-seitig — OCR, Build-Optimizer, Monster-DB.
+**Goal:** KI-Unterstützung rein client-seitig — OCR, Build-Optimizer, Monster-DB. **Pre-Renewal & Renewal Support** für alle Build-Empfehlungen und Skill-Simulatoren.
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-2601** | OCR-based HP/SP Reading: Windows ML / Tesseract Integration für Overlay | Coder | HIGH | TASK-2203 | 📋 OPEN |
-| **TASK-2602** | Skill Recommendation Engine: Class + Level + Equipment → Skill-Build vorschlagen | Coder | MEDIUM | — | 📋 OPEN |
-| **TASK-2603** | Auto-Build Optimizer: Stat-Allokation (Str/Agi/Vit/Int/Dex/Luk) für Builds | Coder | MEDIUM | TASK-2602 | 📋 OPEN |
+| **TASK-2602** | Skill Recommendation Engine: Class + Level + Equipment → Skill-Build vorschlagen (Pre-Renewal & Renewal) | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-2603** | Auto-Build Optimizer: Stat-Allokation (Str/Agi/Vit/Int/Dex/Luk) für Builds (Pre-Renewal & Renewal) | Coder | MEDIUM | TASK-2602 | 📋 OPEN |
 | **TASK-2604** | Monster Database Integration: iRO/kRO DB laden → Element, Drops, Spawns im Overlay | Coder | LOW | — | 📋 OPEN |
-| **TASK-2605** | Market Price Overlay: Item-Preise aus öffentlichen RO-Market-APIs | Coder | LOW | TASK-2604 | 📋 OPEN |
 | **TASK-2606** | Unit-Tests: OCR Accuracy, Build Recommendations, DB Queries | QA | MEDIUM | TASK-2603 | 📋 OPEN |
 
 ---
@@ -382,4 +381,4 @@
 
 ---
 
-*Letzte Aktualisierung: 2026-10-20 | Epics 12-24 hinzugefügt basierend auf FEATURE_GAP_ANALYSIS.md | Build: 0 Errors / 0 Warnings | Tests: 726/726 PASS*
+*Letzte Aktualisierung: 2026-10-21 | Epic 17: Pre-Renewal/Renewal Support hinzugefügt, Market Price Overlay entfernt | Build: 0 Errors / 0 Warnings | Tests: 770/770 PASS*
