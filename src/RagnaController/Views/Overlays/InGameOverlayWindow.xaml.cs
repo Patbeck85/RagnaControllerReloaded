@@ -43,12 +43,34 @@ namespace RagnaController.Views.Overlays
                 /// <summary>HWND des RO-Clients, dem dieses Overlay zugeordnet ist.</summary>
                 public IntPtr ClientHwnd { get; private set; } = IntPtr.Zero;
 
+                // FEAT-031: Skill cooldown tracking (F1-F12)
+                private readonly Dictionary<string, SkillCooldown> _skillCooldowns = new();
+                public IEnumerable<SkillCooldown> SkillCooldowns => _skillCooldowns.Values;
+
+                /// <summary>Sets or updates a skill cooldown.</summary>
+                public void SetSkillCooldown(string keyName, int remainingSeconds, int maxSeconds, System.Windows.Media.Color color)
+                {
+                    var sc = new SkillCooldown(keyName, remainingSeconds, maxSeconds, color);
+                    _skillCooldowns[keyName] = sc;
+                    Dispatcher.Invoke(() =>
+                    {
+                        // ItemsControl will refresh via INotifyPropertyChanged on SkillCooldown
+                    });
+                }
+
+                /// <summary>Clears all skill cooldowns.</summary>
+                public void ClearSkillCooldowns()
+                {
+                    _skillCooldowns.Clear();
+                }
+
         // Constructor with ControllerManager (for new code using unified abstraction)
                         #pragma warning disable CS8625
                         public InGameOverlayWindow(IMessenger messenger, Core.WindowTracker tracker, ControllerManager? controllerManager, Settings settings = null, IntPtr clientHwnd = default) : base()
                         #pragma warning restore CS8625
                 {
                     InitializeComponent();
+                    DataContext = this;
                     ClientHwnd = clientHwnd;
                     _controllerManager = controllerManager;
                     _settings = settings;
@@ -401,6 +423,49 @@ namespace RagnaController.Views.Overlays
         }
 
         // PropertyChanged helper (simplified)
-        private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null) { }
-    }
-}
+                private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null) { }
+            }
+        }
+
+        // FEAT-031: Skill cooldown data model for overlay binding
+        public class SkillCooldown : System.ComponentModel.INotifyPropertyChanged
+        {
+            public string KeyName { get; }
+            public System.Windows.Media.Color Color { get; }
+
+            private int _remainingSeconds;
+            public int RemainingSeconds
+            {
+                get => _remainingSeconds;
+                set
+                {
+                    if (_remainingSeconds != value)
+                    {
+                        _remainingSeconds = value;
+                        OnPropertyChanged();
+                        OnPropertyChanged(nameof(RemainingTime));
+                        OnPropertyChanged(nameof(RemainingPercent));
+                    }
+                }
+            }
+
+            private readonly int _maxSeconds;
+
+            public string RemainingTime => RemainingSeconds > 0 ? RemainingSeconds.ToString() : "0";
+
+            public double RemainingPercent => _maxSeconds > 0
+                ? Math.Clamp((double)RemainingSeconds / _maxSeconds, 0.0, 1.0)
+                : 0.0;
+
+            public SkillCooldown(string keyName, int remainingSeconds, int maxSeconds, System.Windows.Media.Color color)
+            {
+                KeyName = keyName;
+                _maxSeconds = maxSeconds;
+                _remainingSeconds = remainingSeconds;
+                Color = color;
+            }
+
+            public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+            private void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
+                => PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }

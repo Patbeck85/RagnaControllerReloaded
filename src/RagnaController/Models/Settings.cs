@@ -19,15 +19,33 @@ namespace RagnaController.Models
     }
 
     public class Settings
-    {
-        // Path to settings.json in the AppData folder
-        private static readonly object _fileLock = new();
-        private static readonly string SettingsPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "RagnaController", "settings.json");
+        {
+            // Path to settings.json in the AppData folder
+            private static readonly object _fileLock = new();
+            private static readonly string SettingsPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "RagnaController", "settings.json");
 
-        // FIX: Flag to mark if loading settings failed
-        private static bool _loadFailed = false;
+            // FEAT-031: Static Default instance for XAML bindings
+            private static Settings? _default;
+            public static Settings Default
+            {
+                get
+                {
+                    if (_default == null)
+                    {
+                        lock (_fileLock)
+                        {
+                            if (_default == null)
+                                _default = Load();
+                        }
+                    }
+                    return _default!;
+                }
+            }
+
+            // FIX: Flag to mark if loading settings failed
+            private static bool _loadFailed = false;
 
         // --- The eigentlichen Einstellungen ---
         public string LastProfileName { get; set; } = "Novice";
@@ -135,9 +153,19 @@ namespace RagnaController.Models
         }
 
         // Overlay customization settings
-        public OverlayThemeType OverlayTheme { get; set; } = OverlayThemeType.Neon;
-        public double OverlayOpacity { get; set; } = 0.9;
-        public double OverlayFontScale { get; set; } = 1.0;
+                public OverlayThemeType OverlayTheme { get; set; } = OverlayThemeType.Neon;
+                public double OverlayOpacity { get; set; } = 0.9;
+                public double OverlayFontScale { get; set; } = 1.0;
+
+                // ── FEAT-031: Skill Cooldown Overlay ──────────────────────────────
+                /// <summary>Skill-Cooldown-Balken im Overlay anzeigen (F1-F12).</summary>
+                public bool OverlayCooldownsEnabled { get; set; } = true;
+                /// <summary>Höhe jedes Cooldown-Balkens in Pixel.</summary>
+                public double OverlayCooldownBarHeight { get; set; } = 6.0;
+                /// <summary>Breite jedes Cooldown-Balkens in Pixel.</summary>
+                public double OverlayCooldownBarWidth { get; set; } = 40.0;
+                /// <summary>Opacity der Cooldown-Balken (0.0 = unsichtbar, 1.0 = deckend).</summary>
+                public double OverlayCooldownOpacity { get; set; } = 0.8;
 
         // ── UX-017: Accessibility — High-Contrast & Font Scaling ─────────────
         /// <summary>High-Contrast-Modus aktivieren (für Sehbehinderte, Steam Deck im Sonnenlicht).</summary>
