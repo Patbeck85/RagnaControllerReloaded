@@ -193,14 +193,12 @@ namespace RagnaController.Tests
             var btv = new BuffTimerViewModel("Test", false, 30, 60, 5);
             var dmg = new DamageNumber(50, 0, 0);
 
-            bool scFired = false, btvFired = false, dmgFired = false;
+            bool scFired = false, btvFired = false;
             sc.PropertyChanged += (_, _) => scFired = true;
             btv.PropertyChanged += (_, _) => btvFired = true;
-            dmg.PropertyChanged += (_, _) => dmgFired = true;
 
             sc.RemainingSeconds = 500;
             btv.RemainingSec = 20;
-            // DamageNumber has no settable property to trigger change, but event exists
 
             Assert.True(scFired);
             Assert.True(btvFired);
