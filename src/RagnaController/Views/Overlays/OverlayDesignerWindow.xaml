@@ -1,0 +1,79 @@
+<!--
+    Overlay Designer Window.
+    Erlaubt Drag & Drop Positionierung der Overlay-Elemente und Speichern/Laden von Layout-Presets.
+    FEAT-035: Overlay-Designer mit visueller Positionierung.
+-->
+<Window x:Class="RagnaController.Views.Overlays.OverlayDesignerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:RagnaController.Models"
+        Title="RagnaController – Overlay Designer"
+        Width="500" Height="400"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="CanResize"
+        Topmost="True"
+        ShowInTaskbar="True">
+
+    <Window.Resources>
+        <Style x:Key="DraggableElement" TargetType="Border">
+            <Setter Property="Background" Value="#3A3A4A"/>
+            <Setter Property="BorderBrush" Value="#C9A646"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="6"/>
+            <Setter Property="Cursor" Value="SizeAll"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <TextBlock Text="OVERLAY DESIGNER" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentBlue}" Margin="0,0,0,4"/>
+            <TextBlock Text="Ziehe Overlay-Elemente per Drag &amp; Drop an die gewünschte Position. Layout wird automatisch gespeichert." FontSize="11" Foreground="{StaticResource TextSecondary}" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <!-- Designer Canvas -->
+        <Border Grid.Row="1" Style="{StaticResource GlassPanelCompact}" BorderBrush="#44C9A646" BorderThickness="1" CornerRadius="{StaticResource RadiusMd}">
+            <Canvas x:Name="DesignerCanvas" Background="#1A1A2A" Width="400" Height="250" ClipToBounds="True">
+                <!-- Overlay Element Vorschau: Skill Cooldowns -->
+                <Border x:Name="ElemSkillCooldowns" Style="{StaticResource DraggableElement}" Canvas.Left="20" Canvas.Top="20" Width="120" Height="40" MouseLeftButtonDown="Element_MouseLeftButtonDown" MouseMove="Element_MouseMove" MouseLeftButtonUp="Element_MouseLeftButtonUp">
+                    <TextBlock Text="SKILL COOLDOWNS (F1-F12)" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+
+                <!-- Overlay Element Vorschau: Buff/Debuff Timers -->
+                <Border x:Name="ElemBuffTimers" Style="{StaticResource DraggableElement}" Canvas.Left="160" Canvas.Top="20" Width="120" Height="40" MouseLeftButtonDown="Element_MouseLeftButtonDown" MouseMove="Element_MouseMove" MouseLeftButtonUp="Element_MouseLeftButtonUp">
+                    <TextBlock Text="BUFFS / DEBUFFS" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+
+                <!-- Overlay Element Vorschau: HP/SP -->
+                <Border x:Name="ElemHpSp" Style="{StaticResource DraggableElement}" Canvas.Left="20" Canvas.Top="80" Width="100" Height="30" MouseLeftButtonDown="Element_MouseLeftButtonDown" MouseMove="Element_MouseMove" MouseLeftButtonUp="Element_MouseLeftButtonUp">
+                    <TextBlock Text="HP / SP" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+
+                <!-- Overlay Element Vorschau: Target-Info -->
+                <Border x:Name="ElemTargetInfo" Style="{StaticResource DraggableElement}" Canvas.Left="140" Canvas.Top="80" Width="140" Height="30" MouseLeftButtonDown="Element_MouseLeftButtonDown" MouseMove="Element_MouseMove" MouseLeftButtonUp="Element_MouseLeftButtonUp">
+                    <TextBlock Text="TARGET INFO" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+
+                <!-- Overlay Element Vorschau: Class Icon + Profile -->
+                <Border x:Name="ElemProfile" Style="{StaticResource DraggableElement}" Canvas.Left="20" Canvas.Top="130" Width="120" Height="30" MouseLeftButtonDown="Element_MouseLeftButtonDown" MouseMove="Element_MouseMove" MouseLeftButtonUp="Element_MouseLeftButtonUp">
+                    <TextBlock Text="PROFIL + CLASS ICON" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Border>
+            </Canvas>
+        </Border>
+
+        <!-- Preset Controls -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,12,0,0">
+            <Button x:Name="BtnSavePreset" Content="Preset speichern" Click="BtnSavePreset_Click" Margin="0,0,8,0" Padding="12,6"/>
+            <Button x:Name="BtnLoadPreset" Content="Preset laden" Click="BtnLoadPreset_Click" Margin="0,0,8,0" Padding="12,6"/>
+            <Button x:Name="BtnReset" Content="Zurücksetzen" Click="BtnReset_Click" Margin="0,0,8,0" Padding="12,6"/>
+            <Button x:Name="BtnClose" Content="Schließen" Click="BtnClose_Click" Padding="12,6"/>
+        </StackPanel>
+    </Grid>
+</Window>
