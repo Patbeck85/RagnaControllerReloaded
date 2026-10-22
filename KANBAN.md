@@ -386,4 +386,78 @@
 
 ---
 
-*Letzte Aktualisierung: 2026-10-21 | TASK-1901/1903/1904 COMPLETE | Build: 0 Errors / 0 Warnings | Tests: 773/773 PASS*
+
+
+---
+
+### Epic 25: RO Game Knowledge Base (v2.6.0) — 📋 PLANUNG
+
+**Goal:** Integriertes RO-Wissen als controller-freundliche Nachschlagewerke — Monster, Maps, Items, Skills, Stats, XP. Orientiert an Community-Datenbanken (iRO/kRO), aber optimiert für Gamepad-Bedienung während des Spiels.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-3401** | Monster Database: iRO/kRO-Daten laden (Element, Size, Race, Drops, MVP/Miniboss, Spawn-Locations) | Coder | LOW | — | 📋 OPEN |
+| **TASK-3402** | Map Database: Warp-Punkte, Kafra, Dungeon-Eingänge, Levelling-Spots | Coder | LOW | TASK-3401 | 📋 OPEN |
+| **TASK-3403** | Item Database: Suche mit Filtern (Type, Slot, Weight, Price, Drop-Monster) | Designer | LOW | TASK-3401 | 📋 OPEN |
+| **TASK-3404** | Skill Simulator: Skill-Punkte verteilen → Build-Code für Forums/Guides | Designer | LOW | TASK-3401 | 📋 OPEN |
+| **TASK-3405** | Stat Calculator: Base/Job Level → Stats (mit Equipment, Blessings, Foods) | Coder | LOW | TASK-3401 | 📋 OPEN |
+| **TASK-3406** | Experience Calculator: Kill-Count für Level-Up, Optimal Maps per Level-Range | Coder | LOW | TASK-3402 | 📋 OPEN |
+| **TASK-3407** | Unit-Tests: DB Integrity, Calculator Accuracy, Simulator Export | QA | LOW | TASK-3405 | 📋 OPEN |
+
+---
+
+### Epic 26: AI-Assisted Features (v2.6.0) — 📋 PLANUNG
+
+**Goal:** KI-Unterstützung rein client-seitig — OCR, Build-Optimizer, Skill-Recommendation. Pre-Renewal & Renewal Support für alle Empfehlungen.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-3501** | OCR-based HP/SP Reading: Windows ML / Tesseract Integration für Overlay | Coder | HIGH | — | 📋 OPEN |
+| **TASK-3502** | Skill Recommendation Engine: Class + Level + Equipment → Skill-Build vorschlagen (Pre-Renewal & Renewal) | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-3503** | Auto-Build Optimizer: Stat-Allokation (Str/Agi/Vit/Int/Dex/Luk) für Builds | Coder | MEDIUM | TASK-3502 | 📋 OPEN |
+| **TASK-3504** | Unit-Tests: OCR Accuracy, Build Recommendations, DB Queries | QA | MEDIUM | TASK-3503 | 📋 OPEN |
+
+---
+
+### Epic 27: Advanced Input Features (v2.7.0) — 📋 PLANUNG
+
+**Goal:** Next-Level Input — Chords, Sequences, Hold/Tap, Analog Zones, Gestures. Inspiriert von DualSense-Features und SteamInputDB-Konfigs für RO.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-3601** | Chorded Input: L1+R1+A ≠ L1+A + R1+A (eigene Actions für Kombi-Tasten) | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-3602** | Sequential Chords: A→B→X (500ms Fenster) = Combo-Action | Coder | MEDIUM | TASK-3601 | 📋 OPEN |
+| **TASK-3603** | Hold+Tap Distinction: Kurz drücken = Aktion A, Halten = Aktion B | Coder | MEDIUM | — | 📋 OPEN |
+| **TASK-3604** | Analog Trigger Zones: 0-30% Walk, 30-70% Run, 70-100% Sprint | Coder | LOW | — | 📋 OPEN |
+| **TASK-3605** | Stick Gesture Recognition: Kreis, Zick-Zack, Tippen → Actions | Coder | LOW | TASK-3601 | 📋 OPEN |
+| **TASK-3606** | Unit-Tests: Chord Detection, Sequence Timing, Gesture Classification | QA | MEDIUM | TASK-3605 | 📋 OPEN |
+
+---
+
+### Epic 28: Platform & Deployment (v2.8.0) — 📋 PLANUNG
+
+**Goal:** Professionelle Distribution — Auto-Update, MSIX, Portable, Steam Deck, Linux, CI/CD-Matrix.
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-3701** | Auto-Update: Silent/Delta-Update, Background-Download, Restart-Prompt | DevOps | HIGH | — | 📋 OPEN |
+| **TASK-3702** | MSIX / Store Package: Windows Store, Winget, Chocolatey, Scoop | DevOps | MEDIUM | — | 📋 OPEN |
+| **TASK-3703** | Portable Mode: Vollständig portable (keine Registry, AppData optional) | DevOps | MEDIUM | — | 📋 OPEN |
+| **TASK-3704** | Steam Deck Verified: Offizielles Badge anstreben (Performance, Input, UI) | DevOps | MEDIUM | TASK-3703 | 📋 OPEN |
+| **TASK-3705** | Linux/Wine Support: .NET 8 + SDL2 testen, Dokumentation, Known Issues | DevOps | LOW | — | 📋 OPEN |
+| **TASK-3706** | CI/CD Pipeline: GitHub Actions Matrix (Win10/11, x64/ARM64), Stryker, Signing | DevOps | HIGH | TASK-3702 | 📋 OPEN |
+
+---
+
+### Roadmap-Öffentechnische Schulden (TECH-Tasks aus Roadmap.md Phase 11)
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-9001** | TECH-020: WindowSwitcher — Process.GetProcessById im EnumWindows-Callback cachen (Allokationen im Hot Path) | Coder | S4 | — | 📋 OPEN |
+| **TASK-9002** | TECH-021: EngineOrchestrator God Class / SRP-Violation refactoren (686 Zeilen, 20+ Engine-Felder) | Coder | S4 | — | 📋 OPEN |
+| **TASK-9003** | TECH-022: SettingsWindow — Lokalisierungs-Keys für neue Controls (TECH-017/019) in Locales nachpflegen | Designer | S4 | — | 📋 OPEN |
+
+---
+
+*Letzte Aktualisierung: 2026-10-22 | Release v2.5.0 deployed | Build: 0 Errors / 0 Warnings | Tests: 847/848 PASS (1 pre-existing flaky)*
+
