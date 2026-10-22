@@ -12,7 +12,7 @@
     <RootNamespace>RagnaController</RootNamespace>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.3.0</Version>
+    <Version>2.5.0</Version>
     <Authors>RagnaController Contributors</Authors>
     <Description>Hybrid Action Controller Layer for Ragnarok Online — Smart Cursor Edition</Description>
     <!-- Disable XAML compilation to avoid conflicts with manually written methods -->
@@ -184,7 +184,9 @@
         <Compile Include="Core\Services\PowerMonitor.cs" />
         <Compile Include="Core\Services\ProfileApplier.cs" />
         <Compile Include="Core\Services\ProfileShareService.cs" />
-        <Compile Include="Core\Services\ClassDetector.cs" />
+            <Compile Include="Core\Services\CloudSyncService.cs" />
+                <Compile Include="Views\Dialogs\GyroCalibrationWindow.xaml.cs" />
+                <Compile Include="Core\Services\ClassDetector.cs" />
         <Compile Include="Core\Utilities\RoFeatures.cs" />
         <Compile Include="Core\Services\RoUiMenuService.cs" />
         <Compile Include="Core\Input\SendInputMouseStrategy.cs" />
@@ -201,6 +203,7 @@
         <Compile Include="Core\Services\SystemMonitor.cs" />
         <Compile Include="Core\Services\TelemetryService.cs" />
                 <Compile Include="Core\Utilities\RagnaControllerETW.cs" />
+                <Compile Include="Core\Utilities\PerformanceProfiler.cs" />
                 <Compile Include="Core\Utilities\GpuOverlayProfiler.cs" />
                         <Compile Include="Core\Services\MemoryAllocationTracker.cs" />
                         <Compile Include="Core\Input\InputLatencyTracker.cs" />
@@ -248,12 +251,19 @@
     <Compile Include="Profiles\AppJsonContext.cs" />
     <Compile Include="Profiles\CharacterProfileResolver.cs" />
     <Compile Include="Profiles\Profile.cs" />
+    <Compile Include="Profiles\BaseProfile.cs" />
+    <Compile Include="Profiles\ClassProfile.cs" />
+    <Compile Include="Profiles\CharProfile.cs" />
     <Compile Include="Profiles\ProfileManager.cs" />
+    <Compile Include="Profiles\ProfileMigration.cs" />
     <Compile Include="Profiles\ProfilePreset.cs" />
     <Compile Include="Profiles\ProfilePresetManager.cs" />
     <Compile Include="Profiles\ProfileTemplate.cs" />
     <Compile Include="Profiles\ProfileTemplateManager.cs" />
     <Compile Include="Views\Dialogs\ProfileWizardWindow.xaml.cs" />
+    <Compile Include="Views\Dialogs\ProfileValidationWindow.xaml.cs" />
+    <Compile Include="Views\Dialogs\ProfileDiffWindow.xaml.cs" />
+    <Compile Include="Views\Dialogs\GyroCalibrationWindow.xaml.cs" />
     <Compile Include="Views\Dialogs\WizardWindow.xaml.cs" />
     <Compile Include="Views\Editors\RadialMenuWindow.xaml.cs" />
     <Compile Include="Views\Editors\RadialSetupWindow.xaml.cs" />

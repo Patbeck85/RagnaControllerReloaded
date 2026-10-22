@@ -9,7 +9,7 @@ namespace RagnaController.Core
     /// </summary>
     public sealed class BackgroundTickProvider : ITickProvider
     {
-        public int  IntervalMs      { get; }
+        public int  IntervalMs      { get; set; }
         public bool BatteryThrottle { get; set; }
 
         public event EventHandler? Tick;

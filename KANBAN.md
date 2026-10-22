@@ -102,20 +102,25 @@
 
 ### 📋 Nächste sofortige Aktion
 
-**Alle Epics (1-7) abgeschlossen** — kein offener Task mehr in der KANBAN.md.
+**Epic 8: DualSense Lightbar pro Profil konfigurierbar — COMPLETE.**
+
+**Nächste Epics zur Auswahl (alle PLANUNG, keine Blocker):**
+- **Epic 10: Performance-Optimierung** (TASK-1921-1924, alle COMPLETE, keine Abhängigkeiten)
+- **Epic 14: Profile System Advanced Features** (TASK-2301-2308, alle OPEN)
+- **Epic 15: Controller Hardware Advanced Features** (TASK-2401-2408, alle OPEN, baut auf Epic 8 Lightbar auf)
 
 **Neue Epics für v2.6.0+:**
 
-### Epic 8: DualSense Lightbar pro Profil konfigurierbar — 📋 PLANUNG
+### Epic 8: DualSense Lightbar pro Profil konfigurierbar — ✅ COMPLETE
 
 **Goal:** Jedes Charakter-Profil bekommt eigene Lightbar-Farbe (z.B. Rot für Mage, Blau für Archer, Grün für Support).
 
 || Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
-|---------|-------|----------------|-----------|----------------|--------|
-| **TASK-1901** | Lightbar-Farb-Definition pro Profil (RGB-Werte in Profile-Model) | Coder | MEDIUM | — | 📋 OPEN |
-| **TASK-1902** | UI: Lightbar-Farb-Selektor in SettingsWindow / ProfileWizard | Designer | MEDIUM | TASK-1901 | 📋 OPEN |
-| **TASK-1903** | Engine: Lightbar-Farbe bei Profil-Wechsel anwenden | Coder | MEDIUM | TASK-1901 | 📋 OPEN |
-| **TASK-1904** | Unit-Tests für Lightbar-Farb-Logik | QA | LOW | TASK-1903 | 📋 OPEN |
+||---------|-------|----------------|-----------|----------------|--------|
+|| **TASK-1901** | Lightbar-Farb-Definition pro Profil (RGB-Werte in Profile-Model) | Coder | MEDIUM | — | ✅ COMPLETE (2026-10-21) ||
+|| **TASK-1902** | UI: Lightbar-Farb-Selektor in SettingsWindow / ProfileWizard | Designer | MEDIUM | TASK-1901 | ✅ COMPLETE (2026-10-21) ||
+|| **TASK-1903** | Engine: Lightbar-Farbe bei Profil-Wechsel anwenden | Coder | MEDIUM | TASK-1901 | ✅ COMPLETE (2026-10-21) ||
+|| **TASK-1904** | Unit-Tests für Lightbar-Farb-Logik | QA | LOW | TASK-1903 | ✅ COMPLETE (2026-10-21) ||
 
 ### Epic 9: First-Run Wizard erweitern (Controller-Button-Mapping, Profil-Vorlagen) — ✅ COMPLETE
 
@@ -132,16 +137,16 @@
 | **TASK-1919** | MainWindow: Renewal/Pre-Renewal Toggle verdrahten (_engine.ApplyGameMode) | Coder | HIGH | TASK-1917 | ✅ CLOSED (2026-10-19) |
 | **TASK-1920** | GitHub Gists: UI-Verbindung in ProfileLibraryWindow bereits vorhanden (BtnShare/BtnDownload) | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
 
-### Epic 10: Performance-Optimierung (Engine-Tick-Reduktion, Memory-Pooling) — 📋 PLANUNG
+### Epic 10: Performance-Optimierung (Engine-Tick-Reduktion, Memory-Pooling) — ✅ COMPLETE
 
 **Goal:** Engine-Tick optimieren, Memory-Pooling für häufige Objekte, CPU-Last senken.
 
 || Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-1921** | Performance-Profiling: Engines mit höchsten Tick-Zeiten identifizieren | Coder | HIGH | — | 📋 OPEN |
-| **TASK-1922** | Memory-Pooling für häufige Objekte (ControllerSnapshot, InputEvents) | Coder | HIGH | TASK-1921 | 📋 OPEN |
-| **TASK-1923** | Engine-Tick-Reduktion: Idle-State erkennen, Tick-Frequenz senken | Coder | HIGH | TASK-1922 | 📋 OPEN |
-| **TASK-1924** | Performance-Regression-Tests (CPU-Last, Memory) | QA | MEDIUM | TASK-1923 | 📋 OPEN |
+|| **TASK-1921** | Performance-Profiling: Engines mit höchsten Tick-Zeiten identifizieren | Coder | HIGH | — | ✅ COMPLETE (2026-10-21) ||
+|| **TASK-1922** | Memory-Pooling für häufige Objekte (ControllerSnapshot, InputEvents) | Coder | HIGH | TASK-1921 | ✅ COMPLETE (2026-10-21) ||
+|| **TASK-1923** | Engine-Tick-Reduktion: Idle-State erkennen, Tick-Frequenz senken | Coder | HIGH | TASK-1922 | ✅ COMPLETE (2026-10-21) ||
+|| **TASK-1924** | Performance-Regression-Tests (CPU-Last, Memory) | QA | MEDIUM | TASK-1923 | ✅ COMPLETE (2026-10-21) ||
 
 ---
 
@@ -381,4 +386,4 @@
 
 ---
 
-*Letzte Aktualisierung: 2026-10-21 | Epic 17: Pre-Renewal/Renewal Support hinzugefügt, Market Price Overlay entfernt | Build: 0 Errors / 0 Warnings | Tests: 770/770 PASS*
+*Letzte Aktualisierung: 2026-10-21 | TASK-1901/1903/1904 COMPLETE | Build: 0 Errors / 0 Warnings | Tests: 773/773 PASS*

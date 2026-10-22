@@ -1,0 +1,131 @@
+<!--
+    ProfileValidationWindow — TASK-2303: Profile Validation UI.
+    Zeigt Validierungsergebnisse aller Profile an (ProfileValidator).
+    Farben: Grün = OK, Gelb = Warnung, Rot = Fehler.
+-->
+<Window x:Class="RagnaController.Views.Dialogs.ProfileValidationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:RagnaController.Core"
+        xmlns:local="clr-namespace:RagnaController"
+        Title="Profile Validation" Width="950" Height="700"
+        Background="Transparent" WindowStyle="None" AllowsTransparency="True"
+        WindowStartupLocation="CenterOwner" MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
+    <Border Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusXl}" BorderBrush="{StaticResource AccentGold}" BorderThickness="1" Effect="{StaticResource GoldGlow}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="55"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="75"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" Margin="16,16,16,0" CornerRadius="{StaticResource RadiusMd}">
+                <Grid Margin="20,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="4" Height="28" Background="{StaticResource AccentGold}" Effect="{StaticResource GoldGlow}" Margin="0,0,12,0" CornerRadius="2"/>
+                        <TextBlock Text="PROFILE VALIDATION" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
+                        <TextBlock Text=" — Schema v2 Migration &amp; Integrity Check" Style="{StaticResource BodyText}" VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}" Margin="8,0,0,0"/>
+                    </StackPanel>
+                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close validation window" AutomationProperties.Name="Close profile validation window"/>
+                </Grid>
+            </Border>
+
+            <!-- Content Area -->
+            <Grid Grid.Row="1" Margin="24,16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Toolbar -->
+                <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" Padding="16,12" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,0,16">
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="BtnValidateAll" Content="&#xE716;  Alle validieren" Click="BtnValidateAll_Click" Style="{StaticResource AccentButton}" ToolTip="Führt ProfileValidator.ValidateAll() auf allen Profilen aus" AutomationProperties.Name="Validate all profiles"/>
+                        <Button x:Name="BtnExportReport" Content="&#xE72E;  Report exportieren" Click="BtnExportReport_Click" Style="{StaticResource GhostButton}" Margin="12,0,0,0" ToolTip="Validierungs-Report als Textdatei speichern" AutomationProperties.Name="Export validation report"/>
+                        <Button x:Name="BtnRefresh" Content="&#xE72C;" Click="BtnRefresh_Click" Style="{StaticResource GhostButton}" Margin="12,0,0,0" ToolTip="Aktualisieren" AutomationProperties.Name="Refresh validation"/>
+                        <TextBlock Text="{Binding Path=SummaryText, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Margin="20,0,0,0" Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Results List -->
+                <Border Grid.Row="1" Style="{StaticResource GlassPanelCompact}" CornerRadius="{StaticResource RadiusMd}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="36"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Column Headers -->
+                        <Border Grid.Row="0" Background="{StaticResource BgSurface}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" CornerRadius="{StaticResource RadiusMd}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="100"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="80"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Profil" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="16,0,0,0" Foreground="{StaticResource TextMuted}"/>
+                                <TextBlock Text="Status" Grid.Column="1" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource TextMuted}"/>
+                                <TextBlock Text="Fehler" Grid.Column="2" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource TextMuted}"/>
+                                <TextBlock Text="Warnungen" Grid.Column="3" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource TextMuted}"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Items -->
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <ListBox x:Name="ValidationResultsList" SelectionChanged="ValidationResultsList_SelectionChanged">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" Padding="16,12">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="100"/>
+                                                    <ColumnDefinition Width="80"/>
+                                                    <ColumnDefinition Width="80"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding ProfileName}" Style="{StaticResource BodyText}" Foreground="{StaticResource TextPrimary}" FontWeight="Medium"/>
+                                                    <TextBlock Text="{Binding FileName}" Style="{StaticResource Caption}" Foreground="{StaticResource TextMuted}" Margin="0,2,0,0"/>
+                                                </StackPanel>
+                                                <Border Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="6,2" CornerRadius="8" Background="{Binding StatusColor, Converter={StaticResource StringToBrushConverter}}">
+                                                    <TextBlock Text="{Binding StatusText}" Style="{StaticResource Caption}" Foreground="White" HorizontalAlignment="Center" FontWeight="Bold"/>
+                                                </Border>
+                                                <TextBlock Grid.Column="2" Text="{Binding ErrorCount}" Style="{StaticResource BodyText}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{Binding ErrorColor}"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding WarningCount}" Style="{StaticResource BodyText}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{Binding WarningColor}"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ListBox>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+
+                <!-- Details -->
+                <Border Grid.Row="2" Style="{StaticResource GlassPanelCompact}" Padding="16,12" CornerRadius="{StaticResource RadiusMd}" Margin="0,16,0,0">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="Details" Style="{StaticResource Eyebrow}" Foreground="{StaticResource TextMuted}" Margin="0,0,0,8"/>
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="120">
+                            <TextBlock x:Name="DetailsText" Style="{StaticResource Caption}" Foreground="{StaticResource TextPrimary}" TextWrapping="Wrap" Text="Wählen Sie ein Profil aus, um Details anzuzeigen."/>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Footer -->
+            <Border Grid.Row="2" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,1,0,0" Padding="16,12" CornerRadius="0,0,{StaticResource RadiusXl},{StaticResource RadiusXl}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="ProfileValidator prüft: Name/Klasse-Konsistenz, bekannte RO-Klassen, ManagedItems, ButtonMappings, SkillRecommendations, numerische Bereiche." Style="{StaticResource Caption}" Foreground="{StaticResource TextMuted}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

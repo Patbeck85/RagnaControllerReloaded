@@ -49,8 +49,33 @@
                                                 <CheckBox x:Name="EnableKiteCheck" Content="Enable Kite Engine" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI" ToolTip="Abstand zum Gegner automatisch halten (Kite-Modus)" AutomationProperties.Name="Kite engine enable"/>
                                                 <CheckBox x:Name="EnableMageCheck" Content="Enable Mage System" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI" ToolTip="Automatisch Zauber wirken basierend auf Cooldown und Mana" AutomationProperties.Name="Mage system enable"/>
                                                 <CheckBox x:Name="EnableSupportCheck" Content="Enable Support Mode" Foreground="{StaticResource TextPrimary}" FontSize="15" Margin="0,0,0,12" Padding="12,8" FontFamily="Segoe UI Variable, Segoe UI" ToolTip="Party-Mitglieder automatisch heilen und buffen" AutomationProperties.Name="Support mode enable"/>
-                    </StackPanel>
-                </StackPanel>
+                                                </StackPanel>
+
+                                                <!-- TASK-1902: Lightbar color for new profile -->
+                                                <TextBlock Text="LIGHTBAR COLOR" Style="{StaticResource Eyebrow}" Margin="0,8,0,4"/>
+                                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                                <Button x:Name="WizLightbarRed" Content="●" Width="28" Height="28" Margin="0,0,6,0"
+                                                        Background="#FF4444" Foreground="White" FontSize="14"
+                                                        Style="{StaticResource GhostButton}" Click="WizLightbarColor_Click" Tag="#FF0000" ToolTip="Rot"/>
+                                                <Button x:Name="WizLightbarBlue" Content="●" Width="28" Height="28" Margin="0,0,6,0"
+                                                        Background="#4444FF" Foreground="White" FontSize="14"
+                                                        Style="{StaticResource GhostButton}" Click="WizLightbarColor_Click" Tag="#005AD2" ToolTip="Blau (Default)"/>
+                                                <Button x:Name="WizLightbarGreen" Content="●" Width="28" Height="28" Margin="0,0,6,0"
+                                                        Background="#44FF44" Foreground="White" FontSize="14"
+                                                        Style="{StaticResource GhostButton}" Click="WizLightbarColor_Click" Tag="#00FF00" ToolTip="Grün"/>
+                                                <Button x:Name="WizLightbarWhite" Content="●" Width="28" Height="28" Margin="0,0,6,0"
+                                                        Background="#EEEEEE" Foreground="Black" FontSize="14"
+                                                        Style="{StaticResource GhostButton}" Click="WizLightbarColor_Click" Tag="#FFFFFF" ToolTip="Weiß"/>
+                                                <Button x:Name="WizLightbarBlack" Content="●" Width="28" Height="28" Margin="0,0,10,0"
+                                                        Background="#333333" Foreground="White" FontSize="14"
+                                                        Style="{StaticResource GhostButton}" Click="WizLightbarColor_Click" Tag="#000000" ToolTip="Schwarz (aus)"/>
+                                                <TextBox x:Name="WizLightbarHex" Width="80" VerticalAlignment="Center"
+                                                         Background="Transparent" Foreground="{StaticResource TextPrimary}"
+                                                         BorderBrush="{StaticResource BgBorder}" BorderThickness="1"
+                                                         Padding="6,4" FontSize="13" Text="#005AD2"
+                                                         ToolTip="Hex-Farbcode (z.B. #FF5733)"/>
+                                                </StackPanel>
+                                                </StackPanel>
                 <StackPanel x:Name="Step3Panel" Visibility="Collapsed">
                                     <TextBlock Text="QUICK KEYS" Style="{StaticResource Eyebrow}"/>
                                     <Grid Margin="0,10">

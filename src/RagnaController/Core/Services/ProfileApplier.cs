@@ -122,6 +122,12 @@ namespace RagnaController.Core
             // DualSense Adaptive Triggers
             _orchestrator.DualSense?.SetAdaptiveTriggerModes(p.LeftTriggerMode, p.RightTriggerMode);
 
+            // DualSense Lightbar Color per Profile
+            if (_orchestrator.DualSense?.IsAvailable == true && !string.IsNullOrWhiteSpace(p.LightbarColor))
+            {
+                TryApplyLightbarColor(p.LightbarColor);
+            }
+
             // Handheld / ActionRpgMode
             _orchestrator.Handheld.IsEnabled = p.HandheldModeEnabled;
 
@@ -218,43 +224,33 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Live update: Cursor speed
-    /// <param name="v">v parameter.</param>
         /// </summary>
         public void LiveUpdateCursorSpeed(float v) => _orchestrator.Cursor.MaxSpeed = v;
 
         /// <summary>
         /// Live updates for v1.7.0 stick/trigger settings
-    /// <param name="v">v parameter.</param>
-    /// <param name="v">v parameter.</param>
-    /// <param name="v">v parameter.</param>
         /// </summary>
         public void LiveUpdateLeftStick(float v) => _orchestrator.Movement.Deadzone = v;
         /// <summary>
         /// LiveUpdateRightStick method.
-        /// <param name="v">v parameter.</param>
         /// </summary>
         public void LiveUpdateRightStick(float v) => _orchestrator.Cursor.Deadzone = v;
         /// <summary>
         /// LiveUpdateLeftTrigger method.
-        /// <param name="v">v parameter.</param>
         /// </summary>
         public void LiveUpdateLeftTrigger(float v) { /* Adaptive Trigger L2 - Placeholder */ }
         /// <summary>
         /// LiveUpdateRightTrigger method.
-        /// <param name="v">v parameter.</param>
         /// </summary>
         public void LiveUpdateRightTrigger(float v) { /* Adaptive Trigger R2 - Placeholder */ }
 
         /// <summary>
-    /// <param name="enabled">enabled parameter.</param>
-        /// Settings: Soand
+        /// Settings: Sound
         /// </summary>
         public void SetSoundEnabled(bool enabled) => _orchestrator.SoundEnabled = enabled;
 
         /// <summary>
         /// Settings: Rumble
-    /// <param name="enabled">enabled parameter.</param>
-    /// <param name="enabled">enabled parameter.</param>
         /// </summary>
         public void SetRumbleEnabled(bool enabled)
         {
@@ -281,6 +277,32 @@ namespace RagnaController.Core
         public void AttachProfileManagerLogger(ProfileManager pm)
         {
             pm.ProfileSaved += name => _orchestrator.SubscribeToLog($"[Profile] Gespeichert: {name}");
+        }
+
+        /// <summary>
+        /// Versucht, die Lightbar-Farbe aus dem Hex-String (z.B. "#FF0000") zu parsen und auf den DualSense anzuwenden.
+        /// </summary>
+        private void TryApplyLightbarColor(string hexColor)
+        {
+            try
+            {
+                if (hexColor.StartsWith("#") && hexColor.Length == 7)
+                {
+                    byte r = Convert.ToByte(hexColor.Substring(1, 2), 16);
+                    byte g = Convert.ToByte(hexColor.Substring(3, 2), 16);
+                    byte b = Convert.ToByte(hexColor.Substring(5, 2), 16);
+                    _orchestrator.DualSense.SetColor(r, g, b);
+                    _orchestrator.SubscribeToLog($"[Lightbar] Profil-Farbe angewendet: {hexColor} (RGB: {r},{g},{b})");
+                }
+                else
+                {
+                    _orchestrator.SubscribeToLog($"[Lightbar] Ungültiges Farbformat: {hexColor} (erwartet #RRGGBB)");
+                }
+            }
+            catch (Exception ex)
+            {
+                _orchestrator.SubscribeToLog($"[Lightbar] Fehler beim Anwenden der Farbe {hexColor}: {ex.Message}");
+            }
         }
 
     }

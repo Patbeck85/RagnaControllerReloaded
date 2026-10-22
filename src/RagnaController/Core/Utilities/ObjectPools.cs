@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using RagnaController.Controller;
 using RagnaController.Models;
 
 namespace RagnaController.Core
@@ -54,8 +55,16 @@ namespace RagnaController.Core
         public static readonly ObjectPool<SnapshotReadyMessage> SnapshotReadyPool =
             new(() => new SnapshotReadyMessage(default!));
 
+        // ControllerSnapshot - every UI tick (~30/sec), rented from pool in SnapshotBuilder
+        public static readonly ObjectPool<ControllerSnapshot> ControllerSnapshotPool =
+            new(() => new ControllerSnapshot());
+
         // BuffWarningMessage - rare
         public static readonly ObjectPool<BuffWarningMessage> BuffWarningPool =
             new(() => new BuffWarningMessage(string.Empty));
+
+        // InputCmd - per input command in InputCommandQueue (high frequency)
+        public static readonly ObjectPool<InputCmd> InputCmdPool =
+            new(() => new InputCmd(CmdType.Wait));
     }
 }

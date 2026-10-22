@@ -54,53 +54,52 @@ namespace RagnaController.Controller
             string stateRaw = _combo.Enabled ? "COMBO ACTIVE" : (_mage.MageEnabled ? "MAGE MODE" : (_autoTarget.AutoAttackEnabled ? "AUTO ATTACK" : "IDLE"));
             string stateLabel = EngineOptimizationPool.Instance.GetString(stateRaw);
 
-            var snap = new ControllerSnapshot
-            {
-                LayerText = layerText,
-                StateLabel = stateLabel,
-                DeltaMs = (int)elapsedMs,
-                TickMs = (int)elapsedMs,
-                LeftX = input.LeftX,
-                LeftY = input.LeftY,
-                RightX = input.RightX,
-                RightY = input.RightY,
-                L1 = input.L1,
-                R1 = input.R1,
-                L2 = input.L2,
-                R2 = input.R2,
-                BtnL3 = input.L3,
-                BtnA = input.BtnA,
-                BtnB = input.BtnB,
-                BtnX = input.BtnX,
-                BtnY = input.BtnY,
-                DPadUp = input.DPadUp,
-                DPadDown = input.DPadDown,
-                DPadLeft = input.DPadLeft,
-                DPadRight = input.DPadRight,
-                Start = input.Start,
-                Back = input.Back,
-                ActionLabel = _combo.Enabled ? _combo.CurrentActionLabel : "",
-                ActionId = _combo.CurrentActionId,
+            // Rent from pool instead of new() to avoid Gen0 allocation every UI tick (~30/sec)
+            var snap = MessagePools.ControllerSnapshotPool.Rent();
+            snap.LayerText = layerText;
+            snap.StateLabel = stateLabel;
+            snap.DeltaMs = (int)elapsedMs;
+            snap.TickMs = (int)elapsedMs;
+            snap.LeftX = input.LeftX;
+            snap.LeftY = input.LeftY;
+            snap.RightX = input.RightX;
+            snap.RightY = input.RightY;
+            snap.L1 = input.L1;
+            snap.R1 = input.R1;
+            snap.L2 = input.L2;
+            snap.R2 = input.R2;
+            snap.BtnL3 = input.L3;
+            snap.BtnA = input.BtnA;
+            snap.BtnB = input.BtnB;
+            snap.BtnX = input.BtnX;
+            snap.BtnY = input.BtnY;
+            snap.DPadUp = input.DPadUp;
+            snap.DPadDown = input.DPadDown;
+            snap.DPadLeft = input.DPadLeft;
+            snap.DPadRight = input.DPadRight;
+            snap.Start = input.Start;
+            snap.Back = input.Back;
+            snap.ActionLabel = _combo.Enabled ? _combo.CurrentActionLabel : "";
+            snap.ActionId = _combo.CurrentActionId;
 
-                // Skill cooldown tracking (HW-005)
-                SkillCooldownMs = _skillOrchestrator?.GetActiveSkillCooldownMs() ?? 0,
-                ActiveSkillId = _skillOrchestrator?.GetActiveSkillId() ?? 0,
+            // Skill cooldown tracking (HW-005)
+            snap.SkillCooldownMs = _skillOrchestrator?.GetActiveSkillCooldownMs() ?? 0;
+            snap.ActiveSkillId = _skillOrchestrator?.GetActiveSkillId() ?? 0;
 
-                TargetName = _autoTarget.TargetName,
-                TargetType = _autoTarget.TargetType,
-                TargetDistance = _autoTarget.TargetDistance,
-                Buffs = _mage.Buffs,
-                Cooldowns = _mage.Cooldowns,
-                MobSweepLabel = _combo.MobSweepLabel,
-                HandheldModeLabel = _combo.HandheldModeLabel,
-                HandheldModeActive = _combo.HandheldModeActive,
-                OverlayText = _combo.OverlayText,
-                MiniModeLabel = _combo.MiniModeLabel,
-                SmartCursorMenuMode = _smartCursor.IsMenuMode,
-                WindowTracked = _winTracker.WindowTracked,
-                BatteryThrottle = _batteryThrottle,
-                FocusLocked = focusLocked
-            };
+            snap.TargetName = _autoTarget.TargetName;
+            snap.TargetType = _autoTarget.TargetType;
+            snap.TargetDistance = _autoTarget.TargetDistance;
+            snap.Buffs = _mage.Buffs;
+            snap.Cooldowns = _mage.Cooldowns;
+            snap.MobSweepLabel = _combo.MobSweepLabel;
+            snap.HandheldModeLabel = _combo.HandheldModeLabel;
+            snap.HandheldModeActive = _combo.HandheldModeActive;
+            snap.OverlayText = _combo.OverlayText;
+            snap.MiniModeLabel = _combo.MiniModeLabel;
+            snap.SmartCursorMenuMode = _smartCursor.IsMenuMode;
+            snap.WindowTracked = _winTracker.WindowTracked;
+            snap.BatteryThrottle = _batteryThrottle;
+            snap.FocusLocked = focusLocked;
 
             // State foregroand color based on mode
             snap.StateForeground = _smartCursor.IsMenuMode

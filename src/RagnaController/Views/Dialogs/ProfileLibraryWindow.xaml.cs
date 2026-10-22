@@ -69,6 +69,7 @@ namespace RagnaController.Views.Dialogs
         private void Refresh()
         {
             _cache = _manager.Profiles.ToList();
+            PopulateTagFilter();
             ApplyFilter();
         }
 
@@ -78,6 +79,7 @@ namespace RagnaController.Views.Dialogs
 
             string query = SearchBox.Text;
             string type = (FilterCombo.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "All Profiles";
+            string tag = TagFilterCombo?.SelectedItem as string ?? "";
 
             var filtered = _cache.Where(p =>
             {
@@ -92,7 +94,8 @@ namespace RagnaController.Views.Dialogs
                     "Support" => p.Class == "Support",
                     _ => true
                 };
-                return matchesSearch && matchesType;
+                bool matchesTag = string.IsNullOrEmpty(tag) || tag == "All Tags" || (p.Tags != null && p.Tags.Contains(tag));
+                return matchesSearch && matchesType && matchesTag;
             });
 
             // Sortierung
@@ -115,6 +118,32 @@ namespace RagnaController.Views.Dialogs
             if (ProfilesList != null)
                 ProfilesList.Visibility = result.Count == 0 ? Visibility.Collapsed : Visibility.Visible;
         }
+
+        private void PopulateTagFilter()
+        {
+            if (TagFilterCombo == null) return;
+            var currentSelection = TagFilterCombo.SelectedItem as string;
+            TagFilterCombo.Items.Clear();
+            TagFilterCombo.Items.Add("All Tags");
+            
+            // Collect all unique tags from all profiles
+            var allTags = _cache
+                .Where(p => p.Tags != null)
+                .SelectMany(p => p.Tags)
+                .Distinct()
+                .OrderBy(t => t)
+                .ToList();
+            
+            foreach (var tag in allTags)
+                TagFilterCombo.Items.Add(tag);
+            
+            TagFilterCombo.SelectedIndex = 0;
+            // Try to restore previous selection
+            if (currentSelection != null && allTags.Contains(currentSelection))
+                TagFilterCombo.SelectedItem = currentSelection;
+        }
+
+        private void TagFilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e) => ApplyFilter();
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e) => ApplyFilter();
         private void FilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e) => ApplyFilter();

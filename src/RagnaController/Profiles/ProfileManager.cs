@@ -246,6 +246,8 @@ namespace RagnaController.Profiles
                     if (p != null)
                     {
                         p.IsBuiltIn = false;
+                        // TASK-2302: Automatische Schema-Migration beim Laden
+                        ProfileMigration.Migrate(p);
                         int i = Profiles.FindIndex(x => x.Name == p.Name);
                         if (i >= 0) Profiles[i] = p; else Profiles.Add(p);
                     }
@@ -261,6 +263,8 @@ namespace RagnaController.Profiles
                         if (pBak != null)
                         {
                             pBak.IsBuiltIn = false;
+                            // TASK-2302: Automatische Schema-Migration beim Backup-Restore
+                            ProfileMigration.Migrate(pBak);
                             int i = Profiles.FindIndex(x => x.Name == pBak.Name);
                             if (i >= 0) Profiles[i] = pBak; else Profiles.Add(pBak);
                         }

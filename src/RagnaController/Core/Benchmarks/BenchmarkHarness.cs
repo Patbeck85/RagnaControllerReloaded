@@ -216,8 +216,138 @@ namespace RagnaController.Core.Benchmarks
     {
         public void Publish<T>(T message) where T : class { }
         public IDisposable Subscribe<T>(Action<T> handler) where T : class => new EmptyDisposable();
-        
+
         private sealed class EmptyDisposable : IDisposable { public void Dispose() { } }
+    }
+
+    // ── PERF-007: ControllerSnapshot Pool Benchmarks ─────────────────────────
+    [Config(typeof(BenchmarkConfig))]
+    [MemoryDiagnoser]
+    [SimpleJob(RuntimeMoniker.Net80, baseline: true)]
+    public class ControllerSnapshotPoolBenchmarks
+    {
+        private ObjectPool<ControllerSnapshot> _pool = null!;
+
+        [GlobalSetup]
+        public void Setup() => _pool = new ObjectPool<ControllerSnapshot>(() => new ControllerSnapshot());
+
+        [Benchmark(Baseline = true, Description = "new ControllerSnapshot() per tick")]
+        public ControllerSnapshot AllocateNew()
+        {
+            return new ControllerSnapshot
+            {
+                LeftX = 1.0f,
+                LeftY = -1.0f,
+                RightX = 0.5f,
+                RightY = 0.5f,
+                LT = 1.0f,
+                RT = 1.0f
+            };
+        }
+
+        [Benchmark(Description = "ObjectPool Rent/Return per tick")]
+        public ControllerSnapshot PoolRentReturn()
+        {
+            var snap = _pool.Rent();
+            snap.LeftX = 1.0f;
+            snap.LeftY = -1.0f;
+            snap.RightX = 0.5f;
+            snap.RightY = 0.5f;
+            snap.LT = 1.0f;
+            snap.RT = 1.0f;
+            _pool.Return(snap);
+            return snap;
+        }
+
+        [Benchmark(Description = "Pool Rent only (no Return - steady state)")]
+        public ControllerSnapshot PoolRentOnly()
+        {
+            return _pool.Rent();
+        }
+    }
+
+    // ── PERF-007: StandbyManager Idle-Level Benchmarks ──────────────────────
+    [Config(typeof(BenchmarkConfig))]
+    [MemoryDiagnoser]
+    [SimpleJob(RuntimeMoniker.Net80, baseline: true)]
+    public class StandbyManagerBenchmarks
+    {
+        private StandbyManager _standby = null!;
+        private Profile _profile = null!;
+        private ParsedInput _noInput = ParsedInput.Disconnected;
+        private ParsedInput _withInput = new() { LeftX = 0.5f, IsConnected = true };
+
+        [GlobalSetup]
+        public void Setup()
+        {
+            _standby = new StandbyManager();
+            _profile = new Profile
+            {
+                EnableSmartStandby = true,
+                StandbyTimeoutMinutes = 5,
+                EnableDynamicTickReduction = true,
+            };
+        }
+
+        [Benchmark(Description = "StandbyManager.Tick - Active (has input)")]
+        public bool TickActive()
+        {
+            bool shouldSkip;
+            return _standby.Tick(_withInput, _profile, false, new NullFeedbackProvider(), new MovementEngine(null!, null!), null, out shouldSkip);
+        }
+
+        [Benchmark(Description = "StandbyManager.Tick - No input")]
+        public bool TickNoInput()
+        {
+            bool shouldSkip;
+            return _standby.Tick(_noInput, _profile, false, new NullFeedbackProvider(), new MovementEngine(null!, null!), null, out shouldSkip);
+        }
+
+        [Benchmark(Description = "StandbyManager.Get CurrentIdleLevel")]
+        public IdleLevel GetIdleLevel() => _standby.CurrentIdleLevel;
+    }
+
+    // ── PERF-007: PerformanceProfiler Overhead Benchmarks ────────────────────
+    [Config(typeof(BenchmarkConfig))]
+    [MemoryDiagnoser]
+    [SimpleJob(RuntimeMoniker.Net80, baseline: true)]
+    public class PerformanceProfilerBenchmarks
+    {
+        private PerformanceProfiler _profiler = null!;
+
+        [GlobalSetup]
+        public void Setup()
+        {
+            PerformanceProfiler.EnableProfiling = true;
+            _profiler = new PerformanceProfiler("BenchEngine", null);
+        }
+
+        [GlobalCleanup]
+        public void Cleanup()
+        {
+            _profiler.Dispose();
+            PerformanceProfiler.EnableProfiling = false;
+        }
+
+        [Benchmark(Description = "RecordEngineTick - Enabled")]
+        public void RecordEnabled()
+        {
+            _profiler.RecordEngineTick("TestEngine", 0.5);
+        }
+
+        [Benchmark(Baseline = true, Description = "RecordEngineTick - Disabled (zero-overhead)")]
+        public void RecordDisabled()
+        {
+            PerformanceProfiler.EnableProfiling = false;
+            _profiler.RecordEngineTick("TestEngine", 0.5);
+            PerformanceProfiler.EnableProfiling = true;
+        }
+
+        [Benchmark(Description = "GetEngineStats")]
+        public void GetStats()
+        {
+            _ = _profiler.GetEngineStats();
+        }
     }
 
     // Configuration shared by all benchmarks

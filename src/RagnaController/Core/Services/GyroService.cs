@@ -202,12 +202,14 @@ namespace RagnaController.Core
         }
 
         /// <summary>Internen Zustand zurücksetzen (z.B. nach Sleep/Resume).</summary>
-        public void Reset()
-        {
-            _subX = 0f;
-            _subY = 0f;
-            System.Diagnostics.Debug.WriteLine("[GyroService] State reset.");
-        }
+                public void Reset()
+                {
+                    _subX = 0f;
+                    _subY = 0f;
+                    _pitchDps = 0f;
+                    _yawDps = 0f;
+                    System.Diagnostics.Debug.WriteLine("[GyroService] State reset.");
+                }
 
         private float _subX, _subY; // sub-pixel accumulators
 

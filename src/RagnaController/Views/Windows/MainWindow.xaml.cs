@@ -18,6 +18,7 @@ using RagnaController.ControllerTest;
 using RagnaController.Services;
 using RagnaController.Views.Overlays;
 using RagnaController.Views.Editors;
+using RagnaController.Views.Dialogs;
 
 namespace RagnaController.Views.Windows
 {
@@ -1286,6 +1287,12 @@ namespace RagnaController.Views.Windows
         {
             RefreshClassList();
             ShowToast("Klassenliste aktualisiert");
+        }
+
+        private void BtnProfileValidation_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new ProfileValidationWindow();
+            win.ShowDialog();
         }
 
         private sealed class ClassCharacterItem

@@ -17,8 +17,14 @@ namespace RagnaController
     [JsonSerializable(typeof(Models.ButtonKey))]
     [JsonSerializable(typeof(CommunityEntry))]
     [JsonSerializable(typeof(List<CommunityEntry>))]
+    [JsonSerializable(typeof(List<string>))]
     [JsonSerializable(typeof(ControllerConfig))]
     [JsonSerializable(typeof(Dictionary<string, ControllerConfig>))]
+    // TASK-2301: Profile Inheritance
+    [JsonSerializable(typeof(BaseProfile))]
+    [JsonSerializable(typeof(ClassProfile))]
+    [JsonSerializable(typeof(CharProfile))]
+    [JsonSerializable(typeof(List<CharProfile>))]
     // FEAT-011: ItemManager — verwaltete Items (Potions)
     [JsonSerializable(typeof(Models.ItemConfig))]
     [JsonSerializable(typeof(List<Models.ItemConfig>))]

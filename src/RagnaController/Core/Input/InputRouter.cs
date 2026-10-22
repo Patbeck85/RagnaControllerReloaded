@@ -17,6 +17,9 @@ namespace RagnaController.Core
     /// <seealso cref="TECH-064"/>
     public class InputRouter
     {
+        // PERF-006: Per-engine tick profiler (opt-in, zero-allocation when disabled)
+        private readonly PerformanceProfiler? _perfProfiler;
+
         // FIX (ROB-002): Engine-Felder bewusst nicht mehr `readonly`, damit der
         // Failover-only-Konstruktor they leer lassen kann (Failover toucht keine Engine).
         // `= null!` = Deklarations-Init, damit CS8618 (TreatWarningsAsErrors) still is;
@@ -94,8 +97,10 @@ namespace RagnaController.Core
             IFeedbackProvider feedback,
             CooldownManager cooldownManager,
             RadialMenuService radialMenu,
-            GestureRecognizer gestureRecognizer)
+            GestureRecognizer gestureRecognizer,
+            PerformanceProfiler? perfProfiler = null)
         {
+            _perfProfiler = perfProfiler;
             _combat = combat;
             _movement = movement;
             _autoTarget = autoTarget;
@@ -171,7 +176,9 @@ namespace RagnaController.Core
                             var routeSw = InputLatencyBudgets.EnableBudgetTracking ? System.Diagnostics.Stopwatch.StartNew() : null;
 
                             // UX-016: Gestenerkennung (Right-Stick Swipes for Radial Menu)
+                            var gestureSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                             _gestureRecognizer?.Tick(input.RightX, input.RightY, input.R3);
+                            if (gestureSw != null) { gestureSw.Stop(); _perfProfiler.RecordEngineTick(nameof(GestureRecognizer), gestureSw.Elapsed.TotalMilliseconds); }
 
                             // if radial menu open: right stick controls menu, not cursor
                             if (_gestureRecognizer?.IsMenuOpen == true)
@@ -183,24 +190,34 @@ namespace RagnaController.Core
                             }
 
                             // Update combat layers (L1, R1, L2, R2)
+                            var combatLayersSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                             _combat.UpdateLayers(input.L1, input.R1, input.L2, input.R2);
+                            if (combatLayersSw != null) { combatLayersSw.Stop(); _perfProfiler.RecordEngineTick(nameof(CombatEngine) + ".UpdateLayers", combatLayersSw.Elapsed.TotalMilliseconds); }
 
                             // Update movement (left stick)
+                            var movementSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                             _movement.Update(input.LeftX, input.LeftY);
+                            if (movementSw != null) { movementSw.Stop(); _perfProfiler.RecordEngineTick(nameof(MovementEngine), movementSw.Elapsed.TotalMilliseconds); }
 
                             // OverlayRouter has priority (Start+DPad shortcuts, Mini-Button)
+                            var overlaySw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                             if (_overlayRouter.TryHandleInput(input))
                             {
+                                if (overlaySw != null) { overlaySw.Stop(); _perfProfiler.RecordEngineTick(nameof(OverlayRouter), overlaySw.Elapsed.TotalMilliseconds); }
                                 if (routeSw != null) RecordRouteBudget(routeSw);
                                 return true;
                             }
+                            if (overlaySw != null) { overlaySw.Stop(); _perfProfiler.RecordEngineTick(nameof(OverlayRouter), overlaySw.Elapsed.TotalMilliseconds); }
 
                             // SmartCursor: D-Pad Grid-Hopping + Precision-Aiming in menus
+                            var smartCursorSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                             if (_smartCursor.Tick(input))
                             {
+                                if (smartCursorSw != null) { smartCursorSw.Stop(); _perfProfiler.RecordEngineTick(nameof(SmartCursorService), smartCursorSw.Elapsed.TotalMilliseconds); }
                                 if (routeSw != null) RecordRouteBudget(routeSw);
                                 return true; // Menu input consumed → skip combat
                             }
+                            if (smartCursorSw != null) { smartCursorSw.Stop(); _perfProfiler.RecordEngineTick(nameof(SmartCursorService), smartCursorSw.Elapsed.TotalMilliseconds); }
 
                             // Cursor (right stick) — controlled by RightStickPolicy setting
                             // Camera: always use right stick for camera
@@ -225,29 +242,59 @@ namespace RagnaController.Core
 
                             if (useRightStickForCursor)
                             {
+                                var cursorSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                                 _cursor.Handle(input, actualDeltaMs);
+                                if (cursorSw != null) { cursorSw.Stop(); _perfProfiler.RecordEngineTick(nameof(CursorEngine), cursorSw.Elapsed.TotalMilliseconds); }
                             }
 
                             // Engine chain: first engine returning true consumes the input
+                            var kiteSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                             if (!_kite.Handle(input, actualDeltaMs))
+                            {
+                                if (kiteSw != null) { kiteSw.Stop(); _perfProfiler.RecordEngineTick(nameof(KiteEngine), kiteSw.Elapsed.TotalMilliseconds); }
+                                var autoTargetSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                                 if (!_autoTarget.Handle(input, actualDeltaMs))
+                                {
+                                    if (autoTargetSw != null) { autoTargetSw.Stop(); _perfProfiler.RecordEngineTick(nameof(AutoTargetEngine), autoTargetSw.Elapsed.TotalMilliseconds); }
+                                    var mageSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                                     if (!_mage.Handle(input, actualDeltaMs))
+                                    {
+                                        if (mageSw != null) { mageSw.Stop(); _perfProfiler.RecordEngineTick(nameof(MageEngine), mageSw.Elapsed.TotalMilliseconds); }
+                                        var supportSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                                         _support.Handle(input, actualDeltaMs);
+                                        if (supportSw != null) { supportSw.Stop(); _perfProfiler.RecordEngineTick(nameof(SupportEngine), supportSw.Elapsed.TotalMilliseconds); }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (kiteSw != null) { kiteSw.Stop(); _perfProfiler.RecordEngineTick(nameof(KiteEngine), kiteSw.Elapsed.TotalMilliseconds); }
+                            }
 
                             // Combo engine (Y button hold)
+                            var comboSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                             _combo.Update(input.BtnY, actualDeltaMs);
+                            if (comboSw != null) { comboSw.Stop(); _perfProfiler.RecordEngineTick(nameof(ComboEngine), comboSw.Elapsed.TotalMilliseconds); }
 
                             // Cooldown tracking
+                            var cooldownSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                             _cooldownManager.Tick();
+                            if (cooldownSw != null) { cooldownSw.Stop(); _perfProfiler.RecordEngineTick(nameof(CooldownManager), cooldownSw.Elapsed.TotalMilliseconds); }
 
                             // Mob sweep
+                            var mobSweepSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                             _mobSweep.Update(actualDeltaMs);
+                            if (mobSweepSw != null) { mobSweepSw.Stop(); _perfProfiler.RecordEngineTick(nameof(MobSweepEngine), mobSweepSw.Elapsed.TotalMilliseconds); }
 
                             // Handheld mode
+                            var handheldSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                             _handheld.Tick(input, actualDeltaMs);
+                            if (handheldSw != null) { handheldSw.Stop(); _perfProfiler.RecordEngineTick(nameof(HandheldModeManager), handheldSw.Elapsed.TotalMilliseconds); }
 
                             // Feedback tick (rumble stop via timestamp)
+                            var feedbackSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                             _feedback.Tick();
+                            if (feedbackSw != null) { feedbackSw.Stop(); _perfProfiler.RecordEngineTick(nameof(IFeedbackProvider), feedbackSw.Elapsed.TotalMilliseconds); }
 
                             if (routeSw != null) RecordRouteBudget(routeSw);
                             return false; // Input not consumed by router (processed by engines)

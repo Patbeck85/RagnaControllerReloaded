@@ -92,6 +92,10 @@ public partial class ProfileWizardWindow : Window
 
                 // Template info
                 ReviewTemplateInfo.Text = _loadedTemplate != null ? $"Template: {_loadedTemplate.DisplayName} ({_loadedTemplate.Class})" : "No template loaded";
+
+                // Lightbar color
+                var lightbarColor = GetWizardLightbarColor();
+                ReviewEngines.Text += $"\nLightbar: {lightbarColor}";
             }
         }
 
@@ -201,6 +205,7 @@ public partial class ProfileWizardWindow : Window
                 KiteEnabled = EnableKiteCheck.IsChecked == true,
                 MageEnabled = EnableMageCheck.IsChecked == true,
                 SupportEnabled = EnableSupportCheck.IsChecked == true,
+                LightbarColor = GetWizardLightbarColor(),
                 ButtonMappings = new Dictionary<ButtonKey, ButtonAction>
                 {
                     { VirtualKey.A, new ButtonAction { Type = ActionType.Key, Key = AButtonCombo.SelectedItem is ComboBoxItem a ? (VirtualKey)a.Tag : VirtualKey.None, Label = "Quick Key A" } },
@@ -269,6 +274,26 @@ public partial class ProfileWizardWindow : Window
                 MessageBox.Show($"Template '{_loadedTemplate.DisplayName}' loaded successfully!", "Template Loaded", MessageBoxButton.OK, MessageBoxImage.Information);
                 UpdateUI();
             }
+        }
+
+        // ── TASK-1902: Lightbar color in wizard ─────────────────────────
+
+        /// <summary>Setzt die Hex-Eingabe auf den Wert des angeklickten Preset-Buttons.</summary>
+        private void WizLightbarColor_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is string hex)
+            {
+                WizLightbarHex.Text = hex;
+            }
+        }
+
+        /// <summary>Liest den Lightbar-Color-Wert aus dem Wizard-UI aus.</summary>
+        private string GetWizardLightbarColor()
+        {
+            var text = WizLightbarHex?.Text?.Trim() ?? "#005AD2";
+            // Ensure it starts with '#'
+            if (!text.StartsWith("#")) text = "#" + text;
+            return text.Length == 7 ? text : "#005AD2";
         }
     }
 

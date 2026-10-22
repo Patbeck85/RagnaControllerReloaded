@@ -640,6 +640,230 @@ public partial class SettingsWindow : Window
             }
         }
 
+        // ── TASK-1902: DualSense Lightbar per Profil ─────────────────────
+
+        /// <summary>Initialisiert die Lightbar-Sektion mit der Farbe des aktuell ausgewählten Profils.</summary>
+        private void InitializeLightbarSection()
+        {
+            var profile = ProfileCombo.SelectedItem as Profile;
+            if (profile == null) return;
+
+            TxtLightbarHex.Text = profile.LightbarColor ?? "#005AD2";
+            LblLightbarStatus.Text = $"Farbe: {TxtLightbarHex.Text}";
+            LblLightbarStatus.Foreground = System.Windows.Media.Brushes.LimeGreen;
+
+            // Highlight the matching preset button (optional visual feedback)
+            foreach (var name in new[] { "BtnLightbarRed", "BtnLightbarBlue", "BtnLightbarGreen", "BtnLightbarWhite", "BtnLightbarBlack" })
+            {
+                if (this.FindName(name) is Button btn && btn.Tag is string tag)
+                {
+                    btn.IsEnabled = true; // reset
+                }
+            }
+        }
+
+        /// <summary>
+        /// Preset-Farb-Button geklickt — setzt die Lightbar-Farbe des aktiven Profils.
+        /// </summary>
+        private void BtnLightbarColor_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button btn || btn.Tag is not string hex) return;
+
+            var profile = ProfileCombo.SelectedItem as Profile;
+            if (profile == null)
+            {
+                LblLightbarStatus.Text = "Kein Profil ausgewählt";
+                LblLightbarStatus.Foreground = System.Windows.Media.Brushes.OrangeRed;
+                return;
+            }
+
+            // Validate hex format
+            if (!IsValidHexColor(hex))
+            {
+                LblLightbarStatus.Text = $"Ungültiges Hex-Format: {hex}";
+                LblLightbarStatus.Foreground = System.Windows.Media.Brushes.OrangeRed;
+                return;
+            }
+
+            profile.LightbarColor = hex;
+            TxtLightbarHex.Text = hex;
+            LblLightbarStatus.Text = $"Farbe gesetzt: {hex}";
+            LblLightbarStatus.Foreground = System.Windows.Media.Brushes.LimeGreen;
+
+            // Persist via ProfileManager
+            try
+            {
+                _manager.SaveProfile(profile);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[SettingsWindow] Lightbar color save failed: {ex.Message}");
+                LblLightbarStatus.Text = $"Speichern fehlgeschlagen: {ex.Message}";
+                LblLightbarStatus.Foreground = System.Windows.Media.Brushes.OrangeRed;
+            }
+        }
+
+        /// <summary>
+        /// Hex-Eingabefeld + Apply-Button — setzt die Lightbar-Farbe aus freiem Hex-Code.
+        /// </summary>
+        private void BtnLightbarHexApply_Click(object sender, RoutedEventArgs e)
+        {
+            var profile = ProfileCombo.SelectedItem as Profile;
+            if (profile == null)
+            {
+                LblLightbarStatus.Text = "Kein Profil ausgewählt";
+                LblLightbarStatus.Foreground = System.Windows.Media.Brushes.OrangeRed;
+                return;
+            }
+
+            string hex = TxtLightbarHex.Text?.Trim() ?? "";
+
+            // Normalize: prepend # if missing
+            if (hex.Length == 6 && !hex.StartsWith("#"))
+                hex = "#" + hex;
+
+            if (!IsValidHexColor(hex))
+            {
+                LblLightbarStatus.Text = $"Ungültiges Format. Verwende z.B. #FF5733";
+                LblLightbarStatus.Foreground = System.Windows.Media.Brushes.OrangeRed;
+                return;
+            }
+
+            profile.LightbarColor = hex;
+            TxtLightbarHex.Text = hex;
+            LblLightbarStatus.Text = $"Farbe gesetzt: {hex}";
+            LblLightbarStatus.Foreground = System.Windows.Media.Brushes.LimeGreen;
+
+            try
+            {
+                _manager.SaveProfile(profile);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[SettingsWindow] Lightbar hex save failed: {ex.Message}");
+                LblLightbarStatus.Text = $"Speichern fehlgeschlagen: {ex.Message}";
+                LblLightbarStatus.Foreground = System.Windows.Media.Brushes.OrangeRed;
+            }
+        }
+
+        /// <summary>Prüft, ob ein String ein gültiges #RRGGBB Hex-Farbformat ist.</summary>
+        private static bool IsValidHexColor(string hex)
+        {
+            if (string.IsNullOrWhiteSpace(hex)) return false;
+            if (!hex.StartsWith("#") || hex.Length != 7) return false;
+            for (int i = 1; i < 7; i++)
+            {
+                char c = hex[i];
+                if ((c < '0' || c > '9') && (c < 'a' || c > 'f') && (c < 'A' || c > 'F'))
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>Initialisiert die Cloud-Sync-Sektion basierend auf dem ausgewählten Profil.</summary>
+        private void InitializeCloudSyncSection()
+        {
+            var profile = ProfileCombo.SelectedItem as Profile;
+            if (profile == null)
+            {
+                ChkCloudSyncEnabled.IsEnabled = false;
+                CmbCloudSyncProvider.IsEnabled = false;
+                TxtCloudSyncToken.IsEnabled = false;
+                BtnCloudSyncTest.IsEnabled = false;
+                BtnCloudSyncUpload.IsEnabled = false;
+                BtnCloudSyncDownload.IsEnabled = false;
+                LblCloudSyncStatus.Text = "Kein Profil ausgewählt";
+                return;
+            }
+
+            ChkCloudSyncEnabled.IsChecked = profile.CloudSyncEnabled;
+            ChkCloudSyncEnabled.IsEnabled = true;
+            CmbCloudSyncProvider.IsEnabled = profile.CloudSyncEnabled;
+            TxtCloudSyncToken.IsEnabled = profile.CloudSyncEnabled;
+            BtnCloudSyncTest.IsEnabled = profile.CloudSyncEnabled;
+            BtnCloudSyncUpload.IsEnabled = profile.CloudSyncEnabled;
+            BtnCloudSyncDownload.IsEnabled = profile.CloudSyncEnabled;
+
+            // Provider-Auswahl
+            CmbCloudSyncProvider.Items.Clear();
+            foreach (var p in CloudSyncService.GetAvailableProviders())
+                CmbCloudSyncProvider.Items.Add(p);
+            CmbCloudSyncProvider.SelectedItem = profile.CloudSyncProvider;
+
+            // Token anzeigen (maskiert)
+            TxtCloudSyncToken.Text = profile.CloudSyncToken;
+
+            if (!string.IsNullOrWhiteSpace(profile.CloudSyncToken))
+                LblCloudSyncStatus.Text = $"Cloud-Sync aktiv ({CloudSyncService.GetProviderDisplayName(profile.CloudSyncProvider)})";
+            else
+                LblCloudSyncStatus.Text = "Cloud-Sync nicht konfiguriert";
+        }
+
+        private void ChkCloudSyncEnabled_Click(object sender, RoutedEventArgs e)
+        {
+            var profile = ProfileCombo.SelectedItem as Profile;
+            if (profile == null) return;
+
+            profile.CloudSyncEnabled = ChkCloudSyncEnabled.IsChecked == true;
+            InitializeCloudSyncSection();
+            _manager.SaveProfile(profile);
+        }
+
+        private void CmbCloudSyncProvider_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var profile = ProfileCombo.SelectedItem as Profile;
+            if (profile == null || CmbCloudSyncProvider.SelectedItem == null) return;
+
+            profile.CloudSyncProvider = CmbCloudSyncProvider.SelectedItem.ToString()!;
+            _manager.SaveProfile(profile);
+        }
+
+        private async void BtnCloudSyncTest_Click(object sender, RoutedEventArgs e)
+        {
+            var profile = ProfileCombo.SelectedItem as Profile;
+            if (profile == null) return;
+
+            var ok = await CloudSyncService.SyncUploadAsync(profile, profile.CloudSyncToken);
+            LblCloudSyncStatus.Text = ok ? "Cloud-Sync-Verbindung erfolgreich." : CloudSyncService.LastSyncStatus ?? "Unbekannter Fehler.";
+            LblCloudSyncStatus.Foreground = ok ? System.Windows.Media.Brushes.LimeGreen : System.Windows.Media.Brushes.OrangeRed;
+        }
+
+        private async void BtnCloudSyncUpload_Click(object sender, RoutedEventArgs e)
+        {
+            var profile = ProfileCombo.SelectedItem as Profile;
+            if (profile == null) return;
+
+            var ok = await CloudSyncService.AutoSyncAfterSaveAsync(profile);
+            LblCloudSyncStatus.Text = ok ? "Profil in die Cloud hochgeladen." : CloudSyncService.LastSyncStatus ?? "Unbekannter Fehler.";
+            LblCloudSyncStatus.Foreground = ok ? System.Windows.Media.Brushes.LimeGreen : System.Windows.Media.Brushes.OrangeRed;
+        }
+
+        private async void BtnCloudSyncDownload_Click(object sender, RoutedEventArgs e)
+        {
+            var profile = ProfileCombo.SelectedItem as Profile;
+            if (profile == null) return;
+
+            var updated = await CloudSyncService.SyncDownloadAsync(profile, profile.CloudSyncToken);
+            if (updated)
+            {
+                LblCloudSyncStatus.Text = "Profil aus der Cloud aktualisiert.";
+                LblCloudSyncStatus.Foreground = System.Windows.Media.Brushes.LimeGreen;
+                _manager.SaveProfile(profile);
+            }
+            else
+            {
+                LblCloudSyncStatus.Text = CloudSyncService.LastSyncStatus ?? "Keine Aktualisierung erforderlich.";
+                LblCloudSyncStatus.Foreground = System.Windows.Media.Brushes.OrangeRed;
+            }
+        }
+
+        /// <summary>ProfileCombo-SelectionChanged — aktualisiert die Lightbar-Sektion und Cloud-Sync-Sektion.</summary>
+        private void ProfileCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            InitializeLightbarSection();
+            InitializeCloudSyncSection();
+        }
+
         private void BtnReportBug_Click(object sender, RoutedEventArgs e)
                 {
                     try

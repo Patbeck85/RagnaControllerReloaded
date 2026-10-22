@@ -40,32 +40,35 @@
                 <!-- Search & Filter Bar -->
                 <Grid Grid.Row="0" Margin="0,0,0,16">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="200"/>
-                                        <ColumnDefinition Width="200"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                    </Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="200"/>
+                                                                            <ColumnDefinition Width="200"/>
+                                                                            <ColumnDefinition Width="180"/>
+                                                                            <ColumnDefinition Width="Auto"/>
+                                                                        </Grid.ColumnDefinitions>
                     
                     <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}" Height="44" Margin="0,0,12,0">
                         <TextBox x:Name="SearchBox" Height="44" Padding="14,10" TextChanged="SearchBox_TextChanged" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" FontSize="15" VerticalContentAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" AutomationProperties.Name="Search profiles"/>
                     </Border>
                     
                     <ComboBox x:Name="FilterCombo" Grid.Column="1" Height="44" Style="{StaticResource DarkComboBox}" SelectedIndex="0" SelectionChanged="FilterCombo_SelectionChanged" FontSize="15" FontFamily="Segoe UI Variable, Segoe UI">
-                                            <ComboBoxItem Content="All Profiles"/>
-                                            <ComboBoxItem Content="Built-in Only"/>
-                                            <ComboBoxItem Content="Custom Only"/>
-                                            <ComboBoxItem Content="Melee"/>
-                                            <ComboBoxItem Content="Ranged"/>
-                                            <ComboBoxItem Content="Mage"/>
-                                            <ComboBoxItem Content="Support"/>
-                                        </ComboBox>
-                                        <ComboBox x:Name="SortCombo" Grid.Column="2" Height="44" Style="{StaticResource DarkComboBox}" SelectedIndex="0" SelectionChanged="SortCombo_SelectionChanged" FontSize="13" FontFamily="Segoe UI Variable, Segoe UI" Margin="12,0,0,0" AutomationProperties.Name="Sort profiles">
+                                                                <ComboBoxItem Content="All Profiles"/>
+                                                                <ComboBoxItem Content="Built-in Only"/>
+                                                                <ComboBoxItem Content="Custom Only"/>
+                                                                <ComboBoxItem Content="Melee"/>
+                                                                <ComboBoxItem Content="Ranged"/>
+                                                                <ComboBoxItem Content="Mage"/>
+                                                                <ComboBoxItem Content="Support"/>
+                                                            </ComboBox>
+                                                            <!-- TASK-2305: Tag filter -->
+                                                            <ComboBox x:Name="TagFilterCombo" Grid.Column="2" Height="44" Style="{StaticResource DarkComboBox}" SelectedIndex="0" SelectionChanged="TagFilterCombo_SelectionChanged" FontSize="13" FontFamily="Segoe UI Variable, Segoe UI" Margin="12,0,0,0" AutomationProperties.Name="Tag filter"/>
+                                                            <ComboBox x:Name="SortCombo" Grid.Column="3" Height="44" Style="{StaticResource DarkComboBox}" SelectedIndex="0" SelectionChanged="SortCombo_SelectionChanged" FontSize="13" FontFamily="Segoe UI Variable, Segoe UI" Margin="12,0,0,0" AutomationProperties.Name="Sort profiles">
                                             <ComboBoxItem Content="Name (A-Z)"/>
                                             <ComboBoxItem Content="Name (Z-A)"/>
                                             <ComboBoxItem Content="Date (Newest)"/>
                                             <ComboBoxItem Content="Downloads"/>
                                         </ComboBox>
-                                        <TextBlock x:Name="ProfileCount" Grid.Column="3" Text="0 profiles" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="16,0,0,0" FontWeight="Bold"/>
+                                        <TextBlock x:Name="ProfileCount" Grid.Column="4" Text="0 profiles" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="16,0,0,0" FontWeight="Bold"/>
                 </Grid>
                 
                 <!-- Profile List -->
@@ -89,12 +92,27 @@
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
                                         <StackPanel Grid.Column="0">
-                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
-                                                <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Black" Foreground="{StaticResource TextPrimary}" FontFamily="Segoe UI Variable, Segoe UI"/>
-                                                <Border Background="{StaticResource BgTertiary}" CornerRadius="{StaticResource RadiusSm}" Padding="8,3" Margin="12,0,0,0" Visibility="{Binding IsBuiltIn, Converter={StaticResource BoolToVisibilityConverter}}">
-                                                    <TextBlock Text="BUILT-IN" FontSize="9" FontWeight="Black" Foreground="{StaticResource AccentGold}" FontFamily="Segoe UI Variable, Segoe UI"/>
-                                                </Border>
-                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal">
+                                                                                            <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="Black" Foreground="{StaticResource TextPrimary}" FontFamily="Segoe UI Variable, Segoe UI"/>
+                                                                                            <Border Background="{StaticResource BgTertiary}" CornerRadius="{StaticResource RadiusSm}" Padding="8,3" Margin="12,0,0,0" Visibility="{Binding IsBuiltIn, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                                                                <TextBlock Text="BUILT-IN" FontSize="9" FontWeight="Black" Foreground="{StaticResource AccentGold}" FontFamily="Segoe UI Variable, Segoe UI"/>
+                                                                                            </Border>
+                                                                                            <!-- TASK-2305: Tag chips -->
+                                                                                            <ItemsControl ItemsSource="{Binding Tags}" Margin="12,0,0,0">
+                                                                                                <ItemsControl.ItemsPanel>
+                                                                                                    <ItemsPanelTemplate>
+                                                                                                        <StackPanel Orientation="Horizontal"/>
+                                                                                                    </ItemsPanelTemplate>
+                                                                                                </ItemsControl.ItemsPanel>
+                                                                                                <ItemsControl.ItemTemplate>
+                                                                                                    <DataTemplate>
+                                                                                                        <Border Background="{StaticResource AccentBlue}" CornerRadius="{StaticResource RadiusSm}" Padding="6,2" Margin="4,0,0,0">
+                                                                                                            <TextBlock Text="{Binding}" FontSize="9" FontWeight="Bold" Foreground="{StaticResource TextPrimary}" FontFamily="Segoe UI Variable, Segoe UI"/>
+                                                                                                        </Border>
+                                                                                                    </DataTemplate>
+                                                                                                </ItemsControl.ItemTemplate>
+                                                                                            </ItemsControl>
+                                                                                        </StackPanel>
                                             <TextBlock Text="{Binding ClassTips}" FontSize="13" Foreground="{StaticResource TextSecondary}" TextWrapping="Wrap" Margin="0,0,0,10" FontFamily="Segoe UI Variable, Segoe UI"/>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="Class: " FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" FontFamily="Segoe UI Variable, Segoe UI"/>

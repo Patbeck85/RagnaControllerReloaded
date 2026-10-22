@@ -1,6 +1,6 @@
 # RagnaController v2.3.0 — Autonomous Multi-Agent Development
 
-**Version:** 2.3.0 | **Release:** 2026-10-17 | **Build:** 0 errors, 0 warnings | **Tests:** 642/642 passing
+**Version:** 2.3.0 | **Release:** 2026-10-20 | **Build:** 0 errors, 0 warnings | **Tests:** 726/726 passing
 
 ---
 
@@ -26,6 +26,29 @@ This release represents a complete autonomous development cycle executed per **S
 - **Phase 8: Complete UI Modernization** — Cyber-Gaming 2026 design system across all 18 WPF windows
 - **Phase 9: Performance & Observability** — Frame Budget Monitor (PERF-003) with P50/P95/P99 tracking, ETW events
 - **All 7 SOUL.md Golden Rules** verified satisfied
+
+### 🔴 Recent Fixes (Error Scan & Quality Assurance)
+
+| # | File | Issue | Severity | Fix |
+|---|------|-------|----------|-----|
+| 1 | `ProfileManager.cs` | `WriteToDisk` omitted 13 profile properties → data loss on save | Critical | All 13 properties added to `pCopy` |
+| 2 | `ControllerService.cs` | SDL calls directly from UI thread → AccessViolationException/Race condition | Critical | Values cached on SDL thread |
+| 3 | `Settings.cs` | Empty `catch { }` without logging (SOUL.md ERROR-001) | High | Exception logged |
+| 4 | `ProfileManager.cs` | Empty `catch` without logging (SOUL.md ERROR-001) | High | Exception logged |
+| 5 | `InGameOverlayWindow.xaml.cs` | Empty `catch` in `UpdateClassIcon` (SOUL.md ERROR-001) | High | Exception logged |
+| 6 | `WizardWindow.xaml.cs` | Empty `catch` in `DetectControllers` (SOUL.md ERROR-001) | High | Exception logged |
+| 7 | `ControllerTestWindow.xaml.cs` | 2× empty `catch` (SOUL.md ERROR-001) | High | Both replaced with logging |
+| 8 | `ProfileTemplateManager.cs` | Typo `"_preremewal"` instead of `"_prerenewal"` | Medium | Fixed comment and code |
+| 9 | `ProfileTemplateManager.cs` | `ButtonKey.Parse()` without Try-Catch → invalid strings throw Exception | Medium | Try-Catch with logging |
+| 10 | `MainWindow.xaml` | `\n` in 4 ToolTips shown literally | Medium | `&#x0a;` for correct XML line break |
+| 11 | `SettingsWindow.xaml.cs` | Obsolete `Process.Start` API | Medium | `ProcessStartInfo` with `UseShellExecute` |
+| 12 | `SettingsWindow.xaml.cs` | ShowToast DispatcherTimer leak after window close | Medium | `toastWin.Closed` stops timer |
+| 13 | `ProfileWizardWindow.xaml.cs` | `\\\\n` in MessageBox shown literally | Low | `Environment.NewLine` used |
+| 14 | `TutorialWindow.xaml.cs` | `IndexOutOfRangeException` at Slide 5 | High | Bounds-check added |
+
+**Build:** 0 Errors, 0 Warnings
+**Tests:** 726/726 passing
+**Empty catch blocks:** 0 remaining in entire project (SOUL.md ERROR-001 fully satisfied)
 
 ---
 
@@ -166,75 +189,201 @@ RagnaController uses a **JSON-based localization system** with live language swi
 ```
 src/RagnaController/
 ├── App.xaml / App.xaml.cs                 # Entry point, DI setup, Global Exception Handling
-├── MainWindow.xaml / .cs                   # Main UI, Status display, Tab-Navigation
-├── HandheldWindow.xaml / .cs               # Big-Picture UI for ROG Ally / Steam Deck
-├── MiniModeWindow.xaml / .cs               # Compact click-through HUD
-├── StreamerOverlayWindow.xaml / .cs        # OBS-friendly real-time controller visualizer
-├── InGameOverlayWindow.xaml / .cs          # Borderless in-game state HUD
-├── ButtonRemappingWindow.xaml / .cs         # Layer-based button mapping
-├── ComboEditorWindow.xaml / .cs             # Class combo chain editor
-├── MacroEditorWindow.xaml / .cs             # Macro recording & management
-├── MacroTimelineWindow.xaml / .cs           # Visual macro timeline editor
-├── RadialSetupWindow.xaml / .cs             # Radial emote menu configuration
-├── ProfileWizardWindow.xaml / .cs           # Guided profile creation wizard (FEAT-010)
-├── ProfileLibraryWindow.xaml / .cs          # Profile library management
-├── CommunityBrowserWindow.xaml / .cs        # GitHub Gists community hub
-├── SettingsWindow.xaml / .cs               # General settings (sound, rumble, window mode)
-├── SplashWindow.xaml / .cs                 # Animated startup splash
 │
-├── Controller/
-│   ├── ControllerState.cs                 # readonly record struct with helper properties
-│   ├── ButtonState.cs                     # NEW: readonly record struct with 5 helper properties + With()
+├── Views/                                 # UI Layer - WPF Windows & Controls
+│   ├── Windows/                           # Main application windows
+│   │   ├── MainWindow.xaml                # Main UI, Status display, Tab-Navigation
+│   │   ├── SettingsWindow.xaml            # General settings (sound, rumble, window mode)
+│   │   └── SplashWindow.xaml              # Animated startup splash
+│   │
+│   ├── Dialogs/                           # Modal dialog windows & wizards
+│   │   ├── ProfileWizardWindow.xaml       # Guided profile creation wizard (FEAT-010)
+│   │   ├── ProfileLibraryWindow.xaml      # Profile library management
+│   │   ├── CommunityBrowserWindow.xaml    # GitHub Gists community hub
+│   │   ├── DeveloperConsoleWindow.xaml    # In-app developer console
+│   │   ├── DaisyWheelWindow.xaml          # Circular on-screen keyboard
+│   │   └── TutorialWindow.xaml            # Interactive tutorial overlay
+│   │
+│   ├── Overlays/                          # In-game & overlay windows
+│   │   ├── InGameOverlayWindow.xaml       # Borderless in-game state HUD
+│   │   ├── HandheldWindow.xaml            # Big-Picture UI for ROG Ally / Steam Deck
+│   │   └── MiniModeWindow.xaml            # Compact click-through HUD
+│   │
+│   ├── Editors/                           # Configuration editors
+│   │   ├── ButtonRemappingWindow.xaml     # Layer-based button mapping
+│   │   ├── ComboEditorWindow.xaml         # Class combo chain editor
+│   │   ├── RadialMenuWindow.xaml          # Radial emote menu editor
+│   │   └── RadialSetupWindow.xaml         # Radial emote menu configuration
+│   │
+│   └── Controls/                          # Reusable UI controls
+│       ├── DarkComboBox.xaml              # Themed ComboBox control
+│       └── ...
+│
+├── Controller/                            # Hardware Interaction Layer
 │   ├── ControllerService.cs               # XInput polling, WMI brand detection
-│   ├── DualSenseLightbarService.cs         # Raw HID USB reports for PS5 LED colors
-│   └── GyroService.cs                      # Raw HID reading & low-pass filtering
+│   ├── DualSenseHardwareService.cs        # DualSense Lightbar & Adaptive Triggers via Raw HID
+│   ├── DualSenseLightbarService.cs        # PS5 LED colors via Raw HID USB reports
+│   ├── GyroService.cs                     # Raw HID reading & low-pass filtering
+│   └── ControllerSnapshot.cs              # Controller state snapshot for UI binding
 │
-├── Core/
-│   ├── EngineOrchestrator.cs               # Main tick coordination, zero-allocation hot paths
-│   ├── CombatRouter.cs                     # Routes input to correct engine
-│   ├── InputReader.cs                      # Normalizes XInput gamepad data
-│   ├── InputCommandQueue.cs                # Thread-safe SendInput queue (DEBUG-only Commands list)
-│   ├── Win32InputService.cs                # P/Invoke facade for SendInput
-│   ├── NativeMethods.cs
-│   ├── AutoTargetEngine.cs                 # Melee smart-aim & auto-attack
-│   ├── KiteEngine.cs / KiteStates.cs       # Ranged hit-and-run FSM
-│   ├── MageEngine.cs                       # Ground-spell aiming (Stick + Gyro) — SmartCursorService integrated
-│   ├── SupportEngine.cs                    # Party targeting & healing cycle
-│   ├── ComboEngine.cs                      # Class-aware sequential skill chains
-│   ├── MovementEngine.cs                   # Left-stick click-to-move logic
-│   ├── CursorEngine.cs                     # Right-stick free mouse movement
-│   ├── MobSweepEngine.cs                   # Auto TAB-cycle + attack while moving
-│   ├── WindowTracker.cs                    # WinEventHook for game client bounds/DPI
-│   ├── WindowSwitcher.cs                   # Instant multi-client switching
-│   ├── SystemMonitor.cs                    # Focus Lock evaluation (500ms polling)
-│   ├── PowerModeService.cs                 # Windows Sleep/Resume & Battery state
-│   ├── HandheldModeManager.cs              # PC Handheld integration
-│   ├── SmartCursorService.cs               # D-Pad grid-hopping & precision damping
-│   ├── VoiceChatService.cs                 # Windows Speech Recognition (Voice-to-Chat)
-│   ├── ProfileShareService.cs              # GitHub Gists API for community profiles
-│   ├── ActionLogService.cs                 # Event tracking & fast Channel-based logging
-│   └── EngineWatchdog.cs                   # Tick latency monitoring
+├── Core/                                  # Business Logic Layer (all engine & service code)
+│   ├── Engines/                           # Gameplay engines (125Hz tick loop components)
+│   │   ├── AutoTargetEngine.cs            # Melee smart-aim & auto-attack
+│   │   ├── CombatEngine.cs                # Combat state machine & targeting
+│   │   ├── ComboEngine.cs                 # Class-aware sequential skill chains
+│   │   ├── CursorEngine.cs                # Right-stick free mouse movement
+│   │   ├── GroundSpellEngine.cs           # AoE ground spell management
+│   │   ├── HybridEngine.cs                # Legacy hybrid engine (deprecated)
+│   │   ├── ItemManagerEngine.cs           # Auto item usage & inventory management
+│   │   ├── KiteEngine.cs                  # Ranged hit-and-run FSM
+│   │   ├── MageEngine.cs                  # Ground-spell aiming (Stick + Gyro)
+│   │   ├── MobSweepEngine.cs              # Auto TAB-cycle + attack while moving
+│   │   ├── MovementEngine.cs              # Left-stick click-to-move logic
+│   │   ├── SkillOrchestrator.cs           # Class-specific rotation execution
+│   │   ├── SmartCursorEngine.cs           # Smart cursor assistance engine
+│   │   └── SupportEngine.cs               # Party targeting & healing cycle
+│   │
+│   ├── Input/                             # Input processing & routing
+│   │   ├── InputReader.cs                 # Normalizes XInput gamepad data
+│   │   ├── InputRouter.cs                 # Routes input to correct engine (Priority-Chain)
+│   │   ├── InputCommandQueue.cs           # Thread-safe SendInput queue
+│   │   ├── InputChain.cs                  # Input processing chain
+│   │   ├── InputFailoverManager.cs        # Fallback between input methods
+│   │   ├── InputLatencyTracker.cs         # Input latency monitoring
+│   │   ├── JitterService.cs               # Natural input timing variance
+│   │   ├── KeyboardInputService.cs        # Keyboard input handling
+│   │   ├── MouseInputService.cs           # Mouse input handling
+│   │   ├── InterceptionKeyboardStrategy.cs # Interception driver keyboard strategy
+│   │   ├── SendInputKeyboardStrategy.cs   # Win32 SendInput keyboard strategy
+│   │   ├── SendInputMouseStrategy.cs      # Win32 SendInput mouse strategy
+│   │   ├── BezierMouseService.cs          # Smooth mouse movement curves
+│   │   ├── KernelInputService.cs          # Kernel-level input bypass
+│   │   ├── IInputHandler.cs               # Input handler interface
+│   │   ├── IKeyboardEmulationStrategy.cs  # Keyboard emulation strategy interface
+│   │   └── IMouseEmulationStrategy.cs     # Mouse emulation strategy interface
+│   │
+│   ├── Windows/                           # Window management & tracking
+│   │   ├── WindowTracker.cs               # WinEventHook for game client bounds/DPI
+│   │   ├── MultiClientWindowTracker.cs    # Multi-client window tracking
+│   │   ├── WindowSwitcher.cs              # Instant multi-client switching
+│   │   ├── DeviceNotificationWindow.cs    # Device change notifications
+│   │   ├── IWindowTracker.cs              # Window tracker interface
+│   │   └── EnumWindowsProcDelegate.cs     # Win32 enum windows callback
+│   │
+│   ├── Interfaces/                        # Core interfaces & contracts
+│   │   ├── IControllerProvider.cs         # Controller provider interface
+│   │   ├── ICommandQueue.cs               # Command queue interface
+│   │   ├── ICombatState.cs                # Combat state interface
+│   │   ├── IFileSystem.cs                 # File system abstraction
+│   │   ├── IFeedbackProvider.cs           # Feedback provider interface
+│   │   ├── IMessenger.cs                  # Messenger/IPC interface
+│   │   ├── INativeMethods.cs              # Native methods interface
+│   │   ├── IProcessNameResolver.cs        # Process name resolver interface
+│   │   ├── IProfileManager.cs             # Profile manager interface
+│   │   └── ITickProvider.cs               # Tick provider interface
+│   │
+│   ├── Services/                          # Background services & managers
+│   │   ├── TelemetryService.cs            # Usage telemetry & analytics
+│   │   ├── ProfileService.cs              # Profile CRUD operations
+│   │   ├── ControllerService.cs           # High-level controller orchestration
+│   │   ├── GyroService.cs                 # Gyro service wrapper
+│   │   ├── SystemMonitor.cs               # Focus Lock evaluation (500ms polling)
+│   │   ├── PowerMonitor.cs                # Windows Sleep/Resume & Battery state
+│   │   ├── ProfileValidator.cs            # Profile validation logic
+│   │   ├── ConfigWatcher.cs               # Configuration file watcher
+│   │   ├── ClassDetector.cs               # Weighted heuristic auto-class detection (FEAT-009)
+│   │   ├── BuffManager.cs                 # Active buff/debuff tracking (FEAT-008)
+│   │   ├── SessionRecorder.cs             # JSONL session replay recorder
+│   │   ├── StandbyManager.cs              # Smart Standby AFK detection
+│   │   ├── SmartCursorService.cs          # D-Pad grid-hopping & precision damping
+│   │   ├── ActionLogService.cs            # Event tracking & Channel-based logging
+│   │   ├── EngineWatchdog.cs              # Tick latency monitoring
+│   │   ├── LocalizationManager.cs         # i18n language switching
+│   │   ├── ProfileApplier.cs              # Profile live parameter updates
+│   │   ├── ProfileShareService.cs         # GitHub Gists API for community profiles
+│   │   ├── DefaultProfileLoader.cs        # Built-in profile loading
+│   │   ├── DiscordRpcService.cs           # Discord Rich Presence integration
+│   │   ├── RoUiMenuService.cs             # RO in-game menu integration
+│   │   ├── RadialMenuService.cs           # Radial menu service
+│   │   ├── TtsAnnouncerService.cs         # Text-to-speech announcements
+│   │   ├── HapticFeedbackService.cs       # Haptic feedback control
+│   │   ├── GamepadUiNavigator.cs          # Gamepad UI navigation
+│   │   ├── FeedbackRumbleProvider.cs      # Rumble feedback provider
+│   │   ├── NullFeedbackProvider.cs        # Null feedback provider (disabled)
+│   │   ├── ETWProvider.cs                 # Event Tracing for Windows provider
+│   │   ├── BatteryOptimizationService.cs  # Battery optimization
+│   │   ├── AutoStartManager.cs            # Auto-start on Windows boot
+│   │   ├── BackgroundTickProvider.cs      # Background tick timing
+│   │   ├── WpfTickProvider.cs             # WPF tick provider
+│   │   ├── HandheldDetector.cs            # Handheld device detection
+│   │   ├── HandheldModeManager.cs         # PC Handheld integration
+│   │   ├── LongPressTracker.cs            # Long-press detection
+│   │   ├── MemoryAllocationTracker.cs     # Memory allocation tracking
+│   │   ├── MonitorHelper.cs               # Monitor/DPI helper
+│   │   ├── UpdateChecker.cs               # Update check service
+│   │   ├── VoiceChatService.cs            # Windows Speech Recognition (Voice-to-Chat)
+│   │   ├── OverlayRouter.cs               # Overlay window routing
+│   │   ├── PartyManager.cs                # Party management
+│   │   ├── PowerModeService.cs            # Windows power mode service
+│   │   └── CooldownManager.cs             # Cooldown tracking
+│   │
+│   ├── Utilities/                         # Utility classes & helpers
+│   │   ├── EngineOrchestrator.cs          # Main tick coordination, lifecycle management
+│   │   ├── EngineOptimizationPool.cs      # String pooling for hot-path allocations
+│   │   ├── AppVersion.cs                  # Application version info
+│   │   ├── Messages.cs                    # App-wide message constants
+│   │   ├── RoFeatures.cs                  # RO feature flags & detection
+│   │   ├── NativeMethods.cs               # Win32 P/Invoke declarations
+│   │   ├── NativeMethodsImpl.cs           # Native methods implementation
+│   │   ├── NativeStructs.cs               # Win32 struct definitions
+│   │   ├── ProcessNameResolver.cs         # Process name resolution
+│   │   ├── RagnaControllerETW.cs          # ETW event source
+│   │   ├── ShareCodeValidator.cs          # Share code validation
+│   │   ├── SnapshotBuilder.cs             # Builds ControllerSnapshot from engine state
+│   │   ├── AdvancedLogger.cs              # High-performance logger
+│   │   ├── FeedbackSystem.cs              # User feedback collection
+│   │   ├── GestureRecognizer.cs           # Gesture recognition
+│   │   ├── GpuOverlayProfiler.cs          # GPU overlay profiling
+│   │   ├── KiteStates.cs                  # Kite engine state definitions
+│   │   ├── MainViewModel.cs               # Main WPF ViewModel (MVVM)
+│   │   ├── ObjectPools.cs                 # Object pooling utilities
+│   │   ├── Pools.cs                       # Generic pool implementations
+│   │   └── EngineWatchdog.cs              # Tick latency watchdog
+│   │
+│   ├── Benchmarks/                        # Performance benchmarks
+│   │   └── BenchmarkHarness.cs            # Benchmark test harness
+│   │
+│   └── .hermes/                           # Hermes Agent configuration
 │
-├── Models/
-│   ├── ParsedInput.cs                      # Readonly record struct (current/prev frame)
-│   ├── ControllerState.cs                  # Readonly record struct for UI (new)
-│   ├── ControllerSnapshot.cs               # Readonly record struct for UI
-│   ├── Settings.cs                         # Global app settings (AppData)
-│   └── VirtualKey.cs                       # Enum matching Win32 VK codes
+├── Models/                                # Data Models & DTOs
+│   ├── ParsedInput.cs                     # Readonly record struct (current/prev frame)
+│   ├── ControllerState.cs                 # Readonly record struct for UI binding
+│   ├── VirtualKey.cs                      # Enum matching Win32 VK codes
+│   ├── Settings.cs                        # Global app settings (AppData)
+│   └── ...                                # Additional model classes
 │
-├── Profiles/
-│   ├── Profile.cs                          # JSON structure of character profile
-│   ├── ProfileManager.cs                   # Load/Save/Import/Export/Backup
-│   └── AppJsonContext.cs                   # AOT-friendly System.Text.Json context
+├── Profiles/                              # Profile Management
+│   ├── Profile.cs                         # JSON structure of character profile
+│   ├── ProfileManager.cs                  # Load/Save/Import/Export/Backup
+│   └── AppJsonContext.cs                  # AOT-friendly System.Text.Json context
 │
-├── Locales/                                # i18n JSON files (en.json, de.json, tl.json + 38 more)
-├── Assets/                                 # Character sprites, icons, and class images
+├── Locales/                               # i18n JSON files (en.json, de.json, tl.json + 38 more)
+│
+├── Assets/                                # Character sprites, icons, class images
 │   ├── Classes/                           # Ragnarok Online class portraits
 │   └── Emotes/                            # Emote images
 │
-├── AntiCheat/                             # Interception driver (optional)
 ├── DefaultProfiles/                       # Built-in character profiles
-└── .hermes/                               # Hermes Agent configuration
+│
+├── Controls/                              # Shared UI controls (library level)
+│
+├── Services/                              # Shared services (library level)
+│
+├── AntiCheat/                             # Interception driver (optional)
+│
+├── Resources/                             # Embedded resources (images, themes)
+│
+└── Properties/                            # AssemblyInfo & project properties
 ```
 
 ---
@@ -249,14 +398,14 @@ Located in `tests/RagnaController.Tests/`:
 - No Win32 calls during tests (isolated from OS)
 - xUnit framework with NSubstitute and FluentAssertions
 
-**Current Test Suite:** 325 tests passing across all core engines and integration tests.
+**Current Test Suite:** 726 tests passing across all core engines and integration tests.
 
 ### Build Verification
 
 Before any deployment:
 
 1. **Compile** project (`dotnet build`) — **0 errors, 0 warnings** ✅
-2. **Run tests** (`dotnet test`) — **325/325 passing** ✅
+2. **Run tests** (`dotnet test`) — **726/726 passing** ✅
 3. **Manual Windows testing** (VS Code / Visual Studio)
 4. **Verify release isolation** — `release_final/` contains only end products ✅
 

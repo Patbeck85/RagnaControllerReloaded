@@ -77,8 +77,10 @@ namespace RagnaController.Core
 
                                                                 // PERF-004: Memory Allocation Tracking
                                                                                                                                 private readonly MemoryAllocationTracker _memoryTracker = default!;
-                                                                                                                                                // PERF-005: Input Latency Tracking
-                                                                                                                                                private readonly InputLatencyTracker _latencyTracker = default!;
+                                                                                                                                                // PERF-005: Input Latency Tracker
+                                                                                                                                                                                                                                        private readonly InputLatencyTracker _latencyTracker = default!;
+                                                                                                                                                                                                                                        // PERF-006: Performance Profiler (per-engine tick timing)
+                                                                                                                                                private readonly PerformanceProfiler? _perfProfiler = default!;
                     
                                                                                                                                                                 // ProfileManager for auto-switching profiles based on controller
                                                                                                                                                                 private readonly ProfileManager _profileManager = default!;
@@ -115,8 +117,13 @@ namespace RagnaController.Core
         private const int UI_INTERVAL = 4;
         private int _uiTick;
         private int _reconnectTick;
-        private const int RECONNECT_INTERVAL = 375;
         private int _actualDeltaMs;
+
+        // PERF-007: Dynamic tick reduction counters
+        private int _tickSkipCounter;
+        private const int LIGHT_IDLE_SKIP = 1;   // Skip 1 of 2 ticks (~62Hz)
+        private const int DEEP_IDLE_SKIP = 3;    // Skip 3 of 4 ticks (~15Hz)
+        private const int RECONNECT_INTERVAL = 375;
 
         public EngineOrchestrator(
                     ITickProvider tickProvider,
@@ -176,8 +183,12 @@ namespace RagnaController.Core
                     _inputReader = new InputReader(_ctrl);
 
                                 // PERF-005: Initialize Input Latency Tracker for end-to-end latency measurement
-                                _latencyTracker = InputLatencyRegistry.GetOrCreate("EngineOrchestrator");
-                                _logger?.Info("[EngineOrchestrator] InputLatencyTracker initialized — Target P99: 5ms");
+                                                        _latencyTracker = InputLatencyRegistry.GetOrCreate("EngineOrchestrator");
+                                                        _logger?.Info("[EngineOrchestrator] InputLatencyTracker initialized — Target P99: 5ms");
+
+                                                        // PERF-006: Initialize Performance Profiler for per-engine tick timing
+                                                        _perfProfiler = new PerformanceProfiler("EngineOrchestrator", _logger);
+                                                        _logger?.Info("[EngineOrchestrator] PerformanceProfiler initialized — opt-in via PerformanceProfiler.EnableProfiling");
 
                                 var engineQueue = _queue ?? new InputCommandQueue(_latencyTracker, _ctrl.ControllerGuid ?? "Default");
             _movement = new MovementEngine(engineQueue, _winTracker);
@@ -264,7 +275,7 @@ namespace RagnaController.Core
             _inputRouter = new InputRouter(
                 _combat, _movement, _autoTarget, _mage, _combo, _cursor, _smartCursor,
                 _kite, _support, _overlayRouter, _mobSweep, _handheld, _feedback, _cooldownManager,
-                _radialMenu, _gestureRecognizer);
+                _radialMenu, _gestureRecognizer, _perfProfiler);
             _profileApplier = new ProfileApplier(this, _messenger);
 
             // TECH-059: Config Hot-Reload — überwacht settings.json and profiles.json
@@ -489,7 +500,10 @@ namespace RagnaController.Core
                                                                                                                                                                                                                                 public InputLatencyTracker LatencyTracker => _latencyTracker;
 
                                                                                                                                                                                                                                 // PERF-004: Memory Allocation Tracker
-                                                                                                                                                                                                                                public MemoryAllocationTracker MemoryTracker => _memoryTracker;
+                                                                                                                                                                                                                                                                                                                                                                                                                                public MemoryAllocationTracker MemoryTracker => _memoryTracker;
+
+                                                                                                                                                                                                                                // PERF-006: Performance Profiler
+                                                                                                                                                                                                                                public PerformanceProfiler? PerfProfiler => _perfProfiler;
 
                                 // Public method for external log subscription - takes a message and invokes the event
         /// <summary>
@@ -549,8 +563,10 @@ namespace RagnaController.Core
                                 if (_actualDeltaMs > 32) _actualDeltaMs = baseDelta;
 
                                 // Smart Standby check - delegate to StandbyManager
+                                var standbySw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                                 if (_standbyManager.Tick(input, _currentProfile, _rumbleEnabled, _feedback, _movement, _logger, out bool shouldSkip))
                                 {
+                                    if (standbySw != null) { standbySw.Stop(); _perfProfiler.RecordEngineTick(nameof(StandbyManager), standbySw.Elapsed.TotalMilliseconds); }
                                     if (shouldSkip)
                                     {
                                         // Throttle polling to ~20Hz instead of 125Hz to save CPU
@@ -558,14 +574,49 @@ namespace RagnaController.Core
                                         return; // Skip all combat routing and UI updates!
                                     }
                                 }
+                                if (standbySw != null) { standbySw.Stop(); _perfProfiler.RecordEngineTick(nameof(StandbyManager), standbySw.Elapsed.TotalMilliseconds); }
+
+                                // PERF-007: Dynamic tick reduction based on idle level
+                                if (_currentProfile?.EnableDynamicTickReduction == true)
+                                {
+                                    var idleLevel = _standbyManager.CurrentIdleLevel;
+                                    if (idleLevel == IdleLevel.LightIdle)
+                                    {
+                                        // Skip every 2nd tick → ~62Hz
+                                        if (++_tickSkipCounter > LIGHT_IDLE_SKIP)
+                                        {
+                                            _tickSkipCounter = 0;
+                                            return; // Skip this tick
+                                        }
+                                    }
+                                    else if (idleLevel == IdleLevel.DeepIdle)
+                                    {
+                                        // Skip 3 of 4 ticks → ~15Hz
+                                        if (++_tickSkipCounter > DEEP_IDLE_SKIP)
+                                        {
+                                            _tickSkipCounter = 0;
+                                            return; // Skip this tick
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // Active or Standby (handled above) — reset counter
+                                        _tickSkipCounter = 0;
+                                    }
+                                }
 
                 // Routing - delegate to InputRouter
+                                var routeInputSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                                 _inputRouter.RouteInput(input, _actualDeltaMs, _rumbleEnabled);
+                                if (routeInputSw != null) { routeInputSw.Stop(); _perfProfiler.RecordEngineTick(nameof(InputRouter), routeInputSw.Elapsed.TotalMilliseconds); }
 
                                 // FEAT-006: Update groand spells
+                                                                var groundSpellSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                                                                 _groundSpell?.Handle(input, _actualDeltaMs);
+                                                                if (groundSpellSw != null) { groundSpellSw.Stop(); _perfProfiler.RecordEngineTick(nameof(GroundSpellEngine), groundSpellSw.Elapsed.TotalMilliseconds); }
 
                                                                 // FEAT-007: Update skill orchestrator (class-specific rotations)
+                                                                                                                                var skillOrchSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                                                                                                                                 _skillOrchestrator?.Update(input, _actualDeltaMs, 
                                                                                                                                                                                                     _autoTarget?.CurrentTarget != null,
                                                                                                                                                                                                     _autoTarget?.CurrentTargetDistance ?? 0f,
@@ -577,15 +628,22 @@ namespace RagnaController.Core
                                                                                                                                                                                                     _support?.ActiveDebuffs ?? new(),
                                                                                                                                                                                                     _autoTarget?.NearbyEnemyCount ?? 0,
                                                                                                                                                                                                     _groundSpell?.GetActiveSpellNames() ?? new());
+                                                                                                                                if (skillOrchSw != null) { skillOrchSw.Stop(); _perfProfiler.RecordEngineTick(nameof(SkillOrchestrator), skillOrchSw.Elapsed.TotalMilliseconds); }
 
                                                                                                                                                                                                 // FEAT-008: Update buff/debuff tracking
+                                                                                                                                                                                                                                                                                                                                var buffMgrSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                                                                                                                                                                                                                                                                                                                                 _buffManager?.Update(_actualDeltaMs);
+                                                                                                                                                                                                                                                                                                                                if (buffMgrSw != null) { buffMgrSw.Stop(); _perfProfiler.RecordEngineTick(nameof(BuffManager), buffMgrSw.Elapsed.TotalMilliseconds); }
 
                                                                                                                                                                                                 // FEAT-011: Update item manager (Auto-Potion bei HP/SP-Schwelle)
+                                                                                                                                                                                                var itemMgrSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                                                                                                                                                                                                 _itemManager.Update(_combat.CurrentHPPercent, _combat.CurrentSP, _actualDeltaMs);
+                                                                                                                                                                                                if (itemMgrSw != null) { itemMgrSw.Stop(); _perfProfiler.RecordEngineTick(nameof(ItemManagerEngine), itemMgrSw.Elapsed.TotalMilliseconds); }
 
                                                                                                                                                                                                 // FEAT-012: Update party manager (Auto-Heal-Loop)
+                                                                                                                                                                                                var partyMgrSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                                                                                                                                                                                                 _partyManager.Update();
+                                                                                                                                                                                                if (partyMgrSw != null) { partyMgrSw.Stop(); _perfProfiler.RecordEngineTick(nameof(PartyManager), partyMgrSw.Elapsed.TotalMilliseconds); }
 
                                                                                                                                                                                                 // PERF-004: Record memory allocation stats
                                                                                                                                                                                                 _memoryTracker?.RecordTick();
@@ -594,12 +652,17 @@ namespace RagnaController.Core
                 if (++_uiTick < UI_INTERVAL) return;
                 _uiTick = 0;
 
+                var snapSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
                 var snap = _snapshot.Build(input, _sysMonitor.IsFocusLocked, sw.Elapsed.TotalMilliseconds);
+                if (snapSw != null) { snapSw.Stop(); _perfProfiler.RecordEngineTick(nameof(SnapshotBuilder), snapSw.Elapsed.TotalMilliseconds); }
                 SnapshotUpdated?.Invoke(snap);
                 _messenger.Publish(new SnapshotReadyMessage(snap));
 
                 // FEAT-014: Session-Replay — Engine-Zustand (intern 10 Hz gedrosselt)
                 _sessionRecorder?.RecordState(snap);
+
+                // PERF-006: Return snapshot to pool (all consumers have finished synchronously)
+                MessagePools.ControllerSnapshotPool.Return(snap);
             }
             catch (Exception ex)
             {

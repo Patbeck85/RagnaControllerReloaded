@@ -7,6 +7,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --
 
+## [2.5.0-dev] - 2026-10-21 (In Development)
+
+### ✨ Epic 8: DualSense Lightbar pro Profil konfigurierbar
+- **TASK-1901: Lightbar-Farb-Definition pro Profil** — Neues `Profile.LightbarColor` Property (Hex RGB, Default `#005AD2`). Jedes Profil kann jetzt eine eigene Lightbar-Farbe definieren (z.B. Rot für Mage, Blau für Archer, Grün für Support).
+- **TASK-1903: Engine-Integration** — `ProfileApplier.TryApplyLightbarColor()` wendet die Profil-Farbe beim Laden automatisch auf den DualSense an (via `DualSenseHardwareService.SetColor()`).
+- **TASK-1904: Unit-Tests** — 3 neue Tests in `ProfileMigrationTests.cs`: Default-Wert, Serialization-Roundtrip, verschiedene Farben.
+
+### 🔴 Critical Bug Fixes (Error Scan)
+- **ProfileManager.WriteToDisk** — Added 13 missing profile properties (ControllerGuid, Priority, IsEnabled, LongPress*, Stick*, ControllerConfigs, LastControllerGuid, AutoActivateOnControllerConnect, CreatedAt, DownloadCount). Fixes data loss on profile save.
+- **ControllerService** — BatteryLevel and GetButtonStates() now read from SDL-thread-cached values instead of calling SDL directly from UI thread. Fixes AccessViolationException/race condition.
+- **SOUL.md ERROR-001 compliance** — Eliminated all empty `catch { }` blocks across the project:
+  - `Settings.cs` — Exception logged via Debug.WriteLine
+  - `ProfileManager.cs` — Exception logged with backup fallback context
+  - `InGameOverlayWindow.xaml.cs` — Exception logged in `UpdateClassIcon`
+  - `WizardWindow.xaml.cs` — Exception logged in `DetectControllers`
+  - `ControllerTestWindow.xaml.cs` — 2× empty catch blocks replaced with logging
+- **ProfileTemplateManager.cs** — Fixed typo `"_preremewal"` → `"_prerenewal"`; wrapped `ButtonKey.Parse()` in Try-Catch
+- **MainWindow.xaml** — Fixed `\n` in 4 ToolTips (replaced with `&#x0a;` for correct XML line break)
+- **SettingsWindow.xaml.cs** — Replaced obsolete `Process.Start("explorer.exe", path)` with `ProcessStartInfo`; ShowToast DispatcherTimer now stopped on manual window close
+- **ProfileWizardWindow.xaml.cs** — Fixed `\\\\n` literal in MessageBox (replaced with `Environment.NewLine`)
+- **TutorialWindow.xaml.cs** — Fixed `IndexOutOfRangeException` at Slide 5 (`_mediaPaths` has 4 entries for 5 slides)
+
+**Build:** 0 Errors / 0 Warnings  
+**Tests:** 773/773 passing  
+**Empty catch blocks:** 0 remaining (SOUL.md ERROR-001 fully satisfied)
+
+---
+
+## [2.3.1] - 2026-10-20
+
+### 🔴 Critical Bug Fixes (Error Scan)
+
+- **ProfileManager.WriteToDisk** — Added 13 missing profile properties (ControllerGuid, Priority, IsEnabled, LongPress*, Stick*, ControllerConfigs, LastControllerGuid, AutoActivateOnControllerConnect, CreatedAt, DownloadCount). Fixes data loss on profile save.
+- **ControllerService** — BatteryLevel and GetButtonStates() now read from SDL-thread-cached values instead of calling SDL directly from UI thread. Fixes AccessViolationException/race condition.
+- **SOUL.md ERROR-001 compliance** — Eliminated all empty `catch { }` blocks across the project:
+  - `Settings.cs` — Exception logged via Debug.WriteLine
+  - `ProfileManager.cs` — Exception logged with backup fallback context
+  - `InGameOverlayWindow.xaml.cs` — Exception logged in `UpdateClassIcon`
+  - `WizardWindow.xaml.cs` — Exception logged in `DetectControllers`
+  - `ControllerTestWindow.xaml.cs` — 2× empty catch blocks replaced with logging
+- **ProfileTemplateManager.cs** — Fixed typo `"_preremewal"` → `"_prerenewal"`; wrapped `ButtonKey.Parse()` in Try-Catch
+- **MainWindow.xaml** — Fixed `\n` in 4 ToolTips (replaced with `&#x0a;` for correct XML line break)
+- **SettingsWindow.xaml.cs** — Replaced obsolete `Process.Start("explorer.exe", path)` with `ProcessStartInfo`; ShowToast DispatcherTimer now stopped on manual window close
+- **ProfileWizardWindow.xaml.cs** — Fixed `\\\\n` literal in MessageBox (replaced with `Environment.NewLine`)
+- **TutorialWindow.xaml.cs** — Fixed `IndexOutOfRangeException` at Slide 5 (`_mediaPaths` has 4 entries for 5 slides)
+
+**Build:** 0 Errors / 0 Warnings  
+**Tests:** 726/726 passing  
+**Empty catch blocks:** 0 remaining (SOUL.md ERROR-001 fully satisfied)
+
+---
+
 ## [2.3.0] - 2026-10-17
 
 ### 🟥 SPRINT 15A — Critical Bug Fixes
@@ -43,6 +95,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Build: 0 Errors / 0 Warnings
 - Tests: 642/642 passing
 - Localization: 41 locale files updated with new keys
+
+### 🚀 Phase 16: Multi-Client & Profil-Switching (v2.4.0) — Partially Complete
+- **TASK-1601: Research: Win32 Multi-HWND Enum & Input-Isolation** — Research document created in `.workspace_temp/scratchpad/TASK-1601_Research_MultiHwnd.md`. Win32 APIs (EnumWindows, IsWindow, PostMessage) analyzed. MultiClientWindowTracker architecture designed with TTL caching (10s), PID→Name cache (TECH-020 pattern), and IProcessNameResolver integration for testability.
+- **TASK-1602: Multi-Client WindowTracker** — New `MultiClientWindowTracker` class tracks multiple RO client windows (same process name, different HWNDs) simultaneously. `INativeMethods` extended with `EnumWindows`, `IsWindow`, `PostMessage` + `WM_*` constants. `EnumWindowsProcDelegate` public delegate type. 5 Unit-Tests in `MultiClientWindowTrackerTests.cs`. Build: 0 Errors / 0 Warnings.
+- **TASK-1603: Multi-Client Input Router** — New `MultiClientInputRouter` class sends input targeted at specific client HWNDs via PostMessage (focus-independent) with SendInput fallback. Supports preferred HWND selection, active process name from Settings (RoExePath/FocusLockProcess), and process name extraction from executable path. 12 Unit-Tests in `MultiClientInputRouterTests.cs`. Build: 0 Errors / 0 Warnings. Tests: 664/664 PASS.
 
 --
 

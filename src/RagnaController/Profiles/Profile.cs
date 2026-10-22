@@ -111,6 +111,11 @@ namespace RagnaController.Profiles
         public bool EnableSmartStandby { get; set; } = true;
         public int StandbyTimeoutMinutes { get; set; } = 5;
 
+        // PERF-007: Dynamic Tick Reduction
+        public bool EnableDynamicTickReduction { get; set; } = true;
+        public int LightIdleIntervalMs { get; set; } = 16;   // ~62Hz after 30s idle
+        public int DeepIdleIntervalMs { get; set; } = 50;    // ~20Hz after 2min idle
+
         // ── DualSense Adaptive Triggers (v1.7.0) ───────────────────────────
         public AdaptiveTriggerMode LeftTriggerMode  { get; set; } = AdaptiveTriggerMode.Off;
         public AdaptiveTriggerMode RightTriggerMode { get; set; } = AdaptiveTriggerMode.Off;
@@ -211,7 +216,34 @@ namespace RagnaController.Profiles
         public int DownloadCount { get; set; } = 0;
 
         /// <summary>Overlay-Theme für dieses Profil (Neon, Soft, Dark). Standard: Neon.</summary>
-        public Settings.OverlayThemeType OverlayTheme { get; set; } = Settings.OverlayThemeType.Neon;
+                public Settings.OverlayThemeType OverlayTheme { get; set; } = Settings.OverlayThemeType.Neon;
+
+                /// <summary>
+                /// DualSense Lightbar-Farbe für dieses Profil (Hex RGB, z.B. \"#FF0000\" für Rot).
+                /// Standard: Blau (#005AD2) passend zum Default-ControllerConfig.
+                /// </summary>
+                public string LightbarColor { get; set; } = "#005AD2";
+
+                // TASK-2305: Profile Tags / Filter
+                /// <summary>Tags zur Kategorisierung von Profilen (z.B. PvP, WoE, Leveling, MVP).</summary>
+                public List<string> Tags { get; set; } = new();
+
+        // TASK-2302: Profile Versioning — Schema-Version für automatische Migration beim Load
+        /// <summary>Schema-Version dieses Profils. Aktuell: 2. Ältere Versionen werden beim Load automatisch migriert.</summary>
+        public int SchemaVersion { get; set; } = 2;
+
+        // TASK-2306: Cloud Sync — Cloud-Synchronisationseinstellungen
+        /// <summary>Cloud-Sync für dieses Profil aktiviert.</summary>
+        public bool CloudSyncEnabled { get; set; } = false;
+
+        /// <summary>Cloud-Sync-Anbieter (GitHubGist, OneDrive, GoogleDrive).</summary>
+        public string CloudSyncProvider { get; set; } = "GitHubGist";
+
+        /// <summary>Cloud-Sync-Token (GitHub PAT, OneDrive/Google OAuth-Token).</summary>
+        public string CloudSyncToken { get; set; } = "";
+
+        /// <summary>Letzter erfolgreicher Cloud-Sync-Zeitpunkt.</summary>
+        public DateTime LastCloudSyncAt { get; set; } = DateTime.MinValue;
     }
 
     /// <summary>
