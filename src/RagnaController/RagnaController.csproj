@@ -118,6 +118,7 @@
 <Compile Include="Core\Services\RadialMenuService.cs" />
 <Compile Include="Core\Services\UpdateService.cs" />
 <Compile Include="Core\Services\ChordInputService.cs" />
+<Compile Include="Core\Services\MonsterDatabaseService.cs" />
         <Compile Include="Core\Services\BackgroundTickProvider.cs" />
         <Compile Include="Core\Input\BezierMouseService.cs" />
         <Compile Include="Core\Engines\CombatEngine.cs" />
@@ -245,6 +246,8 @@
     <Compile Include="Models\ItemConfig.cs" />
     <Compile Include="Models\UpdateInfo.cs" />
     <Compile Include="Models\ChordConfig.cs" />
+    <Compile Include="Models\Monster.cs" />
+    <Compile Include="Models\MobDatabase.cs" />
     <Compile Include="Models\ParsedInput.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\StorageDropPlanner.cs" />
