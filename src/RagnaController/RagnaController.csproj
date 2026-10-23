@@ -1,3 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -15,20 +16,20 @@
     <Version>2.5.1</Version>
     <Authors>RagnaController Contributors</Authors>
     <Description>Hybrid Action Controller Layer for Ragnarok Online — Smart Cursor Edition</Description>
-    <!-- Disable XAML compilation to avoid conflicts with manually written methods -->
+    
     <XamlCompilation>Disabled</XamlCompilation>
-    <!-- Enable Windows targeting to allow building on WSL -->
+    
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <!-- Override NuGet package folder to avoid Windows-specific paths -->
+    
     <NuGetPackageRoot>/home/patbe/.nuget/packages</NuGetPackageRoot>
-    <!-- SourceLink for Stryker mutation testing -->
+    
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <RepositoryUrl>https://github.com/Patbeck85/RagnaControllerReloaded</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <!-- Localization namespace mapping for {core:Loc ...} bindings -->
+    
     <XamlNamespaceMappings>
       <XamlNamespaceMapping>
         <Prefix>core</Prefix>
@@ -36,21 +37,21 @@
         <Namespace>RagnaController.Locales</Namespace>
       </XamlNamespaceMapping>
     </XamlNamespaceMappings>
-    <!-- Disable default compile items to avoid duplicates with Buildalyzer/generated files -->
+    
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Tesseract" Version="5.2.0" />
     <Using Remove="System.Drawing" />
-    <!-- v1.7.0: System.Windows.Forms for Tray Icon support -->
+    
     <PackageReference Include="System.Windows.Forms" Version="4.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
-    <!-- Discord Rich Presence -->
+    
     <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
-    <!-- v1.7.2: Hexa.NET.SDL2 for native gamepad support (Xbox, DualShock 4, DualSense, Switch Pro) with Lightbar/Rumble -->
+    
     <PackageReference Include="Hexa.NET.SDL2" Version="1.2.17" />
-    <!-- Structured Logging (Serilog) for PERF-002 -->
+    
     <PackageReference Include="Serilog" Version="4.2.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
@@ -62,19 +63,19 @@
         <PackageReference Include="System.Management" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.0" />
-        <!-- BenchmarkDotNet for PERF-007 -->
+        
         <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
-        <!-- SourceLink for Stryker mutation testing -->
+        
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
       </ItemGroup>
 
   <PropertyGroup>
-      <!-- Disable debug symbols in Release to satisfy SOUL.md RULE-001 (Release Isolation) -->
+      
       <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
       <DebugSymbols Condition="'$(Configuration)' == 'Release'">false</DebugSymbols>
-      <!-- NU1701 Override: Suppress compatibility warning for System.Windows.Forms 4.0.0 -->
+      
       <NoWarn>$(NoWarn);NU1701</NoWarn>
-      <!-- Disable fallback package folders to avoid Windows-specific paths in WSL -->
+      
       <EnableFallbackPackageFolders>false</EnableFallbackPackageFolders>
     </PropertyGroup>
 
@@ -286,11 +287,11 @@
       <None Include="startup_voice.mp3" CopyToOutputDirectory="PreserveNewest" Condition="Exists('startup_voice.mp3')" />
       <None Include="startup_voice.wav" CopyToOutputDirectory="PreserveNewest" Condition="Exists('startup_voice.wav')" />
       <Content Include="DefaultProfiles\*.json" CopyToOutputDirectory="PreserveNewest" />
-      <!-- i18n: Kopiert den kompletten Locales Ordner in den Release/Publish Ordner -->
+      
       <None Update="Locales\**" CopyToOutputDirectory="PreserveNewest" />
-      <!-- AntiCheat: Kopiert den kompletten AntiCheat Ordner in den Release/Publish Ordner -->
+      
       <None Update="AntiCheat\**" CopyToOutputDirectory="PreserveNewest" />
-      <!-- Class Sprites: Kopiert alle heruntergeladenen Charakter-Bilder in den Release/Publish Ordner -->
+      
       <None Update="Assets\Classes\*.png" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
@@ -299,8 +300,8 @@
   </Target>
 
   <Target Name="CopyBatAfterPublish" AfterTargets="Publish">
-    <!-- GetDS4Windows.bat removed - Hexa.NET.SDL provides native PS4/PS5 support! -->
-    <!-- Zip-Erstellung übersprungen - wird manuell auf Windows durchgeführt -->
+    
+    
   </Target>
 
 </Project>

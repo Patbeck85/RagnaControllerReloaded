@@ -185,8 +185,8 @@
 ## 🚀 Next Actions (Autonomous Queue)
 1. **Alle Epics bis einschließlich 15 + 25 + 27 + 28 sind COMPLETE** — Release v2.5.1
 2. **TECH-Schulden (S4, keine Blocker):** 
-   - TASK-9001 WindowSwitcher-Caching
-   - TASK-9002 EngineOrchestrator-Refactoring  
+   - TASK-9001 WindowSwitcher-Caching ✅ COMPLETE (2026-10-23)
+   - TASK-9002 EngineOrchestrator-Refactoring 🚧 IN_PROGRESS (5 Coordinator-Klassen: Combat, Navigation, System, Hardware, Advanced + IEngineCoordinator Interface erstellt; kompilieren; Tests 905/905 PASS; Integration in EngineOrchestrator ausstehend)
    - TASK-9003 SettingsWindow-Lokalisierung
 3. **Optional Future Epics (v2.6.0+):**
    - Epic 11: UI/UX Deep-Dive (v2.6.0)
@@ -196,7 +196,7 @@
    - Epic 19: Accessibility & UX Polish
    - Epic 20-24: Developer Tools, RO Knowledge, Advanced Input, Streaming, Platform
 
-**Strategy:** Stable release achieved. Autonomous operation can focus on TECH debt or wait for user direction.
+**Strategy:** Stable release v2.5.1 achieved. 905/905 core tests PASS. TECH-9001 COMPLETE. TECH-9002: Coordinator-Klassen erstellt (Combat, Navigation, System, Hardware, Advanced + IEngineCoordinator), kompilieren erfolgreich, 905/905 Tests PASS. Vollständige EngineOrchestrator-Integration folgt. Autonomous operation can continue TECH-9002 integration or wait for user direction.
 
 ---
 
