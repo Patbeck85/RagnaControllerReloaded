@@ -119,6 +119,7 @@
 <Compile Include="Core\Services\UpdateService.cs" />
 <Compile Include="Core\Services\ChordInputService.cs" />
 <Compile Include="Core\Services\MonsterDatabaseService.cs" />
+<Compile Include="Core\Services\MonsterDataLoader.cs" />
         <Compile Include="Core\Services\BackgroundTickProvider.cs" />
         <Compile Include="Core\Input\BezierMouseService.cs" />
         <Compile Include="Core\Engines\CombatEngine.cs" />

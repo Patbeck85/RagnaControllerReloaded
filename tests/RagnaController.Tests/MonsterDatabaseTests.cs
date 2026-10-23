@@ -282,5 +282,124 @@ namespace RagnaController.Tests
             Assert.Contains(MonsterRace.Beast, races);
             Assert.Contains(MonsterRace.Formless, races);
         }
+
+        [Fact]
+        public void Database_HasMoreThan30Monsters()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            Assert.True(db.Count > 30, $"Erwartet >30 Monster, aber nur {db.Count} gefunden.");
+        }
+
+        [Fact]
+        public void Database_HasMultipleMvpBosses()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var mvps = db.GetMvps();
+            Assert.True(mvps.Count >= 5, $"Erwartet >=5 MVP-Bosse, aber nur {mvps.Count} gefunden.");
+            Assert.True(mvps.Any(m => m.Name == "Lord Knight"));
+            Assert.True(mvps.Any(m => m.Name == "Golden Thief Bug"));
+            Assert.True(mvps.Any(m => m.Name == "Stormy Knight"));
+            Assert.True(mvps.Any(m => m.Name == "Queen Ant"));
+            Assert.True(mvps.Any(m => m.Name == "Baphomet Jr."));
+            Assert.True(mvps.Any(m => m.Name == "Dark Lord"));
+            Assert.True(mvps.Any(m => m.Name == "Turtle General"));
+            Assert.True(mvps.Any(m => m.Name == "General Glast Heim"));
+        }
+
+        [Fact]
+        public void Database_PreRenewalVsRenewal_HaveDifferentValues()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var poring = db.GetMonster("Poring");
+            Assert.NotNull(poring);
+            // Poring sollte unterschiedliche Pre-Renewal und Renewal Werte haben
+            Assert.NotEqual(poring.PreRenewalHp, poring.RenewalHp);
+            Assert.NotEqual(poring.PreRenewalExp, poring.RenewalExp);
+        }
+
+        [Fact]
+        public void Database_CoversAllElementTypes()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var elements = db.GetAllMonsters().Select(m => m.Element).Distinct().ToList();
+            Assert.Contains(MonsterElement.Water, elements);
+            Assert.Contains(MonsterElement.Earth, elements);
+            Assert.Contains(MonsterElement.Fire, elements);
+            Assert.Contains(MonsterElement.Wind, elements);
+            Assert.Contains(MonsterElement.Poison, elements);
+            Assert.Contains(MonsterElement.Shadow, elements);
+            Assert.Contains(MonsterElement.Undead, elements);
+        }
+
+        [Fact]
+        public void Database_CoversAllRaceTypes()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var races = db.GetAllMonsters().Select(m => m.Race).Distinct().ToList();
+            Assert.Contains(MonsterRace.Formless, races);
+            Assert.Contains(MonsterRace.Undead, races);
+            Assert.Contains(MonsterRace.Beast, races);
+            Assert.Contains(MonsterRace.Brute, races);
+            Assert.Contains(MonsterRace.Plant, races);
+            Assert.Contains(MonsterRace.Insect, races);
+            Assert.Contains(MonsterRace.Fish, races);
+            Assert.Contains(MonsterRace.Demon, races);
+            Assert.Contains(MonsterRace.DemiHuman, races);
+        }
+
+        [Fact]
+        public void Database_CoversAllSizeTypes()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var sizes = db.GetAllMonsters().Select(m => m.Size).Distinct().ToList();
+            Assert.Contains(MonsterSize.Small, sizes);
+            Assert.Contains(MonsterSize.Medium, sizes);
+            Assert.Contains(MonsterSize.Large, sizes);
+        }
+
+        [Fact]
+        public void Database_GetByElement_ReturnsCorrectMonsters()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var fireMobs = db.GetByElement(MonsterElement.Fire);
+            Assert.NotEmpty(fireMobs);
+            Assert.All(fireMobs, m => Assert.Equal(MonsterElement.Fire, m.Element));
+        }
+
+        [Fact]
+        public void Database_GetByRace_ReturnsCorrectMonsters()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var undeadMobs = db.GetByRace(MonsterRace.Undead);
+            Assert.NotEmpty(undeadMobs);
+            Assert.All(undeadMobs, m => Assert.Equal(MonsterRace.Undead, m.Race));
+        }
+
+        [Fact]
+        public void Database_GetMinibosses_ReturnsOnlyMinibosses()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var minibosses = db.GetMinibosses();
+            // Drops ist ein Miniboss (Id 1050)
+            Assert.True(minibosses.Any(m => m.Name == "Drops"));
+            Assert.All(minibosses, m => Assert.True(m.IsMiniboss));
+        }
+
+        [Fact]
+        public void Database_SpawnMaps_ArePopulated()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var poring = db.GetMonster("Poring");
+            Assert.NotNull(poring);
+            Assert.NotEmpty(poring.SpawnMaps);
+        }
+
+        [Fact]
+        public void Database_MonsterIds_AreUnique()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var ids = db.GetAllMonsters().Select(m => m.Id).ToList();
+            Assert.Equal(ids.Count, ids.Distinct().Count());
+        }
     }
 }
