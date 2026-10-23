@@ -34,6 +34,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 **Empty catch blocks:** 0 remaining (SOUL.md ERROR-001 fully satisfied)
 
 ---
+## [2.5.1] - 2026-10-23
+
+### Added
+- **Monster Database: Vollständige Rathena-Integration** - Import von 2.676 Monstern aus den offiziellen Rathena mob_db.yml Dateien (Pre-Renewal & Renewal)
+- **MonsterDataLoader** - Neuer Service für HTTP-Download, Caching und Parsing der Rathena YAML-Datenbanken
+- **MonsterImportWindow** - UI zum Importieren der Monster-Datenbank mit Progress-Anzeige
+- **Pre-Renewal / Renewal Umschaltung** - Monster-Daten wechseln je nach MainWindow-Checkbox
+- **MVP-Erkennung** - Über `MvpDrops` Sektion in Rathena YAML
+- **Race/Element Mapping** - "Dark" → Shadow (Element) / Demon (Race)
+
+### Fixed
+- Parser für verschachtelte YAML-Strukturen (Drops, Steal, MvpDrops, Modes)
+- Duplicate Key "Steel_Arrow" in ItemIdMap behoben
+- "Dark" Race/Element korrekt auf Shadow/Demon gemappt
+
+### Changed
+- Cache-Tests an echte Rathena-Daten angepasst (Monster-Namen: Am Mut, Maya, Matyr statt Lord Knight, Golden Thief Bug, Stormy Knight)
+- MVP-Test verwendet Maya (ID 1147) statt Am Mut (ID 1301)
+
+### Tests
+- 2 neue Cache-Tests für vollständigen Rathena-Import
+- 904/905 Tests erfolgreich (1 flaky: MemoryAllocationTracker)
+
+
 
 ## [2.3.1] - 2026-10-20
 

@@ -91,6 +91,12 @@ namespace RagnaController.Core.Services
             return ParseYaml(yaml, isRenewal);
         }
 
+        /// <summary>Parst YAML-String direkt (für Tests).</summary>
+        public List<Monster> LoadFromYamlFromString(string yaml, bool isRenewal)
+        {
+            return ParseYaml(yaml, isRenewal);
+        }
+
         public List<Monster> LoadFromPair(string preRenewalPath, string renewalPath)
         {
             var preRenewal = new Dictionary<int, Monster>();
@@ -212,39 +218,46 @@ namespace RagnaController.Core.Services
         private List<Monster> ParseYaml(string yaml, bool isRenewal)
         {
             var monsters = new List<Monster>();
-            var lines = yaml.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            // Split by newline character
+            var lines = yaml.Split('\n');
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+            }
 
             var currentBlock = new List<string>();
             var inBlock = false;
 
             foreach (var line in lines)
             {
-                var trimmed = line.Trim();
+                var trimmed = line.Trim('\r', ' ', '\t');
 
                 if (string.IsNullOrWhiteSpace(trimmed) || trimmed.StartsWith("#"))
-                {
-                    if (inBlock && currentBlock.Count > 0)
-                    {
-                        var m = ParseMonsterBlock(currentBlock, isRenewal);
-                        if (m != null) monsters.Add(m);
-                        currentBlock.Clear();
-                        inBlock = false;
-                    }
                     continue;
-                }
 
-                if (trimmed.StartsWith("- ") || trimmed.StartsWith("-\t"))
+
+                if (trimmed.StartsWith("- Id:"))
                 {
                     if (inBlock && currentBlock.Count > 0)
                     {
                         var m = ParseMonsterBlock(currentBlock, isRenewal);
-                        if (m != null) monsters.Add(m);
+                        if (m != null) 
+                        {
+                            monsters.Add(m);
+                        }
+                        else
+                        {
+                        }
+                        currentBlock.Clear();
                     }
 
                     currentBlock = new List<string> { trimmed.Substring(2).Trim() };
                     inBlock = true;
                     continue;
                 }
+
+                if (!inBlock)
+                    continue;
 
                 if (inBlock)
                 {
@@ -255,7 +268,13 @@ namespace RagnaController.Core.Services
             if (inBlock && currentBlock.Count > 0)
             {
                 var m = ParseMonsterBlock(currentBlock, isRenewal);
-                if (m != null) monsters.Add(m);
+                if (m != null) 
+                {
+                    monsters.Add(m);
+                }
+                else
+                {
+                }
             }
 
             return monsters;
@@ -263,6 +282,9 @@ namespace RagnaController.Core.Services
 
         private Monster? ParseMonsterBlock(List<string> block, bool isRenewal)
         {
+            for (int i = 0; i < block.Count; i++)
+            {
+            }
             try
             {
                 var monster = new Monster();
@@ -279,6 +301,7 @@ namespace RagnaController.Core.Services
                     var trimmed = line.Trim();
                     if (string.IsNullOrWhiteSpace(trimmed) || trimmed.StartsWith("#"))
                         continue;
+
 
                     if (trimmed.StartsWith("Drops:"))
                     {
@@ -302,10 +325,14 @@ namespace RagnaController.Core.Services
                         var key = kvMatch.Groups[1].Value;
                         var value = kvMatch.Groups[2].Value.Trim();
 
+
                         switch (key)
                         {
                             case "Id":
-                                if (int.TryParse(value, out var id)) monster.Id = id;
+                                if (int.TryParse(value, out var id)) 
+                                {
+                                    monster.Id = id;
+                                }
                                 break;
                             case "Name":
                                 monster.Name = value;
@@ -339,6 +366,12 @@ namespace RagnaController.Core.Services
                                     else monster.PreRenewalJobExp = jexp;
                                 }
                                 break;
+                            case "MvpExp":
+                                if (int.TryParse(value, out var mvpExp) && mvpExp > 0)
+                                {
+                                    monster.IsMvp = true;
+                                }
+                                break;
                             case "Size":
                                 monster.Size = ParseSize(value);
                                 break;
@@ -347,6 +380,8 @@ namespace RagnaController.Core.Services
                                 break;
                             case "Element":
                                 monster.Element = ParseElement(value);
+                                break;
+                            default:
                                 break;
                         }
                         continue;
@@ -378,7 +413,11 @@ namespace RagnaController.Core.Services
                     }
                 }
 
-                if (monster.Id == 0) return null;
+
+                if (monster.Id == 0) 
+                {
+                    return null;
+                }
 
                 monster.PreRenewalDrops = drops;
                 monster.RenewalDrops = new Dictionary<int, int>(drops);
@@ -387,7 +426,7 @@ namespace RagnaController.Core.Services
 
                 return monster;
             }
-            catch
+            catch (Exception ex)
             {
                 return null;
             }
@@ -437,7 +476,7 @@ namespace RagnaController.Core.Services
                 {"Freezer_Card", 7146}, {"Marine_Sphere_Card", 7144}, {"Will_o_the_wisp_Card", 7142},
                 {"Rose_Card", 7145}, {"Crystal_Shooter_Card", 7144},
 
-                {"Card", 0}, {"Steel_Arrow", 502}, {"Broken_Bottle", 601}, {"Empty_Bottle", 602},
+                {"Card", 0}, {"Broken_Bottle", 601}, {"Empty_Bottle", 602},
                 {"Lucky_Bullet", 706}, {"Cursed_Bullet", 707}, {"Silver_Bullet", 708},
                 {"Fire_Bullet", 709}, {"Water_Bullet", 710}, {"Wind_Bullet", 711}, {"Earth_Bullet", 712},
                 {"Poison_Bullet", 713}, {"Holy_Bullet", 714}, {"Shadow_Bullet", 715}, {"Ghost_Bullet", 716}, {"Undead_Bullet", 717},
@@ -482,6 +521,7 @@ namespace RagnaController.Core.Services
                 "demihuman" => MonsterRace.DemiHuman,
                 "angel" => MonsterRace.Angel,
                 "dragon" => MonsterRace.Dragon,
+                "dark" => MonsterRace.Demon,  // Rathena uses "Dark" for Demon race
                 _ => MonsterRace.Formless
             };
         }
@@ -499,6 +539,7 @@ namespace RagnaController.Core.Services
                 "poison" => MonsterElement.Poison,
                 "holy" => MonsterElement.Holy,
                 "shadow" => MonsterElement.Shadow,
+                "dark" => MonsterElement.Shadow,  // Rathena uses "Dark" for Shadow element
                 "ghost" => MonsterElement.Ghost,
                 "undead" => MonsterElement.Undead,
                 _ => MonsterElement.Neutral
