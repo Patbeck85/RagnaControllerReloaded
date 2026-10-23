@@ -38,6 +38,7 @@ namespace RagnaController.Models
         Formless,
         Undead,
         Beast,
+        Brute,
         Plant,
         Insect,
         Fish,
