@@ -257,6 +257,16 @@ namespace RagnaController.Models
         /// <summary>Datum des letzten Update-Checks.</summary>
         public DateTime? LastUpdateCheckAt { get; set; }
 
+        // ── Chorded Input (TASK-3601) ─────────────────────────────────────
+        /// <summary>Chorded Input aktiviert (gleichzeitige Tastenkombinationen, Sequenzen, Hold+Tap).</summary>
+        public bool ChordedInputEnabled { get; set; } = true;
+        /// <summary>Maximales Zeitfenster für Chord-Erkennung in Millisekunden.</summary>
+        public int ChordMaxIntervalMs { get; set; } = 150;
+        /// <summary>Maximales Zeitfenster für Sequenz-Erkennung in Millisekunden.</summary>
+        public int SequenceMaxIntervalMs { get; set; } = 500;
+        /// <summary>Hold+Tap Schwelle in Millisekunden (ab wann als Halten gewertet).</summary>
+        public int HoldTapThresholdMs { get; set; } = 300;
+
         // ── Right Stick Policy (Action Combat) ──────────────────────────────
         /// <summary>Right Stick Policy: Camera (Action Combat), Aim (Target Lock), Hybrid (Lock=Aim, else Camera)</summary>
         public RightStickPolicy RightStickPolicy { get; set; } = RightStickPolicy.Hybrid;

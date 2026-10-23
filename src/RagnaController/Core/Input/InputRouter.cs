@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using RagnaController.Core.Services;
 using RagnaController.Models;
 using RagnaController.Profiles;
 
@@ -42,6 +43,9 @@ namespace RagnaController.Core
         // ── Radial Menu + Gesten (UX-016) ─────────────────────────────────
         private RadialMenuService? _radialMenu;
         private GestureRecognizer? _gestureRecognizer;
+
+        // ── TASK-3601: Chorded Input ────────────────────────────────────
+        private ChordInputService? _chordInputService;
 
         // ── ROB-002: Input-Emulation-Failover (delegated to InputFailoverManager) ────
         private readonly InputFailoverManager _failoverManager = new();
@@ -118,6 +122,9 @@ namespace RagnaController.Core
             _radialMenu = radialMenu;
             _gestureRecognizer = gestureRecognizer;
 
+            // TASK-3601: Chorded Input Service initialisieren
+            _chordInputService = new ChordInputService();
+
             // Gesten-Events with RadialMenuService verdrahten
             _gestureRecognizer.MenuStateChanged += (s, isOpen) =>
             {
@@ -174,6 +181,21 @@ namespace RagnaController.Core
 
                             // GEX-002: Measure Route latency (opt-in, zero-allocation when disabled per PERF-010)
                             var routeSw = InputLatencyBudgets.EnableBudgetTracking ? System.Diagnostics.Stopwatch.StartNew() : null;
+
+                            // TASK-3601: Chorded Input — wird vor der Engine-Kette geprüft
+                            var chordSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
+                            if (_chordInputService != null && _chordInputService.Tick(input, actualDeltaMs, out var chordAction))
+                            {
+                                if (chordAction != null)
+                                {
+                                    OnActionFired(chordAction, rumbleEnabled);
+                                    if (chordSw != null) { chordSw.Stop(); _perfProfiler.RecordEngineTick(nameof(ChordInputService), chordSw.Elapsed.TotalMilliseconds); }
+                                    if (routeSw != null) RecordRouteBudget(routeSw);
+                                    return true;
+                                }
+                                if (chordSw != null) { chordSw.Stop(); _perfProfiler.RecordEngineTick(nameof(ChordInputService), chordSw.Elapsed.TotalMilliseconds); }
+                            }
+                            if (chordSw != null) { chordSw.Stop(); _perfProfiler.RecordEngineTick(nameof(ChordInputService), chordSw.Elapsed.TotalMilliseconds); }
 
                             // UX-016: Gestenerkennung (Right-Stick Swipes for Radial Menu)
                             var gestureSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;
