@@ -181,7 +181,7 @@
 1. **Alle Epics bis einschließlich 15 sind COMPLETE** (Release v2.5.0)
 2. **Epic 28: Platform & Deployment** — TASK-3701 Auto-Update ✅ COMPLETE (2026-10-22)
 3. **Epic 27: Advanced Input Features** — TASK-3601 Chorded Input ✅ COMPLETE (2026-10-22)
-4. **Epic 25: RO Game Knowledge Base** — TASK-3401 Monster Database ✅ COMPLETE (2026-10-22) — Pre-Renewal/Renewal via MainWindow-Checkbox
+4. **Epic 25: RO Game Knowledge Base** — TASK-3401 Monster Database ✅ COMPLETE (2026-10-22) — 23 Monster aus Rathena-DB, Pre-Renewal/Renewal via MainWindow-Checkbox
 5. **Epic 26: AI-Assisted Features** — TASK-3501 OCR-based HP/SP Reading (bereits implementiert via TASK-2203)
 6. **TECH-Schulden:** TASK-9001 WindowSwitcher-Caching, TASK-9002 EngineOrchestrator-Refactoring, TASK-9003 SettingsWindow-Lokalisierung (alle S4, keine Blocker)
 
