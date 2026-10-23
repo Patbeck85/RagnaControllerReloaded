@@ -249,6 +249,14 @@ namespace RagnaController.Models
         /// <summary>UI-Schrift-Skalierung: 0.85 = klein, 1.00 = normal, 1.25 = groß, 1.50 = sehr groß.</summary>
         public double FontScale { get; set; } = 1.0;
 
+        // ── Auto-Update (TASK-3701) ─────────────────────────────────────────
+        /// <summary>Update-Channel: stable oder beta.</summary>
+        public string UpdateChannel { get; set; } = "stable";
+        /// <summary>Intervall für automatische Update-Prüfung in Stunden.</summary>
+        public int UpdateCheckIntervalHours { get; set; } = 24;
+        /// <summary>Datum des letzten Update-Checks.</summary>
+        public DateTime? LastUpdateCheckAt { get; set; }
+
         // ── Right Stick Policy (Action Combat) ──────────────────────────────
         /// <summary>Right Stick Policy: Camera (Action Combat), Aim (Target Lock), Hybrid (Lock=Aim, else Camera)</summary>
         public RightStickPolicy RightStickPolicy { get; set; } = RightStickPolicy.Hybrid;

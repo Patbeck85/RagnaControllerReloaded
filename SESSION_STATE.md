@@ -53,7 +53,7 @@
 ## ✅ Test Status
 | Suite | Count | Status | Command |
 |-------|-------|--------|---------|
-| Unit + Integration (Debug) | 847 | ✅ PASS (1 pre-existing flaky) | `dotnet test --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
+| Unit + Integration (Debug) | 855 | ✅ PASS (1 pre-existing flaky) | `dotnet test --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
 | Release | 847 | ✅ PASS (1 pre-existing flaky) | `dotnet test -c Release --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
 | Performance/Benchmarks | 7 suites | ✅ Baselines | `dotnet run -c Release -p benchmarks/RagnaController.Benchmarks` |
 | Stryker Mutation | ≥80% target | ✅ CI Ready | `dotnet stryker` (CI: windows-latest) |
@@ -179,10 +179,10 @@
 
 ## 🚀 Next Actions (Autonomous Queue)
 1. **Alle Epics bis einschließlich 15 sind COMPLETE** (Release v2.5.0)
-2. **Epic 25: RO Game Knowledge Base** — TASK-3401 Monster Database (OPEN, niedrige Priorität)
-3. **Epic 26: AI-Assisted Features** — TASK-3501 OCR-based HP/SP Reading (OPEN, hohe Priorität)
-4. **Epic 27: Advanced Input Features** — TASK-3601 Chorded Input (OPEN, mittlere Priorität)
-5. **Epic 28: Platform & Deployment** — TASK-3701 Auto-Update (OPEN, hohe Priorität)
+2. **Epic 28: Platform & Deployment** — TASK-3701 Auto-Update ✅ COMPLETE (2026-10-22)
+3. **Epic 25: RO Game Knowledge Base** — TASK-3401 Monster Database (OPEN, niedrige Priorität)
+4. **Epic 26: AI-Assisted Features** — TASK-3501 OCR-based HP/SP Reading (bereits implementiert via TASK-2203, OcrService + Overlay vorhanden)
+5. **Epic 27: Advanced Input Features** — TASK-3601 Chorded Input (OPEN, mittlere Priorität)
 6. **TECH-Schulden:** TASK-9001 WindowSwitcher-Caching, TASK-9002 EngineOrchestrator-Refactoring, TASK-9003 SettingsWindow-Lokalisierung (alle S4, keine Blocker)
 
 ---

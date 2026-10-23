@@ -250,7 +250,52 @@ namespace RagnaController
                                                                                                                                 }
                                 MainWindow = main;
 
-                // ── Silent Mode ──────────────────────────────────────────────
+                                // ── TASK-3701: Auto-Update Check beim Start ─────────────────
+                                if (settings.AutoUpdateEnabled)
+                                {
+                                    var lastCheck = settings.LastUpdateCheckAt;
+                                    var intervalHours = settings.UpdateCheckIntervalHours;
+                                    var shouldCheck = lastCheck == null ||
+                                                      (DateTime.Now - lastCheck.Value).TotalHours >= intervalHours;
+
+                                    if (shouldCheck)
+                                    {
+                                        _ = Task.Run(async () =>
+                                        {
+                                            try
+                                            {
+                                                using var updateService = new UpdateService(
+                                                    System.Reflection.Assembly.GetExecutingAssembly()
+                                                        .GetName()?.Version?.ToString() ?? "0.0.0");
+                                                var update = await updateService.CheckForUpdatesAsync();
+
+                                                if (update != null)
+                                                {
+                                                    // Auf UI-Thread: UpdateWindow anzeigen
+                                                    await Dispatcher.InvokeAsync(() =>
+                                                    {
+                                                        var updateWindow = new UpdateWindow();
+                                                        updateWindow.Owner = main;
+                                                        updateWindow.ShowDialog();
+                                                    });
+                                                }
+                                                else
+                                                {
+                                                    System.Diagnostics.Debug.WriteLine("[App] Kein Update verfügbar.");
+                                                }
+
+                                                settings.LastUpdateCheckAt = DateTime.Now;
+                                                settings.Save();
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                System.Diagnostics.Debug.WriteLine($"[App] Auto-Update-Check fehlgeschlagen: {ex.Message}");
+                                            }
+                                        });
+                                    }
+                                }
+
+                                // ── Silent Mode ──────────────────────────────────────────────
                 if (settings.StartMinimized || settings.StartWithWindows)
                 {
                     main.Show();

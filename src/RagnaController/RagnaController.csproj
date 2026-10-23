@@ -116,6 +116,7 @@
         <Compile Include="Core\Services\ConfigWatcher.cs" />
 <Compile Include="Core\Services\DualSenseLightbarService.cs" />
 <Compile Include="Core\Services\RadialMenuService.cs" />
+<Compile Include="Core\Services\UpdateService.cs" />
         <Compile Include="Core\Services\BackgroundTickProvider.cs" />
         <Compile Include="Core\Input\BezierMouseService.cs" />
         <Compile Include="Core\Engines\CombatEngine.cs" />
@@ -241,6 +242,7 @@
         <Compile Include="Models\ButtonKey.cs" />
     <Compile Include="Models\CommunityEntry.cs" />
     <Compile Include="Models\ItemConfig.cs" />
+    <Compile Include="Models\UpdateInfo.cs" />
     <Compile Include="Models\ParsedInput.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\StorageDropPlanner.cs" />
@@ -268,6 +270,7 @@
     <Compile Include="Views\Editors\RadialMenuWindow.xaml.cs" />
     <Compile Include="Views\Editors\RadialSetupWindow.xaml.cs" />
     <Compile Include="Views\Windows\SettingsWindow.xaml.cs" />
+    <Compile Include="Views\Windows\UpdateWindow.xaml.cs" />
     <Compile Include="Views\Windows\SplashWindow.xaml.cs" />
     <Compile Include="Views\Dialogs\TutorialWindow.xaml.cs" />
   </ItemGroup>

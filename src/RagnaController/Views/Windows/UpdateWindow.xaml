@@ -1,0 +1,132 @@
+<!--
+    Update window.
+    Shows available updates, download progress, and restart prompt.
+    Configures auto-update settings.
+-->
+<Window x:Class="RagnaController.Views.Windows.UpdateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:RagnaController.Core"
+        Title="Update" Width="520" Height="480"
+        MinWidth="480" MinHeight="420" ResizeMode="CanResize"
+        Background="Transparent" WindowStyle="None" AllowsTransparency="True"
+        Topmost="False" Closing="Window_Closing">
+
+    <Border CornerRadius="{StaticResource RadiusXl}" BorderThickness="1" BorderBrush="{StaticResource BgBorder}">
+        <Border.Background>
+            <RadialGradientBrush Center="0.18,0" RadiusX="0.9" RadiusY="0.9">
+                <GradientStop Color="#0f0f12" Offset="0"/>
+                <GradientStop Color="#1a1a20" Offset="0.55"/>
+                <GradientStop Color="#0f0f12" Offset="1"/>
+            </RadialGradientBrush>
+        </Border.Background>
+        <Border CornerRadius="{StaticResource RadiusXl}" ClipToBounds="True">
+            <Grid Margin="18,14">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Header -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="4" Height="22" Background="{StaticResource AccentBlue}" Effect="{StaticResource BlueGlow}" Margin="0,0,10,0"/>
+                    <TextBlock Text="{core:Loc UpdateWindow_Header}" Style="{StaticResource BrandWordmark}"/>
+                </StackPanel>
+
+                <!-- Content -->
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel x:Name="MainContentPanel" Margin="0,16,0,0">
+
+                        <!-- Current Version -->
+                        <Border Style="{StaticResource GlassPanelCompact}" Padding="14" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,0,16">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock Text="{core:Loc UpdateWindow_CurrentVersion}" Style="{StaticResource Eyebrow}" Margin="0,0,0,4"/>
+                                    <TextBlock Text="{Binding CurrentVersion, StringFormat=v{0}}" Style="{StaticResource TextPrimary}" FontWeight="Bold"/>
+                                </StackPanel>
+                                <Button Grid.Column="1" Content="{core:Loc UpdateWindow_CheckNow}" 
+                                        Click="BtnCheckNow_Click"
+                                        Style="{StaticResource ConsolePrimaryBtn}" Margin="10,0,0,0" Width="110" Height="32"/>
+                            </Grid>
+                        </Border>
+
+                        <!-- Auto-Update Settings -->
+                        <Border Style="{StaticResource GlassPanelCompact}" Padding="14" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,0,16">
+                            <StackPanel>
+                                <TextBlock Text="{core:Loc UpdateWindow_AutoUpdate}" Style="{StaticResource Eyebrow}" Margin="0,0,0,8"/>
+                                <CheckBox Content="{core:Loc UpdateWindow_EnableAutoUpdate}" 
+                                          IsChecked="{Binding AutoUpdateEnabled}" Margin="0,0,0,8"/>
+                                <StackPanel Orientation="Horizontal" Margin="20,0,0,0">
+                                    <TextBlock Text="{core:Loc UpdateWindow_CheckEvery}" Style="{StaticResource TextSecondary}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                    <ComboBox x:Name="CmbUpdateInterval" SelectedIndex="0" Width="120" Style="{StaticResource DarkComboBox}" Margin="0,0,8,0">
+                                        <ComboBoxItem Content="{core:Loc UpdateWindow_Interval_12h}" Tag="12"/>
+                                        <ComboBoxItem Content="{core:Loc UpdateWindow_Interval_24h}" Tag="24"/>
+                                        <ComboBoxItem Content="{core:Loc UpdateWindow_Interval_48h}" Tag="48"/>
+                                        <ComboBoxItem Content="{core:Loc UpdateWindow_Interval_72h}" Tag="72"/>
+                                    </ComboBox>
+                                    <TextBlock Text="{core:Loc UpdateWindow_Hours}" Style="{StaticResource TextSecondary}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Available Update -->
+                        <Border x:Name="UpdateAvailablePanel" Style="{StaticResource GlassPanelCompact}" Padding="14" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,0,16" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock Text="{core:Loc UpdateWindow_UpdateAvailable}" Style="{StaticResource Eyebrow}" Foreground="{StaticResource AccentGold}" Margin="0,0,0,8"/>
+                                <TextBlock x:Name="TxtNewVersion" Style="{StaticResource TextPrimary}" FontSize="16" FontWeight="Bold" Margin="0,0,0,8"/>
+                                <TextBlock x:Name="TxtReleaseNotes" Style="{StaticResource TextSecondary}" TextWrapping="Wrap" MaxHeight="120" Margin="0,0,0,12"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="BtnDownload" Content="{core:Loc UpdateWindow_Download}" 
+                                            Click="BtnDownload_Click" Style="{StaticResource ConsolePrimaryBtn}" Margin="0,0,8,0" Width="100" Height="32"/>
+                                    <Button x:Name="BtnSkip" Content="{core:Loc UpdateWindow_Skip}" 
+                                            Click="BtnSkip_Click" Style="{StaticResource ConsoleGhostBtn}" Margin="0,0,8,0" Width="100" Height="32"/>
+                                    <Button x:Name="BtnRemindLater" Content="{core:Loc UpdateWindow_RemindLater}" 
+                                            Click="BtnRemindLater_Click" Style="{StaticResource ConsoleGhostBtn}" Width="110" Height="32"/>
+                                </StackPanel>
+                                <ProgressBar x:Name="ProgressDownload" Height="6" Margin="0,12,0,0" Visibility="Collapsed"
+                                             Maximum="100" Value="0"/>
+                                <TextBlock x:Name="TxtDownloadStatus" Style="{StaticResource TextTertiary}" Margin="0,4,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- No Update Available -->
+                        <Border x:Name="NoUpdatePanel" Style="{StaticResource GlassPanelCompact}" Padding="14" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,0,16" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock Text="{core:Loc UpdateWindow_NoUpdate}" Style="{StaticResource Eyebrow}" Margin="0,0,0,8"/>
+                                <TextBlock Text="{core:Loc UpdateWindow_NoUpdateText}" Style="{StaticResource TextSecondary}"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Error -->
+                        <Border x:Name="ErrorPanel" Style="{StaticResource GlassPanelCompact}" Padding="14" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,0,16" Visibility="Collapsed"
+                                BorderBrush="{StaticResource AccentRed}" BorderThickness="1">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="⚠" FontSize="14" Margin="0,0,8,0" Foreground="{StaticResource AccentRed}"/>
+                                <TextBlock x:Name="TxtError" Style="{StaticResource TextSecondary}" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Footer -->
+                <Border Grid.Row="2" Padding="0,12,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock x:Name="TxtStatus" Style="{StaticResource TextTertiary}" VerticalAlignment="Center"/>
+                        <Button Grid.Column="1" Content="{core:Loc UpdateWindow_Close}" 
+                                Click="BtnClose_Click" Style="{StaticResource ConsoleGhostBtn}" Width="100" Height="32" HorizontalAlignment="Right"/>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Border>
+</Window>
