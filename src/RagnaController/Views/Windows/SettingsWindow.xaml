@@ -50,12 +50,12 @@
                                                         <Border Style="{StaticResource GlassPanelCompact}" Padding="0" CornerRadius="{StaticResource RadiusMd}">
                                                             <TextBox x:Name="SettingsSearchBox" Height="44" Padding="14,10" TextChanged="SettingsSearchBox_TextChanged" Background="Transparent" Foreground="{StaticResource TextPrimary}" BorderThickness="0" FontSize="15" VerticalContentAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI" AutomationProperties.Name="Search settings"/>
                                                         </Border>
-                                                        <Button x:Name="BtnResetSettings" Content="{core:Loc Settings_Btn_ResetAll}" Grid.Column="1" Click="BtnResetSettings_Click" Style="{StaticResource GhostButton}" Height="40" Width="150" Margin="12,0,0,0" ToolTip="Reset all settings to default values" FontSize="13"/>
+                                                        <Button x:Name="BtnResetSettings" Content="{core:Loc Settings_Btn_ResetAll}" Grid.Column="1" Click="BtnResetSettings_Click" Style="{StaticResource GhostButton}" Height="40" Width="150" Margin="12,0,0,0" ToolTip="{core:Loc Settings_Btn_ResetAll_Tooltip}" FontSize="13"/>
                                                     </Grid>
                                                 </Border>
 
                                                 <!-- Profile Settings -->
-                            <TextBlock Text="PROFILE" Style="{StaticResource Eyebrow}"/>
+                            <TextBlock Text="{core:Loc Settings_Profile}" Style="{StaticResource Eyebrow}"/>
                             <Border Style="{StaticResource GlassPanel}">
                                 <StackPanel>
                                     <ComboBox x:Name="ProfileCombo" ItemsSource="{Binding}" SelectedIndex="-1"
@@ -93,42 +93,42 @@
                             </Border>
 
                             <!-- TASK-1902: DualSense Lightbar per Profil -->
-                            <TextBlock Text="DUALSENSE LIGHTBAR" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
+                            <TextBlock Text="{core:Loc Settings_DualSenseLightbar}" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
                             <Border Style="{StaticResource GlassPanel}">
                                 <StackPanel>
-                                    <TextBlock Text="Profil-Farbe (aktuell ausgewähltes Profil)" Style="{StaticResource BodyText}" Margin="0,0,0,8"/>
+                                    <TextBlock Text="{core:Loc Settings_LightbarColor_Label}" Style="{StaticResource BodyText}" Margin="0,0,0,8"/>
 
                                     <!-- Preset Color Swatches -->
                                     <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
                                         <Button x:Name="BtnLightbarRed" Content="●" Width="30" Height="30" Margin="0,0,6,0"
                                                 Background="#FF4444" Foreground="White" FontSize="16"
                                                 Style="{StaticResource GhostButton}" Click="BtnLightbarColor_Click" Tag="#FF0000"
-                                                ToolTip="Rot"/>
+                                                ToolTip="{core:Loc Settings_LightbarColor_Red}"/>
                                         <Button x:Name="BtnLightbarBlue" Content="●" Width="30" Height="30" Margin="0,0,6,0"
                                                 Background="#FF2244CC" Foreground="White" FontSize="16"
                                                 Style="{StaticResource GhostButton}" Click="BtnLightbarColor_Click" Tag="#005AD2"
-                                                ToolTip="Blau (Default)"/>
+                                                ToolTip="{core:Loc Settings_LightbarColor_Blue}"/>
                                         <Button x:Name="BtnLightbarGreen" Content="●" Width="30" Height="30" Margin="0,0,6,0"
                                                 Background="#FF44AA44" Foreground="White" FontSize="16"
                                                 Style="{StaticResource GhostButton}" Click="BtnLightbarColor_Click" Tag="#00CC00"
-                                                ToolTip="Grün"/>
+                                                ToolTip="{core:Loc Settings_LightbarColor_Green}"/>
                                         <Button x:Name="BtnLightbarYellow" Content="●" Width="30" Height="30" Margin="0,0,6,0"
                                                 Background="#FFCCAA22" Foreground="White" FontSize="16"
                                                 Style="{StaticResource GhostButton}" Click="BtnLightbarColor_Click" Tag="#FFD700"
-                                                ToolTip="Gold"/>
+                                                ToolTip="{core:Loc Settings_LightbarColor_Gold}"/>
                                         <Button x:Name="BtnLightbarWhite" Content="●" Width="30" Height="30" Margin="0,0,6,0"
                                                 Background="#FFDDDDDD" Foreground="Black" FontSize="16"
                                                 Style="{StaticResource GhostButton}" Click="BtnLightbarColor_Click" Tag="#FFFFFF"
-                                                ToolTip="Weiß"/>
+                                                ToolTip="{core:Loc Settings_LightbarColor_White}"/>
                                         <Button x:Name="BtnLightbarCyan" Content="●" Width="30" Height="30" Margin="0,0,6,0"
                                                 Background="#FF44CCCC" Foreground="Black" FontSize="16"
                                                 Style="{StaticResource GhostButton}" Click="BtnLightbarColor_Click" Tag="#00FFFF"
-                                                ToolTip="Cyan"/>
+                                                ToolTip="{core:Loc Settings_LightbarColor_Cyan}"/>
                                     </StackPanel>
 
                                     <!-- Custom Hex Input -->
                                     <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="Hex:" Style="{StaticResource BodyText}" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                                        <TextBlock Text="{core:Loc Settings_LightbarColor_Hex}" Style="{StaticResource BodyText}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                                         <TextBox x:Name="TxtLightbarHex" Width="80" Text="#005AD2"
                                                  Foreground="{StaticResource TextPrimary}" FontFamily="Consolas" FontSize="13"
                                                  BorderBrush="{StaticResource BgBorder}" BorderThickness="1"
@@ -143,7 +143,7 @@
                             </Border>
 
                             <!-- TASK-2306: Cloud Sync per Profil -->
-                            <TextBlock Text="CLOUD SYNC" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
+                            <TextBlock Text="{core:Loc Settings_CloudSync}" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
                             <Border Style="{StaticResource GlassPanel}">
                                 <StackPanel>
                                     <CheckBox x:Name="ChkCloudSyncEnabled" Content="{core:Loc Settings_CloudSyncEnabled}"
@@ -308,7 +308,7 @@
                                                                             </Border>
 
                                                                         <!-- Accessibility (UX-017) -->
-                                                                        <TextBlock Text="ACCESSIBILITY" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
+                                                                        <TextBlock Text="{core:Loc Settings_Accessibility}" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
                                                                         <Border Style="{StaticResource GlassPanel}">
                                                                             <StackPanel>
                                                                                 <CheckBox x:Name="ChkHighContrast" Content="{core:Loc Settings_HighContrastMode}"

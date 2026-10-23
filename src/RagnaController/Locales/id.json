@@ -995,5 +995,18 @@
   "MonsterImportWindow_TotalMonsters": "Gesamt-Monster:",
   "MonsterImportWindow_MvpCount": "MVP-Bosse:",
   "MonsterImportWindow_GameMode": "Spielmodus:",
-  "MonsterImportWindow_Close": "Schließen"
+  "MonsterImportWindow_Close": "Schließen",
+  "Settings_Accessibility": "ACCESSIBILITY",
+  "Settings_Btn_ResetAll_Tooltip": "Reset all settings to default values",
+  "Settings_CloudSync": "CLOUD SYNC",
+  "Settings_DualSenseLightbar": "DUALSENSE LIGHTBAR",
+  "Settings_LightbarColor_Hex": "Hex:",
+  "Settings_LightbarColor_Label": "Profil-Farbe (aktuell ausgewähltes Profil)",
+  "Settings_ResetAll_Tooltip": "Reset all settings to default values",
+  "Settings_LightbarColor_Red": "Red",
+  "Settings_LightbarColor_Blue": "Blue (Default)",
+  "Settings_LightbarColor_Green": "Green",
+  "Settings_LightbarColor_Gold": "Gold",
+  "Settings_LightbarColor_White": "White",
+  "Settings_LightbarColor_Cyan": "Cyan"
 }
