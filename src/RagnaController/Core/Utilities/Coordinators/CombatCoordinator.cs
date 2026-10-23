@@ -1,9 +1,11 @@
 using System;
-using RagnaController.Controller;
-using RagnaController.Profiles;
-using RagnaController.Core.Input;
+using global::RagnaController.Core;
+using global::RagnaController.Profiles;
+using global::RagnaController.Controller;
+using global::RagnaController.Models;
+using global::RagnaController.Core.Services;
 
-namespace RagnaController.Core.Utilities.Coordinators
+namespace RagnaController.Coordinators
 {
     /// <summary>
     /// Coordinates all combat-related engines:

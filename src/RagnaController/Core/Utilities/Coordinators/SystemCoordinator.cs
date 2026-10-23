@@ -1,7 +1,13 @@
 using System;
-using RagnaController.Core.Input;
+using System.IO;
+using System.Diagnostics;
+using global::RagnaController.Core;
+using global::RagnaController.Models;
+using global::RagnaController.Profiles;
+using global::RagnaController.Controller;
+using global::RagnaController.Core.Services;
 
-namespace RagnaController.Core.Utilities.Coordinators
+namespace RagnaController.Coordinators
 {
     /// <summary>
     /// Coordinates system monitoring and overlay engines:

@@ -1,6 +1,11 @@
 using System;
+using global::RagnaController.Profiles;
+using global::RagnaController.Controller;
+using global::RagnaController.Core;
+using global::RagnaController.Models;
+using global::RagnaController.Core.Services;
 
-namespace RagnaController.Core.Utilities.Coordinators
+namespace RagnaController.Coordinators
 {
     /// <summary>
     /// Base interface for all engine coordinators.
@@ -27,7 +32,7 @@ namespace RagnaController.Core.Utilities.Coordinators
         void Shutdown();
 
         /// <summary>Optional: Apply profile settings to this coordinator's engines.</summary>
-        void ApplyProfile(RagnaController.Profiles.Profile profile);
+        void ApplyProfile(Profile profile);
     }
 
     /// <summary>
@@ -64,7 +69,7 @@ namespace RagnaController.Core.Utilities.Coordinators
             _isRunning = false;
         }
 
-        public virtual void ApplyProfile(RagnaController.Profiles.Profile profile) { }
+        public virtual void ApplyProfile(Profile profile) { }
 
         public virtual void Dispose()
         {
