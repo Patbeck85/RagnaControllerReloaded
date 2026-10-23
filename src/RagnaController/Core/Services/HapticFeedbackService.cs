@@ -32,6 +32,9 @@ namespace RagnaController.Core
         private float _patternLeft = 0f;
         private float _patternRight = 0f;
 
+        /// <summary>Event fires when a vibration pattern completes (including final off-call).</summary>
+        public event EventHandler? PatternCompleted;
+
         /// <summary>Rumble-Provider (XInputFallbackService in Production, Mock in Tests).</summary>
         public IRumbleProvider Rumble => _rumble;
 
@@ -122,6 +125,13 @@ namespace RagnaController.Core
                     _patternTimer = null;
                     _patternDurationsMs = Array.Empty<int>();
                     _rumble.SetRumble(0f, 0f);
+                    
+                    // Fire completion event (outside lock to avoid deadlocks)
+                    var completed = PatternCompleted;
+                    if (completed != null)
+                    {
+                        try { completed(this, EventArgs.Empty); } catch { /* ignore subscriber exceptions */ }
+                    }
                     return;
                 }
             }

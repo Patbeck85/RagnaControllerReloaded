@@ -40,11 +40,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Test in isolierte `SequentialTests` Collection verschoben (parallele Tests stören prozessweite GC-Messungen nicht mehr)
   - JIT Warmup + expliziter GC.Collect() vor Messung
   - Threshold auf 50KB erhöht (Sampling-Pfad allokiert GCMemoryInfo, WorkingSet64)
+- **Flaky Test behoben:** `FEAT027_HapticFeedback_PlayBuffExpired_RecordsDoubleRumble` (Haptic Feedback)
+  - `HapticFeedbackService` erweitert um `PatternCompleted` Event
+  - Test wartet deterministisch auf Event statt `Thread.Sleep(500)` (Timer-Auflösung/Parallelität)
+  - Exakte Assertion: 4 Calls (On-Off-On-Off) statt `>= 4`
 - **Monster Database:** Pre-Renewal/Renewal Merge korrigiert (2.422 Monster mit unterschiedlichen Stats)
 
 ### Tests
-- **905/905 Tests PASS** (0 flaky) — vorher 904/905
+- **905/905 Tests PASS** (0 flaky in Haptic/GC-Tests) — vorher 904/905
 - Neue `SequentialTestCollection` Fixture für prozessweite Metrik-Tests
+- Haptic Feedback Tests jetzt deterministisch via Event-basierte Synchronisation
 
 
 

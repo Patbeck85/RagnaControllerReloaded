@@ -2076,15 +2076,22 @@ namespace RagnaController.Tests
             using var rumble = new MockRumbleProvider();
             using var haptics = new HapticFeedbackService(rumble);
 
-            haptics.PlayBuffExpired();
-            Thread.Sleep(500); // Pattern: 100 on, 100 off, 100 on, dann aus
+            var patternDone = new ManualResetEventSlim(false);
+            haptics.PatternCompleted += (s, e) => patternDone.Set();
 
-            // 3 An-Phasen + Aus-Phasen (insgesamt 4 Calls)
-            Assert.True(rumble.Calls.Count >= 4);
+            haptics.PlayBuffExpired();
+            
+            // Wait for pattern to complete (with generous timeout)
+            Assert.True(patternDone.Wait(TimeSpan.FromSeconds(2)), "Pattern did not complete in time");
+
+            // Pattern: {100, 100, 100} = On(100) -> Off(100) -> On(100) -> Off(final)
+            // Expect exactly 4 calls
+            Assert.Equal(4, rumble.Calls.Count);
             Assert.Equal(0.6f, rumble.Calls[0].left);
             Assert.Equal(0.6f, rumble.Calls[0].right);
-            // Letzter Call sollte aus sein
-            Assert.Equal((0f, 0f), rumble.Calls[^1]);
+            Assert.Equal((0f, 0f), rumble.Calls[1]); // Off
+            Assert.Equal((0.6f, 0.6f), rumble.Calls[2]); // On
+            Assert.Equal((0f, 0f), rumble.Calls[3]); // Final Off
         }
 
         [Fact]
