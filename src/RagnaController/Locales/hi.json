@@ -984,5 +984,16 @@
   "UpdateWindow_Download": "Download",
   "UpdateWindow_Skip": "Skip",
   "UpdateWindow_RemindLater": "Remind Later",
-  "UpdateWindow_Close": "Close"
+  "UpdateWindow_Close": "Close",
+  "MonsterImportWindow_Header": "MONSTER IMPORT",
+  "MonsterImportWindow_Description": "RATHENNA MONSTER-DATENBANK",
+  "MonsterImportWindow_DescriptionText": "Lädt die vollständige Rathena Monster-Datenbank (Pre-Renewal + Renewal) von GitHub herunter und importiert alle Monster mit ihren Werten, Drops und Spawn-Karten in RagnaController.",
+  "MonsterImportWindow_Import": "IMPORT",
+  "MonsterImportWindow_ImportFromRathena": "Von Rathena GitHub importieren",
+  "MonsterImportWindow_Cancel": "Abbrechen",
+  "MonsterImportWindow_DatabaseStats": "DATENBANK-STATISTIK",
+  "MonsterImportWindow_TotalMonsters": "Gesamt-Monster:",
+  "MonsterImportWindow_MvpCount": "MVP-Bosse:",
+  "MonsterImportWindow_GameMode": "Spielmodus:",
+  "MonsterImportWindow_Close": "Schließen"
 }

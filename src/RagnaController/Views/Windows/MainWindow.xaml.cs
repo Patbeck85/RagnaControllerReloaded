@@ -1295,6 +1295,12 @@ namespace RagnaController.Views.Windows
             win.ShowDialog();
         }
 
+        private void BtnMonsterImport_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new MonsterImportWindow();
+            win.ShowDialog();
+        }
+
         private sealed class ClassCharacterItem
         {
             public string Class { get; set; } = "";

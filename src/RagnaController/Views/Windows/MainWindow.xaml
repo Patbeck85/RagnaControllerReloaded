@@ -174,7 +174,9 @@
                                                 </Grid>
                                             </Border>
                                             <!-- Profile Validation -->
-                                            <Button x:Name="BtnProfileValidation" Content="&#xE716; Profil validieren" Style="{StaticResource GhostButton}" Click="BtnProfileValidation_Click" ToolTip="Öffnet die Profil-Validierung (Schema-Migration &amp; Integritäts-Check)" AutomationProperties.Name="Profile validation" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                            <Button x:Name="BtnProfileValidation" Content="&#xE716; Profil validieren" Style="{StaticResource GhostButton}" Click="BtnProfileValidation_Click" ToolTip="Öffnet die Profil-Validierung (Schema-Migration und Integritäts-Check)" AutomationProperties.Name="Profile validation" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                            <!-- Monster Import -->
+                                            <Button x:Name="BtnMonsterImport" Content="&#xE77A; Monster DB Import" Style="{StaticResource GhostButton}" Click="BtnMonsterImport_Click" ToolTip="Importiert die vollständige Rathena Monster-Datenbank (Pre-Renewal und Renewal)" AutomationProperties.Name="Monster DB Import" Margin="0,0,4,0" VerticalAlignment="Center"/>
                                             <!-- Renewal / Pre-Renewal Toggle -->
                                             <Border x:Name="RenewalModeBorder" Style="{StaticResource GlassPanelCompact}" Padding="8,4" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,12,0" Effect="{StaticResource CardShadow}">
                                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">

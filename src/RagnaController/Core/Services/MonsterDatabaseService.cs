@@ -119,6 +119,18 @@ namespace RagnaController.Core.Services
         /// <summary>Gibt ein Monster anhand des Namens zurück.</summary>
         public Monster? GetMonster(string name) => _database.GetMonster(name);
 
+        /// <summary>Gibt die Anzahl der MVP-Monster zurück.</summary>
+        public int GetMvpCount() => _database.GetMvps().Count;
+
+        /// <summary>Lädt eine Liste von Monstern in die Datenbank (überschreibt vorhandene mit gleicher ID).</summary>
+        public void LoadMonsters(List<Monster> monsters)
+        {
+            foreach (var m in monsters)
+                _database.Add(m);
+            RefreshFilteredList();
+            OnPropertyChanged(nameof(FilteredMonsters));
+        }
+
         /// <summary>Aktualisiert die gefilterte Liste.</summary>
         public void RefreshFilteredList()
         {
