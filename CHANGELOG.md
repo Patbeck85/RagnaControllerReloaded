@@ -33,7 +33,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 **Tests:** 847/848 passing (1 pre-existing flaky)  
 **Empty catch blocks:** 0 remaining (SOUL.md ERROR-001 fully satisfied)
 
----
+---## [2.5.1] - 2026-10-23
+
+### Fixed
+- **Flaky Test behoben:** `MemoryAllocationTracker_RecordTick_DoesNotAllocate` läuft jetzt zuverlässig im vollständigen Testlauf
+  - Test in isolierte `SequentialTests` Collection verschoben (parallele Tests stören prozessweite GC-Messungen nicht mehr)
+  - JIT Warmup + expliziter GC.Collect() vor Messung
+  - Threshold auf 50KB erhöht (Sampling-Pfad allokiert GCMemoryInfo, WorkingSet64)
+- **Monster Database:** Pre-Renewal/Renewal Merge korrigiert (2.422 Monster mit unterschiedlichen Stats)
+
+### Tests
+- **905/905 Tests PASS** (0 flaky) — vorher 904/905
+- Neue `SequentialTestCollection` Fixture für prozessweite Metrik-Tests
+
+
+
 ## [2.5.1] - 2026-10-23
 
 ### Added

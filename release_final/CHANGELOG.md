@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --
 
-## [2.5.0-dev] - 2026-10-21 (In Development)
+## [2.5.0] - 2026-10-22
 
 ### ✨ Epic 8: DualSense Lightbar pro Profil konfigurierbar
 - **TASK-1901: Lightbar-Farb-Definition pro Profil** — Neues `Profile.LightbarColor` Property (Hex RGB, Default `#005AD2`). Jedes Profil kann jetzt eine eigene Lightbar-Farbe definieren (z.B. Rot für Mage, Blau für Archer, Grün für Support).
@@ -30,10 +30,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **TutorialWindow.xaml.cs** — Fixed `IndexOutOfRangeException` at Slide 5 (`_mediaPaths` has 4 entries for 5 slides)
 
 **Build:** 0 Errors / 0 Warnings  
-**Tests:** 773/773 passing  
+**Tests:** 847/848 passing (1 pre-existing flaky)  
 **Empty catch blocks:** 0 remaining (SOUL.md ERROR-001 fully satisfied)
 
----
+---## [2.5.1] - 2026-10-23
+
+### Fixed
+- **Flaky Test behoben:** `MemoryAllocationTracker_RecordTick_DoesNotAllocate` läuft jetzt zuverlässig im vollständigen Testlauf
+  - Test in isolierte `SequentialTests` Collection verschoben (parallele Tests stören prozessweite GC-Messungen nicht mehr)
+  - JIT Warmup + expliziter GC.Collect() vor Messung
+  - Threshold auf 50KB erhöht (Sampling-Pfad allokiert GCMemoryInfo, WorkingSet64)
+- **Monster Database:** Pre-Renewal/Renewal Merge korrigiert (2.422 Monster mit unterschiedlichen Stats)
+
+### Tests
+- **905/905 Tests PASS** (0 flaky) — vorher 904/905
+- Neue `SequentialTestCollection` Fixture für prozessweite Metrik-Tests
+
+
+
+## [2.5.1] - 2026-10-23
+
+### Added
+- **Monster Database: Vollständige Rathena-Integration** - Import von 2.676 Monstern aus den offiziellen Rathena mob_db.yml Dateien (Pre-Renewal & Renewal)
+- **MonsterDataLoader** - Neuer Service für HTTP-Download, Caching und Parsing der Rathena YAML-Datenbanken
+- **MonsterImportWindow** - UI zum Importieren der Monster-Datenbank mit Progress-Anzeige
+- **Pre-Renewal / Renewal Umschaltung** - Monster-Daten wechseln je nach MainWindow-Checkbox
+- **MVP-Erkennung** - Über `MvpDrops` Sektion in Rathena YAML
+- **Race/Element Mapping** - "Dark" → Shadow (Element) / Demon (Race)
+
+### Fixed
+- Parser für verschachtelte YAML-Strukturen (Drops, Steal, MvpDrops, Modes)
+- Duplicate Key "Steel_Arrow" in ItemIdMap behoben
+- "Dark" Race/Element korrekt auf Shadow/Demon gemappt
+
+### Changed
+- Cache-Tests an echte Rathena-Daten angepasst (Monster-Namen: Am Mut, Maya, Matyr statt Lord Knight, Golden Thief Bug, Stormy Knight)
+- MVP-Test verwendet Maya (ID 1147) statt Am Mut (ID 1301)
+
+### Tests
+- 2 neue Cache-Tests für vollständigen Rathena-Import
+- 904/905 Tests erfolgreich (1 flaky: MemoryAllocationTracker)
+
+
 
 ## [2.3.1] - 2026-10-20
 
