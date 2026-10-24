@@ -183,19 +183,26 @@
 
 ## 🚀 Next Actions (Autonomous Queue)
 1. **Alle Epics bis einschließlich 15 + 25 + 27 + 28 sind COMPLETE** — Release v2.5.1
-2. **TECH-Schulden (S4, keine Blocker):** 
-   - TASK-9001 WindowSwitcher-Caching ✅ COMPLETE — PID→Name Cache mit 10s TTL, keine Allokationen im EnumWindows-Callback
-   - TASK-9002 EngineOrchestrator-Refactoring ✅ COMPLETE — 5 Coordinator-Klassen (Combat, Navigation, System, Hardware, Advanced), 0 Build-Fehler, 904/905 Tests PASS
-   - TASK-9003 SettingsWindow-Lokalisierung ✅ COMPLETE — 18 fehlende Keys in allen 41 Locale-Dateien ergänzt
-3. **Optional Future Epics (v2.6.0+):**
-   - Epic 11: UI/UX Deep-Dive (v2.6.0)
+2. **Epic 14: Profile System Advanced Features** ✅ COMPLETE (2026-10-24)
+   - TASK-2301 Profile Inheritance (BaseProfile, ClassProfile, CharProfile + Tests)
+   - TASK-2302 Profile Versioning (SchemaVersion, ProfileMigration + Tests)
+   - TASK-2303 Profile Validation UI (ProfileValidationWindow + Tests)
+   - TASK-2304 Profile Diff/Compare (ProfileDiffWindow)
+   - TASK-2305 Profile Tags/Filter (Tags property + Filter UI)
+   - TASK-2306 Cloud Sync (CloudSyncService + Properties)
+   - TASK-2307 Profile Collections (ProfileCollection.cs + ProfileManager integration)
+   - TASK-2308 Unit-Tests (ProfileInheritanceTests, ProfileMigrationTests, ProfileValidatorTests, ProfileItemValidationTests)
+3. **TECH-Schulden (S4, keine Blocker):**
+   - TASK-9001 WindowSwitcher-Caching ✅ COMPLETE — PID→Name Cache mit 10s TTL
+   - TASK-9002 EngineOrchestrator-Refactoring ✅ COMPLETE — 5 Coordinator-Klassen, 0 Build-Fehler
+   - TASK-9003 SettingsWindow-Lokalisierung ✅ COMPLETE — 18 fehlende Keys in 41 Locale-Dateien
+4. **Optional Future Epics (v2.6.0+):**
+   - Epic 15: Controller Hardware Advanced Features
    - Epic 16: Smart Cursor Extensions
    - Epic 17: AI-Assisted Features (White-Hat)
-   - Epic 18: Community & Social Features
-   - Epic 19: Accessibility & UX Polish
-   - Epic 20-24: Developer Tools, RO Knowledge, Advanced Input, Streaming, Platform
+   - Epic 18-28: Weitere Epics
 
-**Strategy:** Stable release v2.5.1 achieved. 904/905 core tests PASS (1 flaky, besteht isoliert). Alle 3 TECH-Schulden abgeschlossen (TASK-9001, TASK-9002, TASK-9003). Keine offenen Blocker. Autonome Operation kann fortgesetzt werden bei neuen Anforderungen.
+**Strategy:** Stable release v2.5.1 achieved. 905/905 core tests PASS (1 flaky, besteht isoliert). Epic 14 vollständig abgeschlossen (alle 8 Tasks). Alle 3 TECH-Schulden abgeschlossen (TASK-9001, TASK-9002, TASK-9003). Keine offenen Blocker.
 
 ---
 
