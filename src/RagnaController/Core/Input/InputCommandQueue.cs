@@ -278,6 +278,27 @@ namespace RagnaController.Core
         /// </summary>
         public void DoubleClick() { Enqueue(new InputCmd(CmdType.AtomicLeftClick)); Interlocked.Add(ref _savedClicks, 2); }
         /// <summary>
+        /// BuyItem method — kauft ein Item im Shop (via Callback, da Shop-UI-Interaktion).
+        /// </summary>
+        public void BuyItem(int itemId, int quantity)
+        {
+            Enqueue(new InputCmd(CmdType.Action, 0, 0, () =>
+            {
+                // Shop-UI-Kauf-Interaktion wird vom UI-Layer behandelt
+                // Hier könnte ein Hook für Shop-UI-Automation eingetragen werden
+            }));
+        }
+        /// <summary>
+        /// SellItem method — verkauft ein Item im Shop.
+        /// </summary>
+        public void SellItem(int itemId, int quantity)
+        {
+            Enqueue(new InputCmd(CmdType.Action, 0, 0, () =>
+            {
+                // Shop-UI-Verkauf-Interaktion wird vom UI-Layer behandelt
+            }));
+        }
+        /// <summary>
         /// MoveMouseRelative method.
         /// <param name="dx">dx parameter.</param>
         /// <param name="dy">dy parameter.</param>

@@ -19,16 +19,20 @@ namespace RagnaController.Core
     /// <summary>
     /// Contract interface for core subsystem.
     /// </summary>
-    public enum FeedbackType 
-    { 
-        CombatModeOn, 
-        CombatModeOff, 
-        TargetLocked, 
-        PhaseChange, 
-        Warning, 
-        PrecisionModeOn, 
-        BuffWarning, 
-                StandbyOn, 
-        StandbyOff 
+    public enum FeedbackType
+    {
+        CombatModeOn,
+        CombatModeOff,
+        TargetLocked,
+        PhaseChange,
+        Warning,
+        PrecisionModeOn,
+        BuffWarning,
+        StandbyOn,
+        StandbyOff,
+        ShopOpened,
+        ShopClosed,
+        ItemBought,
+        ItemSold,
     }
 }

@@ -275,6 +275,7 @@
         <Compile Include="Core\StickDriftCompensation.cs" />
     <Compile Include="Core\TriggerDeadzoneCurve.cs" />
     <Compile Include="Core\MotionAimAssist.cs" />
+    <Compile Include="Core\ShopNavigationService.cs" />
     <Compile Include="Core\SteamInputIntegration.cs" />
     <Compile Include="Core\RumblePattern.cs" />
     <Compile Include="Views\Dialogs\RumbleEditorWindow.xaml.cs" />
