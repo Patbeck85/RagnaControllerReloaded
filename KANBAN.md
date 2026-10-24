@@ -47,7 +47,7 @@
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-2501** | Shop/NPC Navigation: Automatisches Navigieren in Shop-Menüs (Kaufen/Verkaufen) | Coder | MEDIUM | — | ✅ COMPLETE (2026-10-24) |
-| **TASK-2502** | Storage/Cart Organization: Items sortieren, Stacks zusammenführen, Kategorien | Coder | MEDIUM | TASK-2501 | 📋 OPEN |
+| **TASK-2502** | Storage/Cart Organization: Items sortieren, Stacks zusammenführen, Kategorien | Coder | MEDIUM | TASK-2501 | ✅ COMPLETE (2026-10-24) |
 | **TASK-2503** | Skill Tree Navigation: Skill-Punkte per Controller verteilen (Grid-Navigation) | Coder | MEDIUM | — | 📋 OPEN |
 | **TASK-2504** | Chat Macro Integration: Schnelltexte per D-Pad in Chat einfügen (Emotes, Befehle) | Designer | LOW | — | 📋 OPEN |
 | **TASK-2505** | Unit-Tests: Smart Cursor in verschiedenen UI-Kontexten | QA | LOW | TASK-2503 | 📋 OPEN |
