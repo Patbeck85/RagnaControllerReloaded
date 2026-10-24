@@ -27,7 +27,7 @@
 
 ---
 
-### Epic 15: Controller Hardware Advanced Features (v2.5.0) — 📋 TEILWEISE COMPLETE
+### Epic 15: Controller Hardware Advanced Features (v2.5.0) — ✅ COMPLETE
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -38,7 +38,7 @@
 | **TASK-2405** | Motion Aim Assist: Gyro-basiertes Aiming für Mage/Archer (Konfigurierbar: Sensitivität, Blend) | Coder | MEDIUM | TASK-2401 | ✅ COMPLETE (2026-10-24) |
 | **TASK-2406** | Steam Input Integration: Steam Controller Configs importieren/exportieren | Coder | LOW | — | ✅ COMPLETE (2026-10-24) |
 | **TASK-2407** | DualSense Lightbar pro Profil (aus Epic 8): TASK-1901 bis TASK-1904 | Coder | MEDIUM | — | 📋 OPEN |
-| **TASK-2408** | Unit-Tests: Gyro Calibration, Drift Detection, Trigger Curves, Rumble Patterns | QA | MEDIUM | TASK-2404 | 📋 OPEN |
+| **TASK-2408** | Unit-Tests: Gyro Calibration, Drift Detection, Trigger Curves, Rumble Patterns | QA | MEDIUM | TASK-2404 | ✅ COMPLETE (2026-10-24) |
 
 ---
 
@@ -223,7 +223,7 @@
 **Epic 11: UI/UX Deep-Dive & Funktionalität (v2.6.0)** — alle 20 Tasks (TASK-2001 bis TASK-2020) wurden in CHANGELOG.md [2.6.0] dokumentiert als CLOSED. Prüfen Sie ob Implementierung nachgeholt werden muss oder neue Epic-11-Tasks definiert werden sollen.
 
 **Offene Epics zur Auswahl (alle PLANUNG, keine Blocker):**
-- **Epic 15: Controller Hardware Advanced Features** (TASK-2401, 2402, 2403, 2404 COMPLETE; 2405-2408 OPEN)
+- **Epic 15: Controller Hardware Advanced Features** (TASK-2401-2408 alle COMPLETE)
 - **Epic 16-28: Weitere v2.6.0+ Epics** (alle OPEN)
 
 *Letzte Aktualisierung: 2026-10-24 | Epic 14 COMPLETE, Epic 15 Fortschritt (TASK-2401-2404 COMPLETE; 2405-2406 OPEN) in CHANGELOG.md [2.6.0] | Build: 0 Errors | Tests: 905/905 PASS*
