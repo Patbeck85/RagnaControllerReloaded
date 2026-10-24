@@ -20,7 +20,7 @@ namespace RagnaController.Core
 
         // ── Chat State ──────────────────────────────────────────────────────
         public bool IsChatOpen { get; private set; }
-        public int SelectedMacroIndex { get; private set; } = 0;
+        public int SelectedMacroIndex { get; set; } = 0;
 
         // ── Makros ──────────────────────────────────────────────────────────
         public List<ChatMacro> Macros { get; } = new()

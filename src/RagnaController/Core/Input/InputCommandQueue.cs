@@ -280,7 +280,7 @@ namespace RagnaController.Core
         /// <summary>
         /// BuyItem method — kauft ein Item im Shop (via Callback, da Shop-UI-Interaktion).
         /// </summary>
-        public void BuyItem(int itemId, int quantity)
+        public virtual void BuyItem(int itemId, int quantity)
         {
             Enqueue(new InputCmd(CmdType.Action, 0, 0, () =>
             {
@@ -291,7 +291,7 @@ namespace RagnaController.Core
         /// <summary>
         /// SellItem method — verkauft ein Item im Shop.
         /// </summary>
-        public void SellItem(int itemId, int quantity)
+        public virtual void SellItem(int itemId, int quantity)
         {
             Enqueue(new InputCmd(CmdType.Action, 0, 0, () =>
             {

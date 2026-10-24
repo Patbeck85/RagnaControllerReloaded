@@ -24,7 +24,7 @@ namespace RagnaController.Core
         public bool IsShopOpen { get; private set; }
         public int SelectedCategoryIndex { get; private set; } = 0;
         public int SelectedItemIndex { get; private set; } = 0;
-        public int BuyQuantity { get; private set; } = 1;
+        public int BuyQuantity { get; set; } = 1;
 
         // ── Configuration ───────────────────────────────────────────────────
         public int MaxBuyQuantity { get; set; } = 999;

@@ -22,7 +22,7 @@ namespace RagnaController.Core
 
         // ── Skill Tree State ────────────────────────────────────────────────
         public bool IsSkillTreeOpen { get; private set; }
-        public int SelectedSkillIndex { get; private set; } = 0;
+        public int SelectedSkillIndex { get; set; } = 0;
         public int AvailableSkillPoints { get; set; } = 0;
         public int BaseLevel { get; set; } = 1;
         public int JobLevel { get; set; } = 1;

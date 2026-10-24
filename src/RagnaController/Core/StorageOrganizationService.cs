@@ -158,11 +158,11 @@ namespace RagnaController.Core
         /// <summary>Defragmentiert den Storage — rückt alle Items nach links (Slot 0, 1, 2...).</summary>
         public void Defragment()
         {
-            // Sortiere nach Slot-Index, dann rücke zusammen
-            var sorted = Items.OrderBy(i => i.SlotIndex).ToList();
-            for (int i = 0; i < sorted.Count; i++)
+            // Sortiere nach Slot-Index und ordne die Liste neu
+            Items.Sort((a, b) => a.SlotIndex.CompareTo(b.SlotIndex));
+            for (int i = 0; i < Items.Count; i++)
             {
-                sorted[i].SlotIndex = i;
+                Items[i].SlotIndex = i;
             }
 
             UpdateUsedSlots();
