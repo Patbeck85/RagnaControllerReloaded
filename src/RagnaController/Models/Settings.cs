@@ -248,6 +248,10 @@ namespace RagnaController.Models
         public bool HighContrastEnabled { get; set; } = false;
         /// <summary>UI-Schrift-Skalierung: 0.85 = klein, 1.00 = normal, 1.25 = groß, 1.50 = sehr groß.</summary>
         public double FontScale { get; set; } = 1.0;
+        /// <summary>Screen-Reader-Modus aktivieren (NVDA, JAWS, Narrator Unterstützung).</summary>
+        public bool AccessibilityScreenReaderMode { get; set; } = false;
+        /// <summary>Reduzierte Bewegung — Animationen deaktivieren (Respektiert Windows-Einstellung).</summary>
+        public bool ReducedMotionEnabled { get; set; } = false;
 
         // ── Auto-Update (TASK-3701) ─────────────────────────────────────────
         /// <summary>Update-Channel: stable oder beta.</summary>
