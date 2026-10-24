@@ -274,6 +274,7 @@
         <Compile Include="Profiles\ProfileManager.cs" />
         <Compile Include="Core\StickDriftCompensation.cs" />
     <Compile Include="Core\TriggerDeadzoneCurve.cs" />
+    <Compile Include="Core\MotionAimAssist.cs" />
     <Compile Include="Core\RumblePattern.cs" />
     <Compile Include="Views\Dialogs\RumbleEditorWindow.xaml.cs" />
     <Compile Include="Profiles\ProfileMigration.cs" />
