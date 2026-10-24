@@ -2,6 +2,7 @@ using System;
 using System.Windows.Media;
 using RagnaController.Core;
 using RagnaController.Models;
+using RagnaController.Profiles;
 
 namespace RagnaController.Controller
 {
@@ -25,6 +26,29 @@ namespace RagnaController.Controller
         private readonly SmartCursorService _smartCursor;
         private readonly SkillOrchestrator? _skillOrchestrator;
         private bool _batteryThrottle = false;
+
+        // TASK-2402: Profil-Referenz für Drift-Kompensation
+        private Profile? _activeProfile;
+        private StickDriftCompensation? _driftCompensation;
+
+        /// <summary>Setzt das aktive Profil für Drift-Kompensation.</summary>
+        public Profile? ActiveProfile
+        {
+            get => _activeProfile;
+            set
+            {
+                _activeProfile = value;
+                _driftCompensation = value != null && value.StickDriftCalibrated
+                    ? new StickDriftCompensation()
+                    : null;
+                if (_driftCompensation != null)
+                {
+                    _driftCompensation.SetOffsets(
+                        value.LeftStickDriftX, value.LeftStickDriftY,
+                        value.RightStickDriftX, value.RightStickDriftY);
+                }
+            }
+        }
 
         public SnapshotBuilder(AutoTargetEngine autoTarget, MageEngine mage, ComboEngine combo,
                                Core.WindowTracker winTracker, CursorEngine cursor, SmartCursorService smartCursor,
@@ -60,10 +84,10 @@ namespace RagnaController.Controller
             snap.StateLabel = stateLabel;
             snap.DeltaMs = (int)elapsedMs;
             snap.TickMs = (int)elapsedMs;
-            snap.LeftX = input.LeftX;
-            snap.LeftY = input.LeftY;
-            snap.RightX = input.RightX;
-            snap.RightY = input.RightY;
+            snap.LeftX = ApplyDriftCompensation(input.LeftX, true, true);
+            snap.LeftY = ApplyDriftCompensation(input.LeftY, true, false);
+            snap.RightX = ApplyDriftCompensation(input.RightX, false, true);
+            snap.RightY = ApplyDriftCompensation(input.RightY, false, false);
             snap.L1 = input.L1;
             snap.R1 = input.R1;
             snap.L2 = input.L2;
@@ -116,6 +140,23 @@ namespace RagnaController.Controller
             snap.ComboActive = _combo.IsActive;
 
             return snap;
+        }
+
+        // TASK-2402: Wendet die Drift-Kompensation auf einen Stick-Wert an
+        private float ApplyDriftCompensation(float rawValue, bool isLeftStick, bool isXAxis)
+        {
+            if (_driftCompensation == null || !_driftCompensation.IsCalibrated)
+                return rawValue;
+
+            float offset = (isLeftStick, isXAxis) switch
+            {
+                (true, true)  => _driftCompensation.LeftStickDriftX,
+                (true, false) => _driftCompensation.LeftStickDriftY,
+                (false, true) => _driftCompensation.RightStickDriftX,
+                (false, false) => _driftCompensation.RightStickDriftY,
+            };
+
+            return StickDriftCompensation.Compensate(rawValue, offset);
         }
 
         private SolidColorBrush GetStateBrush(ControllerSnapshot snap)

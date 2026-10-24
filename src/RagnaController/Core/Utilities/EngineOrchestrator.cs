@@ -211,6 +211,7 @@ namespace RagnaController.Core
 
                         _sysMonitor = new SystemMonitor(_winTracker, _movement);
                         _snapshot = new SnapshotBuilder(_autoTarget, _mage, _combo, _winTracker, _cursor, _smartCursor, _skillOrchestrator);
+                        _snapshot.ActiveProfile = _profileManager.ActiveProfile;
 
                         _handheld = new HandheldModeManager(
                             _tickProvider as BackgroundTickProvider, _snapshot, _mage, _overlayRouter, _combat, engineQueue);
@@ -711,6 +712,7 @@ namespace RagnaController.Core
             
                     // Update InputReader with new profile settings (deadzone, normalization)
                     _inputReader.UpdateProfileSettings(_profileManager.ActiveProfile);
+                    _snapshot.ActiveProfile = _profileManager.ActiveProfile;
                 }
 
         private void HandleFocusLost()

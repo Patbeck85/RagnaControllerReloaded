@@ -247,6 +247,22 @@ namespace RagnaController.Profiles
 
         /// <summary>Letzter erfolgreicher Cloud-Sync-Zeitpunkt.</summary>
         public DateTime LastCloudSyncAt { get; set; } = DateTime.MinValue;
+
+        // ── TASK-2402: Stick Drift Compensation ─────────────────────────
+        /// <summary>Erkannter Drift-Offset für den linken Stick (X-Achse, -1.0 bis 1.0).</summary>
+        public float LeftStickDriftX { get; set; } = 0f;
+
+        /// <summary>Erkannter Drift-Offset für den linken Stick (Y-Achse, -1.0 bis 1.0).</summary>
+        public float LeftStickDriftY { get; set; } = 0f;
+
+        /// <summary>Erkannter Drift-Offset für den rechten Stick (X-Achse, -1.0 bis 1.0).</summary>
+        public float RightStickDriftX { get; set; } = 0f;
+
+        /// <summary>Erkannter Drift-Offset für den rechten Stick (Y-Achse, -1.0 bis 1.0).</summary>
+        public float RightStickDriftY { get; set; } = 0f;
+
+        /// <summary>Ob die Stick-Drift-Kalibrierung durchgeführt wurde.</summary>
+        public bool StickDriftCalibrated { get; set; } = false;
     }
 
     /// <summary>
