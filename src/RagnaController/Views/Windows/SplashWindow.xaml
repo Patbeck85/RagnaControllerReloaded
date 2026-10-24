@@ -75,9 +75,9 @@
                                                                                                                 </Border>
 
                                                                                                                 <!-- Skip button (bottom-right) + Escape key handler -->
-                                                                                                                <Button x:Name="BtnSkipSplash" Content="{core:Loc Splash_SkipButton}" Width="120" Height="40" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,32,32"
-                                                                                                                        Style="{StaticResource PrimaryButton}" FontSize="13" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"
-                                                                                                                        ToolTip="{core:Loc Splash_SkipTooltip}" Click="BtnSkipSplash_Click" AutomationProperties.Name="Skip splash screen" BorderThickness="1.5"/>
+                                                                                                                 <Button x:Name="BtnSkipSplash" Content="{core:Loc Splash_SkipButton}" Width="140" Height="44" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,24"
+                                                                                                                         Style="{StaticResource PrimaryButton}" FontSize="14" FontWeight="Bold" Foreground="{StaticResource TextPrimary}"
+                                                                                                                         ToolTip="{core:Loc Splash_SkipTooltip}" Click="BtnSkipSplash_Click" AutomationProperties.Name="Skip splash screen" BorderThickness="1.5"/>
                                                                                                                 <MediaElement x:Name="VoicePlayer" LoadedBehavior="Manual" UnloadedBehavior="Stop" Visibility="Collapsed" Volume="1.0"/>
                                                                                                             </Grid>
         </Border>
