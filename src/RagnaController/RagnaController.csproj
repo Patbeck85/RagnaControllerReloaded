@@ -270,6 +270,7 @@
     <Compile Include="Profiles\BaseProfile.cs" />
     <Compile Include="Profiles\ClassProfile.cs" />
     <Compile Include="Profiles\CharProfile.cs" />
+    <Compile Include="Profiles\ProfileCollection.cs" />
     <Compile Include="Profiles\ProfileManager.cs" />
     <Compile Include="Profiles\ProfileMigration.cs" />
     <Compile Include="Profiles\ProfilePreset.cs" />

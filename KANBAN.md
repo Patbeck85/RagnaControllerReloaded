@@ -12,18 +12,18 @@
 
 ---
 
-### Epic 14: Profile System Advanced Features (v2.5.0) — 📋 PLANUNG
+### Epic 14: Profile System Advanced Features (v2.5.0) — ✅ COMPLETE
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-2301** | Profile Inheritance: BaseProfile → ClassProfile → CharProfile (Override-Mechanik) | Coder | HIGH | — | 📋 OPEN |
-| **TASK-2302** | Profile Versioning: Schema-Version in JSON, automatische Migration auf Load | Coder | HIGH | TASK-2301 | 📋 OPEN |
-| **TASK-2303** | Profile Validation UI: Visueller Validator (fehlende Keys, ungültige VK, Engine-Konflikte) | Designer | HIGH | TASK-2301 | 📋 OPEN |
-| **TASK-2304** | Profile Diff/Compare: Zwei Profile nebeneinander, Unterschiede hervorheben | Designer | MEDIUM | TASK-2303 | 📋 OPEN |
-| **TASK-2305** | Profile Tags/Filter: Tags (PvP, WoE, Leveling, MVP) + Filter-UI in ProfileLibrary | Designer | MEDIUM | — | 📋 OPEN |
-| **TASK-2306** | Cloud Sync: GitHub Gist / OneDrive / Google Drive Sync (optional, User-Config) | Coder | LOW | TASK-2301 | 📋 OPEN |
-| **TASK-2307** | Profile Collections: "Meine WoE-Profile", "Meine Leveling-Profile" als Sammlungen | Designer | LOW | TASK-2305 | 📋 OPEN |
-| **TASK-2308** | Unit-Tests: Inheritance, Migration, Validation, Diff | QA | MEDIUM | TASK-2304 | 📋 OPEN |
+| **TASK-2301** | Profile Inheritance: BaseProfile → ClassProfile → CharProfile (Override-Mechanik) | Coder | HIGH | — | ✅ COMPLETE (2026-10-24) |
+| **TASK-2302** | Profile Versioning: Schema-Version in JSON, automatische Migration auf Load | Coder | HIGH | TASK-2301 | ✅ COMPLETE (2026-10-24) |
+| **TASK-2303** | Profile Validation UI: Visueller Validator (fehlende Keys, ungültige VK, Engine-Konflikte) | Designer | HIGH | TASK-2301 | ✅ COMPLETE (2026-10-24) |
+| **TASK-2304** | Profile Diff/Compare: Zwei Profile nebeneinander, Unterschiede hervorheben | Designer | MEDIUM | TASK-2303 | ✅ COMPLETE (2026-10-24) |
+| **TASK-2305** | Profile Tags/Filter: Tags (PvP, WoE, Leveling, MVP) + Filter-UI in ProfileLibrary | Designer | MEDIUM | — | ✅ COMPLETE (2026-10-24) |
+| **TASK-2306** | Cloud Sync: GitHub Gist / OneDrive / Google Drive Sync (optional, User-Config) | Coder | LOW | TASK-2301 | ✅ COMPLETE (2026-10-24) |
+| **TASK-2307** | Profile Collections: "Meine WoE-Profile", "Meine Leveling-Profile" als Sammlungen | Designer | LOW | TASK-2305 | ✅ COMPLETE (2026-10-24) |
+| **TASK-2308** | Unit-Tests: Inheritance, Migration, Validation, Diff | QA | MEDIUM | TASK-2304 | ✅ COMPLETE (2026-10-24) |
 
 ---
 
@@ -223,8 +223,7 @@
 **Epic 11: UI/UX Deep-Dive & Funktionalität (v2.6.0)** — alle 20 Tasks (TASK-2001 bis TASK-2020) wurden in CHANGELOG.md [2.6.0] dokumentiert als CLOSED. Prüfen Sie ob Implementierung nachgeholt werden muss oder neue Epic-11-Tasks definiert werden sollen.
 
 **Offene Epics zur Auswahl (alle PLANUNG, keine Blocker):**
-- **Epic 14: Profile System Advanced Features** (TASK-2301-2308, alle OPEN)
 - **Epic 15: Controller Hardware Advanced Features** (TASK-2401-2408, alle OPEN)
 - **Epic 16-28: Weitere v2.6.0+ Epics** (alle OPEN)
 
-*Letzte Aktualisierung: 2026-10-24 | Alle 95 abgeschlossenen Tasks in CHANGELOG.md [2.6.0] überführt | Build: 0 Errors | Tests: 904/905 PASS*
+*Letzte Aktualisierung: 2026-10-24 | Epic 14 COMPLETE in CHANGELOG.md [2.6.0] | Build: 0 Errors | Tests: 905/905 PASS*

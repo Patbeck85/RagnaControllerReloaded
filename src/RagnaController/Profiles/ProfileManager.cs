@@ -23,6 +23,73 @@ namespace RagnaController.Profiles
         private static readonly AppJsonContext JsonCtx = AppJsonContext.Default;
         public List<Profile> Profiles { get; } = new();
         public string ActiveProfileName { get; private set; } = "Novice";
+
+        /// <summary>
+        /// TASK-2307: Profile Collections — benannte Sammlungen von Profilen
+        /// (z.B. "Meine WoE-Profile", "Meine Leveling-Profile").
+        /// </summary>
+        public List<ProfileCollection> ProfileCollections { get; } = new();
+
+        /// <summary>Gibt eine Sammlung nach Namen zurück oder null.</summary>
+        public ProfileCollection? GetCollection(string name)
+        {
+            return ProfileCollections.Find(c => c.Name == name);
+        }
+
+        /// <summary>Erstellt eine neue Sammlung (oder gibt bestehende zurück).</summary>
+        public ProfileCollection AddCollection(string name, string description = "")
+        {
+            var existing = GetCollection(name);
+            if (existing != null) return existing;
+            var col = new ProfileCollection { Name = name, Description = description };
+            ProfileCollections.Add(col);
+            SaveCollections();
+            return col;
+        }
+
+        /// <summary>Entfernt eine Sammlung nach Namen.</summary>
+        public bool RemoveCollection(string name)
+        {
+            var col = GetCollection(name);
+            if (col == null) return false;
+            ProfileCollections.Remove(col);
+            SaveCollections();
+            return true;
+        }
+
+        /// <summary>Fügt ein Profil zu einer Sammlung hinzu.</summary>
+        public bool AddProfileToCollection(string collectionName, string profileName)
+        {
+            var col = GetCollection(collectionName);
+            if (col == null) return false;
+            col.AddProfile(profileName);
+            SaveCollections();
+            return true;
+        }
+
+        /// <summary>Entfernt ein Profil aus einer Sammlung.</summary>
+        public bool RemoveProfileFromCollection(string collectionName, string profileName)
+        {
+            var col = GetCollection(collectionName);
+            if (col == null) return false;
+            col.RemoveProfile(profileName);
+            SaveCollections();
+            return true;
+        }
+
+        /// <summary>Gibt alle Profile einer Sammlung zurück (existierende Profile nur).</summary>
+        public List<Profile> GetProfilesInCollection(string collectionName)
+        {
+            var col = GetCollection(collectionName);
+            if (col == null) return new();
+            var result = new List<Profile>();
+            foreach (var pn in col.ProfileNames)
+            {
+                var p = Profiles.Find(x => x.Name == pn);
+                if (p != null) result.Add(p);
+            }
+            return result;
+        }
         
         /// <summary>
         /// Maps controller GUID/name to profile name for auto-switching.
@@ -150,6 +217,40 @@ namespace RagnaController.Profiles
             }
         }
 
+        // ── TASK-2307: Profile Collections ─────────────────────────────────
+        private string CollectionsPath => Path.Combine(_dir, "profile_collections.json");
+
+        /// <summary>TASK-2307: Lädt gespeicherte Profile-Sammlungen.</summary>
+        public void LoadCollections()
+        {
+            if (!File.Exists(CollectionsPath)) return;
+            try
+            {
+                var json = File.ReadAllText(CollectionsPath);
+                var cols = JsonSerializer.Deserialize<List<ProfileCollection>>(json) ?? new List<ProfileCollection>();
+                ProfileCollections.Clear();
+                foreach (var c in cols) ProfileCollections.Add(c);
+            }
+            catch (Exception ex)
+            {
+                Logger?.Invoke($"[ProfileManager] Failed to load profile collections: {ex.Message}");
+            }
+        }
+
+        /// <summary>TASK-2307: Persistiert Profile-Sammlungen on Disk.</summary>
+        public void SaveCollections()
+        {
+            try
+            {
+                var opts = new JsonSerializerOptions { WriteIndented = true };
+                File.WriteAllText(CollectionsPath, JsonSerializer.Serialize(ProfileCollections, opts));
+            }
+            catch (Exception ex)
+            {
+                Logger?.Invoke($"[ProfileManager] Failed to save profile collections: {ex.Message}");
+            }
+        }
+
         /// <summary>
         /// Handles controller connection change - auto-switches profile if configured.
         /// </summary>
@@ -229,7 +330,7 @@ namespace RagnaController.Profiles
         private const int DEBOUNCE_MS = 500;
 
         public ProfileManager() : this(DefaultDir) { }
-        public ProfileManager(string dir) { _dir = dir; Directory.CreateDirectory(_dir); Load(); LoadCharacterMappings(); }
+        public ProfileManager(string dir) { _dir = dir; Directory.CreateDirectory(_dir); Load(); LoadCharacterMappings(); LoadCollections(); }
 
         public void Load()
         {
