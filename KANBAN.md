@@ -79,17 +79,17 @@
 
 ---
 
-### Epic 19: Accessibility & UX Polish (v2.6.0) — 📋 PLANUNG
+### Epic 19: Accessibility & UX Polish (v2.6.0) — ✅ COMPLETE
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-2801** | Screen Reader Support: Vollständige AutomationProperties, Live Regions, ARIA | Designer | MEDIUM | — | ✅ COMPLETE (2026-10-24) |
 | **TASK-2802** | Color Blind Modes: Deuteranopie/Protanopie/Tritanopie Paletten im DesignSystem | Designer | MEDIUM | — | ✅ COMPLETE (2026-10-24) |
 | **TASK-2803** | Reduced Motion: Animationen global deaktivieren (Respects Windows Setting) | Designer | MEDIUM | — | ✅ COMPLETE (2026-10-24) |
-| **TASK-2804** | Gamepad-Only Navigation: Alle Fenster per Controller bedienbar (Focus-Management) | Designer | HIGH | — | 📋 OPEN |
-| **TASK-2805** | High Contrast Themes: Mehrere Themes (Dark, Light, HighContrast, Sepia) | Designer | LOW | TASK-2802 | 📋 OPEN |
-| **TASK-2806** | Font Scaling pro Fenster: Unabhängig speicherbar (nicht nur global) | Designer | LOW | — | 📋 OPEN |
-| **TASK-2807** | Unit-Tests: Accessibility Tree, Color Contrast Ratios, Focus Order | QA | MEDIUM | TASK-2804 | 📋 OPEN |
+| **TASK-2804** | Gamepad-Only Navigation: Alle Fenster per Controller bedienbar (Focus-Management) | Designer | HIGH | — | ✅ COMPLETE (2026-10-24) |
+| **TASK-2805** | High Contrast Themes: Mehrere Themes (Dark, Light, HighContrast, Sepia) | Designer | LOW | TASK-2802 | ✅ COMPLETE (2026-10-24) |
+| **TASK-2806** | Font Scaling pro Fenster: Unabhängig speicherbar (nicht nur global) | Designer | LOW | — | ✅ COMPLETE (2026-10-24) |
+| **TASK-2807** | Unit-Tests: Accessibility Tree, Color Contrast Ratios, Focus Order | QA | MEDIUM | TASK-2804 | ✅ COMPLETE (2026-10-24) |
 
 ---
 
@@ -227,6 +227,7 @@
 - **Epic 16: Smart Cursor Extensions** (TASK-2501-2505 alle COMPLETE)
 - **Epic 17: AI-Assisted Features** (TASK-2601-2606 alle COMPLETE)
 - **Epic 18: Community & Social Features** (TASK-2701-2706 alle COMPLETE)
-- **Epic 19-28: Weitere v2.6.0+ Epics** (alle OPEN)
+- **Epic 19: Accessibility & UX Polish** (TASK-2801-2807 alle COMPLETE)
+- **Epic 20-28: Weitere v2.6.0+ Epics** (alle OPEN)
 
 *Letzte Aktualisierung: 2026-10-24 | Epic 14 COMPLETE, Epic 15 Fortschritt (TASK-2401-2404 COMPLETE; 2405-2406 OPEN) in CHANGELOG.md [2.6.0] | Build: 0 Errors | Tests: 905/905 PASS*
