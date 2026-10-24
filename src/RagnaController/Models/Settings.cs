@@ -257,6 +257,23 @@ namespace RagnaController.Models
         /// <summary>Farbblindheits-Modus: None, Deuteranopia, Protanopia, Tritanopia.</summary>
         public ColorBlindMode ColorBlindMode { get; set; } = ColorBlindMode.None;
 
+        // ── UITheme Enum (für HighContrastService) ──────────────────────────
+        /// <summary>Verfügbare UI-Themes.</summary>
+        public enum UITheme
+        {
+            /// <summary>Dunkles Theme (Standard).</summary>
+            Dark,
+            /// <summary>Helles Theme.</summary>
+            Light,
+            /// <summary>Hochkontrast-Theme.</summary>
+            HighContrast,
+            /// <summary>Sepia-Theme.</summary>
+            Sepia,
+        }
+
+        /// <summary>UI-Theme: Dark, Light, HighContrast, Sepia.</summary>
+        public UITheme SelectedTheme { get; set; } = UITheme.Dark;
+
         // ── Auto-Update (TASK-3701) ─────────────────────────────────────────
         /// <summary>Update-Channel: stable oder beta.</summary>
         public string UpdateChannel { get; set; } = "stable";
