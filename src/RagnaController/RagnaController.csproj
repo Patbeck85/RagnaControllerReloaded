@@ -278,6 +278,7 @@
     <Compile Include="Core\ShopNavigationService.cs" />
     <Compile Include="Core\StorageOrganizationService.cs" />
     <Compile Include="Core\SkillTreeNavigationService.cs" />
+    <Compile Include="Core\ChatMacroService.cs" />
     <Compile Include="Core\SteamInputIntegration.cs" />
     <Compile Include="Core\RumblePattern.cs" />
     <Compile Include="Views\Dialogs\RumbleEditorWindow.xaml.cs" />
