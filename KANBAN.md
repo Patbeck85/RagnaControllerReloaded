@@ -27,12 +27,12 @@
 
 ---
 
-### Epic 15: Controller Hardware Advanced Features (v2.5.0) — 📋 PLANUNG
+### Epic 15: Controller Hardware Advanced Features (v2.5.0) — 📋 TEILWEISE COMPLETE
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-2401** | Gyro Calibration Wizard: Schritt-für-Schritt im First-Run Wizard + Visualisierung | Designer | HIGH | — | 📋 OPEN |
-| **TASK-2402** | Stick Drift Compensation: Automatische Erkennung & Kompensation (Deadzone-Adjustment) | Coder | HIGH | — | 📋 OPEN |
+| **TASK-2401** | Gyro Calibration Wizard: Schritt-für-Schritt im First-Run Wizard + Visualisierung | Designer | HIGH | — | ✅ COMPLETE (2026-10-24) |
+| **TASK-2402** | Stick Drift Compensation: Automatische Erkennung & Kompensation (Deadzone-Adjustment) | Coder | HIGH | — | ✅ COMPLETE (2026-10-24) |
 | **TASK-2403** | Trigger Deadzone Curves: Nicht-linear Kurven (Bow-Charging, Spell-Charge) | Coder | MEDIUM | — | 📋 OPEN |
 | **TASK-2404** | Rumble Editor: Waveform-Editor für eigene Rumble-Patterns (Frequency, Amplitude, Duration) | Designer | MEDIUM | — | 📋 OPEN |
 | **TASK-2405** | Motion Aim Assist: Gyro-basiertes Aiming für Mage/Archer (Konfigurierbar: Sensitivität, Blend) | Coder | MEDIUM | TASK-2401 | 📋 OPEN |
@@ -223,7 +223,7 @@
 **Epic 11: UI/UX Deep-Dive & Funktionalität (v2.6.0)** — alle 20 Tasks (TASK-2001 bis TASK-2020) wurden in CHANGELOG.md [2.6.0] dokumentiert als CLOSED. Prüfen Sie ob Implementierung nachgeholt werden muss oder neue Epic-11-Tasks definiert werden sollen.
 
 **Offene Epics zur Auswahl (alle PLANUNG, keine Blocker):**
-- **Epic 15: Controller Hardware Advanced Features** (TASK-2401-2408, alle OPEN)
+- **Epic 15: Controller Hardware Advanced Features** (TASK-2401, 2402 COMPLETE; 2403-2408 OPEN)
 - **Epic 16-28: Weitere v2.6.0+ Epics** (alle OPEN)
 
-*Letzte Aktualisierung: 2026-10-24 | Epic 14 COMPLETE in CHANGELOG.md [2.6.0] | Build: 0 Errors | Tests: 905/905 PASS*
+*Letzte Aktualisierung: 2026-10-24 | Epic 14 COMPLETE, Epic 15 Teilweise (TASK-2401, 2402 COMPLETE) in CHANGELOG.md [2.6.0] | Build: 0 Errors | Tests: 905/905 PASS*
