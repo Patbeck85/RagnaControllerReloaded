@@ -174,15 +174,15 @@
 ## ✅ Test Status
 | Suite | Count | Status | Command |
 |-------|-------|--------|---------|
-| Unit + Integration (Debug) | 956 | ✅ PASS | `dotnet test --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
-| Release Fuzz Tests | 956 | ✅ PASS | `dotnet test -c Release --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
+| Unit + Integration (Debug) | 981 | ✅ PASS | `dotnet test --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
+| Release Fuzz Tests | 981 | ✅ PASS | `dotnet test -c Release --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
 | Performance/Benchmarks | 5 suites | ✅ Baselines | `dotnet run -c Release -p benchmarks/RagnaController.Benchmarks` |
 | Stryker Mutation | ≥80% target | ✅ CI Ready | `dotnet stryker` (CI: windows-latest) |
 
 ---
 
 ## 🚀 Next Actions (Autonomous Queue)
-1. **Alle Epics bis einschließlich 17 sind COMPLETE** — Ready für Release v2.5.1/v2.6.0
+1. **Alle Epics bis einschließlich 18 sind COMPLETE** — Ready für Release v2.5.1/v2.6.0
 2. **Epic 14: Profile System Advanced Features** ✅ COMPLETE (2026-10-24)
    - TASK-2301 Profile Inheritance (BaseProfile, ClassProfile, CharProfile + Tests)
    - TASK-2302 Profile Versioning (SchemaVersion, ProfileMigration + Tests)
@@ -213,9 +213,16 @@
    - TASK-2603 Auto-Build Optimizer ✅ COMPLETE (AutoBuildOptimizer.cs)
    - TASK-2604 Monster Database Integration ✅ COMPLETE (MonsterDatabaseService.cs + MonsterViewModel)
    - TASK-2606 Unit-Tests ✅ COMPLETE (Epic17AiAssistedTests.cs, 17 neue Tests)
-6. **Optional Future Epics (v2.6.0+):**
-   - Epic 18: Community & Social Features
-   - Epic 19-28: Weitere Epics
+6. **Epic 18: Community & Social Features** ✅ COMPLETE (2026-10-24)
+   - TASK-2701 Discord Rich Presence ✅ COMPLETE (DiscordRpcService.cs - bereits vorhanden)
+   - TASK-2702 Party Voice Chat ✅ COMPLETE (VoiceChatService.cs - bereits vorhanden)
+   - TASK-2703 Guild/Party Overlay ✅ COMPLETE (PartyMember.cs + PartyOverlayService.cs)
+   - TASK-2704 Profile Rating/Reviews ✅ COMPLETE (ProfileRating.cs + ProfileReviewService.cs)
+   - TASK-2705 Profile Collections UI ✅ COMPLETE (ProfileCollectionsWindow + SelectProfilesDialog)
+   - TASK-2706 Unit-Tests ✅ COMPLETE (Epic18CommunityTests.cs, 25 neue Tests)
+7. **Optional Future Epics (v2.6.0+):**
+   - Epic 19: Accessibility & UX Polish
+   - Epic 20-28: Weitere Epics
 
 **Strategy:** Stable release v2.5.1 achieved. 905/905 core tests PASS (1 flaky, besteht isoliert). Epic 14 vollständig abgeschlossen (alle 8 Tasks). Alle 3 TECH-Schulden abgeschlossen (TASK-9001, TASK-9002, TASK-9003). Keine offenen Blocker.
 

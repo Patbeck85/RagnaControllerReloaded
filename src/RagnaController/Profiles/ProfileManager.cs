@@ -36,6 +36,12 @@ namespace RagnaController.Profiles
             return ProfileCollections.Find(c => c.Name == name);
         }
 
+        /// <summary>Gibt eine Sammlung nach ID zurück oder null.</summary>
+        public ProfileCollection? GetCollectionById(string id)
+        {
+            return ProfileCollections.Find(c => c.Id == id);
+        }
+
         /// <summary>Erstellt eine neue Sammlung (oder gibt bestehende zurück).</summary>
         public ProfileCollection AddCollection(string name, string description = "")
         {
@@ -47,6 +53,31 @@ namespace RagnaController.Profiles
             return col;
         }
 
+        /// <summary>Fügt eine bestehende Sammlung hinzu.</summary>
+        public void AddCollection(ProfileCollection collection)
+        {
+            if (collection == null) return;
+            if (!ProfileCollections.Contains(collection))
+                ProfileCollections.Add(collection);
+            SaveCollections();
+        }
+
+        /// <summary>Aktualisiert eine bestehende Sammlung.</summary>
+        public void UpdateCollection(ProfileCollection collection)
+        {
+            if (collection == null) return;
+            var existing = GetCollectionById(collection.Id);
+            if (existing != null)
+            {
+                existing.Name = collection.Name;
+                existing.Description = collection.Description;
+                existing.IsPublic = collection.IsPublic;
+                existing.ProfileNames = collection.ProfileNames;
+                existing.LastModifiedAt = DateTime.UtcNow;
+                SaveCollections();
+            }
+        }
+
         /// <summary>Entfernt eine Sammlung nach Namen.</summary>
         public bool RemoveCollection(string name)
         {
@@ -55,6 +86,22 @@ namespace RagnaController.Profiles
             ProfileCollections.Remove(col);
             SaveCollections();
             return true;
+        }
+
+        /// <summary>Entfernt eine Sammlung nach ID.</summary>
+        public bool RemoveCollectionById(string id)
+        {
+            var col = GetCollectionById(id);
+            if (col == null) return false;
+            ProfileCollections.Remove(col);
+            SaveCollections();
+            return true;
+        }
+
+        /// <summary>Gibt alle Profile zurück.</summary>
+        public List<Profile> GetAllProfiles()
+        {
+            return new List<Profile>(Profiles);
         }
 
         /// <summary>Fügt ein Profil zu einer Sammlung hinzu.</summary>

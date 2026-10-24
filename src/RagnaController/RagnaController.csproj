@@ -283,6 +283,8 @@
     <Compile Include="Core\RumblePattern.cs" />
     <Compile Include="Core\SkillRecommendationEngine.cs" />
     <Compile Include="Core\AutoBuildOptimizer.cs" />
+    <Compile Include="Core\PartyMember.cs" />
+    <Compile Include="Core\ProfileRating.cs" />
     <Compile Include="Views\Dialogs\RumbleEditorWindow.xaml.cs" />
     <Compile Include="Profiles\ProfileMigration.cs" />
     <Compile Include="Profiles\ProfilePreset.cs" />
@@ -290,7 +292,9 @@
     <Compile Include="Profiles\ProfileTemplate.cs" />
     <Compile Include="Profiles\ProfileTemplateManager.cs" />
     <Compile Include="Views\Dialogs\ProfileWizardWindow.xaml.cs" />
-    <Compile Include="Views\Dialogs\ProfileValidationWindow.xaml.cs" />
+        <Compile Include="Views\Dialogs\ProfileValidationWindow.xaml.cs" />
+        <Compile Include="Views\Dialogs\ProfileCollectionsWindow.xaml.cs" />
+        <Compile Include="Views\Dialogs\SelectProfilesDialog.xaml.cs" />
     <Compile Include="Views\Dialogs\ProfileDiffWindow.xaml.cs" />
     <Compile Include="Views\Dialogs\GyroCalibrationWindow.xaml.cs" />
     <Compile Include="Views\Dialogs\WizardWindow.xaml.cs" />

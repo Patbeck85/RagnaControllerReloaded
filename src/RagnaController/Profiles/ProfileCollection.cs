@@ -10,6 +10,12 @@ namespace RagnaController.Profiles
     /// </summary>
     public class ProfileCollection
     {
+        /// <summary>Eindeutige Kennung der Sammlung.</summary>
+        public string Id { get; set; } = Guid.NewGuid().ToString("N");
+
+        /// <summary>Ob die Sammlung öffentlich geteilt ist.</summary>
+        public bool IsPublic { get; set; } = false;
+
         /// <summary>Anzeigename der Sammlung (z.B. "Meine WoE-Profile").</summary>
         public string Name { get; set; } = "Neue Sammlung";
 

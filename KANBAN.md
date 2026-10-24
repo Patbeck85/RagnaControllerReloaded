@@ -66,7 +66,7 @@
 
 ---
 
-### Epic 18: Community & Social Features (v2.6.0) — 📋 PLANUNG
+### Epic 18: Community & Social Features (v2.6.0) — ✅ COMPLETE
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -226,6 +226,7 @@
 - **Epic 15: Controller Hardware Advanced Features** (TASK-2401-2408 alle COMPLETE)
 - **Epic 16: Smart Cursor Extensions** (TASK-2501-2505 alle COMPLETE)
 - **Epic 17: AI-Assisted Features** (TASK-2601-2606 alle COMPLETE)
-- **Epic 18-28: Weitere v2.6.0+ Epics** (alle OPEN)
+- **Epic 18: Community & Social Features** (TASK-2701-2706 alle COMPLETE)
+- **Epic 19-28: Weitere v2.6.0+ Epics** (alle OPEN)
 
 *Letzte Aktualisierung: 2026-10-24 | Epic 14 COMPLETE, Epic 15 Fortschritt (TASK-2401-2404 COMPLETE; 2405-2406 OPEN) in CHANGELOG.md [2.6.0] | Build: 0 Errors | Tests: 905/905 PASS*
