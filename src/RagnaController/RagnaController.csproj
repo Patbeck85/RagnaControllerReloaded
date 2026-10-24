@@ -212,6 +212,9 @@
                 <Compile Include="Core\Utilities\GpuOverlayProfiler.cs" />
                         <Compile Include="Core\Services\MemoryAllocationTracker.cs" />
                         <Compile Include="Core\Input\InputLatencyTracker.cs" />
+    <Compile Include="Core\InputLatencyVisualizer.cs" />
+                            <Compile Include="Core\LuaScriptingService.cs" />
+                            <Compile Include="Core\AutomatedTestRecorder.cs" />
         <Compile Include="Core\Engines\ItemManagerEngine.cs" />
         <Compile Include="Core\Services\PartyManager.cs" />
         <Compile Include="Core\Services\SessionRecorder.cs" />
