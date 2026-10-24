@@ -300,7 +300,7 @@ Live-Telemetrie-Dashboard: macht die Phase-9-Metriken (Input-Latenz, Memory/GC-P
 | **TECH-018** | CommunityBrowserWindow — Static HttpClient Disposal Issue | S3 | ✅ ERLEDIGT (2026-10-06) | `HttpClient` in `App.OnExit` via `DisposeRegistryClient()` disposed; Singleton-Test |
 | **TECH-019** | MainWindow — GetLocalizedString Fallback statt echter Lokalisierung | S4 | ✅ ERLEDIGT (2026-10-07) | Delegation an `LocalizationManager` (wie SettingsWindow) |
 | **TECH-020** | WindowSwitcher — Process.GetProcessById in EnumWindows Callback | S4 | 📋 OFFEN | Allokationen im Hot Path; Caching/WinAPI nötig |
-| **TECH-021** | EngineOrchestrator — God Class / SRP Violation | S4 | 📋 OFFEN | 686 Zeilen, 20+ Engine-Felder; Refactoring-Kandidat |
+| **TECH-021** | EngineOrchestrator — God Class / SRP Violation | S4 | ✅ ERLEDIGT (2026-10-24) | 5 Coordinatoren extrahiert (Combat/Navigation/Advanced/Hardware/System); API-Fixes: 0 Build-Fehler; 904/905 Tests PASS |
 | **TECH-022** | SettingsWindow — Localization Keys Missing for New Controls | S4 | 📋 OFFEN | Neue Controls (TECH-017/019) Keys in Locales nachpflegen |
 | **TECH-023** | ProfileManager — Constructor I/O + Static State | S3 | ❌ **WONT_FIX** (2026-10-07) | **User-Direktive:** 9 Prod-Aufrufe + 8 Tests; **S1 Datenverlust-Risiko** (SaveProfile überschreibt profiles.json bei falscher Init). Risiko > Nutzen. |
 | **TECH-024** | AdvancedLogger — Channel BoundedChannelFullMode.DropOldest | S4 | ✅ ERLEDIGT (2026-10-06) | Dedizierter ungebundener Error-Channel (Warn/Error), DropOldest nur Debug/Info; 5 Tests |
@@ -414,4 +414,4 @@ All features and documentation now synchronized for v2.2.1:
 
 ---
 
-*Last Updated: 2026-10-10 | All Phases 1-11 Complete + Documentation Synchronized | Git: origin/main | SOUL.md: All 7 golden rules satisfied | Release: v2.2.1 | Build: 0 errors, 0 warnings | Tests: 325/325 (Debug) + 40/40 (Release Fuzz)*
+*Last Updated: 2026-10-24 | All Phases 1-11 Complete + TECH-021 Coordinator Refactoring | Git: origin/main | SOUL.md: All 7 golden rules satisfied | Build: 0 errors | Tests: 904/905 (Debug) — 1 flaky test passes isolated*
