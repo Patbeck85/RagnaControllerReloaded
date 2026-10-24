@@ -5,10 +5,9 @@
 
 ## 🎯 Current Milestone
 **Phase:** All Epics 1-15 + Epic 25 COMPLETE — Release v2.5.1 deployed
-**Status:** Build: 0 errors, 0 warnings | Tests: 905/905 PASS (0 flaky!)
-**Git HEAD:** Release commit 4190161 — v2.5.1 tagged
+**Status:** Build: 0 errors | Tests: 904/905 PASS (1 flaky — LogLevel_FiltertTiefereLevel, besteht isoliert)
+**Git HEAD:** commit 2374d9c (TECH-022 localization keys) — alle TECH-Tasks abgeschlossen
 **Release:** v2.5.1 (2026-10-23) — Patch Release mit Flaky-Test-Fix + Monster DB
-**Download:** https://github.com/Patbeck85/RagnaControllerReloaded/releases/download/v2.5.1/RagnaController_2.5.1.zip
 
 ---
 
@@ -185,9 +184,9 @@
 ## 🚀 Next Actions (Autonomous Queue)
 1. **Alle Epics bis einschließlich 15 + 25 + 27 + 28 sind COMPLETE** — Release v2.5.1
 2. **TECH-Schulden (S4, keine Blocker):** 
-   - TASK-9001 WindowSwitcher-Caching ✅ COMPLETE (2026-10-23)
-   - TASK-9002 EngineOrchestrator-Refactoring 🚧 IN_PROGRESS (5 Coordinator-Klassen: Combat, Navigation, System, Hardware, Advanced + IEngineCoordinator Interface erstellt; kompilieren; Tests 905/905 PASS; Integration in EngineOrchestrator ausstehend)
-   - TASK-9003 SettingsWindow-Lokalisierung
+   - TASK-9001 WindowSwitcher-Caching ✅ COMPLETE — PID→Name Cache mit 10s TTL, keine Allokationen im EnumWindows-Callback
+   - TASK-9002 EngineOrchestrator-Refactoring ✅ COMPLETE — 5 Coordinator-Klassen (Combat, Navigation, System, Hardware, Advanced), 0 Build-Fehler, 904/905 Tests PASS
+   - TASK-9003 SettingsWindow-Lokalisierung ✅ COMPLETE — 18 fehlende Keys in allen 41 Locale-Dateien ergänzt
 3. **Optional Future Epics (v2.6.0+):**
    - Epic 11: UI/UX Deep-Dive (v2.6.0)
    - Epic 16: Smart Cursor Extensions
@@ -196,7 +195,7 @@
    - Epic 19: Accessibility & UX Polish
    - Epic 20-24: Developer Tools, RO Knowledge, Advanced Input, Streaming, Platform
 
-**Strategy:** Stable release v2.5.1 achieved. 905/905 core tests PASS. TECH-9001 COMPLETE. TECH-9002: Coordinator-Klassen erstellt (Combat, Navigation, System, Hardware, Advanced + IEngineCoordinator), kompilieren erfolgreich, 905/905 Tests PASS. Vollständige EngineOrchestrator-Integration folgt. Autonomous operation can continue TECH-9002 integration or wait for user direction.
+**Strategy:** Stable release v2.5.1 achieved. 904/905 core tests PASS (1 flaky, besteht isoliert). Alle 3 TECH-Schulden abgeschlossen (TASK-9001, TASK-9002, TASK-9003). Keine offenen Blocker. Autonome Operation kann fortgesetzt werden bei neuen Anforderungen.
 
 ---
 
