@@ -42,7 +42,7 @@
 
 ---
 
-### Epic 16: Smart Cursor Extensions (v2.6.0) — 📋 PLANUNG
+### Epic 16: Smart Cursor Extensions (v2.6.0) — ✅ COMPLETE
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -50,7 +50,7 @@
 | **TASK-2502** | Storage/Cart Organization: Items sortieren, Stacks zusammenführen, Kategorien | Coder | MEDIUM | TASK-2501 | ✅ COMPLETE (2026-10-24) |
 | **TASK-2503** | Skill Tree Navigation: Skill-Punkte per Controller verteilen (Grid-Navigation) | Coder | MEDIUM | — | ✅ COMPLETE (2026-10-24) |
 | **TASK-2504** | Chat Macro Integration: Schnelltexte per D-Pad in Chat einfügen (Emotes, Befehle) | Designer | LOW | — | ✅ COMPLETE (2026-10-24) |
-| **TASK-2505** | Unit-Tests: Smart Cursor in verschiedenen UI-Kontexten | QA | LOW | TASK-2503 | 📋 OPEN |
+| **TASK-2505** | Unit-Tests: Smart Cursor in verschiedenen UI-Kontexten | QA | LOW | TASK-2503 | ✅ COMPLETE (2026-10-24) |
 
 ---
 
@@ -224,6 +224,7 @@
 
 **Offene Epics zur Auswahl (alle PLANUNG, keine Blocker):**
 - **Epic 15: Controller Hardware Advanced Features** (TASK-2401-2408 alle COMPLETE)
-- **Epic 16-28: Weitere v2.6.0+ Epics** (alle OPEN)
+- **Epic 16: Smart Cursor Extensions** (TASK-2501-2505 alle COMPLETE)
+- **Epic 17-28: Weitere v2.6.0+ Epics** (alle OPEN)
 
 *Letzte Aktualisierung: 2026-10-24 | Epic 14 COMPLETE, Epic 15 Fortschritt (TASK-2401-2404 COMPLETE; 2405-2406 OPEN) in CHANGELOG.md [2.6.0] | Build: 0 Errors | Tests: 905/905 PASS*
