@@ -54,8 +54,17 @@
             <Ellipse Width="48" Height="48" Fill="{StaticResource AccentBlue}"
                      HorizontalAlignment="Left" Margin="0,0,16,12"/>
             <TextBlock Text="Welcome to RagnaController" Style="{StaticResource WizardTitle}"/>
-            <TextBlock Text="Set up your RO controller setup in a few steps."
-                       Style="{StaticResource WizardSubtitle}"/>
+            <TextBlock Text="Set up your RO controller setup in a few steps." Style="{StaticResource WizardSubtitle}"/>
+            <!-- Step Progress Indicator -->
+            <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                <TextBlock Text="1" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AccentBlue}" Width="24" Height="24" Background="{StaticResource BgSecondary}" TextAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Step 1 indicator"/>
+                <TextBlock Text="Setup" FontSize="11" Foreground="{StaticResource TextSecondary}" Margin="4,0,16,0" VerticalAlignment="Center"/>
+                <TextBlock Text="2" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" Width="24" Height="24" Background="{StaticResource BgSecondary}" TextAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Step 2 indicator"/>
+                <TextBlock Text="Controller" FontSize="11" Foreground="{StaticResource TextSecondary}" Margin="4,0,16,0" VerticalAlignment="Center"/>
+                <TextBlock Text="3" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" Width="24" Height="24" Background="{StaticResource BgSecondary}" TextAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Step 3 indicator"/>
+                <TextBlock Text="Profile" FontSize="11" Foreground="{StaticResource TextSecondary}" Margin="4,0,16,0" VerticalAlignment="Center"/>
+                <TextBlock Text="4" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" Width="24" Height="24" Background="{StaticResource BgSecondary}" TextAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Step 4 indicator"/>
+            </StackPanel>
         </StackPanel>
 
         <!-- Wizard Content Area -->
