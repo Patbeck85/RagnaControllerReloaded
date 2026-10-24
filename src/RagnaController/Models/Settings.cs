@@ -1,4 +1,6 @@
 using RagnaController;
+using RagnaController.Core;
+using RagnaController.Core.Services;
 using System;
 using System.IO;
 using System.Text.Json;
@@ -252,6 +254,8 @@ namespace RagnaController.Models
         public bool AccessibilityScreenReaderMode { get; set; } = false;
         /// <summary>Reduzierte Bewegung — Animationen deaktivieren (Respektiert Windows-Einstellung).</summary>
         public bool ReducedMotionEnabled { get; set; } = false;
+        /// <summary>Farbblindheits-Modus: None, Deuteranopia, Protanopia, Tritanopia.</summary>
+        public ColorBlindMode ColorBlindMode { get; set; } = ColorBlindMode.None;
 
         // ── Auto-Update (TASK-3701) ─────────────────────────────────────────
         /// <summary>Update-Channel: stable oder beta.</summary>

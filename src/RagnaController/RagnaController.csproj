@@ -218,6 +218,7 @@
         <Compile Include="Core\Services\FirstRunService.cs" />
         <Compile Include="Core\Services\HighContrastService.cs" />
     <Compile Include="Core\Services\AccessibilityService.cs" />
+    <Compile Include="Core\Services\ColorBlindService.cs" />
         <Compile Include="Core\Utilities\ShareCodeValidator.cs" />
 
                         <Compile Include="Core\Services\TtsAnnouncerService.cs" />
