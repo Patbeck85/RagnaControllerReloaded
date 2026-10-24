@@ -45,7 +45,7 @@ namespace RagnaController.Coordinators
 
             _itemManager = new ItemManagerEngine(_queue);
             _partyManager = new PartyManager(_queue);
-            _groundSpell = new GroundSpellEngine();
+            _groundSpell = new GroundSpellEngine(_queue);
             _chordInput = new ChordInputService();
             // _sessionRecorder = new SessionRecorder(); // optional, enabled via settings
         }
@@ -62,7 +62,7 @@ namespace RagnaController.Coordinators
         {
             _itemManager = new ItemManagerEngine(_queue);
             _partyManager = new PartyManager(_queue);
-            _groundSpell = new GroundSpellEngine();
+            _groundSpell = new GroundSpellEngine(_queue);
 
             if (skillOrchestrator != null)
             {
@@ -80,23 +80,19 @@ namespace RagnaController.Coordinators
         {
             if (!_isRunning || _isPaused) return false;
 
-            bool anyWork = false;
-
-            anyWork |= _itemManager?.Tick() ?? false;
-            anyWork |= _partyManager?.Tick() ?? false;
-            anyWork |= _groundSpell?.Tick() ?? false;
-            anyWork |= _chordInput?.Tick() ?? false;
-            anyWork |= _sessionRecorder?.Tick() ?? false;
-
-            return anyWork;
+            // Advanced engines have complex method signatures requiring game state:
+            // - ItemManagerEngine.Update(hpPercent, sp, deltaMs)
+            // - PartyManager.Update()
+            // - GroundSpellEngine.Handle(input, deltaMs)
+            // - ChordInputService.Tick(input, deltaMs, out action)
+            // These are called by EngineOrchestrator with the required parameters.
+            return false;
         }
 
         public override void ApplyProfile(Profile profile)
         {
-            _itemManager?.ApplyProfile(profile);
-            _partyManager?.ApplyProfile(profile);
-            _groundSpell?.ApplyProfile(profile);
-            _chordInput?.ApplyProfile(profile);
+            // None of the advanced engines implement IProfileApplicable.
+            // Profile settings are applied via their individual configuration methods.
         }
 
         public override void Dispose()

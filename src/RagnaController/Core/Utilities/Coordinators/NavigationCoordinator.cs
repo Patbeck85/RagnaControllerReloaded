@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using global::RagnaController.Core;
 using global::RagnaController.Profiles;
 using global::RagnaController.Controller;
@@ -21,6 +22,8 @@ namespace RagnaController.Coordinators
         private readonly InputCommandQueue _queue;
         private readonly AdvancedLogger _logger;
         private readonly WindowTracker _winTracker;
+        private readonly IFeedbackProvider _feedbackProvider;
+        private readonly PerformanceProfiler _perfProfiler;
 
         // Engines
         private MovementEngine _movement;
@@ -37,11 +40,18 @@ namespace RagnaController.Coordinators
         public GestureRecognizer GestureRecognizer => _gestureRecognizer;
         public InputRouter InputRouter => _inputRouter;
 
-        public NavigationCoordinator(InputCommandQueue queue, WindowTracker winTracker, AdvancedLogger logger)
+        // State passed from EngineOrchestrator for Tick
+        private ParsedInput _lastInput;
+        private int _lastDeltaMs;
+        private bool _lastRumbleEnabled;
+
+        public NavigationCoordinator(InputCommandQueue queue, WindowTracker winTracker, AdvancedLogger logger, IFeedbackProvider feedbackProvider, PerformanceProfiler perfProfiler)
         {
             _queue = queue;
             _winTracker = winTracker;
             _logger = logger;
+            _feedbackProvider = feedbackProvider;
+            _perfProfiler = perfProfiler;
         }
 
         public override void Initialize()
@@ -50,34 +60,30 @@ namespace RagnaController.Coordinators
 
             _movement = new MovementEngine(_queue, _winTracker);
             _cursor = new CursorEngine(_winTracker, _queue);
-            _smartCursor = new SmartCursorService(_queue, _winTracker, null); // feedback set later
-            _radialMenu = new RadialMenuService(null); // feedback provider set later
+            _smartCursor = new SmartCursorService(_queue, _winTracker, _feedbackProvider);
+            _radialMenu = new RadialMenuService(null); // rumble provider set later
             _gestureRecognizer = new GestureRecognizer();
         }
 
-        public void InitializeDependencies(IFeedbackProvider feedback, PerformanceProfiler perfProfiler)
+        public void InitializeDependencies(
+            CombatEngine combat,
+            AutoTargetEngine autoTarget,
+            MageEngine mage,
+            ComboEngine combo,
+            KiteEngine kite,
+            SupportEngine support,
+            OverlayRouter overlayRouter,
+            MobSweepEngine mobSweep,
+            HandheldModeManager handheld,
+            CooldownManager cooldownManager,
+            IRumbleProvider rumbleProvider)
         {
-            _smartCursor = new SmartCursorService(_queue, _winTracker, feedback);
-            _radialMenu = new RadialMenuService(feedback);
+            _radialMenu = new RadialMenuService(rumbleProvider);
 
             _inputRouter = new InputRouter(
-                null, // combat
-                null, // movement (set below)
-                null, // autoTarget
-                null, // mage
-                null, // combo
-                null, // cursor
-                null, // smartCursor
-                null, // kite
-                null, // support
-                null, // overlayRouter
-                null, // mobSweep
-                null, // handheld
-                feedback, // feedback
-                null, // cooldownManager
-                _radialMenu,
-                _gestureRecognizer,
-                perfProfiler);
+                combat, _movement, autoTarget, mage, combo, _cursor, _smartCursor,
+                kite, support, overlayRouter, mobSweep, handheld, _feedbackProvider, cooldownManager,
+                _radialMenu, _gestureRecognizer, _perfProfiler);
         }
 
         public override bool Tick()
@@ -86,22 +92,39 @@ namespace RagnaController.Coordinators
 
             bool anyWork = false;
 
-            anyWork |= _movement?.Tick() ?? false;
-            anyWork |= _cursor?.Tick() ?? false;
-            anyWork |= _smartCursor?.Tick() ?? false;
-            anyWork |= _radialMenu?.Tick() ?? false;
-            anyWork |= _gestureRecognizer?.Tick() ?? false;
-            anyWork |= _inputRouter?.Tick() ?? false;
+            // MovementEngine.Update needs stick values
+            anyWork |= _movement != null; // Update called via Handle
+            _movement?.Tick(_lastInput, _lastDeltaMs);
+            
+            // CursorEngine.Handle calls Update internally
+            anyWork |= _cursor?.Handle(_lastInput, _lastDeltaMs) ?? false;
+            
+            // SmartCursorService.Tick
+            anyWork |= _smartCursor?.Tick(_lastInput) ?? false;
+            
+            // RadialMenuService - no Tick, state managed via events
+            
+            // GestureRecognizer.Tick needs right stick and R3
+            _gestureRecognizer?.Tick(_lastInput.RightX, _lastInput.RightY, _lastInput.R3);
+            anyWork |= _gestureRecognizer != null;
+            
+            // InputRouter.RouteInput
+            anyWork |= _inputRouter?.RouteInput(_lastInput, _lastDeltaMs, _lastRumbleEnabled) ?? false;
 
             return anyWork;
         }
 
+        public void SetTickState(ParsedInput input, int deltaMs, bool rumbleEnabled)
+        {
+            _lastInput = input;
+            _lastDeltaMs = deltaMs;
+            _lastRumbleEnabled = rumbleEnabled;
+        }
+
         public override void ApplyProfile(Profile profile)
         {
+            // Only MovementEngine implements IProfileApplicable.
             _movement?.ApplyProfile(profile);
-            _cursor?.ApplyProfile(profile);
-            _smartCursor?.ApplyProfile(profile);
-            _radialMenu?.ApplyProfile(profile);
         }
 
         public override void Dispose()
@@ -110,8 +133,6 @@ namespace RagnaController.Coordinators
             base.Dispose();
 
             _movement?.Dispose();
-            _cursor?.Dispose();
-            _smartCursor?.Dispose();
             _radialMenu?.Dispose();
             _gestureRecognizer?.Dispose();
             _inputRouter?.Dispose();

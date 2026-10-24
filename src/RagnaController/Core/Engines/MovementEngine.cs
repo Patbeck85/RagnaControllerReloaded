@@ -1,4 +1,6 @@
 using System;
+using RagnaController.Models;
+using RagnaController.Profiles;
 
 namespace RagnaController.Core
 {
@@ -10,7 +12,7 @@ namespace RagnaController.Core
     /// <remarks>
     /// Thread safety: Not thread-safe. Must be called from the engine tick thread only.
     /// </remarks>
-    public class MovementEngine
+    public class MovementEngine : IEngine
     {
         private readonly InputCommandQueue _queue;
         private readonly WindowTracker _tracker;
@@ -22,11 +24,11 @@ namespace RagnaController.Core
         private const float BASE_RES_H = 1080f;  // reference resolution (1080p)
 
         // Zustand
-                private bool  _isWalking;
-                public  bool  IsWalking => _isWalking;
-        
-                // FEAT-007: Property for SkillOrchestrator condition evaluation
-                public bool IsMoving => _isWalking;
+        private bool  _isWalking;
+        public  bool  IsWalking => _isWalking;
+       
+        // FEAT-007: Property for SkillOrchestrator condition evaluation
+        public bool IsMoving => _isWalking;
         private float _lastX, _lastY;
         private int   _lastTx = -1; // last sent X coordinate (for deduplication)
         private int   _lastTy = -1; // last sent Y coordinate (for deduplication)
@@ -97,7 +99,7 @@ namespace RagnaController.Core
             // FIX: limit click to actual inner area of window
             int limitX = _tracker.ClientW / 2;
             int limitY = _tracker.ClientH / 2;
-            
+           
             // prevent clicks outside game client
             int tx = _cx + (int)(nx * radius * curved);
             int ty = _cy + (int)(ny * radius * curved);
@@ -163,5 +165,28 @@ namespace RagnaController.Core
                 _isWalking = false;
             }
         }
+
+        // ── IEngine Implementation ─────────────────────────────────────────
+
+        public string Name => "MovementEngine";
+
+        public void Tick(ParsedInput input, int deltaMs)
+        {
+            if (!input.IsConnected) return;
+            Update(input.LeftX, input.LeftY);
+        }
+
+        public void ApplyProfile(Profile profile)
+        {
+            if (profile == null) return;
+
+            Deadzone = profile.StickDeadzone > 0 ? profile.StickDeadzone : 0.20f;
+            Curve = profile.MovementCurve > 0 ? profile.MovementCurve : 1.5f;
+            ActionRpgMode = profile.ActionRpgMode;
+            CoastFrames = profile.MovementCoastFrames > 0 ? profile.MovementCoastFrames : 3;
+            CurveMode = profile.MovementCurveMode > 0 ? profile.MovementCurveMode : 1;
+        }
+
+        public void Dispose() => ForceStop();
     }
 }

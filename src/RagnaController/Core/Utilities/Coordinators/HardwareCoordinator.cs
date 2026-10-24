@@ -63,21 +63,14 @@ namespace RagnaController.Coordinators
         {
             if (!_isRunning || _isPaused) return false;
 
-            bool anyWork = false;
-
-            anyWork |= _controllerService?.Tick() ?? false;
-            anyWork |= _controllerManager?.Tick() ?? false;
-            anyWork |= _dualSense?.Tick() ?? false;
-            anyWork |= _feedback?.Tick() ?? false;
-            anyWork |= _snapshot?.Tick() ?? false;
-
-            return anyWork;
+            // Hardware engines run on their own threads (SDL2 thread for ControllerService,
+            // XInput polling for ControllerManager). No per-tick work needed here.
+            return false;
         }
 
         public override void ApplyProfile(Profile profile)
         {
-            _dualSense?.ApplyProfile(profile);
-            _feedback?.ApplyProfile(profile);
+            // DualSenseHardwareService and FeedbackSystem do not implement IProfileApplicable.
         }
 
         public override void Dispose()
@@ -89,7 +82,6 @@ namespace RagnaController.Coordinators
             _controllerManager?.Dispose();
             _dualSense?.Dispose();
             _feedback?.Dispose();
-            _snapshot?.Dispose();
             _mouseEmulationFallback?.Dispose();
             _primaryMouseStrategy?.Dispose();
         }

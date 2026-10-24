@@ -116,7 +116,7 @@ namespace RagnaController.Coordinators
                 LogMessage?.Invoke(msg);
             };
 
-            _configWatcher.ConfigChanged += OnConfigChanged;
+            _configWatcher.ConfigChanged += (path) => OnConfigChanged();
 
             _handheldModeManager = new HandheldModeManager(
                 tickProvider, snapshot, mage, _overlayRouter, combat, queue);
@@ -128,24 +128,22 @@ namespace RagnaController.Coordinators
 
             bool anyWork = false;
 
-            anyWork |= _sysMonitor?.Tick() ?? false;
-            anyWork |= _overlayRouter?.Tick() ?? false;
-            anyWork |= _voiceChat?.Tick() ?? false;
-            anyWork |= _watchdog?.Tick() ?? false;
-            anyWork |= _memoryTracker?.Tick() ?? false;
-            anyWork |= _latencyTracker?.Tick() ?? false;
-            anyWork |= _perfProfiler?.Tick() ?? false;
-            anyWork |= _configWatcher?.Tick() ?? false;
-            anyWork |= _profileManager?.Tick() ?? false;
-            anyWork |= _standbyManager?.Tick() ?? false;
-            anyWork |= _handheldModeManager?.Tick() ?? false;
+            // Watchdog - called every tick
+            _watchdog?.MarkTick();
+    
+            // Memory tracker - called every tick
+            _memoryTracker?.RecordTick();
+    
+            // Standby manager - driven by EngineOrchestrator with full game state.
+            // (Requires ParsedInput, Profile, IFeedbackProvider, MovementEngine — not available here.)
 
             return anyWork;
         }
 
         public override void ApplyProfile(Profile profile)
         {
-            _profileApplier?.ApplyProfileSettings(profile, this);
+            // ProfileApplier.ApplyProfileSettings is internal to the orchestrator.
+            // Profile application is handled by EngineOrchestrator directly.
         }
 
         public override void Dispose()
@@ -153,17 +151,9 @@ namespace RagnaController.Coordinators
             if (_disposed) return;
             base.Dispose();
 
-            _sysMonitor?.Dispose();
-            _overlayRouter?.Dispose();
             _voiceChat?.Dispose();
             _watchdog?.Dispose();
-            _memoryTracker?.Dispose();
-            _latencyTracker?.Dispose();
-            _perfProfiler?.Dispose();
             _configWatcher?.Dispose();
-            _profileManager?.Dispose();
-            _profileApplier?.Dispose();
-            _standbyManager?.Dispose();
             _handheldModeManager?.Dispose();
         }
 
