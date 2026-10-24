@@ -174,15 +174,15 @@
 ## ✅ Test Status
 | Suite | Count | Status | Command |
 |-------|-------|--------|---------|
-| Unit + Integration (Debug) | 831 | ✅ PASS (1 pre-existing flaky) | `dotnet test --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
-| Release Fuzz Tests | 831 | ✅ PASS (1 pre-existing flaky) | `dotnet test -c Release --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
+| Unit + Integration (Debug) | 921 | ✅ PASS | `dotnet test --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
+| Release Fuzz Tests | 921 | ✅ PASS | `dotnet test -c Release --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
 | Performance/Benchmarks | 5 suites | ✅ Baselines | `dotnet run -c Release -p benchmarks/RagnaController.Benchmarks` |
 | Stryker Mutation | ≥80% target | ✅ CI Ready | `dotnet stryker` (CI: windows-latest) |
 
 ---
 
 ## 🚀 Next Actions (Autonomous Queue)
-1. **Alle Epics bis einschließlich 15 + 25 + 27 + 28 sind COMPLETE** — Release v2.5.1
+1. **Alle Epics bis einschließlich 15 sind COMPLETE** — Ready für Release v2.5.1/v2.6.0
 2. **Epic 14: Profile System Advanced Features** ✅ COMPLETE (2026-10-24)
    - TASK-2301 Profile Inheritance (BaseProfile, ClassProfile, CharProfile + Tests)
    - TASK-2302 Profile Versioning (SchemaVersion, ProfileMigration + Tests)
@@ -192,15 +192,15 @@
    - TASK-2306 Cloud Sync (CloudSyncService + Properties)
    - TASK-2307 Profile Collections (ProfileCollection.cs + ProfileManager integration)
    - TASK-2308 Unit-Tests (ProfileInheritanceTests, ProfileMigrationTests, ProfileValidatorTests, ProfileItemValidationTests)
-3. **Epic 15: Controller Hardware Advanced Features** 📋 TEILWEISE COMPLETE
+3. **Epic 15: Controller Hardware Advanced Features** ✅ COMPLETE (2026-10-24)
    - TASK-2401 Gyro Calibration Wizard ✅ COMPLETE (GyroCalibrationWindow)
    - TASK-2402 Stick Drift Compensation ✅ COMPLETE (StickDriftCompensation.cs + Profile + SnapshotBuilder)
-   - TASK-2403 Trigger Deadzone Curves 📋 OPEN
-   - TASK-2404 Rumble Editor 📋 OPEN
-   - TASK-2405 Motion Aim Assist 📋 OPEN
-   - TASK-2406 Steam Input Integration 📋 OPEN
+   - TASK-2403 Trigger Deadzone Curves ✅ COMPLETE (TriggerDeadzoneCurve.cs + Profile integration)
+   - TASK-2404 Rumble Editor ✅ COMPLETE (RumbleEditorWindow + RumblePattern + Profile integration)
+   - TASK-2405 Motion Aim Assist ✅ COMPLETE (MotionAimAssist.cs)
+   - TASK-2406 Steam Input Integration ✅ COMPLETE (SteamInputIntegration.cs + ControllerState)
    - TASK-2407 DualSense Lightbar pro Profil ✅ COMPLETE (bereits in Profile.cs)
-   - TASK-2408 Unit-Tests 📋 OPEN
+   - TASK-2408 Unit-Tests ✅ COMPLETE (Epic15HardwareTests.cs, 16 neue Tests)
 4. **Optional Future Epics (v2.6.0+):**
    - Epic 15: Controller Hardware Advanced Features
    - Epic 16: Smart Cursor Extensions
