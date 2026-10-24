@@ -36,7 +36,7 @@
 | **TASK-2403** | Trigger Deadzone Curves: Nicht-linear Kurven (Bow-Charging, Spell-Charge) | Coder | MEDIUM | — | ✅ COMPLETE (2026-10-24) |
 | **TASK-2404** | Rumble Editor: Waveform-Editor für eigene Rumble-Patterns (Frequency, Amplitude, Duration) | Designer | MEDIUM | — | ✅ COMPLETE (2026-10-24) |
 | **TASK-2405** | Motion Aim Assist: Gyro-basiertes Aiming für Mage/Archer (Konfigurierbar: Sensitivität, Blend) | Coder | MEDIUM | TASK-2401 | ✅ COMPLETE (2026-10-24) |
-| **TASK-2406** | Steam Input Integration: Steam Controller Configs importieren/exportieren | Coder | LOW | — | 📋 OPEN |
+| **TASK-2406** | Steam Input Integration: Steam Controller Configs importieren/exportieren | Coder | LOW | — | ✅ COMPLETE (2026-10-24) |
 | **TASK-2407** | DualSense Lightbar pro Profil (aus Epic 8): TASK-1901 bis TASK-1904 | Coder | MEDIUM | — | 📋 OPEN |
 | **TASK-2408** | Unit-Tests: Gyro Calibration, Drift Detection, Trigger Curves, Rumble Patterns | QA | MEDIUM | TASK-2404 | 📋 OPEN |
 
