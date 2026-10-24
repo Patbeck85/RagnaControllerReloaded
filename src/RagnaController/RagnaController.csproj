@@ -118,7 +118,8 @@
 <Compile Include="Core\Services\DualSenseLightbarService.cs" />
 <Compile Include="Core\Services\RadialMenuService.cs" />
 <Compile Include="Core\Services\UpdateService.cs" />
-<Compile Include="Core\Services\ChordInputService.cs" />
+<Compile Include="Core\AdvancedInputService.cs" />
+    <Compile Include="Core\Services\ChordInputService.cs" />
 <Compile Include="Core\Services\MonsterDatabaseService.cs" />
 <Compile Include="Core\Services\MonsterDataLoader.cs" />
         <Compile Include="Core\Services\BackgroundTickProvider.cs" />

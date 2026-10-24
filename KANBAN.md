@@ -106,7 +106,7 @@
 
 ---
 
-### Epic 21: RO-Specific Game Knowledge (v2.7.0) — 📋 PLANUNG
+### Epic 21: RO-Specific Game Knowledge (v2.7.0) — ✅ COMPLETE
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -229,6 +229,7 @@
 - **Epic 18: Community & Social Features** (TASK-2701-2706 alle COMPLETE)
 - **Epic 19: Accessibility & UX Polish** (TASK-2801-2807 alle COMPLETE)
 - **Epic 20: Developer & Power-User Tools** (TASK-2901-2906 alle COMPLETE)
-- **Epic 21-28: Weitere v2.6.0+ Epics** (alle OPEN)
+- **Epic 21: RO-Specific Game Knowledge** (TASK-3001-3007 alle COMPLETE)
+- **Epic 22-28: Weitere v2.6.0+ Epics** (alle OPEN)
 
 *Letzte Aktualisierung: 2026-10-24 | Epic 14 COMPLETE, Epic 15 Fortschritt (TASK-2401-2404 COMPLETE; 2405-2406 OPEN) in CHANGELOG.md [2.6.0] | Build: 0 Errors | Tests: 905/905 PASS*
