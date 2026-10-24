@@ -174,15 +174,15 @@
 ## ✅ Test Status
 | Suite | Count | Status | Command |
 |-------|-------|--------|---------|
-| Unit + Integration (Debug) | 921 | ✅ PASS | `dotnet test --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
-| Release Fuzz Tests | 921 | ✅ PASS | `dotnet test -c Release --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
+| Unit + Integration (Debug) | 939 | ✅ PASS | `dotnet test --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
+| Release Fuzz Tests | 939 | ✅ PASS | `dotnet test -c Release --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
 | Performance/Benchmarks | 5 suites | ✅ Baselines | `dotnet run -c Release -p benchmarks/RagnaController.Benchmarks` |
 | Stryker Mutation | ≥80% target | ✅ CI Ready | `dotnet stryker` (CI: windows-latest) |
 
 ---
 
 ## 🚀 Next Actions (Autonomous Queue)
-1. **Alle Epics bis einschließlich 15 sind COMPLETE** — Ready für Release v2.5.1/v2.6.0
+1. **Alle Epics bis einschließlich 16 sind COMPLETE** — Ready für Release v2.5.1/v2.6.0
 2. **Epic 14: Profile System Advanced Features** ✅ COMPLETE (2026-10-24)
    - TASK-2301 Profile Inheritance (BaseProfile, ClassProfile, CharProfile + Tests)
    - TASK-2302 Profile Versioning (SchemaVersion, ProfileMigration + Tests)
@@ -201,9 +201,13 @@
    - TASK-2406 Steam Input Integration ✅ COMPLETE (SteamInputIntegration.cs + ControllerState)
    - TASK-2407 DualSense Lightbar pro Profil ✅ COMPLETE (bereits in Profile.cs)
    - TASK-2408 Unit-Tests ✅ COMPLETE (Epic15HardwareTests.cs, 16 neue Tests)
-4. **Optional Future Epics (v2.6.0+):**
-   - Epic 15: Controller Hardware Advanced Features
-   - Epic 16: Smart Cursor Extensions
+4. **Epic 16: Smart Cursor Extensions** ✅ COMPLETE (2026-10-24)
+   - TASK-2501 Shop Navigation Service ✅ COMPLETE (ShopNavigationService.cs)
+   - TASK-2502 Storage Organization Service ✅ COMPLETE (StorageOrganizationService.cs)
+   - TASK-2503 Skill Tree Navigation Service ✅ COMPLETE (SkillTreeNavigationService.cs)
+   - TASK-2504 Chat Macro Integration ✅ COMPLETE (ChatMacroService.cs)
+   - TASK-2505 Unit-Tests ✅ COMPLETE (Epic16SmartCursorTests.cs, 18 neue Tests)
+5. **Optional Future Epics (v2.6.0+):**
    - Epic 17: AI-Assisted Features (White-Hat)
    - Epic 18-28: Weitere Epics
 
