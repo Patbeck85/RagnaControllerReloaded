@@ -34,5 +34,6 @@ namespace RagnaController.Core
         ShopClosed,
         ItemBought,
         ItemSold,
+        PrecisionModeOff,
     }
 }
