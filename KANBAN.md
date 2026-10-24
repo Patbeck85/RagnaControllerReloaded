@@ -453,9 +453,9 @@
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-9001** | TECH-020: WindowSwitcher — Process.GetProcessById im EnumWindows-Callback cachen (Allokationen im Hot Path) | Coder | S4 | — | 📋 OPEN |
-| **TASK-9002** | TECH-021: EngineOrchestrator God Class / SRP-Violation refactoren (686 Zeilen, 20+ Engine-Felder) | Coder | S4 | — | 📋 OPEN |
-| **TASK-9003** | TECH-022: SettingsWindow — Lokalisierungs-Keys für neue Controls (TECH-017/019) in Locales nachpflegen | Designer | S4 | — | 📋 OPEN |
+| **TASK-9001** | TECH-020: WindowSwitcher — Process.GetProcessById im EnumWindows-Callback cachen (Allokationen im Hot Path) | Coder | S4 | — | ✅ CLOSED (2026-10-24) — PID→Name Cache mit 10s TTL, keine Allokationen im Callback |
+| **TASK-9002** | TECH-021: EngineOrchestrator God Class / SRP-Violation refactoren (686 Zeilen, 20+ Engine-Felder) | Coder | S4 | — | ✅ CLOSED (2026-10-24) — 5 Coordinatoren extrahiert, 0 Build-Fehler, 904/905 Tests PASS |
+| **TASK-9003** | TECH-022: SettingsWindow — Lokalisierungs-Keys für neue Controls (TECH-017/019) in Locales nachpflegen | Designer | S4 | — | ✅ CLOSED (2026-10-24) — 18 fehlende Keys in allen 41 Locale-Dateien ergänzt |
 
 ---
 
