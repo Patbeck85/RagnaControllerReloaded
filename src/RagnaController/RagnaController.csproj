@@ -192,6 +192,11 @@
             <Compile Include="Core\Services\CloudSyncService.cs" />
                 <Compile Include="Views\Dialogs\GyroCalibrationWindow.xaml.cs" />
                 <Compile Include="Core\Services\ClassDetector.cs" />
+    <Compile Include="Core\ExperienceCalculator.cs" />
+                    <Compile Include="Core\ItemDatabaseService.cs" />
+                    <Compile Include="Core\MapDatabaseService.cs" />
+                    <Compile Include="Core\SkillSimulator.cs" />
+                    <Compile Include="Core\StatCalculator.cs" />
         <Compile Include="Core\Utilities\RoFeatures.cs" />
         <Compile Include="Core\Services\RoUiMenuService.cs" />
         <Compile Include="Core\Input\SendInputMouseStrategy.cs" />
