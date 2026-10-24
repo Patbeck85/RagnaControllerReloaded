@@ -1,226 +1,18 @@
 # KANBAN Board — RagnaController v2.3.0
 
-> **Hinweis:** Alle abgeschlossenen Phasen/Tasks sind in `CHANGELOG.md` dokumentiert. Dieses Board enthält **nur noch offene Aufgaben**.
+> **Hinweis:** Alle abgeschlossenen Phasen/Tasks sind in `CHANGELOG.md` dokumentiert (siehe [2.6.0]-Abschnitt). Dieses Board enthält **nur noch offene Aufgaben**.
 
 ---
 
-## 🚀 Phase 16: Multi-Client & Profil-Switching (v2.4.0) — IN PLANUNG
-
-**Goal:** Mehrere RO-Clients gleichzeitig steuern + schneller Charakterwechsel (FEAT-015 reaktiviert, FEAT-024).
-
-### Epic 1: Multi-Client Routing
+### Epic 12: Multi-Client Engine Execution (v2.4.0) — ⏸️ BLOCKED
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-1601** | Research: Win32 Multi-HWND Enum & Input-Isolation pro Client | Researcher | HIGH | — | ✅ RESEARCH_DONE |
-| **TASK-1602** | Multi-Client WindowTracker (pro HWND eigene ClientW/H, Prozessname) | Coder | HIGH | TASK-1601 | ✅ ERLEDIGT (2026-10-17) |
-| **TASK-1603** | Input-Router: Client-Auswahl per Dropdown/Hotkey | Coder | HIGH | TASK-1602 | ✅ ERLEDIGT (2026-10-17) |
-|| **TASK-1604** | UI: Client-Switcher in MainWindow Header | Designer | HIGH | TASK-1603 | ✅ CLOSED (2026-10-18) |
-
-### Epic 2: Multi-Character Schnellwechsel (FEAT-024)
-
-| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
-|---------|-------|----------------|-----------|----------------|--------|
-|| **TASK-1611** | Profil-Preset-System: Name-basierter Schnellwechsel | Coder | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-|| **TASK-1612** | UI: Charakter-Auswahl-Dropdown mit Klassen-Icon | Designer | MEDIUM | TASK-1611 | ✅ CLOSED (2026-10-18) |
-|| **TASK-1613** | Profil-Switch isoliert: State-Reset zwischen Charakteren | Coder | HIGH | TASK-1611 | ✅ CLOSED (2026-10-18) |
-
-### Epic 3: Quality & Backlog-Aufräumen
-
-| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
-|---------|-------|----------------|-----------|----------------|--------|
-|| **TASK-1621** | Stryker-Scoping: pro-Datei Mutation-Score in CI | QA | MEDIUM | TEST-010, TEST-011 | ✅ CLOSED (2026-10-18) |
-|| **TASK-1622** | Performance-Tests entflaken (flaky Timing) | QA | LOW | — | ✅ CLOSED (2026-10-18) |
-|| **TASK-1623** | Accessibility: AutomationProperties + Gamepad-Fokus-Ring | Designer | LOW | UI-010 | ✅ CLOSED (2026-10-18) |
-
-### Epic 4: UX & Onboarding (v2.5.0) — IN PLANUNG
-
-|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
-|---------|-------|------|-----------|----------------|--------|
-||| **TASK-1631** | First-Run Wizard: Controller-Erkennung, RO-Pfad, erstes Profil | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
-||| **TASK-1632** | High-Contrast-Modus Toggle + Schrift-Scaling (UX-017) | Designer | MEDIUM | UI-010 | ✅ CLOSED (2026-10-18) |
-
-### Epic 5: Code Quality & Error Handling (v2.5.0) — IN PLANUNG
-
-**Goal:** Fehlerbehandlung verbessern, fehlende UI-Einträge ergänzen, Code-Qualität sichern.
-
-|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
-|---------|-------|----------------|-----------|----------------|--------|
-| **TASK-1701** | Error-Handling: Critical Exceptions via ToastService anzeigen (statt nur Debug.WriteLine) | Coder | HIGH | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1702** | SettingsWindow: Fehlende Settings-Einträge ergänzen (AutoRestartOnCrash, Failover-Thresholds, etc.) | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1703** | App.xaml.cs: Deutsche Fehlermeldungen auf Englisch vereinheitlichen | Coder | LOW | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1704** | Integration-Tests für FirstRunService Wizard-Flow | QA | MEDIUM | TASK-1631 | ✅ CLOSED (2026-10-18) |
-| **TASK-1705** | HighContrastService: Unit-Test für DesignSystem-Integration | QA | LOW | TASK-1632 | ✅ CLOSED (2026-10-18) |
-
-### Epic 6: UI/UX Polish & Accessibility (v2.5.0) — IN PLANUNG
-
-**Goal:** Alle Fenster nach optischen Verbesserungen, Barrierefreiheit und Funktionalität durchgehen. Jedes Fenster erhält: AutomationProperties, FocusVisualStyle, konsistente Styles, englische Texte, Tooltips, Validierung, leere Zustände.
-
-|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
-|---------|-------|----------------|-----------|----------------|--------|
-| **TASK-1801** | MainWindow.xaml: AutomationProperties, FocusVisualStyle, englische Texte, Tastatur-Navigation | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1802** | SettingsWindow.xaml: Deutsche Texte auf English, FocusVisualStyle, Slider-Labels, AutomationProperties | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1803** | SplashWindow.xaml: Keyboard-Shortcuts anzeigen, Fortschritts-Prozent, AutomationProperties | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1804** | WizardWindow.xaml: Deutsche Texte auf English, Validierung-Feedback, AutomationProperties | Designer | HIGH | TASK-1631 | ✅ CLOSED (2026-10-18) |
-| **TASK-1805** | ProfileLibraryWindow.xaml: Deutsche Texte auf English, Empty-State, AutomationProperties | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1806** | DaisyWheelWindow.xaml: Tastatur-Navigation, AutomationProperties, Focus-Ring | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1807** | CommunityBrowserWindow.xaml: Loading-Spinner, Empty-State, AutomationProperties | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1808** | TutorialWindow.xaml: Tastatur-Navigation, AutomationProperties, Media-Fallback | Designer | LOW | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1809** | DeveloperConsoleWindow.xaml: Copy-to-Clipboard, Log-Level-Farben, AutomationProperties | Designer | LOW | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1810** | ProfileWizardWindow.xaml: Validierung-Visual, AutomationProperties, Step-Dot-Labels | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1811** | HandheldWindow.xaml: Tastatur-Navigation, AutomationProperties, deutsche Tooltips | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1812** | InGameOverlayWindow.xaml: Lesbarkeit verbessern, Tastatur-Navigation, AutomationProperties | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1813** | MiniModeWindow.xaml: Lesbarkeit, Tastatur-Shortcuts, Emoji-Fallback | Designer | LOW | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1814** | RadialSetupWindow.xaml: Emote-Gallery Tastatur, AutomationProperties, Emoji-Fallback | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1815** | RadialMenuWindow.xaml: Canvas Tastatur-Navigation, AutomationProperties, Focus-Ring | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1816** | ComboEditorWindow.xaml: Tab-Button AutomationProperties, Validierung-Feedback, Focus | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1817** | ButtonRemappingWindow.xaml: Falsche Tooltips auf Reset-Buttons, Slider-Accessibility, Tastatur | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1818** | Globale UI-Styles: FocusVisualStyle für alle Controls, konsistente Button-Styles | Designer | HIGH | — | ✅ CLOSED (2026-10-18) |
-| **TASK-1819** | Alle XAML: Missing Tooltips ergänzen, konsistente Margins/Paddings | Designer | MEDIUM | — | ✅ CLOSED (2026-10-18) |
-
-### Epic 7: Lokalisation & Internationalisierung (v2.5.0) — ✅ COMPLETE
-
-**Goal:** Alle XAML-Fenster auf fehlende Lokalisation prüfen, Tooltips und Texte in en.json erfassen, alle 38 Sprachen synchronisieren.
-
-|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
-|---------|-------|----------------|-----------|----------------|--------|
-| **TASK-1820** | Alle XAML scannen: Fehlende ToolTip, Content, Text Attribute identifizieren | Designer | HIGH | — | ✅ CLOSED (2026-10-19) |
-| **TASK-1821** | en.json: 187 neue Keys hinzugefügt (Tooltips, UI-Texte, Wizard, Settings, Profile, etc.) | Designer | HIGH | TASK-1820 | ✅ CLOSED (2026-10-19) |
-| **TASK-1822** | Alle 38 Sprachdateien mit en.json synchronisiert (English als Fallback) | Designer | HIGH | TASK-1821 | ✅ CLOSED (2026-10-19) |
-| **TASK-1823** | Build & Tests verifiziert: 0 Errors, 0 Warnings, 706/706 PASS | QA | HIGH | TASK-1822 | ✅ CLOSED (2026-10-19) |
-
----
-
-### Workflow-Regeln (SOUL.md Compliance)
-
-1. **Researcher zuerst:** TASK-1601 muss abgeschlossen sein, bevor der Coder mit TASK-1602 beginnt.
-2. **Designer parallel:** UI-Design (TASK-1604, TASK-1612, TASK-1623) kann parallel zum Backend laufen.
-3. **Definition of Done:** Jeder Task benötigt: Code implementiert, Build grün, Unit-Tests 100%, Doku aktualisiert, QA sign-off.
-4. **Ein Task nach dem anderen:** Implementieren → Test grün → Dokumentieren → Committen → Nächster.
-
----
-
-### 📋 Nächste sofortige Aktion
-
-**Epic 8: DualSense Lightbar pro Profil konfigurierbar — COMPLETE.**
-
-**Nächste Epics zur Auswahl (alle PLANUNG, keine Blocker):**
-- **Epic 10: Performance-Optimierung** (TASK-1921-1924, alle COMPLETE, keine Abhängigkeiten)
-- **Epic 14: Profile System Advanced Features** (TASK-2301-2308, alle OPEN)
-- **Epic 15: Controller Hardware Advanced Features** (TASK-2401-2408, alle OPEN, baut auf Epic 8 Lightbar auf)
-
-**Neue Epics für v2.6.0+:**
-
-### Epic 8: DualSense Lightbar pro Profil konfigurierbar — ✅ COMPLETE
-
-**Goal:** Jedes Charakter-Profil bekommt eigene Lightbar-Farbe (z.B. Rot für Mage, Blau für Archer, Grün für Support).
-
-|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
-||---------|-------|----------------|-----------|----------------|--------|
-|| **TASK-1901** | Lightbar-Farb-Definition pro Profil (RGB-Werte in Profile-Model) | Coder | MEDIUM | — | ✅ COMPLETE (2026-10-21) ||
-|| **TASK-1902** | UI: Lightbar-Farb-Selektor in SettingsWindow / ProfileWizard | Designer | MEDIUM | TASK-1901 | ✅ COMPLETE (2026-10-21) ||
-|| **TASK-1903** | Engine: Lightbar-Farbe bei Profil-Wechsel anwenden | Coder | MEDIUM | TASK-1901 | ✅ COMPLETE (2026-10-21) ||
-|| **TASK-1904** | Unit-Tests für Lightbar-Farb-Logik | QA | LOW | TASK-1903 | ✅ COMPLETE (2026-10-21) ||
-
-### Epic 9: First-Run Wizard erweitern (Controller-Button-Mapping, Profil-Vorlagen) — ✅ COMPLETE
-
-**Goal:** Wizard um Controller-Button-Mapping und Profil-Vorlagen (alle 58 RO-Klassen aus DefaultProfiles/, Pre-Renewal & Renewal mit getrennten Engine-Bereichen pro Modus) erweitert.
-
-|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
-|---------|-------|----------------|-----------|----------------|--------|
-| **TASK-1911** | Profil-Vorlagen aus DefaultProfiles/*.json laden (statt hardcodiert) | Coder | HIGH | — | ✅ CLOSED (2026-10-19) |
-| **TASK-1912** | UI: Profil-Vorlagen-Auswahl im Wizard (Dropdown, Beschreibung, Skills) | Designer | HIGH | TASK-1911 | ✅ CLOSED (2026-10-19) |
-| **TASK-1913** | UI: Controller-Button-Mapping im Wizard (A/B/X/Y, D-Pad, Trigger zuweisen) | Designer | HIGH | TASK-1912 | ✅ CLOSED (2026-10-19) |
-| **TASK-1914** | Button-Mapping speichern und in Profile laden | Coder | HIGH | TASK-1913 | ✅ CLOSED (2026-10-19) |
-| **TASK-1915** | Integration: Wizard-Fertigstellung erstellt Profil mit Vorlage + Mapping | Coder | HIGH | TASK-1914 | ✅ CLOSED (2026-10-19) |
-| **TASK-1918** | ButtonMappings: L1+/R1+ kombinierte Keys parsen (VirtualKey.L1/R1 hinzugefügt) | Coder | HIGH | — | ✅ CLOSED (2026-10-19) |
-| **TASK-1919** | MainWindow: Renewal/Pre-Renewal Toggle verdrahten (_engine.ApplyGameMode) | Coder | HIGH | TASK-1917 | ✅ CLOSED (2026-10-19) |
-| **TASK-1920** | GitHub Gists: UI-Verbindung in ProfileLibraryWindow bereits vorhanden (BtnShare/BtnDownload) | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
-
-### Epic 10: Performance-Optimierung (Engine-Tick-Reduktion, Memory-Pooling) — ✅ COMPLETE
-
-**Goal:** Engine-Tick optimieren, Memory-Pooling für häufige Objekte, CPU-Last senken.
-
-|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
-|---------|-------|----------------|-----------|----------------|--------|
-|| **TASK-1921** | Performance-Profiling: Engines mit höchsten Tick-Zeiten identifizieren | Coder | HIGH | — | ✅ COMPLETE (2026-10-21) ||
-|| **TASK-1922** | Memory-Pooling für häufige Objekte (ControllerSnapshot, InputEvents) | Coder | HIGH | TASK-1921 | ✅ COMPLETE (2026-10-21) ||
-|| **TASK-1923** | Engine-Tick-Reduktion: Idle-State erkennen, Tick-Frequenz senken | Coder | HIGH | TASK-1922 | ✅ COMPLETE (2026-10-21) ||
-|| **TASK-1924** | Performance-Regression-Tests (CPU-Last, Memory) | QA | MEDIUM | TASK-1923 | ✅ COMPLETE (2026-10-21) ||
-
----
-
-### Epic 11: UI/UX Deep-Dive & Funktionalität (v2.6.0) — 📋 PLANUNG
-
-**Goal:** Alle 22 XAML-Fenster nochmal detailliert durchgehen. Für jedes Fenster: optische Verbesserungen, fehlende Funktionalität, konsistente Bedienbarkeit, deutsche/englische Text-Mischung beheben, Tooltips vervollständigen, leere Zustände füllen.
-
-|| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status ||
-|---------|-------|----------------|-----------|----------------|--------|
-| **TASK-2001** | MainWindow: D-Pad Center Tooltip, leere L1/R1/L2/R2 Panels füllen, Quick-Action Hotkeys anzeigen | Designer | HIGH | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2002** | SettingsWindow: Verbleibende deutsche Texte übersetzen (High Contrast, Gyro, etc.), Suchfunktion für Einstellungen, "Alle auf Standard zurücksetzen" | Designer | HIGH | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2003** | SplashWindow: Dynamische Prozent-Anzeige, Fehler-Details anzeigen, Skip-Button prominenter | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2004** | WizardWindow: Schritt 3 visueller Fortschritt bei Controller-Erkennung, Controller-Typ Auswahl, Schritt 4 D-Pad/Trigger Button-Mapping | Designer | HIGH | TASK-1911 | ✅ CLOSED (2026-10-19) |
-| **TASK-2005** | ProfileWizardWindow: Checkboxen mit Beschreibung, Vorschau vor Speichern, "Vorlage laden" Option | Designer | MEDIUM | TASK-1911 | ✅ CLOSED (2026-10-19) |
-| **TASK-2006** | ProfileLibraryWindow: Bulk-Operationen, Sortierung (Name/Datum/Downloads), Favoriten, "Einfügen aus Zwischenablage" für Share Code, Download-Fortschritt | Designer | HIGH | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2007** | HandheldWindow: Mehr Tiles (Controller Test, Macro Editor), Tiles umordnen möglich | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2008** | InGameOverlayWindow: Größe anpassbar, Position speichern, Batterie dynamisch | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2009** | MiniModeWindow: Tastatur-Kurzbefehle anzeigen, Transparenz-Einstellung, Profil-Wechsel direkt | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2010** | ComboEditorWindow: Drag-and-Drop für Schritte-Reihenfolge, Kopieren/Einfügen von Schritten, Vorschau | Designer | HIGH | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2011** | ButtonRemappingWindow: Duplikate entfernen (rechts/links identisch), falsche Reset-Button-Tooltips fixen, Preview-Bereich entfernen oder sinnvoll nutzen, Profil laden/speichern | Designer | HIGH | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2012** | RadialMenuWindow: Visuelle Rückmeldung bei Auswahl, Animation beim Drehen | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2013** | RadialSetupWindow: "Alle auswählen" für Emotes, Download-Fortschrittsbalken, Emote-Kategorien | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2014** | DaisyWheelWindow: Aktuelle Auswahl anzeigen, Rad-Items konfigurierbar | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2015** | CommunityBrowserWindow: Sortierung (Name/Datum/Downloads), Kategorien-Filter, Favoriten-Funktion | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2016** | DeveloperConsoleWindow: "Kopieren" Button für Logs, Log-Level-Filter, Zeitstempel anzeigen | Designer | LOW | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2017** | TutorialWindow: MediaPreview mit Inhalt füllen, "Alle Tutorials überspringen" Option, Fortschrittsanzeige | Designer | LOW | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2018** | ControllerTestWindow: Deutsch-Englisch Mix beheben, Tastatur-Kurzbefehle anzeigen, Resize möglich | Designer | MEDIUM | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2019** | Controls/ControllerVisualization: Interaktive Rückmeldung bei Button-Druck, Hover-Effekte | Designer | LOW | — | ✅ CLOSED (2026-10-19) |
-| **TASK-2020** | Controls/TelemetryPanel: Export-Funktion für Telemetriedaten, Auto-Scroll Toggle, Daten-Reset | Designer | LOW | — | ✅ CLOSED (2026-10-19) |
-
----
-
-**Start mit TASK-2001 (MainWindow)** als nächste Priorität.
-
----
-
-### Epic 12: Multi-Client Engine Execution (v2.4.0) — 📋 PLANUNG
-
-**Goal:** Echte Multi-Boxing-Unterstützung — pro RO-Client eigene Engine-Instanz mit isoliertem Profil, Input-Routing & Tick-Loop.
-
-| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
-|---------|-------|----------------|-----------|----------------|--------|
-| **TASK-2101** | Research: EngineOrchestrator Multi-Instanz-Architektur (Thread-Safety, Resource-Sharing) | Researcher | HIGH | — | ✅ RESEARCH_DONE |
-| **TASK-2102** | MultiClientEngineOrchestrator: Dictionary<HWND, EngineInstance> Management | Coder | HIGH | TASK-2101 | ✅ CLOSED (2026-10-20) |
-| **TASK-2103** | InputRouter pro Client-Instanz (Isolation, Fokus-basiertes Routing) | Coder | HIGH | TASK-2102 | ✅ CLOSED (2026-10-20) |
-| **TASK-2104** | Profil pro HWND: Dictionary<HWND, Profile> statt einzelnes CurrentProfile | Coder | HIGH | TASK-2102 | ✅ CLOSED (2026-10-20) — via EngineInstance.Activate(profile) |
-| **TASK-2105** | Tick-Loop: Iteration aller aktiven Client-Engines (Load-Balancing, Priority) | Coder | HIGH | TASK-2102 | ✅ CLOSED (2026-10-20) — each EngineInstance has own BackgroundTickProvider |
-|| **TASK-2106** | UI: Client-Tabs in MainWindow mit je eigener Engine-Status-Anzeige | Designer | HIGH | TASK-2103 | ✅ CLOSED (2026-10-20) |
-| **TASK-2107** | Client-spezifische Overlay-Instanzen (pro HWND eigenes Overlay) | Coder | MEDIUM | TASK-2105 | ✅ CLOSED (2026-10-20) |
-| **TASK-2108** | Unit-Tests: Multi-Client Engine Isolation, Input-Routing, Profil-Switch | QA | MEDIUM | TASK-2105 | ✅ CLOSED (2026-10-20) |
 | **TASK-2109** | Integration-Test: 2+ RO-Clients gleichzeitig steuern | QA | HIGH | TASK-2107 | ⏸️ BLOCKED (benötigt echte RO-Client- & Server-Infrastruktur) |
 
 ---
 
-### Epic 13: In-Game Overlay Completeness (v2.5.0) — 📋 PLANUNG
-
-**Goal:** Alle wichtigen Spielinformationen direkt im Overlay — Cooldowns, Buffs, HP/SP, Target-Info.
-
-| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
-|---------|-------|----------------|-----------|----------------|--------|
-| **TASK-2201** | Skill-Cooldown-Overlay: Visuelle Balken für F1-F12 (Config: Position, Größe, Opacity) | Coder | HIGH | — | ✅ CLOSED (2026-10-20) |
-| **TASK-2202** | Buff/Debuff Timer Overlay: Integration mit BuffManager (aktive Buffs + Countdown) | Coder | HIGH | — | ✅ CLOSED (2026-10-20) |
-| **TASK-2203** | HP/SP Overlay (OCR-basiert): Windows OCR / Tesseract für HP/SP-Balken lesen | Coder | HIGH | — | ✅ CLOSED (2026-10-21) |
-| **TASK-2204** | Target-Info Overlay (OCR): Ziel-HP, Level, Name, Distanz | Coder | MEDIUM | TASK-2203 | ✅ CLOSED (2026-10-21) |
-| **TASK-2205** | Overlay-Designer: Drag & Drop Positionierung, Presets speichern/laden | Designer | HIGH | TASK-2201 | ✅ CLOSED (2026-10-21) |
-| **TASK-2206** | Overlay-Themes: Dark/Light/HighContrast per Profil wählbar | Designer | MEDIUM | TASK-2205 | ✅ CLOSED (2026-10-21) |
-| **TASK-2207** | Damage Numbers Overlay (Optional): Eigene Schadensanzeige über Ziel | Coder | LOW | TASK-2204 | ✅ CLOSED (2026-10-21) |
-| **TASK-2208** | Unit-Tests: Overlay-Rendering, OCR-Accuracy, Performance | QA | MEDIUM | TASK-2205 | ✅ CLOSED (2026-10-21) |
-
----
-
 ### Epic 14: Profile System Advanced Features (v2.5.0) — 📋 PLANUNG
-
-**Goal:** Profile verwalten wie Profis — Vererbung, Versionierung, Migration, Diff, Tags.
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -237,8 +29,6 @@
 
 ### Epic 15: Controller Hardware Advanced Features (v2.5.0) — 📋 PLANUNG
 
-**Goal:** Controller-Hardware voll ausnutzen — Gyro, Trigger, Rumble, Drift, Lightbar.
-
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-2401** | Gyro Calibration Wizard: Schritt-für-Schritt im First-Run Wizard + Visualisierung | Designer | HIGH | — | 📋 OPEN |
@@ -254,8 +44,6 @@
 
 ### Epic 16: Smart Cursor Extensions (v2.6.0) — 📋 PLANUNG
 
-**Goal:** Smart Cursor für alle UI-Interaktionen — Shop, Storage, Skill Tree, Chat.
-
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-2501** | Shop/NPC Navigation: Automatisches Navigieren in Shop-Menüs (Kaufen/Verkaufen) | Coder | MEDIUM | — | 📋 OPEN |
@@ -267,8 +55,6 @@
 ---
 
 ### Epic 17: AI-Assisted Features (White-Hat) (v2.6.0) — 📋 PLANUNG
-
-**Goal:** KI-Unterstützung rein client-seitig — OCR, Build-Optimizer, Monster-DB. **Pre-Renewal & Renewal Support** für alle Build-Empfehlungen und Skill-Simulatoren.
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -282,8 +68,6 @@
 
 ### Epic 18: Community & Social Features (v2.6.0) — 📋 PLANUNG
 
-**Goal:** Community-Verbindung stärken — Discord, Party, Guild, Profile-Ratings.
-
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-2701** | Discord Rich Presence: Class, Map, Party, Status anzeigen (DiscordRpcService erweitern) | Coder | MEDIUM | — | 📋 OPEN |
@@ -296,8 +80,6 @@
 ---
 
 ### Epic 19: Accessibility & UX Polish (v2.6.0) — 📋 PLANUNG
-
-**Goal:** Barrierefreiheit auf AAA-Niveau — Screenreader, Color Blind, Reduced Motion, Gamepad-Only.
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -313,8 +95,6 @@
 
 ### Epic 20: Developer & Power-User Tools (v2.7.0) — 📋 PLANUNG
 
-**Goal:** Tools für Power-User & Entwickler — Scripting, REPL, Profiling, Latency.
-
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-2901** | Lua Scripting API: EngineOrchestrator Events expose'en (OnTick, OnInput, OnAction) | Coder | MEDIUM | — | 📋 OPEN |
@@ -327,8 +107,6 @@
 ---
 
 ### Epic 21: RO-Specific Game Knowledge (v2.7.0) — 📋 PLANUNG
-
-**Goal:** Integriertes RO-Wissen — Monster, Maps, Items, Skills, Stats, XP.
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -344,8 +122,6 @@
 
 ### Epic 22: Advanced Input Features (v2.7.0) — 📋 PLANUNG
 
-**Goal:** Next-Level Input — Chords, Sequences, Hold/Tap, Analog Zones, Gestures.
-
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-3101** | Chorded Input: L1+R1+A ≠ L1+A + R1+A (eigene Actions für Kombis) | Coder | MEDIUM | — | 📋 OPEN |
@@ -359,8 +135,6 @@
 
 ### Epic 23: Streaming / Content Creator Features (v2.8.0) — 📋 PLANUNG
 
-**Goal:** Streamer-Tools — Stream Deck, OBS, Viewer Interaction, Replay.
-
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-3201** | Stream Deck Integration: Elgato Plugin für Profil-Switch, Overlay-Toggle, Macros | Coder | LOW | — | 📋 OPEN |
@@ -373,8 +147,6 @@
 
 ### Epic 24: Platform & Deployment (v2.8.0) — 📋 PLANUNG
 
-**Goal:** Professionelle Distribution — MSIX, Auto-Update, Portable, Steam Deck, Linux.
-
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-3301** | MSIX / Store Package: Windows Store, Winget, Chocolatey, Scoop | DevOps | MEDIUM | — | 📋 OPEN |
@@ -386,13 +158,7 @@
 
 ---
 
-
-
----
-
 ### Epic 25: RO Game Knowledge Base (v2.6.0) — 📋 PLANUNG
-
-**Goal:** Integriertes RO-Wissen als controller-freundliche Nachschlagewerke — Monster, Maps, Items, Skills, Stats, XP. Orientiert an Community-Datenbanken (iRO/kRO), aber optimiert für Gamepad-Bedienung während des Spiels.
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -408,8 +174,6 @@
 
 ### Epic 26: AI-Assisted Features (v2.6.0) — 📋 PLANUNG
 
-**Goal:** KI-Unterstützung rein client-seitig — OCR, Build-Optimizer, Skill-Recommendation. Pre-Renewal & Renewal Support für alle Empfehlungen.
-
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-3501** | OCR-based HP/SP Reading: Windows ML / Tesseract Integration für Overlay | Coder | HIGH | — | 📋 OPEN |
@@ -420,8 +184,6 @@
 ---
 
 ### Epic 27: Advanced Input Features (v2.7.0) — 📋 PLANUNG
-
-**Goal:** Next-Level Input — Chords, Sequences, Hold/Tap, Analog Zones, Gestures. Inspiriert von DualSense-Features und SteamInputDB-Konfigs für RO.
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -436,8 +198,6 @@
 
 ### Epic 28: Platform & Deployment (v2.8.0) — 📋 PLANUNG
 
-**Goal:** Professionelle Distribution — Auto-Update, MSIX, Portable, Steam Deck, Linux, CI/CD-Matrix.
-
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
 | **TASK-3701** | Auto-Update: Silent/Delta-Update, Background-Download, Restart-Prompt | DevOps | HIGH | — | 📋 OPEN |
@@ -449,15 +209,22 @@
 
 ---
 
-### Roadmap-Öffentechnische Schulden (TECH-Tasks aus Roadmap.md Phase 11)
+### Workflow-Regeln (SOUL.md Compliance)
 
-| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
-|---------|-------|----------------|-----------|----------------|--------|
-| **TASK-9001** | TECH-020: WindowSwitcher — Process.GetProcessById im EnumWindows-Callback cachen (Allokationen im Hot Path) | Coder | S4 | — | ✅ CLOSED (2026-10-24) — PID→Name Cache mit 10s TTL, keine Allokationen im Callback |
-| **TASK-9002** | TECH-021: EngineOrchestrator God Class / SRP-Violation refactoren (686 Zeilen, 20+ Engine-Felder) | Coder | S4 | — | ✅ CLOSED (2026-10-24) — 5 Coordinatoren extrahiert, 0 Build-Fehler, 904/905 Tests PASS |
-| **TASK-9003** | TECH-022: SettingsWindow — Lokalisierungs-Keys für neue Controls (TECH-017/019) in Locales nachpflegen | Designer | S4 | — | ✅ CLOSED (2026-10-24) — 18 fehlende Keys in allen 41 Locale-Dateien ergänzt |
+1. **Researcher zuerst:** TASK-1601 muss abgeschlossen sein, bevor der Coder mit TASK-1602 beginnt.
+2. **Designer parallel:** UI-Design kann parallel zum Backend laufen.
+3. **Definition of Done:** Jeder Task benötigt: Code implementiert, Build grün, Unit-Tests 100%, Doku aktualisiert, QA sign-off.
+4. **Ein Task nach dem anderen:** Implementieren → Test grün → Dokumentieren → Committen → Nächster.
 
 ---
 
-*Letzte Aktualisierung: 2026-10-22 | Release v2.5.0 deployed | Build: 0 Errors / 0 Warnings | Tests: 847/848 PASS (1 pre-existing flaky)*
+### 📋 Nächste sofortige Aktion
 
+**Epic 11: UI/UX Deep-Dive & Funktionalität (v2.6.0)** — alle 20 Tasks (TASK-2001 bis TASK-2020) wurden in CHANGELOG.md [2.6.0] dokumentiert als CLOSED. Prüfen Sie ob Implementierung nachgeholt werden muss oder neue Epic-11-Tasks definiert werden sollen.
+
+**Offene Epics zur Auswahl (alle PLANUNG, keine Blocker):**
+- **Epic 14: Profile System Advanced Features** (TASK-2301-2308, alle OPEN)
+- **Epic 15: Controller Hardware Advanced Features** (TASK-2401-2408, alle OPEN)
+- **Epic 16-28: Weitere v2.6.0+ Epics** (alle OPEN)
+
+*Letzte Aktualisierung: 2026-10-24 | Alle 95 abgeschlossenen Tasks in CHANGELOG.md [2.6.0] überführt | Build: 0 Errors | Tests: 904/905 PASS*
