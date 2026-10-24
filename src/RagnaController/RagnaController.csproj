@@ -273,6 +273,7 @@
     <Compile Include="Profiles\ProfileCollection.cs" />
         <Compile Include="Profiles\ProfileManager.cs" />
         <Compile Include="Core\StickDriftCompensation.cs" />
+    <Compile Include="Core\TriggerDeadzoneCurve.cs" />
     <Compile Include="Profiles\ProfileMigration.cs" />
     <Compile Include="Profiles\ProfilePreset.cs" />
     <Compile Include="Profiles\ProfilePresetManager.cs" />

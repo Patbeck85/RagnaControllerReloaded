@@ -263,6 +263,25 @@ namespace RagnaController.Profiles
 
         /// <summary>Ob die Stick-Drift-Kalibrierung durchgeführt wurde.</summary>
         public bool StickDriftCalibrated { get; set; } = false;
+
+        // ── TASK-2403: Trigger Deadzone Curves ───────────────────────────
+        /// <summary>Kurven-Typ für den linken Trigger (Linear, Quadratic, Exponential, SCurve).</summary>
+        public string LeftTriggerCurveType { get; set; } = "Linear";
+
+        /// <summary>Deadzone für den linken Trigger (0.0 bis 1.0).</summary>
+        public float LeftTriggerDeadzone { get; set; } = 0.05f;
+
+        /// <summary>Sättigungspunkt für den linken Trigger (0.0 bis 1.0).</summary>
+        public float LeftTriggerSaturation { get; set; } = 1.00f;
+
+        /// <summary>Kurven-Typ für den rechten Trigger.</summary>
+        public string RightTriggerCurveType { get; set; } = "Linear";
+
+        /// <summary>Deadzone für den rechten Trigger (0.0 bis 1.0).</summary>
+        public float RightTriggerDeadzone { get; set; } = 0.05f;
+
+        /// <summary>Sättigungspunkt für den rechten Trigger (0.0 bis 1.0).</summary>
+        public float RightTriggerSaturation { get; set; } = 1.00f;
     }
 
     /// <summary>

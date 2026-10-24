@@ -192,10 +192,15 @@
    - TASK-2306 Cloud Sync (CloudSyncService + Properties)
    - TASK-2307 Profile Collections (ProfileCollection.cs + ProfileManager integration)
    - TASK-2308 Unit-Tests (ProfileInheritanceTests, ProfileMigrationTests, ProfileValidatorTests, ProfileItemValidationTests)
-3. **TECH-Schulden (S4, keine Blocker):**
-   - TASK-9001 WindowSwitcher-Caching ✅ COMPLETE — PID→Name Cache mit 10s TTL
-   - TASK-9002 EngineOrchestrator-Refactoring ✅ COMPLETE — 5 Coordinator-Klassen, 0 Build-Fehler
-   - TASK-9003 SettingsWindow-Lokalisierung ✅ COMPLETE — 18 fehlende Keys in 41 Locale-Dateien
+3. **Epic 15: Controller Hardware Advanced Features** 📋 TEILWEISE COMPLETE
+   - TASK-2401 Gyro Calibration Wizard ✅ COMPLETE (GyroCalibrationWindow)
+   - TASK-2402 Stick Drift Compensation ✅ COMPLETE (StickDriftCompensation.cs + Profile + SnapshotBuilder)
+   - TASK-2403 Trigger Deadzone Curves 📋 OPEN
+   - TASK-2404 Rumble Editor 📋 OPEN
+   - TASK-2405 Motion Aim Assist 📋 OPEN
+   - TASK-2406 Steam Input Integration 📋 OPEN
+   - TASK-2407 DualSense Lightbar pro Profil ✅ COMPLETE (bereits in Profile.cs)
+   - TASK-2408 Unit-Tests 📋 OPEN
 4. **Optional Future Epics (v2.6.0+):**
    - Epic 15: Controller Hardware Advanced Features
    - Epic 16: Smart Cursor Extensions

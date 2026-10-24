@@ -31,7 +31,11 @@ namespace RagnaController.Controller
         private Profile? _activeProfile;
         private StickDriftCompensation? _driftCompensation;
 
-        /// <summary>Setzt das aktive Profil für Drift-Kompensation.</summary>
+        // TASK-2403: Trigger-Kurven für LT und RT
+        private TriggerDeadzoneCurve _leftTriggerCurve = new TriggerDeadzoneCurve { Type = TriggerDeadzoneCurve.CurveType.Linear, Deadzone = 0.05f, Saturation = 1.00f };
+        private TriggerDeadzoneCurve _rightTriggerCurve = new TriggerDeadzoneCurve { Type = TriggerDeadzoneCurve.CurveType.Linear, Deadzone = 0.05f, Saturation = 1.00f };
+
+        /// <summary>Setzt das aktive Profil für Drift-Kompensation und Trigger-Kurven.</summary>
         public Profile? ActiveProfile
         {
             get => _activeProfile;
@@ -47,7 +51,31 @@ namespace RagnaController.Controller
                         value.LeftStickDriftX, value.LeftStickDriftY,
                         value.RightStickDriftX, value.RightStickDriftY);
                 }
+
+                // Trigger-Kurven aus Profil laden
+                _leftTriggerCurve = new TriggerDeadzoneCurve
+                {
+                    Type = ParseCurveType(value.LeftTriggerCurveType),
+                    Deadzone = value.LeftTriggerDeadzone,
+                    Saturation = value.LeftTriggerSaturation,
+                };
+                _rightTriggerCurve = new TriggerDeadzoneCurve
+                {
+                    Type = ParseCurveType(value.RightTriggerCurveType),
+                    Deadzone = value.RightTriggerDeadzone,
+                    Saturation = value.RightTriggerSaturation,
+                };
             }
+        }
+
+        /// <summary>Wandelt einen String in einen CurveType um.</summary>
+        private static TriggerDeadzoneCurve.CurveType ParseCurveType(string? typeName)
+        {
+            if (string.IsNullOrWhiteSpace(typeName))
+                return TriggerDeadzoneCurve.CurveType.Linear;
+            return Enum.TryParse<TriggerDeadzoneCurve.CurveType>(typeName, ignoreCase: true, out var result)
+                ? result
+                : TriggerDeadzoneCurve.CurveType.Linear;
         }
 
         public SnapshotBuilder(AutoTargetEngine autoTarget, MageEngine mage, ComboEngine combo,
@@ -92,6 +120,8 @@ namespace RagnaController.Controller
             snap.R1 = input.R1;
             snap.L2 = input.L2;
             snap.R2 = input.R2;
+            snap.LT = _leftTriggerCurve.Apply(input.LT);
+            snap.RT = _rightTriggerCurve.Apply(input.RT);
             snap.BtnL3 = input.L3;
             snap.BtnA = input.BtnA;
             snap.BtnB = input.BtnB;
