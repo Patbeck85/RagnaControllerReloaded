@@ -22,6 +22,7 @@ namespace RagnaController.Views.Dialogs
 
         private readonly ProfileManager _manager;
         private List<Profile> _cache = new();
+        private string _favoriteFilter = "All"; // "All", "Favoriten"
         public Profile? SelectedProfile { get; private set; }
 
         public ProfileLibraryWindow(ProfileManager manager)
@@ -95,7 +96,8 @@ namespace RagnaController.Views.Dialogs
                     _ => true
                 };
                 bool matchesTag = string.IsNullOrEmpty(tag) || tag == "All Tags" || (p.Tags != null && p.Tags.Contains(tag));
-                return matchesSearch && matchesType && matchesTag;
+                bool matchesFavorite = _favoriteFilter == "All" || (_favoriteFilter == "Favoriten" && p.IsFavorite) || (_favoriteFilter != "Favoriten" && !p.IsFavorite);
+                return matchesSearch && matchesType && matchesTag && matchesFavorite;
             });
 
             // Sortierung
@@ -146,7 +148,12 @@ namespace RagnaController.Views.Dialogs
         private void TagFilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e) => ApplyFilter();
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e) => ApplyFilter();
-        private void FilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e) => ApplyFilter();
+        private void FilterCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selected = (FilterCombo.SelectedItem as ComboBoxItem)?.Content?.ToString() ?? "All Profiles";
+            _favoriteFilter = selected == "Favoriten" ? "Favoriten" : "All";
+            ApplyFilter();
+        }
         private void SortCombo_SelectionChanged(object sender, SelectionChangedEventArgs e) => ApplyFilter();
 
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
@@ -337,6 +344,18 @@ namespace RagnaController.Views.Dialogs
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[ProfileLibrary] Paste failed: {ex.Message}");
+            }
+        }
+
+        private void BtnToggleFavorite_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is Profile p)
+            {
+                p.IsFavorite = !p.IsFavorite;
+                _manager.SaveProfile(p);
+                ApplyFilter(); // Refresh list to update star display
+                StatusText.Text = p.IsFavorite ? $"⭐ {p.Name} zu Favoriten hinzugefügt" : $"⭐ {p.Name} aus Favoriten entfernt";
+                StatusText.Foreground = (Brush)FindResource("Live");
             }
         }
 

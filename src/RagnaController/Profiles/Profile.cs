@@ -232,6 +232,9 @@ namespace RagnaController.Profiles
         /// <summary>Schema-Version dieses Profils. Aktuell: 2. Ältere Versionen werden beim Load automatisch migriert.</summary>
         public int SchemaVersion { get; set; } = 2;
 
+        /// <summary>Markiert dieses Profil als Favorit für schnellen Zugriff.</summary>
+        public bool IsFavorite { get; set; } = false;
+
         // TASK-2306: Cloud Sync — Cloud-Synchronisationseinstellungen
         /// <summary>Cloud-Sync für dieses Profil aktiviert.</summary>
         public bool CloudSyncEnabled { get; set; } = false;

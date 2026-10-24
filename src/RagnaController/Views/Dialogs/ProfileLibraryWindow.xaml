@@ -59,6 +59,7 @@
                                                                 <ComboBoxItem Content="Ranged"/>
                                                                 <ComboBoxItem Content="Mage"/>
                                                                 <ComboBoxItem Content="Support"/>
+                                                                <ComboBoxItem Content="Favoriten"/>
                                                             </ComboBox>
                                                             <!-- TASK-2305: Tag filter -->
                                                             <ComboBox x:Name="TagFilterCombo" Grid.Column="2" Height="44" Style="{StaticResource DarkComboBox}" SelectedIndex="0" SelectionChanged="TagFilterCombo_SelectionChanged" FontSize="13" FontFamily="Segoe UI Variable, Segoe UI" Margin="12,0,0,0" AutomationProperties.Name="Tag filter"/>
@@ -124,6 +125,20 @@
                                             <Button Content="Export" Width="100" Height="38" Margin="0,0,0,10" Style="{StaticResource GhostButton}" Click="BtnExport_Click" Tag="{Binding}" ToolTip="Export profile to JSON file" FontSize="14"/>
                                             <Button Content="↑ Share" Width="100" Height="38" Margin="0,0,0,10" Style="{StaticResource GhostButton}" Click="BtnShare_Click" Tag="{Binding}" ToolTip="Upload to GitHub Gist and get a share code" FontSize="14"/>
                                             <Button Content="Delete" Width="100" Height="38" Style="{StaticResource DangerButton}" Click="BtnDelete_Click" Tag="{Binding}" Visibility="{Binding IsBuiltIn, Converter={StaticResource InverseBoolToVisibilityConverter}}" ToolTip="Delete profile from library (built-in profiles cannot be deleted)" FontSize="14"/>
+                                                <Button x:Name="BtnToggleFavorite" Width="40" Height="38" Click="BtnToggleFavorite_Click" Tag="{Binding}" FontSize="16">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource GhostButton}">
+                                                        <Setter Property="Content" Value="☆"/>
+                                                        <Setter Property="ToolTip" Value="Zu Favoriten hinzufügen"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsFavorite}" Value="True">
+                                                                <Setter Property="Content" Value="★"/>
+                                                                <Setter Property="ToolTip" Value="Aus Favoriten entfernen"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
                                         </StackPanel>
                                     </Grid>
                                 </Border>
