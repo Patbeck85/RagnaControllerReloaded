@@ -282,6 +282,10 @@ namespace RagnaController.Profiles
 
         /// <summary>Sättigungspunkt für den rechten Trigger (0.0 bis 1.0).</summary>
         public float RightTriggerSaturation { get; set; } = 1.00f;
+
+        // ── TASK-2404: Rumble Editor ─────────────────────────────────────
+        /// <summary>Benutzerdefinierte Rumble-Patterns für diesen Profil.</summary>
+        public List<RumblePattern> RumblePatterns { get; set; } = new();
     }
 
     /// <summary>
