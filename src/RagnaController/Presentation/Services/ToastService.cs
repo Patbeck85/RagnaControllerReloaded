@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-namespace RagnaController.Services
+namespace RagnaController.Presentation.Services
 {
     /// <summary>
     /// Manages toast notifications (temporary UI messages shown at the bottom of MainWindow).

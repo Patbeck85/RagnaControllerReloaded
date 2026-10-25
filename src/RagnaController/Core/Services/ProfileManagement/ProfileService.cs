@@ -5,7 +5,7 @@ using RagnaController.Models;
 using RagnaController.Profiles;
 using RagnaController.Views.Dialogs;
 
-namespace RagnaController.Services
+namespace RagnaController.Core.Services.ProfileManagement
 {
     /// <summary>
     /// TECH-062: Extracted from MainWindow — Profile management logic.

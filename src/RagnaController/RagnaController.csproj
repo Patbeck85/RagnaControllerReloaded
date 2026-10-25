@@ -106,8 +106,8 @@
     <Compile Include="ControllerPreview.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="Core\Services\ActionLogService.cs" />
-    <Compile Include="Services\ToastService.cs" />
-    <Compile Include="Services\ProfileService.cs" />
+    <Compile Include="Core\Services\ProfileManagement\ProfileService.cs" />
+        <Compile Include="Presentation\Services\ToastService.cs" />
     <Compile Include="Core\Input\InputFailoverManager.cs" />
     <Compile Include="Core\Services\MonitorHelper.cs" />
         <Compile Include="Core\Utilities\AdvancedLogger.cs" />
