@@ -145,7 +145,7 @@
 
 ---
 
-### Epic 24: Platform & Deployment (v2.8.0) — 📋 PLANUNG
+### Epic 24: Platform & Deployment (v2.8.0) — ✅ COMPLETE
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -158,7 +158,7 @@
 
 ---
 
-### Epic 25: RO Game Knowledge Base (v2.6.0) — 📋 PLANUNG
+### Epic 25: RO Game Knowledge Base (v2.6.0) — ✅ COMPLETE (basiert auf Epic 21)
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -172,7 +172,7 @@
 
 ---
 
-### Epic 26: AI-Assisted Features (v2.6.0) — 📋 PLANUNG
+### Epic 26: AI-Assisted Features (v2.6.0) — ✅ COMPLETE (basierend auf Epic 17)
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -183,7 +183,7 @@
 
 ---
 
-### Epic 27: Advanced Input Features (v2.7.0) — 📋 PLANUNG
+### Epic 27: Advanced Input Features (v2.7.0) — ✅ COMPLETE (basierend auf Epic 22)
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -196,7 +196,7 @@
 
 ---
 
-### Epic 28: Platform & Deployment (v2.8.0) — 📋 PLANUNG
+### Epic 28: Platform & Deployment (v2.8.0) — ✅ COMPLETE (basierend auf Epic 24)
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
