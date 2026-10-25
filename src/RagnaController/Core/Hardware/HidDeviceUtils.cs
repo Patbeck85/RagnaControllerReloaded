@@ -3,8 +3,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Hardware {
     /// <summary>
     /// TASK-TECH: Shared HID Device Utilities.
     /// 

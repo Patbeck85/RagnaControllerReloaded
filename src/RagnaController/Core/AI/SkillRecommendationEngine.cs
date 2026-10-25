@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.AI {
     /// <summary>
     /// TASK-2602: SkillRecommendationEngine — Vorschlägt Skill-Builds basierend auf
     /// Klasse, Level, Ausrüstung und Spielstil (Pre-Renewal & Renewal).

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using Xunit;
 using RagnaController.Core;
+using RagnaController.Core.Input.Advanced;
 
 namespace RagnaController.Tests
 {

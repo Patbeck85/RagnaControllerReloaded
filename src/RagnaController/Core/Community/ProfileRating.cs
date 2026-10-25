@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Community {
     /// <summary>
     /// TASK-2704: ProfileRating — Modell für eine Community-Bewertung eines Gist-Profils.
     ///

@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using RagnaController.Models;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Navigation {
     /// <summary>
     /// TASK-2501: ShopNavigationService — Automatisches Navigieren in Shop-/NPC-Menüs.
     ///

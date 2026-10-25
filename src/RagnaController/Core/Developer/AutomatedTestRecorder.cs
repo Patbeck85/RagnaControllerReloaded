@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Developer {
     /// <summary>
     /// TASK-2905: AutomatedTestRecorder — Zeichnet User-Aktionen auf und generiert
     /// Integration-Tests aus den aufgezeichneten Sequenzen.

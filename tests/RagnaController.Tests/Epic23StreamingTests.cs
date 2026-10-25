@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using RagnaController.Core.Services;
+using RagnaController.Core.Developer;
 
 namespace RagnaController.Tests
 {

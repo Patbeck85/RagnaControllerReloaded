@@ -1,6 +1,7 @@
 using System;
 using RagnaController.Models;
 using RagnaController.Profiles;
+using RagnaController.Core.Community;
 
 namespace RagnaController.Core
 {

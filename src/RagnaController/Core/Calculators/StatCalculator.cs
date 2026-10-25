@@ -1,7 +1,6 @@
 using System;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Calculators {
     /// <summary>
     /// TASK-3005: StatCalculator — Base/Job Level → Stats (mit Equipment, Blessings, Foods).
     ///

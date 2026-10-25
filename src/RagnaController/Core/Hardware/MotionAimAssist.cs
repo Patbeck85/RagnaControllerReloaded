@@ -1,7 +1,6 @@
 using System;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Hardware {
     /// <summary>
     /// TASK-2405: MotionAimAssist — Gyro-gestützte Zielunterstützung (Motion Aim).
     ///

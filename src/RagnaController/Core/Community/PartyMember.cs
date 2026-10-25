@@ -4,8 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Community {
     /// <summary>
     /// TASK-2703: PartyMember — Modell für ein einzelnes Party-Mitglied im Guild/Party Overlay.
     ///

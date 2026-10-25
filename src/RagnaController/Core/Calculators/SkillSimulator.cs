@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Calculators {
     /// <summary>
     /// TASK-3004: SkillSimulator — Skill-Punkte verteilen → Build-Code für Forums/Guides.
     ///

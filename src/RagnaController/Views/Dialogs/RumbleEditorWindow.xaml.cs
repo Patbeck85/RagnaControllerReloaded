@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using RagnaController.Core;
 using RagnaController.Profiles;
+using RagnaController.Core.Hardware;
 
 namespace RagnaController.Views.Dialogs
 {

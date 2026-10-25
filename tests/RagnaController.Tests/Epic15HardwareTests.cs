@@ -1,6 +1,7 @@
 using System;
 using Xunit;
 using RagnaController.Core;
+using RagnaController.Core.Hardware;
 
 namespace RagnaController.Tests
 {

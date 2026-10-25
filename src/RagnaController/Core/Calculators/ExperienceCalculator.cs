@@ -1,7 +1,6 @@
 using System;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Calculators {
     /// <summary>
     /// TASK-3006: ExperienceCalculator — Kill-Count für Level-Up, Optimale Maps per Level-Range.
     ///

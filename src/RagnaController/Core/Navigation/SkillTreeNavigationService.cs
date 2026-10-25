@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RagnaController.Models;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Navigation {
     /// <summary>
     /// TASK-2503: SkillTreeNavigationService — Skill-Punkte per Controller verteilen (Grid-Navigation).
     ///

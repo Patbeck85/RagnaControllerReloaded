@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Hardware {
     /// <summary>
     /// TASK-2404: RumblePattern — Definition eines Rumble-Vibrationsmusters für den DualSense-Controller.
     ///

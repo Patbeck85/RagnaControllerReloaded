@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Calculators {
     /// <summary>
     /// TASK-2603: AutoBuildOptimizer — Empfiehlt Stat-Allokation (Str/Agi/Vit/Int/Dex/Luk)
     /// für Builds (Pre-Renewal & Renewal).

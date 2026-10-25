@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Developer {
     /// <summary>
     /// TASK-2904: InputLatencyVisualizer — Echtzeit-Messung der Input-Latenz.
     ///

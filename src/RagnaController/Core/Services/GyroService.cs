@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using static RagnaController.Core.NativeMethods;
-using RagnaController.Core;
+using RagnaController.Core.Hardware;
 
 namespace RagnaController.Core
 {

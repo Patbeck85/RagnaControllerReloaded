@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Media;
-using RagnaController.Core;
 
 namespace RagnaController.Core
 {

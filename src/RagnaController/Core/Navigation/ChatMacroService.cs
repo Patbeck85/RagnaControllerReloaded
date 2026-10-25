@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using RagnaController.Models;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Navigation {
     /// <summary>
     /// TASK-2504: ChatMacroService — Schnelltexte per D-Pad in Chat einfügen (Emotes, Befehle).
     ///

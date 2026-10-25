@@ -1,7 +1,6 @@
 using System;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Hardware {
     /// <summary>
     /// TASK-2403: TriggerDeadzoneCurve — Nicht-lineare Kurven für Analog-Trigger.
     ///

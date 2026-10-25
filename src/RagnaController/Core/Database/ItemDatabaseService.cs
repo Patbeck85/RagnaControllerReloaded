@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Database {
     /// <summary>
     /// TASK-3003: ItemDatabaseService — Item-Suche mit Filtern (Type, Slot, Weight, Price, Drop-Monster).
     ///

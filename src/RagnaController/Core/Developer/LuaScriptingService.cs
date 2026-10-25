@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using RagnaController.Models;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Developer {
     /// <summary>
     /// TASK-2901: LuaScriptingService — Skripting-API für EngineOrchestrator-Events.
     ///

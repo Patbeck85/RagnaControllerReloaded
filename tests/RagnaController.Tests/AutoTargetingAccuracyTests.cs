@@ -628,10 +628,10 @@ namespace RagnaController.Tests
 
         [Fact]
         public void SkillInterruptMs_PausesAttack_NotLock()
-        {
-            // SkillInterruptMs pauses attack timer, not target lock
-            using var ctx = new TestContext();
-            var e = ctx.Engine;
+                {
+                    // SkillInterruptMs pauses attack timer, not target lock
+                    using var ctx = new TestContext();
+                    var e = ctx.Engine;
             e.AttackIntervalMs = 100;
             e.SkillInterruptMs = 500;
 

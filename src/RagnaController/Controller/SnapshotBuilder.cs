@@ -3,6 +3,7 @@ using System.Windows.Media;
 using RagnaController.Core;
 using RagnaController.Models;
 using RagnaController.Profiles;
+using RagnaController.Core.Hardware;
 
 namespace RagnaController.Controller
 {

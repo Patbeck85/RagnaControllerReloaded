@@ -1,8 +1,7 @@
 using System;
 using System.Diagnostics;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Shared {
     /// <summary>
     /// TASK-TECH: Shared Stick Drift Utilities.
     /// 

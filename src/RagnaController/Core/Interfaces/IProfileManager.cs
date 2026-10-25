@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using RagnaController.Core;
 using RagnaController.Models;
 using RagnaController.Profiles;
 

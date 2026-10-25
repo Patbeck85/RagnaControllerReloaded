@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Hardware {
     /// <summary>
     /// TASK-2406: SteamInputIntegration — Abstraktion über die Steam Input API.
     ///

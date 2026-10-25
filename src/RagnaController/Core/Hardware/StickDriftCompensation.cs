@@ -1,7 +1,6 @@
 using System;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Hardware {
     /// <summary>
     /// TASK-2402: StickDriftCompensation — Automatische Erkennung und Kompensation von Analog-Stick-Drift.
     ///

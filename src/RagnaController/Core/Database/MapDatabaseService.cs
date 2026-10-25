@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace RagnaController.Core
-{
+namespace RagnaController.Core.Database {
     /// <summary>
     /// TASK-3002: MapDatabaseService — Warp-Punkte, Kafra, Dungeon-Eingänge, Levelling-Spots.
     ///
