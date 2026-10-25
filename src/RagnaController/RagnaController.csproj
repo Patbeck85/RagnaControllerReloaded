@@ -120,6 +120,10 @@
 <Compile Include="Core\Services\UpdateService.cs" />
 <Compile Include="Core\AdvancedInputService.cs" />
     <Compile Include="Core\Services\ChordInputService.cs" />
+    <Compile Include="Core\Services\StreamDeckService.cs" />
+    <Compile Include="Core\Services\ObsWebSocketService.cs" />
+    <Compile Include="Core\Services\ViewerInteractionService.cs" />
+    <Compile Include="Core\Services\ReplaySystem.cs" />
 <Compile Include="Core\Services\MonsterDatabaseService.cs" />
 <Compile Include="Core\Services\MonsterDataLoader.cs" />
         <Compile Include="Core\Services\BackgroundTickProvider.cs" />
