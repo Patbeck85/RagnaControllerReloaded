@@ -5,6 +5,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:RagnaController"
+             xmlns:converters="clr-namespace:RagnaController.Presentation.Converters"
              ShutdownMode="OnLastWindowClose">
     <Application.Resources>
         <ResourceDictionary>
@@ -20,9 +21,9 @@
                 <ResourceDictionary Source="Resources/UI2026DesignSystem.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-            <local:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
-            <local:StringToBrushConverter x:Key="StringToBrushConverter"/>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <converters:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
+            <converters:StringToBrushConverter x:Key="StringToBrushConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

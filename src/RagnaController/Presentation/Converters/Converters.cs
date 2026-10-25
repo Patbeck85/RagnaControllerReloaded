@@ -5,7 +5,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace RagnaController
+namespace RagnaController.Presentation.Converters
 {
     /// <summary>
     /// Application class.

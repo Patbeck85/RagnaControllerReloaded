@@ -10,6 +10,7 @@
         xmlns:local="clr-namespace:RagnaController"
         xmlns:views="clr-namespace:RagnaController.Views.Windows"
         xmlns:ctrl="clr-namespace:RagnaController.Controls"
+        xmlns:converters="clr-namespace:RagnaController.Presentation.Converters"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:core="clr-namespace:RagnaController.Core"
         mc:Ignorable="d"
@@ -19,7 +20,7 @@
         Loaded="Window_Loaded" Closing="Window_Closing" StateChanged="Window_StateChanged"
         MouseLeftButtonDown="Window_MouseLeftButtonDown">
     <Window.Resources>
-        <local:ClassToIconConverter x:Key="ClassToIconConverter"/>
+        <converters:ClassToIconConverter x:Key="ClassToIconConverter"/>
         <DataTemplate x:Key="ClientTabTemplate" DataType="{x:Type views:ClientTabItem}">
             <StackPanel Orientation="Horizontal" Margin="4,0">
                 <Ellipse Width="8" Height="8" Fill="{Binding StatusColor}" VerticalAlignment="Center" Margin="0,0,8,0" Effect="{StaticResource GoldGlow}"/>

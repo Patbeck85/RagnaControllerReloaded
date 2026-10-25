@@ -6,7 +6,7 @@ using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Media.Effects;
 
-namespace RagnaController
+namespace RagnaController.Views.Controls
 {
     /// <summary>
     /// Application class.

@@ -103,8 +103,8 @@
     <Compile Include="Controller\DualSenseHardwareService.cs" />
     <Compile Include="Controller\SnapshotBuilder.cs" />
     <Compile Include="Controller\XInputFallbackService.cs" />
-    <Compile Include="ControllerPreview.cs" />
-    <Compile Include="Converters.cs" />
+    <Compile Include="Views\Controls\ControllerPreview.cs" />
+        <Compile Include="Presentation\Converters\Converters.cs" />
     <Compile Include="Core\Services\ActionLogService.cs" />
     <Compile Include="Core\Services\ProfileManagement\ProfileService.cs" />
         <Compile Include="Presentation\Services\ToastService.cs" />
