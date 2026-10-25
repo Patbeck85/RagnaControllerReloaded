@@ -1,6 +1,6 @@
-# RagnaController v2.3.0 — Autonomous Multi-Agent Development
+# RagnaController v2.6.0 — Autonomous Multi-Agent Development
 
-**Version:** 2.3.0 | **Release:** 2026-10-20 | **Build:** 0 errors, 0 warnings | **Tests:** 726/726 passing
+**Version:** 2.6.0 | **Release:** 2026-10-24 | **Build:** 0 errors, 0 warnings | **Tests:** 1076/1076 passing
 
 ---
 

@@ -9,6 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.6.0] - 2026-10-24
 
+### 🔧 Code Deduplication & Architecture Improvements
+- **HidDeviceUtils.cs** — Zentrale HID-Geräte-Enumeration für DualSense-Controller (beseitigt Duplikate in GyroService & DualSenseHardwareService)
+- **StickDriftUtils.cs** — Zentrale Stick-Drift-Erkennung & -Kompensation (beseitigt Duplikate in HybridEngine, EngineOrchestrator, SettingsWindow)
+- **BaseWindow.cs** — Basis-Klasse für Window-DragMove-Pattern (beseitigt Duplikate in 18 Window Code-Behind Dateien)
+
+### 📦 Refactoring
+- GyroService: Verwendet nun HidDeviceUtils statt eigener HID-Enumeration
+- DualSenseHardwareService: Verwendet nun HidDeviceUtils statt eigener HID-Enumeration
+- Entfernt: Unnötige P/Invoke-Signaturen aus GyroService & DualSenseHardwareService
+- Entfernt: DualSense VID/PID Konstanten aus DualSenseHardwareService (nun in HidDeviceUtils)
+- Fix: Doppelte GyroCalibrationWindow.xaml.cs Einträge im csproj
+
+### ✨ Features
+- Alle Epics 1-28 COMPLETE (1076 Tests passing)
+- Profile Collections, Stick Drift Compensation, Rumble Editor, Motion Aim Assist, Steam Input Integration
+- Shop Navigation, Storage Organization, Skill Tree Navigation, Chat Macros
+- Skill Recommendation Engine, Auto Build Optimizer, Monster/Item/Skill/Map Databases
+- Party/Guild Tracking, Profile Rating/Reviews, Accessibility (Color Blind, Reduced Motion, Gamepad Navigation)
+- Lua Scripting, Input Latency Visualizer, Automated Test Recorder, Replay System, Debug Overlay
+- Streaming Features (Stream Deck, OBS WebSocket, Viewer Interaction, Donation Alerts, Streamer Mode)
+- Platform Support (Auto Update, Portable Mode, Linux/Wine, Steam Deck, CI/CD)
+
+### 🐛 Bug Fixes
+- Race Condition Fix in GyroService.Dispose (Thread-sicheres Handle-Schließen)
+- XAML Parser-Fehler in RumbleEditorWindow & ProfileCollectionsWindow behoben
+- Duplicate VirtualKey Keys in ClassDetector.cs behoben
+
+### 📋 Documentation
+- Version auf 2.6.0 aktualisiert (csproj, README.md)
+- CHANGELOG.md aktualisiert mit allen Änderungen seit v2.3.0
+
+## [2.5.1] - 2026-10-24
+
 ### 📋 Alle abgeschlossenen Tasks aus KANBAN.md überführt
 
 #### Epic 1 — Multi-Client Routing

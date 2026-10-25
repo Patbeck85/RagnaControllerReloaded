@@ -1,48 +1,17 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using static RagnaController.Core.NativeMethods;
+using RagnaController.Core;
 
 namespace RagnaController.Core
 {
     /// <summary>
     /// Reads the DualSense gyroscope via HID input reports and exposes
     /// filtered angular velocity for use in groand-spell aiming.
-    ///
-    /// Architecture:
-    ///   A dedicated backgroand thread blocks on ReadFile(handle, report, 64).
-    ///   When a new report arrives (≈125 Hz), the gyro fields are extracted
-    ///   and low-pass filtered to remove sensor drift and micro-vibration.
-    ///   The engine reads <see cref="PitchDps"/> / <see cref="YawDps"/> each
-    ///   tick — no locking needed because they are written with Interlocked.
-    ///
-    /// DualSense USB Input Report 0x01 layout (verified against DualSenseY):
-    ///   [0]      Report ID = 0x01
-    ///   [1]      Left stick X
-    ///   [2]      Left stick Y
-    ///   [3]      Right stick X
-    ///   [4]      Right stick Y
-    ///   [5]      L2 analog
-    ///   [6]      R2 analog
-    ///   [8]      Buttons 1 (Square/Cross/Circle/Triangle)
-    ///   [9]      Buttons 2 (L1/R1/L2/R2/Create/Options/L3/R3)
-    ///   [10]     Buttons 3 (PS/Touchpad/Mute)
-    ///   [12]     D-pad nibble
-    ///   [13–14]  Gyro Pitch   (int16 LE, hardware units)
-    ///   [15–16]  Gyro Yaw     (int16 LE, hardware units)
-    ///   [17–18]  Gyro Roll    (int16 LE, hardware units)
-    ///   [19–24]  Accelerometer XYZ (int16 × 3)
-    ///
-    /// Scale calibration:
-    ///   Sony's factory calibration data is embedded in the USB descriptor but
-    ///   not trivially accessible without a full HID descriptor parser.  In
-    ///   practice the raw value ÷ <see cref="GyroScale"/> gives deg/s, and
-    ///   the default (8.696f ≈ 1/0.115 deg LSB) matches the majority of units.
-    ///   If aiming feels too fast or slow, adjust <see cref="Sensitivity"/>.
-    /// </summary>
-    /// <summary>
-    /// Background service for game functionality.
     /// </summary>
     public sealed class GyroService : IDisposable
     {
@@ -54,15 +23,11 @@ namespace RagnaController.Core
 
         /// <summary>
         /// Raw-to-deg/s divisor for the DualSense gyro.
-        /// Default 8.696 ≈ the value implied by Sony's spec sheet (0.115 deg/LSB).
-        /// Adjust if your unit reads unusually fast or slow.
         /// </summary>
         public float GyroScale { get; set; } = 8.696f;
 
         /// <summary>
         /// Final sensitivity multiplier applied after scaling.
-        /// 1.0 = one degree of rotation ≈ one degree of cursor arc at default scale.
-        /// Increase for faster response on small-screen handhelds.
         /// </summary>
         public float Sensitivity
         {
@@ -253,71 +218,30 @@ namespace RagnaController.Core
         }
 
         // ── Device enumeration ────────────────────────────────────────────
-        private void TryOpen()
+                private void TryOpen()
                 {
                     try
                     {
-                        HidD_GetHidGuid(out Guid hidGuid);
-                        IntPtr devInfo = SetupDiGetClassDevs(
-                            ref hidGuid, IntPtr.Zero, IntPtr.Zero,
-                            DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
-
-                        if (devInfo == IntPtr.Zero || devInfo == new IntPtr(-1)) return;
-
-                        try
+                        var devices = HidDeviceUtils.EnumerateDualSenseDevices();
+                        foreach (var path in devices)
                         {
-                            var ifaceData = new SP_DEVICE_INTERFACE_DATA();
-                            ifaceData.cbSize = (uint)Marshal.SizeOf<SP_DEVICE_INTERFACE_DATA>();
+                            // Open with READ+WRITE+SHARE so lightbar service can coexist
+                            IntPtr h = CreateFile(
+                                path,
+                                GENERIC_READ | GENERIC_WRITE,
+                                FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                IntPtr.Zero,
+                                OPEN_EXISTING,
+                                FILE_ATTRIBUTE_NORMAL,
+                                IntPtr.Zero);
 
-                            for (uint i = 0; ; i++)
+                            if (h != IntPtr.Zero && h != new IntPtr(-1))
                             {
-                                if (!SetupDiEnumDeviceInterfaces(
-                                        devInfo, IntPtr.Zero, ref hidGuid, i, ref ifaceData))
-                                    break;
-
-                                SetupDiGetDeviceInterfaceDetail(
-                                    devInfo, ref ifaceData, IntPtr.Zero, 0, out uint needed, IntPtr.Zero);
-
-                                if (needed == 0) continue;
-
-                                IntPtr detailBuf = Marshal.AllocHGlobal((int)needed);
-                                try
-                                {
-                                    Marshal.WriteInt32(detailBuf, IntPtr.Size == 8 ? 8 : 6);
-                                    if (!SetupDiGetDeviceInterfaceDetail(
-                                            devInfo, ref ifaceData, detailBuf, needed, out _, IntPtr.Zero))
-                                        continue;
-
-                                    string path = Marshal.PtrToStringAuto(detailBuf + 4) ?? "";
-
-                                    bool isDualSense =
-                                        path.IndexOf(DualSenseVid,  StringComparison.OrdinalIgnoreCase) >= 0 &&
-                                       (path.IndexOf(DualSensePid1, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                                        path.IndexOf(DualSensePid2, StringComparison.OrdinalIgnoreCase) >= 0);
-
-                                    if (!isDualSense) continue;
-
-                                    // Open with READ+WRITE+SHARE so lightbar service can coexist
-                                    IntPtr h = CreateFile(
-                                        path,
-                                        GENERIC_READ | GENERIC_WRITE,
-                                        FILE_SHARE_READ | FILE_SHARE_WRITE,
-                                        IntPtr.Zero,
-                                        OPEN_EXISTING,
-                                        FILE_ATTRIBUTE_NORMAL,
-                                        IntPtr.Zero);
-
-                                    if (h != IntPtr.Zero && h != new IntPtr(-1))
-                                    {
-                                        _handle     = h;
-                                        IsAvailable = true;
-                                        return;
-                                    }
-                                }
-                                finally { Marshal.FreeHGlobal(detailBuf); }
+                                _handle = h;
+                                IsAvailable = true;
+                                return;
                             }
                         }
-                        finally { SetupDiDestroyDeviceInfoList(devInfo); }
                     }
                     catch (Exception ex)
                     {

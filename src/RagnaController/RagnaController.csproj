@@ -13,7 +13,7 @@
     <RootNamespace>RagnaController</RootNamespace>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.5.1</Version>
+    <Version>2.6.0</Version>
     <Authors>RagnaController Contributors</Authors>
     <Description>Hybrid Action Controller Layer for Ragnarok Online — Smart Cursor Edition</Description>
     
@@ -295,6 +295,8 @@
     <Compile Include="Profiles\ProfileCollection.cs" />
         <Compile Include="Profiles\ProfileManager.cs" />
         <Compile Include="Core\StickDriftCompensation.cs" />
+            <Compile Include="Core\StickDriftUtils.cs" />
+            <Compile Include="Core\HidDeviceUtils.cs" />
     <Compile Include="Core\TriggerDeadzoneCurve.cs" />
     <Compile Include="Core\MotionAimAssist.cs" />
     <Compile Include="Core\ShopNavigationService.cs" />
@@ -316,10 +318,9 @@
     <Compile Include="Views\Dialogs\ProfileWizardWindow.xaml.cs" />
         <Compile Include="Views\Dialogs\ProfileValidationWindow.xaml.cs" />
         <Compile Include="Views\Dialogs\ProfileCollectionsWindow.xaml.cs" />
-        <Compile Include="Views\Dialogs\SelectProfilesDialog.xaml.cs" />
-    <Compile Include="Views\Dialogs\ProfileDiffWindow.xaml.cs" />
-    <Compile Include="Views\Dialogs\GyroCalibrationWindow.xaml.cs" />
-    <Compile Include="Views\Dialogs\WizardWindow.xaml.cs" />
+                <Compile Include="Views\Dialogs\SelectProfilesDialog.xaml.cs" />
+            <Compile Include="Views\Dialogs\ProfileDiffWindow.xaml.cs" />
+            <Compile Include="Views\Dialogs\WizardWindow.xaml.cs" />
     <Compile Include="Views\Editors\RadialMenuWindow.xaml.cs" />
     <Compile Include="Views\Editors\RadialSetupWindow.xaml.cs" />
     <Compile Include="Views\Windows\SettingsWindow.xaml.cs" />

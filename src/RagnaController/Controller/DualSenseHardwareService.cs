@@ -14,13 +14,9 @@ namespace RagnaController.Controller
     /// </summary>
     public sealed class DualSenseHardwareService : IDisposable
     {
-        private const string DualSenseVid  = "VID_054C";
-        private const string DualSensePid1 = "PID_0CE6";
-        private const string DualSensePid2 = "PID_0DF2";
-
         private const int  REPORT_SIZE   = 64;
         private const byte REPORT_ID     = 0x02;
-        
+       
         // Flags: 0x40 = Lightbar, 0x04 = RightTrigger, 0x08 = LeftTrigger
         private const byte VALID_FLAGS   = 0x40 | 0x04 | 0x08; 
         
@@ -194,85 +190,34 @@ namespace RagnaController.Controller
         }
 
         private static IntPtr OpenDualSenseHandle()
-        {
-            // 1. Get the HID device GUID from the system
-            HidD_GetHidGuid(out Guid hidGuid);
-
-            // 2. Enumerate all present HID devices
-            IntPtr devInfo = SetupDiGetClassDevs(
-                ref hidGuid, IntPtr.Zero, IntPtr.Zero,
-                DIGCF_PRESENT | DIGCF_DEVICEINTERFACE);
-
-            if (devInfo == IntPtr.Zero || devInfo == new IntPtr(-1))
-                return IntPtr.Zero;
-
-            try
-            {
-                var ifaceData = new SP_DEVICE_INTERFACE_DATA();
-                ifaceData.cbSize = (uint)Marshal.SizeOf<SP_DEVICE_INTERFACE_DATA>();
-
-                for (uint i = 0; ; i++)
                 {
-                    // Enumerate each HID interface
-                    if (!SetupDiEnumDeviceInterfaces(
-                            devInfo, IntPtr.Zero, ref hidGuid, i, ref ifaceData))
-                        break; // ERROR_NO_MORE_ITEMS
-
-                    // Get required buffer size for the detail struct
-                    SetupDiGetDeviceInterfaceDetail(
-                        devInfo, ref ifaceData, IntPtr.Zero, 0, out uint needed, IntPtr.Zero);
-
-                    if (needed == 0) continue;
-
-                    // Allocate unmanaged buffer and read device path
-                    IntPtr detailBuf = Marshal.AllocHGlobal((int)needed);
                     try
                     {
-                        // First field of SP_DEVICE_INTERFACE_DETAIL_DATA is cbSize (DWORD)
-                        Marshal.WriteInt32(detailBuf, IntPtr.Size == 8 ? 8 : 6);
+                        var devices = HidDeviceUtils.EnumerateDualSenseDevices();
+                        foreach (var path in devices)
+                        {
+                            Debug.WriteLine($"[DualSense] Found device: {path}");
 
-                        if (!SetupDiGetDeviceInterfaceDetail(
-                                devInfo, ref ifaceData, detailBuf, needed, out _, IntPtr.Zero))
-                            continue;
+                            IntPtr handle = CreateFile(
+                                path,
+                                GENERIC_READ | GENERIC_WRITE,
+                                FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                IntPtr.Zero,
+                                OPEN_EXISTING,
+                                FILE_ATTRIBUTE_NORMAL,
+                                IntPtr.Zero);
 
-                        // Device path starts at offset 4 (after cbSize DWORD)
-                        string path = Marshal.PtrToStringAuto(detailBuf + 4) ?? "";
-
-                        // Check for DualSense VID/PID in path
-                        bool isDualSense =
-                            path.IndexOf(DualSenseVid,  StringComparison.OrdinalIgnoreCase) >= 0 &&
-                           (path.IndexOf(DualSensePid1, StringComparison.OrdinalIgnoreCase) >= 0 ||
-                            path.IndexOf(DualSensePid2, StringComparison.OrdinalIgnoreCase) >= 0);
-
-                        if (!isDualSense) continue;
-
-                        Debug.WriteLine($"[DualSense] Found device: {path}");
-
-                        IntPtr handle = CreateFile(
-                            path,
-                            GENERIC_READ | GENERIC_WRITE,
-                            FILE_SHARE_READ | FILE_SHARE_WRITE,
-                            IntPtr.Zero,
-                            OPEN_EXISTING,
-                            FILE_ATTRIBUTE_NORMAL,
-                            IntPtr.Zero);
-
-                        if (handle != IntPtr.Zero && handle != new IntPtr(-1))
-                            return handle; // success — caller owns handle
+                            if (handle != IntPtr.Zero && handle != new IntPtr(-1))
+                                return handle; // success — caller owns handle
+                        }
                     }
-                    finally
+                    catch (Exception ex)
                     {
-                        Marshal.FreeHGlobal(detailBuf);
+                        Debug.WriteLine($"[DualSense] Device enumeration failed: {ex.Message}");
                     }
-                }
-            }
-            finally
-            {
-                SetupDiDestroyDeviceInfoList(devInfo);
-            }
 
-            return IntPtr.Zero;
-        }
+                    return IntPtr.Zero;
+                }
 
         public void Dispose()
         {
