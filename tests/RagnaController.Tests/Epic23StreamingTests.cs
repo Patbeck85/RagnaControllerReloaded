@@ -250,7 +250,7 @@ namespace RagnaController.Tests
         [Fact]
         public void ReplaySystem_GetSavedSessions_ShouldReturnFiles()
         {
-            var dir = Path.Combine(Path.GetTempPath(), "RagnaController_ReplayTests6");
+            var dir = Path.Combine(Path.GetTempPath(), $"RagnaController_ReplayTests6_{Guid.NewGuid():N}");
             Directory.CreateDirectory(dir);
             var system = new ReplaySystem(dir);
 
@@ -263,6 +263,8 @@ namespace RagnaController.Tests
 
             var sessions = system.GetSavedSessions();
             Assert.Equal(2, sessions.Count);
+
+            Directory.Delete(dir, true);
         }
 
         [Fact]

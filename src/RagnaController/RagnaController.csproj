@@ -120,7 +120,12 @@
 <Compile Include="Core\Services\UpdateService.cs" />
 <Compile Include="Core\AdvancedInputService.cs" />
     <Compile Include="Core\Services\ChordInputService.cs" />
-    <Compile Include="Core\Services\StreamDeckService.cs" />
+    <Compile Include="Core\Services\CICDService.cs" />
+        <Compile Include="Core\Services\AutoUpdateService.cs" />
+        <Compile Include="Core\Services\PortableModeService.cs" />
+        <Compile Include="Core\Services\LinuxSupportService.cs" />
+        <Compile Include="Core\Services\SteamDeckService.cs" />
+        <Compile Include="Core\Services\StreamDeckService.cs" />
     <Compile Include="Core\Services\ObsWebSocketService.cs" />
     <Compile Include="Core\Services\ViewerInteractionService.cs" />
     <Compile Include="Core\Services\ReplaySystem.cs" />
