@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics.Tracing;
+using RagnaController.Core;
+using RagnaController.Profiles;
 
 namespace RagnaController.Core
 {

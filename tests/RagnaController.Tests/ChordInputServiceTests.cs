@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using Xunit;
 using RagnaController.Core.Services;
+using RagnaController.Core.Services.Input;
 using RagnaController.Models;
 
 namespace RagnaController.Tests

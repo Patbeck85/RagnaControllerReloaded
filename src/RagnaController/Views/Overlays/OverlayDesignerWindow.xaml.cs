@@ -6,8 +6,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using RagnaController.Core.Services;
+using RagnaController.Core;
 using RagnaController.Models;
+using RagnaController.Profiles;
 
 namespace RagnaController.Views.Overlays
 {

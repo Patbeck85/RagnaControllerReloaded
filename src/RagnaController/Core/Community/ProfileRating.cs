@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using RagnaController.Profiles;
 
 namespace RagnaController.Core.Community {
     /// <summary>

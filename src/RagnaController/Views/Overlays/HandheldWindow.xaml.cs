@@ -12,6 +12,8 @@ using RagnaController.Views.Windows;
 using RagnaController.Views.Dialogs;
 using RagnaController.Views.Editors;
 
+using RagnaController.Core.Services.FirstRun;
+
 namespace RagnaController.Views.Overlays
 {
     public partial class HandheldWindow : Window

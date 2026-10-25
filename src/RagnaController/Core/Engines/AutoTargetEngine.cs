@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using RagnaController.Models;
+using RagnaController.Core;
 using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Core

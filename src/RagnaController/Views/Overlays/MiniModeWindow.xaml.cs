@@ -9,6 +9,7 @@ using System.Windows.Media.Effects;
 using RagnaController.Controller;
 using RagnaController.Core;
 using RagnaController.Profiles;
+using RagnaController.Views.Windows;
 
 namespace RagnaController.Views.Overlays
 {

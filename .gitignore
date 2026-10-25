@@ -75,7 +75,6 @@ BenchmarkDotNet.Artifacts/
 *.bak
 roadmap.md
 SESSION_STATE.md
-build.bat
 publish_log.txt
 START.bat
 Sync-Localization.ps1

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Media;
 using Xunit;
 using RagnaController.Core.Services;
+using RagnaController.Core.Services.Monitoring;
 using RagnaController.Models;
 using RagnaController.Views.Overlays;
 

@@ -1,11 +1,18 @@
 using System;
 using System.IO;
 using System.Diagnostics;
-using global::RagnaController.Core;
-using global::RagnaController.Models;
-using global::RagnaController.Profiles;
-using global::RagnaController.Controller;
-using global::RagnaController.Core.Services;
+
+
+
+
+
+
+using RagnaController.Controller;
+
+using RagnaController.Models;
+using RagnaController.Profiles;
+using RagnaController.Core;
+using RagnaController.Coordinators;
 
 namespace RagnaController.Coordinators
 {

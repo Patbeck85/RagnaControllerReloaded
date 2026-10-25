@@ -16,6 +16,7 @@ using RagnaController.Views.Dialogs;
 
 namespace RagnaController.Views.Windows
 {
+    using RagnaController.Core.Services.UI;
     /// <summary>
 /// SettingsWindow — General application settings window.
 /// Configures sound, rumble, window mode, language, deadzone, and input preferences.
@@ -247,7 +248,7 @@ public partial class SettingsWindow : Window
         private void ChkStartWithWindows_Click(object sender, RoutedEventArgs e)
         {
             _s.StartWithWindows = ChkStartWithWindows.IsChecked == true;
-            Core.AutoStartManager.SetAutoStart(_s.StartWithWindows);
+            RagnaController.Core.Services.System.AutoStartManager.SetAutoStart(_s.StartWithWindows);
             _s.Save();
         }
 
@@ -450,7 +451,7 @@ public partial class SettingsWindow : Window
             _s.MinimizeToTray = ChkMinimizeToTray.IsChecked == true;
             bool autoStart = ChkStartWithWindows.IsChecked == true;
             _s.StartWithWindows = autoStart;
-            Core.AutoStartManager.SetAutoStart(autoStart);
+            RagnaController.Core.Services.System.AutoStartManager.SetAutoStart(autoStart);
 
             _s.FocusLockEnabled = ChkFocusLock.IsChecked == true;
 

@@ -1,6 +1,7 @@
 using System.Windows;
 using System.Windows.Media;
 using RagnaController.Core.Services;
+using RagnaController.Core.Services.UI;
 using RagnaController.Models;
 using Xunit;
 

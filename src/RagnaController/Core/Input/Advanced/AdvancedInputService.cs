@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using RagnaController.Core.Input;
 
-namespace RagnaController.Core.Input.Advanced {
+namespace RagnaController.Core.Input {
     /// <summary>
     /// TASK-3101-3105: AdvancedInputService — Erweiterte Eingabefunktionen.
     ///

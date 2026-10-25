@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using RagnaController.Core;
 using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Core

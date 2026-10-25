@@ -12,6 +12,7 @@ using RagnaController.Profiles;
 
 namespace RagnaController.Views.Dialogs
 {
+    using RagnaController.Core.Services.FirstRun;
     /// <summary>
     /// TASK-1631: WizardWindow — Geführter First-Run Wizard.
     /// Führt den neuen Nutzer durch 4 Schritte:

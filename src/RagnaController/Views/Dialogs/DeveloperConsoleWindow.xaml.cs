@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using RagnaController.Core;
+using RagnaController.Views.Windows;
 
 namespace RagnaController.Views.Dialogs
 {

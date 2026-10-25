@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using RagnaController.Core;
 
 namespace RagnaController.Core
 {

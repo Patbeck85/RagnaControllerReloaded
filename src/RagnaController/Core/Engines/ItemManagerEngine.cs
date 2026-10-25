@@ -1,5 +1,6 @@
 using System;
 using RagnaController.Models;
+using RagnaController.Core;
 
 namespace RagnaController.Core
 {

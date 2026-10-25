@@ -113,14 +113,15 @@ Loads templates from `DefaultProfiles/*.json`, converts `Profile` → `ProfileTe
 ```
 PROJECT_ROOT/
 ├── .workspace_temp/     (temp_builds/, scratchpad/, benchmarks/, logs/)
+├── scripts/             (Python/PowerShell helper scripts)
 ├── src/RagnaController/
 │   ├── Views/           (Windows/, Dialogs/, Overlays/, Editors/, Controls/)
 │   ├── Controller/      (SDL2, XInput, Raw HID)
 │   ├── Core/            (Engines/, Input/, Windows/, Services/, Interfaces/, Utilities/)
 │   ├── Models/          (ParsedInput, VirtualKey, Settings, ...)
 │   ├── Profiles/        (Profile, ProfileManager, ProfileTemplate, ...)
-│   ├── Locales/         (en.json, de.json, +38 more)
-│   ├── Assets/          (Classes/, Emotes/)
+│   ├── Locales/         (en.json, de.json, +38 more — i18n JSON files)
+│   ├── Assets/          (Classes/, Emotes/, icon.ico, startup_voice.mp3)
 │   ├── DefaultProfiles/ (58 RO class templates)
 │   └── RagnaController.csproj
 ├── tests/RagnaController.Tests/

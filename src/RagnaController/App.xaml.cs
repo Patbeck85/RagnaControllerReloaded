@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Animation;
 using RagnaController.Core;
-using RagnaController.Core.Services;
+using RagnaController.Core.Services.FirstRun;
+using RagnaController.Core.Services.Update;
 using RagnaController.Profiles;
 using RagnaController.Core.Services.ProfileManagement;
 using RagnaController.Presentation.Services;
@@ -17,23 +18,13 @@ using RagnaController.Views.Dialogs;
 
 namespace RagnaController
 {
-    /// <summary>
-    /// App.xaml.cs v2.0.0 - Main application entry point
-    /// </summary>
     public partial class App : Application
     {
         private static readonly string CrashLog = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory, "crash.log");
 
-        /// <summary>
-        /// TASK-1701: Statischer ToastService-Zugriff für alle Klassen.
-        /// Wird in MainWindow.xaml.cs initialisiert.
-        /// </summary>
         public static ToastService? ToastService { get; private set; }
 
-        /// <summary>
-        /// TASK-1701: Initialisiert den statischen ToastService.
-        /// </summary>
         public static void InitializeToastService(ToastService toastService)
         {
             ToastService = toastService;
@@ -41,21 +32,20 @@ namespace RagnaController
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            // ── Register all Exception-Handlers as early as possible ──────
             AppDomain.CurrentDomain.UnhandledException += (s, ex) =>
             {
                 LogFatal("UnhandledException", ex.ExceptionObject?.ToString() ?? "unknown");
                 var settings = Models.Settings.Load();
                 if (settings.AutoRestartOnCrash)
                 {
-                    settings.Save(); // Persist last known profile/settings
-                    MessageBox.Show($"⚠ Fatal error — App will auto-restart.\n\nDetails: {CrashLog}",
-                        "RagnaController – Auto-Restart", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    settings.Save();
+                    MessageBox.Show("Fatal error - App will auto-restart.\n\nDetails: " + CrashLog,
+                        "RagnaController - Auto-Restart", MessageBoxButton.OK, MessageBoxImage.Warning);
                     RestartApp();
                     return;
                 }
-                MessageBox.Show($"{ex.ExceptionObject?.GetType().Name}\n\nDetails: {CrashLog}",
-                    "RagnaController – Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.ExceptionObject?.GetType().Name + "\n\nDetails: " + CrashLog,
+                    "RagnaController - Error", MessageBoxButton.OK, MessageBoxImage.Error);
             };
 
             DispatcherUnhandledException += (s, ex) =>
@@ -65,13 +55,13 @@ namespace RagnaController
                 if (settings.AutoRestartOnCrash)
                 {
                     settings.Save();
-                    MessageBox.Show($"⚠ UI error — App will auto-restart.\n\nDetails: {CrashLog}",
-                        "RagnaController – Auto-Restart", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("UI error - App will auto-restart.\n\nDetails: " + CrashLog,
+                        "RagnaController - Auto-Restart", MessageBoxButton.OK, MessageBoxImage.Warning);
                     RestartApp();
                     return;
                 }
-                MessageBox.Show($"{ex.Exception?.Message}\n\nDetails: {CrashLog}",
-                    "RagnaController – Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Exception?.Message + "\n\nDetails: " + CrashLog,
+                    "RagnaController - Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 ex.Handled = true;
             };
 
@@ -81,10 +71,8 @@ namespace RagnaController
                 ev.SetObserved();
             };
 
-            // Nuclear exit handler — if WPF gets stuck with no windows, kill the process
             Application.Current.Exit += (s, ev) =>
             {
-                // TECH-018: Singleton HttpClient beim App-Shutdown disposten (Socket-Cleanup)
                 CommunityBrowserWindow.DisposeRegistryClient();
                 Environment.Exit(0);
             };
@@ -97,18 +85,13 @@ namespace RagnaController
         {
             try
             {
-                // Settings laden (early - needed for SkipSplash & language)
                 var settings = Models.Settings.Load();
 
-                // ── TASK-1631: First-Run Wizard ─────────────────────────────
-                // Wenn noch kein RO-Client-Pfad konfiguriert ist, zeige den Wizard
-                // bevor Splash und Hauptfenster geladen werden.
                 var firstRunService = new FirstRunService(settings);
                 ProfileManager? preCreatedProfileManager = null;
 
                 if (firstRunService.IsFirstRun)
                 {
-                    // Leichtgewichtigen ProfileManager für den Wizard erstellen
                     preCreatedProfileManager = new ProfileManager();
 
                     var wizard = new WizardWindow(firstRunService, preCreatedProfileManager);
@@ -116,187 +99,169 @@ namespace RagnaController
 
                     if (wizardResult == true && !string.IsNullOrWhiteSpace(wizard.SelectedRoExePath))
                     {
-                        // RO-Pfad aus dem Wizard speichern
                         firstRunService.CompleteFirstRun(wizard.SelectedRoExePath);
                     }
                     else if (wizardResult != true)
                     {
-                        // Nutzer hat den Wizard abgebrochen — App beenden
                         Shutdown();
                         return;
                     }
                 }
 
-                // NEW: Respect SkipSplash preference - skip splash entirely if enabled
                 bool shouldShowSplash = !settings.SkipSplash;
 
-                // i18n: Sprache initialisieren
                 LocalizationManager.Instance.CurrentLanguage = settings.AppLanguage;
 
                 SplashWindow? splash = null;
                 if (shouldShowSplash)
                 {
-                    // Splash anzeigen
                     splash = new SplashWindow();
                     MainWindow = splash;
                     splash.Show();
 
-                    // DI-Warmup + Profil-Laden PARALLEL zur Splash-Animation
                     var warmupTask = Task.Run(() =>
                     {
                         _ = Models.Settings.Load();
                     });
 
-                    // Splash dauert min. 1s, then Voice, then max. weitere 2.5s
-                    // — skippable on click immediately
                     var skipToken = splash.SkipCts.Token;
                     await Task.Delay(1000).ConfigureAwait(true);
                     splash.PlayVoice();
                     try { await Task.WhenAll(warmupTask, Task.Delay(2500, skipToken)); }
                     catch (TaskCanceledException)
                     {
-                        // Click = skip splash — expected, no error
                         System.Diagnostics.Debug.WriteLine("[App] Splash skipped via click");
                     }
                 }
                 else
                 {
-                    // Skip splash entirely - still do warmup
                     var warmupTask = Task.Run(() => { _ = Models.Settings.Load(); });
-                                    await warmupTask.ConfigureAwait(true);
-                                }
+                    await warmupTask.ConfigureAwait(true);
+                }
 
-                                // Handheld-Erkennung im Hintergrand
-                                bool isHandheld = await Task.Run(() => Core.HandheldDetector.IsHandheldDevice())
-                                                      || settings.ForceHandheldMode;
+                bool isHandheld = await Task.Run(() => Core.HandheldDetector.IsHandheldDevice())
+                                      || settings.ForceHandheldMode;
 
-                                // ── Multi-Client Engine + Manager im Hintergrand erstellen ────────────────
-                                // Create shared services for multi-client architecture
-                                MultiClientEngineOrchestrator? multiEngine = null;
-                                ProfileManager? manager = null;
-                                try
-                                {
-                                    await Task.Run(() =>
-                                    {
-                    #pragma warning disable CS8625
-                                        var controllerService = new ControllerService();
-                                        var profileManager = preCreatedProfileManager ?? new ProfileManager();
-                                        var messenger = new Messenger();
-                                        var logger = new AdvancedLogger(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RagnaController", "logs", "engine.log"));
-                                        var settingsObj = Models.Settings.Load();
+                MultiClientEngineOrchestrator? multiEngine = null;
+                ProfileManager? manager = null;
+                try
+                {
+                    await Task.Run(() =>
+                    {
+#pragma warning disable CS8625
+                        var controllerService = new ControllerService();
+                        var profileManager = preCreatedProfileManager ?? new ProfileManager();
+                        var messenger = new Messenger();
+                        var logger = new AdvancedLogger(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RagnaController", "logs", "engine.log"));
+                        var settingsObj = Models.Settings.Load();
 
-                                        var nativeMethods = new NativeMethodsImpl();
-                                        var processNames = new ProcessNameResolver();
-                                        var windowTracker = new MultiClientWindowTracker(nativeMethods, processNames);
-                                        var multiClientRouter = new MultiClientInputRouter(nativeMethods, processNames, windowTracker);
+                        var nativeMethods = new NativeMethodsImpl();
+                        var processNames = new ProcessNameResolver();
+                        var windowTracker = new MultiClientWindowTracker(nativeMethods, processNames);
+                        var multiClientRouter = new MultiClientInputRouter(nativeMethods, processNames, windowTracker);
 
-                                        multiEngine = new MultiClientEngineOrchestrator(
-                                            controllerService,
-                                            profileManager,
-                                            settingsObj,
-                                            messenger,
-                                            logger,
-                                            multiClientRouter,
-                                            windowTracker);
-                                        manager = profileManager;
-                    #pragma warning restore CS8625
-                                    });
-                                }
-                                catch (Exception ex)
-                                {
-                                    LogFatal("Engine Creation", ex.ToString());
-                                    MessageBox.Show($"Error creating engine:\n{ex.Message}\n\nDetails: {CrashLog}",
-                                        "RagnaController – Start Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                    Shutdown();
-                                    return;
-                                }
+                        multiEngine = new MultiClientEngineOrchestrator(
+                            controllerService,
+                            profileManager,
+                            settingsObj,
+                            messenger,
+                            logger,
+                            multiClientRouter,
+                            windowTracker);
+                        manager = profileManager;
+#pragma warning restore CS8625
+                    });
+                }
+                catch (Exception ex)
+                {
+                    LogFatal("Engine Creation", ex.ToString());
+                    MessageBox.Show("Error creating engine:\n" + ex.Message + "\n\nDetails: " + CrashLog,
+                        "RagnaController - Start Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Shutdown();
+                    return;
+                }
 
-                                if (multiEngine == null || manager == null)
-                                {
-                                    LogFatal("Engine Creation", "Engine or Manager is null after initialization");
-                                    MessageBox.Show("Error creating engine: Unknown error",
-                                        "RagnaController – Start Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                    Shutdown();
-                                    return;
-                                }
+                if (multiEngine == null || manager == null)
+                {
+                    LogFatal("Engine Creation", "Engine or Manager is null after initialization");
+                    MessageBox.Show("Error creating engine: Unknown error",
+                        "RagnaController - Start Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Shutdown();
+                    return;
+                }
 
-                                var viewModel = new MainViewModel();
+                var viewModel = new MainViewModel();
 
-                                Window main;
-                                if (isHandheld)
-                                                                {
-                                                                    System.Diagnostics.Debug.WriteLine(
-                                                                        $"[App] Handheld erkannt: {Core.HandheldDetector.DeviceName} → HandheldWindow");
-                                                                    // For handheld, create a single HybridEngine (multi-client not needed for handheld mode)
-                                                                    HybridEngine? handheldEngine = null;
-                                                                    await Task.Run(() =>
-                                                                    {
-                                #pragma warning disable CS8625
-                                                                        handheldEngine = new HybridEngine(new BackgroundTickProvider(8), new Messenger(), null, null);
-                                #pragma warning restore CS8625
-                                                                    });
-                                                                    main = new HandheldWindow(handheldEngine!, manager);
-                                                                }
-                                                                else
-                                                                                                                                {
-                                                                                                                                    // Create a HybridEngine for MainWindow (uses first client from multiEngine)
-                                                                                                                                    HybridEngine? mainEngine = null;
-                                                                                                                                    await Task.Run(() =>
-                                                                                                                                    {
-                                                                #pragma warning disable CS8625
-                                                                                                                                        mainEngine = new HybridEngine(new BackgroundTickProvider(8), new Messenger(), null, null);
-                                                                #pragma warning restore CS8625
-                                                                                                                                    });
-                                                                                                                                    main = new MainWindow(mainEngine!, manager, viewModel);
-                                                                                                                                }
-                                MainWindow = main;
+                Window main;
+                if (isHandheld)
+                {
+                    System.Diagnostics.Debug.WriteLine(
+                        "[App] Handheld erkannt: " + Core.HandheldDetector.DeviceName + " - HandheldWindow");
+                    HybridEngine? handheldEngine = null;
+                    await Task.Run(() =>
+                    {
+#pragma warning disable CS8625
+                        handheldEngine = new HybridEngine(new BackgroundTickProvider(8), new Messenger(), null, null);
+#pragma warning restore CS8625
+                    });
+                    main = new HandheldWindow(handheldEngine!, manager);
+                }
+                else
+                {
+                    HybridEngine? mainEngine = null;
+                    await Task.Run(() =>
+                    {
+#pragma warning disable CS8625
+                        mainEngine = new HybridEngine(new BackgroundTickProvider(8), new Messenger(), null, null);
+#pragma warning restore CS8625
+                    });
+                    main = new MainWindow(mainEngine!, manager, viewModel);
+                }
+                MainWindow = main;
 
-                                // ── TASK-3701: Auto-Update Check beim Start ─────────────────
-                                if (settings.AutoUpdateEnabled)
-                                {
-                                    var lastCheck = settings.LastUpdateCheckAt;
-                                    var intervalHours = settings.UpdateCheckIntervalHours;
-                                    var shouldCheck = lastCheck == null ||
-                                                      (DateTime.Now - lastCheck.Value).TotalHours >= intervalHours;
+                if (settings.AutoUpdateEnabled)
+                {
+                    var lastCheck = settings.LastUpdateCheckAt;
+                    var intervalHours = settings.UpdateCheckIntervalHours;
+                    var shouldCheck = lastCheck == null ||
+                                      (DateTime.Now - lastCheck.Value).TotalHours >= intervalHours;
 
-                                    if (shouldCheck)
-                                    {
-                                        _ = Task.Run(async () =>
+                    if (shouldCheck)
                                         {
-                                            try
+                                            _ = Task.Run(async () =>
                                             {
-                                                using var updateService = new UpdateService(
-                                                    System.Reflection.Assembly.GetExecutingAssembly()
-                                                        .GetName()?.Version?.ToString() ?? "0.0.0");
-                                                var update = await updateService.CheckForUpdatesAsync();
-
-                                                if (update != null)
+                                                try
                                                 {
-                                                    // Auf UI-Thread: UpdateWindow anzeigen
-                                                    await Dispatcher.InvokeAsync(() =>
+                                                    using var updateService = new UpdateService(
+                                                        System.Reflection.Assembly.GetExecutingAssembly()
+                                                            .GetName()?.Version?.ToString() ?? "0.0.0");
+                                                    var update = await updateService.CheckForUpdatesAsync();
+
+                                                    if (update != null)
                                                     {
-                                                        var updateWindow = new UpdateWindow();
-                                                        updateWindow.Owner = main;
-                                                        updateWindow.ShowDialog();
-                                                    });
+                                                        await Dispatcher.InvokeAsync(() =>
+                                                        {
+                                                            var updateWindow = new UpdateWindow();
+                                                            updateWindow.Owner = main;
+                                                            updateWindow.ShowDialog();
+                                                        });
+                                                    }
+                                                    else
+                                                    {
+                                                        System.Diagnostics.Debug.WriteLine("[App] Kein Update verfugbar.");
+                                                    }
+
+                                                    settings.LastUpdateCheckAt = DateTime.Now;
+                                                    settings.Save();
                                                 }
-                                                else
+                                                catch (Exception ex)
                                                 {
-                                                    System.Diagnostics.Debug.WriteLine("[App] Kein Update verfügbar.");
+                                                    System.Diagnostics.Debug.WriteLine("[App] Auto-Update-Check fehlgeschlagen: " + ex.Message);
                                                 }
-
-                                                settings.LastUpdateCheckAt = DateTime.Now;
-                                                settings.Save();
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                System.Diagnostics.Debug.WriteLine($"[App] Auto-Update-Check fehlgeschlagen: {ex.Message}");
-                                            }
-                                        });
+                                            });
+                                        }
                                     }
-                                }
 
-                                // ── Silent Mode ──────────────────────────────────────────────
                 if (settings.StartMinimized || settings.StartWithWindows)
                 {
                     main.Show();
@@ -316,7 +281,6 @@ namespace RagnaController
                     main.BeginAnimation(Window.OpacityProperty, anim);
                 }
 
-                // ── Telemetry Opt-In (einmalig beim ersten Start) ────────────
                 if (!settings.HasAskedForTelemetry)
                 {
                     var result = MessageBox.Show(
@@ -325,7 +289,7 @@ namespace RagnaController
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Information);
 
-                    settings.EnableTelemetry    = (result == MessageBoxResult.Yes);
+                    settings.EnableTelemetry = (result == MessageBoxResult.Yes);
                     settings.HasAskedForTelemetry = true;
                     settings.Save();
                 }
@@ -333,14 +297,13 @@ namespace RagnaController
                 TelemetryService.Initialize(settings);
                 TelemetryService.SendAppStartPing();
 
-                // FEAT-029: Automatic update check on startup
                 if (settings.AutoUpdateEnabled)
                 {
                     _ = UpdateChecker.CheckAndNotifyAsync(main).ContinueWith(t =>
                     {
                         if (t.IsFaulted)
                         {
-                            System.Diagnostics.Debug.WriteLine($"[App] Update check failed: {t.Exception}");
+                            System.Diagnostics.Debug.WriteLine("[App] Update check failed: " + t.Exception);
                         }
                     }, TaskContinuationOptions.OnlyOnFaulted);
                 }
@@ -348,8 +311,8 @@ namespace RagnaController
             catch (Exception ex)
             {
                 LogFatal("StartWorkflow", ex.ToString());
-                MessageBox.Show($"Error starting:\n{ex.Message}\n\nDetails: {CrashLog}",
-                    "RagnaController – Start Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Error starting:\n" + ex.Message + "\n\nDetails: " + CrashLog,
+                    "RagnaController - Start Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Shutdown();
             }
         }
@@ -360,19 +323,14 @@ namespace RagnaController
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(CrashLog)!);
                 File.AppendAllText(CrashLog,
-                    $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] [{source}]\n{msg}\n\n");
+                    "[" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "] [" + source + "]\n" + msg + "\n\n");
             }
             catch (Exception ex)
             {
-                // Log error must not crash app
-                System.Diagnostics.Debug.WriteLine($"[App] LogFatal failed: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine("[App] LogFatal failed: " + ex.Message);
             }
         }
 
-        /// <summary>
-        /// TECH-063: Restarts the application process (auto-restart on crash).
-        /// Persists settings first, then launches a new instance and shuts down the current one.
-        /// </summary>
         private static void RestartApp()
         {
             try

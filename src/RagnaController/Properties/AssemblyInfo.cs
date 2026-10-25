@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using RagnaController.Core;
 
 // TEST-0xx / FEAT-015: Internals for das Testprojekt sichtbar machen,
 // damit reine Auswahl-/Routing-Funktionen (z.B. WindowSwitcher.SelectTargetHwnd)

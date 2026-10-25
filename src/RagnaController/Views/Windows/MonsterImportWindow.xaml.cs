@@ -5,8 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using RagnaController.Core.Services;
+using RagnaController.Core;
 using RagnaController.Models;
+using RagnaController.Core.Services.Database;
 
 namespace RagnaController.Views.Windows
 {

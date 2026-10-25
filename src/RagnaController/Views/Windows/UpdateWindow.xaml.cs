@@ -7,8 +7,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using RagnaController.Core.Services;
+using RagnaController.Core;
 using RagnaController.Models;
+using RagnaController.Core.Services.Update;
 
 namespace RagnaController.Views.Windows
 {
@@ -19,7 +20,7 @@ namespace RagnaController.Views.Windows
     {
         private readonly UpdateService? _updateService;
         private readonly CancellationTokenSource _cts = new();
-        private UpdateInfo? _availableUpdate;
+        private RagnaController.Models.UpdateInfo? _availableUpdate;
         private bool _isChecking;
         private bool _isDownloading;
         private bool _isInstalling;
@@ -255,7 +256,7 @@ namespace RagnaController.Views.Windows
             Close();
         }
 
-        private void OnUpdateAvailable(object? sender, UpdateInfo e)
+        private void OnUpdateAvailable(object? sender, RagnaController.Models.UpdateInfo e)
         {
             // Wird vom UpdateService aufgerufen (möglicherweise auf Hintergrund-Thread)
             Dispatcher.Invoke(() =>

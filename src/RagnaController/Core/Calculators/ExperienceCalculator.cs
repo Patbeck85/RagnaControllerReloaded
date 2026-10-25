@@ -1,4 +1,5 @@
 using System;
+using RagnaController.Models;
 
 namespace RagnaController.Core.Calculators {
     /// <summary>

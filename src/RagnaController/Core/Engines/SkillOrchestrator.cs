@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using RagnaController.Models;
-using RagnaController.Core.Community;
+using RagnaController.Core;
+using RagnaController.Profiles;
 
 namespace RagnaController.Core
 {

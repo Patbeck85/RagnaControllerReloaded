@@ -1,4 +1,7 @@
 using System.Text.RegularExpressions;
+using RagnaController.Core;
+using RagnaController.Profiles;
+using RagnaController.Views.Dialogs;
 
 namespace RagnaController.Core
 {

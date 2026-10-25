@@ -6,6 +6,8 @@ using System.Diagnostics.Tracing;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using RagnaController.Core;
+using RagnaController.Views.Controls;
 
 namespace RagnaController.Core
 {

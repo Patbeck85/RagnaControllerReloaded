@@ -7,6 +7,8 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 using RagnaController.Core;
+using RagnaController.Views.Controls;
+using RagnaController.Views.Windows;
 
 namespace RagnaController.Controls
 {

@@ -4,6 +4,10 @@ using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using RagnaController.Models;
 using RagnaController.Controller;
+using RagnaController.Core;
+using RagnaController.Profiles;
+using RagnaController.Views.Overlays;
+using RagnaController.Views.Windows;
 
 namespace RagnaController.Core
 {

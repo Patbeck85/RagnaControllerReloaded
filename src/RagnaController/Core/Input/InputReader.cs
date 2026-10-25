@@ -3,6 +3,7 @@ using Hexa.NET.SDL2;
 using RagnaController.Controller;
 using RagnaController.Models;
 using RagnaController.Profiles;
+using RagnaController.Core;
 
 namespace RagnaController.Core
 {

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using RagnaController.Models;
+using RagnaController.Core;
 
 namespace RagnaController.Core.Navigation {
     /// <summary>

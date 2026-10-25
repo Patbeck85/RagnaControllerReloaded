@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
 using RagnaController.Core;
+using RagnaController.Profiles;
 
 namespace RagnaController.Views.Dialogs
 {

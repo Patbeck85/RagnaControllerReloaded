@@ -9,7 +9,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using RagnaController.Core;
-using RagnaController.Core.Services;
 using RagnaController.Profiles;
 
 namespace RagnaController.Views.Dialogs

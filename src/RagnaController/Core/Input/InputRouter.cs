@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using RagnaController.Core.Services;
+using RagnaController.Core;
 using RagnaController.Models;
 using RagnaController.Profiles;
+
+using RagnaController.Core.Services.Input;
 
 namespace RagnaController.Core
 {

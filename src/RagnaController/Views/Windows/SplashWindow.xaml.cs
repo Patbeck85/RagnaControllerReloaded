@@ -7,6 +7,7 @@ using System.Windows.Threading;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using RagnaController.Core;
 
 namespace RagnaController.Views.Windows
 {

@@ -1,4 +1,6 @@
 using System;
+using RagnaController.Profiles;
+using RagnaController.Core;
 
 namespace RagnaController.Models
 {

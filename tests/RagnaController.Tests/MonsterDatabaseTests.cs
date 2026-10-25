@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using RagnaController.Core.Services;
+using RagnaController.Core.Services.Database;
 using RagnaController.Models;
 
 namespace RagnaController.Tests

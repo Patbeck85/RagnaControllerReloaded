@@ -1,5 +1,7 @@
 using System;
 using System.Diagnostics;
+using RagnaController.Core;
+using RagnaController.Views.Windows;
 
 namespace RagnaController.Core.Shared {
     /// <summary>

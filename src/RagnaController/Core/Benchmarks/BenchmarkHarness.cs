@@ -17,6 +17,8 @@ using BenchmarkDotNet.Columns;
 using RagnaController.Controller;
 using RagnaController.Models;
 using RagnaController.Profiles;
+using RagnaController.Core.Services.Input;
+using RagnaController.Core;
 
 namespace RagnaController.Core.Benchmarks
 {

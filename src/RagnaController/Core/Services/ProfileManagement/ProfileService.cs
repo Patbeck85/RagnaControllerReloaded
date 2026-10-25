@@ -1,9 +1,11 @@
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using RagnaController.Core;
 using RagnaController.Models;
 using RagnaController.Profiles;
 using RagnaController.Views.Dialogs;
+using RagnaController.Views.Windows;
 
 namespace RagnaController.Core.Services.ProfileManagement
 {
@@ -32,7 +34,7 @@ namespace RagnaController.Core.Services.ProfileManagement
         }
 
         /// <summary>Returns the list of all available profiles.</summary>
-        public System.Collections.Generic.IEnumerable<Profile> GetAllProfiles() => _manager.Profiles;
+        public IEnumerable<Profile> GetAllProfiles() => _manager.Profiles;
 
         /// <summary>Loads the last used profile or the first available one.</summary>
         /// <returns>The geladene Profil or null, if keine Profile available.</summary>

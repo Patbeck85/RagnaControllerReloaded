@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using RagnaController.Controller;
 using RagnaController.Models;
+using RagnaController.Core;
 
 namespace RagnaController.Core
 {

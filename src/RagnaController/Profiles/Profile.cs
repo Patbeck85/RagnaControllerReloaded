@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using RagnaController.Core;
 using RagnaController.Models;
 using RagnaController.Core.Hardware;
-using RagnaController.Core.Community;
 
 namespace RagnaController.Profiles
 {
@@ -179,7 +178,6 @@ namespace RagnaController.Profiles
         public bool IsBuiltIn { get; set; }
         public int Priority { get; set; } = 0;
         public bool IsEnabled { get; set; } = true;
-
 
         // Emote Commands (v1.7.3) - Static collection for quick access
         public static List<RadialItem> EmoteCommands => new()

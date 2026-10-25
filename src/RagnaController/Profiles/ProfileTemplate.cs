@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using RagnaController.Models;
+using RagnaController.Views.Windows;
 
 namespace RagnaController.Profiles
 {

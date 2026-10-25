@@ -13,6 +13,7 @@ using RagnaController.Models;
 
 namespace RagnaController.Views.Overlays
 {
+    using RagnaController.Core.Services.Monitoring;
     /// <summary>
     /// Interaction logic for InGameOverlayWindow.xaml
     /// </summary>

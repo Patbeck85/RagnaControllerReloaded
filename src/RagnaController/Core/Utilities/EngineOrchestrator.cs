@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using RagnaController.Models;
 using RagnaController.Controller;
 using RagnaController.Profiles;
+using RagnaController.Core;
 
 namespace RagnaController.Core
 {

@@ -4,6 +4,8 @@ using System.Threading;
 using RagnaController.Models;
 using RagnaController.Controller;
 using RagnaController.Profiles;
+using RagnaController.Core;
+using RagnaController.Views.Windows;
 
 namespace RagnaController.Core
 {

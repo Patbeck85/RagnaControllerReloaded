@@ -1,5 +1,6 @@
 using System.IO;
 using RagnaController.Core.Services;
+using RagnaController.Core.Services.FirstRun;
 using RagnaController.Models;
 using Xunit;
 

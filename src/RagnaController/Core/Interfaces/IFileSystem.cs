@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using RagnaController.Core;
 
 namespace RagnaController.Core
 {

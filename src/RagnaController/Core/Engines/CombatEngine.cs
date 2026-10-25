@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using RagnaController.Profiles;
 using RagnaController.Models;
+using RagnaController.Core;
 using static RagnaController.Core.NativeMethods;
 
 namespace RagnaController.Core

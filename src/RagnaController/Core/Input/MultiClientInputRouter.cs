@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using RagnaController.Models;
+using RagnaController.Core;
 
 namespace RagnaController.Core
 {
