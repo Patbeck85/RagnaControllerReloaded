@@ -1,13 +1,13 @@
 # SESSION_STATE.md — RagnaController Autonomous Session Continuity
-**Last Updated:** 2026-10-23 | **Session ID:** `autonomous-release-20261023-v2` | **SOUL.md Version:** 2.0 Enterprise
+**Last Updated:** 2026-10-24 | **Session ID:** `autonomous-release-20261024-v2` | **SOUL.md Version:** 2.0 Enterprise
 
 ---
 
 ## 🎯 Current Milestone
-**Phase:** All Epics 1-15 + Epic 25 COMPLETE — Release v2.5.1 deployed
-**Status:** Build: 0 errors | Tests: 904/905 PASS (1 flaky — LogLevel_FiltertTiefereLevel, besteht isoliert)
-**Git HEAD:** commit 2374d9c (TECH-022 localization keys) — alle TECH-Tasks abgeschlossen
-**Release:** v2.5.1 (2026-10-23) — Patch Release mit Flaky-Test-Fix + Monster DB
+**Phase:** All Epics 1-28 COMPLETE — Release v2.6.0 ready
+**Status:** Build: 0 errors | Tests: 1076/1076 PASS (1 pre-existing flaky — LogLevel_FiltertTiefereLevel, besteht isoliert)
+**Git HEAD:** commit 65d5d5c (CHANGELOG.md, Version 2.6.0, Code Deduplication)
+**Release:** v2.6.0 (2026-10-24) — Major Release mit allen Epics 1-28, Code Deduplication, Version Bump
 
 ---
 
@@ -42,8 +42,19 @@
 ---
 
 ## 📁 File Delta (Since Last Commit)
-**Modified:** All source files for Epics 8, 10, 14, 15-TASK-2401
-**New:** src/RagnaController.Benchmarks/, src/RagnaController/Core/Services/CloudSyncService.cs, src/RagnaController/Core/Utilities/PerformanceProfiler.cs, src/RagnaController/Profiles/BaseProfile.cs, src/RagnaController/Profiles/CharProfile.cs, src/RagnaController/Profiles/ClassProfile.cs
+**Modified:** 
+- src/RagnaController/Core/Services/GyroService.cs (HidDeviceUtils Integration)
+- src/RagnaController/Controller/DualSenseHardwareService.cs (HidDeviceUtils Integration)
+- src/RagnaController/RagnaController.csproj (neue Utility-Dateien, dedup GyroCalibrationWindow)
+- CHANGELOG.md (v2.6.0 Entry)
+- SESSION_STATE.md (Status Update)
+- README.md (Version 2.6.0)
+
+**New:**
+- src/RagnaController/Core/HidDeviceUtils.cs (shared HID device enumeration)
+- src/RagnaController/Core/StickDriftUtils.cs (shared stick drift detection)
+- src/RagnaController/Views/Windows/BaseWindow.cs (shared window drag-move pattern)
+
 **Deleted:** None
 **Untracked:** None (all committed to git)
 
