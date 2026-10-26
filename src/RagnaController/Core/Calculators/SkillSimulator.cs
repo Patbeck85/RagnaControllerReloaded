@@ -117,6 +117,13 @@ namespace RagnaController.Core.Calculators {
                 "minstrel" => MinstrelSkills(),
                 "wanderer" => WandererSkills(),
                 "paladin" => PaladinSkills(),
+                "super novice" => SuperNoviceSkills(),
+                "taekwon boy" or "taekwon girl" => TaekwonSkills(),
+                "star gladiator" => StarGladiatorSkills(),
+                "soul linker" => SoulLinkerSkills(),
+                "gangster" => GangsterSkills(),
+                "kagerou" or "oboro" or "ninja" => NinjaSkills(),
+                "rebellion" => RebellionSkills(),
                 _ => NoviceSkills(),
             };
 
@@ -137,6 +144,8 @@ namespace RagnaController.Core.Calculators {
             "Lord Knight", "High Wizard", "Sniper", "High Priest", "Professor", "Stalker",
             // 3. Klasse
             "Rune Knight", "Royal Guard", "Sorcerer", "Shadow Chaser", "Genetic", "Guillotine Cross", "Arch Bishop", "Minstrel", "Wanderer", "Paladin",
+            // Erweiterte / Sonderklassen
+            "Super Novice", "Taekwon Boy", "Taekwon Girl", "Star Gladiator", "Soul Linker", "Gangster", "Kagerou", "Oboro", "Rebellion",
         }.AsReadOnly();
 
         #region 1. Klasse (Base Jobs)
@@ -436,6 +445,75 @@ namespace RagnaController.Core.Calculators {
                 (2701, "Sword Mastery", 10, 99, 50),
                 (2702, "Spear Mastery", 10, 99, 50),
                 (2703, "Two-Handed Sword Mastery", 10, 99, 50),
+            };
+
+        #endregion
+
+        #region Erweiterte / Sonderklassen
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] SuperNoviceSkills() =>
+            new[]
+            {
+                (2801, "Punch", 1, 1, 1),
+                (2802, "Stones", 1, 1, 1),
+                (2803, "Berserk", 10, 1, 1),
+                (2804, "Providence", 10, 1, 1),
+                (2805, "Impositio Manus", 10, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] TaekwonSkills() =>
+            new[]
+            {
+                (2901, "TaeKwon", 10, 70, 50),
+                (2902, "Bash", 10, 70, 50),
+                (2903, "Counter Attack", 10, 70, 50),
+                (2904, "Rage Strike", 10, 70, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] StarGladiatorSkills() =>
+            new[]
+            {
+                (3001, "Shining Star", 10, 99, 50),
+                (3002, "Meteor Assault", 10, 99, 50),
+                (3003, "Cosmic Ray", 10, 99, 50),
+                (3004, "Soul Expansion", 5, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] SoulLinkerSkills() =>
+            new[]
+            {
+                (3101, "Berserk", 10, 99, 50),
+                (3102, "Providence", 10, 99, 50),
+                (3103, "Impositio Manus", 10, 99, 50),
+                (3104, "Heal", 10, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] GangsterSkills() =>
+            new[]
+            {
+                (3201, "Steal", 10, 1, 1),
+                (3202, "Hide", 1, 1, 1),
+                (3203, "Backstab", 10, 1, 1),
+                (3204, "Double Attack", 10, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] NinjaSkills() =>
+            new[]
+            {
+                (3301, "Throw Kunai", 10, 99, 50),
+                (3302, "Kunai Storm", 10, 99, 50),
+                (3303, "Hide", 1, 99, 50),
+                (3304, "Double Attack", 10, 99, 50),
+                (3305, "Enchant Poison", 10, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] RebellionSkills() =>
+            new[]
+            {
+                (3401, "Gunslinger", 10, 99, 50),
+                (3402, "Desperado", 10, 99, 50),
+                (3403, "Full Buster", 10, 99, 50),
+                (3404, "Snowflake Throw", 10, 99, 50),
             };
 
         #endregion
