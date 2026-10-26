@@ -1207,6 +1207,399 @@ namespace RagnaController.Models
                 Description = "Erde-Bestie aus den Payon-Feldern."
             });
 
+            // ── Allgemeine Monster (Pre-Renewal & Renewal) ──
+            db.Add(new Monster
+            {
+                Id = 1001,
+                Name = "Scorpion",
+                DisplayName = "Scorpion",
+                Element = MonsterElement.Fire,
+                Size = MonsterSize.Small,
+                Race = MonsterRace.Insect,
+                PreRenewalHp = 136,
+                RenewalHp = 300,
+                PreRenewalExp = 169,
+                RenewalExp = 400,
+                PreRenewalJobExp = 115,
+                RenewalJobExp = 250,
+                PreRenewalBaseLevel = 16,
+                RenewalBaseLevel = 20,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 1000 }, { 7143, 100 }, { 7239, 50 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 1200 }, { 7143, 150 }, { 7239, 80 } },
+                SpawnMaps = new List<string> { "pay_fild01", "pay_fild02" },
+                Description = "Skorpion mit Gift-Attacke."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1004,
+                Name = "Hornet",
+                DisplayName = "Hornet",
+                Element = MonsterElement.Wind,
+                Size = MonsterSize.Small,
+                Race = MonsterRace.Insect,
+                PreRenewalHp = 85,
+                RenewalHp = 200,
+                PreRenewalExp = 158,
+                RenewalExp = 380,
+                PreRenewalJobExp = 90,
+                RenewalJobExp = 220,
+                PreRenewalBaseLevel = 11,
+                RenewalBaseLevel = 14,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 800 }, { 7229, 80 }, { 7144, 20 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 1000 }, { 7229, 120 }, { 7144, 40 } },
+                SpawnMaps = new List<string> { "pay_fild01", "pay_fild03" },
+                Description = "Wespe mit schnellen Angriffen."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1005,
+                Name = "Familiar",
+                DisplayName = "Familiar",
+                Element = MonsterElement.Shadow,
+                Size = MonsterSize.Small,
+                Race = MonsterRace.Brute,
+                PreRenewalHp = 330,
+                RenewalHp = 800,
+                PreRenewalExp = 200,
+                RenewalExp = 500,
+                PreRenewalJobExp = 152,
+                RenewalJobExp = 350,
+                PreRenewalBaseLevel = 24,
+                RenewalBaseLevel = 30,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 900 }, { 7224, 100 }, { 7145, 30 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 1100 }, { 7224, 150 }, { 7145, 50 } },
+                SpawnMaps = new List<string> { "pay_fild04", "pay_fild05" },
+                Description = "Fledermaus-ähnliches Monster."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1008,
+                Name = "Pupa",
+                DisplayName = "Pupa",
+                Element = MonsterElement.Earth,
+                Size = MonsterSize.Small,
+                Race = MonsterRace.Insect,
+                PreRenewalHp = 51,
+                RenewalHp = 120,
+                PreRenewalExp = 157,
+                RenewalExp = 370,
+                PreRenewalJobExp = 55,
+                RenewalJobExp = 140,
+                PreRenewalBaseLevel = 4,
+                RenewalBaseLevel = 6,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 600 }, { 7143, 30 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 800 }, { 7143, 50 } },
+                SpawnMaps = new List<string> { "pay_fild01", "pay_fild02" },
+                Description = "Puppe eines Insekts, bevor es schlüpft."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1009,
+                Name = "Condor",
+                DisplayName = "Condor",
+                Element = MonsterElement.Wind,
+                Size = MonsterSize.Medium,
+                Race = MonsterRace.Brute,
+                PreRenewalHp = 105,
+                RenewalHp = 250,
+                PreRenewalExp = 160,
+                RenewalExp = 400,
+                PreRenewalJobExp = 95,
+                RenewalJobExp = 230,
+                PreRenewalBaseLevel = 12,
+                RenewalBaseLevel = 15,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 800 }, { 7229, 60 }, { 7144, 10 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 1000 }, { 7229, 100 }, { 7144, 20 } },
+                SpawnMaps = new List<string> { "pay_fild05", "prt_fild02" },
+                Description = "Großer Greifvogel."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1010,
+                Name = "Willow",
+                DisplayName = "Willow",
+                Element = MonsterElement.Earth,
+                Size = MonsterSize.Medium,
+                Race = MonsterRace.Plant,
+                PreRenewalHp = 78,
+                RenewalHp = 180,
+                PreRenewalExp = 160,
+                RenewalExp = 400,
+                PreRenewalJobExp = 75,
+                RenewalJobExp = 180,
+                PreRenewalBaseLevel = 8,
+                RenewalBaseLevel = 10,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 700 }, { 7144, 40 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 900 }, { 7144, 60 } },
+                SpawnMaps = new List<string> { "pay_fild01", "pay_fild03" },
+                Description = "Baum-Monster in Wäldern."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1011,
+                Name = "Chonchon",
+                DisplayName = "Chonchon",
+                Element = MonsterElement.Wind,
+                Size = MonsterSize.Small,
+                Race = MonsterRace.Insect,
+                PreRenewalHp = 48,
+                RenewalHp = 110,
+                PreRenewalExp = 150,
+                RenewalExp = 350,
+                PreRenewalJobExp = 60,
+                RenewalJobExp = 150,
+                PreRenewalBaseLevel = 5,
+                RenewalBaseLevel = 7,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 500 }, { 7143, 20 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 700 }, { 7143, 40 } },
+                SpawnMaps = new List<string> { "pay_fild01", "pay_fild02" },
+                Description = "Kleines fliegendes Monster."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1012,
+                Name = "Roda Frog",
+                DisplayName = "Roda Frog",
+                Element = MonsterElement.Water,
+                Size = MonsterSize.Medium,
+                Race = MonsterRace.Fish,
+                PreRenewalHp = 140,
+                RenewalHp = 350,
+                PreRenewalExp = 162,
+                RenewalExp = 400,
+                PreRenewalJobExp = 100,
+                RenewalJobExp = 250,
+                PreRenewalBaseLevel = 13,
+                RenewalBaseLevel = 16,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 900 }, { 7239, 100 }, { 7145, 20 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 1100 }, { 7239, 150 }, { 7145, 40 } },
+                SpawnMaps = new List<string> { "pay_fild03", "pay_fild04" },
+                Description = "Frosch-Monster in Wassergebieten."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1013,
+                Name = "Wolf",
+                DisplayName = "Wolf",
+                Element = MonsterElement.Earth,
+                Size = MonsterSize.Medium,
+                Race = MonsterRace.Brute,
+                PreRenewalHp = 1091,
+                RenewalHp = 2500,
+                PreRenewalExp = 369,
+                RenewalExp = 900,
+                PreRenewalJobExp = 301,
+                RenewalJobExp = 700,
+                PreRenewalBaseLevel = 45,
+                RenewalBaseLevel = 55,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 1500 }, { 7224, 200 }, { 7145, 50 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 1800 }, { 7224, 300 }, { 7145, 80 } },
+                SpawnMaps = new List<string> { "pay_fild06", "prt_fild04" },
+                Description = "Wildwolf in offenen Gebieten."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1014,
+                Name = "Spore",
+                DisplayName = "Spore",
+                Element = MonsterElement.Water,
+                Size = MonsterSize.Medium,
+                Race = MonsterRace.Plant,
+                PreRenewalHp = 223,
+                RenewalHp = 500,
+                PreRenewalExp = 175,
+                RenewalExp = 420,
+                PreRenewalJobExp = 125,
+                RenewalJobExp = 300,
+                PreRenewalBaseLevel = 18,
+                RenewalBaseLevel = 22,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 800 }, { 7144, 50 }, { 7239, 20 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 1000 }, { 7144, 80 }, { 7239, 40 } },
+                SpawnMaps = new List<string> { "pay_fild04", "pay_fild05" },
+                Description = "Pilz-Monster mit Sporen-Angriff."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1016,
+                Name = "Archer Skeleton",
+                DisplayName = "Archer Skeleton",
+                Element = MonsterElement.Undead,
+                Size = MonsterSize.Medium,
+                Race = MonsterRace.Undead,
+                PreRenewalHp = 1458,
+                RenewalHp = 3500,
+                PreRenewalExp = 436,
+                RenewalExp = 1000,
+                PreRenewalJobExp = 327,
+                RenewalJobExp = 800,
+                PreRenewalBaseLevel = 50,
+                RenewalBaseLevel = 60,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 1800 }, { 7224, 300 }, { 7145, 100 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 2200 }, { 7224, 400 }, { 7145, 150 } },
+                SpawnMaps = new List<string> { "pay_dun00", "pay_dun01" },
+                Description = "Skelett-Bogenschütze in Dungeons."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1033,
+                Name = "Thief Bug",
+                DisplayName = "Thief Bug",
+                Element = MonsterElement.Earth,
+                Size = MonsterSize.Small,
+                Race = MonsterRace.Insect,
+                PreRenewalHp = 320,
+                RenewalHp = 800,
+                PreRenewalExp = 320,
+                RenewalExp = 800,
+                PreRenewalJobExp = 200,
+                RenewalJobExp = 450,
+                PreRenewalBaseLevel = 15,
+                RenewalBaseLevel = 20,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 1000 }, { 7239, 100 }, { 7144, 30 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 1200 }, { 7239, 150 }, { 7144, 50 } },
+                SpawnMaps = new List<string> { "pay_fild04", "pay_fild06" },
+                Description = "Dieb-Käfer, stiehlt Items."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1038,
+                Name = "Hunter Fly",
+                DisplayName = "Hunter Fly",
+                Element = MonsterElement.Wind,
+                Size = MonsterSize.Small,
+                Race = MonsterRace.Insect,
+                PreRenewalHp = 200,
+                RenewalHp = 500,
+                PreRenewalExp = 200,
+                RenewalExp = 500,
+                PreRenewalJobExp = 150,
+                RenewalJobExp = 350,
+                PreRenewalBaseLevel = 10,
+                RenewalBaseLevel = 13,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 700 }, { 7143, 40 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 900 }, { 7143, 60 } },
+                SpawnMaps = new List<string> { "pay_fild02", "pay_fild03" },
+                Description = "Große Fliege, fliegt schnell."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1058,
+                Name = "Pecopeco Egg",
+                DisplayName = "Pecopeco Egg",
+                Element = MonsterElement.Earth,
+                Size = MonsterSize.Medium,
+                Race = MonsterRace.Plant,
+                PreRenewalHp = 1200,
+                RenewalHp = 2800,
+                PreRenewalExp = 450,
+                RenewalExp = 1100,
+                PreRenewalJobExp = 280,
+                RenewalJobExp = 650,
+                PreRenewalBaseLevel = 18,
+                RenewalBaseLevel = 22,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 1200 }, { 7224, 150 }, { 7144, 50 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 1500 }, { 7224, 200 }, { 7144, 80 } },
+                SpawnMaps = new List<string> { "pay_fild07", "prt_fild05" },
+                Description = "Ei des Pecopeco-Vogels."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1092,
+                Name = "Deviace",
+                DisplayName = "Deviace",
+                Element = MonsterElement.Undead,
+                Size = MonsterSize.Medium,
+                Race = MonsterRace.Undead,
+                PreRenewalHp = 2000,
+                RenewalHp = 5000,
+                PreRenewalExp = 4500,
+                RenewalExp = 10000,
+                PreRenewalJobExp = 2500,
+                RenewalJobExp = 6000,
+                PreRenewalBaseLevel = 32,
+                RenewalBaseLevel = 40,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 2000 }, { 6107, 400 }, { 7224, 100 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 2500 }, { 6107, 500 }, { 7224, 150 } },
+                SpawnMaps = new List<string> { "pay_dun01", "pay_dun02" },
+                Description = "Untoter Krieger mit Dolch."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1091,
+                Name = "Bone Soldier",
+                DisplayName = "Bone Soldier",
+                Element = MonsterElement.Undead,
+                Size = MonsterSize.Medium,
+                Race = MonsterRace.Undead,
+                PreRenewalHp = 1500,
+                RenewalHp = 3500,
+                PreRenewalExp = 3200,
+                RenewalExp = 7500,
+                PreRenewalJobExp = 1800,
+                RenewalJobExp = 4500,
+                PreRenewalBaseLevel = 28,
+                RenewalBaseLevel = 35,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 1500 }, { 6107, 300 }, { 7224, 80 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 1900 }, { 6107, 400 }, { 7224, 120 } },
+                SpawnMaps = new List<string> { "pay_dun00", "pay_dun01" },
+                Description = "Skelett-Soldat in Dungeons."
+            });
+
+            db.Add(new Monster
+            {
+                Id = 1090,
+                Name = "Giearth",
+                DisplayName = "Giearth",
+                Element = MonsterElement.Earth,
+                Size = MonsterSize.Medium,
+                Race = MonsterRace.Beast,
+                PreRenewalHp = 3400,
+                RenewalHp = 8000,
+                PreRenewalExp = 4600,
+                RenewalExp = 10800,
+                PreRenewalJobExp = 2600,
+                RenewalJobExp = 6200,
+                PreRenewalBaseLevel = 37,
+                RenewalBaseLevel = 44,
+                PreRenewalDrops = new Dictionary<int, int> { { 501, 2100 }, { 7172, 180 } },
+                RenewalDrops = new Dictionary<int, int> { { 501, 2700 }, { 7172, 260 } },
+                SpawnMaps = new List<string> { "pay_fild06", "pay_fild07" },
+                Description = "Erde-Bestie aus den Payon-Feldern."
+            });
+
+            // ── Pre-Renewal / Renewal Consistency Check ──
+            // Alle Monster haben sowohl Pre-Renewal als auch Renewal Werte
+            // Für den Import aus Rathena werden diese automatisch überschrieben
+            return db;
+        }
+
+        /// <summary>
+        /// Erstellt eine Datenbank mit nur den wichtigsten klassischen RO-Monstern.
+        /// Wird verwendet wenn der automatische Rathena-Import nicht verfügbar ist.
+        /// </summary>
+        public static MonsterDatabase CreateClassicDatabase()
+        {
+            var db = new MonsterDatabase();
+            // Fügt nur die wichtigsten Basismonster hinzu
+            foreach (var monster in CreateStarterDatabase().GetAllMonsters())
+            {
+                db.Add(monster);
+            }
             return db;
         }
     }

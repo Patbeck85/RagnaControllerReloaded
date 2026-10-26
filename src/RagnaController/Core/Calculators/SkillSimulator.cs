@@ -76,9 +76,86 @@ namespace RagnaController.Core.Calculators {
             foreach (var skill in _skills) skill.Level = 0;
         }
 
+        /// <summary>Lädt vordefinierte RO-Skills für eine Base-Klasse.</summary>
+        public static void LoadClassSkills(SkillSimulator sim, string className)
+        {
+            var skills = className.ToLowerInvariant() switch
+            {
+                "swordman" => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
+                {
+                    (1, "Sword Mastery", 10, 1, 1),
+                    (2, "Spear Mastery", 10, 1, 1),
+                    (3, "Two-Handed Sword Mastery", 10, 1, 1),
+                    (4, "Two-Handed Spear Mastery", 10, 1, 1),
+                    (5, "Pole Arm Mastery", 10, 1, 1),
+                    (6, "Bash", 10, 1, 1),
+                    (7, "Magnum Break", 10, 1, 1),
+                    (8, "Provoke", 10, 1, 1),
+                    (9, "Weapon Research", 10, 1, 1),
+                    (10, "First Aid", 5, 1, 1),
+                },
+                "mage" => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
+                {
+                    (101, "Fire Bolt", 10, 1, 1),
+                    (102, "Fire Ball", 10, 1, 1),
+                    (103, "Fire Wall", 10, 1, 1),
+                    (104, "Meteor Storm", 10, 1, 1),
+                    (105, "Lightning Bolt", 10, 1, 1),
+                    (106, "Thunder Storm", 10, 1, 1),
+                    (107, "Frost Diver", 10, 1, 1),
+                    (108, "Ice Wall", 10, 1, 1),
+                    (109, "Energy Coat", 1, 1, 1),
+                    (110, "Increase SP Recovery", 1, 1, 1),
+                    (111, "Heal", 10, 1, 1),
+                    (112, "Blessing", 10, 1, 1),
+                    (113, "Increase AGI", 10, 1, 1),
+                },
+                "archer" => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
+                {
+                    (201, "Double Strafe", 10, 1, 1),
+                    (202, "Arrow Storm", 10, 1, 1),
+                    (203, "Blaze", 10, 1, 1),
+                    (204, "Concentration", 1, 1, 1),
+                    (205, "Critical Explosion", 1, 1, 1),
+                },
+                "acolyte" => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
+                {
+                    (301, "Heal", 10, 1, 1),
+                    (302, "Blessing", 10, 1, 1),
+                    (303, "Increase AGI", 10, 1, 1),
+                    (304, "Resurrection", 10, 1, 1),
+                    (305, "Glory", 1, 1, 1),
+                },
+                "merchant" => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
+                {
+                    (401, "Discount", 10, 1, 1),
+                    (402, "Overcharge", 10, 1, 1),
+                    (403, "Mammonite", 10, 1, 1),
+                    (404, "Coin", 10, 1, 1),
+                },
+                "thief" => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
+                {
+                    (501, "Steal", 10, 1, 1),
+                    (502, "Hide", 1, 1, 1),
+                    (503, "Double Attack", 10, 1, 1),
+                    (504, "Critical Strike", 1, 1, 1),
+                },
+                "novice" or _ => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
+                {
+                    (901, "Punch", 1, 1, 1),
+                    (902, "Stones", 1, 1, 1),
+                },
+            };
+
+            foreach (var (id, name, maxLevel, minBase, minJob) in skills)
+            {
+                sim.AddSkill(id, name, maxLevel, minBase, minJob);
+            }
+        }
+
         private static int CalculateTotalPoints(int baseLevel)
         {
-            // Vereinfacht: 1 Punkt pro Level ab Level 1
+            // RO: 1 Stat-Punkt pro Level ab Level 1 (Base Level)
             return Math.Max(0, baseLevel - 1);
         }
     }
