@@ -92,6 +92,7 @@ namespace RagnaController.Core.Calculators {
 
                 // ── 2. Klasse (Pre-Renewal 2nd Jobs) ──
                 "knight" => KnightSkills(),
+                "crusader" => CrusaderSkills(),
                 "wizard" => WizardSkills(),
                 "hunter" => HunterSkills(),
                 "priest" => PriestSkills(),
@@ -124,6 +125,8 @@ namespace RagnaController.Core.Calculators {
                 "gangster" => GangsterSkills(),
                 "kagerou" or "oboro" or "ninja" => NinjaSkills(),
                 "rebellion" => RebellionSkills(),
+                "bard" => BardSkills(),
+                "dancer" => DancerSkills(),
                 // ── Baby-Klassen ──
                 "baby novice" => BabyNoviceSkills(),
                 "baby swordman" => BabySwordmanSkills(),
@@ -134,11 +137,17 @@ namespace RagnaController.Core.Calculators {
                 "baby thief" => BabyThiefSkills(),
                 // ── Baby Transcendent ──
                 "baby knight" => BabyKnightSkills(),
+                "baby crusader" => BabyCrusaderSkills(),
                 "baby wizard" => BabyWizardSkills(),
+                "baby high wizard" => BabyHighWizardSkills(),
                 "baby hunter" => BabyHunterSkills(),
+                "baby sniper" => BabySniperSkills(),
                 "baby priest" => BabyPriestSkills(),
+                "baby high priest" => BabyHighPriestSkills(),
                 "baby blacksmith" => BabyBlacksmithSkills(),
+                "baby creator" => BabyCreatorSkills(),
                 "baby assassin" => BabyAssassinSkills(),
+                "baby assassin cross" => BabyAssassinCrossSkills(),
                 // ── 3. Klasse (weitere) ──
                 "gunslinger" => GunslingerSkills(),
                 _ => NoviceSkills(),
@@ -156,17 +165,17 @@ namespace RagnaController.Core.Calculators {
             // 1. Klasse
             "Novice", "Swordman", "Mage", "Archer", "Acolyte", "Merchant", "Thief",
             // 2. Klasse
-            "Knight", "Wizard", "Hunter", "Priest", "Blacksmith", "Assassin",
+            "Knight", "Crusader", "Wizard", "Hunter", "Priest", "Blacksmith", "Assassin",
             // Transcendent
             "Lord Knight", "High Wizard", "Sniper", "High Priest", "Professor", "Stalker",
             // 3. Klasse
-            "Rune Knight", "Royal Guard", "Sorcerer", "Shadow Chaser", "Genetic", "Guillotine Cross", "Arch Bishop", "Minstrel", "Wanderer", "Paladin",
+            "Rune Knight", "Royal Guard", "Sorcerer", "Shadow Chaser", "Genetic", "Guillotine Cross", "Arch Bishop", "Minstrel", "Wanderer", "Paladin", "Gunslinger",
             // Erweiterte / Sonderklassen
-            "Super Novice", "Taekwon Boy", "Taekwon Girl", "Star Gladiator", "Soul Linker", "Gangster", "Kagerou", "Oboro", "Rebellion",
+            "Super Novice", "Taekwon Boy", "Taekwon Girl", "Star Gladiator", "Soul Linker", "Gangster", "Kagerou", "Oboro", "Rebellion", "Bard", "Dancer",
             // Baby-Klassen
             "Baby Novice", "Baby Swordman", "Baby Mage", "Baby Archer", "Baby Acolyte", "Baby Merchant", "Baby Thief",
             // Baby Transcendent
-            "Baby Knight", "Baby Wizard", "Baby Hunter", "Baby Priest", "Baby Blacksmith", "Baby Assassin",
+            "Baby Knight", "Baby Crusader", "Baby Wizard", "Baby High Wizard", "Baby Hunter", "Baby Sniper", "Baby Priest", "Baby High Priest", "Baby Blacksmith", "Baby Creator", "Baby Assassin", "Baby Assassin Cross",
             // 3. Klasse (weitere)
             "Gunslinger",
         }.AsReadOnly();
@@ -264,6 +273,19 @@ namespace RagnaController.Core.Calculators {
                 (604, "Spear Boom", 5, 50, 50),
                 (605, "Skid Trap", 5, 50, 50),
                 (606, "Change Material", 5, 50, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] CrusaderSkills() =>
+            new[]
+            {
+                (611, "Spear Mastery", 10, 50, 50),
+                (612, "Two-Handed Spear Mastery", 10, 50, 50),
+                (613, "Pole Arm Mastery", 10, 50, 50),
+                (614, "Spear Boom", 5, 50, 50),
+                (615, "Skid Trap", 5, 50, 50),
+                (616, "Change Material", 5, 50, 50),
+                (617, "Spirit of Sword", 10, 50, 50),
+                (618, "Provoke", 10, 50, 50),
             };
 
         private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] WizardSkills() =>
@@ -623,6 +645,17 @@ namespace RagnaController.Core.Calculators {
                 (4206, "Brandish Spear", 10, 70, 70),
             };
 
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyCrusaderSkills() =>
+            new[]
+            {
+                (4211, "Spear Mastery", 10, 70, 70),
+                (4212, "Two-Handed Spear Mastery", 10, 70, 70),
+                (4213, "Pole Arm Mastery", 10, 70, 70),
+                (4214, "Spear Boom", 5, 70, 70),
+                (4215, "Skid Trap", 5, 70, 70),
+                (4216, "Change Material", 5, 70, 70),
+            };
+
         private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyWizardSkills() =>
             new[]
             {
@@ -634,6 +667,16 @@ namespace RagnaController.Core.Calculators {
                 (4306, "Frost Diver", 10, 70, 70),
             };
 
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyHighWizardSkills() =>
+            new[]
+            {
+                (4321, "Fire Ball", 10, 70, 70),
+                (4322, "Fire Wall", 10, 70, 70),
+                (4323, "Meteor Storm", 10, 70, 70),
+                (4324, "Storm Gust", 10, 70, 70),
+                (4325, "Lord of Vermilion", 10, 70, 70),
+            };
+
         private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyHunterSkills() =>
             new[]
             {
@@ -642,6 +685,16 @@ namespace RagnaController.Core.Calculators {
                 (4403, "Blaze", 10, 70, 70),
                 (4404, "Concentration", 10, 70, 70),
                 (4405, "Critical Explosion", 5, 70, 70),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabySniperSkills() =>
+            new[]
+            {
+                (4431, "Double Strafe", 10, 70, 70),
+                (4432, "Arrow Storm", 10, 70, 70),
+                (4433, "Blaze", 10, 70, 70),
+                (4434, "Sharpshooting", 10, 70, 70),
+                (4435, "Fletcherize", 1, 70, 70),
             };
 
         private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyPriestSkills() =>
@@ -655,6 +708,17 @@ namespace RagnaController.Core.Calculators {
                 (4506, "Kyrie Eleison", 10, 70, 70),
             };
 
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyHighPriestSkills() =>
+            new[]
+            {
+                (4531, "Heal", 10, 70, 70),
+                (4532, "Blessing", 10, 70, 70),
+                (4533, "Increase AGI", 10, 70, 70),
+                (4534, "Resurrection", 10, 70, 70),
+                (4535, "Magnificat", 10, 70, 70),
+                (4536, "Turn Undead", 10, 70, 70),
+            };
+
         private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyBlacksmithSkills() =>
             new[]
             {
@@ -664,6 +728,15 @@ namespace RagnaController.Core.Calculators {
                 (4604, "Coin", 10, 70, 70),
             };
 
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyCreatorSkills() =>
+            new[]
+            {
+                (4631, "Mammonite", 10, 70, 70),
+                (4632, "Overcharge", 10, 70, 70),
+                (4633, "Discount", 10, 70, 70),
+                (4634, "Coin", 10, 70, 70),
+            };
+
         private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyAssassinSkills() =>
             new[]
             {
@@ -671,6 +744,16 @@ namespace RagnaController.Core.Calculators {
                 (4702, "Hide", 1, 70, 70),
                 (4703, "Double Attack", 10, 70, 70),
                 (4704, "Critical Strike", 10, 70, 70),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyAssassinCrossSkills() =>
+            new[]
+            {
+                (4731, "Steal", 10, 70, 70),
+                (4732, "Hide", 1, 70, 70),
+                (4733, "Double Attack", 10, 70, 70),
+                (4734, "Critical Strike", 10, 70, 70),
+                (4735, "Enchant Poison", 10, 70, 70),
             };
 
         #endregion
@@ -684,6 +767,22 @@ namespace RagnaController.Core.Calculators {
                 (4802, "Full Buster", 10, 99, 50),
                 (4803, "Snowflake Throw", 10, 99, 50),
                 (4804, "Gunslinger", 10, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BardSkills() =>
+            new[]
+            {
+                (4901, "Swing Dance", 5, 99, 50),
+                (4902, "Saturn Frosty Day", 5, 99, 50),
+                (4903, "Winter Rose of Wind", 5, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] DancerSkills() =>
+            new[]
+            {
+                (5001, "Swing Dance", 5, 99, 50),
+                (5002, "Saturn Frosty Day", 5, 99, 50),
+                (5003, "Winter Rose of Wind", 5, 99, 50),
             };
 
         #endregion
