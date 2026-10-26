@@ -24,6 +24,21 @@
 
 ---
 
+### Epic 13: In-Game Overlay Completeness (v2.5.0) — ✅ COMPLETE
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-2201** | Skill-Cooldown-Overlay: Visuelle Balken für F1-F12 (Config: Position, Größe, Opacity) | Coder | HIGH | — | ✅ COMPLETE (2026-10-20) |
+| **TASK-2202** | Buff/Debuff Timer Overlay: Integration mit BuffManager (aktive Buffs + Countdown) | Coder | HIGH | TASK-2201 | ✅ COMPLETE (2026-10-20) |
+| **TASK-2203** | HP/SP Overlay (OCR-basiert): Windows OCR / Tesseract für HP/SP-Balken lesen | Coder | HIGH | TASK-2202 | ✅ COMPLETE (2026-10-21) |
+| **TASK-2204** | Target-Info Overlay (OCR): Ziel-HP, Level, Name, Distanz | Coder | HIGH | TASK-2203 | ✅ COMPLETE (2026-10-21) |
+| **TASK-2205** | Overlay-Designer: Drag & Drop Positionierung, Presets speichern/laden | Designer | HIGH | TASK-2204 | ✅ COMPLETE (2026-10-21) |
+| **TASK-2206** | Overlay-Themes: Dark/Light/HighContrast per Profil wählbar | Designer | MEDIUM | TASK-2205 | ✅ COMPLETE (2026-10-21) |
+| **TASK-2207** | Damage Numbers Overlay (Optional): Eigene Schadensanzeige über Ziel | Coder | LOW | TASK-2205 | ✅ COMPLETE (2026-10-21) |
+| **TASK-2208** | Unit-Tests: Overlay-Rendering, OCR-Accuracy, Performance | QA | MEDIUM | TASK-2207 | ✅ COMPLETE (2026-10-21) |
+
+---
+
 ### Epic 14: Profile System Advanced Features (v2.5.0) — ✅ COMPLETE
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
@@ -66,7 +81,7 @@
 
 ---
 
-### Epic 17: AI-Assisted Features (White-Hat) (v2.6.0) — ✅ COMPLETE
+### Epic 17: AI-Assisted Features (White-Hat) (v2.6.0) — 📋 PLANUNG
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
@@ -248,7 +263,7 @@
 **Offene Epics zur Auswahl (alle PLANUNG, keine Blocker):**
 - **Epic 15: Controller Hardware Advanced Features** (TASK-2401-2408 alle COMPLETE)
 - **Epic 16: Smart Cursor Extensions** (TASK-2501-2505 alle COMPLETE)
-- **Epic 17: AI-Assisted Features** (TASK-2601-2606 alle COMPLETE)
+- **Epic 17: AI-Assisted Features** (TASK-2601-2606 alle 📋 OPEN / PLANUNG)
 - **Epic 18: Community & Social Features** (TASK-2701-2706 alle COMPLETE)
 - **Epic 19: Accessibility & UX Polish** (TASK-2801-2807 alle COMPLETE)
 - **Epic 20: Developer & Power-User Tools** (TASK-2901-2906 alle COMPLETE)
