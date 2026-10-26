@@ -5,11 +5,11 @@
 
 ## 🎯 Current Milestone
 **Phase:** All Epics 1-28 COMPLETE + Vollständige Lokalisierung (48 Sprachen × 1289 Keys)
-**Status:** Build: 0 errors | Tests: 1076/1076 PASS (Flaky-Test behoben)
-**Git HEAD:** commit c5ba188 (KANBAN.md alle Epics 22-28 COMPLETE, Duplikate markiert)
+**Status:** Build: 0 errors | Tests: 1106/1106 PASS (ROGameKnowledgeTests hinzugefügt)
+**Git HEAD:** commit bc91f6c (Epik 21 abgeschlossen - Unit Tests für alle RO-Komponenten)
 **Last Updated:** 2026-10-26
-**Status:** Alle Epics 1-28 COMPLETE. RagnaController ist feature-complete. Build: 0 Fehler, Tests: 1076/1076 PASS. Stryker.NET CI deaktiviert (WPF App.g.cs Problem, Issue #3813).
-**Release:** v2.6.0 (2026-10-24) — Major Release mit allen Epics 1-28, Code Deduplication, Version Bump
+**Status:** Alle Epics 1-28 COMPLETE. Epik 21 (RO Game Knowledge) vollständig abgeschlossen mit Unit Tests. Build: 0 Fehler, Tests: 1106/1106 PASS. Stryker.NET CI deaktiviert (WPF App.g.cs Problem, Issue #3813).
+**Release:** v2.6.1 (2026-10-26) — Alle Epics 1-28, vollständige Lokalisierung, RO Game Knowledge (Monster, Maps, Items, Skills, Stats, EXP, Calculator), Unit Tests
 
 ---
 
@@ -83,10 +83,10 @@
 ## ✅ Test Status
 | Suite | Count | Status | Command |
 |-------|-------|--------|---------|
-| Unit + Integration (Debug) | 899 | ✅ PASS (1 pre-existing flaky) | `dotnet test --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
-| Release | 847 | ✅ PASS (1 pre-existing flaky) | `dotnet test -c Release --filter "FullyQualifiedName~RagnaController.Tests" -- RAGNACONTROLLER_SKIP_SDL=1` |
+| Unit + Integration (Debug) | 1106 | ✅ PASS | `dotnet test` |
+| Release | 1106 | ✅ PASS | `dotnet test -c Release` |
 | Performance/Benchmarks | 7 suites | ✅ Baselines | `dotnet run -c Release -p benchmarks/RagnaController.Benchmarks` |
-| Stryker Mutation | ≥80% target | ✅ CI Ready | `dotnet stryker` (CI: windows-latest) |
+| Stryker Mutation | ≥80% target | ⏸️ Blocked | `dotnet stryker` (WPF App.g.cs Issue #3813) |
 
 ---
 
