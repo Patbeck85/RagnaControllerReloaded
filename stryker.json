@@ -15,8 +15,9 @@
       "src/RagnaController/Core/Windows/*Window*.xaml.cs",
       "src/RagnaController/Core/App.xaml.cs",
       "src/RagnaController/Core/DeviceNotificationWindow.cs",
-      "src/RagnaController/Core/*.g.cs"
+      "src/RagnaController/Core/Utilities/Coordinators/*.cs"
     ],
+    "disable-mix-mutants": true,
     "test-runner": "vstest",
     "test-projects": ["tests/RagnaController.Tests/RagnaController.Tests.csproj"],
     "project": "src/RagnaController/RagnaController.csproj",
