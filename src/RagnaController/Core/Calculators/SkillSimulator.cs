@@ -76,75 +76,48 @@ namespace RagnaController.Core.Calculators {
             foreach (var skill in _skills) skill.Level = 0;
         }
 
-        /// <summary>Lädt vordefinierte RO-Skills für eine Base-Klasse.</summary>
+        /// <summary>Lädt vordefinierte RO-Skills für eine Jobklasse.</summary>
         public static void LoadClassSkills(SkillSimulator sim, string className)
         {
             var skills = className.ToLowerInvariant() switch
             {
-                "swordman" => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
-                {
-                    (1, "Sword Mastery", 10, 1, 1),
-                    (2, "Spear Mastery", 10, 1, 1),
-                    (3, "Two-Handed Sword Mastery", 10, 1, 1),
-                    (4, "Two-Handed Spear Mastery", 10, 1, 1),
-                    (5, "Pole Arm Mastery", 10, 1, 1),
-                    (6, "Bash", 10, 1, 1),
-                    (7, "Magnum Break", 10, 1, 1),
-                    (8, "Provoke", 10, 1, 1),
-                    (9, "Weapon Research", 10, 1, 1),
-                    (10, "First Aid", 5, 1, 1),
-                },
-                "mage" => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
-                {
-                    (101, "Fire Bolt", 10, 1, 1),
-                    (102, "Fire Ball", 10, 1, 1),
-                    (103, "Fire Wall", 10, 1, 1),
-                    (104, "Meteor Storm", 10, 1, 1),
-                    (105, "Lightning Bolt", 10, 1, 1),
-                    (106, "Thunder Storm", 10, 1, 1),
-                    (107, "Frost Diver", 10, 1, 1),
-                    (108, "Ice Wall", 10, 1, 1),
-                    (109, "Energy Coat", 1, 1, 1),
-                    (110, "Increase SP Recovery", 1, 1, 1),
-                    (111, "Heal", 10, 1, 1),
-                    (112, "Blessing", 10, 1, 1),
-                    (113, "Increase AGI", 10, 1, 1),
-                },
-                "archer" => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
-                {
-                    (201, "Double Strafe", 10, 1, 1),
-                    (202, "Arrow Storm", 10, 1, 1),
-                    (203, "Blaze", 10, 1, 1),
-                    (204, "Concentration", 1, 1, 1),
-                    (205, "Critical Explosion", 1, 1, 1),
-                },
-                "acolyte" => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
-                {
-                    (301, "Heal", 10, 1, 1),
-                    (302, "Blessing", 10, 1, 1),
-                    (303, "Increase AGI", 10, 1, 1),
-                    (304, "Resurrection", 10, 1, 1),
-                    (305, "Glory", 1, 1, 1),
-                },
-                "merchant" => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
-                {
-                    (401, "Discount", 10, 1, 1),
-                    (402, "Overcharge", 10, 1, 1),
-                    (403, "Mammonite", 10, 1, 1),
-                    (404, "Coin", 10, 1, 1),
-                },
-                "thief" => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
-                {
-                    (501, "Steal", 10, 1, 1),
-                    (502, "Hide", 1, 1, 1),
-                    (503, "Double Attack", 10, 1, 1),
-                    (504, "Critical Strike", 1, 1, 1),
-                },
-                "novice" or _ => new (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[]
-                {
-                    (901, "Punch", 1, 1, 1),
-                    (902, "Stones", 1, 1, 1),
-                },
+                // ── 1. Klasse (Base Jobs) ──
+                "novice" => NoviceSkills(),
+                "swordman" => SwordmanSkills(),
+                "mage" => MageSkills(),
+                "archer" => ArcherSkills(),
+                "acolyte" => AcolyteSkills(),
+                "merchant" => MerchantSkills(),
+                "thief" => ThiefSkills(),
+
+                // ── 2. Klasse (Pre-Renewal 2nd Jobs) ──
+                "knight" => KnightSkills(),
+                "wizard" => WizardSkills(),
+                "hunter" => HunterSkills(),
+                "priest" => PriestSkills(),
+                "blacksmith" or "creator" => BlacksmithSkills(),
+                "assassin" => AssassinSkills(),
+
+                // ── Transcendent 2nd Jobs ──
+                "lord knight" => LordKnightSkills(),
+                "high wizard" => HighWizardSkills(),
+                "sniper" => SniperSkills(),
+                "high priest" => HighPriestSkills(),
+                "professor" => ProfessorSkills(),
+                "stalker" or "assassin cross" => StalkerSkills(),
+
+                // ── 3. Klasse (Renewal 3rd Jobs) ──
+                "rune knight" => RuneKnightSkills(),
+                "royal guard" => RoyalGuardSkills(),
+                "sorcerer" => SorcererSkills(),
+                "shadow chaser" => ShadowChaserSkills(),
+                "genetic" => GeneticSkills(),
+                "guillotine cross" => GuillotineCrossSkills(),
+                "arch bishop" => ArchBishopSkills(),
+                "minstrel" => MinstrelSkills(),
+                "wanderer" => WandererSkills(),
+                "paladin" => PaladinSkills(),
+                _ => NoviceSkills(),
             };
 
             foreach (var (id, name, maxLevel, minBase, minJob) in skills)
@@ -153,9 +126,323 @@ namespace RagnaController.Core.Calculators {
             }
         }
 
+        /// <summary>Gibt alle unterstützten Jobklassen zurück.</summary>
+        public static IReadOnlyList<string> GetSupportedClasses() => new List<string>
+        {
+            // 1. Klasse
+            "Novice", "Swordman", "Mage", "Archer", "Acolyte", "Merchant", "Thief",
+            // 2. Klasse
+            "Knight", "Wizard", "Hunter", "Priest", "Blacksmith", "Assassin",
+            // Transcendent
+            "Lord Knight", "High Wizard", "Sniper", "High Priest", "Professor", "Stalker",
+            // 3. Klasse
+            "Rune Knight", "Royal Guard", "Sorcerer", "Shadow Chaser", "Genetic", "Guillotine Cross", "Arch Bishop", "Minstrel", "Wanderer", "Paladin",
+        }.AsReadOnly();
+
+        #region 1. Klasse (Base Jobs)
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] NoviceSkills() =>
+            new[]
+            {
+                (901, "Punch", 1, 1, 1),
+                (902, "Stones", 1, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] SwordmanSkills() =>
+            new[]
+            {
+                (1, "Sword Mastery", 10, 1, 1),
+                (2, "Spear Mastery", 10, 1, 1),
+                (3, "Two-Handed Sword Mastery", 10, 1, 1),
+                (4, "Two-Handed Spear Mastery", 10, 1, 1),
+                (5, "Pole Arm Mastery", 10, 1, 1),
+                (6, "Bash", 10, 1, 1),
+                (7, "Magnum Break", 10, 1, 1),
+                (8, "Provoke", 10, 1, 1),
+                (9, "Weapon Research", 10, 1, 1),
+                (10, "First Aid", 5, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] MageSkills() =>
+            new[]
+            {
+                (101, "Fire Bolt", 10, 1, 1),
+                (102, "Fire Ball", 10, 1, 1),
+                (103, "Fire Wall", 10, 1, 1),
+                (104, "Meteor Storm", 10, 1, 1),
+                (105, "Lightning Bolt", 10, 1, 1),
+                (106, "Thunder Storm", 10, 1, 1),
+                (107, "Frost Diver", 10, 1, 1),
+                (108, "Ice Wall", 10, 1, 1),
+                (109, "Energy Coat", 1, 1, 1),
+                (110, "Increase SP Recovery", 1, 1, 1),
+                (111, "Heal", 10, 1, 1),
+                (112, "Blessing", 10, 1, 1),
+                (113, "Increase AGI", 10, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] ArcherSkills() =>
+            new[]
+            {
+                (201, "Double Strafe", 10, 1, 1),
+                (202, "Arrow Storm", 10, 1, 1),
+                (203, "Blaze", 10, 1, 1),
+                (204, "Concentration", 1, 1, 1),
+                (205, "Critical Explosion", 1, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] AcolyteSkills() =>
+            new[]
+            {
+                (301, "Heal", 10, 1, 1),
+                (302, "Blessing", 10, 1, 1),
+                (303, "Increase AGI", 10, 1, 1),
+                (304, "Resurrection", 10, 1, 1),
+                (305, "Glory", 1, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] MerchantSkills() =>
+            new[]
+            {
+                (401, "Discount", 10, 1, 1),
+                (402, "Overcharge", 10, 1, 1),
+                (403, "Mammonite", 10, 1, 1),
+                (404, "Coin", 10, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] ThiefSkills() =>
+            new[]
+            {
+                (501, "Steal", 10, 1, 1),
+                (502, "Hide", 1, 1, 1),
+                (503, "Double Attack", 10, 1, 1),
+                (504, "Critical Strike", 1, 1, 1),
+            };
+
+        #endregion
+
+        #region 2. Klasse (Pre-Renewal 2nd Jobs)
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] KnightSkills() =>
+            new[]
+            {
+                (601, "Spear Mastery", 10, 50, 50),
+                (602, "Two-Handed Spear Mastery", 10, 50, 50),
+                (603, "Pole Arm Mastery", 10, 50, 50),
+                (604, "Spear Boom", 5, 50, 50),
+                (605, "Skid Trap", 5, 50, 50),
+                (606, "Change Material", 5, 50, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] WizardSkills() =>
+            new[]
+            {
+                (701, "Fire Ball", 10, 50, 50),
+                (702, "Fire Wall", 10, 50, 50),
+                (703, "Meteor Storm", 10, 50, 50),
+                (704, "Lightning Bolt", 10, 50, 50),
+                (705, "Thunder Storm", 10, 50, 50),
+                (706, "Frost Diver", 10, 50, 50),
+                (707, "Ice Wall", 10, 50, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] HunterSkills() =>
+            new[]
+            {
+                (801, "Double Strafe", 10, 50, 50),
+                (802, "Arrow Storm", 10, 50, 50),
+                (803, "Blaze", 10, 50, 50),
+                (804, "Concentration", 10, 50, 50),
+                (805, "Critical Explosion", 5, 50, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] PriestSkills() =>
+            new[]
+            {
+                (901, "Heal", 10, 50, 50),
+                (902, "Blessing", 10, 50, 50),
+                (903, "Increase AGI", 10, 50, 50),
+                (904, "Resurrection", 10, 50, 50),
+                (905, "Glory", 1, 50, 50),
+                (906, "Kyrie Eleison", 10, 50, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BlacksmithSkills() =>
+            new[]
+            {
+                (1001, "Mammonite", 10, 50, 50),
+                (1002, "Overcharge", 10, 50, 50),
+                (1003, "Discount", 10, 50, 50),
+                (1004, "Coin", 10, 50, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] AssassinSkills() =>
+            new[]
+            {
+                (1101, "Steal", 10, 50, 50),
+                (1102, "Hide", 1, 50, 50),
+                (1103, "Double Attack", 10, 50, 50),
+                (1104, "Critical Strike", 10, 50, 50),
+            };
+
+        #endregion
+
+        #region Transcendent 2nd Jobs
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] LordKnightSkills() =>
+            new[]
+            {
+                (1201, "Sword Mastery", 10, 70, 70),
+                (1202, "Spear Mastery", 10, 70, 70),
+                (1203, "Two-Handed Sword Mastery", 10, 70, 70),
+                (1204, "Bowling Bash", 10, 70, 70),
+                (1205, "Brandish Spear", 10, 70, 70),
+                (1206, "Spiral Pierce", 10, 70, 70),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] HighWizardSkills() =>
+            new[]
+            {
+                (1301, "Fire Ball", 10, 70, 70),
+                (1302, "Fire Wall", 10, 70, 70),
+                (1303, "Meteor Storm", 10, 70, 70),
+                (1304, "Storm Gust", 10, 70, 70),
+                (1305, "Lord of Vermilion", 10, 70, 70),
+                (1306, "Varetyr Spear", 10, 70, 70),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] SniperSkills() =>
+            new[]
+            {
+                (1401, "Double Strafe", 10, 70, 70),
+                (1402, "Arrow Storm", 10, 70, 70),
+                (1403, "Blaze", 10, 70, 70),
+                (1404, "Sharpshooting", 10, 70, 70),
+                (1405, "Fletcherize", 1, 70, 70),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] HighPriestSkills() =>
+            new[]
+            {
+                (1501, "Heal", 10, 70, 70),
+                (1502, "Blessing", 10, 70, 70),
+                (1503, "Increase AGI", 10, 70, 70),
+                (1504, "Resurrection", 10, 70, 70),
+                (1505, "Magnificat", 10, 70, 70),
+                (1506, "Turn Undead", 10, 70, 70),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] ProfessorSkills() =>
+            new[]
+            {
+                (1601, "Fire Ball", 10, 70, 70),
+                (1602, "Fire Wall", 10, 70, 70),
+                (1603, "Meteor Storm", 10, 70, 70),
+                (1604, "Storm Gust", 10, 70, 70),
+                (1605, "Lord of Vermilion", 10, 70, 70),
+                (1606, "Varetyr Spear", 10, 70, 70),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] StalkerSkills() =>
+            new[]
+            {
+                (1701, "Steal", 10, 70, 70),
+                (1702, "Hide", 1, 70, 70),
+                (1703, "Double Attack", 10, 70, 70),
+                (1704, "Critical Strike", 10, 70, 70),
+                (1705, "Enchant Poison", 10, 70, 70),
+            };
+
+        #endregion
+
+        #region 3. Klasse (Renewal 3rd Jobs)
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] RuneKnightSkills() =>
+            new[]
+            {
+                (1801, "Dragon Breath", 10, 99, 50),
+                (1802, "Runic Strike", 10, 99, 50),
+                (1803, "Dragon Training", 5, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] RoyalGuardSkills() =>
+            new[]
+            {
+                (1901, "Spear Mastery", 10, 99, 50),
+                (1902, "Brandish Spear", 10, 99, 50),
+                (1903, "Spiral Pierce", 10, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] SorcererSkills() =>
+            new[]
+            {
+                (2001, "Fire Ball", 10, 99, 50),
+                (2002, "Fire Wall", 10, 99, 50),
+                (2003, "Meteor Storm", 10, 99, 50),
+                (2004, "Storm Gust", 10, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] ShadowChaserSkills() =>
+            new[]
+            {
+                (2101, "Steal", 10, 99, 50),
+                (2102, "Hide", 1, 99, 50),
+                (2103, "Double Attack", 10, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] GeneticSkills() =>
+            new[]
+            {
+                (2201, "Mammonite", 10, 99, 50),
+                (2202, "Overcharge", 10, 99, 50),
+                (2203, "Discount", 10, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] GuillotineCrossSkills() =>
+            new[]
+            {
+                (2301, "Steal", 10, 99, 50),
+                (2302, "Hide", 1, 99, 50),
+                (2303, "Double Attack", 10, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] ArchBishopSkills() =>
+            new[]
+            {
+                (2401, "Heal", 10, 99, 50),
+                (2402, "Blessing", 10, 99, 50),
+                (2403, "Increase AGI", 10, 99, 50),
+                (2404, "Resurrection", 10, 99, 50),
+                (2405, "Turn Undead", 10, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] MinstrelSkills() =>
+            new[]
+            {
+                (2501, "Swing Dance", 5, 99, 50),
+                (2502, "Saturn Frosty Day", 5, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] WandererSkills() =>
+            new[]
+            {
+                (2601, "Swing Dance", 5, 99, 50),
+                (2602, "Saturn Frosty Day", 5, 99, 50),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] PaladinSkills() =>
+            new[]
+            {
+                (2701, "Sword Mastery", 10, 99, 50),
+                (2702, "Spear Mastery", 10, 99, 50),
+                (2703, "Two-Handed Sword Mastery", 10, 99, 50),
+            };
+
+        #endregion
+
         private static int CalculateTotalPoints(int baseLevel)
         {
-            // RO: 1 Stat-Punkt pro Level ab Level 1 (Base Level)
+            // RO: 1 Skill-Punkt pro Base-Level ab Level 1
             return Math.Max(0, baseLevel - 1);
         }
     }
