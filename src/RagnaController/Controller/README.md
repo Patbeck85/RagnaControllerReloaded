@@ -6,11 +6,11 @@ Handles all physical controller input: XInput polling, DualSense HID communicati
 
 | File | Responsibility |
 |------|----------------|
-| `ControllerService.cs` | XInput polling, WMI brand detection, controller enumeration |
-| `DualSenseHardwareService.cs` | DualSense Lightbar colors and Adaptive Triggers via Raw HID |
-| `DualSenseLightbarService.cs` | PS5 LED color control via Raw HID USB reports |
-| `GyroService.cs` | Raw HID gyro reading with low-pass filtering |
-| `ControllerSnapshot.cs` | Controller state snapshot for UI binding |
+|| `ButtonState.cs` | Readonly Record-Struct mit Button-Status-Flags |
+|| `ControllerSnapshot.cs` | Controller-Status-Snapshot für UI-Binding |
+|| `DualSenseHardwareService.cs` | DualSense-Lightbar-Farben und Adaptive Triggers via Raw HID |
+|| `SnapshotBuilder.cs` | Baut ControllerSnapshot aus Engine-Zustand |
+|| `XInputFallbackService.cs` | XInput-Fallback-Controller-Dienst |
 
 ## Architecture
 

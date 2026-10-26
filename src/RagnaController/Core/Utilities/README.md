@@ -6,27 +6,27 @@ General-purpose utilities, helpers, and shared infrastructure.
 
 | File | Responsibility |
 |------|----------------|
-| `EngineOrchestrator.cs` | Main tick coordination, lifecycle management |
-| `EngineOptimizationPool.cs` | String pooling for hot-path allocations |
-| `AppVersion.cs` | Application version info |
-| `Messages.cs` | App-wide message constants |
-| `RoFeatures.cs` | RO feature flags & detection |
-| `NativeMethods.cs` | Win32 P/Invoke declarations |
-| `NativeMethodsImpl.cs` | Native methods implementation |
-| `NativeStructs.cs` | Win32 struct definitions |
-| `ProcessNameResolver.cs` | Process name resolution |
-| `RagnaControllerETW.cs` | ETW event source |
-| `ShareCodeValidator.cs` | Share code validation |
-| `SnapshotBuilder.cs` | Builds ControllerSnapshot from engine state |
-| `AdvancedLogger.cs` | High-performance logger |
-| `FeedbackSystem.cs` | User feedback collection |
-| `GestureRecognizer.cs` | Gesture recognition |
-| `GpuOverlayProfiler.cs` | GPU overlay profiling |
-| `KiteStates.cs` | Kite engine state definitions |
-| `MainViewModel.cs` | Main WPF ViewModel (MVVM) |
-| `ObjectPools.cs` | Object pooling utilities |
-| `Pools.cs` | Generic pool implementations |
-| `EngineWatchdog.cs` | Tick latency watchdog |
+|| `AdvancedLogger.cs` | Hochperformanter Logger |
+|| `AppVersion.cs` | Anwendungs-Versions-Info |
+|| `EngineOptimizationPool.cs` | String-Pooling für Hot-Path-Zuweisungen |
+|| `EngineOrchestrator.cs` | Haupt-Tick-Koordinierung, Lebenszyklus-Verwaltung |
+|| `EngineWatchdog.cs` | Tick-Latenz-Watchdog |
+|| `FeedbackSystem.cs` | Benutzer-Feedback-Sammlung |
+|| `GestureRecognizer.cs` | Gestenerkennung |
+|| `GpuOverlayProfiler.cs` | GPU-Overlay-Profiling |
+|| `KiteStates.cs` | Kite-Engine-Status-Definitionen |
+|| `MainViewModel.cs` | Haupt-WPF ViewModel (MVVM) |
+|| `Messages.cs` | App-weite Nachrichten-Konstanten |
+|| `NativeMethods.cs` | Win32 P/Invoke-Deklarationen |
+|| `NativeMethodsImpl.cs` | Native-Methoden-Implementierung |
+|| `NativeStructs.cs` | Win32-Struct-Definitionen |
+|| `ObjectPools.cs` | Objekt-Pooling-Dienstprogramme |
+|| `PerformanceProfiler.cs` | Performance-Profiling-Dienstprogramme |
+|| `Pools.cs` | Generische Pool-Implementierungen |
+|| `ProcessNameResolver.cs` | Prozessnamen-Auflösung |
+|| `RagnaControllerETW.cs` | ETW-Ereignisquelle |
+|| `RoFeatures.cs` | RO-Feature-Flags & -Erkennung |
+|| `ShareCodeValidator.cs` | Share-Code-Validierung |
 
 ## Notes
 

@@ -6,11 +6,20 @@ Data transfer objects and record structs used across all layers.
 
 | File | Responsibility |
 |------|----------------|
-| `ParsedInput.cs` | Readonly record struct (current/prev frame input) |
-| `ControllerState.cs` | Readonly record struct for UI binding |
-| `VirtualKey.cs` | Enum matching Win32 VK codes |
-| `Settings.cs` | Global app settings (AppData) |
-| *(additional model classes)* | Various data models |
+|| `AdaptiveTriggerMode.cs` | Enum für DualSense Adaptive-Trigger-Modi |
+|| `BuffRegistry.cs` | Registry für aktive Buff/Debuff-Verfolgung |
+|| `ButtonAction.cs` | Enum für Button-Action-Mappings |
+|| `ButtonKey.cs` | Enum passend zu Win32 VK-Codes mit Button-Key-Mappings |
+|| `ChordConfig.cs` | Konfiguration für Akkord-/Button-Kombinationen |
+|| `CommunityEntry.cs` | Datenmodell für Community-Hub-Einträge |
+|| `ItemConfig.cs` | Konfiguration für Spielgegenstände |
+|| `MobDatabase.cs` | Monster-Datenbank-Modell |
+|| `Monster.cs` | Einzelnes Monster-Datenmodell |
+|| `ParsedInput.cs` | Readonly Record-Struct (aktueller/vorheriger Frame-Input) |
+|| `Settings.cs` | Globale App-Einstellungen (AppData) |
+|| `StorageDropPlanner.cs` | Storage-Drop-Organisations-Planer |
+|| `UpdateInfo.cs` | Update-Prüfungs-Informationen-Modell |
+|| `VirtualKey.cs` | Enum passend zu Win32 VK-Codes |
 
 ## Notes
 
