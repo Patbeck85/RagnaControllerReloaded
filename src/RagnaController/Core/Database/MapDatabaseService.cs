@@ -46,6 +46,14 @@ namespace RagnaController.Core.Database {
             foreach (var m in BuildSphinxDungeons()) yield return m;
             foreach (var m in BuildYunoDungeons()) yield return m;
             foreach (var m in BuildSpecialDungeons()) yield return m;
+            foreach (var m in BuildJawaiiMaps()) yield return m;
+            foreach (var m in BuildLouyangMaps()) yield return m;
+            foreach (var m in BuildAmatsuMaps()) yield return m;
+            foreach (var m in BuildAyothayaMaps()) yield return m;
+            foreach (var m in BuildSplendideMaps()) yield return m;
+            foreach (var m in BuildNiflheimMaps()) yield return m;
+            foreach (var m in BuildThanatosMaps()) yield return m;
+            foreach (var m in BuildByalanMaps()) yield return m;
         }
 
         // ── Städte ──
@@ -57,15 +65,15 @@ namespace RagnaController.Core.Database {
             yield return City(4, "aldebaran", "AldeBaran", 1, 15, 1, 50, new[] { 1, 401 });
             yield return City(5, "alberta", "Alberta", 1, 15, 1, 30, new[] { 1 });
             yield return City(6, "comodo", "Comodo", 40, 70, 40, 90, new[] { 631 });
-            yield return City(7, "lighthalzen", "Lighthalzen", 70, 120, 70, 150, Array.Empty<int>());
+            yield return City(7, "lighthalzen", "Lighthalzen", 70, 120, 70, 150, new int[0]);
             yield return City(8, "morroc", "Morroc", 20, 60, 20, 100, new[] { 501, 651 });
-            yield return City(9, "rachel", "Rachel", 70, 120, 70, 150, Array.Empty<int>());
+            yield return City(9, "rachel", "Rachel", 70, 120, 70, 150, new int[0]);
             yield return City(10, "yuno", "Yuno", 70, 120, 70, 150, new[] { 691 });
-            yield return City(11, "einbech", "Einbech", 60, 100, 60, 120, Array.Empty<int>());
-            yield return City(12, "einbroch", "Einbroch", 60, 100, 60, 120, Array.Empty<int>());
-            yield return City(13, "hugel", "Hugel", 40, 80, 40, 100, Array.Empty<int>());
-            yield return City(14, "rache", "Rache", 70, 120, 70, 150, Array.Empty<int>());
-            yield return City(15, "veins", "Veins", 70, 120, 70, 150, Array.Empty<int>());
+            yield return City(11, "einbech", "Einbech", 60, 100, 60, 120, new int[0]);
+            yield return City(12, "einbroch", "Einbroch", 60, 100, 60, 120, new int[0]);
+            yield return City(13, "hugel", "Hugel", 40, 80, 40, 100, new int[0]);
+            yield return City(14, "rache", "Rache", 70, 120, 70, 150, new int[0]);
+            yield return City(15, "veins", "Veins", 70, 120, 70, 150, new int[0]);
             yield return City(16, "al_debaran", "AldeBaran (Alt)", 1, 15, 1, 50, new[] { 1 });
         }
 
@@ -231,10 +239,10 @@ namespace RagnaController.Core.Database {
         // ── Dungeons (Eis-Region) ──
         private static IEnumerable<MapEntry> BuildIceDungeons()
         {
-            yield return Dungeon(641, "ice_dun01", "Ice Dungeon 01", 45, 75, 45, 85, Array.Empty<int>(), new[] { 1138, 1139, 1129 }, new[] { 70, 60, 80 });
-            yield return Dungeon(642, "ice_dun02", "Ice Dungeon 02", 55, 85, 55, 95, Array.Empty<int>(), new[] { 1139, 1138, 1129 }, new[] { 80, 70, 90 });
-            yield return Dungeon(643, "ice_dun03", "Ice Dungeon 03", 65, 95, 65, 105, Array.Empty<int>(), new[] { 1129, 1138, 1139 }, new[] { 90, 80, 70 });
-            yield return Dungeon(644, "ice_dun04", "Ice Dungeon 04", 75, 105, 75, 115, Array.Empty<int>(), new[] { 1138, 1139, 1129 }, new[] { 70, 90, 80 });
+            yield return Dungeon(641, "ice_dun01", "Ice Dungeon 01", 45, 75, 45, 85, new int[0], new[] { 1138, 1139, 1129 }, new[] { 70, 60, 80 });
+            yield return Dungeon(642, "ice_dun02", "Ice Dungeon 02", 55, 85, 55, 95, new int[0], new[] { 1139, 1138, 1129 }, new[] { 80, 70, 90 });
+            yield return Dungeon(643, "ice_dun03", "Ice Dungeon 03", 65, 95, 65, 105, new int[0], new[] { 1129, 1138, 1139 }, new[] { 90, 80, 70 });
+            yield return Dungeon(644, "ice_dun04", "Ice Dungeon 04", 75, 105, 75, 115, new int[0], new[] { 1138, 1139, 1129 }, new[] { 70, 90, 80 });
         }
 
         // ── Dungeons (Ameisen-Nest) ──
@@ -248,29 +256,29 @@ namespace RagnaController.Core.Database {
         // ── Dungeons (Orc) ──
         private static IEnumerable<MapEntry> BuildOrcDungeons()
         {
-            yield return Dungeon(661, "orc_dun01", "Orc Dungeon 01", 30, 50, 30, 60, Array.Empty<int>(), new[] { 1096, 1148, 1149 }, new[] { 70, 60, 80 });
-            yield return Dungeon(662, "orc_dun02", "Orc Dungeon 02", 40, 60, 40, 70, Array.Empty<int>(), new[] { 1148, 1149, 1096 }, new[] { 80, 70, 90 });
-            yield return Dungeon(663, "orc_dun03", "Orc Dungeon 03", 50, 70, 50, 80, Array.Empty<int>(), new[] { 1149, 1096, 1148 }, new[] { 90, 80, 70 });
+            yield return Dungeon(661, "orc_dun01", "Orc Dungeon 01", 30, 50, 30, 60, new int[0], new[] { 1096, 1148, 1149 }, new[] { 70, 60, 80 });
+            yield return Dungeon(662, "orc_dun02", "Orc Dungeon 02", 40, 60, 40, 70, new int[0], new[] { 1148, 1149, 1096 }, new[] { 80, 70, 90 });
+            yield return Dungeon(663, "orc_dun03", "Orc Dungeon 03", 50, 70, 50, 80, new int[0], new[] { 1149, 1096, 1148 }, new[] { 90, 80, 70 });
         }
 
         // ── Dungeons (Turmschildkröte) ──
         private static IEnumerable<MapEntry> BuildTurtleDungeons()
         {
-            yield return Dungeon(671, "tur_dun01", "Turtle Dungeon 01", 40, 70, 40, 80, Array.Empty<int>(), new[] { 1094, 1012 }, new[] { 30, 70 });
-            yield return Dungeon(672, "tur_dun02", "Turtle Dungeon 02", 50, 80, 50, 90, Array.Empty<int>(), new[] { 1094, 1012, 1091 }, new[] { 40, 50, 30 });
-            yield return Dungeon(673, "tur_dun03", "Turtle Dungeon 03", 60, 90, 60, 100, Array.Empty<int>(), new[] { 1091, 1094, 1012 }, new[] { 50, 40, 30 });
-            yield return Dungeon(674, "tur_dun04", "Turtle Dungeon 04", 70, 100, 70, 110, Array.Empty<int>(), new[] { 1012, 1091, 1094 }, new[] { 40, 30, 50 });
-            yield return Dungeon(675, "tur_dun05", "Turtle Dungeon 05", 80, 110, 80, 120, Array.Empty<int>(), new[] { 1094, 1012, 1091 }, new[] { 30, 40, 30 });
-            yield return Dungeon(676, "tur_dun06", "Turtle Dungeon 06", 90, 120, 90, 130, Array.Empty<int>(), new[] { 1091, 1094, 1012 }, new[] { 40, 30, 30 });
+            yield return Dungeon(671, "tur_dun01", "Turtle Dungeon 01", 40, 70, 40, 80, new int[0], new[] { 1094, 1012 }, new[] { 30, 70 });
+            yield return Dungeon(672, "tur_dun02", "Turtle Dungeon 02", 50, 80, 50, 90, new int[0], new[] { 1094, 1012, 1091 }, new[] { 40, 50, 30 });
+            yield return Dungeon(673, "tur_dun03", "Turtle Dungeon 03", 60, 90, 60, 100, new int[0], new[] { 1091, 1094, 1012 }, new[] { 50, 40, 30 });
+            yield return Dungeon(674, "tur_dun04", "Turtle Dungeon 04", 70, 100, 70, 110, new int[0], new[] { 1012, 1091, 1094 }, new[] { 40, 30, 50 });
+            yield return Dungeon(675, "tur_dun05", "Turtle Dungeon 05", 80, 110, 80, 120, new int[0], new[] { 1094, 1012, 1091 }, new[] { 30, 40, 30 });
+            yield return Dungeon(676, "tur_dun06", "Turtle Dungeon 06", 90, 120, 90, 130, new int[0], new[] { 1091, 1094, 1012 }, new[] { 40, 30, 30 });
         }
 
         // ── Dungeons (Sphinx) ──
         private static IEnumerable<MapEntry> BuildSphinxDungeons()
         {
-            yield return Dungeon(681, "sphinx_dun01", "Sphinx Dungeon 01", 50, 80, 50, 90, Array.Empty<int>(), new[] { 1090, 1092, 1096 }, new[] { 60, 70, 50 });
-            yield return Dungeon(682, "sphinx_dun02", "Sphinx Dungeon 02", 60, 90, 60, 100, Array.Empty<int>(), new[] { 1096, 1090, 1092 }, new[] { 70, 60, 80 });
-            yield return Dungeon(683, "sphinx_dun03", "Sphinx Dungeon 03", 70, 100, 70, 110, Array.Empty<int>(), new[] { 1092, 1096, 1090 }, new[] { 80, 50, 60 });
-            yield return Dungeon(684, "sphinx_dun04", "Sphinx Dungeon 04", 80, 110, 80, 120, Array.Empty<int>(), new[] { 1090, 1092, 1096 }, new[] { 60, 70, 50 });
+            yield return Dungeon(681, "sphinx_dun01", "Sphinx Dungeon 01", 50, 80, 50, 90, new int[0], new[] { 1090, 1092, 1096 }, new[] { 60, 70, 50 });
+            yield return Dungeon(682, "sphinx_dun02", "Sphinx Dungeon 02", 60, 90, 60, 100, new int[0], new[] { 1096, 1090, 1092 }, new[] { 70, 60, 80 });
+            yield return Dungeon(683, "sphinx_dun03", "Sphinx Dungeon 03", 70, 100, 70, 110, new int[0], new[] { 1092, 1096, 1090 }, new[] { 80, 50, 60 });
+            yield return Dungeon(684, "sphinx_dun04", "Sphinx Dungeon 04", 80, 110, 80, 120, new int[0], new[] { 1090, 1092, 1096 }, new[] { 60, 70, 50 });
         }
 
         // ── Dungeons (Yuno) ──
@@ -284,8 +292,8 @@ namespace RagnaController.Core.Database {
         // ── Spezielle Dungeons ──
         private static IEnumerable<MapEntry> BuildSpecialDungeons()
         {
-            yield return Dungeon(701, "glast_heim", "Glast Heim", 80, 120, 80, 150, Array.Empty<int>(), new[] { 1260, 1092, 1091 }, new[] { 20, 30, 50 });
-            yield return Field(702, "thor_camp01", "Thor Camp", 90, 150, 90, 175, Array.Empty<int>(), new[] { 1252, 1148, 1149 }, new[] { 10, 40, 50 });
+            yield return Dungeon(701, "glast_heim", "Glast Heim", 80, 120, 80, 150, new int[0], new[] { 1260, 1092, 1091 }, new[] { 20, 30, 50 });
+            yield return Field(702, "thor_camp01", "Thor Camp", 90, 150, 90, 175, new int[0], new[] { 1252, 1148, 1149 }, new[] { 10, 40, 50 });
             yield return Dungeon(703, "prison", "Prison", 30, 60, 30, 70, new[] { 5 }, new[] { 1127, 1129 }, new[] { 70, 60 });
         }
 
@@ -362,8 +370,72 @@ namespace RagnaController.Core.Database {
             _maps.Where(m => m.MonsterSpawns.ContainsKey(monsterId)).ToList();
 
         #endregion
-    }
 
+        #region Zusätzliche Städte (alle klassischen RO-Städte)
+
+        private static IEnumerable<MapEntry> BuildJawaiiMaps()
+        {
+            yield return City(801, "jawaii", "Jawaii", 1, 20, 1, 60, new[] { 501 });
+            yield return Field(802, "jawaii_dun00", "Jawaii Dungeon 00", 20, 50, 20, 70, new[] { 801 }, new[] { 1127, 1129 }, new[] { 70, 60 });
+        }
+
+        private static IEnumerable<MapEntry> BuildLouyangMaps()
+        {
+            yield return City(811, "louyang", "Louyang", 1, 30, 1, 80, new[] { 1 });
+            yield return Field(812, "louyang_dun00", "Louyang Dungeon 00", 30, 60, 30, 90, new[] { 811 }, new[] { 1148, 1149 }, new[] { 70, 60 });
+        }
+
+        private static IEnumerable<MapEntry> BuildAmatsuMaps()
+        {
+            yield return City(821, "amatsu", "Amatsu", 1, 40, 1, 90, new[] { 1 });
+            yield return Field(822, "amatsu_dun00", "Amatsu Dungeon 00", 40, 70, 40, 100, new[] { 821 }, new[] { 1138, 1139 }, new[] { 60, 70 });
+        }
+
+        private static IEnumerable<MapEntry> BuildAyothayaMaps()
+        {
+            yield return City(831, "ayothaya", "Ayothaya", 1, 40, 1, 90, new[] { 1 });
+            yield return Field(832, "ayothaya_dun00", "Ayothaya Dungeon 00", 40, 70, 40, 100, new[] { 831 }, new[] { 1112, 1118 }, new[] { 70, 60 });
+        }
+
+        private static IEnumerable<MapEntry> BuildSplendideMaps()
+        {
+            yield return City(841, "splendide", "Splendide", 1, 50, 1, 100, new[] { 1 });
+            yield return Field(842, "splendide_dun00", "Splendide Dungeon 00", 50, 80, 50, 110, new[] { 841 }, new[] { 1090, 1096 }, new[] { 80, 70 });
+        }
+
+        #endregion
+
+        #region Zusätzliche Felder (Niflheim, Thanatos, Byalan)
+
+        private static IEnumerable<MapEntry> BuildNiflheimMaps()
+        {
+            yield return Field(851, "niflheim", "Niflheim Field", 70, 120, 70, 150, new[] { 852 }, new[] { 1138, 1139, 1129 }, new[] { 70, 60, 80 });
+            yield return Dungeon(852, "niflheim_dun01", "Niflheim Dungeon 01", 80, 130, 80, 160, new[] { 851 }, new[] { 1090, 1092, 1096 }, new[] { 60, 70, 50 });
+            yield return Dungeon(853, "niflheim_dun02", "Niflheim Dungeon 02", 90, 140, 90, 170, new[] { 851 }, new[] { 1096, 1148, 1149 }, new[] { 70, 60, 80 });
+        }
+
+        private static IEnumerable<MapEntry> BuildThanatosMaps()
+        {
+            yield return Dungeon(861, "thanatos_tower01", "Thanatos Tower 01", 90, 150, 90, 175, new int[0], new[] { 1252, 1148, 1149 }, new[] { 20, 40, 50 });
+            yield return Dungeon(862, "thanatos_tower02", "Thanatos Tower 02", 100, 160, 100, 175, new int[0], new[] { 1252, 1148, 1149 }, new[] { 30, 40, 50 });
+            yield return Dungeon(863, "thanatos_tower03", "Thanatos Tower 03", 110, 170, 110, 175, new int[0], new[] { 1252, 1148, 1149 }, new[] { 40, 40, 50 });
+            yield return Dungeon(864, "thanatos_tower04", "Thanatos Tower 04", 120, 175, 120, 175, new int[0], new[] { 1252, 1148, 1149 }, new[] { 50, 40, 50 });
+            yield return Dungeon(865, "thanatos_tower05", "Thanatos Tower 05", 130, 175, 130, 175, new int[0], new[] { 1252, 1148, 1149 }, new[] { 60, 30, 50 });
+            yield return Dungeon(866, "thanatos_tower06", "Thanatos Tower 06", 140, 175, 140, 175, new int[0], new[] { 1252, 1148, 1149 }, new[] { 70, 20, 50 });
+            yield return Dungeon(867, "thanatos_tower07", "Thanatos Tower 07", 150, 175, 150, 175, new int[0], new[] { 1252, 1148, 1149 }, new[] { 80, 10, 50 });
+            yield return Dungeon(868, "thanatos_tower08", "Thanatos Tower 08", 160, 175, 160, 175, new int[0], new[] { 1252, 1148, 1149 }, new[] { 90, 5, 50 });
+            yield return Dungeon(869, "thanatos_tower09", "Thanatos Tower 09", 170, 175, 170, 175, new int[0], new[] { 1252, 1148, 1149 }, new[] { 95, 0, 50 });
+            yield return Dungeon(870, "thanatos_tower10", "Thanatos Tower 10", 175, 175, 175, 175, new int[0], new[] { 1252, 1148, 1149 }, new[] { 99, 0, 50 });
+        }
+
+        private static IEnumerable<MapEntry> BuildByalanMaps()
+        {
+            yield return Dungeon(881, "byalan_dun01", "Byalan Dungeon 01", 50, 80, 50, 90, new int[0], new[] { 1118, 1121, 1122 }, new[] { 80, 70, 60 });
+            yield return Dungeon(882, "byalan_dun02", "Byalan Dungeon 02", 60, 90, 60, 100, new int[0], new[] { 1122, 1123, 1118 }, new[] { 70, 80, 60 });
+        }
+
+        #endregion
+    }
     public class MapEntry
     {
         public int Id { get; set; }
