@@ -5,10 +5,10 @@
 
 ## 🎯 Current Milestone
 **Phase:** All Epics 1-28 COMPLETE + Vollständige Lokalisierung (48 Sprachen × 1289 Keys)
-**Status:** Build: 0 errors | Tests: 1076/1076 PASS (1 pre-existing flaky — LogLevel_FiltertTiefereLevel, besteht isoliert)
-**Git HEAD:** commit 20ff6c7 (Alle 9 Unterordner-READMEs mit tatsächlichem Dateibaum synchronisiert)
-**Last Updated:** 2026-10-25
-**Status:** Alle Unterordner-READMEs aktualisiert (Views/Windows, Views/Overlays, Views/Dialogs, Core/Input, Core/Utilities, Controller, Models, Profiles, Core/Services). Build: 0 Fehler, Tests: 1076/1076 PASS.
+**Status:** Build: 0 errors | Tests: 1076/1076 PASS (Flaky-Test behoben)
+**Git HEAD:** commit cf7ad34 (Flaky Test Fix + Release v2.6.1 Paket)
+**Last Updated:** 2026-10-26
+**Status:** P1 Release-Paket erstellt (release_final/ v2.6.1 ZIP, 48 Sprachen). P2 Flaky-Test behoben (AdvancedLogger.Dispose). P4 Stryker.NET Config repariert (ignore-mutations). Build: 0 Fehler, Tests: 1076/1076 PASS.
 **Release:** v2.6.0 (2026-10-24) — Major Release mit allen Epics 1-28, Code Deduplication, Version Bump
 
 ---
