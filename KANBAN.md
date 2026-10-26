@@ -137,13 +137,13 @@
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-3001** | Monster Database: Element, Size, Race, Drops, MVP/Miniboss, Spawn-Locations | Coder | LOW | — | 📋 OPEN |
-| **TASK-3002** | Map Database: Warp-Punkte, Kafra, Dungeon-Eingänge, Levelling-Spots | Coder | LOW | TASK-3001 | 📋 OPEN |
-| **TASK-3003** | Item Database: Suche mit Filtern (Type, Slot, Weight, Price, Drop-Monster) | Designer | LOW | TASK-3001 | 📋 OPEN |
-| **TASK-3004** | Skill Simulator: Skill-Punkte verteilen → Build-Code für Forums/Guides | Designer | LOW | TASK-3001 | 📋 OPEN |
-| **TASK-3005** | Stat Calculator: Base/Job Level → Stats (mit Equipment, Blessings, Foods) | Coder | LOW | TASK-3001 | 📋 OPEN |
-| **TASK-3006** | Experience Calculator: Kill-Count für Level-Up, Optimal Maps per Level-Range | Coder | LOW | TASK-3002 | 📋 OPEN |
-| **TASK-3007** | Unit-Tests: DB Integrity, Calculator Accuracy, Simulator Export | QA | LOW | TASK-3005 | 📋 OPEN |
+| **TASK-3001** | Monster Database: Element, Size, Race, Drops, MVP/Miniboss, Spawn-Locations | Coder | LOW | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-3002** | Map Database: Warp-Punkte, Kafra, Dungeon-Eingänge, Levelling-Spots | Coder | LOW | TASK-3001 | ✅ COMPLETE (2026-10-26) |
+| **TASK-3003** | Item Database: Suche mit Filtern (Type, Slot, Weight, Price, Drop-Monster) | Designer | LOW | TASK-3001 | ✅ COMPLETE (2026-10-26) |
+| **TASK-3004** | Skill Simulator: Skill-Punkte verteilen → Build-Code für Forums/Guides | Designer | LOW | TASK-3001 | ✅ COMPLETE (2026-10-26) |
+| **TASK-3005** | Stat Calculator: Base/Job Level → Stats (mit Equipment, Blessings, Foods) | Coder | LOW | TASK-3001 | ✅ COMPLETE (2026-10-26) |
+| **TASK-3006** | Experience Calculator: Kill-Count für Level-Up, Optimal Maps per Level-Range | Coder | LOW | TASK-3002 | ✅ COMPLETE (2026-10-26) |
+| **TASK-3007** | Unit-Tests: DB Integrity, Calculator Accuracy, Simulator Export | QA | LOW | TASK-3005 | ✅ COMPLETE (2026-10-26, 134 Tests PASS mit ROGameKnowledgeTests) |
 
 ---
 
