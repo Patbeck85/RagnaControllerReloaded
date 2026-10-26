@@ -33,12 +33,12 @@ namespace RagnaController.Coordinators
         private readonly PerformanceProfiler _perfProfiler;
 
         // Engines
-        private MovementEngine _movement;
-        private CursorEngine _cursor;
-        private SmartCursorService _smartCursor;
-        private RadialMenuService _radialMenu;
-        private GestureRecognizer _gestureRecognizer;
-        private InputRouter _inputRouter;
+        private MovementEngine _movement = null!;
+        private CursorEngine _cursor = null!;
+        private SmartCursorService _smartCursor = null!;
+        private RadialMenuService _radialMenu = null!;
+        private GestureRecognizer _gestureRecognizer = null!;
+        private InputRouter _inputRouter = null!;
 
         public MovementEngine Movement => _movement;
         public CursorEngine Cursor => _cursor;

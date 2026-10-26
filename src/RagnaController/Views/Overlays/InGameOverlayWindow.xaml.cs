@@ -66,7 +66,7 @@ namespace RagnaController.Views.Overlays
 
                     // Entferne nach Ablauf der Dauer
                     var removeTimer = new System.Windows.Threading.DispatcherTimer();
-                    removeTimer.Interval = TimeSpan.FromMilliseconds(_settings.OverlayDamageDurationMs);
+                    removeTimer.Interval = TimeSpan.FromMilliseconds(_settings!.OverlayDamageDurationMs);
                     removeTimer.Tick += (s, e) =>
                     {
                         _damageNumbers.Remove(dmg);

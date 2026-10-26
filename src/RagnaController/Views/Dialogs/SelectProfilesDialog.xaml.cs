@@ -29,7 +29,7 @@ namespace RagnaController.Views.Dialogs
         {
             SelectedProfiles.Clear();
             foreach (var item in ProfileList.SelectedItems)
-                SelectedProfiles.Add(item.ToString());
+                SelectedProfiles.Add(item?.ToString() ?? "");
 
             DialogResult = true;
             Close();

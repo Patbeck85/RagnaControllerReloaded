@@ -79,7 +79,7 @@ namespace RagnaController.Core.Services.Update {
                 {
                     if (asset.Name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                     {
-                        updateInfo.DownloadUrl = asset.BrowserDownloadUrl;
+                        updateInfo.DownloadUrl = asset.BrowserDownloadUrl!;
                         break;
                     }
                 }

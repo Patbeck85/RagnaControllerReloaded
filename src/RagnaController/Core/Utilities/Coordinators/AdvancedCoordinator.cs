@@ -29,17 +29,17 @@ namespace RagnaController.Coordinators
         private readonly InputCommandQueue _queue;
 
         // Engines
-        private ItemManagerEngine _itemManager;
-        private PartyManager _partyManager;
-        private GroundSpellEngine _groundSpell;
-        private ChordInputService _chordInput;
-        private SessionRecorder _sessionRecorder;
+        private ItemManagerEngine _itemManager = null!;
+        private PartyManager _partyManager = null!;
+        private GroundSpellEngine _groundSpell = null!;
+        private ChordInputService _chordInput = null!;
+        private SessionRecorder? _sessionRecorder = null; // optional, enabled via settings
 
         public ItemManagerEngine ItemManager => _itemManager;
         public PartyManager PartyManager => _partyManager;
         public GroundSpellEngine GroundSpell => _groundSpell;
         public ChordInputService ChordInput => _chordInput;
-        public SessionRecorder SessionRecorder => _sessionRecorder;
+        public SessionRecorder? SessionRecorder => _sessionRecorder;
 
         public AdvancedCoordinator(InputCommandQueue queue, AdvancedLogger logger)
         {

@@ -425,7 +425,7 @@ namespace RagnaController.Core.Services.Database {
 
                 return monster;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }

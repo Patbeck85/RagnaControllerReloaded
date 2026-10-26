@@ -36,18 +36,18 @@ namespace RagnaController.Coordinators
         private readonly WindowTracker _winTracker;
 
         // Engines
-        private SystemMonitor _sysMonitor;
-        private OverlayRouter _overlayRouter;
-        private VoiceChatService _voiceChat;
-        private EngineWatchdog _watchdog;
-        private MemoryAllocationTracker _memoryTracker;
-        private InputLatencyTracker _latencyTracker;
-        private PerformanceProfiler _perfProfiler;
-        private ConfigWatcher _configWatcher;
-        private ProfileManager _profileManager;
-        private ProfileApplier _profileApplier;
-        private StandbyManager _standbyManager;
-        private HandheldModeManager _handheldModeManager;
+        private SystemMonitor _sysMonitor = null!;
+        private OverlayRouter _overlayRouter = null!;
+        private VoiceChatService _voiceChat = null!;
+        private EngineWatchdog _watchdog = null!;
+        private MemoryAllocationTracker _memoryTracker = null!;
+        private InputLatencyTracker _latencyTracker = null!;
+        private PerformanceProfiler _perfProfiler = null!;
+        private ConfigWatcher _configWatcher = null!;
+        private ProfileManager _profileManager = null!;
+        private ProfileApplier _profileApplier = null!;
+        private StandbyManager _standbyManager = null!;
+        private HandheldModeManager _handheldModeManager = null!;
 
         public SystemMonitor SysMonitor => _sysMonitor;
         public OverlayRouter OverlayRouter => _overlayRouter;
@@ -72,9 +72,9 @@ namespace RagnaController.Coordinators
         {
             _logger?.Info("[SystemCoordinator] Initializing system engines...");
 
-            _sysMonitor = new SystemMonitor(_winTracker, null); // movement set later
-            _overlayRouter = new OverlayRouter(null); // voice set later
-            _voiceChat = new VoiceChatService(null); // queue set later
+            _sysMonitor = new SystemMonitor(_winTracker, null!); // movement set later
+            _overlayRouter = new OverlayRouter(null!); // voice set later
+            _voiceChat = new VoiceChatService(null!); // queue set later
             _watchdog = new EngineWatchdog();
             _memoryTracker = MemoryAllocationRegistry.GetOrCreate("EngineOrchestrator");
             _latencyTracker = InputLatencyRegistry.GetOrCreate("EngineOrchestrator");
@@ -84,7 +84,7 @@ namespace RagnaController.Coordinators
                 Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RagnaController", "Profiles"));
             _profileManager = new ProfileManager();
             _standbyManager = new StandbyManager();
-            _handheldModeManager = new HandheldModeManager(null, null, null, null, null, null); // dependencies set later
+            _handheldModeManager = new HandheldModeManager(null!, null!, null!, null!, null!, null!); // dependencies set later
         }
 
         public void InitializeDependencies(

@@ -27,13 +27,13 @@ namespace RagnaController.Coordinators
         private readonly AdvancedLogger _logger;
 
         // Engines
-        private ControllerService _controllerService;
-        private ControllerManager _controllerManager;
-        private DualSenseHardwareService _dualSense;
-        private FeedbackSystem _feedback;
-        private SnapshotBuilder _snapshot;
-        private InterceptionMouseStrategy? _mouseEmulationFallback;
-        private SendInputMouseStrategy _primaryMouseStrategy;
+        private ControllerService _controllerService = null!;
+        private ControllerManager _controllerManager = null!;
+        private DualSenseHardwareService _dualSense = null!;
+        private FeedbackSystem _feedback = null!;
+        private SnapshotBuilder _snapshot = null!;
+        private InterceptionMouseStrategy? _mouseEmulationFallback = null; // lazy init
+        private SendInputMouseStrategy _primaryMouseStrategy = null!;
 
         public ControllerService ControllerService => _controllerService;
         public ControllerManager ControllerManager => _controllerManager;
@@ -54,8 +54,8 @@ namespace RagnaController.Coordinators
             _controllerService = new ControllerService();
             _controllerManager = new ControllerManager();
             _dualSense = new DualSenseHardwareService();
-            _feedback = new FeedbackSystem(null); // ctrl set later
-            _snapshot = new SnapshotBuilder(null, null, null, null, null, null, null); // dependencies set later
+            _feedback = new FeedbackSystem(null!); // ctrl set later
+            _snapshot = new SnapshotBuilder(null!, null!, null!, null!, null!, null!, null!); // dependencies set later
             _primaryMouseStrategy = new SendInputMouseStrategy();
             _mouseEmulationFallback = null; // lazy init
         }

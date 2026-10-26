@@ -73,7 +73,7 @@ namespace RagnaController.Core.Hardware {
                                 var path = Marshal.PtrToStringAuto(
                                     IntPtr.Add(detailBuf, IntPtr.Size == 8 ? 8 : 6));
                                 
-                                if (IsDualSenseDevice(path))
+                                if (IsDualSenseDevice(path!))
                                     devices.Add(path);
                             }
                         }

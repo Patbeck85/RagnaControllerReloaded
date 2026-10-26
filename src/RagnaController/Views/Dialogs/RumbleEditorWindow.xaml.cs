@@ -255,14 +255,14 @@ namespace RagnaController.Views.Dialogs
         {
             if (_selectedPattern != null && float.TryParse(TxtFrequency.Text.Replace("%", "").Trim(), out float val))
                 _selectedPattern.Frequency = Math.Clamp(val, 1.0f, 100.0f);
-            DrawWaveformPreview(_selectedPattern);
+            DrawWaveformPreview(_selectedPattern!);
         }
 
         private void TxtAmplitude_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (_selectedPattern != null && float.TryParse(TxtAmplitude.Text.Replace("%", "").Trim(), out float val))
                 _selectedPattern.Amplitude = Math.Clamp(val / 100.0f, 0.0f, 1.0f);
-            DrawWaveformPreview(_selectedPattern);
+            DrawWaveformPreview(_selectedPattern!);
         }
 
         private void TxtDuration_TextChanged(object sender, TextChangedEventArgs e)
@@ -282,7 +282,7 @@ namespace RagnaController.Views.Dialogs
             if (_selectedPattern != null && CmbWaveform.SelectedItem is ComboBoxItem item)
             {
                 _selectedPattern.Waveform = (WaveformType)item.Tag;
-                DrawWaveformPreview(_selectedPattern);
+                DrawWaveformPreview(_selectedPattern!);
             }
         }
 

@@ -191,13 +191,13 @@ namespace RagnaController.Core
                                 if (chordAction != null)
                                 {
                                     OnActionFired(chordAction, rumbleEnabled);
-                                    if (chordSw != null) { chordSw.Stop(); _perfProfiler.RecordEngineTick(nameof(ChordInputService), chordSw.Elapsed.TotalMilliseconds); }
-                                    if (routeSw != null) RecordRouteBudget(routeSw);
-                                    return true;
-                                }
-                                if (chordSw != null) { chordSw.Stop(); _perfProfiler.RecordEngineTick(nameof(ChordInputService), chordSw.Elapsed.TotalMilliseconds); }
-                            }
-                            if (chordSw != null) { chordSw.Stop(); _perfProfiler.RecordEngineTick(nameof(ChordInputService), chordSw.Elapsed.TotalMilliseconds); }
+                                    if (chordSw != null) { chordSw!.Stop(); _perfProfiler.RecordEngineTick(nameof(ChordInputService), chordSw!.Elapsed.TotalMilliseconds); }
+                                        if (routeSw != null) RecordRouteBudget(routeSw);
+                                        return true;
+                                    }
+                                    if (chordSw != null) { chordSw!.Stop(); _perfProfiler.RecordEngineTick(nameof(ChordInputService), chordSw!.Elapsed.TotalMilliseconds); }
+                                    }
+                                    if (chordSw != null) { chordSw!.Stop(); _perfProfiler.RecordEngineTick(nameof(ChordInputService), chordSw!.Elapsed.TotalMilliseconds); }
 
                             // UX-016: Gestenerkennung (Right-Stick Swipes for Radial Menu)
                             var gestureSw = _perfProfiler != null && PerformanceProfiler.EnableProfiling ? Stopwatch.StartNew() : null;

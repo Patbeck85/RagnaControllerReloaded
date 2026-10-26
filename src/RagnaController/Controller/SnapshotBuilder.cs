@@ -49,22 +49,22 @@ namespace RagnaController.Controller
                 if (_driftCompensation != null)
                 {
                     _driftCompensation.SetOffsets(
-                        value.LeftStickDriftX, value.LeftStickDriftY,
-                        value.RightStickDriftX, value.RightStickDriftY);
+                        value!.LeftStickDriftX, value!.LeftStickDriftY,
+                        value!.RightStickDriftX, value!.RightStickDriftY);
                 }
 
                 // Trigger-Kurven aus Profil laden
                 _leftTriggerCurve = new TriggerDeadzoneCurve
                 {
-                    Type = ParseCurveType(value.LeftTriggerCurveType),
-                    Deadzone = value.LeftTriggerDeadzone,
-                    Saturation = value.LeftTriggerSaturation,
+                    Type = ParseCurveType(value!.LeftTriggerCurveType),
+                    Deadzone = value!.LeftTriggerDeadzone,
+                    Saturation = value!.LeftTriggerSaturation,
                 };
                 _rightTriggerCurve = new TriggerDeadzoneCurve
                 {
-                    Type = ParseCurveType(value.RightTriggerCurveType),
-                    Deadzone = value.RightTriggerDeadzone,
-                    Saturation = value.RightTriggerSaturation,
+                    Type = ParseCurveType(value!.RightTriggerCurveType),
+                    Deadzone = value!.RightTriggerDeadzone,
+                    Saturation = value!.RightTriggerSaturation,
                 };
             }
         }

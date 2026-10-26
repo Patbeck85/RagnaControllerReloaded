@@ -168,10 +168,10 @@ namespace RagnaController.Views.Dialogs
 
             if (importantProperties.Contains(propName))
             {
-                return (remark: "WICHTIG", isImportant: true);
+                return ("WICHTIG", true);
             }
 
-            return (remark: "", isImportant: false);
+            return ("", false);
         }
 
         private string FormatValue(object? value)

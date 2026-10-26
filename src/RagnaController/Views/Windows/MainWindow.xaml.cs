@@ -121,7 +121,7 @@ namespace RagnaController.Views.Windows
             InitializeComponent();
             _toastService.Initialize(ToastBorder!, ToastText!, ToastBg!);
             App.InitializeToastService(_toastService);
-            _profileService = new ProfileService(_manager, _settings, null, msg => ShowToast(msg));
+            _profileService = new ProfileService(_manager, _settings, null!, msg => ShowToast(msg));
             DataContext = vm;
 
             // Bind ClientTabs to TabControl
@@ -170,6 +170,7 @@ namespace RagnaController.Views.Windows
         /// </summary>
         public MainWindow(HybridEngine engine, ProfileManager manager, MainViewModel vm)
         {
+            _multiEngine = null!;
             _manager = manager;
             _vm = vm;
             InitializeComponent();
@@ -765,11 +766,11 @@ namespace RagnaController.Views.Windows
             {
                 var activeInstance = _multiEngine?.GetActiveInstance();
                 _gameOverlay = new InGameOverlayWindow(
-                    activeInstance?.Orchestrator.Messenger,
-                    activeInstance?.Orchestrator.WinTracker,
-                    activeInstance?.Orchestrator.ControllerManager,
+                    activeInstance!.Orchestrator.Messenger,
+                    activeInstance!.Orchestrator.WinTracker,
+                    activeInstance!.Orchestrator.ControllerManager,
                     _settings,
-                    buffManager: activeInstance?.Orchestrator.BuffManager);
+                    buffManager: activeInstance!.Orchestrator.BuffManager);
                 _gameOverlay.Show();
             }
             else
@@ -900,7 +901,7 @@ namespace RagnaController.Views.Windows
         private void BtnSettings_Click(object s, RoutedEventArgs e)
                 {
                     var activeInstance = _multiEngine?.GetActiveInstance();
-                    var settings = new SettingsWindow(activeInstance?.Orchestrator, _manager, _settings, s =>
+                    var settings = new SettingsWindow(activeInstance!.Orchestrator, _manager, _settings, s =>
                     {
                         // Settings are applied via onSave callback
                         _settings = s; // Update local reference
@@ -962,7 +963,7 @@ namespace RagnaController.Views.Windows
         private void BtnOpenRemap_Click(object sender, RoutedEventArgs e)
         {
             var activeInstance = _multiEngine?.GetActiveInstance();
-            var w = new ButtonRemappingWindow(activeInstance?.Orchestrator, _manager);
+            var w = new ButtonRemappingWindow(activeInstance!.Orchestrator, _manager);
             w.Owner = this;
             w.Show();
         }
@@ -1002,7 +1003,7 @@ namespace RagnaController.Views.Windows
             {
                 activeInstance.Orchestrator.ProfileApplier.LiveUpdateDeadzone(0.15f);
                 var pm = new ProfileManager();
-                pm.SaveProfile(activeInstance.Orchestrator.CurrentProfile);
+                pm.SaveProfile(activeInstance!.Orchestrator.CurrentProfile!);
                 ShowToast("Deadzone reset to default (0.15)");
             }
         }
@@ -1014,7 +1015,7 @@ namespace RagnaController.Views.Windows
             {
                 activeInstance.Orchestrator.ProfileApplier.LiveUpdateCurve(1.0f);
                 var pm = new ProfileManager();
-                pm.SaveProfile(activeInstance.Orchestrator.CurrentProfile);
+                pm.SaveProfile(activeInstance!.Orchestrator.CurrentProfile!);
                 ShowToast("Curve reset to default (1.0)");
             }
         }
@@ -1026,7 +1027,7 @@ namespace RagnaController.Views.Windows
             {
                 activeInstance.Orchestrator.ProfileApplier.LiveUpdateActionSpeed(5.0f); // Default mid-point
                 var pm = new ProfileManager();
-                pm.SaveProfile(activeInstance.Orchestrator.CurrentProfile);
+                pm.SaveProfile(activeInstance!.Orchestrator.CurrentProfile!);
                 ShowToast("Action Speed reset to default (5)");
             }
         }
@@ -1038,7 +1039,7 @@ namespace RagnaController.Views.Windows
             {
                 activeInstance.Orchestrator.ProfileApplier.LiveUpdateCursorSpeed(1.0f);
                 var pm = new ProfileManager();
-                pm.SaveProfile(activeInstance.Orchestrator.CurrentProfile);
+                pm.SaveProfile(activeInstance!.Orchestrator.CurrentProfile!);
                 ShowToast("Sensitivity reset to default (1.0)");
             }
         }
