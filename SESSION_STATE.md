@@ -7,6 +7,8 @@
 **Phase:** All Epics 1-28 COMPLETE + Vollständige Lokalisierung (48 Sprachen × 1289 Keys)
 **Status:** Build: 0 errors | Tests: 1076/1076 PASS (1 pre-existing flaky — LogLevel_FiltertTiefereLevel, besteht isoliert)
 **Git HEAD:** commit bb24ea1 (Vollständige Übersetzung aller 48 Sprachen × 1289 Keys)
+**Last Updated:** 2026-10-25
+**Status:** App-Ordner aufgeräumt (dotnet clean, .workspace_temp bereinigt). README.md: 48 Sprachen dokumentiert, Test-Count auf 1076 aktualisiert, Version/Date aktualisiert. CHANGELOG.md: v2.6.1 Localization-Release eingetragen.
 **Release:** v2.6.0 (2026-10-24) — Major Release mit allen Epics 1-28, Code Deduplication, Version Bump
 
 ---

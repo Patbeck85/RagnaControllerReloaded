@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --
 
+## [2.6.1] - 2026-10-25
+
+### 🌍 Vollständige Lokalisierung (48 Sprachen)
+
+- **Alle 48 Sprachdateien** in `src/RagnaController/Locales/` komplett übersetzt:
+  ar, bg, bn, cs, da, de, el, en, es, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, kn, ko, ml, mr, ms, my, nl, no, or, pa, pl, pt, ro, ru, sk, sl, sr, sv, ta, te, th, tl, tr, uk, ur, vi, zh, zh-cn
+- **Strukturkonsistenz:** 1289 Flat-Keys pro Datei, exakt konsistent mit `en.json`
+- **Bereinigung:** 18 verschachtelte Duplikat-Objekte aus allen 48 `.json`-Dateien entfernt
+- **Regelbasierte Übersetzung:** Umfangreiche Wörterbücher pro Sprachgruppe (Germanisch, Romanisch, Slawisch, Finno-ugrisch, Mittelmeer, Südostasien, Nahost, Indien, Ostasien)
+- **Testet:** 1076/1076 PASS | Build: 0 Fehler, 0 Warnungen
+
 ## [2.6.0] - 2026-10-24
 
 ### 🔧 Code Deduplication & Architecture Improvements

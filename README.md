@@ -164,10 +164,19 @@ RagnaController uses a **JSON-based localization system** with live language swi
 
 ### Supported Languages
 
-- **English** (`en.json`) — Default
-- **Deutsch** (`de.json`) — German
-- **Tagalog** (`tl.json`) — Filipino
-- **Community languages:** Add your own! (41 locales supported)
+| **English** (`en.json`) — Default (Quellsprache)
+| **Deutsch** (`de.json`) — German
+| **Français** (`fr.json`), **Español** (`es.json`), **Italiano** (`it.json`), **Português** (`pt.json`), **Română** (`ro.json`)
+| **Nederlands** (`nl.json`), **Svenska** (`sv.json`), **Dansk** (`da.json`), **Norsk** (`no.json`)
+| **Polski** (`pl.json`), **Čeština** (`cs.json`), **Slovenčina** (`sk.json`), **Slovenščina** (`sl.json`), **Hrvatski** (`hr.json`), **Srpski** (`sr.json`)
+| **Русский** (`ru.json`), **Українська** (`uk.json`), **Български** (`bg.json`)
+| **Suomi** (`fi.json`), **Magyar** (`hu.json`), **Ελληνικά** (`el.json`), **Türkçe** (`tr.json`), **فارسی** (`fa.json`)
+| **Tiếng Việt** (`vi.json`), **Bahasa Indonesia** (`id.json`), **Bahasa Melayu** (`ms.json`), **Tagalog** (`tl.json`), **ไทย** (`th.json`), **မြန်မာ** (`my.json`)
+| **العربية** (`ar.json`), **עברית** (`he.json`)
+| **हिन्दी** (`hi.json`), **বাংলা** (`bn.json`), **தமிழ்** (`ta.json`), **తెలుగు** (`te.json`), **മലയാളം** (`ml.json`), **मराठी** (`mr.json`), **ગુજરાતી** (`gu.json`), **ਪੰਜਾਬੀ** (`pa.json`), **ଓଡ଼ିଆ** (`or.json`), **ಕನ್ನಡ** (`kn.json`), **اردو** (`ur.json`)
+| **日本語** (`ja.json`), **한국어** (`ko.json`), **中文** (`zh.json`), **简体中文** (`zh-cn.json`)
+
+**48 Sprachen × 1289 Keys** — alle konsistent mit `en.json`
 
 ### How It Works
 
@@ -398,14 +407,14 @@ Located in `tests/RagnaController.Tests/`:
 - No Win32 calls during tests (isolated from OS)
 - xUnit framework with NSubstitute and FluentAssertions
 
-**Current Test Suite:** 726 tests passing across all core engines and integration tests.
+**Current Test Suite:** 1076 tests passing across all core engines and integration tests.
 
 ### Build Verification
 
 Before any deployment:
 
 1. **Compile** project (`dotnet build`) — **0 errors, 0 warnings** ✅
-2. **Run tests** (`dotnet test`) — **726/726 passing** ✅
+2. **Run tests** (`dotnet test`) — **1076/1076 passing** ✅
 3. **Manual Windows testing** (VS Code / Visual Studio)
 4. **Verify release isolation** — `release_final/` contains only end products ✅
 
@@ -536,4 +545,4 @@ Automated checks for all 7 golden rules — all satisfied in v2.2.1.
 
 ---
 
-*Last updated: 2026-10-10 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 325/325 (Debug) + 40/40 (Release Fuzz) | SOUL.md: All 7 golden rules satisfied | Version: 2.2.1*
+*Last updated: 2026-10-25 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 1076/1076 PASS | SOUL.md: All 7 golden rules satisfied | Version: 2.6.0*
