@@ -12,6 +12,17 @@ namespace RagnaController.Core.Calculators
     /// </summary>
     public sealed class StatCalculator
     {
+        #region GameMode
+
+        /// <summary>Spielmodus: Pre-Renewal oder Renewal.</summary>
+        public enum GameMode
+        {
+            PreRenewal,
+            Renewal
+        }
+
+        #endregion
+
         #region Klasse-Basisdaten
 
         /// <summary>Basis-HP-Faktor pro Klasse (Pre-Renewal).</summary>
@@ -129,6 +140,13 @@ namespace RagnaController.Core.Calculators
             return Math.Max(0, baseLevel - 1);
         }
 
+        /// <summary>Berechnet die verfügbaren Job-Stat-Punkte für ein Job-Level.</summary>
+        public static int GetAvailableJobStatPoints(int jobLevel)
+        {
+            // RO: 3 Job-Stat-Punkte pro Job-Level über Level 1
+            return Math.Max(0, (jobLevel - 1) * 3);
+        }
+
         #endregion
 
         #region Max HP
@@ -142,24 +160,33 @@ namespace RagnaController.Core.Calculators
             int baseLevel,
             int vit,
             string className = "Novice",
-            ExperienceCalculator.GameMode mode = ExperienceCalculator.GameMode.PreRenewal,
+            GameMode mode = GameMode.PreRenewal,
             int jobHpModifier = 0,
-            int jobHpMultiplier = 1)
+            int jobHpMultiplier = 1,
+            double equipmentBonusPercent = 0.0,
+            double blessingBonusPercent = 0.0)
         {
-            var hpFactor = mode == ExperienceCalculator.GameMode.Renewal
+            var hpFactor = mode == GameMode.Renewal
                 ? GetClassFactor(ClassBaseHpFactorRenewal, className)
                 : GetClassFactor(ClassBaseHpFactorPreRenewal, className);
 
-            // VIT HP-Faktor: jede 10 VIT = +1% Max HP (vereinfacht)
-            double vitHpFactor = vit * 0.1;
+            // Basis HP aus Level und Klasse
+            double baseHp = baseLevel * hpFactor;
 
-            double baseHp = baseLevel * hpFactor * vitHpFactor + jobHpModifier;
+            // VIT Bonus: jeder VIT-Punkt erhöht HP um ca. 1% des Basis-HP (vereinfacht)
+            double vitBonus = baseHp * (vit * 0.01);
+
+            double totalHp = baseHp + vitBonus + jobHpModifier;
 
             // Renewal Multiplier
-            if (mode == ExperienceCalculator.GameMode.Renewal)
-                baseHp *= 1.5;
+            if (mode == GameMode.Renewal)
+                totalHp *= 1.5;
 
-            return (int)Math.Max(1, baseHp * jobHpMultiplier);
+            // Equipment und Blessing Boni (prozentual)
+            totalHp *= (1.0 + equipmentBonusPercent / 100.0);
+            totalHp *= (1.0 + blessingBonusPercent / 100.0);
+
+            return (int)Math.Max(1, totalHp * jobHpMultiplier);
         }
 
         #endregion
@@ -175,24 +202,33 @@ namespace RagnaController.Core.Calculators
             int baseLevel,
             int int_,
             string className = "Novice",
-            ExperienceCalculator.GameMode mode = ExperienceCalculator.GameMode.PreRenewal,
+            GameMode mode = GameMode.PreRenewal,
             int jobSpModifier = 0,
-            int jobSpMultiplier = 1)
+            int jobSpMultiplier = 1,
+            double equipmentBonusPercent = 0.0,
+            double blessingBonusPercent = 0.0)
         {
-            var spFactor = mode == ExperienceCalculator.GameMode.Renewal
+            var spFactor = mode == GameMode.Renewal
                 ? GetClassFactor(ClassBaseSpFactorRenewal, className)
                 : GetClassFactor(ClassBaseSpFactorPreRenewal, className);
 
-            // INT SP-Faktor: jede 10 INT = +1% Max SP (vereinfacht)
-            double intSpFactor = int_ * 0.1;
+            // Basis SP aus Level und Klasse
+            double baseSp = baseLevel * spFactor;
 
-            double baseSp = baseLevel * spFactor * intSpFactor + jobSpModifier;
+            // INT Bonus: jeder INT-Punkt erhöht SP um ca. 1% des Basis-SP (vereinfacht)
+            double intBonus = baseSp * (int_ * 0.01);
+
+            double totalSp = baseSp + intBonus + jobSpModifier;
 
             // Renewal Multiplier
-            if (mode == ExperienceCalculator.GameMode.Renewal)
-                baseSp *= 1.5;
+            if (mode == GameMode.Renewal)
+                totalSp *= 1.5;
 
-            return (int)Math.Max(1, baseSp * jobSpMultiplier);
+            // Equipment und Blessing Boni (prozentual)
+            totalSp *= (1.0 + equipmentBonusPercent / 100.0);
+            totalSp *= (1.0 + blessingBonusPercent / 100.0);
+
+            return (int)Math.Max(1, totalSp * jobSpMultiplier);
         }
 
         #endregion
@@ -203,36 +239,99 @@ namespace RagnaController.Core.Calculators
         /// Berechnet Angriffsgeschwindigkeit basierend auf Agi, Dex und Klasse.
         /// RO-Formel: ASPD = 200 - (Agi * 0.5 + Dex * 0.3) - Klassenmodifikator + Delay-Reduktion
         /// </summary>
-        public static double CalculateAttackSpeed(int agi, int dex, string className = "Novice")
+        public static double CalculateAttackSpeed(int agi, int dex, string className = "Novice", GameMode mode = GameMode.PreRenewal, double delayReduction = 0.0)
         {
-            double classMod = className switch
+            double classMod = mode == GameMode.Renewal
+                ? GetAspdClassModRenewal(className)
+                : GetAspdClassModPreRenewal(className);
+
+            double aspd = 200 - (agi * 0.5 + dex * 0.3) - classMod + delayReduction;
+
+            // Mindest-ASPD
+            double minAspd = mode == GameMode.Renewal ? 10.0 : 50.0;
+
+            return Math.Max(minAspd, aspd);
+        }
+
+        private static double GetAspdClassModPreRenewal(string className)
+        {
+            return className.ToLowerInvariant() switch
             {
-                "Swordman" or "Knight" or "Crusader" => 10,
-                "Mage" or "Wizard" or "High Wizard" or "Professor" => 5,
-                "Acolyte" or "Priest" or "High Priest" => 5,
-                "Merchant" or "Blacksmith" or "Creator" => 10,
-                "Assassin" or "Stalker" => -5,
-                "Thief" => -5,
+                "swordman" or "knight" or "crusader" => 10,
+                "mage" or "wizard" or "high wizard" or "professor" => 5,
+                "acolyte" or "priest" or "high priest" => 5,
+                "merchant" or "blacksmith" or "creator" => 10,
+                "assassin" or "stalker" => -5,
+                "thief" => -5,
                 _ => 0
             };
+        }
 
-            return 200 - (agi * 0.5 + dex * 0.3) - classMod;
+        private static double GetAspdClassModRenewal(string className)
+        {
+            return className.ToLowerInvariant() switch
+            {
+                "swordman" or "knight" or "crusader" => 8,
+                "mage" or "wizard" or "high wizard" or "professor" => 4,
+                "acolyte" or "priest" or "high priest" => 4,
+                "merchant" or "blacksmith" or "creator" => 8,
+                "assassin" or "stalker" => -4,
+                "thief" => -4,
+                _ => 0
+            };
         }
 
         #endregion
 
         #region Treffer- und Fluchtwerte
 
-        /// <summary>Berechnet Trefferwahrscheinlichkeit basierend auf Dex und Luk.</summary>
-        public static int CalculateHitRate(int dex, int luk)
+        /// <summary>
+        /// Berechnet Trefferwahrscheinlichkeit (Hit Rate).
+        ///
+        /// Pre-Renewal: Hit = Dex * 2 + Luk + Klassenmodifikator
+        /// Renewal: Hit = Dex * 2 + Luk * 1.5 + Klassenmodifikator
+        /// </summary>
+        public static int CalculateHitRate(int dex, int luk, string className = "Novice", GameMode mode = GameMode.PreRenewal)
         {
-            return dex * 2 + luk;
+            double lukMod = mode == GameMode.Renewal ? luk * 1.5 : luk;
+            double classMod = GetHitClassMod(className);
+
+            return (int)Math.Max(0, dex * 2 + lukMod + classMod);
         }
 
-        /// <summary>Berechnet Fluchtwahrscheinlichkeit basierend auf Agi und Luk.</summary>
-        public static int CalculateFlee(int agi, int luk)
+        private static double GetHitClassMod(string className)
         {
-            return agi * 2 + luk;
+            return className.ToLowerInvariant() switch
+            {
+                "archer" or "hunter" or "sniper" => 10,
+                "assassin" or "stalker" => 8,
+                "thief" => 5,
+                _ => 0
+            };
+        }
+
+        /// <summary>
+        /// Berechnet Fluchtwahrscheinlichkeit (Flee).
+        ///
+        /// Pre-Renewal: Flee = Agi * 2 + Luk + Klassenmodifikator
+        /// Renewal: Flee = Agi * 2 + Luk * 1.5 + Klassenmodifikator
+        /// </summary>
+        public static int CalculateFlee(int agi, int luk, string className = "Novice", GameMode mode = GameMode.PreRenewal)
+        {
+            double lukMod = mode == GameMode.Renewal ? luk * 1.5 : luk;
+            double classMod = GetFleeClassMod(className);
+
+            return (int)Math.Max(0, agi * 2 + lukMod + classMod);
+        }
+
+        private static double GetFleeClassMod(string className)
+        {
+            return className.ToLowerInvariant() switch
+            {
+                "thief" or "assassin" or "stalker" => 10,
+                "archer" or "hunter" or "sniper" => 8,
+                _ => 0
+            };
         }
 
         #endregion
@@ -265,6 +364,78 @@ namespace RagnaController.Core.Calculators
         /// <summary>Berechnet benötigte EXP für Job-Level (Renewal).</summary>
         public static long GetExpForJobLevelRenewal(int jobLevel) =>
             ExperienceCalculator.GetExpForJobLevel(jobLevel, ExperienceCalculator.GameMode.Renewal);
+
+        #endregion
+
+        #region Komplette Stat-Berechnung (alle Werte auf einmal)
+
+        /// <summary>
+        /// Ergebnis einer vollständigen Stat-Berechnung für Pre-Renewal oder Renewal.
+        /// </summary>
+        public class StatResult
+        {
+            public int BaseLevel { get; set; }
+            public int JobLevel { get; set; }
+            public string ClassName { get; set; } = "Novice";
+            public GameMode Mode { get; set; } = GameMode.PreRenewal;
+            public int Str { get; set; }
+            public int Agi { get; set; }
+            public int Vit { get; set; }
+            public int Int_ { get; set; }
+            public int Dex { get; set; }
+            public int Luk { get; set; }
+            public int MaxHP { get; set; }
+            public int MaxSP { get; set; }
+            public double AttackSpeed { get; set; }
+            public int HitRate { get; set; }
+            public int Flee { get; set; }
+            public int MaxWeight { get; set; }
+            public int AvailableStatPoints { get; set; }
+            public int AvailableJobStatPoints { get; set; }
+        }
+
+        /// <summary>Berechnet alle Stats auf einmal für einen Charakter.</summary>
+        public static StatResult CalculateAllStats(
+            int baseLevel,
+            int jobLevel,
+            int str,
+            int agi,
+            int vit,
+            int int_,
+            int dex,
+            int luk,
+            string className = "Novice",
+            GameMode mode = GameMode.PreRenewal,
+            int jobHpModifier = 0,
+            int jobSpModifier = 0,
+            double equipmentHpBonusPercent = 0.0,
+            double equipmentSpBonusPercent = 0.0,
+            double blessingHpBonusPercent = 0.0,
+            double blessingSpBonusPercent = 0.0,
+            double delayReduction = 0.0)
+        {
+            return new StatResult
+            {
+                BaseLevel = baseLevel,
+                JobLevel = jobLevel,
+                ClassName = className,
+                Mode = mode,
+                Str = str,
+                Agi = agi,
+                Vit = vit,
+                Int_ = int_,
+                Dex = dex,
+                Luk = luk,
+                MaxHP = CalculateMaxHP(baseLevel, vit, className, mode, jobHpModifier, 1, equipmentHpBonusPercent, blessingHpBonusPercent),
+                MaxSP = CalculateMaxSP(baseLevel, int_, className, mode, jobSpModifier, 1, equipmentSpBonusPercent, blessingSpBonusPercent),
+                AttackSpeed = CalculateAttackSpeed(agi, dex, className, mode, delayReduction),
+                HitRate = CalculateHitRate(dex, luk, className, mode),
+                Flee = CalculateFlee(agi, luk, className, mode),
+                MaxWeight = CalculateMaxWeight(str),
+                AvailableStatPoints = GetAvailableStatPoints(baseLevel),
+                AvailableJobStatPoints = GetAvailableJobStatPoints(jobLevel),
+            };
+        }
 
         #endregion
 
