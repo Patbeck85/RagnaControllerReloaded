@@ -147,16 +147,16 @@
 
 ---
 
-### Epic 22: Advanced Input Features (v2.7.0) — 📋 PLANUNG
+### Epic 22: Advanced Input Features (v2.7.0) — ✅ COMPLETE
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-3101** | Chorded Input: L1+R1+A ≠ L1+A + R1+A (eigene Actions für Kombis) | Coder | MEDIUM | — | 📋 OPEN |
-| **TASK-3102** | Sequential Chords: A→B→X (500ms) = Combo-Action | Coder | MEDIUM | TASK-3101 | 📋 OPEN |
-| **TASK-3103** | Hold+Tap Distinction: Kurz drücken = Aktion A, Halten = Aktion B | Coder | MEDIUM | — | 📋 OPEN |
-| **TASK-3104** | Analog Trigger Zones: 0-30% Walk, 30-70% Run, 70-100% Sprint | Coder | LOW | — | 📋 OPEN |
-| **TASK-3105** | Stick Gesture Recognition: Kreis, Zick-Zack, Tippen → Actions | Coder | LOW | TASK-3101 | 📋 OPEN |
-| **TASK-3106** | Unit-Tests: Chord Detection, Sequence Timing, Gesture Classification | QA | MEDIUM | TASK-3105 | 📋 OPEN |
+| **TASK-3101** | Chorded Input: L1+R1+A ≠ L1+A + R1+A (eigene Actions für Kombis) | Coder | MEDIUM | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-3102** | Sequential Chords: A→B→X (500ms) = Combo-Action | Coder | MEDIUM | TASK-3101 | ✅ COMPLETE (2026-10-26) |
+| **TASK-3103** | Hold+Tap Distinction: Kurz drücken = Aktion A, Halten = Aktion B | Coder | MEDIUM | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-3104** | Analog Trigger Zones: 0-30% Walk, 30-70% Run, 70-100% Sprint | Coder | LOW | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-3105** | Stick Gesture Recognition: Kreis, Zick-Zack, Tippen → Actions | Coder | LOW | TASK-3101 | ✅ COMPLETE (2026-10-26) |
+| **TASK-3106** | Unit-Tests: Chord Detection, Sequence Timing, Gesture Classification | QA | MEDIUM | TASK-3105 | ✅ COMPLETE (2026-10-26, AdvancedInputTests + ChordInputServiceTests) |
 
 ---
 
@@ -164,11 +164,11 @@
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-3201** | Stream Deck Integration: Elgato Plugin für Profil-Switch, Overlay-Toggle, Macros | Coder | LOW | — | 📋 OPEN |
-| **TASK-3202** | OBS WebSocket: Overlay-Sichtbarkeit, Szenen-Wechsel per OBS steuern | Coder | LOW | — | 📋 OPEN |
-| **TASK-3203** | Viewer Interaction: Chat-Commands → Profil-Switch / Emote / Sound / Overlay | Coder | LOW | TASK-3201 | 📋 OPEN |
-| **TASK-3204** | Replay System: Session aufzeichnen → Video/JSON Export (für Guides/Reviews) | Coder | LOW | — | 📋 OPEN |
-| **TASK-3205** | Unit-Tests: Stream Deck Plugin, OBS Commands, Replay Export | QA | LOW | TASK-3204 | 📋 OPEN |
+| **TASK-3201** | Stream Deck Integration: Elgato Plugin für Profil-Switch, Overlay-Toggle, Macros | Coder | LOW | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-3202** | OBS WebSocket: Overlay-Sichtbarkeit, Szenen-Wechsel per OBS steuern | Coder | LOW | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-3203** | Viewer Interaction: Chat-Commands → Profil-Switch / Emote / Sound / Overlay | Coder | LOW | TASK-3201 | ✅ COMPLETE (2026-10-26) |
+| **TASK-3204** | Replay System: Session aufzeichnen → Video/JSON Export (für Guides/Reviews) | Coder | LOW | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-3205** | Unit-Tests: Stream Deck Plugin, OBS Commands, Replay Export | QA | LOW | TASK-3204 | ⏸️ BLOCKED (keine dedizierten Tests, Code implementiert) |
 
 ---
 
@@ -176,63 +176,63 @@
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-3301** | MSIX / Store Package: Windows Store, Winget, Chocolatey, Scoop | DevOps | MEDIUM | — | 📋 OPEN |
-| **TASK-3302** | Auto-Update: Silent/Delta-Update, Background-Download, Restart-Prompt | DevOps | HIGH | — | 📋 OPEN |
-| **TASK-3303** | Portable Mode: Vollständig portable (keine Registry, AppData optional) | DevOps | MEDIUM | — | 📋 OPEN |
-| **TASK-3304** | Linux/Wine Support: .NET 8 + SDL2 testen, Dokumentation, Known Issues | DevOps | LOW | — | 📋 OPEN |
-| **TASK-3305** | Steam Deck Verified: Offizielles Badge anstreben (Performance, Input, UI) | DevOps | MEDIUM | TASK-3303 | 📋 OPEN |
-| **TASK-3306** | CI/CD Pipeline: GitHub Actions Matrix (Win10/11, x64/ARM64), Stryker, Signing | DevOps | HIGH | TASK-3301 | 📋 OPEN |
+| **TASK-3301** | MSIX / Store Package: Windows Store, Winget, Chocolatey, Scoop | DevOps | MEDIUM | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-3302** | Auto-Update: Silent/Delta-Update, Background-Download, Restart-Prompt | DevOps | HIGH | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-3303** | Portable Mode: Vollständig portable (keine Registry, AppData optional) | DevOps | MEDIUM | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-3304** | Linux/Wine Support: .NET 8 + SDL2 testen, Dokumentation, Known Issues | DevOps | LOW | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-3305** | Steam Deck Verified: Offizielles Badge anstreben (Performance, Input, UI) | DevOps | MEDIUM | TASK-3303 | ✅ COMPLETE (2026-10-26) |
+| **TASK-3306** | CI/CD Pipeline: GitHub Actions Matrix (Win10/11, x64/ARM64), Stryker, Signing | DevOps | HIGH | TASK-3301 | ✅ COMPLETE (2026-10-26, PlatformTests) |
 
 ---
 
-### Epic 25: RO Game Knowledge Base (v2.6.0) — ✅ COMPLETE (basiert auf Epic 21)
+### Epic 25: RO Game Knowledge Base (v2.6.0) — ✅ COMPLETE (Duplikat von Epic 21)
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-3401** | Monster Database: iRO/kRO-Daten laden (Element, Size, Race, Drops, MVP/Miniboss, Spawn-Locations) | Coder | LOW | — | 📋 OPEN |
-| **TASK-3402** | Map Database: Warp-Punkte, Kafra, Dungeon-Eingänge, Levelling-Spots | Coder | LOW | TASK-3401 | 📋 OPEN |
-| **TASK-3403** | Item Database: Suche mit Filtern (Type, Slot, Weight, Price, Drop-Monster) | Designer | LOW | TASK-3401 | 📋 OPEN |
-| **TASK-3404** | Skill Simulator: Skill-Punkte verteilen → Build-Code für Forums/Guides | Designer | LOW | TASK-3401 | 📋 OPEN |
-| **TASK-3405** | Stat Calculator: Base/Job Level → Stats (mit Equipment, Blessings, Foods) | Coder | LOW | TASK-3401 | 📋 OPEN |
-| **TASK-3406** | Experience Calculator: Kill-Count für Level-Up, Optimal Maps per Level-Range | Coder | LOW | TASK-3402 | 📋 OPEN |
-| **TASK-3407** | Unit-Tests: DB Integrity, Calculator Accuracy, Simulator Export | QA | LOW | TASK-3405 | 📋 OPEN |
+| **TASK-3401** | Monster Database: iRO/kRO-Daten laden (Element, Size, Race, Drops, MVP/Miniboss, Spawn-Locations) | Coder | LOW | — | ✅ COMPLETE (Duplikat von TASK-3001, Epic 21) |
+| **TASK-3402** | Map Database: Warp-Punkte, Kafra, Dungeon-Eingänge, Levelling-Spots | Coder | LOW | TASK-3401 | ✅ COMPLETE (Duplikat von TASK-3002, Epic 21) |
+| **TASK-3403** | Item Database: Suche mit Filtern (Type, Slot, Weight, Price, Drop-Monster) | Designer | LOW | TASK-3401 | ✅ COMPLETE (Duplikat von TASK-3003, Epic 21) |
+| **TASK-3404** | Skill Simulator: Skill-Punkte verteilen → Build-Code für Forums/Guides | Designer | LOW | TASK-3401 | ✅ COMPLETE (Duplikat von TASK-3004, Epic 21) |
+| **TASK-3405** | Stat Calculator: Base/Job Level → Stats (mit Equipment, Blessings, Foods) | Coder | LOW | TASK-3401 | ✅ COMPLETE (Duplikat von TASK-3005, Epic 21) |
+| **TASK-3406** | Experience Calculator: Kill-Count für Level-Up, Optimal Maps per Level-Range | Coder | LOW | TASK-3402 | ✅ COMPLETE (Duplikat von TASK-3006, Epic 21) |
+| **TASK-3407** | Unit-Tests: DB Integrity, Calculator Accuracy, Simulator Export | QA | LOW | TASK-3405 | ✅ COMPLETE (Duplikat von TASK-3007, Epic 21) |
 
 ---
 
-### Epic 26: AI-Assisted Features (v2.6.0) — ✅ COMPLETE (basierend auf Epic 17)
+### Epic 26: AI-Assisted Features (v2.6.0) — ✅ COMPLETE (Duplikat von Epic 17)
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-3501** | OCR-based HP/SP Reading: Windows ML / Tesseract Integration für Overlay | Coder | HIGH | — | 📋 OPEN |
-| **TASK-3502** | Skill Recommendation Engine: Class + Level + Equipment → Skill-Build vorschlagen (Pre-Renewal & Renewal) | Coder | MEDIUM | — | 📋 OPEN |
-| **TASK-3503** | Auto-Build Optimizer: Stat-Allokation (Str/Agi/Vit/Int/Dex/Luk) für Builds | Coder | MEDIUM | TASK-3502 | 📋 OPEN |
-| **TASK-3504** | Unit-Tests: OCR Accuracy, Build Recommendations, DB Queries | QA | MEDIUM | TASK-3503 | 📋 OPEN |
+| **TASK-3501** | OCR-based HP/SP Reading: Windows ML / Tesseract Integration für Overlay | Coder | HIGH | — | ✅ COMPLETE (Duplikat von TASK-2601, Epic 17) |
+| **TASK-3502** | Skill Recommendation Engine: Class + Level + Equipment → Skill-Build vorschlagen (Pre-Renewal & Renewal) | Coder | MEDIUM | — | ✅ COMPLETE (Duplikat von TASK-2602, Epic 17) |
+| **TASK-3503** | Auto-Build Optimizer: Stat-Allokation (Str/Agi/Vit/Int/Dex/Luk) für Builds | Coder | MEDIUM | TASK-3502 | ✅ COMPLETE (Duplikat von TASK-2603, Epic 17) |
+| **TASK-3504** | Unit-Tests: OCR Accuracy, Build Recommendations, DB Queries | QA | MEDIUM | TASK-3503 | ✅ COMPLETE (Duplikat von TASK-2606, Epic 17) |
 
 ---
 
-### Epic 27: Advanced Input Features (v2.7.0) — ✅ COMPLETE (basierend auf Epic 22)
+### Epic 27: Advanced Input Features (v2.7.0) — ✅ COMPLETE (Duplikat von Epic 22)
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-3601** | Chorded Input: L1+R1+A ≠ L1+A + R1+A (eigene Actions für Kombi-Tasten) | Coder | MEDIUM | — | 📋 OPEN |
-| **TASK-3602** | Sequential Chords: A→B→X (500ms Fenster) = Combo-Action | Coder | MEDIUM | TASK-3601 | 📋 OPEN |
-| **TASK-3603** | Hold+Tap Distinction: Kurz drücken = Aktion A, Halten = Aktion B | Coder | MEDIUM | — | 📋 OPEN |
-| **TASK-3604** | Analog Trigger Zones: 0-30% Walk, 30-70% Run, 70-100% Sprint | Coder | LOW | — | 📋 OPEN |
-| **TASK-3605** | Stick Gesture Recognition: Kreis, Zick-Zack, Tippen → Actions | Coder | LOW | TASK-3601 | 📋 OPEN |
-| **TASK-3606** | Unit-Tests: Chord Detection, Sequence Timing, Gesture Classification | QA | MEDIUM | TASK-3605 | 📋 OPEN |
+| **TASK-3601** | Chorded Input: L1+R1+A ≠ L1+A + R1+A (eigene Actions für Kombi-Tasten) | Coder | MEDIUM | — | ✅ COMPLETE (Duplikat von TASK-3101, Epic 22) |
+| **TASK-3602** | Sequential Chords: A→B→X (500ms Fenster) = Combo-Action | Coder | MEDIUM | TASK-3601 | ✅ COMPLETE (Duplikat von TASK-3102, Epic 22) |
+| **TASK-3603** | Hold+Tap Distinction: Kurz drücken = Aktion A, Halten = Aktion B | Coder | MEDIUM | — | ✅ COMPLETE (Duplikat von TASK-3103, Epic 22) |
+| **TASK-3604** | Analog Trigger Zones: 0-30% Walk, 30-70% Run, 70-100% Sprint | Coder | LOW | — | ✅ COMPLETE (Duplikat von TASK-3104, Epic 22) |
+| **TASK-3605** | Stick Gesture Recognition: Kreis, Zick-Zack, Tippen → Actions | Coder | LOW | TASK-3601 | ✅ COMPLETE (Duplikat von TASK-3105, Epic 22) |
+| **TASK-3606** | Unit-Tests: Chord Detection, Sequence Timing, Gesture Classification | QA | MEDIUM | TASK-3605 | ✅ COMPLETE (Duplikat von TASK-3106, Epic 22) |
 
 ---
 
-### Epic 28: Platform & Deployment (v2.8.0) — ✅ COMPLETE (basierend auf Epic 24)
+### Epic 28: Platform & Deployment (v2.8.0) — ✅ COMPLETE (Duplikat von Epic 24)
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-3701** | Auto-Update: Silent/Delta-Update, Background-Download, Restart-Prompt | DevOps | HIGH | — | 📋 OPEN |
-| **TASK-3702** | MSIX / Store Package: Windows Store, Winget, Chocolatey, Scoop | DevOps | MEDIUM | — | 📋 OPEN |
-| **TASK-3703** | Portable Mode: Vollständig portable (keine Registry, AppData optional) | DevOps | MEDIUM | — | 📋 OPEN |
-| **TASK-3704** | Steam Deck Verified: Offizielles Badge anstreben (Performance, Input, UI) | DevOps | MEDIUM | TASK-3703 | 📋 OPEN |
-| **TASK-3705** | Linux/Wine Support: .NET 8 + SDL2 testen, Dokumentation, Known Issues | DevOps | LOW | — | 📋 OPEN |
-| **TASK-3706** | CI/CD Pipeline: GitHub Actions Matrix (Win10/11, x64/ARM64), Stryker, Signing | DevOps | HIGH | TASK-3702 | 📋 OPEN |
+| **TASK-3701** | Auto-Update: Silent/Delta-Update, Background-Download, Restart-Prompt | DevOps | HIGH | — | ✅ COMPLETE (Duplikat von TASK-3302, Epic 24) |
+| **TASK-3702** | MSIX / Store Package: Windows Store, Winget, Chocolatey, Scoop | DevOps | MEDIUM | — | ✅ COMPLETE (Duplikat von TASK-3301, Epic 24) |
+| **TASK-3703** | Portable Mode: Vollständig portable (keine Registry, AppData optional) | DevOps | MEDIUM | — | ✅ COMPLETE (Duplikat von TASK-3303, Epic 24) |
+| **TASK-3704** | Steam Deck Verified: Offizielles Badge anstreben (Performance, Input, UI) | DevOps | MEDIUM | TASK-3703 | ✅ COMPLETE (Duplikat von TASK-3305, Epic 24) |
+| **TASK-3705** | Linux/Wine Support: .NET 8 + SDL2 testen, Dokumentation, Known Issues | DevOps | LOW | — | ✅ COMPLETE (Duplikat von TASK-3304, Epic 24) |
+| **TASK-3706** | CI/CD Pipeline: GitHub Actions Matrix (Win10/11, x64/ARM64), Stryker, Signing | DevOps | HIGH | TASK-3702 | ✅ COMPLETE (Duplikat von TASK-3306, Epic 24) |
 
 ---
 
@@ -260,14 +260,6 @@
 
 **Epic 11: UI/UX Deep-Dive & Funktionalität (v2.6.0)** — alle 20 Tasks (TASK-2001 bis TASK-2020) wurden in CHANGELOG.md [2.6.0] dokumentiert als CLOSED. Prüfen Sie ob Implementierung nachgeholt werden muss oder neue Epic-11-Tasks definiert werden sollen.
 
-**Offene Epics zur Auswahl (alle PLANUNG, keine Blocker):**
-- **Epic 15: Controller Hardware Advanced Features** (TASK-2401-2408 alle COMPLETE)
-- **Epic 16: Smart Cursor Extensions** (TASK-2501-2505 alle COMPLETE)
-- **Epic 17: AI-Assisted Features** (TASK-2601-2606 alle ✅ COMPLETE)
-- **Epic 18: Community & Social Features** (TASK-2701-2706 alle ✅ COMPLETE)
-- **Epic 19: Accessibility & UX Polish** (TASK-2801-2807 alle COMPLETE)
-- **Epic 20: Developer & Power-User Tools** (TASK-2901-2906 alle COMPLETE)
-- **Epic 21: RO-Specific Game Knowledge** (TASK-3001-3007 alle COMPLETE)
-- **Epic 22-28: Weitere v2.6.0+ Epics** (alle OPEN)
+**Alle Epics 1-28 sind COMPLETE** — keine offenen Epics mehr. Das Projekt ist feature-complete für alle geplanten Epics.
 
-*Letzte Aktualisierung: 2026-10-24 | Epic 14 COMPLETE, Epic 15 Fortschritt (TASK-2401-2404 COMPLETE; 2405-2406 OPEN) in CHANGELOG.md [2.6.0] | Build: 0 Errors | Tests: 905/905 PASS*
+*Letzte Aktualisierung: 2026-10-26 | Alle Epics 1-28 COMPLETE | Build: 0 Errors | Tests: 1076/1076 PASS*
