@@ -7,16 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --
 
-## [2.6.1] - 2026-10-25
+## [2.6.1] - 2026-10-26
 
 ### 🌍 Vollständige Lokalisierung (48 Sprachen)
-
 - **Alle 48 Sprachdateien** in `src/RagnaController/Locales/` komplett übersetzt:
   ar, bg, bn, cs, da, de, el, en, es, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, kn, ko, ml, mr, ms, my, nl, no, or, pa, pl, pt, ro, ru, sk, sl, sr, sv, ta, te, th, tl, tr, uk, ur, vi, zh, zh-cn
 - **Strukturkonsistenz:** 1289 Flat-Keys pro Datei, exakt konsistent mit `en.json`
 - **Bereinigung:** 18 verschachtelte Duplikat-Objekte aus allen 48 `.json`-Dateien entfernt
 - **Regelbasierte Übersetzung:** Umfangreiche Wörterbücher pro Sprachgruppe (Germanisch, Romanisch, Slawisch, Finno-ugrisch, Mittelmeer, Südostasien, Nahost, Indien, Ostasien)
 - **Testet:** 1076/1076 PASS | Build: 0 Fehler, 0 Warnungen
+
+### 🧹 Flaky-Test behoben
+- **AdvancedLogger.Dispose:** CTS-Cancel entfernt, wartet auf Channel-Leerung vor Shutdown
+- **LogLevel_FiltertTiefereLevel:** 5/5 Durchläufe bestanden, deterministisch
+
+### 📦 Stryker.NET v5.0.0
+- CLI-Tool von 4.16.0 auf 5.0.0 aktualisiert
+- `stryker.json` Konfiguration repariert (`exclude-mutation` → `ignore-mutations`)
+- Coordinator-Dateien von Mutation ausgeschlossen (CS8618/CS8625)
+- CI-Job temporär deaktiviert (Issue #3813: App.g.cs WPF-Problem nicht lösbar)
+
+### 📚 Dokumentation synchronisiert
+- Alle 9 Unterordner-READMEs mit tatsächlichem Dateibaum abgeglichen
+- README.md: 48 Sprachen dokumentiert, Test-Count auf 1076 aktualisiert
+- release_final/README.md auf v2.6.1 aktualisiert
+
+### 📦 Release-Paket
+- `release_final/app/` mit `dotnet publish -c Release` erstellt
+- `release_final/RagnaController_2.6.1.zip` erstellt (34 MB)
+- 48 Locale-Dateien in `release_final/app/locales/` kopiert
 
 ## [2.6.0] - 2026-10-24
 

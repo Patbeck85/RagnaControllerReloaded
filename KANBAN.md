@@ -209,7 +209,18 @@
 
 ---
 
-### Workflow-Regeln (SOUL.md Compliance)
+### Epic 29: Release & Quality Assurance (v2.6.1) — 🔄 IN PROGRESS
+
+| Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
+|---------|-------|----------------|-----------|----------------|--------|
+| **TASK-3801** | CHANGELOG.md v2.6.1 Eintrag erstellen (Lokalisierung, Flaky-Test-Fix, Stryker v5) | PO | HIGH | — | 🔄 IN PROGRESS |
+| **TASK-3802** | Git Tag v2.6.1 erstellen und auf main puschen | DevOps | HIGH | TASK-3801 | ⏸️ BLOCKED |
+| **TASK-3803** | GitHub Release v2.6.1 erstellen (ZIP aus release_final/ als Asset) | DevOps | HIGH | TASK-3802 | ⏸️ BLOCKED |
+| **TASK-3804** | Nullable-Warnings beseitigen (CS8602, CS8618, CS8625 aus Stryker-Output) | Coder | MEDIUM | — | ⏸️ BLOCKED |
+| **TASK-3805** | Stryker.NET WPF App.g.cs Problem überwachen (Issue #3813) — reaktivieren wenn gefixt | PO | LOW | — | ⏸️ BLOCKED |
+
+---
+
 
 1. **Researcher zuerst:** TASK-1601 muss abgeschlossen sein, bevor der Coder mit TASK-1602 beginnt.
 2. **Designer parallel:** UI-Design kann parallel zum Backend laufen.
