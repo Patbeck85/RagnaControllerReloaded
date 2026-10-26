@@ -1,6 +1,6 @@
-# RagnaController v2.3.0 — Autonomous Multi-Agent Development
+# RagnaController v2.6.1 — Autonomous Multi-Agent Development
 
-**Version:** 2.3.0 | **Release:** 2026-10-20 | **Build:** 0 errors, 0 warnings | **Tests:** 726/726 passing
+**Version:** 2.6.1 | **Release:** 2026-10-26 | **Build:** 0 errors, 0 warnings | **Tests:** 1076/1076 passing
 
 ---
 
@@ -8,7 +8,13 @@
 
 This release represents a complete autonomous development cycle executed per **SOUL.md v2.0 Enterprise** principles. All phases (1-11) were completed without manual intervention, with systematic file-by-file review and optimization of all ~323 `.cs` files.
 
-### Key Achievements (v2.2.1):
+### Key Achievements (v2.6.1):
+- **🌍 Vollständige Lokalisierung (48 Sprachen × 1289 Keys)** — Alle Sprachdateien in `Locales/` komplett übersetzt und konsistent mit `en.json`
+- **🧹 Flaky-Test behoben** — `LogLevel_FiltertTiefereLevel` deterministisch (AdvancedLogger.Dispose wartet auf Channel-Leerung)
+- **📚 Dokumentation synchronisiert** — Alle 9 Unterordner-READMEs mit tatsächlichem Dateibaum abgeglichen
+- **📦 Stryker.NET Konfiguration repariert** — `stryker.json` Key `exclude-mutation` → `ignore-mutations`
+
+### Key Achievements (v2.6.0):
 - **Static Collection Cleanup** — All registries and caches now dispose properly on shutdown (TECH-051)
 - **Event Subscription Leak Prevention** — 4 core classes now implement `IDisposable` with proper event cleanup (TECH-052)
 - **Background Thread Management** — Consumer thread and SDL thread properly joined on shutdown (TECH-053)
@@ -164,10 +170,19 @@ RagnaController uses a **JSON-based localization system** with live language swi
 
 ### Supported Languages
 
-- **English** (`en.json`) — Default
+- **English** (`en.json`) — Default (Quellsprache)
 - **Deutsch** (`de.json`) — German
-- **Tagalog** (`tl.json`) — Filipino
-- **Community languages:** Add your own! (41 locales supported)
+- **Français** (`fr.json`), **Español** (`es.json`), **Italiano** (`it.json`), **Português** (`pt.json`), **Română** (`ro.json`)
+- **Nederlands** (`nl.json`), **Svenska** (`sv.json`), **Dansk** (`da.json`), **Norsk** (`no.json`)
+- **Polski** (`pl.json`), **Čeština** (`cs.json`), **Slovenčina** (`sk.json`), **Slovenščina** (`sl.json`), **Hrvatski** (`hr.json`), **Srpski** (`sr.json`)
+- **Русский** (`ru.json`), **Українська** (`uk.json`), **Български** (`bg.json`)
+- **Suomi** (`fi.json`), **Magyar** (`hu.json`), **Ελληνικά** (`el.json`), **Türkçe** (`tr.json`), **فارسی** (`fa.json`)
+- **Tiếng Việt** (`vi.json`), **Bahasa Indonesia** (`id.json`), **Bahasa Melayu** (`ms.json`), **Tagalog** (`tl.json`), **ไทย** (`th.json`), **မြန်မာ** (`my.json`)
+- **العربية** (`ar.json`), **עברית** (`he.json`)
+- **हिन्दी** (`hi.json`), **বাংলা** (`bn.json`), **தமிழ்** (`ta.json`), **తెలుగు** (`te.json`), **മലയാളം** (`ml.json`), **मराठी** (`mr.json`), **ગુજરાતી** (`gu.json`), **ਪੰਜਾਬੀ** (`pa.json`), **ଓଡ଼ିଆ** (`or.json`), **ಕನ್ನಡ** (`kn.json`), **اردو** (`ur.json`)
+- **日本語** (`ja.json`), **한국어** (`ko.json`), **中文** (`zh.json`), **简体中文** (`zh-cn.json`)
+
+**48 Sprachen × 1289 Keys** — alle konsistent mit `en.json`
 
 ### How It Works
 
@@ -398,14 +413,14 @@ Located in `tests/RagnaController.Tests/`:
 - No Win32 calls during tests (isolated from OS)
 - xUnit framework with NSubstitute and FluentAssertions
 
-**Current Test Suite:** 726 tests passing across all core engines and integration tests.
+**Current Test Suite:** 1076 tests passing across all core engines and integration tests.
 
 ### Build Verification
 
 Before any deployment:
 
 1. **Compile** project (`dotnet build`) — **0 errors, 0 warnings** ✅
-2. **Run tests** (`dotnet test`) — **726/726 passing** ✅
+2. **Run tests** (`dotnet test`) — **1076/1076 passing** ✅
 3. **Manual Windows testing** (VS Code / Visual Studio)
 4. **Verify release isolation** — `release_final/` contains only end products ✅
 

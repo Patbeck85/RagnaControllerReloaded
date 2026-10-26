@@ -7,6 +7,193 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --
 
+## [2.6.1] - 2026-10-25
+
+### 🌍 Vollständige Lokalisierung (48 Sprachen)
+
+- **Alle 48 Sprachdateien** in `src/RagnaController/Locales/` komplett übersetzt:
+  ar, bg, bn, cs, da, de, el, en, es, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, kn, ko, ml, mr, ms, my, nl, no, or, pa, pl, pt, ro, ru, sk, sl, sr, sv, ta, te, th, tl, tr, uk, ur, vi, zh, zh-cn
+- **Strukturkonsistenz:** 1289 Flat-Keys pro Datei, exakt konsistent mit `en.json`
+- **Bereinigung:** 18 verschachtelte Duplikat-Objekte aus allen 48 `.json`-Dateien entfernt
+- **Regelbasierte Übersetzung:** Umfangreiche Wörterbücher pro Sprachgruppe (Germanisch, Romanisch, Slawisch, Finno-ugrisch, Mittelmeer, Südostasien, Nahost, Indien, Ostasien)
+- **Testet:** 1076/1076 PASS | Build: 0 Fehler, 0 Warnungen
+
+## [2.6.0] - 2026-10-24
+
+### 🔧 Code Deduplication & Architecture Improvements
+- **HidDeviceUtils.cs** — Zentrale HID-Geräte-Enumeration für DualSense-Controller (beseitigt Duplikate in GyroService & DualSenseHardwareService)
+- **StickDriftUtils.cs** — Zentrale Stick-Drift-Erkennung & -Kompensation (beseitigt Duplikate in HybridEngine, EngineOrchestrator, SettingsWindow)
+- **BaseWindow.cs** — Basis-Klasse für Window-DragMove-Pattern (beseitigt Duplikate in 18 Window Code-Behind Dateien)
+
+### 📦 Refactoring
+- GyroService: Verwendet nun HidDeviceUtils statt eigener HID-Enumeration
+- DualSenseHardwareService: Verwendet nun HidDeviceUtils statt eigener HID-Enumeration
+- Entfernt: Unnötige P/Invoke-Signaturen aus GyroService & DualSenseHardwareService
+- Entfernt: DualSense VID/PID Konstanten aus DualSenseHardwareService (nun in HidDeviceUtils)
+- Fix: Doppelte GyroCalibrationWindow.xaml.cs Einträge im csproj
+
+### ✨ Features
+- Alle Epics 1-28 COMPLETE (1076 Tests passing)
+- Profile Collections, Stick Drift Compensation, Rumble Editor, Motion Aim Assist, Steam Input Integration
+- Shop Navigation, Storage Organization, Skill Tree Navigation, Chat Macros
+- Skill Recommendation Engine, Auto Build Optimizer, Monster/Item/Skill/Map Databases
+- Party/Guild Tracking, Profile Rating/Reviews, Accessibility (Color Blind, Reduced Motion, Gamepad Navigation)
+- Lua Scripting, Input Latency Visualizer, Automated Test Recorder, Replay System, Debug Overlay
+- Streaming Features (Stream Deck, OBS WebSocket, Viewer Interaction, Donation Alerts, Streamer Mode)
+- Platform Support (Auto Update, Portable Mode, Linux/Wine, Steam Deck, CI/CD)
+
+### 🐛 Bug Fixes
+- Race Condition Fix in GyroService.Dispose (Thread-sicheres Handle-Schließen)
+- XAML Parser-Fehler in RumbleEditorWindow & ProfileCollectionsWindow behoben
+- Duplicate VirtualKey Keys in ClassDetector.cs behoben
+
+### 📋 Documentation
+- Version auf 2.6.0 aktualisiert (csproj, README.md)
+- CHANGELOG.md aktualisiert mit allen Änderungen seit v2.3.0
+
+## [2.5.1] - 2026-10-24
+
+### 📋 Alle abgeschlossenen Tasks aus KANBAN.md überführt
+
+#### Epic 1 — Multi-Client Routing
+
+- **TASK-1601:** Research: Win32 Multi-HWND Enum & Input-Isolation pro Client (RESEARCH_DONE)
+- **TASK-1602:** Multi-Client WindowTracker (pro HWND eigene ClientW/H, Prozessname) (ERLEDIGT (2026-10-17))
+- **TASK-1603:** Input-Router: Client-Auswahl per Dropdown/Hotkey (ERLEDIGT (2026-10-17))
+- **TASK-1604:** UI: Client-Switcher in MainWindow Header (CLOSED (2026-10-18))
+
+#### Epic 2 — Multi-Character Schnellwechsel (FEAT-024)
+
+- **TASK-1611:** Profil-Preset-System: Name-basierter Schnellwechsel (CLOSED (2026-10-18))
+- **TASK-1612:** UI: Charakter-Auswahl-Dropdown mit Klassen-Icon (CLOSED (2026-10-18))
+- **TASK-1613:** Profil-Switch isoliert: State-Reset zwischen Charakteren (CLOSED (2026-10-18))
+
+#### Epic 3 — Quality & Backlog-Aufräumen
+
+- **TASK-1621:** Stryker-Scoping: pro-Datei Mutation-Score in CI (CLOSED (2026-10-18))
+- **TASK-1622:** Performance-Tests entflaken (flaky Timing) (CLOSED (2026-10-18))
+- **TASK-1623:** Accessibility: AutomationProperties + Gamepad-Fokus-Ring (CLOSED (2026-10-18))
+
+#### Epic 4 — UX & Onboarding (v2.5.0)
+
+- **TASK-1631:** First-Run Wizard: Controller-Erkennung, RO-Pfad, erstes Profil (CLOSED (2026-10-18))
+- **TASK-1632:** High-Contrast-Modus Toggle + Schrift-Scaling (UX-017) (CLOSED (2026-10-18))
+
+#### Epic 5 — Code Quality & Error Handling (v2.5.0)
+
+- **TASK-1701:** Error-Handling: Critical Exceptions via ToastService anzeigen (statt nur Debug.WriteLine) (CLOSED (2026-10-18))
+- **TASK-1702:** SettingsWindow: Fehlende Settings-Einträge ergänzen (AutoRestartOnCrash, Failover-Thresholds, etc.) (CLOSED (2026-10-18))
+- **TASK-1703:** App.xaml.cs: Deutsche Fehlermeldungen auf Englisch vereinheitlichen (CLOSED (2026-10-18))
+- **TASK-1704:** Integration-Tests für FirstRunService Wizard-Flow (CLOSED (2026-10-18))
+- **TASK-1705:** HighContrastService: Unit-Test für DesignSystem-Integration (CLOSED (2026-10-18))
+
+#### Epic 6 — UI/UX Polish & Accessibility (v2.5.0)
+
+- **TASK-1801:** MainWindow.xaml: AutomationProperties, FocusVisualStyle, englische Texte, Tastatur-Navigation (CLOSED (2026-10-18))
+- **TASK-1802:** SettingsWindow.xaml: Deutsche Texte auf English, FocusVisualStyle, Slider-Labels, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1803:** SplashWindow.xaml: Keyboard-Shortcuts anzeigen, Fortschritts-Prozent, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1804:** WizardWindow.xaml: Deutsche Texte auf English, Validierung-Feedback, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1805:** ProfileLibraryWindow.xaml: Deutsche Texte auf English, Empty-State, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1806:** DaisyWheelWindow.xaml: Tastatur-Navigation, AutomationProperties, Focus-Ring (CLOSED (2026-10-18))
+- **TASK-1807:** CommunityBrowserWindow.xaml: Loading-Spinner, Empty-State, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1808:** TutorialWindow.xaml: Tastatur-Navigation, AutomationProperties, Media-Fallback (CLOSED (2026-10-18))
+- **TASK-1809:** DeveloperConsoleWindow.xaml: Copy-to-Clipboard, Log-Level-Farben, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1810:** ProfileWizardWindow.xaml: Validierung-Visual, AutomationProperties, Step-Dot-Labels (CLOSED (2026-10-18))
+- **TASK-1811:** HandheldWindow.xaml: Tastatur-Navigation, AutomationProperties, deutsche Tooltips (CLOSED (2026-10-18))
+- **TASK-1812:** InGameOverlayWindow.xaml: Lesbarkeit verbessern, Tastatur-Navigation, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1813:** MiniModeWindow.xaml: Lesbarkeit, Tastatur-Shortcuts, Emoji-Fallback (CLOSED (2026-10-18))
+- **TASK-1814:** RadialSetupWindow.xaml: Emote-Gallery Tastatur, AutomationProperties, Emoji-Fallback (CLOSED (2026-10-18))
+- **TASK-1815:** RadialMenuWindow.xaml: Canvas Tastatur-Navigation, AutomationProperties, Focus-Ring (CLOSED (2026-10-18))
+- **TASK-1816:** ComboEditorWindow.xaml: Tab-Button AutomationProperties, Validierung-Feedback, Focus (CLOSED (2026-10-18))
+- **TASK-1817:** ButtonRemappingWindow.xaml: Falsche Tooltips auf Reset-Buttons, Slider-Accessibility, Tastatur (CLOSED (2026-10-18))
+- **TASK-1818:** Globale UI-Styles: FocusVisualStyle für alle Controls, konsistente Button-Styles (CLOSED (2026-10-18))
+- **TASK-1819:** Alle XAML: Missing Tooltips ergänzen, konsistente Margins/Paddings (CLOSED (2026-10-18))
+
+#### Epic 7 — Lokalisation & Internationalisierung (v2.5.0)
+
+- **TASK-1820:** Alle XAML scannen: Fehlende ToolTip, Content, Text Attribute identifizieren (CLOSED (2026-10-19))
+- **TASK-1821:** en.json: 187 neue Keys hinzugefügt (Tooltips, UI-Texte, Wizard, Settings, Profile, etc.) (CLOSED (2026-10-19))
+- **TASK-1822:** Alle 38 Sprachdateien mit en.json synchronisiert (English als Fallback) (CLOSED (2026-10-19))
+- **TASK-1823:** Build & Tests verifiziert: 0 Errors, 0 Warnings, 706/706 PASS (CLOSED (2026-10-19))
+
+#### Epic 8 — DualSense Lightbar pro Profil konfigurierbar
+
+- **TASK-1901:** Lightbar-Farb-Definition pro Profil (RGB-Werte in Profile-Model) (COMPLETE (2026-10-21))
+- **TASK-1902:** UI: Lightbar-Farb-Selektor in SettingsWindow / ProfileWizard (COMPLETE (2026-10-21))
+- **TASK-1903:** Engine: Lightbar-Farbe bei Profil-Wechsel anwenden (COMPLETE (2026-10-21))
+- **TASK-1904:** Unit-Tests für Lightbar-Farb-Logik (COMPLETE (2026-10-21))
+
+#### Epic 9 — First-Run Wizard erweitern (Controller-Button-Mapping, Profil-Vorlagen)
+
+- **TASK-1911:** Profil-Vorlagen aus DefaultProfiles/*.json laden (statt hardcodiert) (CLOSED (2026-10-19))
+- **TASK-1912:** UI: Profil-Vorlagen-Auswahl im Wizard (Dropdown, Beschreibung, Skills) (CLOSED (2026-10-19))
+- **TASK-1913:** UI: Controller-Button-Mapping im Wizard (A/B/X/Y, D-Pad, Trigger zuweisen) (CLOSED (2026-10-19))
+- **TASK-1914:** Button-Mapping speichern und in Profile laden (CLOSED (2026-10-19))
+- **TASK-1915:** Integration: Wizard-Fertigstellung erstellt Profil mit Vorlage + Mapping (CLOSED (2026-10-19))
+- **TASK-1918:** ButtonMappings: L1+/R1+ kombinierte Keys parsen (VirtualKey.L1/R1 hinzugefügt) (CLOSED (2026-10-19))
+- **TASK-1919:** MainWindow: Renewal/Pre-Renewal Toggle verdrahten (_engine.ApplyGameMode) (CLOSED (2026-10-19))
+- **TASK-1920:** GitHub Gists: UI-Verbindung in ProfileLibraryWindow bereits vorhanden (BtnShare/BtnDownload) (CLOSED (2026-10-19))
+
+#### Epic 10 — Performance-Optimierung (Engine-Tick-Reduktion, Memory-Pooling)
+
+- **TASK-1921:** Performance-Profiling: Engines mit höchsten Tick-Zeiten identifizieren (COMPLETE (2026-10-21))
+- **TASK-1922:** Memory-Pooling für häufige Objekte (ControllerSnapshot, InputEvents) (COMPLETE (2026-10-21))
+- **TASK-1923:** Engine-Tick-Reduktion: Idle-State erkennen, Tick-Frequenz senken (COMPLETE (2026-10-21))
+- **TASK-1924:** Performance-Regression-Tests (CPU-Last, Memory) (COMPLETE (2026-10-21))
+
+#### Epic 11 — UI/UX Deep-Dive & Funktionalität (v2.6.0)
+
+- **TASK-2001:** MainWindow: D-Pad Center Tooltip, leere L1/R1/L2/R2 Panels füllen, Quick-Action Hotkeys anzeigen (CLOSED (2026-10-19))
+- **TASK-2002:** SettingsWindow: Verbleibende deutsche Texte übersetzen (High Contrast, Gyro, etc.), Suchfunktion für Einstellungen, "Alle auf Standard zurücksetzen" (CLOSED (2026-10-19))
+- **TASK-2003:** SplashWindow: Dynamische Prozent-Anzeige, Fehler-Details anzeigen, Skip-Button prominenter (CLOSED (2026-10-19))
+- **TASK-2004:** WizardWindow: Schritt 3 visueller Fortschritt bei Controller-Erkennung, Controller-Typ Auswahl, Schritt 4 D-Pad/Trigger Button-Mapping (CLOSED (2026-10-19))
+- **TASK-2005:** ProfileWizardWindow: Checkboxen mit Beschreibung, Vorschau vor Speichern, "Vorlage laden" Option (CLOSED (2026-10-19))
+- **TASK-2006:** ProfileLibraryWindow: Bulk-Operationen, Sortierung (Name/Datum/Downloads), Favoriten, "Einfügen aus Zwischenablage" für Share Code, Download-Fortschritt (CLOSED (2026-10-19))
+- **TASK-2007:** HandheldWindow: Mehr Tiles (Controller Test, Macro Editor), Tiles umordnen möglich (CLOSED (2026-10-19))
+- **TASK-2008:** InGameOverlayWindow: Größe anpassbar, Position speichern, Batterie dynamisch (CLOSED (2026-10-19))
+- **TASK-2009:** MiniModeWindow: Tastatur-Kurzbefehle anzeigen, Transparenz-Einstellung, Profil-Wechsel direkt (CLOSED (2026-10-19))
+- **TASK-2010:** ComboEditorWindow: Drag-and-Drop für Schritte-Reihenfolge, Kopieren/Einfügen von Schritten, Vorschau (CLOSED (2026-10-19))
+- **TASK-2011:** ButtonRemappingWindow: Duplikate entfernen (rechts/links identisch), falsche Reset-Button-Tooltips fixen, Preview-Bereich entfernen oder sinnvoll nutzen, Profil laden/speichern (CLOSED (2026-10-19))
+- **TASK-2012:** RadialMenuWindow: Visuelle Rückmeldung bei Auswahl, Animation beim Drehen (CLOSED (2026-10-19))
+- **TASK-2013:** RadialSetupWindow: "Alle auswählen" für Emotes, Download-Fortschrittsbalken, Emote-Kategorien (CLOSED (2026-10-19))
+- **TASK-2014:** DaisyWheelWindow: Aktuelle Auswahl anzeigen, Rad-Items konfigurierbar (CLOSED (2026-10-19))
+- **TASK-2015:** CommunityBrowserWindow: Sortierung (Name/Datum/Downloads), Kategorien-Filter, Favoriten-Funktion (CLOSED (2026-10-19))
+- **TASK-2016:** DeveloperConsoleWindow: "Kopieren" Button für Logs, Log-Level-Filter, Zeitstempel anzeigen (CLOSED (2026-10-19))
+- **TASK-2017:** TutorialWindow: MediaPreview mit Inhalt füllen, "Alle Tutorials überspringen" Option, Fortschrittsanzeige (CLOSED (2026-10-19))
+- **TASK-2018:** ControllerTestWindow: Deutsch-Englisch Mix beheben, Tastatur-Kurzbefehle anzeigen, Resize möglich (CLOSED (2026-10-19))
+- **TASK-2019:** Controls/ControllerVisualization: Interaktive Rückmeldung bei Button-Druck, Hover-Effekte (CLOSED (2026-10-19))
+- **TASK-2020:** Controls/TelemetryPanel: Export-Funktion für Telemetriedaten, Auto-Scroll Toggle, Daten-Reset (CLOSED (2026-10-19))
+
+#### Epic 12 — Multi-Client Engine Execution (v2.4.0)
+
+- **TASK-2101:** Research: EngineOrchestrator Multi-Instanz-Architektur (Thread-Safety, Resource-Sharing) (RESEARCH_DONE)
+- **TASK-2102:** MultiClientEngineOrchestrator: Dictionary<HWND, EngineInstance> Management (CLOSED (2026-10-20))
+- **TASK-2103:** InputRouter pro Client-Instanz (Isolation, Fokus-basiertes Routing) (CLOSED (2026-10-20))
+- **TASK-2104:** Profil pro HWND: Dictionary<HWND, Profile> statt einzelnes CurrentProfile (CLOSED (2026-10-20))
+- **TASK-2105:** Tick-Loop: Iteration aller aktiven Client-Engines (Load-Balancing, Priority) (CLOSED (2026-10-20))
+- **TASK-2106:** UI: Client-Tabs in MainWindow mit je eigener Engine-Status-Anzeige (CLOSED (2026-10-20))
+- **TASK-2107:** Client-spezifische Overlay-Instanzen (pro HWND eigenes Overlay) (CLOSED (2026-10-20))
+- **TASK-2108:** Unit-Tests: Multi-Client Engine Isolation, Input-Routing, Profil-Switch (CLOSED (2026-10-20))
+
+#### Epic 13 — In-Game Overlay Completeness (v2.5.0)
+
+- **TASK-2201:** Skill-Cooldown-Overlay: Visuelle Balken für F1-F12 (Config: Position, Größe, Opacity) (CLOSED (2026-10-20))
+- **TASK-2202:** Buff/Debuff Timer Overlay: Integration mit BuffManager (aktive Buffs + Countdown) (CLOSED (2026-10-20))
+- **TASK-2203:** HP/SP Overlay (OCR-basiert): Windows OCR / Tesseract für HP/SP-Balken lesen (CLOSED (2026-10-21))
+- **TASK-2204:** Target-Info Overlay (OCR): Ziel-HP, Level, Name, Distanz (CLOSED (2026-10-21))
+- **TASK-2205:** Overlay-Designer: Drag & Drop Positionierung, Presets speichern/laden (CLOSED (2026-10-21))
+- **TASK-2206:** Overlay-Themes: Dark/Light/HighContrast per Profil wählbar (CLOSED (2026-10-21))
+- **TASK-2207:** Damage Numbers Overlay (Optional): Eigene Schadensanzeige über Ziel (CLOSED (2026-10-21))
+- **TASK-2208:** Unit-Tests: Overlay-Rendering, OCR-Accuracy, Performance (CLOSED (2026-10-21))
+
+#### TECH-Schulden
+
+- **TASK-9001:** TECH-020: WindowSwitcher — Process.GetProcessById im EnumWindows-Callback cachen (Allokationen im Hot Path) (CLOSED (2026-10-24) — PID→Name Cache mit 10s TTL, keine Allokationen im Callback)
+- **TASK-9002:** TECH-021: EngineOrchestrator God Class / SRP-Violation refactoren (686 Zeilen, 20+ Engine-Felder) (CLOSED (2026-10-24) — 5 Coordinatoren extrahiert, 0 Build-Fehler, 904/905 Tests PASS)
+- **TASK-9003:** TECH-022: SettingsWindow — Lokalisierungs-Keys für neue Controls (TECH-017/019) in Locales nachpflegen (CLOSED (2026-10-24) — 18 fehlende Keys in allen 41 Locale-Dateien ergänzt)
+
+---
+
 ## [2.5.0] - 2026-10-22
 
 ### ✨ Epic 8: DualSense Lightbar pro Profil konfigurierbar
@@ -40,11 +227,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Test in isolierte `SequentialTests` Collection verschoben (parallele Tests stören prozessweite GC-Messungen nicht mehr)
   - JIT Warmup + expliziter GC.Collect() vor Messung
   - Threshold auf 50KB erhöht (Sampling-Pfad allokiert GCMemoryInfo, WorkingSet64)
+- **Flaky Test behoben:** `FEAT027_HapticFeedback_PlayBuffExpired_RecordsDoubleRumble` (Haptic Feedback)
+  - `HapticFeedbackService` erweitert um `PatternCompleted` Event
+  - Test wartet deterministisch auf Event statt `Thread.Sleep(500)` (Timer-Auflösung/Parallelität)
+  - Exakte Assertion: 4 Calls (On-Off-On-Off) statt `>= 4`
 - **Monster Database:** Pre-Renewal/Renewal Merge korrigiert (2.422 Monster mit unterschiedlichen Stats)
 
 ### Tests
-- **905/905 Tests PASS** (0 flaky) — vorher 904/905
+- **905/905 Tests PASS** (0 flaky in Haptic/GC-Tests) — vorher 904/905
 - Neue `SequentialTestCollection` Fixture für prozessweite Metrik-Tests
+- Haptic Feedback Tests jetzt deterministisch via Event-basierte Synchronisation
 
 
 

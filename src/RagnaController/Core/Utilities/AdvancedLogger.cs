@@ -192,12 +192,16 @@ namespace RagnaController.Core
         {
             _channel.Writer.TryComplete();
             _errorChannel.Writer.TryComplete();
-            _cts.Cancel();
-            try { _consumer.Wait(TimeSpan.FromSeconds(2)); }
+
+            // Consumer darf laufen bis beide Channels geleert sind (Completion.IsCompleted + empty).
+            // Nicht sofort abbrechen — sonst landen noch nicht geschriebene Warn/Error-Items verloren.
+            try { _consumer.Wait(TimeSpan.FromSeconds(5)); }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[Logger] Dispose wait failed: {ex.Message}");
+                _cts.Cancel(); // Fallback: nur bei Timeout erzwingen
             }
+
             _cts.Dispose();
 
             _writer?.Dispose();

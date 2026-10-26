@@ -10,7 +10,7 @@
       "src/RagnaController/Core/Interfaces/*.cs",
       "src/RagnaController/Core/Utilities/*.cs"
     ],
-    "exclude-mutation": [
+    "ignore-mutations": [
       "src/RagnaController/Core/Windows/*Window*.cs",
       "src/RagnaController/Core/Windows/*Window*.xaml.cs",
       "src/RagnaController/Core/App.xaml.cs",
