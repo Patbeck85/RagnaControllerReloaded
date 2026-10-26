@@ -6,9 +6,9 @@
 ## 🎯 Current Milestone
 **Phase:** All Epics 1-28 COMPLETE + Vollständige Lokalisierung (48 Sprachen × 1289 Keys)
 **Status:** Build: 0 errors | Tests: 1076/1076 PASS (Flaky-Test behoben)
-**Git HEAD:** commit 3896124 (Stryker.NET v5.0.0 aktualisiert, CI nicht-blockierend)
+**Git HEAD:** commit a2dc22d (Stryker.NET CI deaktiviert bis WPF App.g.cs Fix verfügbar)
 **Last Updated:** 2026-10-26
-**Status:** Stryker.NET auf v5.0.0 aktualisiert. CI Mutation-Checks als continue-on-error (App.g.cs WPF-Problem bleibt bestehen). Build: 0 Fehler, Tests: 1076/1076 PASS.
+**Status:** Stryker.NET CI Job deaktiviert (if: false) bis Stryker.NET das WPF App.g.cs Problem behebt (Issue #3813). Build: 0 Fehler, Tests: 1076/1076 PASS.
 **Release:** v2.6.0 (2026-10-24) — Major Release mit allen Epics 1-28, Code Deduplication, Version Bump
 
 ---
