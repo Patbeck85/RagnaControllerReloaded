@@ -81,15 +81,15 @@
 
 ---
 
-### Epic 17: AI-Assisted Features (White-Hat) (v2.6.0) — 📋 PLANUNG
+### Epic 17: AI-Assisted Features (White-Hat) (v2.6.0) — ✅ COMPLETE
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-2601** | OCR-based HP/SP Reading: Windows ML / Tesseract Integration für Overlay | Coder | HIGH | TASK-2203 | 📋 OPEN |
-| **TASK-2602** | Skill Recommendation Engine: Class + Level + Equipment → Skill-Build vorschlagen (Pre-Renewal & Renewal) | Coder | MEDIUM | — | 📋 OPEN |
-| **TASK-2603** | Auto-Build Optimizer: Stat-Allokation (Str/Agi/Vit/Int/Dex/Luk) für Builds (Pre-Renewal & Renewal) | Coder | MEDIUM | TASK-2602 | 📋 OPEN |
-| **TASK-2604** | Monster Database Integration: iRO/kRO DB laden → Element, Drops, Spawns im Overlay | Coder | LOW | — | 📋 OPEN |
-| **TASK-2606** | Unit-Tests: OCR Accuracy, Build Recommendations, DB Queries | QA | MEDIUM | TASK-2603 | 📋 OPEN |
+| **TASK-2601** | OCR-based HP/SP Reading: Windows ML / Tesseract Integration für Overlay | Coder | HIGH | TASK-2203 | ✅ COMPLETE (2026-10-26) |
+| **TASK-2602** | Skill Recommendation Engine: Class + Level + Equipment → Skill-Build vorschlagen (Pre-Renewal & Renewal) | Coder | MEDIUM | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-2603** | Auto-Build Optimizer: Stat-Allokation (Str/Agi/Vit/Int/Dex/Luk) für Builds (Pre-Renewal & Renewal) | Coder | MEDIUM | TASK-2602 | ✅ COMPLETE (2026-10-26) |
+| **TASK-2604** | Monster Database Integration: iRO/kRO DB laden → Element, Drops, Spawns im Overlay | Coder | LOW | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-2606** | Unit-Tests: OCR Accuracy, Build Recommendations, DB Queries | QA | MEDIUM | TASK-2603 | ✅ COMPLETE (2026-10-26, 27 Tests PASS) |
 
 ---
 
@@ -263,7 +263,7 @@
 **Offene Epics zur Auswahl (alle PLANUNG, keine Blocker):**
 - **Epic 15: Controller Hardware Advanced Features** (TASK-2401-2408 alle COMPLETE)
 - **Epic 16: Smart Cursor Extensions** (TASK-2501-2505 alle COMPLETE)
-- **Epic 17: AI-Assisted Features** (TASK-2601-2606 alle 📋 OPEN / PLANUNG)
+- **Epic 17: AI-Assisted Features** (TASK-2601-2606 alle ✅ COMPLETE)
 - **Epic 18: Community & Social Features** (TASK-2701-2706 alle COMPLETE)
 - **Epic 19: Accessibility & UX Polish** (TASK-2801-2807 alle COMPLETE)
 - **Epic 20: Developer & Power-User Tools** (TASK-2901-2906 alle COMPLETE)
