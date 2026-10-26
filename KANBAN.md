@@ -4,11 +4,23 @@
 
 ---
 
-### Epic 12: Multi-Client Engine Execution (v2.4.0) — ⏸️ BLOCKED
+### Epic 12: Multi-Client Engine Execution (v2.4.0) — ✅ COMPLETE (implementierbare Tasks)
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-2109** | Integration-Test: 2+ RO-Clients gleichzeitig steuern | QA | HIGH | TASK-2107 | ⏸️ BLOCKED (benötigt echte RO-Client- & Server-Infrastruktur) |
+| **TASK-1601** | Research: Win32 Multi-HWND Enum & Input-Isolation pro Client | Researcher | HIGH | — | ✅ COMPLETE (RESEARCH_DONE, in .workspace_temp/scratchpad/TASK-1601_Research_MultiHwnd.md) |
+| **TASK-1602** | Multi-Client WindowTracker (pro HWND eigene ClientW/H, Prozessname) | Coder | HIGH | TASK-1601 | ✅ COMPLETE (2026-10-17) |
+| **TASK-1603** | Input-Router: Client-Auswahl per Dropdown/Hotkey | Coder | HIGH | TASK-1602 | ✅ COMPLETE (2026-10-17) |
+| **TASK-1604** | UI: Client-Switcher in MainWindow Header | Designer | HIGH | TASK-1603 | ✅ COMPLETE (2026-10-18) |
+| **TASK-2101** | Research: EngineOrchestrator Multi-Instanz-Architektur | Researcher | HIGH | — | ✅ COMPLETE (RESEARCH_DONE) |
+| **TASK-2102** | MultiClientEngineOrchestrator: Dictionary<HWND, EngineInstance> Management | Coder | HIGH | TASK-2101 | ✅ COMPLETE (2026-10-20) |
+| **TASK-2103** | InputRouter pro Client-Instanz (Isolation, Fokus-basiertes Routing) | Coder | HIGH | TASK-2102 | ✅ COMPLETE (2026-10-20) |
+| **TASK-2104** | Profil pro HWND: Dictionary<HWND, Profile> statt einzelnes CurrentProfile | Coder | HIGH | TASK-2103 | ✅ COMPLETE (2026-10-20) |
+| **TASK-2105** | Tick-Loop: Iteration aller aktiven Client-Engines (Load-Balancing, Priority) | Coder | HIGH | TASK-2104 | ✅ COMPLETE (2026-10-20) |
+| **TASK-2106** | UI: Client-Tabs in MainWindow mit je eigener Engine-Status-Anzeige | Designer | HIGH | TASK-2105 | ✅ COMPLETE (2026-10-20) |
+| **TASK-2107** | Client-spezifische Overlay-Instanzen (pro HWND eigenes Overlay) | Designer | HIGH | TASK-2106 | ✅ COMPLETE (2026-10-20) |
+| **TASK-2108** | Unit-Tests: Multi-Client Engine Isolation, Input-Routing, Profil-Switch | QA | HIGH | TASK-2107 | ✅ COMPLETE (2026-10-20) |
+| **TASK-2109** | Integration-Test: 2+ RO-Clients gleichzeitig steuern | QA | HIGH | TASK-2107 | ⏸️ BLOCKED (benötigt echte RO-Client- & Server-Infrastruktur — nicht im Lab verfügbar) |
 
 ---
 
