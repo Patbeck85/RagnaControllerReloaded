@@ -97,12 +97,12 @@
 
 | Task ID | Titel | Verantwortlich | Priorität | Abhängigkeiten | Status |
 |---------|-------|----------------|-----------|----------------|--------|
-| **TASK-2701** | Discord Rich Presence: Class, Map, Party, Status anzeigen (DiscordRpcService erweitern) | Coder | MEDIUM | — | 📋 OPEN |
-| **TASK-2702** | Party Voice Chat: Opus/WebRTC Implementation (VoiceChatService vervollständigen) | Coder | LOW | — | 📋 OPEN |
-| **TASK-2703** | Guild/Party Overlay: Party-Member Status (HP, SP, Buffs) im Overlay | Coder | MEDIUM | TASK-2202 | 📋 OPEN |
-| **TASK-2704** | Profile Rating/Reviews: Community-Bewertungen für Gist-Profile (Sterne, Kommentare) | Designer | LOW | — | 📋 OPEN |
-| **TASK-2705** | Profile Collections UI: Sammlungen verwalten, teilen, abonnieren | Designer | LOW | TASK-2307 | 📋 OPEN |
-| **TASK-2706** | Unit-Tests: Discord RPC, Voice Chat, Party Overlay Sync | QA | LOW | TASK-2703 | 📋 OPEN |
+| **TASK-2701** | Discord Rich Presence: Class, Map, Party, Status anzeigen (DiscordRpcService erweitern) | Coder | MEDIUM | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-2702** | Party Voice Chat: Opus/WebRTC Implementation (VoiceChatService vervollständigen) | Coder | LOW | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-2703** | Guild/Party Overlay: Party-Member Status (HP, SP, Buffs) im Overlay | Coder | MEDIUM | TASK-2202 | ✅ COMPLETE (2026-10-26) |
+| **TASK-2704** | Profile Rating/Reviews: Community-Bewertungen für Gist-Profile (Sterne, Kommentare) | Designer | LOW | — | ✅ COMPLETE (2026-10-26) |
+| **TASK-2705** | Profile Collections UI: Sammlungen verwalten, teilen, abonnieren | Designer | LOW | TASK-2307 | ✅ COMPLETE (2026-10-26) |
+| **TASK-2706** | Unit-Tests: Discord RPC, Voice Chat, Party Overlay Sync | QA | LOW | TASK-2703 | ✅ COMPLETE (2026-10-26, 75 Tests PASS mit CommunityTests + PartyManagerTests) |
 
 ---
 
@@ -264,7 +264,7 @@
 - **Epic 15: Controller Hardware Advanced Features** (TASK-2401-2408 alle COMPLETE)
 - **Epic 16: Smart Cursor Extensions** (TASK-2501-2505 alle COMPLETE)
 - **Epic 17: AI-Assisted Features** (TASK-2601-2606 alle ✅ COMPLETE)
-- **Epic 18: Community & Social Features** (TASK-2701-2706 alle COMPLETE)
+- **Epic 18: Community & Social Features** (TASK-2701-2706 alle ✅ COMPLETE)
 - **Epic 19: Accessibility & UX Polish** (TASK-2801-2807 alle COMPLETE)
 - **Epic 20: Developer & Power-User Tools** (TASK-2901-2906 alle COMPLETE)
 - **Epic 21: RO-Specific Game Knowledge** (TASK-3001-3007 alle COMPLETE)
