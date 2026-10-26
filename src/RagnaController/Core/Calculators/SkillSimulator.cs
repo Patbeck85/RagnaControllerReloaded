@@ -124,6 +124,23 @@ namespace RagnaController.Core.Calculators {
                 "gangster" => GangsterSkills(),
                 "kagerou" or "oboro" or "ninja" => NinjaSkills(),
                 "rebellion" => RebellionSkills(),
+                // ── Baby-Klassen ──
+                "baby novice" => BabyNoviceSkills(),
+                "baby swordman" => BabySwordmanSkills(),
+                "baby mage" => BabyMageSkills(),
+                "baby archer" => BabyArcherSkills(),
+                "baby acolyte" => BabyAcolyteSkills(),
+                "baby merchant" => BabyMerchantSkills(),
+                "baby thief" => BabyThiefSkills(),
+                // ── Baby Transcendent ──
+                "baby knight" => BabyKnightSkills(),
+                "baby wizard" => BabyWizardSkills(),
+                "baby hunter" => BabyHunterSkills(),
+                "baby priest" => BabyPriestSkills(),
+                "baby blacksmith" => BabyBlacksmithSkills(),
+                "baby assassin" => BabyAssassinSkills(),
+                // ── 3. Klasse (weitere) ──
+                "gunslinger" => GunslingerSkills(),
                 _ => NoviceSkills(),
             };
 
@@ -146,6 +163,12 @@ namespace RagnaController.Core.Calculators {
             "Rune Knight", "Royal Guard", "Sorcerer", "Shadow Chaser", "Genetic", "Guillotine Cross", "Arch Bishop", "Minstrel", "Wanderer", "Paladin",
             // Erweiterte / Sonderklassen
             "Super Novice", "Taekwon Boy", "Taekwon Girl", "Star Gladiator", "Soul Linker", "Gangster", "Kagerou", "Oboro", "Rebellion",
+            // Baby-Klassen
+            "Baby Novice", "Baby Swordman", "Baby Mage", "Baby Archer", "Baby Acolyte", "Baby Merchant", "Baby Thief",
+            // Baby Transcendent
+            "Baby Knight", "Baby Wizard", "Baby Hunter", "Baby Priest", "Baby Blacksmith", "Baby Assassin",
+            // 3. Klasse (weitere)
+            "Gunslinger",
         }.AsReadOnly();
 
         #region 1. Klasse (Base Jobs)
@@ -514,6 +537,153 @@ namespace RagnaController.Core.Calculators {
                 (3402, "Desperado", 10, 99, 50),
                 (3403, "Full Buster", 10, 99, 50),
                 (3404, "Snowflake Throw", 10, 99, 50),
+            };
+
+        #endregion
+
+        #region Baby-Klassen
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyNoviceSkills() =>
+            new[]
+            {
+                (3501, "Punch", 1, 1, 1),
+                (3502, "Stones", 1, 1, 1),
+                (3503, "Provoke", 5, 1, 1),
+                (3504, "First Aid", 5, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabySwordmanSkills() =>
+            new[]
+            {
+                (3601, "Sword Mastery", 10, 1, 1),
+                (3602, "Spear Mastery", 10, 1, 1),
+                (3603, "Bash", 10, 1, 1),
+                (3604, "Magnum Break", 10, 1, 1),
+                (3605, "Provoke", 10, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyMageSkills() =>
+            new[]
+            {
+                (3701, "Fire Bolt", 10, 1, 1),
+                (3702, "Fire Ball", 10, 1, 1),
+                (3703, "Lightning Bolt", 10, 1, 1),
+                (3704, "Frost Diver", 10, 1, 1),
+                (3705, "Heal", 10, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyArcherSkills() =>
+            new[]
+            {
+                (3801, "Double Strafe", 10, 1, 1),
+                (3802, "Arrow Storm", 10, 1, 1),
+                (3803, "Concentration", 5, 1, 1),
+                (3804, "Critical Explosion", 5, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyAcolyteSkills() =>
+            new[]
+            {
+                (3901, "Heal", 10, 1, 1),
+                (3902, "Blessing", 10, 1, 1),
+                (3903, "Increase AGI", 10, 1, 1),
+                (3904, "Resurrection", 10, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyMerchantSkills() =>
+            new[]
+            {
+                (4001, "Discount", 10, 1, 1),
+                (4002, "Overcharge", 10, 1, 1),
+                (4003, "Mammonite", 10, 1, 1),
+                (4004, "Coin", 10, 1, 1),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyThiefSkills() =>
+            new[]
+            {
+                (4101, "Steal", 10, 1, 1),
+                (4102, "Hide", 1, 1, 1),
+                (4103, "Double Attack", 10, 1, 1),
+                (4104, "Critical Strike", 10, 1, 1),
+            };
+
+        #endregion
+
+        #region Baby Transcendent
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyKnightSkills() =>
+            new[]
+            {
+                (4201, "Sword Mastery", 10, 70, 70),
+                (4202, "Spear Mastery", 10, 70, 70),
+                (4203, "Bash", 10, 70, 70),
+                (4204, "Magnum Break", 10, 70, 70),
+                (4205, "Provoke", 10, 70, 70),
+                (4206, "Brandish Spear", 10, 70, 70),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyWizardSkills() =>
+            new[]
+            {
+                (4301, "Fire Ball", 10, 70, 70),
+                (4302, "Fire Wall", 10, 70, 70),
+                (4303, "Meteor Storm", 10, 70, 70),
+                (4304, "Lightning Bolt", 10, 70, 70),
+                (4305, "Thunder Storm", 10, 70, 70),
+                (4306, "Frost Diver", 10, 70, 70),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyHunterSkills() =>
+            new[]
+            {
+                (4401, "Double Strafe", 10, 70, 70),
+                (4402, "Arrow Storm", 10, 70, 70),
+                (4403, "Blaze", 10, 70, 70),
+                (4404, "Concentration", 10, 70, 70),
+                (4405, "Critical Explosion", 5, 70, 70),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyPriestSkills() =>
+            new[]
+            {
+                (4501, "Heal", 10, 70, 70),
+                (4502, "Blessing", 10, 70, 70),
+                (4503, "Increase AGI", 10, 70, 70),
+                (4504, "Resurrection", 10, 70, 70),
+                (4505, "Glory", 1, 70, 70),
+                (4506, "Kyrie Eleison", 10, 70, 70),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyBlacksmithSkills() =>
+            new[]
+            {
+                (4601, "Mammonite", 10, 70, 70),
+                (4602, "Overcharge", 10, 70, 70),
+                (4603, "Discount", 10, 70, 70),
+                (4604, "Coin", 10, 70, 70),
+            };
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] BabyAssassinSkills() =>
+            new[]
+            {
+                (4701, "Steal", 10, 70, 70),
+                (4702, "Hide", 1, 70, 70),
+                (4703, "Double Attack", 10, 70, 70),
+                (4704, "Critical Strike", 10, 70, 70),
+            };
+
+        #endregion
+
+        #region 3. Klasse (weitere)
+
+        private static (int Id, string Name, int MaxLevel, int MinBase, int MinJob)[] GunslingerSkills() =>
+            new[]
+            {
+                (4801, "Desperado", 10, 99, 50),
+                (4802, "Full Buster", 10, 99, 50),
+                (4803, "Snowflake Throw", 10, 99, 50),
+                (4804, "Gunslinger", 10, 99, 50),
             };
 
         #endregion
