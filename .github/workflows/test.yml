@@ -60,19 +60,11 @@ jobs:
           path: coverage/**/*.xml
           retention-days: 14
 
-      - name: Upload Stryker Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: stryker-report
-          path: StrykerOutput/**/*
-          retention-days: 14
-
   stryker-mutation:
     name: Stryker Mutation Testing
     runs-on: windows-latest
     needs: test
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: false  # TEMPORÄR DEAKTIVIERT bis Stryker.NET WPF App.g.cs Problem gelöst (siehe https://github.com/stryker-mutator/stryker-net/issues/3813)
     timeout-minutes: 60
 
     env:
