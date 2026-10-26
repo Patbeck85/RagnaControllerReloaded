@@ -8,6 +8,7 @@ using System.Windows.Media.Animation;
 using RagnaController.Core;
 using RagnaController.Core.Services.FirstRun;
 using RagnaController.Core.Services.Update;
+using RagnaController.Core.Services.Database;
 using RagnaController.Profiles;
 using RagnaController.Core.Services.ProfileManagement;
 using RagnaController.Presentation.Services;
@@ -24,6 +25,7 @@ namespace RagnaController
             AppDomain.CurrentDomain.BaseDirectory, "crash.log");
 
         public static ToastService? ToastService { get; private set; }
+        public static MonsterDatabaseService? MonsterDatabaseService { get; private set; }
 
         public static void InitializeToastService(ToastService toastService)
         {
@@ -189,6 +191,27 @@ namespace RagnaController
                     Shutdown();
                     return;
                 }
+
+                // --- Automatischer Monster-Datenbank-Import (Rathena) ---
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        var loader = new MonsterDataLoader();
+                        var monsters = await loader.LoadFromRathenaOnlineAsync();
+                        if (monsters.Count > 0)
+                        {
+                            var dbService = new MonsterDatabaseService();
+                            dbService.LoadMonsters(monsters);
+                            MonsterDatabaseService = dbService;
+                            System.Diagnostics.Debug.WriteLine($"[App] Automatischer Monster-Import: {monsters.Count} Monster aus Rathena geladen.");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"[App] Automatischer Monster-Import fehlgeschlagen: {ex.Message}");
+                    }
+                });
 
                 var viewModel = new MainViewModel();
 
