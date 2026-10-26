@@ -37,11 +37,11 @@ namespace RagnaController.Tests
         public void MapDatabaseService_GetMapsForLevelRange_ShouldReturnMatchingMaps()
         {
             var db = new MapDatabaseService();
-            var maps = db.GetMapsForLevelRange(20);
+            var maps = db.GetMapsForLevelRange(20, GameMode.PreRenewal);
             Assert.NotEmpty(maps);
             foreach (var m in maps)
             {
-                Assert.True(m.BaseLevelMin <= 20 && m.BaseLevelMax >= 20);
+                Assert.True(m.PreRenewalLevelMin <= 20 && m.PreRenewalLevelMax >= 20);
             }
         }
 
