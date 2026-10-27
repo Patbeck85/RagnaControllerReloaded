@@ -67,9 +67,6 @@ namespace RagnaController.Views.Windows
         private bool _isBigPictureMode = false;
         private readonly List<string> _logBuffer = new();
         private MiniModeWindow? _miniWindow;
-#pragma warning disable CS0169 // Field may be used in future; kept for potential use
-        private bool _wasFocusLocked;
-#pragma warning restore CS0169
         private readonly ToastService _toastService = new();
         private readonly ProfileService _profileService;
 

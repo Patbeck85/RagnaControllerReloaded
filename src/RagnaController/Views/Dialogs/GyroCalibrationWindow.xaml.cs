@@ -25,9 +25,7 @@ namespace RagnaController.Views.Dialogs
         private int _currentStep = 1;
         private readonly int _totalSteps = 4;
 
-#pragma warning disable CS0414 // Field is assigned but may be used in future; kept for calibration state tracking
-        private bool _isCalibrating = false;
-#pragma warning restore CS0414
+        // Kalibrierungs-Zustand
         private int _calibrationSamplesCollected = 0;
         private const int CalibrationTargetSamples = 125; // ~1 Sekunde bei 125 Hz
         private float _totalPitchDps = 0f;
@@ -149,7 +147,7 @@ namespace RagnaController.Views.Dialogs
         // ── Schritt 3: Kalibrierung ──────────────────────────────────
         private void StartCalibration()
         {
-            _isCalibrating = true;
+
             _calibrationSamplesCollected = 0;
             _totalPitchDps = 0f;
             _totalYawDps = 0f;
@@ -206,7 +204,7 @@ namespace RagnaController.Views.Dialogs
 
                     Dispatcher.Invoke(() =>
                     {
-                        _isCalibrating = false;
+
                         ShowResults();
                     });
                 }
@@ -218,7 +216,7 @@ namespace RagnaController.Views.Dialogs
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        _isCalibrating = false;
+
                         CalibrationStatusText.Text = $"Fehler: {ex.Message}";
                         CalibrationStatusText.Foreground = Brushes.OrangeRed;
                         BtnStartCalibration.IsEnabled = true;
@@ -230,7 +228,7 @@ namespace RagnaController.Views.Dialogs
         private void StartCalibrationSimulation()
         {
             // Simuliere Kalibrierung ohne echten Hardware-Controller
-            _isCalibrating = true;
+
             _calibrationSamplesCollected = 0;
             _totalPitchDps = 0f;
             _totalYawDps = 0f;
@@ -284,7 +282,7 @@ namespace RagnaController.Views.Dialogs
 
                     Dispatcher.Invoke(() =>
                     {
-                        _isCalibrating = false;
+
                         ShowResults();
                     });
                 }
@@ -293,7 +291,7 @@ namespace RagnaController.Views.Dialogs
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        _isCalibrating = false;
+
                         CalibrationStatusText.Text = $"Fehler: {ex.Message}";
                         CalibrationStatusText.Foreground = Brushes.OrangeRed;
                         BtnStartCalibration.IsEnabled = true;
