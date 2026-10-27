@@ -142,7 +142,7 @@ namespace RagnaController.Views.Overlays
         {
             if (_settingsWin == null)
             {
-                _settingsWin = new SettingsWindow(_engine, _manager, Models.Settings.Load());
+                _settingsWin = new SettingsWindow(_manager, Models.Settings.Load());
                 _settingsWin.Closed += (_, _) => { _settingsWin = null; _navigator.ActiveWindow = this; };
             }
             _navigator.ActiveWindow = _settingsWin;

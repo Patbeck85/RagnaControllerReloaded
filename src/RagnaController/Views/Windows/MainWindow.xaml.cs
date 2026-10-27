@@ -77,8 +77,8 @@ namespace RagnaController.Views.Windows
         // ── TASK-1604: Multi-Client Client-Switcher ──
         private readonly INativeMethods _nativeMethods = new NativeMethodsImpl();
         private readonly IProcessNameResolver _processNames = new ProcessNameResolver();
-        private readonly MultiClientWindowTracker _windowTracker = null!;
-        private readonly MultiClientInputRouter _multiClientRouter = null!;
+        private MultiClientWindowTracker? _windowTracker;
+        private MultiClientInputRouter? _multiClientRouter;
         private bool _clientComboUpdating = false;
 
         // ── TASK-1611: Profil-Preset-System ──
@@ -153,8 +153,7 @@ namespace RagnaController.Views.Windows
             _multiEngine.ClientStarted += (sender, instance) => SubscribeToInstanceEvents(instance);
 
             // Initialize multi-client services
-            _windowTracker = new MultiClientWindowTracker(_nativeMethods, _processNames);
-            _multiClientRouter = new MultiClientInputRouter(_nativeMethods, _processNames, _windowTracker);
+            InitializeMultiClientServices();
             RefreshClientList();
 
             // Initialize preset manager
@@ -163,6 +162,16 @@ namespace RagnaController.Views.Windows
 
             // Initialize character class list
             RefreshClassList();
+        }
+
+        /// <summary>
+        /// Initializes the multi-client window tracker and input router.
+        /// Shared by both constructors to avoid duplicate initialization code.
+        /// </summary>
+        private void InitializeMultiClientServices()
+        {
+            _windowTracker = new MultiClientWindowTracker(_nativeMethods, _processNames);
+            _multiClientRouter = new MultiClientInputRouter(_nativeMethods, _processNames, _windowTracker);
         }
 
         /// <summary>
@@ -198,8 +207,7 @@ namespace RagnaController.Views.Windows
             _ttsService = new TtsAnnouncerService(_settings);
 
             // Initialize multi-client services (for client switcher UI)
-            _windowTracker = new MultiClientWindowTracker(_nativeMethods, _processNames);
-            _multiClientRouter = new MultiClientInputRouter(_nativeMethods, _processNames, _windowTracker);
+            InitializeMultiClientServices();
             RefreshClientList();
 
             // Initialize preset manager
@@ -901,7 +909,7 @@ namespace RagnaController.Views.Windows
         private void BtnSettings_Click(object s, RoutedEventArgs e)
                 {
                     var activeInstance = _multiEngine?.GetActiveInstance();
-                    var settings = new SettingsWindow(activeInstance!.Orchestrator, _manager, _settings, s =>
+                    var settings = new SettingsWindow(_manager, _settings, s =>
                     {
                         // Settings are applied via onSave callback
                         _settings = s; // Update local reference
@@ -1060,11 +1068,11 @@ namespace RagnaController.Views.Windows
                 _clientComboUpdating = true;
                 ClientCombo.Items.Clear();
 
-                var clients = _windowTracker.GetClients(_multiEngine?.SharedProfileManager?.ActiveProfile?.Name ?? "ragexe");
+                var clients = _windowTracker!.GetClients(_multiEngine?.SharedProfileManager?.ActiveProfile?.Name ?? "ragexe");
                 if (!clients.Any())
                 {
                     // Fallback: alle bekannten Clients anzeigen
-                    clients = _windowTracker.GetClients("ragexe");
+                    clients = _windowTracker!.GetClients("ragexe");
                 }
 
                 foreach (var client in clients)

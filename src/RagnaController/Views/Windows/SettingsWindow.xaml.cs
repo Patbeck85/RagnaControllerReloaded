@@ -32,7 +32,6 @@ public partial class SettingsWindow : Window
         /// </summary>
         public static string GetLocalizedString(string key) => LocalizationManager.GetLocalizedString(key);
 
-        private readonly object _engine; // HybridEngine or EngineOrchestrator
         private readonly ProfileManager _manager;
         private readonly Settings _s;
         private HighContrastService? _highContrastService;
@@ -40,10 +39,9 @@ public partial class SettingsWindow : Window
         private readonly Action<Settings>? _onSave;
 #pragma warning restore CS0649
 
-        public SettingsWindow(object engine, ProfileManager manager, Settings s, Action<Settings>? onSave = null)
+        public SettingsWindow(ProfileManager manager, Settings s, Action<Settings>? onSave = null)
                 {
                     InitializeComponent();
-                    _engine = engine;
                     _manager = manager;
                     _s = s;
                     _onSave = onSave;

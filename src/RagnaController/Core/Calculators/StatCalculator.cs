@@ -12,17 +12,6 @@ namespace RagnaController.Core.Calculators
     /// </summary>
     public sealed class StatCalculator
     {
-        #region GameMode
-
-        /// <summary>Spielmodus: Pre-Renewal oder Renewal.</summary>
-        public enum GameMode
-        {
-            PreRenewal,
-            Renewal
-        }
-
-        #endregion
-
         #region Klasse-Basisdaten
 
         /// <summary>Basis-HP-Faktor pro Klasse (Pre-Renewal).</summary>
@@ -160,13 +149,13 @@ namespace RagnaController.Core.Calculators
             int baseLevel,
             int vit,
             string className = "Novice",
-            GameMode mode = GameMode.PreRenewal,
+            ExperienceCalculator.GameMode mode = ExperienceCalculator.GameMode.PreRenewal,
             int jobHpModifier = 0,
             int jobHpMultiplier = 1,
             double equipmentBonusPercent = 0.0,
             double blessingBonusPercent = 0.0)
         {
-            var hpFactor = mode == GameMode.Renewal
+            var hpFactor = mode == ExperienceCalculator.GameMode.Renewal
                 ? GetClassFactor(ClassBaseHpFactorRenewal, className)
                 : GetClassFactor(ClassBaseHpFactorPreRenewal, className);
 
@@ -179,7 +168,7 @@ namespace RagnaController.Core.Calculators
             double totalHp = baseHp + vitBonus + jobHpModifier;
 
             // Renewal Multiplier
-            if (mode == GameMode.Renewal)
+            if (mode == ExperienceCalculator.GameMode.Renewal)
                 totalHp *= 1.5;
 
             // Equipment und Blessing Boni (prozentual)
@@ -202,13 +191,13 @@ namespace RagnaController.Core.Calculators
             int baseLevel,
             int int_,
             string className = "Novice",
-            GameMode mode = GameMode.PreRenewal,
+            ExperienceCalculator.GameMode mode = ExperienceCalculator.GameMode.PreRenewal,
             int jobSpModifier = 0,
             int jobSpMultiplier = 1,
             double equipmentBonusPercent = 0.0,
             double blessingBonusPercent = 0.0)
         {
-            var spFactor = mode == GameMode.Renewal
+            var spFactor = mode == ExperienceCalculator.GameMode.Renewal
                 ? GetClassFactor(ClassBaseSpFactorRenewal, className)
                 : GetClassFactor(ClassBaseSpFactorPreRenewal, className);
 
@@ -221,7 +210,7 @@ namespace RagnaController.Core.Calculators
             double totalSp = baseSp + intBonus + jobSpModifier;
 
             // Renewal Multiplier
-            if (mode == GameMode.Renewal)
+            if (mode == ExperienceCalculator.GameMode.Renewal)
                 totalSp *= 1.5;
 
             // Equipment und Blessing Boni (prozentual)
@@ -239,16 +228,16 @@ namespace RagnaController.Core.Calculators
         /// Berechnet Angriffsgeschwindigkeit basierend auf Agi, Dex und Klasse.
         /// RO-Formel: ASPD = 200 - (Agi * 0.5 + Dex * 0.3) - Klassenmodifikator + Delay-Reduktion
         /// </summary>
-        public static double CalculateAttackSpeed(int agi, int dex, string className = "Novice", GameMode mode = GameMode.PreRenewal, double delayReduction = 0.0)
+        public static double CalculateAttackSpeed(int agi, int dex, string className = "Novice", ExperienceCalculator.GameMode mode = ExperienceCalculator.GameMode.PreRenewal, double delayReduction = 0.0)
         {
-            double classMod = mode == GameMode.Renewal
+            double classMod = mode == ExperienceCalculator.GameMode.Renewal
                 ? GetAspdClassModRenewal(className)
                 : GetAspdClassModPreRenewal(className);
 
             double aspd = 200 - (agi * 0.5 + dex * 0.3) - classMod + delayReduction;
 
             // Mindest-ASPD
-            double minAspd = mode == GameMode.Renewal ? 10.0 : 50.0;
+            double minAspd = mode == ExperienceCalculator.GameMode.Renewal ? 10.0 : 50.0;
 
             return Math.Max(minAspd, aspd);
         }
@@ -291,9 +280,9 @@ namespace RagnaController.Core.Calculators
         /// Pre-Renewal: Hit = Dex * 2 + Luk + Klassenmodifikator
         /// Renewal: Hit = Dex * 2 + Luk * 1.5 + Klassenmodifikator
         /// </summary>
-        public static int CalculateHitRate(int dex, int luk, string className = "Novice", GameMode mode = GameMode.PreRenewal)
+        public static int CalculateHitRate(int dex, int luk, string className = "Novice", ExperienceCalculator.GameMode mode = ExperienceCalculator.GameMode.PreRenewal)
         {
-            double lukMod = mode == GameMode.Renewal ? luk * 1.5 : luk;
+            double lukMod = mode == ExperienceCalculator.GameMode.Renewal ? luk * 1.5 : luk;
             double classMod = GetHitClassMod(className);
 
             return (int)Math.Max(0, dex * 2 + lukMod + classMod);
@@ -316,9 +305,9 @@ namespace RagnaController.Core.Calculators
         /// Pre-Renewal: Flee = Agi * 2 + Luk + Klassenmodifikator
         /// Renewal: Flee = Agi * 2 + Luk * 1.5 + Klassenmodifikator
         /// </summary>
-        public static int CalculateFlee(int agi, int luk, string className = "Novice", GameMode mode = GameMode.PreRenewal)
+        public static int CalculateFlee(int agi, int luk, string className = "Novice", ExperienceCalculator.GameMode mode = ExperienceCalculator.GameMode.PreRenewal)
         {
-            double lukMod = mode == GameMode.Renewal ? luk * 1.5 : luk;
+            double lukMod = mode == ExperienceCalculator.GameMode.Renewal ? luk * 1.5 : luk;
             double classMod = GetFleeClassMod(className);
 
             return (int)Math.Max(0, agi * 2 + lukMod + classMod);
@@ -377,7 +366,7 @@ namespace RagnaController.Core.Calculators
             public int BaseLevel { get; set; }
             public int JobLevel { get; set; }
             public string ClassName { get; set; } = "Novice";
-            public GameMode Mode { get; set; } = GameMode.PreRenewal;
+            public ExperienceCalculator.GameMode Mode { get; set; } = ExperienceCalculator.GameMode.PreRenewal;
             public int Str { get; set; }
             public int Agi { get; set; }
             public int Vit { get; set; }
@@ -405,7 +394,7 @@ namespace RagnaController.Core.Calculators
             int dex,
             int luk,
             string className = "Novice",
-            GameMode mode = GameMode.PreRenewal,
+            ExperienceCalculator.GameMode mode = ExperienceCalculator.GameMode.PreRenewal,
             int jobHpModifier = 0,
             int jobSpModifier = 0,
             double equipmentHpBonusPercent = 0.0,

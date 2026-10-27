@@ -145,8 +145,8 @@ namespace RagnaController.Tests
         [Fact]
         public void StatCalculator_CalculateMaxHP_PreRenewal_Vs_Renewal()
         {
-            var hpPre = StatCalculator.CalculateMaxHP(50, 20, "Swordman", StatCalculator.GameMode.PreRenewal);
-            var hpRenewal = StatCalculator.CalculateMaxHP(50, 20, "Swordman", StatCalculator.GameMode.Renewal);
+            var hpPre = StatCalculator.CalculateMaxHP(50, 20, "Swordman", ExperienceCalculator.GameMode.PreRenewal);
+            var hpRenewal = StatCalculator.CalculateMaxHP(50, 20, "Swordman", ExperienceCalculator.GameMode.Renewal);
 
             Assert.True(hpRenewal > hpPre);
             Assert.True(hpPre > 0);
@@ -156,8 +156,8 @@ namespace RagnaController.Tests
         [Fact]
         public void StatCalculator_CalculateMaxSP_PreRenewal_Vs_Renewal()
         {
-            var spPre = StatCalculator.CalculateMaxSP(50, 20, "Mage", StatCalculator.GameMode.PreRenewal);
-            var spRenewal = StatCalculator.CalculateMaxSP(50, 20, "Mage", StatCalculator.GameMode.Renewal);
+            var spPre = StatCalculator.CalculateMaxSP(50, 20, "Mage", ExperienceCalculator.GameMode.PreRenewal);
+            var spRenewal = StatCalculator.CalculateMaxSP(50, 20, "Mage", ExperienceCalculator.GameMode.Renewal);
 
             Assert.True(spRenewal > spPre);
             Assert.True(spPre > 0);
@@ -167,8 +167,8 @@ namespace RagnaController.Tests
         [Fact]
         public void StatCalculator_ClassSpecificFactors_ShouldDiffer()
         {
-            var hpMage = StatCalculator.CalculateMaxHP(50, 10, "Mage", StatCalculator.GameMode.PreRenewal);
-            var hpKnight = StatCalculator.CalculateMaxHP(50, 10, "Knight", StatCalculator.GameMode.PreRenewal);
+            var hpMage = StatCalculator.CalculateMaxHP(50, 10, "Mage", ExperienceCalculator.GameMode.PreRenewal);
+            var hpKnight = StatCalculator.CalculateMaxHP(50, 10, "Knight", ExperienceCalculator.GameMode.PreRenewal);
 
             Assert.True(hpKnight > hpMage);
         }
@@ -176,8 +176,8 @@ namespace RagnaController.Tests
         [Fact]
         public void StatCalculator_CalculateAttackSpeed_ShouldHaveMinimum()
         {
-            var aspdPre = StatCalculator.CalculateAttackSpeed(99, 99, "Novice", StatCalculator.GameMode.PreRenewal);
-            var aspdRenewal = StatCalculator.CalculateAttackSpeed(99, 99, "Novice", StatCalculator.GameMode.Renewal);
+            var aspdPre = StatCalculator.CalculateAttackSpeed(99, 99, "Novice", ExperienceCalculator.GameMode.PreRenewal);
+            var aspdRenewal = StatCalculator.CalculateAttackSpeed(99, 99, "Novice", ExperienceCalculator.GameMode.Renewal);
 
             Assert.True(aspdPre >= 50);
             Assert.True(aspdRenewal >= 10);
@@ -186,8 +186,8 @@ namespace RagnaController.Tests
         [Fact]
         public void StatCalculator_CalculateHitRate_Renewal_LukBonus()
         {
-            var hitPre = StatCalculator.CalculateHitRate(10, 50, "Novice", StatCalculator.GameMode.PreRenewal);
-            var hitRenewal = StatCalculator.CalculateHitRate(10, 50, "Novice", StatCalculator.GameMode.Renewal);
+            var hitPre = StatCalculator.CalculateHitRate(10, 50, "Novice", ExperienceCalculator.GameMode.PreRenewal);
+            var hitRenewal = StatCalculator.CalculateHitRate(10, 50, "Novice", ExperienceCalculator.GameMode.Renewal);
 
             Assert.True(hitRenewal > hitPre);
         }
@@ -195,8 +195,8 @@ namespace RagnaController.Tests
         [Fact]
         public void StatCalculator_CalculateFlee_Renewal_LukBonus()
         {
-            var fleePre = StatCalculator.CalculateFlee(10, 50, "Novice", StatCalculator.GameMode.PreRenewal);
-            var fleeRenewal = StatCalculator.CalculateFlee(10, 50, "Novice", StatCalculator.GameMode.Renewal);
+            var fleePre = StatCalculator.CalculateFlee(10, 50, "Novice", ExperienceCalculator.GameMode.PreRenewal);
+            var fleeRenewal = StatCalculator.CalculateFlee(10, 50, "Novice", ExperienceCalculator.GameMode.Renewal);
 
             Assert.True(fleeRenewal > fleePre);
         }
@@ -207,12 +207,12 @@ namespace RagnaController.Tests
             var result = StatCalculator.CalculateAllStats(
                 baseLevel: 50, jobLevel: 30,
                 str: 20, agi: 20, vit: 20, int_: 20, dex: 20, luk: 20,
-                className: "Swordman", mode: StatCalculator.GameMode.PreRenewal);
+                className: "Swordman", mode: ExperienceCalculator.GameMode.PreRenewal);
 
             Assert.Equal(50, result.BaseLevel);
             Assert.Equal(30, result.JobLevel);
             Assert.Equal("Swordman", result.ClassName);
-            Assert.Equal(StatCalculator.GameMode.PreRenewal, result.Mode);
+            Assert.Equal(ExperienceCalculator.GameMode.PreRenewal, result.Mode);
             Assert.True(result.MaxHP > 0);
             Assert.True(result.MaxSP > 0);
             Assert.True(result.AttackSpeed > 0);
@@ -631,6 +631,80 @@ namespace RagnaController.Tests
             Assert.Equal(ItemType.Card, item.Type);
             Assert.False(item.IsMvp);
             Assert.Equal(1002, item.DropsFrom);
+        }
+
+        #endregion
+
+
+        #region StatCalculator Extended Tests
+
+        [Fact]
+        public void StatCalculator_CalculateAllStats_Renewal_ShouldHaveRenewalMultiplier()
+        {
+            var result = StatCalculator.CalculateAllStats(
+                baseLevel: 99, jobLevel: 50,
+                str: 50, agi: 50, vit: 50, int_: 50, dex: 50, luk: 50,
+                className: "Knight", mode: ExperienceCalculator.GameMode.Renewal);
+
+            Assert.Equal(ExperienceCalculator.GameMode.Renewal, result.Mode);
+            Assert.True(result.MaxHP > 3000, $"Renewal MaxHP should be > 3000, got {result.MaxHP}");
+            Assert.True(result.MaxSP > 1000, $"Renewal MaxSP should be high, got {result.MaxSP}");
+            Assert.True(result.AttackSpeed >= 10, $"Renewal ASPD minimum should be 10, got {result.AttackSpeed}");
+        }
+
+        [Fact]
+        public void StatCalculator_CalculateAllStats_PreRenewal_ShouldHavePreRenewalValues()
+        {
+            var result = StatCalculator.CalculateAllStats(
+                baseLevel: 99, jobLevel: 50,
+                str: 50, agi: 50, vit: 50, int_: 50, dex: 50, luk: 50,
+                className: "Knight", mode: ExperienceCalculator.GameMode.PreRenewal);
+
+            Assert.Equal(ExperienceCalculator.GameMode.PreRenewal, result.Mode);
+            Assert.True(result.MaxHP > 0);
+            Assert.True(result.MaxSP > 0);
+            Assert.True(result.AttackSpeed >= 50, $"Pre-Renewal ASPD minimum should be 50, got {result.AttackSpeed}");
+        }
+
+        [Fact]
+        public void StatCalculator_AllSupportedClasses_ShouldCalculateWithoutError()
+        {
+            var classes = new[] { "Novice", "Swordman", "Mage", "Archer", "Acolyte", "Merchant", "Thief",
+                "Knight", "Wizard", "Hunter", "Priest", "Blacksmith", "Assassin",
+                "Crusader", "High Wizard", "Sniper", "High Priest", "Professor", "Stalker", "Creator", "Champion" };
+
+            foreach (var className in classes)
+            {
+                var hp = StatCalculator.CalculateMaxHP(50, 30, className, ExperienceCalculator.GameMode.PreRenewal);
+                var sp = StatCalculator.CalculateMaxSP(50, 30, className, ExperienceCalculator.GameMode.PreRenewal);
+                var aspd = StatCalculator.CalculateAttackSpeed(50, 50, className, ExperienceCalculator.GameMode.PreRenewal);
+                var hit = StatCalculator.CalculateHitRate(50, 30, className, ExperienceCalculator.GameMode.PreRenewal);
+                var flee = StatCalculator.CalculateFlee(50, 30, className, ExperienceCalculator.GameMode.PreRenewal);
+
+                Assert.True(hp > 0, $"{className} HP should be > 0");
+                Assert.True(sp > 0, $"{className} SP should be > 0");
+                Assert.True(aspd > 0, $"{className} ASPD should be > 0");
+                Assert.True(hit >= 0, $"{className} Hit should be >= 0");
+                Assert.True(flee >= 0, $"{className} Flee should be >= 0");
+            }
+        }
+
+        [Fact]
+        public void StatCalculator_Renewal_HpShouldBeHigherThanPreRenewal()
+        {
+            var hpPre = StatCalculator.CalculateMaxHP(50, 30, "Swordman", ExperienceCalculator.GameMode.PreRenewal);
+            var hpRenewal = StatCalculator.CalculateMaxHP(50, 30, "Swordman", ExperienceCalculator.GameMode.Renewal);
+
+            Assert.True(hpRenewal > hpPre, $"Renewal HP ({hpRenewal}) should be > Pre-Renewal HP ({hpPre})");
+        }
+
+        [Fact]
+        public void StatCalculator_Renewal_SpShouldBeHigherThanPreRenewal()
+        {
+            var spPre = StatCalculator.CalculateMaxSP(50, 30, "Mage", ExperienceCalculator.GameMode.PreRenewal);
+            var spRenewal = StatCalculator.CalculateMaxSP(50, 30, "Mage", ExperienceCalculator.GameMode.Renewal);
+
+            Assert.True(spRenewal > spPre, $"Renewal SP ({spRenewal}) should be > Pre-Renewal SP ({spPre})");
         }
 
         #endregion
