@@ -1,0 +1,306 @@
+<!--
+    DeveloperDashboardWindow — Zentrale Entwickler- und Monitoring-Konsole.
+    Integriert alle Developer- und Monitoring-Services:
+    - InputLatencyVisualizer, FrameBudgetMonitor, MemoryAllocationTracker
+    - ActionLogService, ETWProvider
+    - AutomatedTestRecorder, LuaScriptingService
+    - SystemMonitor, OcrService, TelemetryService
+-->
+<Window x:Class="RagnaController.Views.Windows.DeveloperDashboardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RagnaController.Views.Windows"
+        mc:Ignorable="d"
+        Title="RagnaController — Developer Dashboard"
+        Width="1100" Height="700"
+        MinWidth="900" MinHeight="500"
+        Background="Transparent" WindowStyle="None" AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <Style x:Key="TabButton" TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="{StaticResource TextSecondary}"/>
+                <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Padding" Value="16,8"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="FontWeight" Value="SemiBold"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="bd" Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource AccentBlue}"/>
+                                    <Setter Property="BorderBrush" Value="{StaticResource AccentBlue}"/>
+                                </Trigger>
+                                <Trigger Property="IsPressed" Value="True">
+                                    <Setter Property="Foreground" Value="{StaticResource AccentPurple}"/>
+                                    <Setter Property="BorderBrush" Value="{StaticResource AccentPurple}"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <!-- Root -->
+    <Border Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusXl}" BorderBrush="{StaticResource BgBorder}" BorderThickness="1" Effect="{StaticResource CardShadow}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="56"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="36"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" Margin="16,16,16,0" CornerRadius="{StaticResource RadiusMd}">
+                <Grid Margin="20,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="4" Height="28" Background="{StaticResource AccentPurple}" Effect="{StaticResource PurpleGlow}" Margin="0,0,12,0" CornerRadius="2"/>
+                        <TextBlock Text="DEVELOPER DASHBOARD" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
+                        <TextBlock Text="— RO Game Controller Dev Tools" Style="{StaticResource BodyText}" VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}" Margin="8,0,0,0"/>
+                    </StackPanel>
+                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close" AutomationProperties.Name="Close developer dashboard"/>
+                </Grid>
+            </Border>
+
+            <!-- Content -->
+            <Grid Grid.Row="1" Margin="16,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Navigation -->
+                <Border Grid.Column="0" Style="{StaticResource GlassPanelCompact}" CornerRadius="{StaticResource RadiusLg}" Margin="0,0,16,0">
+                    <StackPanel Margin="0,16">
+                        <TextBlock Text="MODULES" Style="{StaticResource Eyebrow}" Margin="16,0,16,12"/>
+                        <Button x:Name="BtnTabPerf" Content="Performance" Style="{StaticResource TabButton}" Click="TabPerf_Click" Tag="Perf" AutomationProperties.Name="Performance tab"/>
+                        <Button x:Name="BtnTabActions" Content="Actions &amp; Logs" Style="{StaticResource TabButton}" Click="TabActions_Click" Tag="Actions" AutomationProperties.Name="Actions tab"/>
+                        <Button x:Name="BtnTabDev" Content="Developer Tools" Style="{StaticResource TabButton}" Click="TabDev_Click" Tag="Dev" AutomationProperties.Name="Developer tools tab"/>
+                        <Button x:Name="BtnTabSystem" Content="System &amp; Health" Style="{StaticResource TabButton}" Click="TabSystem_Click" Tag="System" AutomationProperties.Name="System tab"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Content Area -->
+                <Border Grid.Column="1" Style="{StaticResource GlassPanelCompact}" CornerRadius="{StaticResource RadiusLg}">
+                    <Grid>
+                        <!-- Performance Tab -->
+                        <Border x:Name="TabPerf" Visibility="Collapsed">
+                            <Grid Margin="24">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Input Latency &amp; Frame Budget" Style="{StaticResource Eyebrow}" Margin="0,0,0,12"/>
+                                <Border Grid.Row="1" Style="{StaticResource GlassPanelCompact}" CornerRadius="{StaticResource RadiusMd}">
+                                    <Grid Margin="16">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <!-- Latency -->
+                                        <Border Grid.Column="0" Style="{StaticResource GlassPanelCompact}" Padding="12" CornerRadius="{StaticResource RadiusSm}" Margin="0,0,8,0">
+                                            <StackPanel>
+                                                <TextBlock Text="Input Latency" Style="{StaticResource Eyebrow}" Foreground="{StaticResource AccentBlue}"/>
+                                                <TextBlock x:Name="LblLatencyCurrent" Text="— ms" Style="{StaticResource StatValue}" Foreground="{StaticResource TextPrimary}"/>
+                                                <TextBlock Text="Last" Style="{StaticResource MutedText}" FontSize="10"/>
+                                                <TextBlock x:Name="LblLatencyAvg" Text="Avg: — ms" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                                <TextBlock x:Name="LblLatencyMin" Text="Min: — ms" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                                <TextBlock x:Name="LblLatencyMax" Text="Max: — ms" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <!-- Frame Budget -->
+                                        <Border Grid.Column="1" Style="{StaticResource GlassPanelCompact}" Padding="12" CornerRadius="{StaticResource RadiusSm}" Margin="8,0,8,0">
+                                            <StackPanel>
+                                                <TextBlock Text="Frame Budget (P99)" Style="{StaticResource Eyebrow}" Foreground="{StaticResource AccentPurple}"/>
+                                                <TextBlock x:Name="LblFrameP99" Text="— ms" Style="{StaticResource StatValue}" Foreground="{StaticResource TextPrimary}"/>
+                                                <TextBlock Text="Target: 2.0 ms" Style="{StaticResource MutedText}" FontSize="10"/>
+                                                <TextBlock x:Name="LblFrameP50" Text="P50: — ms" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                                <TextBlock x:Name="LblFrameP95" Text="P95: — ms" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <!-- Memory -->
+                                        <Border Grid.Column="2" Style="{StaticResource GlassPanelCompact}" Padding="12" CornerRadius="{StaticResource RadiusSm}" Margin="8,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="Memory" Style="{StaticResource Eyebrow}" Foreground="{StaticResource AccentGold}"/>
+                                                <TextBlock x:Name="LblMemWorkingSet" Text="— MB" Style="{StaticResource StatValue}" Foreground="{StaticResource TextPrimary}"/>
+                                                <TextBlock Text="Working Set" Style="{StaticResource MutedText}" FontSize="10"/>
+                                                <TextBlock x:Name="LblMemGen0" Text="Gen0: —" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                                <TextBlock x:Name="LblMemGen1" Text="Gen1: —" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                                <TextBlock x:Name="LblMemGen2" Text="Gen2: —" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!-- Actions & Logs Tab -->
+                        <Border x:Name="TabActions" Visibility="Collapsed">
+                            <Grid Margin="24">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Action Log &amp; Event History" Style="{StaticResource Eyebrow}" Margin="0,0,0,12"/>
+                                <Border Grid.Row="1" Style="{StaticResource GlassPanelCompact}" CornerRadius="{StaticResource RadiusMd}">
+                                    <Grid Margin="16">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                        </Grid.RowDefinitions>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                                            <Button x:Name="BtnLogClear" Content="Clear" Click="BtnLogClear_Click" Style="{StaticResource GhostButton}" Width="80" Height="32" FontSize="11" AutomationProperties.Name="Clear action log"/>
+                                            <Button x:Name="BtnLogExport" Content="Export" Click="BtnLogExport_Click" Style="{StaticResource GhostButton}" Width="80" Height="32" FontSize="11" Margin="8,0,0,0" AutomationProperties.Name="Export action log"/>
+                                            <TextBlock Text="Live events (last 20):" Style="{StaticResource BodyText}" VerticalAlignment="Center" Margin="16,0,0,0" Foreground="{StaticResource TextSecondary}"/>
+                                        </StackPanel>
+                                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                            <ItemsControl x:Name="ActionLogList" AutomationProperties.Name="Action log entries">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Padding="8,4" CornerRadius="{StaticResource RadiusSm}" Margin="0,2" Background="{StaticResource BgTertiary}">
+                                                            <Grid>
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="Auto"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock Text="{Binding Icon}" FontSize="14" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                                                                <TextBlock Text="{Binding Label}" Style="{StaticResource BodyText}" Foreground="{StaticResource TextPrimary}" VerticalAlignment="Center"/>
+                                                                <TextBlock Text="{Binding FormattedTime}" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}" VerticalAlignment="Center" Grid.Column="2"/>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <!-- Developer Tab -->
+                        <Border x:Name="TabDev" Visibility="Collapsed">
+                            <Grid Margin="24">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Developer Tools" Style="{StaticResource Eyebrow}" Margin="0,0,0,12"/>
+                                <Grid Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <!-- Automated Test Recorder -->
+                                    <Border Grid.Column="0" Style="{StaticResource GlassPanelCompact}" Padding="16" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,8,0">
+                                        <StackPanel>
+                                            <TextBlock Text="Automated Test Recorder" Style="{StaticResource BodyText}" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,12"/>
+                                            <TextBlock Text="Records UI actions and generates xUnit test code." Style="{StaticResource MutedText}" FontSize="11" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <Button x:Name="BtnRecordStart" Content="Start Recording" Click="BtnRecordStart_Click" Style="{StaticResource PrimaryButton}" Width="120" Height="36" FontSize="12" AutomationProperties.Name="Start test recording"/>
+                                                <Button x:Name="BtnRecordStop" Content="Stop" Click="BtnRecordStop_Click" Style="{StaticResource GhostButton}" Width="80" Height="36" FontSize="12" Margin="8,0,0,0" AutomationProperties.Name="Stop test recording"/>
+                                            </StackPanel>
+                                            <TextBlock x:Name="LblRecordStatus" Text="Status: Idle" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}" Margin="0,8,0,0"/>
+                                            <Button x:Name="BtnRecordExport" Content="Export Test Code" Click="BtnRecordExport_Click" Style="{StaticResource GhostButton}" Width="140" Height="32" FontSize="11" Margin="0,12,0,0" AutomationProperties.Name="Export test code"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <!-- Lua Scripting -->
+                                    <Border Grid.Column="1" Style="{StaticResource GlassPanelCompact}" Padding="16" CornerRadius="{StaticResource RadiusMd}" Margin="8,0,0,0">
+                                        <StackPanel>
+                                            <TextBlock Text="Lua Scripting" Style="{StaticResource BodyText}" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,12"/>
+                                            <TextBlock Text="Event-based scripting API for engine events." Style="{StaticResource MutedText}" FontSize="11" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <Button x:Name="BtnLuaEnable" Content="Enable" Click="BtnLuaEnable_Click" Style="{StaticResource PrimaryButton}" Width="100" Height="36" FontSize="12" AutomationProperties.Name="Enable Lua scripting"/>
+                                                <Button x:Name="BtnLuaDisable" Content="Disable" Click="BtnLuaDisable_Click" Style="{StaticResource GhostButton}" Width="80" Height="36" FontSize="12" Margin="8,0,0,0" AutomationProperties.Name="Disable Lua scripting"/>
+                                            </StackPanel>
+                                            <TextBlock x:Name="LblLuaStatus" Text="Status: Disabled" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}" Margin="0,8,0,0"/>
+                                            <ListBox x:Name="LuaScriptList" Height="120" Margin="0,8,0,8" Style="{StaticResource GlassPanelCompact}" BorderThickness="1" BorderBrush="{StaticResource BgBorder}" AutomationProperties.Name="Registered Lua scripts"/>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                                <TextBox x:Name="TxtLuaName" Width="100" Height="32" FontSize="11" Margin="0,0,8,0" AutomationProperties.Name="Script name"/>
+                                                <TextBox x:Name="TxtLuaCode" Width="150" Height="32" FontSize="11" Margin="0,0,8,0" AutomationProperties.Name="Script code"/>
+                                                <Button x:Name="BtnLuaRegister" Content="Register" Click="BtnLuaRegister_Click" Style="{StaticResource GhostButton}" Width="80" Height="32" FontSize="11" AutomationProperties.Name="Register Lua script"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- System & Health Tab -->
+                        <Border x:Name="TabSystem" Visibility="Collapsed">
+                            <Grid Margin="24">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="System &amp; Health" Style="{StaticResource Eyebrow}" Margin="0,0,0,12"/>
+                                <Border Grid.Row="1" Style="{StaticResource GlassPanelCompact}" CornerRadius="{StaticResource RadiusMd}">
+                                    <Grid Margin="16">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <!-- System Monitor -->
+                                        <Border Grid.Column="0" Style="{StaticResource GlassPanelCompact}" Padding="12" CornerRadius="{StaticResource RadiusSm}" Margin="0,0,8,0">
+                                            <StackPanel>
+                                                <TextBlock Text="System Monitor" Style="{StaticResource Eyebrow}" Foreground="{StaticResource AccentBlue}"/>
+                                                <TextBlock x:Name="LblSysFocusLock" Text="Focus Lock: —" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                                <TextBlock x:Name="LblSysDpiScale" Text="DPI Scale: —" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                                <TextBlock x:Name="LblSysTracking" Text="Tracking: —" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <!-- OCR Service -->
+                                        <Border Grid.Column="1" Style="{StaticResource GlassPanelCompact}" Padding="12" CornerRadius="{StaticResource RadiusSm}" Margin="8,0,8,0">
+                                            <StackPanel>
+                                                <TextBlock Text="OCR Service" Style="{StaticResource Eyebrow}" Foreground="{StaticResource AccentGold}"/>
+                                                <TextBlock x:Name="LblOcrStatus" Text="Status: —" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                                <TextBlock x:Name="LblOcrDuration" Text="Last: — ms" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                                <Button x:Name="BtnOcrTest" Content="Test OCR" Click="BtnOcrTest_Click" Style="{StaticResource GhostButton}" Width="100" Height="32" FontSize="11" Margin="0,8,0,0" AutomationProperties.Name="Test OCR service"/>
+                                            </StackPanel>
+                                        </Border>
+                                        <!-- Telemetry -->
+                                        <Border Grid.Column="2" Style="{StaticResource GlassPanelCompact}" Padding="12" CornerRadius="{StaticResource RadiusSm}" Margin="8,0,0,0">
+                                            <StackPanel>
+                                                <TextBlock Text="Telemetry" Style="{StaticResource Eyebrow}" Foreground="{StaticResource AccentGreen}"/>
+                                                <TextBlock x:Name="LblTelStatus" Text="Status: —" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
+                                                <Button x:Name="BtnTelPing" Content="Send Ping" Click="BtnTelPing_Click" Style="{StaticResource GhostButton}" Width="100" Height="32" FontSize="11" Margin="0,8,0,0" AutomationProperties.Name="Send telemetry ping"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Footer -->
+            <Border Grid.Row="2" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,1,0,0" Padding="16,8" CornerRadius="0,0,{StaticResource RadiusXl},{StaticResource RadiusXl}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="RagnaController Developer Dashboard — White-Hat tools only. No memory manipulation, no cheating." Style="{StaticResource Caption}" Foreground="{StaticResource TextMuted}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

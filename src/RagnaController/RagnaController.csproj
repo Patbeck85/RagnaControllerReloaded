@@ -327,6 +327,7 @@
     <Compile Include="Views\Windows\SettingsWindow.xaml.cs" />
     <Compile Include="Views\Windows\UpdateWindow.xaml.cs" />
     <Compile Include="Views\Windows\MonsterImportWindow.xaml.cs" />
+    <Compile Include="Views\Windows\DeveloperDashboardWindow.xaml.cs" />
     <Compile Include="Views\Windows\SplashWindow.xaml.cs" />
     <Compile Include="Views\Dialogs\TutorialWindow.xaml.cs" />
   </ItemGroup>

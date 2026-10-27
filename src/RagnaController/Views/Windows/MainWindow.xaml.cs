@@ -1339,5 +1339,12 @@ namespace RagnaController.Views.Windows
                 System.Diagnostics.Debug.WriteLine($"[MainWindow] ApplyRenewalMode failed: {ex.Message}");
             }
         }
+        private void BtnDeveloperDashboard_Click(object sender, RoutedEventArgs e)
+        {
+            var dashboard = new DeveloperDashboardWindow();
+            dashboard.ShowDialog();
+        }
     }
-}
+    }
+
+
