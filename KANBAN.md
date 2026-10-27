@@ -129,7 +129,8 @@
 | **TASK-2903** | Performance Profiler UI: GpuOverlayProfiler Daten im Overlay visualisieren | Designer | LOW | — | ✅ COMPLETE (2026-10-26) |
 | **TASK-2904** | Input Latency Visualizer: Echtzeit-Graph Input → Engine → SendInput | Coder | LOW | — | ✅ COMPLETE (2026-10-26) |
 | **TASK-2905** | Automated Test Recorder: User-Aktionen aufzeichnen → Integration-Test generieren | QA | LOW | TASK-2901 | ✅ COMPLETE (2026-10-26) |
-| **TASK-2906** | Unit-Tests: Scripting API Sandbox, REPL, Recorder | QA | LOW | TASK-2905 | ✅ COMPLETE (2026-10-26, 106 Tests PASS) |
+|| **TASK-2906** | Unit-Tests: Scripting API Sandbox, REPL, Recorder | QA | LOW | TASK-2905 | ✅ COMPLETE (2026-10-26, 106 Tests PASS) |
+|| **TASK-2907** | Developer Dashboard: Einheitliches Fenster für alle Dev/Monitoring-Services (Latency, FrameBudget, Memory, ActionLog, Lua, TestRecorder, OCR, Telemetry) | Coder | MEDIUM | TASK-2901, TASK-2904, TASK-2905 | ✅ COMPLETE (2026-10-27) |
 
 ---
 
