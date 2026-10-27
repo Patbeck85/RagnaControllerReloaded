@@ -618,7 +618,11 @@ namespace RagnaController.Tests
             foreach (var item in preRenewal)
                 Assert.False(item.IsRenewal);
 
-            Assert.True(renewal.Count >= preRenewal.Count);
+            foreach (var item in renewal)
+                Assert.True(item.IsRenewal);
+
+            Assert.NotEmpty(preRenewal);
+            Assert.NotEmpty(renewal);
         }
 
         [Fact]
@@ -801,6 +805,113 @@ namespace RagnaController.Tests
             sim.Reset();
 
             Assert.All(sim.Skills, s => Assert.Equal(0, s.Level));
+        }
+
+        #endregion
+
+        #region ItemDatabaseService Extended Tests
+
+        [Fact]
+        public void ItemDatabaseService_SellPrice_ShouldBeSet()
+        {
+            var db = new ItemDatabaseService();
+            var item = db.GetItem(104); // Red Potion
+
+            Assert.NotNull(item);
+            Assert.True(item.SellPrice > 0, "SellPrice should be > 0");
+            Assert.True(item.SellPrice <= item.Price, "SellPrice should not exceed Price");
+        }
+
+        [Fact]
+        public void ItemDatabaseService_GetAccessories_ShouldReturnOnlyAccessories()
+        {
+            var db = new ItemDatabaseService();
+            var accessories = db.GetAccessories();
+
+            Assert.NotEmpty(accessories);
+            foreach (var item in accessories)
+                Assert.Equal(ItemType.Accessory, item.Type);
+        }
+
+        [Fact]
+        public void ItemDatabaseService_GetEtc_ShouldReturnOnlyEtc()
+        {
+            var db = new ItemDatabaseService();
+            var etc = db.GetEtc();
+
+            Assert.NotEmpty(etc);
+            foreach (var item in etc)
+                Assert.Equal(ItemType.Etc, item.Type);
+        }
+
+        [Fact]
+        public void ItemDatabaseService_GetItemsWithSlots_ShouldFilterBySlots()
+        {
+            var db = new ItemDatabaseService();
+            var slotted = db.GetItemsWithSlots(1);
+            var multiSlot = db.GetItemsWithSlots(3);
+
+            Assert.NotEmpty(slotted);
+            foreach (var item in slotted)
+                Assert.True(item.Slots >= 1);
+
+            foreach (var item in multiSlot)
+                Assert.True(item.Slots >= 3);
+        }
+
+        [Fact]
+        public void ItemDatabaseService_GetRenewalItems_ShouldOnlyContainRenewal()
+        {
+            var db = new ItemDatabaseService();
+            var renewal = db.GetRenewalItems();
+
+            Assert.NotEmpty(renewal);
+            foreach (var item in renewal)
+                Assert.True(item.IsRenewal);
+        }
+
+        [Fact]
+        public void ItemDatabaseService_GetPreRenewalItems_ShouldOnlyContainPreRenewal()
+        {
+            var db = new ItemDatabaseService();
+            var preRenewal = db.GetPreRenewalItems();
+
+            Assert.NotEmpty(preRenewal);
+            foreach (var item in preRenewal)
+                Assert.False(item.IsRenewal);
+        }
+
+        [Fact]
+        public void ItemDatabaseService_Search_WithMinSlots_ShouldFilterCorrectly()
+        {
+            var db = new ItemDatabaseService();
+            var result = db.Search(type: ItemType.Weapon, minSlots: 2);
+
+            Assert.NotEmpty(result);
+            foreach (var item in result)
+                Assert.True(item.Slots >= 2);
+        }
+
+        [Fact]
+        public void ItemDatabaseService_Search_WithIsMvp_ShouldFilterCorrectly()
+        {
+            var db = new ItemDatabaseService();
+            var mvpCards = db.Search(type: ItemType.Card, isMvp: true);
+
+            Assert.NotEmpty(mvpCards);
+            foreach (var item in mvpCards)
+                Assert.True(item.IsMvp);
+        }
+
+        [Fact]
+        public void ItemDatabaseService_GetItemsByDropMonster_ShouldReturnMatching()
+        {
+            var db = new ItemDatabaseService();
+            var drops = db.GetItemsByDropMonster(1002); // Poring
+
+            Assert.NotEmpty(drops);
+            foreach (var item in drops)
+                Assert.Equal(1002, item.DropsFrom);
         }
 
         #endregion

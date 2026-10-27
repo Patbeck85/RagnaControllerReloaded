@@ -24,6 +24,7 @@ namespace RagnaController.Core.Database
 
         public void InitializeStarterItems()
         {
+            if (_items.Count > 0) return; // Bereits initialisiert
             _items.AddRange(BuildAllItems());
         }
 
@@ -194,7 +195,7 @@ namespace RagnaController.Core.Database
             int id, string name, ItemType type, int slot, int weight, int price,
             int hp = 0, int sp = 0, int attack = 0, int defense = 0, int slots = 0,
             int minBaseLevel = 1, int minJobLevel = 1, string description = "",
-            int? dropsFrom = null, bool isMvp = false, bool isRenewal = false)
+            int? dropsFrom = null, bool isMvp = false, bool isRenewal = false, int sellPrice = 0)
         {
             return new ItemEntry
             {
@@ -204,6 +205,7 @@ namespace RagnaController.Core.Database
                 Slot = slot,
                 Weight = weight,
                 Price = price,
+                SellPrice = sellPrice > 0 ? sellPrice : price / 2,
                 Attack = attack,
                 Defense = defense,
                 HpHeal = hp,
@@ -227,7 +229,7 @@ namespace RagnaController.Core.Database
         public ItemEntry? GetItem(string name) => _items.FirstOrDefault(i => i.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
         public List<ItemEntry> Search(string? name = null, ItemType? type = null, int? minPrice = null, int? maxPrice = null,
-            GameMode mode = GameMode.Both)
+            GameMode mode = GameMode.Both, int? minSlots = null, bool? isMvp = null)
         {
             var query = _items.AsQueryable();
 
@@ -243,8 +245,17 @@ namespace RagnaController.Core.Database
             if (maxPrice.HasValue)
                 query = query.Where(i => i.Price <= maxPrice.Value);
 
+            if (minSlots.HasValue)
+                query = query.Where(i => i.Slots >= minSlots.Value);
+
+            if (isMvp.HasValue)
+                query = query.Where(i => i.IsMvp == isMvp.Value);
+
             if (mode == GameMode.PreRenewal)
                 query = query.Where(i => !i.IsRenewal);
+            else if (mode == GameMode.Renewal)
+                query = query.Where(i => i.IsRenewal);
+            // GameMode.Both = keine Filterung nach GameMode
 
             return query.ToList();
         }
@@ -260,6 +271,16 @@ namespace RagnaController.Core.Database
 
         public List<ItemEntry> GetArmors() => _items.Where(i => i.Type == ItemType.Armor).ToList();
 
+        public List<ItemEntry> GetAccessories() => _items.Where(i => i.Type == ItemType.Accessory).ToList();
+
+        public List<ItemEntry> GetEtc() => _items.Where(i => i.Type == ItemType.Etc).ToList();
+
+        public List<ItemEntry> GetItemsWithSlots(int minSlots = 1) => _items.Where(i => i.Slots >= minSlots).ToList();
+
+        public List<ItemEntry> GetRenewalItems() => _items.Where(i => i.IsRenewal).ToList();
+
+        public List<ItemEntry> GetPreRenewalItems() => _items.Where(i => !i.IsRenewal).ToList();
+
         #endregion
     }
 
@@ -271,6 +292,7 @@ namespace RagnaController.Core.Database
         public int Slot { get; set; }
         public int Weight { get; set; }
         public int Price { get; set; }
+        public int SellPrice { get; set; }
         public int Attack { get; set; }
         public int Defense { get; set; }
         public int HpHeal { get; set; }
