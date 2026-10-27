@@ -4,12 +4,12 @@
 ---
 
 ## 🎯 Current Milestone
-**Phase:** All Epics 1-28 COMPLETE + Vollständige Lokalisierung (48 Sprachen × 1289 Keys)
-**Status:** Build: 0 errors | Tests: 1106/1106 PASS (ROGameKnowledgeTests hinzugefügt)
-**Git HEAD:** commit bc91f6c (Epik 21 abgeschlossen - Unit Tests für alle RO-Komponenten)
+**Phase:** All Epics 1-28 COMPLETE + Vollständige Lokalisierung (48 Sprachen × 1289 Keys) + UI/UX Polish
+**Status:** Build: 0 errors | Tests: 1106/1106 PASS
+**Git HEAD:** commit 9c66f56 (UI/UX Polish - Hardcodierte Texte lokalisiert)
 **Last Updated:** 2026-10-26
-**Status:** Alle Epics 1-28 COMPLETE. Epik 21 (RO Game Knowledge) vollständig abgeschlossen mit Unit Tests. Build: 0 Fehler, Tests: 1106/1106 PASS. Stryker.NET CI deaktiviert (WPF App.g.cs Problem, Issue #3813).
-**Release:** v2.6.1 (2026-10-26) — Alle Epics 1-28, vollständige Lokalisierung, RO Game Knowledge (Monster, Maps, Items, Skills, Stats, EXP, Calculator), Unit Tests
+**Status:** Alle Epics 1-28 COMPLETE. UI/UX Polish abgeschlossen (Epic 11/TASK-2002). Build: 0 Fehler, Tests: 1106/1106 PASS. Stryker.NET CI deaktiviert (WPF App.g.cs Problem, Issue #3813).
+**Release:** v2.6.1 (2026-10-26) — Alle Epics 1-28, vollständige Lokalisierung, RO Game Knowledge, UI/UX Polish, Unit Tests
 
 ---
 
