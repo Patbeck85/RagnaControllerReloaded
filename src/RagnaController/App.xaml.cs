@@ -354,7 +354,7 @@ namespace RagnaController
             }
         }
 
-        private static void RestartApp()
+        public static void RestartApp()
         {
             try
             {

@@ -350,16 +350,46 @@ public partial class SettingsWindow : Window
 
             if (_s.EnableKernelInput)
             {
-                var result = MessageBox.Show(
-                    LocalizationManager.GetLocalizedString("Settings_KernelInput_Required_Message"),
-                    LocalizationManager.GetLocalizedString("Settings_KernelInput_Required_Title"),
-                    MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                // Prüfen ob Treiber-Installer verfügbar ist
+                string installerPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AntiCheat", "install-interception.exe");
+                bool driverInstallerExists = File.Exists(installerPath);
 
-                if (result == MessageBoxResult.Cancel)
+                if (!driverInstallerExists)
                 {
-                    _s.EnableKernelInput = false;
-                    ChkEnableKernelInput.IsChecked = false;
-                    _s.Save();
+                    var missingResult = MessageBox.Show(
+                        LocalizationManager.GetLocalizedString("Settings_KernelInput_DriverMissing_Message"),
+                        LocalizationManager.GetLocalizedString("Settings_KernelInput_DriverMissing_Title"),
+                        MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+
+                    if (missingResult == MessageBoxResult.Cancel)
+                    {
+                        _s.EnableKernelInput = false;
+                        ChkEnableKernelInput.IsChecked = false;
+                        _s.Save();
+                        return;
+                    }
+                }
+
+                // Beim ersten Mal: Neustart-Dialog anzeigen
+                if (!_s.KernelInputFirstRunShown)
+                {
+                    var restartResult = MessageBox.Show(
+                        LocalizationManager.GetLocalizedString("Settings_KernelInput_Restart_Message"),
+                        LocalizationManager.GetLocalizedString("Settings_KernelInput_Restart_Title"),
+                        MessageBoxButton.YesNo, MessageBoxImage.Information);
+
+                    if (restartResult == MessageBoxResult.Yes)
+                    {
+                        _s.KernelInputFirstRunShown = true;
+                        _s.Save();
+                        App.RestartApp();
+                        return;
+                    }
+                    else
+                    {
+                        _s.KernelInputFirstRunShown = true;
+                        _s.Save();
+                    }
                 }
             }
         }

@@ -115,6 +115,9 @@ namespace RagnaController.Models
         /// <summary>Force kernel-mode input emulation (Interception driver) instead of SendInput. Requires driver installation.</summary>
         public bool EnableKernelInput { get; set; } = false;
 
+        /// <summary>Whether the kernel-input restart dialog has already been shown (to avoid repeating it).</summary>
+        public bool KernelInputFirstRunShown { get; set; } = false;
+
         // ── FEAT-014: Session-Replay (JSONL-Aufzeichnung for deterministische Wiedergabe) ──
         /// <summary>Session replay enabled? Recording runs per engine session, rotation at 50 MB.</summary>
         public bool EnableSessionRecording { get; set; } = false;
@@ -382,6 +385,7 @@ namespace RagnaController.Models
             FailoverTriggerCount = defaults.FailoverTriggerCount;
             FailoverRecoveryCount = defaults.FailoverRecoveryCount;
             EnableKernelInput = defaults.EnableKernelInput;
+            KernelInputFirstRunShown = defaults.KernelInputFirstRunShown;
             EnableSessionRecording = defaults.EnableSessionRecording;
             StartMinimized = defaults.StartMinimized;
             ShowControllerViz = defaults.ShowControllerViz;

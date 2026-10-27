@@ -1318,5 +1318,9 @@
   "Settings_EnableKernelInput": "Enable Kernel-Mode Input (Interception)",
   "Settings_EnableKernelInput_Tooltip": "Uses Interception driver for kernel-level input emulation. Bypasses Gepard/Harmony Anti-Cheat blocks. Requires driver installation.",
   "Settings_KernelInput_Required_Title": "Kernel-Mode Input Required",
-  "Settings_KernelInput_Required_Message": "The Interception driver must be installed before kernel-mode input can be used.\n\nClick OK to open the driver installer.\n\nNote: Requires administrator rights (UAC)."
+  "Settings_KernelInput_Required_Message": "The Interception driver must be installed before kernel-mode input can be used.\n\nClick OK to open the driver installer.\n\nNote: Requires administrator rights (UAC).",
+  "Settings_KernelInput_Restart_Title": "Restart Required",
+  "Settings_KernelInput_Restart_Message": "Kernel-mode input changes will only take effect after restarting RagnaController.\n\nRestart now?",
+  "Settings_KernelInput_DriverMissing_Title": "Interception Driver Not Found",
+  "Settings_KernelInput_DriverMissing_Message": "The Interception driver installer (AntiCheat/install-interception.exe) was not found.\n\nPlease download it from the Releases page and place it in the AntiCheat folder.\n\nContinue anyway?"
 }
