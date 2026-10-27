@@ -2342,7 +2342,7 @@ namespace RagnaController.Tests
 
             // Big Picture Toggle Button existiert in der Top Bar
             Assert.Contains("BtnBigPicture", xaml);
-            Assert.Contains("Big Picture Mode", xaml);
+            Assert.Contains("MainWindow_Tooltip_BigPicture", xaml);
             Assert.Contains("🎮", xaml);
         }
 

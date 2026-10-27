@@ -133,7 +133,7 @@
                                                  Foreground="{StaticResource TextPrimary}" FontFamily="Consolas" FontSize="13"
                                                  BorderBrush="{StaticResource BgBorder}" BorderThickness="1"
                                                  Padding="8,4" VerticalContentAlignment="Center"/>
-                                        <Button Content="Apply" Click="BtnLightbarHexApply_Click"
+                                        <Button Content="{core:Loc Settings_Btn_Apply}" Click="BtnLightbarHexApply_Click"
                                                 Style="{StaticResource GhostButton}" Margin="8,0,0,0" Padding="12,4" FontSize="12"/>
                                     </StackPanel>
 
