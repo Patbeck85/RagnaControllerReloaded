@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace RagnaController.Core.Calculators {
     /// <summary>
@@ -30,16 +31,56 @@ namespace RagnaController.Core.Calculators {
 
         public IReadOnlyList<SimSkill> Skills => _skills;
 
-        public void AddSkill(int id, string name, int maxLevel, int minBaseLevel, int minJobLevel)
+        public void AddSkill(int id, string name, int maxLevel, int minBaseLevel, int minJobLevel,
+            string description = "", string skillType = "Active", string iconPath = "")
         {
-            _skills.Add(new SimSkill { Id = id, Name = name, MaxLevel = maxLevel, MinBaseLevel = minBaseLevel, MinJobLevel = minJobLevel });
+            _skills.Add(new SimSkill
+            {
+                Id = id,
+                Name = name,
+                Description = description,
+                SkillType = skillType,
+                IconPath = iconPath,
+                MaxLevel = maxLevel,
+                MinBaseLevel = minBaseLevel,
+                MinJobLevel = minJobLevel
+            });
+        }
+
+        /// <summary>Fügt ein Skill mit Voraussetzungen hinzu.</summary>
+        public void AddSkillWithPrereq(int id, string name, int maxLevel, int minBaseLevel, int minJobLevel,
+            Dictionary<int, int> prerequisites, string description = "", string skillType = "Active")
+        {
+            _skills.Add(new SimSkill
+            {
+                Id = id,
+                Name = name,
+                Description = description,
+                SkillType = skillType,
+                MaxLevel = maxLevel,
+                MinBaseLevel = minBaseLevel,
+                MinJobLevel = minJobLevel,
+                PrerequisiteSkills = prerequisites
+            });
         }
 
         public bool CanUpgrade(SimSkill skill) =>
             skill.Level < skill.MaxLevel &&
             PointsRemaining > 0 &&
             BaseLevel >= skill.MinBaseLevel &&
-            JobLevel >= skill.MinJobLevel;
+            JobLevel >= skill.MinJobLevel &&
+            PrerequisitesMet(skill);
+
+        private bool PrerequisitesMet(SimSkill skill)
+        {
+            foreach (var (prereqId, reqLevel) in skill.PrerequisiteSkills)
+            {
+                var prereqSkill = _skills.FirstOrDefault(s => s.Id == prereqId);
+                if (prereqSkill == null || prereqSkill.Level < reqLevel)
+                    return false;
+            }
+            return true;
+        }
 
         public bool UpgradeSkill(SimSkill skill)
         {
@@ -57,8 +98,32 @@ namespace RagnaController.Core.Calculators {
 
         public string GenerateBuildCode()
         {
+            return GenerateBuildCode(BuildCodeFormat.PlainText);
+        }
+
+        /// <summary>Export format for skill build code.</summary>
+        public enum BuildCodeFormat
+        {
+            PlainText,
+            IroWiki,
+            Json
+        }
+
+        /// <summary>Generates build code in the specified format.</summary>
+        public string GenerateBuildCode(BuildCodeFormat format)
+        {
+            return format switch
+            {
+                BuildCodeFormat.IroWiki => GenerateIroWikiCode(),
+                BuildCodeFormat.Json => GenerateJsonCode(),
+                _ => GeneratePlainTextCode()
+            };
+        }
+
+        private string GeneratePlainTextCode()
+        {
             var lines = new List<string>();
-            lines.Add($"// RagnaController Skill Build");
+            lines.Add("// RagnaController Skill Build");
             lines.Add($"// Base Level: {BaseLevel}, Job Level: {JobLevel}");
             lines.Add($"// Total Points: {_availablePoints}, Spent: {TotalPointsSpent}, Remaining: {PointsRemaining}");
             lines.Add("");
@@ -69,6 +134,37 @@ namespace RagnaController.Core.Calculators {
             }
 
             return string.Join(Environment.NewLine, lines);
+        }
+
+        private string GenerateIroWikiCode()
+        {
+            var lines = new List<string>();
+            lines.Add("{| class=\"wikitable\"");
+            lines.Add("! Skill !! Level !! Max Level");
+            foreach (var skill in _skills.Where(s => s.Level > 0))
+            {
+                lines.Add($"|- | [[{skill.Name}]] || {skill.Level} || {skill.MaxLevel}");
+            }
+            lines.Add("|}");
+            return string.Join(Environment.NewLine, lines);
+        }
+
+        private string GenerateJsonCode()
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine("{");
+            sb.AppendLine($"  \"baseLevel\": {BaseLevel},");
+            sb.AppendLine($"  \"jobLevel\": {JobLevel},");
+            sb.AppendLine($"  \"totalPoints\": {_availablePoints},");
+            sb.AppendLine($"  \"pointsSpent\": {TotalPointsSpent},");
+            sb.AppendLine($"  \"pointsRemaining\": {PointsRemaining},");
+            sb.AppendLine($"  \"skills\": [");
+            var skillLines = _skills.Where(s => s.Level > 0).Select(s =>
+                $"    {{\"id\": {s.Id}, \"name\": \"{s.Name}\", \"level\": {s.Level}, \"maxLevel\": {s.MaxLevel}}}");
+            sb.AppendLine(string.Join(",\n", skillLines));
+            sb.AppendLine("  ]");
+            sb.AppendLine("}");
+            return sb.ToString();
         }
 
         public void Reset()
@@ -798,9 +894,14 @@ namespace RagnaController.Core.Calculators {
     {
         public int Id { get; set; }
         public string Name { get; set; } = "";
+        public string Description { get; set; } = "";
+        public string SkillType { get; set; } = "Active"; // Active, Passive, Buff, Debuff
+        public string IconPath { get; set; } = "";
         public int MaxLevel { get; set; } = 10;
         public int MinBaseLevel { get; set; } = 1;
         public int MinJobLevel { get; set; } = 1;
         public int Level { get; set; } = 0;
+        // Prerequisite skills: skill ID → required level
+        public Dictionary<int, int> PrerequisiteSkills { get; set; } = new();
     }
 }

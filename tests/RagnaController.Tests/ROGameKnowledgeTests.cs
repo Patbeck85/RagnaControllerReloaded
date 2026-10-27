@@ -708,5 +708,101 @@ namespace RagnaController.Tests
         }
 
         #endregion
+
+        #region SkillSimulator Extended Tests
+
+        [Fact]
+        public void SkillSimulator_AddSkill_WithDescriptionAndType_ShouldStoreProperties()
+        {
+            var sim = new SkillSimulator(50, 50);
+            sim.AddSkill(1, "Sword Mastery", 10, 1, 1, "Increases sword damage", "Passive", "skills/sword_mastery.png");
+
+            var skill = sim.Skills.First();
+            Assert.Equal(1, skill.Id);
+            Assert.Equal("Sword Mastery", skill.Name);
+            Assert.Equal("Increases sword damage", skill.Description);
+            Assert.Equal("Passive", skill.SkillType);
+            Assert.Equal("skills/sword_mastery.png", skill.IconPath);
+        }
+
+        [Fact]
+        public void SkillSimulator_AddSkillWithPrereq_ShouldBlockUpgradeUntilMet()
+        {
+            var sim = new SkillSimulator(50, 50);
+            sim.AddSkill(101, "Fire Bolt", 10, 1, 1);
+            sim.AddSkillWithPrereq(102, "Fire Ball", 10, 1, 1,
+                new Dictionary<int, int> { { 101, 5 } }, "Fire Ball description");
+
+            var fireBall = sim.Skills.First(s => s.Id == 102);
+            Assert.False(sim.CanUpgrade(fireBall), "Fire Ball should be blocked until Fire Bolt is level 5");
+
+            // Upgrade Fire Bolt to level 5
+            var fireBolt = sim.Skills.First(s => s.Id == 101);
+            for (int i = 0; i < 5; i++) sim.UpgradeSkill(fireBolt);
+
+            Assert.True(sim.CanUpgrade(fireBall), "Fire Ball should be upgradable after Fire Bolt reaches level 5");
+        }
+
+        [Fact]
+        public void SkillSimulator_GenerateBuildCode_PlainText_ShouldContainSkillLevels()
+        {
+            var sim = new SkillSimulator(50, 50);
+            sim.AddSkill(1, "Sword Mastery", 10, 1, 1);
+            sim.UpgradeSkill(sim.Skills.First());
+
+            var code = sim.GenerateBuildCode();
+            Assert.Contains("Sword Mastery: 1/10", code);
+            Assert.Contains("// RagnaController Skill Build", code);
+            Assert.Contains("Base Level: 50", code);
+        }
+
+        [Fact]
+        public void SkillSimulator_GenerateBuildCode_IroWiki_ShouldContainWikiFormat()
+        {
+            var sim = new SkillSimulator(50, 50);
+            sim.AddSkill(1, "Sword Mastery", 10, 1, 1);
+            sim.UpgradeSkill(sim.Skills.First());
+
+            var code = sim.GenerateBuildCode(SkillSimulator.BuildCodeFormat.IroWiki);
+            Assert.Contains("{| class=\"wikitable\"", code);
+            Assert.Contains("Sword Mastery", code);
+        }
+
+        [Fact]
+        public void SkillSimulator_GenerateBuildCode_Json_ShouldContainJsonStructure()
+        {
+            var sim = new SkillSimulator(50, 50);
+            sim.AddSkill(1, "Sword Mastery", 10, 1, 1);
+            sim.UpgradeSkill(sim.Skills.First());
+
+            var code = sim.GenerateBuildCode(SkillSimulator.BuildCodeFormat.Json);
+            Assert.Contains("\"baseLevel\": 50", code);
+            Assert.Contains("\"name\": \"Sword Mastery\"", code);
+            Assert.Contains("\"level\": 1", code);
+        }
+
+        [Fact]
+        public void SkillSimulator_CanUpgrade_WithInsufficientPoints_ShouldReturnFalse()
+        {
+            var sim = new SkillSimulator(1, 1); // 0 available points
+            sim.AddSkill(1, "Sword Mastery", 10, 1, 1);
+
+            var skill = sim.Skills.First();
+            Assert.False(sim.CanUpgrade(skill), "Should not be upgradable with 0 points");
+        }
+
+        [Fact]
+        public void SkillSimulator_Reset_ShouldSetAllLevelsToZero()
+        {
+            var sim = new SkillSimulator(50, 50);
+            sim.AddSkill(1, "Sword Mastery", 10, 1, 1);
+            sim.UpgradeSkill(sim.Skills.First());
+
+            sim.Reset();
+
+            Assert.All(sim.Skills, s => Assert.Equal(0, s.Level));
+        }
+
+        #endregion
     }
 }
