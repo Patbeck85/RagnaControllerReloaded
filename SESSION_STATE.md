@@ -4,12 +4,12 @@
 ---
 
 ## 🎯 Current Milestone
-**Phase:** All Epics 1-28 COMPLETE + Vollständige Lokalisierung (48 Sprachen × 1289 Keys) + UI/UX Polish + Interception-Option mit automatischem GitHub-Download
+**Phase:** All Epics 1-28 COMPLETE + Vollständige Lokalisierung (48 Sprachen × 1289 Keys) + UI/UX Polish + Interception-Option mit Download vom Original-Repo oblitum/Interception
 **Status:** Build: 0 errors | Tests: 1106/1106 PASS
-**Git HEAD:** commit 79f2a8b (Automatischer Interception-Treiber-Download von GitHub Releases)
+**Git HEAD:** commit 6e0a31f (Interception-Treiber-Download vom Original-Repo oblitum/Interception)
 **Last Updated:** 2026-10-26
-**Status:** Alle Epics 1-28 COMPLETE. Interception-Treiber wird bei fehlendem Installer automatisch von GitHub Releases heruntergeladen (install-interception.exe aus neuestem Release). Neustart-Dialog bei erstem Aktivieren. Build: 0 Fehler, Tests: 1106/1106 PASS. Stryker.NET CI deaktiviert (WPF App.g.cs Problem, Issue #3813).
-**Release:** v2.6.1 (2026-10-26) — Alle Epics 1-28, vollständige Lokalisierung, RO Game Knowledge, UI/UX Polish, Interception-UI mit automatischem Download + Neustart, Unit Tests
+**Status:** Alle Epics 1-28 COMPLETE. Interception-Treiber wird automatisch vom Original-Repo oblitum/Interception heruntergeladen (Interception.zip → entpacken → install-interception.exe im AntiCheat-Ordner). Neustart-Dialog bei erstem Aktivieren. Build: 0 Fehler, Tests: 1106/1106 PASS. Stryker.NET CI deaktiviert (WPF App.g.cs Problem, Issue #3813).
+**Release:** v2.6.1 (2026-10-26) — Alle Epics 1-28, vollständige Lokalisierung, RO Game Knowledge, UI/UX Polish, Interception-UI mit automatischem Download vom Original-Repo + Neustart, Unit Tests
 
 ---
 
