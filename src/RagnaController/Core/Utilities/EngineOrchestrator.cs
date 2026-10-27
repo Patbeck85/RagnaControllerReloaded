@@ -8,6 +8,7 @@ using RagnaController.Controller;
 using RagnaController.Profiles;
 using RagnaController.Core;
 
+
 namespace RagnaController.Core
 {
     /// <summary>
@@ -35,7 +36,7 @@ namespace RagnaController.Core
 
         // ROB-002: input emulation failover — kernel strategy holds an interception context
         // (P/Invoke-Handle) and muss beim Shutdown deterministisch freigegeben are.
-        private InterceptionMouseStrategy? _mouseEmulationFallback;
+        private IMouseEmulationStrategy? _mouseEmulationFallback;
 
         // FEAT-014: Session-Replay — JSONL-Aufzeichnung pro Engine-Session (only if in Settings enabled).
         private SessionRecorder? _sessionRecorder;
@@ -294,19 +295,40 @@ namespace RagnaController.Core
             // Primär = SendInput (Standard); Fallback = Interception-Treiber, only if it
             // on this Maschine verfügbar is. Ohne Treiber bleibt alles bei SendInput —
             // der Failover-Schalter is then nie ausgelöst (KISS: no No-Op-Overhead).
-            var primaryStrategy = new SendInputMouseStrategy();
-            try { _mouseEmulationFallback = new InterceptionMouseStrategy(); }
-                        catch (Exception ex)
-                        {
-                            _mouseEmulationFallback = null; // DLL/Treiber fehlt → bewusst ohne Fallback
-                            System.Diagnostics.Debug.WriteLine($"[EngineOrchestrator] InterceptionMouseStrategy init failed: {ex.Message}");
-                        }
-            if (_mouseEmulationFallback != null && !_mouseEmulationFallback.IsAvailable)
+            var settings = Models.Settings.Load();
+            IMouseEmulationStrategy primaryStrategy;
+            IMouseEmulationStrategy? fallbackStrategy;
+
+            if (settings.EnableKernelInput)
             {
-                _mouseEmulationFallback.Dispose();
-                _mouseEmulationFallback = null;
+                // Benutzer hat Kernel-Modus explizit aktiviert → Interception primär
+                try { primaryStrategy = new InterceptionMouseStrategy(); }
+                catch (Exception ex)
+                {
+                    primaryStrategy = new SendInputMouseStrategy();
+                    System.Diagnostics.Debug.WriteLine($"[EngineOrchestrator] InterceptionMouseStrategy init failed: {ex.Message}");
+                }
+                fallbackStrategy = new SendInputMouseStrategy();
             }
-            _inputRouter.InitializeFailover(primaryStrategy, _mouseEmulationFallback, Models.Settings.Load());
+            else
+            {
+                // Standard: SendInput primär, Interception als Fallback
+                primaryStrategy = new SendInputMouseStrategy();
+                try { fallbackStrategy = new InterceptionMouseStrategy(); }
+                catch (Exception ex)
+                {
+                    fallbackStrategy = null; // DLL/Treiber fehlt → bewusst ohne Fallback
+                    System.Diagnostics.Debug.WriteLine($"[EngineOrchestrator] InterceptionMouseStrategy init failed: {ex.Message}");
+                }
+                if (fallbackStrategy != null && !fallbackStrategy.IsAvailable)
+                {
+                    fallbackStrategy.Dispose();
+                    fallbackStrategy = null;
+                }
+            }
+
+            _mouseEmulationFallback = fallbackStrategy;
+            _inputRouter.InitializeFailover(primaryStrategy, fallbackStrategy, settings);
             engineQueue.SendInputLatencyRecorded += _inputRouter.RecordSendInputLatency;
 
             // FEAT-014: Session-Replay — JSONL-Aufzeichnung pro Engine-Session (opt-in via Settings).

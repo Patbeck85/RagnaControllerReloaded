@@ -245,6 +245,11 @@
                                                                                                                                                           Click="ChkEnableSessionRecording_Click"
                                                                                                                                                           ToolTip="{core:Loc Settings_EnableSessionRecording_Tooltip}"/>
 
+                                                                                                                                                <!-- Input Emulation (ROB-002) -->
+                                                                                                                                                <CheckBox x:Name="ChkEnableKernelInput" Content="{core:Loc Settings_EnableKernelInput}"
+                                                                                                                                                          Click="ChkEnableKernelInput_Click"
+                                                                                                                                                          ToolTip="{core:Loc Settings_EnableKernelInput_Tooltip}"/>
+
                                                                                                                                                 <!-- Window Behavior -->
                                                                                                                                                 <CheckBox x:Name="ChkStartMinimized" Content="{core:Loc Settings_StartMinimized}"
                                                                                                                                                           Click="ChkStartMinimized_Click"

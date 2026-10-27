@@ -1314,5 +1314,9 @@
   "MainWindow_HotkeyHint": "Hotkeys: F1 Kalibrieren · F2 Input-Test · F3 Remapping · F4 Radial-Menü",
   "MainWindow_Tooltip_SelectClient": "RO-Client-Fenster für Eingabe-Routing auswählen",
   "MainWindow_Tooltip_SelectPreset": "Gespeichertes Profil-Preset für schnellen Wechsel auswählen",
-  "MainWindow_Tooltip_SelectClass": "Charakterklasse für schnelles Profil-Laden auswählen"
+  "MainWindow_Tooltip_SelectClass": "Charakterklasse für schnelles Profil-Laden auswählen",
+  "Settings_EnableKernelInput": "Kernel-Modus-Eingabe (Interception) aktivieren",
+  "Settings_EnableKernelInput_Tooltip": "Verwendet den Interception-Treiber für kernel-level Eingabe-Emulation. Umgeht Gepard/Harmony Anti-Cheat-Blockaden. Erfordert Treiber-Installation.",
+  "Settings_KernelInput_Required_Title": "Kernel-Modus-Eingabe erforderlich",
+  "Settings_KernelInput_Required_Message": "Der Interception-Treiber muss installiert sein, bevor der Kernel-Modus verwendet werden kann.\n\nKlicken Sie auf OK, um den Treiber-Installer zu öffnen.\n\nHinweis: Erfordert Administratorrechte (UAC)."
 }

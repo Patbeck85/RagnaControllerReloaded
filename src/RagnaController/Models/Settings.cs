@@ -112,6 +112,9 @@ namespace RagnaController.Models
         /// <summary>M stable (fast) flushes after switch → recovery back to SendInput.</summary>
         public int FailoverRecoveryCount { get; set; } = 2;
 
+        /// <summary>Force kernel-mode input emulation (Interception driver) instead of SendInput. Requires driver installation.</summary>
+        public bool EnableKernelInput { get; set; } = false;
+
         // ── FEAT-014: Session-Replay (JSONL-Aufzeichnung for deterministische Wiedergabe) ──
         /// <summary>Session replay enabled? Recording runs per engine session, rotation at 50 MB.</summary>
         public bool EnableSessionRecording { get; set; } = false;
@@ -378,6 +381,7 @@ namespace RagnaController.Models
             FailoverLatencyThresholdMs = defaults.FailoverLatencyThresholdMs;
             FailoverTriggerCount = defaults.FailoverTriggerCount;
             FailoverRecoveryCount = defaults.FailoverRecoveryCount;
+            EnableKernelInput = defaults.EnableKernelInput;
             EnableSessionRecording = defaults.EnableSessionRecording;
             StartMinimized = defaults.StartMinimized;
             ShowControllerViz = defaults.ShowControllerViz;

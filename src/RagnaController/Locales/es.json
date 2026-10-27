@@ -1314,5 +1314,9 @@
   "MainWindow_HotkeyHint": "Hotkeys: F1 Calibrate · F2 Input Test · F3 Remapping · F4 Radial Menu",
   "MainWindow_Tooltip_SelectClient": "Select RO client window for input routing",
   "MainWindow_Tooltip_SelectPreset": "Select saved profile preset for quick switch",
-  "MainWindow_Tooltip_SelectClass": "Select character class for quick profile load"
+  "MainWindow_Tooltip_SelectClass": "Select character class for quick profile load",
+  "Settings_EnableKernelInput": "Enable Kernel-Mode Input (Interception)",
+  "Settings_EnableKernelInput_Tooltip": "Uses Interception driver for kernel-level input emulation. Bypasses Gepard/Harmony Anti-Cheat blocks. Requires driver installation.",
+  "Settings_KernelInput_Required_Title": "Kernel-Mode Input Required",
+  "Settings_KernelInput_Required_Message": "The Interception driver must be installed before kernel-mode input can be used.\n\nClick OK to open the driver installer.\n\nNote: Requires administrator rights (UAC)."
 }

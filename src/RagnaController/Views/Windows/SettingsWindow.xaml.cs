@@ -343,6 +343,27 @@ public partial class SettingsWindow : Window
             _s.Save();
         }
 
+        private void ChkEnableKernelInput_Click(object sender, RoutedEventArgs e)
+        {
+            _s.EnableKernelInput = ChkEnableKernelInput.IsChecked == true;
+            _s.Save();
+
+            if (_s.EnableKernelInput)
+            {
+                var result = MessageBox.Show(
+                    LocalizationManager.GetLocalizedString("Settings_KernelInput_Required_Message"),
+                    LocalizationManager.GetLocalizedString("Settings_KernelInput_Required_Title"),
+                    MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+
+                if (result == MessageBoxResult.Cancel)
+                {
+                    _s.EnableKernelInput = false;
+                    ChkEnableKernelInput.IsChecked = false;
+                    _s.Save();
+                }
+            }
+        }
+
         // ── Window Behavior ─────────
         private void ChkStartMinimized_Click(object sender, RoutedEventArgs e)
         {
