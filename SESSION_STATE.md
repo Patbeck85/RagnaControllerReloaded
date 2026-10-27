@@ -4,12 +4,12 @@
 ---
 
 ## 🎯 Current Milestone
-**Phase:** All Epics 1-28 COMPLETE + Vollständige Lokalisierung (48 Sprachen × 1289 Keys) + UI/UX Polish + Interception-Option in Settings mit Neustart-Dialog
+**Phase:** All Epics 1-28 COMPLETE + Vollständige Lokalisierung (48 Sprachen × 1289 Keys) + UI/UX Polish + Interception-Option mit automatischem GitHub-Download
 **Status:** Build: 0 errors | Tests: 1106/1106 PASS
-**Git HEAD:** commit 5cff821 (Interception-Treiber: Automatischer Neustart-Dialog + Driver-Missing-Prüfung)
+**Git HEAD:** commit 79f2a8b (Automatischer Interception-Treiber-Download von GitHub Releases)
 **Last Updated:** 2026-10-26
-**Status:** Alle Epics 1-28 COMPLETE. Interception-Treiber-Option jetzt über Settings UI mit automatischem Neustart-Dialog bei erstem Aktivieren. Driver-Missing-Prüfung eingebaut. Build: 0 Fehler, Tests: 1106/1106 PASS. Stryker.NET CI deaktiviert (WPF App.g.cs Problem, Issue #3813).
-**Release:** v2.6.1 (2026-10-26) — Alle Epics 1-28, vollständige Lokalisierung, RO Game Knowledge, UI/UX Polish, Interception-UI mit Neustart, Unit Tests
+**Status:** Alle Epics 1-28 COMPLETE. Interception-Treiber wird bei fehlendem Installer automatisch von GitHub Releases heruntergeladen (install-interception.exe aus neuestem Release). Neustart-Dialog bei erstem Aktivieren. Build: 0 Fehler, Tests: 1106/1106 PASS. Stryker.NET CI deaktiviert (WPF App.g.cs Problem, Issue #3813).
+**Release:** v2.6.1 (2026-10-26) — Alle Epics 1-28, vollständige Lokalisierung, RO Game Knowledge, UI/UX Polish, Interception-UI mit automatischem Download + Neustart, Unit Tests
 
 ---
 
