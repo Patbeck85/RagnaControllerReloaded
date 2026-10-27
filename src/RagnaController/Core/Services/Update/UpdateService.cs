@@ -77,7 +77,7 @@ namespace RagnaController.Core.Services.Update {
                 // ZIP-Asset finden
                 foreach (var asset in release.Assets)
                 {
-                    if (asset.Name.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                    if (asset?.Name?.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) == true)
                     {
                         updateInfo.DownloadUrl = asset.BrowserDownloadUrl!;
                         break;

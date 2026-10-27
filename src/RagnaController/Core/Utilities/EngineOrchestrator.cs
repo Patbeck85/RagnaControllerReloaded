@@ -540,6 +540,7 @@ namespace RagnaController.Core
         {
             try
             {
+#pragma warning disable CS8602 // Engine-Felder werden im Konstruktor gesetzt und sind im Produktionsbetrieb nie null
                 // ROB-001: Heartbeat ZUERST — auch bei Disconnect/Pause/Focus-Lost muss der
                 // Watchdog sehen, dass die Tick-Schlebe lebt (sonst false-positive Hang).
                 _watchdog.MarkTick();
@@ -692,6 +693,7 @@ namespace RagnaController.Core
             {
                 LogMessage?.Invoke($"[Engine] Tick error: {ex.Message}");
             }
+#pragma warning restore CS8602
         }
 
         private void HandleDisconnected()

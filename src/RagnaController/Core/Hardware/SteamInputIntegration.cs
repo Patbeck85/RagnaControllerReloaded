@@ -21,11 +21,13 @@ namespace RagnaController.Core.Hardware {
         /// <summary>Ob ein Controller über Steam Input erkannt wurde.</summary>
         public bool IsControllerConnected { get; private set; }
 
+#pragma warning disable CS0067 // Events are public API, subscribed externally
         /// <summary>Event bei Controller-Verbindung.</summary>
         public event EventHandler? ControllerConnected;
 
         /// <summary>Event bei Controller-Trennung.</summary>
         public event EventHandler? ControllerDisconnected;
+#pragma warning restore CS0067
 
         private bool _disposed;
 

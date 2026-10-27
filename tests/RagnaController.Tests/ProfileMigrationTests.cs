@@ -213,7 +213,7 @@ namespace RagnaController.Tests
         public void Migrate_Null_DoesNotThrow()
         {
             // Act & Assert
-            ProfileMigration.Migrate(null);
+            ProfileMigration.Migrate(null!);
         }
 
         [Fact]
@@ -247,7 +247,7 @@ namespace RagnaController.Tests
         {
             // Act & Assert
             Assert.Equal(0, ProfileMigration.DetectSchemaVersion(""));
-            Assert.Equal(0, ProfileMigration.DetectSchemaVersion(null));
+            Assert.Equal(0, ProfileMigration.DetectSchemaVersion(null!));
             Assert.Equal(0, ProfileMigration.DetectSchemaVersion("   "));
         }
 
@@ -296,7 +296,7 @@ namespace RagnaController.Tests
         public void GetMigrationReport_Null_ReturnsNoProfile()
         {
             // Act
-            var report = ProfileMigration.GetMigrationReport(null);
+            var report = ProfileMigration.GetMigrationReport(null!);
 
             // Assert
             Assert.Equal("Kein Profil", report);
@@ -327,7 +327,7 @@ namespace RagnaController.Tests
         public void MigrateAll_Null_DoesNotThrow()
         {
             // Act & Assert
-            ProfileMigration.MigrateAll(null);
+            ProfileMigration.MigrateAll(null!);
         }
 
         #endregion

@@ -88,7 +88,7 @@ namespace RagnaController.Core.Navigation {
             if (macro == null || string.IsNullOrWhiteSpace(macro.Text))
                 return;
 
-            _queue.SendChatString(macro.Text!);
+            _ = _queue.SendChatString(macro.Text!);
             _feedback.Trigger(FeedbackType.TargetLocked);
         }
 

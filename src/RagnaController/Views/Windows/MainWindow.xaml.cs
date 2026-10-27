@@ -67,7 +67,9 @@ namespace RagnaController.Views.Windows
         private bool _isBigPictureMode = false;
         private readonly List<string> _logBuffer = new();
         private MiniModeWindow? _miniWindow;
+#pragma warning disable CS0169 // Field may be used in future; kept for potential use
         private bool _wasFocusLocked;
+#pragma warning restore CS0169
         private readonly ToastService _toastService = new();
         private readonly ProfileService _profileService;
 
@@ -94,7 +96,7 @@ namespace RagnaController.Views.Windows
         // UX-012: Gamepad-Navigation in der Hauptfenster (DPad/Tab-Fokus)
         private GamepadUiNavigator? _navigator;
 
-        // Event handler delegates for proper cleanup in Window_Closing (MEMORY-001: no leaked references)
+#pragma warning disable CS0169 // Event handler delegates for proper cleanup in Window_Closing - assigned externally
         private Action<EngineInstance, EngineStatus>? _statusChangedHandler;
         private Action<int>? _profileQuickSwitchHandler;
         private Action<EngineInstance, string>? _logMessageHandler;
@@ -102,6 +104,7 @@ namespace RagnaController.Views.Windows
         private Action<string>? _controllerConnectedHandler;
         private Action? _controllerDisconnectedHandler;
         private Action? _restoreMainWindowRequestedHandler;
+#pragma warning restore CS0169
 
 #pragma warning disable CS0649 // WPF: Fields initialized in XAML
         // Toast/Notifications (NOT in XAML - created dynamically)

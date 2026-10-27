@@ -29,7 +29,9 @@ namespace RagnaController.Core.Services.UI {
         public bool IsScreenReaderActive => _settings.AccessibilityScreenReaderMode;
 
         /// <summary>Ereignis, wenn sich der Screen-Reader-Status ändert.</summary>
+#pragma warning disable CS0067 // Public event, subscribed externally
         public event EventHandler<bool>? ScreenReaderStatusChanged;
+#pragma warning restore CS0067
 
         public AccessibilityService(Settings settings)
         {

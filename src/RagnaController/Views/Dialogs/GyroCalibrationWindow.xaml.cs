@@ -25,8 +25,9 @@ namespace RagnaController.Views.Dialogs
         private int _currentStep = 1;
         private readonly int _totalSteps = 4;
 
-        // Kalibrierungs-Zustand
+#pragma warning disable CS0414 // Field is assigned but may be used in future; kept for calibration state tracking
         private bool _isCalibrating = false;
+#pragma warning restore CS0414
         private int _calibrationSamplesCollected = 0;
         private const int CalibrationTargetSamples = 125; // ~1 Sekunde bei 125 Hz
         private float _totalPitchDps = 0f;

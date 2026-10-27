@@ -37,7 +37,9 @@ namespace RagnaController.Views.Windows
             DataContext = this;
         }
 
+#pragma warning disable CS0067 // Public event, subscribed externally
         public event PropertyChangedEventHandler? PropertyChangedInternal;
+#pragma warning restore CS0067
         private void OnPropertyChanged(string propertyName)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 

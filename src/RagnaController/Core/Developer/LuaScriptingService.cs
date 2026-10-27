@@ -22,6 +22,7 @@ namespace RagnaController.Core.Developer {
         /// <summary>Ob die Skripting-API aktiv ist.</summary>
         public bool IsEnabled => _enabled;
 
+#pragma warning disable CS0067 // Events are public API, subscribed externally
         /// <summary>Event: Wird pro Tick ausgelöst.</summary>
         public event Action<float>? OnTick;
 
@@ -30,6 +31,7 @@ namespace RagnaController.Core.Developer {
 
         /// <summary>Event: Wird bei jeder Aktion ausgelöst.</summary>
         public event Action<string>? OnAction;
+#pragma warning restore CS0067
 
         /// <summary>Registrierte Skript-Namen.</summary>
         public IReadOnlyList<string> RegisteredScripts => _scripts;

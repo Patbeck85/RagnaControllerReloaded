@@ -74,7 +74,7 @@ namespace RagnaController.Core.Hardware {
                                     IntPtr.Add(detailBuf, IntPtr.Size == 8 ? 8 : 6));
                                 
                                 if (IsDualSenseDevice(path!))
-                                    devices.Add(path);
+                                    devices.Add(path!);
                             }
                         }
                         finally

@@ -208,6 +208,8 @@ namespace RagnaController.Views.Dialogs
         public bool IsImportant { get; set; } = false;
         public string RowBackground { get; set; } = "#1a1a20";
 
+#pragma warning disable CS0067 // Public event, subscribed externally
         public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
     }
 }

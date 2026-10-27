@@ -204,6 +204,8 @@ namespace RagnaController.Views.Dialogs
             _result = result;
         }
 
+#pragma warning disable CS0067 // Public event, subscribed externally
         public event PropertyChangedEventHandler? PropertyChanged;
+#pragma warning restore CS0067
     }
 }

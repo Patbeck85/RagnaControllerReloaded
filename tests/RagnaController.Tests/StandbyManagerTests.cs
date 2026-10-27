@@ -57,13 +57,13 @@ namespace RagnaController.Tests
             bool shouldSkip;
             for (int i = 0; i < 10; i++)
             {
-                _standby.Tick(noInput, _profile, false, new NullFeedbackProvider(), new MovementEngine(null, null), _logger, out shouldSkip);
+                _standby.Tick(noInput, _profile, false, new NullFeedbackProvider(), new MovementEngine(null!, null!), _logger, out shouldSkip);
                 Thread.Sleep(35); // 350ms total — still below 30s light idle threshold, but we test the reset path
             }
 
             // Now send input — should reset to Active
             var withInput = new ParsedInput { LeftX = 0.5f, RawButtons = GamepadButtonFlags.None };
-            _standby.Tick(withInput, _profile, false, new NullFeedbackProvider(), new MovementEngine(null, null), _logger, out shouldSkip);
+            _standby.Tick(withInput, _profile, false, new NullFeedbackProvider(), new MovementEngine(null!, null!), _logger, out shouldSkip);
 
             // Assert
             Assert.Equal(IdleLevel.Active, _standby.CurrentIdleLevel);
@@ -83,7 +83,7 @@ namespace RagnaController.Tests
             // (though we won't reach 30s in a unit test, we verify the level starts degrading)
             for (int i = 0; i < 100; i++)
             {
-                _standby.Tick(noInput, _profile, false, new NullFeedbackProvider(), new MovementEngine(null, null), _logger, out shouldSkip);
+                _standby.Tick(noInput, _profile, false, new NullFeedbackProvider(), new MovementEngine(null!, null!), _logger, out shouldSkip);
             }
 
             // At minimum, standby should not be entered (5 min timeout) but idle level should be tracked
@@ -104,7 +104,7 @@ namespace RagnaController.Tests
             // Act — many ticks with no input
             for (int i = 0; i < 100; i++)
             {
-                _standby.Tick(noInput, profileNoStandby, false, new NullFeedbackProvider(), new MovementEngine(null, null), _logger, out shouldSkip);
+                _standby.Tick(noInput, profileNoStandby, false, new NullFeedbackProvider(), new MovementEngine(null!, null!), _logger, out shouldSkip);
             }
 
             // Assert
