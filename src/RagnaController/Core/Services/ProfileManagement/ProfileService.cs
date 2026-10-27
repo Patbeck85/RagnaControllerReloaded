@@ -22,10 +22,10 @@ namespace RagnaController.Core.Services.ProfileManagement
     {
         private readonly ProfileManager _manager;
         private readonly Settings _settings;
-        private readonly HybridEngine _engine;
+        private readonly HybridEngine? _engine;
         private readonly Action<string> _onToast;
 
-        public ProfileService(ProfileManager manager, Settings settings, HybridEngine engine, Action<string> onToast)
+        public ProfileService(ProfileManager manager, Settings settings, HybridEngine? engine, Action<string> onToast)
         {
             _manager = manager;
             _settings = settings;
@@ -53,7 +53,7 @@ namespace RagnaController.Core.Services.ProfileManagement
         {
             if (profile == null) return;
 
-            _engine.LoadProfile(profile);
+            _engine?.LoadProfile(profile);
             _settings.LastProfileName = profile.Name;
             _settings.Save();
             _onToast($"Profile loaded: {profile.Name}");

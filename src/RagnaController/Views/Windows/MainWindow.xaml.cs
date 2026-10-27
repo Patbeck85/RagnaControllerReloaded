@@ -121,7 +121,7 @@ namespace RagnaController.Views.Windows
             InitializeComponent();
             _toastService.Initialize(ToastBorder!, ToastText!, ToastBg!);
             App.InitializeToastService(_toastService);
-            _profileService = new ProfileService(_manager, _settings, null!, msg => ShowToast(msg));
+            _profileService = new ProfileService(_manager, _settings, null, msg => ShowToast(msg));
             DataContext = vm;
 
             // Bind ClientTabs to TabControl
