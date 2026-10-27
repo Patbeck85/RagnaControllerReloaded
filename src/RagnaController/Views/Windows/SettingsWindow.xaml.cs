@@ -374,7 +374,7 @@ public partial class SettingsWindow : Window
                     if (downloadResult == MessageBoxResult.Yes)
                     {
                         // Download von GitHub Releases
-                        using var driverService = new InterceptionDriverService("Patbeck85", "RagnaController");
+                        using var driverService = new InterceptionDriverService();
                         driverService.DownloadProgressChanged += (s, p) =>
                         {
                             System.Diagnostics.Debug.WriteLine($"[Interception] Download: {p}%");

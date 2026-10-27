@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
@@ -15,17 +16,15 @@ namespace RagnaController.Core.Services.Update
     public class InterceptionDriverService : IDisposable
     {
         private readonly HttpClient _httpClient;
-        private readonly string _owner;
-        private readonly string _repo;
+        private readonly string _owner = "oblitum";
+        private readonly string _repo = "Interception";
         private bool _disposed;
 
         /// <summary>Event ausgelöst beim Download-Fortschritt (0-100).</summary>
         public event EventHandler<int>? DownloadProgressChanged;
 
-        public InterceptionDriverService(string owner, string repo)
+        public InterceptionDriverService()
         {
-            _owner = owner;
-            _repo = repo;
             _httpClient = new HttpClient();
             _httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("RagnaController-InterceptionDownloader/1.0");
             _httpClient.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github.v3+json");
@@ -42,14 +41,14 @@ namespace RagnaController.Core.Services.Update
         }
 
         /// <summary>
-        /// Lädt die neueste install-interception.exe von GitHub Releases herunter
-        /// und speichert sie im AntiCheat-Ordner.
+        /// Lädt die neueste Interception.zip von GitHub Releases (oblitum/Interception) herunter,
+        /// entpackt sie und platziert install-interception.exe im AntiCheat-Ordner.
         /// </summary>
         public async Task<bool> DownloadDriverAsync(string appBaseDirectory, CancellationToken ct = default)
         {
             try
             {
-                // 1. GitHub Releases API abfragen
+                // 1. GitHub Releases API abfragen (Original-Repo: oblitum/Interception)
                 var apiUrl = $"https://api.github.com/repos/{_owner}/{_repo}/releases/latest";
                 using var response = await _httpClient.GetAsync(apiUrl, ct);
                 ct.ThrowIfCancellationRequested();
@@ -70,13 +69,13 @@ namespace RagnaController.Core.Services.Update
                     return false;
                 }
 
-                // 2. install-interception.exe Asset finden
+                // 2. Interception.zip Asset finden
                 var asset = Array.Find(release.Assets, a =>
-                    a.Name != null && a.Name.Equals("install-interception.exe", StringComparison.OrdinalIgnoreCase));
+                    a.Name != null && a.Name.Equals("Interception.zip", StringComparison.OrdinalIgnoreCase));
 
                 if (asset == null || string.IsNullOrEmpty(asset.BrowserDownloadUrl))
                 {
-                    global::System.Diagnostics.Debug.WriteLine("[InterceptionDriverService] install-interception.exe asset not found in release");
+                    global::System.Diagnostics.Debug.WriteLine("[InterceptionDriverService] Interception.zip asset not found in release");
                     return false;
                 }
 
@@ -84,9 +83,9 @@ namespace RagnaController.Core.Services.Update
                 var antiCheatDir = Path.Combine(appBaseDirectory, "AntiCheat");
                 Directory.CreateDirectory(antiCheatDir);
 
-                var targetPath = Path.Combine(antiCheatDir, "install-interception.exe");
+                var zipPath = Path.Combine(antiCheatDir, "Interception.zip");
 
-                // 4. Herunterladen mit Fortschritt
+                // 4. ZIP herunterladen mit Fortschritt
                 using var downloadResponse = await _httpClient.GetAsync(asset.BrowserDownloadUrl, HttpCompletionOption.ResponseHeadersRead, ct);
                 ct.ThrowIfCancellationRequested();
 
@@ -100,7 +99,7 @@ namespace RagnaController.Core.Services.Update
                 var totalBytes = downloadResponse.Content.Headers.ContentLength ?? 0L;
                 var downloadedBytes = 0L;
 
-                using var fileStream = new FileStream(targetPath, FileMode.Create, FileAccess.Write, FileShare.None);
+                using var fileStream = new FileStream(zipPath, FileMode.Create, FileAccess.Write, FileShare.None);
                 var buffer = new byte[8192];
                 int bytesRead;
 
@@ -117,7 +116,34 @@ namespace RagnaController.Core.Services.Update
                 }
 
                 ct.ThrowIfCancellationRequested();
-                global::System.Diagnostics.Debug.WriteLine($"[InterceptionDriverService] Download complete: {targetPath} ({downloadedBytes} bytes)");
+                global::System.Diagnostics.Debug.WriteLine($"[InterceptionDriverService] ZIP download complete: {zipPath} ({downloadedBytes} bytes)");
+
+                // 5. ZIP entpacken in AntiCheat-Ordner
+                try
+                {
+                    ZipFile.ExtractToDirectory(zipPath, antiCheatDir, overwriteFiles: true);
+                    global::System.Diagnostics.Debug.WriteLine($"[InterceptionDriverService] ZIP extracted to {antiCheatDir}");
+                }
+                catch (Exception ex)
+                {
+                    global::System.Diagnostics.Debug.WriteLine($"[InterceptionDriverService] ZIP extraction failed: {ex.Message}");
+                    return false;
+                }
+                finally
+                {
+                    // Temp-ZIP aufräumen
+                    try { if (File.Exists(zipPath)) File.Delete(zipPath); } catch { }
+                }
+
+                // 6. Prüfen ob install-interception.exe jetzt vorhanden ist
+                var installerPath = Path.Combine(antiCheatDir, "install-interception.exe");
+                if (!File.Exists(installerPath))
+                {
+                    global::System.Diagnostics.Debug.WriteLine("[InterceptionDriverService] install-interception.exe not found after extraction");
+                    return false;
+                }
+
+                global::System.Diagnostics.Debug.WriteLine($"[InterceptionDriverService] Driver ready: {installerPath}");
                 return true;
             }
             catch (OperationCanceledException)
