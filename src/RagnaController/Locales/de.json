@@ -1322,5 +1322,10 @@
   "Settings_KernelInput_Restart_Title": "Neustart erforderlich",
   "Settings_KernelInput_Restart_Message": "Änderungen für den Kernel-Modus werden erst nach einem Neustart von RagnaController aktiv.\n\nJetzt neu starten?",
   "Settings_KernelInput_DriverMissing_Title": "Interception-Treiber nicht gefunden",
-  "Settings_KernelInput_DriverMissing_Message": "Der Interception-Treiber-Installer (AntiCheat/install-interception.exe) wurde nicht gefunden.\n\nBitte laden Sie ihn von der Releases-Seite herunter und legen Sie ihn in den AntiCheat-Ordner.\n\nTrotzdem fortfahren?"
+  "Settings_KernelInput_DriverMissing_Message": "Der Interception-Treiber-Installer (AntiCheat/install-interception.exe) wurde nicht gefunden.\n\nBitte laden Sie ihn von der Releases-Seite herunter und legen Sie ihn in den AntiCheat-Ordner.\n\nTrotzdem fortfahren?",
+  "Settings_KernelInput_DownloadFailed_Title": "Download fehlgeschlagen",
+  "Settings_KernelInput_DownloadFailed_Message": "Der Interception-Treiber konnte nicht von GitHub heruntergeladen werden.\n\nBitte überprüfen Sie Ihre Internetverbindung und versuchen Sie es erneut, oder laden Sie ihn manuell von der Releases-Seite herunter.",
+  "Settings_KernelInput_DownloadSuccess_Title": "Download abgeschlossen",
+  "Settings_KernelInput_DownloadSuccess_Message": "Der Interception-Treiber wurde in den AntiCheat-Ordner heruntergeladen.\n\nSie können den Kernel-Modus jetzt aktivieren. Ein Neustart ist erforderlich.",
+  "Settings_KernelInput_DownloadException_Message": "Bei dem Download ist ein Fehler aufgetreten: {0}"
 }

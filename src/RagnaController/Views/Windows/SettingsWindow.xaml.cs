@@ -10,6 +10,7 @@ using Microsoft.Win32;
 using RagnaController.Models;
 using RagnaController.Core;
 using RagnaController.Core.Services;
+using RagnaController.Core.Services.Update;
 using RagnaController.Profiles;
 using RagnaController.Controller;
 using RagnaController.Views.Dialogs;
@@ -343,30 +344,73 @@ public partial class SettingsWindow : Window
             _s.Save();
         }
 
-        private void ChkEnableKernelInput_Click(object sender, RoutedEventArgs e)
+        private async void ChkEnableKernelInput_Click(object sender, RoutedEventArgs e)
         {
             _s.EnableKernelInput = ChkEnableKernelInput.IsChecked == true;
             _s.Save();
 
             if (_s.EnableKernelInput)
             {
-                // Prüfen ob Treiber-Installer verfügbar ist
-                string installerPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "AntiCheat", "install-interception.exe");
+                string appBaseDir = AppDomain.CurrentDomain.BaseDirectory;
+                string installerPath = Path.Combine(appBaseDir, "AntiCheat", "install-interception.exe");
                 bool driverInstallerExists = File.Exists(installerPath);
 
                 if (!driverInstallerExists)
                 {
-                    var missingResult = MessageBox.Show(
+                    // Download von GitHub anbieten
+                    var downloadResult = MessageBox.Show(
                         LocalizationManager.GetLocalizedString("Settings_KernelInput_DriverMissing_Message"),
                         LocalizationManager.GetLocalizedString("Settings_KernelInput_DriverMissing_Title"),
-                        MessageBoxButton.OKCancel, MessageBoxImage.Warning);
+                        MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
 
-                    if (missingResult == MessageBoxResult.Cancel)
+                    if (downloadResult == MessageBoxResult.Cancel)
                     {
                         _s.EnableKernelInput = false;
                         ChkEnableKernelInput.IsChecked = false;
                         _s.Save();
                         return;
+                    }
+
+                    if (downloadResult == MessageBoxResult.Yes)
+                    {
+                        // Download von GitHub Releases
+                        using var driverService = new InterceptionDriverService("Patbeck85", "RagnaController");
+                        driverService.DownloadProgressChanged += (s, p) =>
+                        {
+                            System.Diagnostics.Debug.WriteLine($"[Interception] Download: {p}%");
+                        };
+
+                        try
+                        {
+                            var success = await driverService.DownloadDriverAsync(appBaseDir);
+                            if (!success)
+                            {
+                                MessageBox.Show(
+                                    LocalizationManager.GetLocalizedString("Settings_KernelInput_DownloadFailed_Message"),
+                                    LocalizationManager.GetLocalizedString("Settings_KernelInput_DownloadFailed_Title"),
+                                    MessageBoxButton.OK, MessageBoxImage.Error);
+                                _s.EnableKernelInput = false;
+                                ChkEnableKernelInput.IsChecked = false;
+                                _s.Save();
+                                return;
+                            }
+
+                            MessageBox.Show(
+                                LocalizationManager.GetLocalizedString("Settings_KernelInput_DownloadSuccess_Message"),
+                                LocalizationManager.GetLocalizedString("Settings_KernelInput_DownloadSuccess_Title"),
+                                MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(
+                                string.Format(LocalizationManager.GetLocalizedString("Settings_KernelInput_DownloadException_Message"), ex.Message),
+                                LocalizationManager.GetLocalizedString("Settings_KernelInput_DownloadFailed_Title"),
+                                MessageBoxButton.OK, MessageBoxImage.Error);
+                            _s.EnableKernelInput = false;
+                            ChkEnableKernelInput.IsChecked = false;
+                            _s.Save();
+                            return;
+                        }
                     }
                 }
 

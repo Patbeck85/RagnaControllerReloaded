@@ -1322,5 +1322,10 @@
   "Settings_KernelInput_Restart_Title": "Restart Required",
   "Settings_KernelInput_Restart_Message": "Kernel-mode input changes will only take effect after restarting RagnaController.\n\nRestart now?",
   "Settings_KernelInput_DriverMissing_Title": "Interception Driver Not Found",
-  "Settings_KernelInput_DriverMissing_Message": "The Interception driver installer (AntiCheat/install-interception.exe) was not found.\n\nPlease download it from the Releases page and place it in the AntiCheat folder.\n\nContinue anyway?"
+  "Settings_KernelInput_DriverMissing_Message": "The Interception driver installer (AntiCheat/install-interception.exe) was not found.\n\nPlease download it from the Releases page and place it in the AntiCheat folder.\n\nContinue anyway?",
+  "Settings_KernelInput_DownloadFailed_Title": "Download Failed",
+  "Settings_KernelInput_DownloadFailed_Message": "Could not download the Interception driver from GitHub.\n\nPlease check your internet connection and try again, or download manually from the Releases page.",
+  "Settings_KernelInput_DownloadSuccess_Title": "Download Complete",
+  "Settings_KernelInput_DownloadSuccess_Message": "The Interception driver has been downloaded to the AntiCheat folder.\n\nYou can now enable kernel-mode input. A restart is required.",
+  "Settings_KernelInput_DownloadException_Message": "An error occurred during download: {0}"
 }

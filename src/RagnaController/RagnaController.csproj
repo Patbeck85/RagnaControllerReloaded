@@ -118,6 +118,7 @@
 <Compile Include="Core\Services\Hardware\DualSenseLightbarService.cs" />
 <Compile Include="Core\Services\Gameplay\RadialMenuService.cs" />
 <Compile Include="Core\Services\Update\UpdateService.cs" />
+<Compile Include="Core\Services\Update\InterceptionDriverService.cs" />
 <Compile Include="Core\Input\Advanced\AdvancedInputService.cs" />
     <Compile Include="Core\Services\Input\ChordInputService.cs" />
     <Compile Include="Core\Services\System\CICDService.cs" />
