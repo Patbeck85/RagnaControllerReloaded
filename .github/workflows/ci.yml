@@ -87,7 +87,8 @@ jobs:
         $summary = @()
         $summary += "=== RagnaController Performance Dashboard ==="
         $summary += "Generated: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-        $summary += "Run: ${{ github.run_number }} | Commit: ${{ github.sha.Substring(0,7) }}"
+        $shortSha = "${{ github.sha }}".Substring(0,7)
+        $summary += "Run: ${{ github.run_number }} | Commit: $shortSha"
         $summary += ""
         $summary += "| Benchmark | P50 (ms) | P95 (ms) | P99 (ms) | Mean (ms) | StdDev | Status |"
         $summary += "|-----------|----------|----------|----------|-----------|--------|--------|"
