@@ -689,48 +689,39 @@ public partial class SettingsWindow : Window
             }
         }
 
-        // UX-022: Gyro calibration — measures drift and sets GyroDeadzone
-        private async void BtnGyroCalibrate_Click(object sender, RoutedEventArgs e)
+        // UX-022: Gyro calibration — öffnet den geführten Kalibrierungs-Assistenten
+        private void BtnGyroCalibrate_Click(object sender, RoutedEventArgs e)
         {
-            using var gyro = new Core.GyroService();
+            var targetProfile = ProfileCombo.SelectedItem as Profile;
+            var calibrationWindow = new GyroCalibrationWindow(_manager, targetProfile);
+            calibrationWindow.Owner = this;
+            calibrationWindow.ShowDialog();
 
-                        if (!gyro.IsAvailable)
+            // Nach dem Schließen: Aktualisiere Deadzone-Anzeige aus den Profil-Tags
+            if (targetProfile != null)
             {
-                GyroStatusText.Text = LocalizationManager.GetLocalizedString("Settings_Gyro_NoDualSense");
-                GyroStatusText.Foreground = Brushes.OrangeRed;
-                return;
-            }
-
-            BtnGyroCalibrate.IsEnabled = false;
-            GyroStatusText.Text = LocalizationManager.GetLocalizedString("Settings_Gyro_Measuring");
-            GyroStatusText.Foreground = Brushes.Yellow;
-
-            try
-            {
-                gyro.Start();
-                await Task.Delay(3000); // Measure for 3 seconds
-                gyro.Stop();
-
-                // Read current drift threshold from service
-                int currentThreshold = gyro.DriftThreshold;
-
-                // Save to settings
-                _s.GyroDeadzone = currentThreshold;
-                _s.Save();
-
-                GyroDeadzoneValue.Text = currentThreshold.ToString();
-                GyroStatusText.Text = string.Format(LocalizationManager.GetLocalizedString("Settings_Gyro_Calibrated"), currentThreshold);
-                GyroStatusText.Foreground = Brushes.LimeGreen;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"[SettingsWindow] Gyro calibration failed: {ex.Message}");
-                GyroStatusText.Text = LocalizationManager.GetLocalizedString("Settings_Gyro_CalibrationFailed");
-                GyroStatusText.Foreground = Brushes.OrangeRed;
-            }
-            finally
-            {
-                BtnGyroCalibrate.IsEnabled = true;
+                var thresholdTag = targetProfile.Tags.FirstOrDefault(t => t.StartsWith("gyro_threshold="));
+                if (!string.IsNullOrEmpty(thresholdTag))
+                {
+                    try
+                    {
+                        int threshold = int.Parse(thresholdTag.Split('=')[1]);
+                        _s.GyroDeadzone = threshold;
+                        _s.Save();
+                        GyroDeadzoneValue.Text = threshold.ToString();
+                        GyroStatusText.Text = string.Format(LocalizationManager.GetLocalizedString("Settings_Gyro_Calibrated"), threshold);
+                        GyroStatusText.Foreground = Brushes.LimeGreen;
+                    }
+                    catch
+                    {
+                        // Parse-Fehler ignorieren, Anzeige bleibt unverändert
+                    }
+                }
+                else
+                {
+                    GyroStatusText.Text = LocalizationManager.GetLocalizedString("Settings_Gyro_NoDualSense");
+                    GyroStatusText.Foreground = Brushes.OrangeRed;
+                }
             }
         }
 

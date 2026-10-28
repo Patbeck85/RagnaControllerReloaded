@@ -359,9 +359,10 @@ namespace RagnaController.Views.Dialogs
                         {
                             _profileManager.AddAndSave(profile);
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            _profileManager.AddAndSave(profile);
+                            System.Diagnostics.Debug.WriteLine($"GyroCalibration: Profil speichern fehlgeschlagen: {ex.Message}");
+                            // Einmal versuchen, bei Fehler weiterfahren (Daten sind bereits in Tags gespeichert)
                         }
 
             DialogResult = true;
