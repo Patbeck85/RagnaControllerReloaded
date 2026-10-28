@@ -31,6 +31,18 @@ namespace RagnaController.Views.Windows
             PrepareVoice();
             ContentRendered += async (s, e) => await StartAnimationsAsync().ConfigureAwait(false);
             KeyDown += SplashWindow_KeyDown;
+            Closing += SplashWindow_Closing;
+        }
+
+        private void SplashWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (SkipCts != null)
+            {
+                SkipCts.Cancel();
+                SkipCts.Dispose();
+            }
+            if (VoicePlayer != null)
+                VoicePlayer.Source = null;
         }
 
         private void SplashWindow_KeyDown(object sender, KeyEventArgs e)

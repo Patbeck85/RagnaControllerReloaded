@@ -10,7 +10,7 @@ using RagnaController.Views.Windows;
 
 namespace RagnaController.Views.Dialogs
 {
-    public partial class DeveloperConsoleWindow : Window
+    public partial class DeveloperConsoleWindow : Window, IDisposable
     {
         private readonly AdvancedLogger _logger;
         private readonly List<string> _buffer = new();
@@ -23,6 +23,7 @@ namespace RagnaController.Views.Dialogs
         // Throttling timer to prevent UI thread flooding
         private readonly DispatcherTimer _flushTimer;
         private bool _isDirty = false;
+        private bool _disposed = false;
 
         public DeveloperConsoleWindow(AdvancedLogger logger)
         {
@@ -41,9 +42,20 @@ namespace RagnaController.Views.Dialogs
             
             Closed += (_, _) => 
             {
-                _flushTimer.Stop();
-                _logger.LiveLogReceived -= OnLiveLogReceived;
+                Dispose();
             };
+        }
+
+        public void Dispose()
+        {
+            if (_disposed) return;
+            _disposed = true;
+            if (_flushTimer != null)
+            {
+                _flushTimer.Stop();
+                _flushTimer.Tick -= FlushBuffer;
+            }
+            _logger.LiveLogReceived -= OnLiveLogReceived;
         }
 
         private void OnLiveLogReceived(string message)
