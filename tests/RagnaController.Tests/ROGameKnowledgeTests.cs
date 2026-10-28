@@ -4,6 +4,7 @@ using Xunit;
 using RagnaController.Core;
 using RagnaController.Core.Calculators;
 using RagnaController.Core.Database;
+using RagnaController.Models;
 
 namespace RagnaController.Tests
 {
@@ -67,7 +68,135 @@ namespace RagnaController.Tests
 
         #endregion
 
-        #region SkillSimulator Tests
+        #region MonsterDatabase Tests
+
+        [Fact]
+        public void MonsterDatabase_Count_ShouldBeGreaterThanZero()
+        {
+            var db = new MonsterDatabase();
+            var starter = MonsterDatabase.CreateStarterDatabase();
+            Assert.True(starter.Count > 30, $"Starter-DB sollte >30 Monster haben, hat {starter.Count}");
+        }
+
+        [Fact]
+        public void MonsterDatabase_GetMonster_ById_ShouldReturnMonster()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var monster = db.GetMonster(1002); // Poring
+
+            Assert.NotNull(monster);
+            Assert.Equal("Poring", monster?.Name);
+            Assert.Equal(MonsterElement.Water, monster?.Element);
+        }
+
+        [Fact]
+        public void MonsterDatabase_GetMonster_ByName_ShouldReturnMonster()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var monster = db.GetMonster("poporing");
+
+            Assert.NotNull(monster);
+            Assert.Equal("Poporing", monster.Name);
+        }
+
+        [Fact]
+        public void MonsterDatabase_GetByElement_ShouldFilterCorrectly()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var waterMonsters = db.GetByElement(MonsterElement.Water);
+
+            Assert.NotEmpty(waterMonsters);
+            foreach (var m in waterMonsters)
+                Assert.Equal(MonsterElement.Water, m.Element);
+        }
+
+        [Fact]
+        public void MonsterDatabase_GetByRace_ShouldFilterCorrectly()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var undead = db.GetByRace(MonsterRace.Undead);
+
+            Assert.NotEmpty(undead);
+            foreach (var m in undead)
+                Assert.Equal(MonsterRace.Undead, m.Race);
+        }
+
+        [Fact]
+        public void MonsterDatabase_GetByLevelRange_ShouldReturnMatching()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var lowLevel = db.GetByLevelRange(1, 10, ExperienceCalculator.GameMode.PreRenewal);
+
+            Assert.NotEmpty(lowLevel);
+            foreach (var m in lowLevel)
+                Assert.True(m.PreRenewalBaseLevel >= 1 && m.PreRenewalBaseLevel <= 10);
+        }
+
+        [Fact]
+        public void MonsterDatabase_GetMapsWithMonster_ShouldReturnMatching()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var poringMaps = db.GetMapsWithMonster("pay_fild01");
+
+            Assert.NotEmpty(poringMaps);
+            foreach (var m in poringMaps)
+                Assert.Contains("pay_fild01", m.SpawnMaps, StringComparer.OrdinalIgnoreCase);
+        }
+
+        [Fact]
+        public void MonsterDatabase_GetByDropItem_ShouldReturnMatching()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var appleDroppers = db.GetByDropItem(501); // Jellopy
+
+            Assert.NotEmpty(appleDroppers);
+            foreach (var m in appleDroppers)
+                Assert.True(m.PreRenewalDrops.ContainsKey(501) || m.RenewalDrops.ContainsKey(501));
+        }
+
+        [Fact]
+        public void MonsterDatabase_GetMvps_ShouldReturnOnlyMvps()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var mvps = db.GetMvps();
+
+            Assert.NotEmpty(mvps);
+            foreach (var m in mvps)
+                Assert.True(m.IsMvp);
+        }
+
+        [Fact]
+        public void MonsterDatabase_GetMinibosses_ShouldReturnOnlyMinibosses()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var minibosses = db.GetMinibosses();
+
+            Assert.NotEmpty(minibosses);
+            foreach (var m in minibosses)
+                Assert.True(m.IsMiniboss);
+        }
+
+        [Fact]
+        public void MonsterDatabase_PreRenewalVsRenewal_HpShouldDiffer()
+        {
+            var db = MonsterDatabase.CreateStarterDatabase();
+            var poring = db.GetMonster(1002);
+
+            Assert.NotNull(poring);
+            Assert.True(poring.RenewalHp > poring.PreRenewalHp, "Renewal HP sollte höher sein als Pre-Renewal HP");
+        }
+
+        [Fact]
+        public void MonsterDatabase_CreateClassicDatabase_ShouldMatchStarter()
+        {
+            var starter = MonsterDatabase.CreateStarterDatabase();
+            var classic = MonsterDatabase.CreateClassicDatabase();
+
+            Assert.Equal(starter.Count, classic.Count);
+        }
+        #endregion
+
+#region SkillSimulator Tests
 
 
 
