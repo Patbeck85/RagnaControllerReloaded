@@ -330,6 +330,8 @@
     <Compile Include="Views\Windows\DeveloperDashboardWindow.xaml.cs" />
     <Compile Include="Views\Windows\SplashWindow.xaml.cs" />
     <Compile Include="Views\Dialogs\TutorialWindow.xaml.cs" />
+    <Compile Include="Views\Dialogs\SkillRecommendationWindow.xaml.cs" />
+    <Compile Include="Views\Dialogs\AutoBuildOptimizerWindow.xaml.cs" />
   </ItemGroup>
 
   <ItemGroup>

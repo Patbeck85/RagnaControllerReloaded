@@ -325,7 +325,43 @@
                                                                                         SmallChange="0.05" LargeChange="0.1" IsSnapToTickEnabled="True" TickFrequency="0.05"
                                                                                         Margin="0,0,0,4" ValueChanged="FontScaleSlider_ValueChanged"/>
                                                                                 <TextBlock x:Name="FontScaleValue" Text="100%" Style="{StaticResource MutedText}" FontFamily="Consolas"/>
-                                                                            </StackPanel>
+                                                                            <CheckBox x:Name="ChkGamepadNavigation" Content="{core:Loc Settings_GamepadNavigation_Label}"
+                                                                                      Click="ChkGamepadNavigation_Click"
+                                                                                      ToolTip="{core:Loc Settings_GamepadNavigation_Tooltip}"
+                                                                                      Margin="0,8,0,4"/>
+                                                                            <TextBlock Text="{core:Loc Settings_ColorBlindMode}" Style="{StaticResource BodyText}" Margin="0,8,0,4"/>
+                                                                            <ComboBox x:Name="CmbColorBlindMode" SelectionChanged="CmbColorBlindMode_SelectionChanged"
+                                                                                      ToolTip="{core:Loc Settings_ColorBlindModeTooltip}"
+                                                                                      Margin="0,0,0,8">
+                                                                                    <ComboBoxItem Content="{core:Loc ColorBlindMode_None}" Tag="None"/>
+                                                                                    <ComboBoxItem Content="{core:Loc ColorBlindMode_Deuteranopia}" Tag="Deuteranopia"/>
+                                                                                    <ComboBoxItem Content="{core:Loc ColorBlindMode_Protanopia}" Tag="Protanopia"/>
+                                                                                    <ComboBoxItem Content="{core:Loc ColorBlindMode_Tritanopia}" Tag="Tritanopia"/>
+                                                                            </ComboBox>
+                                                                            <CheckBox x:Name="ChkRoUiMenu" Content="{core:Loc Settings_RoUiMenu_Label}"
+                                                                                      Click="ChkRoUiMenu_Click"
+                                                                                      ToolTip="{core:Loc Settings_RoUiMenu_Tooltip}"
+                                                                                      Margin="0,0,0,4"/>
+                                                                            <CheckBox x:Name="ChkSkillRecommendations" Content="{core:Loc Settings_SkillRecommendations_Label}"
+                                                                                      Click="ChkSkillRecommendations_Click"
+                                                                                      ToolTip="{core:Loc Settings_SkillRecommendations_Tooltip}"
+                                                                                      Margin="0,0,0,4"/>
+                                                                            <CheckBox x:Name="ChkAutoBuildOptimizer" Content="{core:Loc Settings_AutoBuildOptimizer_Label}"
+                                                                                      Click="ChkAutoBuildOptimizer_Click"
+                                                                                      ToolTip="{core:Loc Settings_AutoBuildOptimizer_Tooltip}"
+                                                                                      Margin="0,0,0,8"/>
+                                                                            <!-- Neue Fenster-Buttons -->
+                                                                            <Button x:Name="BtnOpenSkillRecommendations" Content="{core:Loc Settings_Btn_OpenSkillRecommendations}"
+                                                                                      Click="BtnOpenSkillRecommendations_Click"
+                                                                                      Style="{StaticResource GhostButton}"
+                                                                                      Width="200" Height="36" Margin="0,8,0,4"
+                                                                                      ToolTip="{core:Loc Settings_Btn_OpenSkillRecommendationsTooltip}"/>
+                                                                            <Button x:Name="BtnOpenAutoBuildOptimizer" Content="{core:Loc Settings_Btn_OpenAutoBuildOptimizer}"
+                                                                                      Click="BtnOpenAutoBuildOptimizer_Click"
+                                                                                      Style="{StaticResource GhostButton}"
+                                                                                      Width="200" Height="36" Margin="0,0,0,8"
+                                                                                      ToolTip="{core:Loc Settings_Btn_OpenAutoBuildOptimizerTooltip}"/>
+                                                                        </StackPanel>
                                                                         </Border>
 
                                                                         <!-- Ragnarok Online Path Selector -->

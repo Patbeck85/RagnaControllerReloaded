@@ -1,0 +1,154 @@
+<!--
+    SkillRecommendationWindow — TASK-2602: Skill-Empfehlungen basierend auf Klasse und Level.
+-->
+<Window x:Class="RagnaController.Views.Dialogs.SkillRecommendationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:RagnaController.Core"
+        Title="{core:Loc SkillRecommendation_Title}" Width="800" Height="600"
+        WindowStartupLocation="CenterOwner">
+
+    <Border Style="{StaticResource GlassPanel}" CornerRadius="12" 
+            BorderBrush="{StaticResource AccentGold}" BorderThickness="1" Effect="{StaticResource GoldGlow}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="55"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="70"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" 
+                    BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" 
+                    Margin="16,16,16,0" CornerRadius="8">
+                <Grid Margin="20,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="4" Height="28" Background="{StaticResource AccentGold}" 
+                                Effect="{StaticResource GoldGlow}" Margin="0,0,12,0" CornerRadius="2"/>
+                        <TextBlock Text="SKILL EMPFEHLUNGEN" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
+                        <TextBlock Text=" — Basierend auf Klasse, Level und Spielstil" Style="{StaticResource BodyText}" 
+                                   VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}" Margin="8,0,0,0"/>
+                    </StackPanel>
+                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" 
+                            Style="{StaticResource WindowControlButtonClose}" ToolTip="Schließen" 
+                            AutomationProperties.Name="Schließen"/>
+                </Grid>
+            </Border>
+
+            <!-- Content Area -->
+            <Grid Grid.Row="1" Margin="24,16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Eingabe-Sektion -->
+                <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" Padding="16,12" 
+                        CornerRadius="8" Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="{core:Loc SkillRecommendation_InputHeader}" 
+                                   Style="{StaticResource Eyebrow}" Margin="0,0,0,8"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Base Class -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{core:Loc SkillRecommendation_BaseClass}" 
+                                       Style="{StaticResource Caption}" Margin="0,0,0,4"/>
+                            <ComboBox x:Name="CmbBaseClass" Grid.Row="1" Grid.Column="0" 
+                                      Style="{StaticResource DarkComboBox}" 
+                                     />
+
+                            <!-- Job Class -->
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{core:Loc SkillRecommendation_JobClass}" 
+                                       Style="{StaticResource Caption}" Margin="0,0,0,4"/>
+                            <ComboBox x:Name="CmbJobClass" Grid.Row="1" Grid.Column="1" 
+                                      Style="{StaticResource DarkComboBox}" 
+                                     />
+
+                            <!-- Base Level -->
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="{core:Loc SkillRecommendation_BaseLevel}" 
+                                       Style="{StaticResource Caption}" Margin="0,0,0,4"/>
+                            <ComboBox x:Name="CmbBaseLevel" Grid.Row="1" Grid.Column="2" 
+                                      Style="{StaticResource DarkComboBox}" 
+                                     />
+
+                            <!-- Button -->
+                            <Button Grid.Row="0" Grid.Column="3" Grid.RowSpan="2" 
+                                    Content="{core:Loc SkillRecommendation_RecommendBtn}" 
+                                    Click="BtnRecommend_Click"
+                                    Style="{StaticResource PrimaryButton}" 
+                                    Width="120" Height="72" Margin="16,0,0,0"/>
+                        </Grid>
+
+                        <!-- Spielstil -->
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <TextBlock Text="{core:Loc SkillRecommendation_Playstyle}" 
+                                       Style="{StaticResource Caption}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <RadioButton x:Name="RbPlaystylePvm" Content="{core:Loc SkillRecommendation_Playstyle_Pvm}" 
+                                         GroupName="Playstyle" IsChecked="True" Margin="0,0,12,0"
+                                         Checked="OnInputChanged"/>
+                            <RadioButton x:Name="RbPlaystylePvp" Content="{core:Loc SkillRecommendation_Playstyle_Pvp}" 
+                                         GroupName="Playstyle" Margin="0,0,12,0"
+                                         Checked="OnInputChanged"/>
+                            <RadioButton x:Name="RbPlaystyleSupport" Content="{core:Loc SkillRecommendation_Playstyle_Support}" 
+                                         GroupName="Playstyle" Margin="0,0,12,0"
+                                         Checked="OnInputChanged"/>
+                            <RadioButton x:Name="RbPlaystyleHybrid" Content="{core:Loc SkillRecommendation_Playstyle_Hybrid}" 
+                                         GroupName="Playstyle" Margin="0,0,0,0"
+                                         Checked="OnInputChanged"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Ergebnisse -->
+                <ScrollViewer Grid.Row="1">
+                    <ItemsControl x:Name="ResultsList" Margin="0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Style="{StaticResource GlassPanelCompact}" Padding="16" 
+                                        Margin="0,0,0,8" CornerRadius="8">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Name}" 
+                                                   Style="{StaticResource BodyText}" FontWeight="Bold" 
+                                                   Foreground="{StaticResource TextPrimary}" Margin="0,0,16,0"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Description}" 
+                                                   Style="{StaticResource BodyText}" 
+                                                   Foreground="{StaticResource TextSecondary}" TextWrapping="Wrap"/>
+                                        <TextBlock Grid.Column="2" Text="{Binding ScoreText}" 
+                                                   Style="{StaticResource Caption}" 
+                                                   Foreground="{StaticResource AccentGold}" 
+                                                   FontWeight="Bold" Margin="16,0,0,0"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Grid>
+        <!-- Footer -->
+        <Border Grid.Row="2" Style="{StaticResource GlassPanelCompact}" 
+                BorderBrush="{StaticResource BgBorder}" BorderThickness="0,1,0,0" 
+                Padding="16,12">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{core:Loc SkillRecommendation_FooterTip}" 
+                           Style="{StaticResource Caption}" Foreground="{StaticResource TextMuted}"/>
+            </StackPanel>
+        </Border>
+        </Grid>
+    </Border>
+</Window>

@@ -988,7 +988,15 @@ namespace RagnaController.Views.Windows
         {
             var activeInstance = _multiEngine?.GetActiveInstance();
             var queue = activeInstance?.Orchestrator.CommandQueue ?? new InputCommandQueue();
-            var w = new RadialMenuWindow(queue);
+
+            // Verwende RoUiMenuService-Preset wenn aktiviert, sonst Default-Items
+            var config = new RadialMenuWindow.RadialMenuConfig();
+            if (_settings.RoUiMenuEnabled)
+            {
+                config.Items = RoUiMenuService.UiNavigationPreset().ToArray();
+            }
+
+            var w = new RadialMenuWindow(queue, config);
             w.Owner = this;
             w.Show();
         }

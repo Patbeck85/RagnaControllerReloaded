@@ -109,6 +109,29 @@ public partial class SettingsWindow : Window
                     FontScaleSlider.Value = _s.FontScale;
                     FontScaleValue.Text = $"{_s.FontScale:P0}";
 
+                    // Gamepad-Navigation
+                    ChkGamepadNavigation.IsChecked = _s.GamepadNavigationEnabled;
+
+                    // ColorBlindMode
+                    var cbMode = _s.ColorBlindMode.ToString();
+                    foreach (ComboBoxItem item in CmbColorBlindMode.Items)
+                    {
+                        if (item.Tag?.ToString() == cbMode)
+                        {
+                            CmbColorBlindMode.SelectedItem = item;
+                            break;
+                        }
+                    }
+
+                    // RoUiMenu
+                    ChkRoUiMenu.IsChecked = _s.RoUiMenuEnabled;
+
+                    // Skill Recommendations
+                    ChkSkillRecommendations.IsChecked = _s.SkillRecommendationsEnabled;
+
+                    // Auto Build Optimizer
+                    ChkAutoBuildOptimizer.IsChecked = _s.AutoBuildOptimizerEnabled;
+
                     // FEAT-030: Multi-monitor support
                     InitializeOverlayMonitorCombo();
                 }
@@ -455,6 +478,56 @@ public partial class SettingsWindow : Window
             _s.HighContrastEnabled = ChkHighContrast.IsChecked == true;
             _s.Save();
             ApplyTheme();
+        }
+
+        private void ChkGamepadNavigation_Click(object sender, RoutedEventArgs e)
+        {
+            _s.GamepadNavigationEnabled = ChkGamepadNavigation.IsChecked == true;
+            _s.Save();
+        }
+
+        private void CmbColorBlindMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (CmbColorBlindMode.SelectedItem is ComboBoxItem item && item.Tag is string tag)
+            {
+                if (Enum.TryParse<ColorBlindMode>(tag, out var mode))
+                {
+                    _s.ColorBlindMode = mode;
+                    _s.Save();
+                }
+            }
+        }
+
+        private void ChkRoUiMenu_Click(object sender, RoutedEventArgs e)
+        {
+            _s.RoUiMenuEnabled = ChkRoUiMenu.IsChecked == true;
+            _s.Save();
+        }
+
+        private void ChkSkillRecommendations_Click(object sender, RoutedEventArgs e)
+        {
+            _s.SkillRecommendationsEnabled = ChkSkillRecommendations.IsChecked == true;
+            _s.Save();
+        }
+
+        private void ChkAutoBuildOptimizer_Click(object sender, RoutedEventArgs e)
+        {
+            _s.AutoBuildOptimizerEnabled = ChkAutoBuildOptimizer.IsChecked == true;
+            _s.Save();
+        }
+
+        private void BtnOpenSkillRecommendations_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new SkillRecommendationWindow();
+            win.Owner = this;
+            win.ShowDialog();
+        }
+
+        private void BtnOpenAutoBuildOptimizer_Click(object sender, RoutedEventArgs e)
+        {
+            var win = new AutoBuildOptimizerWindow();
+            win.Owner = this;
+            win.ShowDialog();
         }
 
         private void FontScaleSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

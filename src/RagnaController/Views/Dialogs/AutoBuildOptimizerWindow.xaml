@@ -1,0 +1,278 @@
+<!--
+    AutoBuildOptimizerWindow — TASK-2603: Automatische Stat-Allokations-Empfehlungen.
+    Nutzt AutoBuildOptimizer für regelbasierte Stat-Build-Vorschläge.
+-->
+<Window x:Class="RagnaController.Views.Dialogs.AutoBuildOptimizerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:RagnaController.Core"
+        Title="{core:Loc AutoBuildOptimizer_Title}" Width="700" Height="600"
+        Background="Transparent" WindowStyle="None" AllowsTransparency="True"
+        WindowStartupLocation="CenterOwner"
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+
+    <Border Style="{StaticResource GlassPanel}" CornerRadius="{StaticResource RadiusXl}" 
+            BorderBrush="{StaticResource AccentGold}" BorderThickness="1" Effect="{StaticResource GoldGlow}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="55"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="70"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" 
+                    BorderBrush="{StaticResource BgBorder}" BorderThickness="0,0,0,1" 
+                    Margin="16,16,16,0" CornerRadius="{StaticResource RadiusMd}">
+                <Grid Margin="20,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Border Width="4" Height="28" Background="{StaticResource AccentGold}" 
+                                Effect="{StaticResource GoldGlow}" Margin="0,0,12,0" CornerRadius="2"/>
+                        <TextBlock Text="AUTO STAT OPTIMIERUNG" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
+                        <TextBlock Text=" — Empfohlene Attributs-Verteilung für deinen Build" Style="{StaticResource BodyText}" 
+                                   VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}" Margin="8,0,0,0"/>
+                    </StackPanel>
+                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" 
+                            Style="{StaticResource WindowControlButtonClose}" ToolTip="Schließen" 
+                            AutomationProperties.Name="Schließen"/>
+                </Grid>
+            </Border>
+
+            <!-- Content Area -->
+            <Grid Grid.Row="1" Margin="24,16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Eingabe-Sektion -->
+                <Border Grid.Row="0" Style="{StaticResource GlassPanelCompact}" Padding="16,12" 
+                        CornerRadius="{StaticResource RadiusMd}" Margin="0,0,0,16">
+                    <StackPanel>
+                        <TextBlock Text="{core:Loc AutoBuildOptimizer_InputHeader}" 
+                                   Style="{StaticResource Eyebrow}" Margin="0,0,0,8"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Base Class -->
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{core:Loc AutoBuildOptimizer_BaseClass}" 
+                                       Style="{StaticResource Caption}" Margin="0,0,0,4"/>
+                            <ComboBox x:Name="CmbBaseClass" Grid.Row="1" Grid.Column="0" 
+                                      Style="{StaticResource DarkComboBox}" 
+                                      ToolTip="{core:Loc AutoBuildOptimizer_BaseClassTooltip}"
+                                     />
+
+
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{core:Loc AutoBuildOptimizer_JobClass}" 
+                                       Style="{StaticResource Caption}" Margin="0,0,0,4"/>
+                            <ComboBox x:Name="CmbJobClass" Grid.Row="1" Grid.Column="1" 
+                                      Style="{StaticResource DarkComboBox}" 
+                                      ToolTip="{core:Loc AutoBuildOptimizer_JobClassTooltip}"
+                                     />
+
+                            <!-- Base Level -->
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="{core:Loc AutoBuildOptimizer_BaseLevel}" 
+                                       Style="{StaticResource Caption}" Margin="0,0,0,4"/>
+                            <ComboBox x:Name="CmbBaseLevel" Grid.Row="1" Grid.Column="2" 
+                                      Style="{StaticResource DarkComboBox}" 
+                                      ToolTip="{core:Loc AutoBuildOptimizer_BaseLevelTooltip}"
+                                     />
+
+                            <!-- Button -->
+                            <Button Grid.Row="0" Grid.Column="3" Grid.RowSpan="2" 
+                                    Content="{core:Loc AutoBuildOptimizer_OptimizeBtn}" 
+                                    Click="BtnOptimize_Click"
+                                    Style="{StaticResource PrimaryButton}" 
+                                    Width="120" Height="72" Margin="16,0,0,0"
+                                    ToolTip="{core:Loc AutoBuildOptimizer_OptimizeBtnTooltip}"/>
+                        </Grid>
+
+                        <!-- Spielstil -->
+                        <StackPanel Orientation="Horizontal" Margin="0,12,0,0">
+                            <TextBlock Text="{core:Loc AutoBuildOptimizer_Playstyle}" 
+                                       Style="{StaticResource Caption}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <RadioButton x:Name="RbPlaystylePvm" Content="{core:Loc AutoBuildOptimizer_Playstyle_Pvm}" 
+                                         GroupName="Playstyle" IsChecked="True" Margin="0,0,12,0"
+                                         Checked="OnInputChanged"/>
+                            <RadioButton x:Name="RbPlaystylePvp" Content="{core:Loc AutoBuildOptimizer_Playstyle_Pvp}" 
+                                         GroupName="Playstyle" Margin="0,0,12,0"
+                                         Checked="OnInputChanged"/>
+                            <RadioButton x:Name="RbPlaystyleSupport" Content="{core:Loc AutoBuildOptimizer_Playstyle_Support}" 
+                                         GroupName="Playstyle" Margin="0,0,12,0"
+                                         Checked="OnInputChanged"/>
+                            <RadioButton x:Name="RbPlaystyleHybrid" Content="{core:Loc AutoBuildOptimizer_Playstyle_Hybrid}" 
+                                         GroupName="Playstyle" Margin="0,0,0,0"
+                                         Checked="OnInputChanged"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Ergebnisse - Stat Verteilung -->
+                <Grid Grid.Row="1">
+                    <ScrollViewer>
+                        <StackPanel>
+                            <TextBlock Text="{core:Loc AutoBuildOptimizer_ResultsHeader}" 
+                                       Style="{StaticResource BodyText}" FontWeight="Bold" 
+                                       Foreground="{StaticResource TextPrimary}" Margin="0,0,0,12"/>
+
+                            <!-- Stat Grid -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Str -->
+                                <Border Grid.Column="0" Style="{StaticResource GlassPanelCompact}" 
+                                        Padding="12" Margin="0,0,8,0" CornerRadius="{StaticResource RadiusMd}">
+                                    <StackPanel>
+                                        <TextBlock Text="STR" Style="{StaticResource Caption}" 
+                                                   Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="TxtStatStr" Text="—" 
+                                                   Style="{StaticResource BodyText}" FontSize="32" 
+                                                   FontWeight="Bold" Foreground="{StaticResource TextPrimary}" 
+                                                   HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                                        <TextBlock Text="{core:Loc AutoBuildOptimizer_StrDesc}" 
+                                                   Style="{StaticResource Caption}" Foreground="{StaticResource TextSecondary}" 
+                                                   HorizontalAlignment="Center" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Agi -->
+                                <Border Grid.Column="1" Style="{StaticResource GlassPanelCompact}" 
+                                        Padding="12" Margin="8,0,8,0" CornerRadius="{StaticResource RadiusMd}">
+                                    <StackPanel>
+                                        <TextBlock Text="AGI" Style="{StaticResource Caption}" 
+                                                   Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="TxtStatAgi" Text="—" 
+                                                   Style="{StaticResource BodyText}" FontSize="32" 
+                                                   FontWeight="Bold" Foreground="{StaticResource TextPrimary}" 
+                                                   HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                                        <TextBlock Text="{core:Loc AutoBuildOptimizer_AgiDesc}" 
+                                                   Style="{StaticResource Caption}" Foreground="{StaticResource TextSecondary}" 
+                                                   HorizontalAlignment="Center" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Vit -->
+                                <Border Grid.Column="2" Style="{StaticResource GlassPanelCompact}" 
+                                        Padding="12" Margin="8,0,8,0" CornerRadius="{StaticResource RadiusMd}">
+                                    <StackPanel>
+                                        <TextBlock Text="VIT" Style="{StaticResource Caption}" 
+                                                   Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="TxtStatVit" Text="—" 
+                                                   Style="{StaticResource BodyText}" FontSize="32" 
+                                                   FontWeight="Bold" Foreground="{StaticResource TextPrimary}" 
+                                                   HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                                        <TextBlock Text="{core:Loc AutoBuildOptimizer_VitDesc}" 
+                                                   Style="{StaticResource Caption}" Foreground="{StaticResource TextSecondary}" 
+                                                   HorizontalAlignment="Center" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Int -->
+                                <Border Grid.Column="3" Style="{StaticResource GlassPanelCompact}" 
+                                        Padding="12" Margin="8,0,0,0" CornerRadius="{StaticResource RadiusMd}">
+                                    <StackPanel>
+                                        <TextBlock Text="INT" Style="{StaticResource Caption}" 
+                                                   Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="TxtStatInt" Text="—" 
+                                                   Style="{StaticResource BodyText}" FontSize="32" 
+                                                   FontWeight="Bold" Foreground="{StaticResource TextPrimary}" 
+                                                   HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                                        <TextBlock Text="{core:Loc AutoBuildOptimizer_IntDesc}" 
+                                                   Style="{StaticResource Caption}" Foreground="{StaticResource TextSecondary}" 
+                                                   HorizontalAlignment="Center" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+
+                            <!-- Dex und Luk in zweiter Reihe -->
+                            <Grid Margin="0,16,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Dex -->
+                                <Border Grid.Column="0" Style="{StaticResource GlassPanelCompact}" 
+                                        Padding="12" Margin="0,0,8,0" CornerRadius="{StaticResource RadiusMd}">
+                                    <StackPanel>
+                                        <TextBlock Text="DEX" Style="{StaticResource Caption}" 
+                                                   Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="TxtStatDex" Text="—" 
+                                                   Style="{StaticResource BodyText}" FontSize="32" 
+                                                   FontWeight="Bold" Foreground="{StaticResource TextPrimary}" 
+                                                   HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                                        <TextBlock Text="{core:Loc AutoBuildOptimizer_DexDesc}" 
+                                                   Style="{StaticResource Caption}" Foreground="{StaticResource TextSecondary}" 
+                                                   HorizontalAlignment="Center" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Luk -->
+                                <Border Grid.Column="1" Style="{StaticResource GlassPanelCompact}" 
+                                        Padding="12" Margin="8,0,8,0" CornerRadius="{StaticResource RadiusMd}">
+                                    <StackPanel>
+                                        <TextBlock Text="LUK" Style="{StaticResource Caption}" 
+                                                   Foreground="{StaticResource TextMuted}" HorizontalAlignment="Center"/>
+                                        <TextBlock x:Name="TxtStatLuk" Text="—" 
+                                                   Style="{StaticResource BodyText}" FontSize="32" 
+                                                   FontWeight="Bold" Foreground="{StaticResource TextPrimary}" 
+                                                   HorizontalAlignment="Center" Margin="0,4,0,0"/>
+                                        <TextBlock Text="{core:Loc AutoBuildOptimizer_LukDesc}" 
+                                                   Style="{StaticResource Caption}" Foreground="{StaticResource TextSecondary}" 
+                                                   HorizontalAlignment="Center" Margin="0,4,0,0" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Leer Platz -->
+                                <Border Grid.Column="2" />
+                                <Border Grid.Column="3" />
+                            </Grid>
+
+                            <!-- Hinweis -->
+                            <Border Style="{StaticResource GlassPanelCompact}" Padding="16" 
+                                    Margin="0,24,0,0" CornerRadius="{StaticResource RadiusMd}">
+                                <StackPanel>
+                                    <TextBlock Text="{core:Loc AutoBuildOptimizer_NotesHeader}" 
+                                               Style="{StaticResource Eyebrow}" Margin="0,0,0,8"/>
+                                    <TextBlock Text="{core:Loc AutoBuildOptimizer_Note1}" 
+                                               Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" 
+                                               TextWrapping="Wrap" Margin="0,0,0,4"/>
+                                    <TextBlock Text="{core:Loc AutoBuildOptimizer_Note2}" 
+                                               Style="{StaticResource BodyText}" Foreground="{StaticResource TextSecondary}" 
+                                               TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+
+            <!-- Footer -->
+            <Border Grid.Row="2" Style="{StaticResource GlassPanelCompact}" 
+                    BorderBrush="{StaticResource BgBorder}" BorderThickness="0,1,0,0" 
+                    Padding="16,12" CornerRadius="0,0,{StaticResource RadiusXl},{StaticResource RadiusXl}">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{core:Loc AutoBuildOptimizer_FooterTip}" 
+                               Style="{StaticResource Caption}" Foreground="{StaticResource TextMuted}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

@@ -263,6 +263,22 @@ namespace RagnaController.Models
         /// <summary>Farbblindheits-Modus: None, Deuteranopia, Protanopia, Tritanopia.</summary>
         public ColorBlindMode ColorBlindMode { get; set; } = ColorBlindMode.None;
 
+        // ── Gamepad-Navigation (GamepadNavigationService) ───────────────────
+        /// <summary>Gamepad-Navigation für alle Fenster aktiviert (D-Pad, Buttons, Sticks).</summary>
+        public bool GamepadNavigationEnabled { get; set; } = false;
+
+        // ── Radial Menu Preset (RoUiMenuService) ────────────────────────────
+        /// <summary>RO UI Radial-Menü-Preset aktiviert (Inventar, Status, Skills, etc.).</summary>
+        public bool RoUiMenuEnabled { get; set; } = false;
+
+        // ── Skill-Empfehlungen (SkillRecommendationEngine) ──────────────────
+        /// <summary>Skill-Build-Empfehlungen anzeigen.</summary>
+        public bool SkillRecommendationsEnabled { get; set; } = false;
+
+        // ── Auto-Stat-Optimierung (AutoBuildOptimizer) ──────────────────────
+        /// <summary>Automatische Stat-Allokations-Empfehlungen anzeigen.</summary>
+        public bool AutoBuildOptimizerEnabled { get; set; } = false;
+
         // ── UITheme Enum (für HighContrastService) ──────────────────────────
         /// <summary>Verfügbare UI-Themes.</summary>
         public enum UITheme
