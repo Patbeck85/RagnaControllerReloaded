@@ -3,13 +3,50 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace RagnaController.Core.Database {
-    /// <summary>
-    /// TASK-3002: MapDatabaseService — Warp-Punkte, Kafra, Dungeon-Eingänge, Levelling-Spots.
-    ///
-    /// Verwaltet RO-Karten-Daten für Navigation und Levelling-Unterstützung.
-    /// White-Hat: Reine Datenbereitstellung, keine automatische Navigation.
-    /// </summary>
-    public sealed class MapDatabaseService
+
+    public class MapEntry
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public string DisplayName { get; set; } = "";
+        public MapType Type { get; set; }
+
+        // ── Pre-Renewal Level-Range ──
+        public int PreRenewalLevelMin { get; set; }
+        public int PreRenewalLevelMax { get; set; }
+
+        // ── Renewal Level-Range ──
+        public int RenewalLevelMin { get; set; }
+        public int RenewalLevelMax { get; set; }
+
+        public bool IsKafra { get; set; }
+        public List<int> WarpDestinations { get; set; } = new();
+
+        // ── Monster-Spawns auf dieser Map (Monster-ID → Spawn-Chance %) ──
+        public Dictionary<int, int> MonsterSpawns { get; set; } = new();
+
+        // ── Unterstützter GameMode ──
+        public GameMode SupportedGameMode { get; set; } = GameMode.Both;
+    }
+
+    /// <summary>Spielmodus für Map-Daten.</summary>
+    public enum GameMode
+    {
+        PreRenewal,
+        Renewal,
+        Both
+    }
+
+    public enum MapType
+    {
+        City,
+        Field,
+        Dungeon,
+        Instance,
+    }
+
+
+public sealed class MapDatabaseService
     {
         private readonly List<MapEntry> _maps = new();
 
@@ -328,47 +365,6 @@ namespace RagnaController.Core.Database {
 
         public MapEntry? GetMap(string name) => _maps.FirstOrDefault(m => m.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
-        /// <summary>Gibt alle Maps zurück, die für ein Base-Level im angegebenen GameMode geeignet sind.</summary>
-        public List<MapEntry> GetMapsForLevelRange(int baseLevel, GameMode mode = GameMode.Both)
-        {
-            return mode switch
-            {
-                GameMode.PreRenewal => _maps
-                    .Where(m => (m.SupportedGameMode == GameMode.PreRenewal || m.SupportedGameMode == GameMode.Both)
-                              && m.PreRenewalLevelMin <= baseLevel && m.PreRenewalLevelMax >= baseLevel)
-                    .ToList(),
-                GameMode.Renewal => _maps
-                    .Where(m => (m.SupportedGameMode == GameMode.Renewal || m.SupportedGameMode == GameMode.Both)
-                              && m.RenewalLevelMin <= baseLevel && m.RenewalLevelMax >= baseLevel)
-                    .ToList(),
-                _ => _maps
-                    .Where(m => m.SupportedGameMode == GameMode.Both
-                              && ((m.PreRenewalLevelMin <= baseLevel && m.PreRenewalLevelMax >= baseLevel)
-                               || (m.RenewalLevelMin <= baseLevel && m.RenewalLevelMax >= baseLevel)))
-                    .ToList()
-            };
-        }
-
-        /// <summary>Gibt alle Maps für Pre-Renewal zurück, die für ein Level geeignet sind.</summary>
-        public List<MapEntry> GetMapsForLevelRangePreRenewal(int baseLevel) =>
-            GetMapsForLevelRange(baseLevel, GameMode.PreRenewal);
-
-        /// <summary>Gibt alle Maps für Renewal zurück, die für ein Level geeignet sind.</summary>
-        public List<MapEntry> GetMapsForLevelRangeRenewal(int baseLevel) =>
-            GetMapsForLevelRange(baseLevel, GameMode.Renewal);
-
-        public List<MapEntry> GetKafraMaps() => _maps.Where(m => m.IsKafra).ToList();
-
-        public List<MapEntry> GetMapsByType(MapType type) => _maps.Where(m => m.Type == type).ToList();
-
-        /// <summary>Gibt alle Monster-IDs zurück, die auf einer Map spawnen.</summary>
-        public IReadOnlyDictionary<int, int> GetMonsterSpawns(string mapName) =>
-            GetMap(mapName)?.MonsterSpawns ?? new Dictionary<int, int>();
-
-        /// <summary>Gibt alle Maps zurück, auf denen ein bestimmtes Monster spawnt.</summary>
-        public List<MapEntry> GetMapsWithMonster(int monsterId) =>
-            _maps.Where(m => m.MonsterSpawns.ContainsKey(monsterId)).ToList();
-
         #endregion
 
         #region Zusätzliche Städte (alle klassischen RO-Städte)
@@ -435,45 +431,69 @@ namespace RagnaController.Core.Database {
         }
 
         #endregion
-    }
-    public class MapEntry
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public string DisplayName { get; set; } = "";
-        public MapType Type { get; set; }
 
-        // ── Pre-Renewal Level-Range ──
-        public int PreRenewalLevelMin { get; set; }
-        public int PreRenewalLevelMax { get; set; }
+        #region Erweiterte Abfragemethoden
 
-        // ── Renewal Level-Range ──
-        public int RenewalLevelMin { get; set; }
-        public int RenewalLevelMax { get; set; }
+        /// <summary>Gibt Karten zurück deren Pre-Renewal Level-Range den angegebenen Level enthält.</summary>
+        public IReadOnlyList<MapEntry> GetMapsForLevelRangePreRenewal(int level)
+        {
+            return _maps.Where(m => m.PreRenewalLevelMin <= level && m.PreRenewalLevelMax >= level)
+                .ToList().AsReadOnly();
+        }
 
-        public bool IsKafra { get; set; }
-        public List<int> WarpDestinations { get; set; } = new();
+        /// <summary>Gibt Karten zurück deren Renewal Level-Range den angegebenen Level enthält.</summary>
+        public IReadOnlyList<MapEntry> GetMapsForLevelRangeRenewal(int level)
+        {
+            return _maps.Where(m => m.RenewalLevelMin <= level && m.RenewalLevelMax >= level)
+                .ToList().AsReadOnly();
+        }
 
-        // ── Monster-Spawns auf dieser Map (Monster-ID → Spawn-Chance %) ──
-        public Dictionary<int, int> MonsterSpawns { get; set; } = new();
+        /// <summary>Gibt Karten zurück deren Level-Range (je nach GameMode) den angegebenen Level enthält.</summary>
+        public IReadOnlyList<MapEntry> GetMapsForLevelRange(int level, GameMode mode = GameMode.Both)
+        {
+            return mode switch
+            {
+                GameMode.PreRenewal => GetMapsForLevelRangePreRenewal(level),
+                GameMode.Renewal => GetMapsForLevelRangeRenewal(level),
+                _ => _maps.Where(m => (m.PreRenewalLevelMin <= level && m.PreRenewalLevelMax >= level) ||
+                                      (m.RenewalLevelMin <= level && m.RenewalLevelMax >= level))
+                    .ToList().AsReadOnly()
+            };
+        }
 
-        // ── Unterstützter GameMode ──
-        public GameMode SupportedGameMode { get; set; } = GameMode.Both;
-    }
+        /// <summary>Gibt alle Karten zurück auf denen ein bestimmtes Monster spawnt.</summary>
+        public IReadOnlyList<MapEntry> GetMapsWithMonster(int monsterId)
+        {
+            return _maps.Where(m => m.MonsterSpawns.ContainsKey(monsterId))
+                .ToList().AsReadOnly();
+        }
 
-    /// <summary>Spielmodus für Map-Daten.</summary>
-    public enum GameMode
-    {
-        PreRenewal,
-        Renewal,
-        Both
-    }
+        /// <summary>Gibt die Monster-Spawns für eine Karte zurück (Monster-ID → Chance %).</summary>
+        public Dictionary<int, int> GetMonsterSpawns(string mapName)
+        {
+            var map = _maps.FirstOrDefault(m => m.Name.Equals(mapName, StringComparison.OrdinalIgnoreCase));
+            return map?.MonsterSpawns ?? new Dictionary<int, int>();
+        }
 
-    public enum MapType
-    {
-        City,
-        Field,
-        Dungeon,
-        Instance,
+        /// <summary>Gibt alle Kafra-Städte zurück.</summary>
+        public IReadOnlyList<MapEntry> GetKafraCities()
+        {
+            return _maps.Where(m => m.Type == MapType.City && m.IsKafra)
+                .ToList().AsReadOnly();
+        }
+
+        /// <summary>Gibt alle Dungeons zurück.</summary>
+        public IReadOnlyList<MapEntry> GetDungeons()
+        {
+            return _maps.Where(m => m.Type == MapType.Dungeon)
+                .ToList().AsReadOnly();
+        }
+
+        
+        public List<MapEntry> GetMapsByType(MapType type) => _maps.Where(m => m.Type == type).ToList();
+
+        public List<MapEntry> GetKafraMaps() => _maps.Where(m => m.IsKafra).ToList();
+
+#endregion
     }
 }
