@@ -12,6 +12,7 @@ Primary application windows for the main UI, settings, and splash screen.
 || `SettingsWindow.xaml` / `.cs` | Allgemeine Einstellungen (Sound, Rumble, Window-Mode, Sprache) |
 || `SplashWindow.xaml` / `.cs` | Animierter Startbildschirm |
 || `UpdateWindow.xaml` / `.cs` | Update-Download und Changelog-Anzeige |
+|| `DeveloperDashboardWindow.xaml` / `.cs` | Entwickler-Dashboard mit 4 Tabs (Performance, Logs, Tools, System) |
 
 ## Namespace
 

@@ -13,7 +13,10 @@ Data transfer objects and record structs used across all layers.
 || `ChordConfig.cs` | Konfiguration für Akkord-/Button-Kombinationen |
 || `CommunityEntry.cs` | Datenmodell für Community-Hub-Einträge |
 || `ItemConfig.cs` | Konfiguration für Spielgegenstände |
-|| `MobDatabase.cs` | Monster-Datenbank-Modell |
+|| `MobDatabase.cs` | Monster-Datenbank-Modell (Pre-Renewal & Renewal, erweiterte Abfragen) |
+|| `ItemDatabaseService.cs` | Item-Datenbank mit SellPrice, Filtern, GameMode |
+|| `MapDatabaseService.cs` | Map-Datenbank mit Level-Ranges, Spawns, Warp-Zielen |
+|| `Monster.cs` | Einzelnes Monster-Datenmodell |
 || `Monster.cs` | Einzelnes Monster-Datenmodell |
 || `ParsedInput.cs` | Readonly Record-Struct (aktueller/vorheriger Frame-Input) |
 || `Settings.cs` | Globale App-Einstellungen (AppData) |

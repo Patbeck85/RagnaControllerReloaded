@@ -19,6 +19,8 @@ Modal dialog windows and wizard flows for user interaction.
 || `SelectProfilesDialog.xaml` / `.cs` | Mehrfach-Profil-Auswahl-Dialog |
 || `TutorialWindow.xaml` / `.cs` | Interaktives Tutorial-Overlay |
 || `WizardWindow.xaml` / `.cs` | Generischer Wizard-Flow-Fenster |
+|| `SkillRecommendationWindow.xaml` / `.cs` | Skill-Build-Empfehlungen (FEAT-2602) |
+|| `AutoBuildOptimizerWindow.xaml` / `.cs` | Automatische Stat-Allokation (FEAT-2603) |
 
 ## Namespace
 

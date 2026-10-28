@@ -22,6 +22,7 @@ Handles all gamepad/keyboard/mouse input processing, routing, and strategy patte
 || `MultiClientInputRouter.cs` | Leitet Input an spezifische Client-HWNDs weiter (Multi-Client-Support) |
 || `SendInputKeyboardStrategy.cs` | Win32 SendInput Keyboard-Strategie |
 || `SendInputMouseStrategy.cs` | Win32 SendInput Maus-Strategie |
+|| `MultiClientInputRouter.cs` | Leitet Input an spezifische Client-HWNDs weiter (Multi-Client-Support) |
 
 ## Architecture
 

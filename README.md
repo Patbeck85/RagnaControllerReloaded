@@ -1,6 +1,6 @@
-# RagnaController v2.6.0 — Autonomous Multi-Agent Development
+# RagnaController v2.6.1 — Autonomous Multi-Agent Development
 
-**Version:** 2.6.0 | **Release:** 2026-10-24 | **Build:** 0 errors, 0 warnings | **Tests:** 1076/1076 passing
+**Version:** 2.6.1 | **Release:** 2026-10-28 | **Build:** 0 errors, 0 warnings | **Tests:** 1139/1139 passing
 
 ---
 
@@ -47,7 +47,7 @@ This release represents a complete autonomous development cycle executed per **S
 | 14 | `TutorialWindow.xaml.cs` | `IndexOutOfRangeException` at Slide 5 | High | Bounds-check added |
 
 **Build:** 0 Errors, 0 Warnings
-**Tests:** 726/726 passing
+**Tests:** 1139/1139 passing
 **Empty catch blocks:** 0 remaining in entire project (SOUL.md ERROR-001 fully satisfied)
 
 ---
@@ -312,8 +312,12 @@ src/RagnaController/
 │   │   ├── ProfileShareService.cs         # GitHub Gists API for community profiles
 │   │   ├── DefaultProfileLoader.cs        # Built-in profile loading
 │   │   ├── DiscordRpcService.cs           # Discord Rich Presence integration
-│   │   ├── RoUiMenuService.cs             # RO in-game menu integration
+│   │   ├── RoUiMenuService.cs             # RO in-game menu integration (UI-integriert via MainWindow BtnRadial)
 │   │   ├── RadialMenuService.cs           # Radial menu service
+│   │   ├── ColorBlindService.cs           # Color blindness palettes (UI-integriert via Settings)
+│   │   ├── AccessibilityService.cs        # Screen reader support (UI-integriert via Settings)
+│   │   ├── GamepadNavigationService.cs    # Gamepad UI navigation (UI-integriert via Settings)
+│   │   ├── AdvancedInputService.cs        # Chorded/sequential input (UI-integriert via Settings)
 │   │   ├── TtsAnnouncerService.cs         # Text-to-speech announcements
 │   │   ├── HapticFeedbackService.cs       # Haptic feedback control
 │   │   ├── GamepadUiNavigator.cs          # Gamepad UI navigation
@@ -361,6 +365,14 @@ src/RagnaController/
 │   │
 │   ├── Benchmarks/                        # Performance benchmarks
 │   │   └── BenchmarkHarness.cs            # Benchmark test harness
+│   ├── AI/                                  # AI & recommendation services
+│   │   ├── SkillRecommendationEngine.cs   # Skill build recommendations (UI: SkillRecommendationWindow)
+│   │   └── ...                              # Future AI features
+│   ├── Calculators/                         # Game calculators
+│   │   ├── AutoBuildOptimizer.cs          # Stat build optimizer (UI: AutoBuildOptimizerWindow)
+│   │   ├── StatCalculator.cs              # HP/SP/ASPD/Hit/Flee calculations
+│   │   ├── ExperienceCalculator.cs        # RO EXP tables (Pre-Renewal & Renewal)
+│   │   └── SkillSimulator.cs              # Skill build simulator (63 job classes)
 │   │
 │   └── .hermes/                           # Hermes Agent configuration
 │
@@ -545,4 +557,4 @@ Automated checks for all 7 golden rules — all satisfied in v2.2.1.
 
 ---
 
-*Last updated: 2026-10-25 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 1076/1076 PASS | SOUL.md: All 7 golden rules satisfied | Version: 2.6.0*
+*Last updated: 2026-10-28 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 1139/1139 PASS | SOUL.md: All 7 golden rules satisfied | Version: 2.6.1*
