@@ -6,21 +6,21 @@ Modal dialog windows and wizard flows for user interaction.
 
 | File | Responsibility |
 |------|----------------|
-|| `CommunityBrowserWindow.xaml` / `.cs` | GitHub Gists Community-Hub |
-|| `DaisyWheelWindow.xaml` / `.cs` | Circular On-Screen Keyboard |
-|| `DeveloperConsoleWindow.xaml` / `.cs` | In-App Entwickler-Konsole |
-|| `GyroCalibrationWindow.xaml` / `.cs` | DualSense-Gyro-Kalibrierungs-Wizard |
-|| `ProfileCollectionsWindow.xaml` / `.cs` | Profile-Sammlungen-Verwaltung |
-|| `ProfileDiffWindow.xaml` / `.cs` | Profile-Unterschieds-/Vergleichs-Ansicht |
-|| `ProfileLibraryWindow.xaml` / `.cs` | Profilbibliothek-Verwaltung |
-|| `ProfileValidationWindow.xaml` / `.cs` | Profile-Validierung und Reparatur |
-|| `ProfileWizardWindow.xaml` / `.cs` | Geführter Profil-Erstellungs-Wizard (FEAT-010) |
-|| `RumbleEditorWindow.xaml` / `.cs` | DualSense Rumble-Effekt-Editor |
-|| `SelectProfilesDialog.xaml` / `.cs` | Mehrfach-Profil-Auswahl-Dialog |
-|| `TutorialWindow.xaml` / `.cs` | Interaktives Tutorial-Overlay |
-|| `WizardWindow.xaml` / `.cs` | Generischer Wizard-Flow-Fenster |
-|| `SkillRecommendationWindow.xaml` / `.cs` | Skill-Build-Empfehlungen (FEAT-2602) |
-|| `AutoBuildOptimizerWindow.xaml` / `.cs` | Automatische Stat-Allokation (FEAT-2603) |
+| `CommunityBrowserWindow.xaml` / `.cs` | GitHub Gists Community Hub |
+| `DaisyWheelWindow.xaml` / `.cs` | Circular On-Screen Keyboard |
+| `DeveloperConsoleWindow.xaml` / `.cs` | In-App Developer Console |
+| `GyroCalibrationWindow.xaml` / `.cs` | DualSense Gyro Calibration Wizard |
+| `ProfileCollectionsWindow.xaml` / `.cs` | Profile Collections Management |
+| `ProfileDiffWindow.xaml` / `.cs` | Profile Difference / Comparison View |
+| `ProfileLibraryWindow.xaml` / `.cs` | Profile Library Management |
+| `ProfileValidationWindow.xaml` / `.cs` | Profile Validation and Repair |
+| `ProfileWizardWindow.xaml` / `.cs` | Guided Profile Creation Wizard (FEAT-010) |
+| `RumbleEditorWindow.xaml` / `.cs` | DualSense Rumble Effect Editor |
+| `SelectProfilesDialog.xaml` / `.cs` | Multi-Profile Selection Dialog |
+| `TutorialWindow.xaml` / `.cs` | Interactive Tutorial Overlay |
+| `WizardWindow.xaml` / `.cs` | Generic Wizard Flow Window |
+| `SkillRecommendationWindow.xaml` / `.cs` | Skill Build Recommendations (FEAT-2602) |
+| `AutoBuildOptimizerWindow.xaml` / `.cs` | Automatic Stat Allocation Optimizer (FEAT-2603) |
 
 ## Namespace
 

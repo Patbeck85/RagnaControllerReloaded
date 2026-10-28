@@ -6,26 +6,25 @@ Handles all gamepad/keyboard/mouse input processing, routing, and strategy patte
 
 | File | Responsibility |
 |------|----------------|
-|| `BezierMouseService.cs` | Sanfte Maus-Bewegungskurven |
-|| `IInputHandler.cs` | Input-Handler-Interface |
-|| `IKeyboardEmulationStrategy.cs` | Keyboard-Emulations-Strategie-Interface |
-|| `IMouseEmulationStrategy.cs` | Maus-Emulations-Strategie-Interface |
-|| `InputChain.cs` | Input-Verarbeitungskette |
-|| `InputCommandQueue.cs` | Thread-sichere SendInput-Warteschlange |
-|| `InputFailoverManager.cs` | Fallback zwischen Input-Methoden |
-|| `InputLatencyTracker.cs` | Input-Latenz-Überwachung |
-|| `InputReader.cs` | Normalisiert XInput-Gamepad-Daten |
-|| `InputRouter.cs` | Leitet Input an korrekte Engine weiter (Prioritäts-Kette) |
-|| `InterceptionKeyboardStrategy.cs` | Interception-Driver Keyboard-Strategie |
-|| `JitterService.cs` | Natürliches Input-Timing-Variance (15-46ms) |
-|| `KernelInputService.cs` | Kernel-Level Input-Bypass |
-|| `MultiClientInputRouter.cs` | Leitet Input an spezifische Client-HWNDs weiter (Multi-Client-Support) |
-|| `SendInputKeyboardStrategy.cs` | Win32 SendInput Keyboard-Strategie |
-|| `SendInputMouseStrategy.cs` | Win32 SendInput Maus-Strategie |
-|| `MultiClientInputRouter.cs` | Leitet Input an spezifische Client-HWNDs weiter (Multi-Client-Support) |
+| `BezierMouseService.cs` | Smooth mouse movement curves |
+| `IInputHandler.cs` | Input handler interface |
+| `IKeyboardEmulationStrategy.cs` | Keyboard emulation strategy interface |
+| `IMouseEmulationStrategy.cs` | Mouse emulation strategy interface |
+| `InputChain.cs` | Input processing chain |
+| `InputCommandQueue.cs` | Thread-safe SendInput queue |
+| `InputFailoverManager.cs` | Fallback between input methods |
+| `InputLatencyTracker.cs` | Input latency monitoring |
+| `InputReader.cs` | Normalizes XInput gamepad data |
+| `InputRouter.cs` | Routes input to correct engine (priority chain) |
+| `InterceptionKeyboardStrategy.cs` | Interception driver keyboard strategy |
+| `JitterService.cs` | Natural input timing variance (15-46ms) |
+| `KernelInputService.cs` | Kernel-level input bypass |
+| `MultiClientInputRouter.cs` | Routes input to specific client HWNDs (multi-client support) |
+| `SendInputKeyboardStrategy.cs` | Win32 SendInput keyboard strategy |
+| `SendInputMouseStrategy.cs` | Win32 SendInput mouse strategy |
 
 ## Architecture
 
 - **InputReader** normalizes raw XInput into `ParsedInput`
 - **InputRouter** implements the priority chain: routes input to Kite → AutoTarget → Mage → Support engines
-- **Strategy pattern**: Keyboard/mouse emulation strategies are interchangeable (SendInput vs Interception)
+- **Strategy pattern**: keyboard/mouse emulation strategies are interchangeable (SendInput vs Interception)

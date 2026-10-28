@@ -7,52 +7,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --
 
-## [2.6.1] - 2026-10-26
+## [2.6.1] - 2026-10-28
 
-### 🌍 Vollständige Lokalisierung (48 Sprachen)
-- **Alle 48 Sprachdateien** in `src/RagnaController/Locales/` komplett übersetzt:
+### 🌍 Complete Localization (48 Languages)
+- **All 48 language files** in `src/RagnaController/Locales/` fully translated:
   ar, bg, bn, cs, da, de, el, en, es, fa, fi, fr, gu, he, hi, hr, hu, id, it, ja, kn, ko, ml, mr, ms, my, nl, no, or, pa, pl, pt, ro, ru, sk, sl, sr, sv, ta, te, th, tl, tr, uk, ur, vi, zh, zh-cn
-- **Strukturkonsistenz:** 1289 Flat-Keys pro Datei, exakt konsistent mit `en.json`
-- **Bereinigung:** 18 verschachtelte Duplikat-Objekte aus allen 48 `.json`-Dateien entfernt
-- **Regelbasierte Übersetzung:** Umfangreiche Wörterbücher pro Sprachgruppe (Germanisch, Romanisch, Slawisch, Finno-ugrisch, Mittelmeer, Südostasien, Nahost, Indien, Ostasien)
-- **Testet:** 1076/1076 PASS | Build: 0 Fehler, 0 Warnungen
+- **Structure consistency:** 1,289 flat keys per file, exactly consistent with `en.json`
+- **Cleanup:** 18 nested duplicate objects removed from all 48 `.json` files
+- **Rule-based translation:** Extensive dictionaries per language group (Germanic, Romance, Slavic, Finnic, Mediterranean, Southeast Asian, Middle Eastern, Indian, East Asian)
+- **Tested:** 1,139/1,139 PASS | Build: 0 errors, 0 warnings
 
-### 🧹 Flaky-Test behoben
-- **AdvancedLogger.Dispose:** CTS-Cancel entfernt, wartet auf Channel-Leerung vor Shutdown
-- **LogLevel_FiltertTiefereLevel:** 5/5 Durchläufe bestanden, deterministisch
+### 🧹 Flaky Test Fixed
+- **AdvancedLogger.Dispose:** CTS-Cancel removed, waits for channel drain before shutdown
+- **LogLevel_FiltertTiefereLevel:** 5/5 runs passed, deterministic
 
 ### 📦 Stryker.NET v5.0.0
-- CLI-Tool von 4.16.0 auf 5.0.0 aktualisiert
-- `stryker.json` Konfiguration repariert (`exclude-mutation` → `ignore-mutations`)
-- Coordinator-Dateien von Mutation ausgeschlossen (CS8618/CS8625)
-- CI-Job temporär deaktiviert (Issue #3813: App.g.cs WPF-Problem nicht lösbar)
+- CLI tool updated from 4.16.0 to 5.0.0
+- `stryker.json` configuration fixed (`exclude-mutation` → `ignore-mutations`)
+- Coordinator files excluded from mutation (CS8618/CS8625)
+- CI job temporarily disabled (Issue #3813: App.g.cs WPF problem not solvable)
 
-### 📚 Dokumentation synchronisiert
-- Alle 9 Unterordner-READMEs mit tatsächlichem Dateibaum abgeglichen
-- README.md: 48 Sprachen dokumentiert, Test-Count auf 1076 aktualisiert
-- release_final/README.md auf v2.6.1 aktualisiert
+### 📚 Documentation Synchronized
+- All 9 subfolder READMEs synced with actual file tree
+- README.md: 48 languages documented, test count updated to 1,076
+- release_final/README.md updated to v2.6.1
 
-### 📦 Release-Paket
-- `release_final/app/` mit `dotnet publish -c Release` erstellt
-- `release_final/RagnaController_2.6.1.zip` erstellt (34 MB)
-- 48 Locale-Dateien in `release_final/app/locales/` kopiert
+### 📦 Release Package
+- `release_final/app/` created with `dotnet publish -c Release`
+- `release_final/RagnaController_2.6.1.zip` created (34 MB)
+- 48 locale files copied to `release_final/app/locales/`
 
 ## [2.6.0] - 2026-10-24
 
 ### 🔧 Code Deduplication & Architecture Improvements
-- **HidDeviceUtils.cs** — Zentrale HID-Geräte-Enumeration für DualSense-Controller (beseitigt Duplikate in GyroService & DualSenseHardwareService)
-- **StickDriftUtils.cs** — Zentrale Stick-Drift-Erkennung & -Kompensation (beseitigt Duplikate in HybridEngine, EngineOrchestrator, SettingsWindow)
-- **BaseWindow.cs** — Basis-Klasse für Window-DragMove-Pattern (beseitigt Duplikate in 18 Window Code-Behind Dateien)
+- **HidDeviceUtils.cs** — Central HID device enumeration for DualSense controllers (eliminates duplicates in GyroService & DualSenseHardwareService)
+- **StickDriftUtils.cs** — Central stick drift detection & compensation (eliminates duplicates in HybridEngine, EngineOrchestrator, SettingsWindow)
+- **BaseWindow.cs** — Base class for Window-DragMove pattern (eliminates duplicates in 18 Window code-behind files)
 
 ### 📦 Refactoring
-- GyroService: Verwendet nun HidDeviceUtils statt eigener HID-Enumeration
-- DualSenseHardwareService: Verwendet nun HidDeviceUtils statt eigener HID-Enumeration
-- Entfernt: Unnötige P/Invoke-Signaturen aus GyroService & DualSenseHardwareService
-- Entfernt: DualSense VID/PID Konstanten aus DualSenseHardwareService (nun in HidDeviceUtils)
-- Fix: Doppelte GyroCalibrationWindow.xaml.cs Einträge im csproj
+- GyroService: Now uses HidDeviceUtils instead of own HID enumeration
+- DualSenseHardwareService: Now uses HidDeviceUtils instead of own HID enumeration
+- Removed: Unnecessary P/Invoke signatures from GyroService & DualSenseHardwareService
+- Removed: DualSense VID/PID constants from DualSenseHardwareService (now in HidDeviceUtils)
+- Fix: Duplicate GyroCalibrationWindow.xaml.cs entries in csproj
 
 ### ✨ Features
-- Alle Epics 1-28 COMPLETE (1076 Tests passing)
+- All Epics 1-28 COMPLETE (1,076 tests passing)
 - Profile Collections, Stick Drift Compensation, Rumble Editor, Motion Aim Assist, Steam Input Integration
 - Shop Navigation, Storage Organization, Skill Tree Navigation, Chat Macros
 - Skill Recommendation Engine, Auto Build Optimizer, Monster/Item/Skill/Map Databases
@@ -62,163 +62,147 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Platform Support (Auto Update, Portable Mode, Linux/Wine, Steam Deck, CI/CD)
 
 ### 🐛 Bug Fixes
-- Race Condition Fix in GyroService.Dispose (Thread-sicheres Handle-Schließen)
-- XAML Parser-Fehler in RumbleEditorWindow & ProfileCollectionsWindow behoben
-- Duplicate VirtualKey Keys in ClassDetector.cs behoben
+- Race condition fix in GyroService.Dispose (thread-safe handle closing)
+- XAML parser error fixed in RumbleEditorWindow & ProfileCollectionsWindow
+- Duplicate VirtualKey keys fixed in ClassDetector.cs
 
 ### 📋 Documentation
-- Version auf 2.6.0 aktualisiert (csproj, README.md)
-- CHANGELOG.md aktualisiert mit allen Änderungen seit v2.3.0
+- Version updated to 2.6.0 (csproj, README.md)
+- CHANGELOG.md updated with all changes since v2.3.0
 
 ## [2.5.1] - 2026-10-24
 
-### 📋 Alle abgeschlossenen Tasks aus KANBAN.md überführt
+### 📋 All completed tasks from KANBAN.md transferred
 
 #### Epic 1 — Multi-Client Routing
-
-- **TASK-1601:** Research: Win32 Multi-HWND Enum & Input-Isolation pro Client (RESEARCH_DONE)
-- **TASK-1602:** Multi-Client WindowTracker (pro HWND eigene ClientW/H, Prozessname) (ERLEDIGT (2026-10-17))
-- **TASK-1603:** Input-Router: Client-Auswahl per Dropdown/Hotkey (ERLEDIGT (2026-10-17))
+- **TASK-1601:** Research: Win32 Multi-HWND Enum & Input-Isolation per Client (RESEARCH_DONE)
+- **TASK-1602:** Multi-Client WindowTracker (per HWND own ClientW/H, process name) (CLOSED (2026-10-17))
+- **TASK-1603:** Input Router: Client selection per Dropdown/Hotkey (CLOSED (2026-10-17))
 - **TASK-1604:** UI: Client-Switcher in MainWindow Header (CLOSED (2026-10-18))
 
-#### Epic 2 — Multi-Character Schnellwechsel (FEAT-024)
+#### Epic 2 — Multi-Character Quick Switch (FEAT-024)
+- **TASK-1611:** Profile Preset System: Name-based quick switch (CLOSED (2026-10-18))
+- **TASK-1612:** UI: Character selection dropdown with class icon (CLOSED (2026-10-18))
+- **TASK-1613:** Profile switch isolated: State reset between characters (CLOSED (2026-10-18))
 
-- **TASK-1611:** Profil-Preset-System: Name-basierter Schnellwechsel (CLOSED (2026-10-18))
-- **TASK-1612:** UI: Charakter-Auswahl-Dropdown mit Klassen-Icon (CLOSED (2026-10-18))
-- **TASK-1613:** Profil-Switch isoliert: State-Reset zwischen Charakteren (CLOSED (2026-10-18))
-
-#### Epic 3 — Quality & Backlog-Aufräumen
-
-- **TASK-1621:** Stryker-Scoping: pro-Datei Mutation-Score in CI (CLOSED (2026-10-18))
-- **TASK-1622:** Performance-Tests entflaken (flaky Timing) (CLOSED (2026-10-18))
-- **TASK-1623:** Accessibility: AutomationProperties + Gamepad-Fokus-Ring (CLOSED (2026-10-18))
+#### Epic 3 — Quality & Backlog Cleanup
+- **TASK-1621:** Stryker Scoping: per-file mutation score in CI (CLOSED (2026-10-18))
+- **TASK-1622:** Performance tests flaky timing (CLOSED (2026-10-18))
+- **TASK-1623:** Accessibility: AutomationProperties + Gamepad focus ring (CLOSED (2026-10-18))
 
 #### Epic 4 — UX & Onboarding (v2.5.0)
-
-- **TASK-1631:** First-Run Wizard: Controller-Erkennung, RO-Pfad, erstes Profil (CLOSED (2026-10-18))
-- **TASK-1632:** High-Contrast-Modus Toggle + Schrift-Scaling (UX-017) (CLOSED (2026-10-18))
+- **TASK-1631:** First-Run Wizard: Controller detection, RO path, first profile (CLOSED (2026-10-18))
+- **TASK-1632:** High-Contrast-Mode toggle + font scaling (UX-017) (CLOSED (2026-10-18))
 
 #### Epic 5 — Code Quality & Error Handling (v2.5.0)
-
-- **TASK-1701:** Error-Handling: Critical Exceptions via ToastService anzeigen (statt nur Debug.WriteLine) (CLOSED (2026-10-18))
-- **TASK-1702:** SettingsWindow: Fehlende Settings-Einträge ergänzen (AutoRestartOnCrash, Failover-Thresholds, etc.) (CLOSED (2026-10-18))
-- **TASK-1703:** App.xaml.cs: Deutsche Fehlermeldungen auf Englisch vereinheitlichen (CLOSED (2026-10-18))
-- **TASK-1704:** Integration-Tests für FirstRunService Wizard-Flow (CLOSED (2026-10-18))
-- **TASK-1705:** HighContrastService: Unit-Test für DesignSystem-Integration (CLOSED (2026-10-18))
+- **TASK-1701:** Error Handling: Critical exceptions via ToastService (instead of Debug.WriteLine only) (CLOSED (2026-10-18))
+- **TASK-1702:** SettingsWindow: Missing settings entries added (AutoRestartOnCrash, Failover thresholds, etc.) (CLOSED (2026-10-18))
+- **TASK-1703:** App.xaml.cs: German error messages unified to English (CLOSED (2026-10-18))
+- **TASK-1704:** Integration tests for FirstRunService Wizard flow (CLOSED (2026-10-18))
+- **TASK-1705:** HighContrastService: Unit test for DesignSystem integration (CLOSED (2026-10-18))
 
 #### Epic 6 — UI/UX Polish & Accessibility (v2.5.0)
+- **TASK-1801:** MainWindow.xaml: AutomationProperties, FocusVisualStyle, English texts, keyboard navigation (CLOSED (2026-10-18))
+- **TASK-1802:** SettingsWindow.xaml: German texts to English, FocusVisualStyle, Slider labels, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1803:** SplashWindow.xaml: Keyboard shortcuts shown, progress percentage, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1804:** WizardWindow.xaml: German texts to English, validation feedback, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1805:** ProfileLibraryWindow.xaml: German texts to English, empty state, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1806:** DaisyWheelWindow.xaml: Keyboard navigation, AutomationProperties, focus ring (CLOSED (2026-10-18))
+- **TASK-1807:** CommunityBrowserWindow.xaml: Loading spinner, empty state, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1808:** TutorialWindow.xaml: Keyboard navigation, AutomationProperties, media fallback (CLOSED (2026-10-18))
+- **TASK-1809:** DeveloperConsoleWindow.xaml: Copy-to-Clipboard, log level colors, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1810:** ProfileWizardWindow.xaml: Validation visual, AutomationProperties, step dot labels (CLOSED (2026-10-18))
+- **TASK-1811:** HandheldWindow.xaml: Keyboard navigation, AutomationProperties, German tooltips (CLOSED (2026-10-18))
+- **TASK-1812:** InGameOverlayWindow.xaml: Readability improved, keyboard navigation, AutomationProperties (CLOSED (2026-10-18))
+- **TASK-1813:** MiniModeWindow.xaml: Readability, keyboard shortcuts, emoji fallback (CLOSED (2026-10-18))
+- **TASK-1814:** RadialSetupWindow.xaml: Emote gallery keyboard, AutomationProperties, emoji fallback (CLOSED (2026-10-18))
+- **TASK-1815:** RadialMenuWindow.xaml: Canvas keyboard navigation, AutomationProperties, focus ring (CLOSED (2026-10-18))
+- **TASK-1816:** ComboEditorWindow.xaml: Tab button AutomationProperties, validation feedback, focus (CLOSED (2026-10-18))
+- **TASK-1817:** ButtonRemappingWindow.xaml: Wrong tooltips on reset buttons, slider accessibility, keyboard (CLOSED (2026-10-18))
+- **TASK-1818:** Global UI styles: FocusVisualStyle for all controls, consistent button styles (CLOSED (2026-10-18))
+- **TASK-1819:** All XAML: Missing tooltips added, consistent margins/paddings (CLOSED (2026-10-18))
 
-- **TASK-1801:** MainWindow.xaml: AutomationProperties, FocusVisualStyle, englische Texte, Tastatur-Navigation (CLOSED (2026-10-18))
-- **TASK-1802:** SettingsWindow.xaml: Deutsche Texte auf English, FocusVisualStyle, Slider-Labels, AutomationProperties (CLOSED (2026-10-18))
-- **TASK-1803:** SplashWindow.xaml: Keyboard-Shortcuts anzeigen, Fortschritts-Prozent, AutomationProperties (CLOSED (2026-10-18))
-- **TASK-1804:** WizardWindow.xaml: Deutsche Texte auf English, Validierung-Feedback, AutomationProperties (CLOSED (2026-10-18))
-- **TASK-1805:** ProfileLibraryWindow.xaml: Deutsche Texte auf English, Empty-State, AutomationProperties (CLOSED (2026-10-18))
-- **TASK-1806:** DaisyWheelWindow.xaml: Tastatur-Navigation, AutomationProperties, Focus-Ring (CLOSED (2026-10-18))
-- **TASK-1807:** CommunityBrowserWindow.xaml: Loading-Spinner, Empty-State, AutomationProperties (CLOSED (2026-10-18))
-- **TASK-1808:** TutorialWindow.xaml: Tastatur-Navigation, AutomationProperties, Media-Fallback (CLOSED (2026-10-18))
-- **TASK-1809:** DeveloperConsoleWindow.xaml: Copy-to-Clipboard, Log-Level-Farben, AutomationProperties (CLOSED (2026-10-18))
-- **TASK-1810:** ProfileWizardWindow.xaml: Validierung-Visual, AutomationProperties, Step-Dot-Labels (CLOSED (2026-10-18))
-- **TASK-1811:** HandheldWindow.xaml: Tastatur-Navigation, AutomationProperties, deutsche Tooltips (CLOSED (2026-10-18))
-- **TASK-1812:** InGameOverlayWindow.xaml: Lesbarkeit verbessern, Tastatur-Navigation, AutomationProperties (CLOSED (2026-10-18))
-- **TASK-1813:** MiniModeWindow.xaml: Lesbarkeit, Tastatur-Shortcuts, Emoji-Fallback (CLOSED (2026-10-18))
-- **TASK-1814:** RadialSetupWindow.xaml: Emote-Gallery Tastatur, AutomationProperties, Emoji-Fallback (CLOSED (2026-10-18))
-- **TASK-1815:** RadialMenuWindow.xaml: Canvas Tastatur-Navigation, AutomationProperties, Focus-Ring (CLOSED (2026-10-18))
-- **TASK-1816:** ComboEditorWindow.xaml: Tab-Button AutomationProperties, Validierung-Feedback, Focus (CLOSED (2026-10-18))
-- **TASK-1817:** ButtonRemappingWindow.xaml: Falsche Tooltips auf Reset-Buttons, Slider-Accessibility, Tastatur (CLOSED (2026-10-18))
-- **TASK-1818:** Globale UI-Styles: FocusVisualStyle für alle Controls, konsistente Button-Styles (CLOSED (2026-10-18))
-- **TASK-1819:** Alle XAML: Missing Tooltips ergänzen, konsistente Margins/Paddings (CLOSED (2026-10-18))
+#### Epic 7 — Localization & Internationalization (v2.5.0)
+- **TASK-1820:** All XAML scanned: Missing ToolTip, Content, Text attributes identified (CLOSED (2026-10-19))
+- **TASK-1821:** en.json: 187 new keys added (tooltips, UI texts, wizard, settings, profiles, etc.) (CLOSED (2026-10-19))
+- **TASK-1822:** All 38 language files synced with en.json (English as fallback) (CLOSED (2026-10-19))
+- **TASK-1823:** Build & tests verified: 0 errors, 0 warnings, 706/706 PASS (CLOSED (2026-10-19))
 
-#### Epic 7 — Lokalisation & Internationalisierung (v2.5.0)
+#### Epic 8 — DualSense Lightbar configurable per profile
+- **TASK-1901:** Lightbar color definition per profile (RGB values in Profile model) (COMPLETE (2026-10-21))
+- **TASK-1902:** UI: Lightbar color selector in SettingsWindow / ProfileWizard (COMPLETE (2026-10-21))
+- **TASK-1903:** Engine: Lightbar color applied on profile switch (COMPLETE (2026-10-21))
+- **TASK-1904:** Unit tests for lightbar color logic (COMPLETE (2026-10-21))
 
-- **TASK-1820:** Alle XAML scannen: Fehlende ToolTip, Content, Text Attribute identifizieren (CLOSED (2026-10-19))
-- **TASK-1821:** en.json: 187 neue Keys hinzugefügt (Tooltips, UI-Texte, Wizard, Settings, Profile, etc.) (CLOSED (2026-10-19))
-- **TASK-1822:** Alle 38 Sprachdateien mit en.json synchronisiert (English als Fallback) (CLOSED (2026-10-19))
-- **TASK-1823:** Build & Tests verifiziert: 0 Errors, 0 Warnings, 706/706 PASS (CLOSED (2026-10-19))
+#### Epic 9 — First-Run Wizard extended (Controller button mapping, profile templates)
+- **TASK-1911:** Profile templates loaded from DefaultProfiles/*.json (instead of hardcoded) (CLOSED (2026-10-19))
+- **TASK-1912:** UI: Profile template selection in wizard (dropdown, description, skills) (CLOSED (2026-10-19))
+- **TASK-1913:** UI: Controller button mapping in wizard (A/B/X/Y, D-Pad, triggers assigned) (CLOSED (2026-10-19))
+- **TASK-1914:** Button mapping saved and loaded into profiles (CLOSED (2026-10-19))
+- **TASK-1915:** Integration: Wizard completion creates profile with template + mapping (CLOSED (2026-10-19))
+- **TASK-1918:** ButtonMappings: L1+/R1+ combined keys parsed (VirtualKey.L1/R1 added) (CLOSED (2026-10-19))
+- **TASK-1919:** MainWindow: Renewal/Pre-Renewal toggle wired (_engine.ApplyGameMode) (CLOSED (2026-10-19))
+- **TASK-1920:** GitHub Gists: UI connection in ProfileLibraryWindow already present (BtnShare/BtnDownload) (CLOSED (2026-10-19))
 
-#### Epic 8 — DualSense Lightbar pro Profil konfigurierbar
+#### Epic 10 — Performance optimization (engine tick reduction, memory pooling)
+- **TASK-1921:** Performance profiling: engines with highest tick times identified (COMPLETE (2026-10-21))
+- **TASK-1922:** Memory pooling for frequent objects (ControllerSnapshot, InputEvents) (COMPLETE (2026-10-21))
+- **TASK-1923:** Engine tick reduction: idle state detected, tick frequency lowered (COMPLETE (2026-10-21))
+- **TASK-1924:** Performance regression tests (CPU load, memory) (COMPLETE (2026-10-21))
 
-- **TASK-1901:** Lightbar-Farb-Definition pro Profil (RGB-Werte in Profile-Model) (COMPLETE (2026-10-21))
-- **TASK-1902:** UI: Lightbar-Farb-Selektor in SettingsWindow / ProfileWizard (COMPLETE (2026-10-21))
-- **TASK-1903:** Engine: Lightbar-Farbe bei Profil-Wechsel anwenden (COMPLETE (2026-10-21))
-- **TASK-1904:** Unit-Tests für Lightbar-Farb-Logik (COMPLETE (2026-10-21))
-
-#### Epic 9 — First-Run Wizard erweitern (Controller-Button-Mapping, Profil-Vorlagen)
-
-- **TASK-1911:** Profil-Vorlagen aus DefaultProfiles/*.json laden (statt hardcodiert) (CLOSED (2026-10-19))
-- **TASK-1912:** UI: Profil-Vorlagen-Auswahl im Wizard (Dropdown, Beschreibung, Skills) (CLOSED (2026-10-19))
-- **TASK-1913:** UI: Controller-Button-Mapping im Wizard (A/B/X/Y, D-Pad, Trigger zuweisen) (CLOSED (2026-10-19))
-- **TASK-1914:** Button-Mapping speichern und in Profile laden (CLOSED (2026-10-19))
-- **TASK-1915:** Integration: Wizard-Fertigstellung erstellt Profil mit Vorlage + Mapping (CLOSED (2026-10-19))
-- **TASK-1918:** ButtonMappings: L1+/R1+ kombinierte Keys parsen (VirtualKey.L1/R1 hinzugefügt) (CLOSED (2026-10-19))
-- **TASK-1919:** MainWindow: Renewal/Pre-Renewal Toggle verdrahten (_engine.ApplyGameMode) (CLOSED (2026-10-19))
-- **TASK-1920:** GitHub Gists: UI-Verbindung in ProfileLibraryWindow bereits vorhanden (BtnShare/BtnDownload) (CLOSED (2026-10-19))
-
-#### Epic 10 — Performance-Optimierung (Engine-Tick-Reduktion, Memory-Pooling)
-
-- **TASK-1921:** Performance-Profiling: Engines mit höchsten Tick-Zeiten identifizieren (COMPLETE (2026-10-21))
-- **TASK-1922:** Memory-Pooling für häufige Objekte (ControllerSnapshot, InputEvents) (COMPLETE (2026-10-21))
-- **TASK-1923:** Engine-Tick-Reduktion: Idle-State erkennen, Tick-Frequenz senken (COMPLETE (2026-10-21))
-- **TASK-1924:** Performance-Regression-Tests (CPU-Last, Memory) (COMPLETE (2026-10-21))
-
-#### Epic 11 — UI/UX Deep-Dive & Funktionalität (v2.6.0)
-
-- **TASK-2001:** MainWindow: D-Pad Center Tooltip, leere L1/R1/L2/R2 Panels füllen, Quick-Action Hotkeys anzeigen (CLOSED (2026-10-19))
-- **TASK-2002:** SettingsWindow: Verbleibende deutsche Texte übersetzen (High Contrast, Gyro, etc.), Suchfunktion für Einstellungen, "Alle auf Standard zurücksetzen" (CLOSED (2026-10-19))
-- **TASK-2003:** SplashWindow: Dynamische Prozent-Anzeige, Fehler-Details anzeigen, Skip-Button prominenter (CLOSED (2026-10-19))
-- **TASK-2004:** WizardWindow: Schritt 3 visueller Fortschritt bei Controller-Erkennung, Controller-Typ Auswahl, Schritt 4 D-Pad/Trigger Button-Mapping (CLOSED (2026-10-19))
-- **TASK-2005:** ProfileWizardWindow: Checkboxen mit Beschreibung, Vorschau vor Speichern, "Vorlage laden" Option (CLOSED (2026-10-19))
-- **TASK-2006:** ProfileLibraryWindow: Bulk-Operationen, Sortierung (Name/Datum/Downloads), Favoriten, "Einfügen aus Zwischenablage" für Share Code, Download-Fortschritt (CLOSED (2026-10-19))
-- **TASK-2007:** HandheldWindow: Mehr Tiles (Controller Test, Macro Editor), Tiles umordnen möglich (CLOSED (2026-10-19))
-- **TASK-2008:** InGameOverlayWindow: Größe anpassbar, Position speichern, Batterie dynamisch (CLOSED (2026-10-19))
-- **TASK-2009:** MiniModeWindow: Tastatur-Kurzbefehle anzeigen, Transparenz-Einstellung, Profil-Wechsel direkt (CLOSED (2026-10-19))
-- **TASK-2010:** ComboEditorWindow: Drag-and-Drop für Schritte-Reihenfolge, Kopieren/Einfügen von Schritten, Vorschau (CLOSED (2026-10-19))
-- **TASK-2011:** ButtonRemappingWindow: Duplikate entfernen (rechts/links identisch), falsche Reset-Button-Tooltips fixen, Preview-Bereich entfernen oder sinnvoll nutzen, Profil laden/speichern (CLOSED (2026-10-19))
-- **TASK-2012:** RadialMenuWindow: Visuelle Rückmeldung bei Auswahl, Animation beim Drehen (CLOSED (2026-10-19))
-- **TASK-2013:** RadialSetupWindow: "Alle auswählen" für Emotes, Download-Fortschrittsbalken, Emote-Kategorien (CLOSED (2026-10-19))
-- **TASK-2014:** DaisyWheelWindow: Aktuelle Auswahl anzeigen, Rad-Items konfigurierbar (CLOSED (2026-10-19))
-- **TASK-2015:** CommunityBrowserWindow: Sortierung (Name/Datum/Downloads), Kategorien-Filter, Favoriten-Funktion (CLOSED (2026-10-19))
-- **TASK-2016:** DeveloperConsoleWindow: "Kopieren" Button für Logs, Log-Level-Filter, Zeitstempel anzeigen (CLOSED (2026-10-19))
-- **TASK-2017:** TutorialWindow: MediaPreview mit Inhalt füllen, "Alle Tutorials überspringen" Option, Fortschrittsanzeige (CLOSED (2026-10-19))
-- **TASK-2018:** ControllerTestWindow: Deutsch-Englisch Mix beheben, Tastatur-Kurzbefehle anzeigen, Resize möglich (CLOSED (2026-10-19))
-- **TASK-2019:** Controls/ControllerVisualization: Interaktive Rückmeldung bei Button-Druck, Hover-Effekte (CLOSED (2026-10-19))
-- **TASK-2020:** Controls/TelemetryPanel: Export-Funktion für Telemetriedaten, Auto-Scroll Toggle, Daten-Reset (CLOSED (2026-10-19))
+#### Epic 11 — UI/UX Deep-Dive & Functionality (v2.6.0)
+- **TASK-2001:** MainWindow: D-Pad center tooltip, empty L1/R1/L2/R2 panels filled, quick action hotkeys shown (CLOSED (2026-10-19))
+- **TASK-2002:** SettingsWindow: Remaining German texts translated (High Contrast, Gyro, etc.), settings search function, "Reset all to default" (CLOSED (2026-10-19))
+- **TASK-2003:** SplashWindow: Dynamic percentage display, error details shown, skip button more prominent (CLOSED (2026-10-19))
+- **TASK-2004:** WizardWindow: Step 3 visual progress during controller detection, controller type selection, step 4 D-Pad/trigger button mapping (CLOSED (2026-10-19))
+- **TASK-2005:** ProfileWizardWindow: Checkboxes with description, preview before save, "Load template" option (CLOSED (2026-10-19))
+- **TASK-2006:** ProfileLibraryWindow: Bulk operations, sorting (name/date/downloads), favorites, "Insert from clipboard" for share code, download progress (CLOSED (2026-10-19))
+- **TASK-2007:** HandheldWindow: More tiles (Controller Test, Macro Editor), tiles reorderable (CLOSED (2026-10-19))
+- **TASK-2008:** InGameOverlayWindow: Size adjustable, position saved, battery dynamic (CLOSED (2026-10-19))
+- **TASK-2009:** MiniModeWindow: Keyboard shortcuts shown, transparency setting, profile switch directly (CLOSED (2026-10-19))
+- **TASK-2010:** ComboEditorWindow: Drag-and-drop for step order, copy/paste of steps, preview (CLOSED (2026-10-19))
+- **TASK-2011:** ButtonRemappingWindow: Duplicates removed (left/right identical), wrong reset button tooltips fixed, preview area removed or used sensibly, profile load/save (CLOSED (2026-10-19))
+- **TASK-2012:** RadialMenuWindow: Visual feedback on selection, animation on rotate (CLOSED (2026-10-19))
+- **TASK-2013:** RadialSetupWindow: "Select all" for emotes, download progress bar, emote categories (CLOSED (2026-10-19))
+- **TASK-2014:** DaisyWheelWindow: Current selection shown, wheel items configurable (CLOSED (2026-10-19))
+- **TASK-2015:** CommunityBrowserWindow: Sorting (name/date/downloads), category filter, favorites function (CLOSED (2026-10-19))
+- **TASK-2016:** DeveloperConsoleWindow: "Copy" button for logs, log level filter, timestamps shown (CLOSED (2026-10-19))
+- **TASK-2017:** TutorialWindow: Media preview filled with content, "Skip all tutorials" option, progress indicator (CLOSED (2026-10-19))
+- **TASK-2018:** ControllerTestWindow: German-English mix fixed, keyboard shortcuts shown, resize possible (CLOSED (2026-10-19))
+- **TASK-2019:** Controls/ControllerVisualization: Interactive feedback on button press, hover effects (CLOSED (2026-10-19))
+- **TASK-2020:** Controls/TelemetryPanel: Export function for telemetry data, auto-scroll toggle, data reset (CLOSED (2026-10-19))
 
 #### Epic 12 — Multi-Client Engine Execution (v2.4.0)
-
-- **TASK-2101:** Research: EngineOrchestrator Multi-Instanz-Architektur (Thread-Safety, Resource-Sharing) (RESEARCH_DONE)
-- **TASK-2102:** MultiClientEngineOrchestrator: Dictionary<HWND, EngineInstance> Management (CLOSED (2026-10-20))
-- **TASK-2103:** InputRouter pro Client-Instanz (Isolation, Fokus-basiertes Routing) (CLOSED (2026-10-20))
-- **TASK-2104:** Profil pro HWND: Dictionary<HWND, Profile> statt einzelnes CurrentProfile (CLOSED (2026-10-20))
-- **TASK-2105:** Tick-Loop: Iteration aller aktiven Client-Engines (Load-Balancing, Priority) (CLOSED (2026-10-20))
-- **TASK-2106:** UI: Client-Tabs in MainWindow mit je eigener Engine-Status-Anzeige (CLOSED (2026-10-20))
-- **TASK-2107:** Client-spezifische Overlay-Instanzen (pro HWND eigenes Overlay) (CLOSED (2026-10-20))
-- **TASK-2108:** Unit-Tests: Multi-Client Engine Isolation, Input-Routing, Profil-Switch (CLOSED (2026-10-20))
+- **TASK-2101:** Research: EngineOrchestrator multi-instance architecture (thread safety, resource sharing) (RESEARCH_DONE)
+- **TASK-2102:** MultiClientEngineOrchestrator: Dictionary<HWND, EngineInstance> management (CLOSED (2026-10-20))
+- **TASK-2103:** Input router per client instance (isolation, focus-based routing) (CLOSED (2026-10-20))
+- **TASK-2104:** Profile per HWND: Dictionary<HWND, Profile> instead of single CurrentProfile (CLOSED (2026-10-20))
+- **TASK-2105:** Tick loop: iteration over all active client engines (load balancing, priority) (CLOSED (2026-10-20))
+- **TASK-2106:** UI: Client tabs in MainWindow with own engine status display each (CLOSED (2026-10-20))
+- **TASK-2107:** Client-specific overlay instances (own overlay per HWND) (CLOSED (2026-10-20))
+- **TASK-2108:** Unit tests: Multi-client engine isolation, input routing, profile switch (CLOSED (2026-10-20))
 
 #### Epic 13 — In-Game Overlay Completeness (v2.5.0)
+- **TASK-2201:** Skill cooldown overlay: visual bars for F1-F12 (config: position, size, opacity) (CLOSED (2026-10-20))
+- **TASK-2202:** Buff/debuff timer overlay: integration with BuffManager (active buffs + countdown) (CLOSED (2026-10-20))
+- **TASK-2203:** HP/SP overlay (OCR-based): Windows OCR / Tesseract for HP/SP bar reading (CLOSED (2026-10-21))
+- **TASK-2204:** Target info overlay (OCR): target HP, level, name, distance (CLOSED (2026-10-21))
+- **TASK-2205:** Overlay designer: drag & drop positioning, presets save/load (CLOSED (2026-10-21))
+- **TASK-2206:** Overlay themes: Dark/Light/HighContrast selectable per profile (CLOSED (2026-10-21))
+- **TASK-2207:** Damage numbers overlay (optional): own damage display over target (CLOSED (2026-10-21))
+- **TASK-2208:** Unit tests: overlay rendering, OCR accuracy, performance (CLOSED (2026-10-21))
 
-- **TASK-2201:** Skill-Cooldown-Overlay: Visuelle Balken für F1-F12 (Config: Position, Größe, Opacity) (CLOSED (2026-10-20))
-- **TASK-2202:** Buff/Debuff Timer Overlay: Integration mit BuffManager (aktive Buffs + Countdown) (CLOSED (2026-10-20))
-- **TASK-2203:** HP/SP Overlay (OCR-basiert): Windows OCR / Tesseract für HP/SP-Balken lesen (CLOSED (2026-10-21))
-- **TASK-2204:** Target-Info Overlay (OCR): Ziel-HP, Level, Name, Distanz (CLOSED (2026-10-21))
-- **TASK-2205:** Overlay-Designer: Drag & Drop Positionierung, Presets speichern/laden (CLOSED (2026-10-21))
-- **TASK-2206:** Overlay-Themes: Dark/Light/HighContrast per Profil wählbar (CLOSED (2026-10-21))
-- **TASK-2207:** Damage Numbers Overlay (Optional): Eigene Schadensanzeige über Ziel (CLOSED (2026-10-21))
-- **TASK-2208:** Unit-Tests: Overlay-Rendering, OCR-Accuracy, Performance (CLOSED (2026-10-21))
-
-#### TECH-Schulden
-
-- **TASK-9001:** TECH-020: WindowSwitcher — Process.GetProcessById im EnumWindows-Callback cachen (Allokationen im Hot Path) (CLOSED (2026-10-24) — PID→Name Cache mit 10s TTL, keine Allokationen im Callback)
-- **TASK-9002:** TECH-021: EngineOrchestrator God Class / SRP-Violation refactoren (686 Zeilen, 20+ Engine-Felder) (CLOSED (2026-10-24) — 5 Coordinatoren extrahiert, 0 Build-Fehler, 904/905 Tests PASS)
-- **TASK-9003:** TECH-022: SettingsWindow — Lokalisierungs-Keys für neue Controls (TECH-017/019) in Locales nachpflegen (CLOSED (2026-10-24) — 18 fehlende Keys in allen 41 Locale-Dateien ergänzt)
-
----
+#### Technical Debt
+- **TASK-9001:** TECH-020: WindowSwitcher — Process.GetProcessById cached in EnumWindows callback (allocations in hot path) (CLOSED (2026-10-24) — PID→Name cache with 10s TTL, no allocations in callback)
+- **TASK-9002:** TECH-021: EngineOrchestrator God Class / SRP violation refactored (686 lines, 20+ engine fields) (CLOSED (2026-10-24) — 5 coordinators extracted, 0 build errors, 904/905 tests PASS)
+- **TASK-9003:** TECH-022: SettingsWindow — localization keys for new controls (TECH-017/019) added to locales (CLOSED (2026-10-24) — 18 missing keys added in all 41 locale files)
 
 ## [2.5.0] - 2026-10-22
 
-### ✨ Epic 8: DualSense Lightbar pro Profil konfigurierbar
-- **TASK-1901: Lightbar-Farb-Definition pro Profil** — Neues `Profile.LightbarColor` Property (Hex RGB, Default `#005AD2`). Jedes Profil kann jetzt eine eigene Lightbar-Farbe definieren (z.B. Rot für Mage, Blau für Archer, Grün für Support).
-- **TASK-1903: Engine-Integration** — `ProfileApplier.TryApplyLightbarColor()` wendet die Profil-Farbe beim Laden automatisch auf den DualSense an (via `DualSenseHardwareService.SetColor()`).
-- **TASK-1904: Unit-Tests** — 3 neue Tests in `ProfileMigrationTests.cs`: Default-Wert, Serialization-Roundtrip, verschiedene Farben.
+### ✨ Epic 8: DualSense Lightbar configurable per profile
+- **TASK-1901: Lightbar color definition per profile** — New `Profile.LightbarColor` property (hex RGB, default `#005AD2`). Each profile can now define its own lightbar color (e.g. red for Mage, blue for Archer, green for Support).
+- **TASK-1903: Engine integration** — `ProfileApplier.TryApplyLightbarColor()` applies the profile color automatically on the DualSense when loading (via `DualSenseHardwareService.SetColor()`).
+- **TASK-1904: Unit tests** — 3 new tests in `ProfileMigrationTests.cs`: default value, serialization roundtrip, different colors.
 
 ### 🔴 Critical Bug Fixes (Error Scan)
 - **ProfileManager.WriteToDisk** — Added 13 missing profile properties (ControllerGuid, Priority, IsEnabled, LongPress*, Stick*, ControllerConfigs, LastControllerGuid, AutoActivateOnControllerConnect, CreatedAt, DownloadCount). Fixes data loss on profile save.
@@ -230,64 +214,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `WizardWindow.xaml.cs` — Exception logged in `DetectControllers`
   - `ControllerTestWindow.xaml.cs` — 2× empty catch blocks replaced with logging
 - **ProfileTemplateManager.cs** — Fixed typo `"_preremewal"` → `"_prerenewal"`; wrapped `ButtonKey.Parse()` in Try-Catch
-- **MainWindow.xaml** — Fixed `\n` in 4 ToolTips (replaced with `&#x0a;` for correct XML line break)
+- **MainWindow.xaml** — Fixed `\n` in 4 tooltips (replaced with `&#x0a;` for correct XML line break)
 - **SettingsWindow.xaml.cs** — Replaced obsolete `Process.Start("explorer.exe", path)` with `ProcessStartInfo`; ShowToast DispatcherTimer now stopped on manual window close
 - **ProfileWizardWindow.xaml.cs** — Fixed `\\\\n` literal in MessageBox (replaced with `Environment.NewLine`)
 - **TutorialWindow.xaml.cs** — Fixed `IndexOutOfRangeException` at Slide 5 (`_mediaPaths` has 4 entries for 5 slides)
 
-**Build:** 0 Errors / 0 Warnings  
+**Build:** 0 errors / 0 warnings  
 **Tests:** 847/848 passing (1 pre-existing flaky)  
 **Empty catch blocks:** 0 remaining (SOUL.md ERROR-001 fully satisfied)
 
----## [2.5.1] - 2026-10-23
-
-### Fixed
-- **Flaky Test behoben:** `MemoryAllocationTracker_RecordTick_DoesNotAllocate` läuft jetzt zuverlässig im vollständigen Testlauf
-  - Test in isolierte `SequentialTests` Collection verschoben (parallele Tests stören prozessweite GC-Messungen nicht mehr)
-  - JIT Warmup + expliziter GC.Collect() vor Messung
-  - Threshold auf 50KB erhöht (Sampling-Pfad allokiert GCMemoryInfo, WorkingSet64)
-- **Flaky Test behoben:** `FEAT027_HapticFeedback_PlayBuffExpired_RecordsDoubleRumble` (Haptic Feedback)
-  - `HapticFeedbackService` erweitert um `PatternCompleted` Event
-  - Test wartet deterministisch auf Event statt `Thread.Sleep(500)` (Timer-Auflösung/Parallelität)
-  - Exakte Assertion: 4 Calls (On-Off-On-Off) statt `>= 4`
-- **Monster Database:** Pre-Renewal/Renewal Merge korrigiert (2.422 Monster mit unterschiedlichen Stats)
-
-### Tests
-- **905/905 Tests PASS** (0 flaky in Haptic/GC-Tests) — vorher 904/905
-- Neue `SequentialTestCollection` Fixture für prozessweite Metrik-Tests
-- Haptic Feedback Tests jetzt deterministisch via Event-basierte Synchronisation
-
-
-
 ## [2.5.1] - 2026-10-23
 
-### Added
-- **Monster Database: Vollständige Rathena-Integration** - Import von 2.676 Monstern aus den offiziellen Rathena mob_db.yml Dateien (Pre-Renewal & Renewal)
-- **MonsterDataLoader** - Neuer Service für HTTP-Download, Caching und Parsing der Rathena YAML-Datenbanken
-- **MonsterImportWindow** - UI zum Importieren der Monster-Datenbank mit Progress-Anzeige
-- **Pre-Renewal / Renewal Umschaltung** - Monster-Daten wechseln je nach MainWindow-Checkbox
-- **MVP-Erkennung** - Über `MvpDrops` Sektion in Rathena YAML
-- **Race/Element Mapping** - "Dark" → Shadow (Element) / Demon (Race)
-
 ### Fixed
-- Parser für verschachtelte YAML-Strukturen (Drops, Steal, MvpDrops, Modes)
-- Duplicate Key "Steel_Arrow" in ItemIdMap behoben
-- "Dark" Race/Element korrekt auf Shadow/Demon gemappt
-
-### Changed
-- Cache-Tests an echte Rathena-Daten angepasst (Monster-Namen: Am Mut, Maya, Matyr statt Lord Knight, Golden Thief Bug, Stormy Knight)
-- MVP-Test verwendet Maya (ID 1147) statt Am Mut (ID 1301)
+- **Flaky test fixed:** `MemoryAllocationTracker_RecordTick_DoesNotAllocate` now runs reliably in full test run
+  - Test moved to isolated `SequentialTests` collection (parallel tests no longer interfere with process-wide GC measurements)
+  - JIT warmup + explicit GC.Collect() before measurement
+  - Threshold raised to 50 KB (sampling path allocates GCMemoryInfo, WorkingSet64)
+- **Flaky test fixed:** `FEAT027_HapticFeedback_PlayBuffExpired_RecordsDoubleRumble` (haptic feedback)
+  - `HapticFeedbackService` extended with `PatternCompleted` event
+  - Test waits deterministically for event instead of `Thread.Sleep(500)` (timer resolution/parallelism)
+  - Exact assertion: 4 calls (on-off-on-off) instead of `>= 4`
+- **Monster database:** Pre-Renewal/Renewal merge corrected (2,422 monsters with different stats)
 
 ### Tests
-- 2 neue Cache-Tests für vollständigen Rathena-Import
-- 904/905 Tests erfolgreich (1 flaky: MemoryAllocationTracker)
+- **905/905 tests PASS** (0 flaky in haptic/GC tests) — previously 904/905
+- New `SequentialTestCollection` fixture for process-wide metric tests
+- Haptic feedback tests now deterministic via event-based synchronization
 
+### Added
+- **Monster database: Complete Rathena integration** — Import of 2,676 monsters from official Rathena mob_db.yml files (Pre-Renewal & Renewal)
+- **MonsterDataLoader** — New service for HTTP download, caching, and parsing of Rathena YAML databases
+- **MonsterImportWindow** — UI for importing the monster database with progress display
+- **Pre-Renewal / Renewal switch** — Monster data switches based on main window checkbox
+- **MVP detection** — via `MvpDrops` section in Rathena YAML
+- **Race/element mapping** — "Dark" → Shadow (element) / Demon (race)
 
+### Fixed
+- Parser for nested YAML structures (drops, steal, mvp drops, modes)
+- Duplicate key "Steel_Arrow" in ItemIdMap fixed
+- "Dark" race/element correctly mapped to Shadow/Demon
+
+### Changed
+- Cache tests adjusted to real Rathena data (monster names: Am Mut, Maya, Matyr instead of Lord Knight, Golden Thief Bug, Stormy Knight)
+- MVP test uses Maya (ID 1147) instead of Am Mut (ID 1301)
+
+### Tests
+- 2 new cache tests for complete Rathena import
+- 904/905 tests successful (1 flaky: MemoryAllocationTracker)
 
 ## [2.3.1] - 2026-10-20
 
 ### 🔴 Critical Bug Fixes (Error Scan)
-
 - **ProfileManager.WriteToDisk** — Added 13 missing profile properties (ControllerGuid, Priority, IsEnabled, LongPress*, Stick*, ControllerConfigs, LastControllerGuid, AutoActivateOnControllerConnect, CreatedAt, DownloadCount). Fixes data loss on profile save.
 - **ControllerService** — BatteryLevel and GetButtonStates() now read from SDL-thread-cached values instead of calling SDL directly from UI thread. Fixes AccessViolationException/race condition.
 - **SOUL.md ERROR-001 compliance** — Eliminated all empty `catch { }` blocks across the project:
@@ -297,65 +274,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `WizardWindow.xaml.cs` — Exception logged in `DetectControllers`
   - `ControllerTestWindow.xaml.cs` — 2× empty catch blocks replaced with logging
 - **ProfileTemplateManager.cs** — Fixed typo `"_preremewal"` → `"_prerenewal"`; wrapped `ButtonKey.Parse()` in Try-Catch
-- **MainWindow.xaml** — Fixed `\n` in 4 ToolTips (replaced with `&#x0a;` for correct XML line break)
+- **MainWindow.xaml** — Fixed `\n` in 4 tooltips (replaced with `&#x0a;` for correct XML line break)
 - **SettingsWindow.xaml.cs** — Replaced obsolete `Process.Start("explorer.exe", path)` with `ProcessStartInfo`; ShowToast DispatcherTimer now stopped on manual window close
 - **ProfileWizardWindow.xaml.cs** — Fixed `\\\\n` literal in MessageBox (replaced with `Environment.NewLine`)
 - **TutorialWindow.xaml.cs** — Fixed `IndexOutOfRangeException` at Slide 5 (`_mediaPaths` has 4 entries for 5 slides)
 
-**Build:** 0 Errors / 0 Warnings  
+**Build:** 0 errors / 0 warnings  
 **Tests:** 726/726 passing  
 **Empty catch blocks:** 0 remaining (SOUL.md ERROR-001 fully satisfied)
-
----
 
 ## [2.3.0] - 2026-10-17
 
 ### 🟥 SPRINT 15A — Critical Bug Fixes
-- **TECH-061: EngineOrchestrator Startup Validation** — All engine fields changed from `null!` to `private readonly`. Startup validation throws clear `InvalidOperationException` instead of silent `NullReferenceException` if any engine fails to initialize.
-- **TECH-062: MainWindow God Class Refactoring** — Extracted `ToastService` (~25 lines removed) and `ProfileService` (~60 lines removed) from MainWindow. MainWindow now delegates toast notifications and profile management to dedicated services.
-- **TECH-063: App.xaml.cs Auto-Restart on Crash** — Added `AutoRestartOnCrash` setting. Unhandled/Dispatcher exceptions now auto-restart the app with settings persisted first, preventing dead controller mid-session.
+- **TECH-061: EngineOrchestrator startup validation** — All engine fields changed from `null!` to `private readonly`. Startup validation throws clear `InvalidOperationException` instead of silent `NullReferenceException` if any engine fails to initialize.
+- **TECH-062: MainWindow god class refactoring** — Extracted `ToastService` (~25 lines removed) and `ProfileService` (~60 lines removed) from MainWindow. MainWindow now delegates toast notifications and profile management to dedicated services.
+- **TECH-063: App.xaml.cs auto-restart on crash** — Added `AutoRestartOnCrash` setting. Unhandled/Dispatcher exceptions now auto-restart the app with settings persisted first, preventing dead controller mid-session.
 
 ### 🟨 SPRINT 15B — UI/UX Polish
-- **UX-018: Empty States in All Panels** — ProfileLibraryWindow shows contextual empty state with icon, message, and "Create New Profile" CTA button when no profiles found.
-- **UX-019: Keyboard Shortcuts for Main Functions** — Ctrl+O (Profile Library), Ctrl+S (Save Settings), F1 (Help), Esc (Exit Mini Mode / Close Overlay) via `PreviewKeyDown`.
-- **UX-020: HandheldWindow Touch Optimization** — Battery status display in top bar (color-coded icon + text). All 6 main buttons already ≥180px touch targets.
-- **UX-021: InGameOverlayWindow Position Memory & Movable** — Overlay position saved/restored from settings. Draggable with left mouse button (except on interactive elements). Existing Opacity and FontScale settings supported.
-- **UX-022: Gyro Calibration in UI** — Added `GyroDeadzone` setting (default: 64). Calibration wizard in Settings measures DualSense gyro drift over 3 seconds and sets deadzone automatically.
+- **UX-018: Empty states in all panels** — ProfileLibraryWindow shows contextual empty state with icon, message, and "Create New Profile" CTA button when no profiles found.
+- **UX-019: Keyboard shortcuts for main functions** — Ctrl+O (Profile Library), Ctrl+S (Save Settings), F1 (Help), Esc (Exit Mini Mode / Close Overlay) via `PreviewKeyDown`.
+- **UX-020: HandheldWindow touch optimization** — Battery status display in top bar (color-coded icon + text). All 6 main buttons already ≥180px touch targets.
+- **UX-021: InGameOverlayWindow position memory & movable** — Overlay position saved/restored from settings. Draggable with left mouse button (except on interactive elements). Existing Opacity and FontScale settings supported.
+- **UX-022: Gyro calibration in UI** — Added `GyroDeadzone` setting (default: 64). Calibration wizard in Settings measures DualSense gyro drift over 3 seconds and sets deadzone automatically.
 
 ### 🟩 SPRINT 15C — Code Quality
-- **TECH-064: InputRouter Split** — Extracted `InputFailoverManager` class with ROB-002 failover state machine. `InputRouter` delegates failover logic (~50 lines removed).
-- **TECH-065: ControllerTestWindow Timer Optimization** — Timer now only runs when recording or diagnostic is active. 0 CPU usage when idle.
-- **TECH-066: AdvancedLogger Log Rotation** — Log files capped at 10 MB each, max 5 rotated files (.log.1 → .log.5, oldest deleted). Automatic rotation before each write cycle.
+- **TECH-064: InputRouter split** — Extracted `InputFailoverManager` class with ROB-002 failover state machine. `InputRouter` delegates failover logic (~50 lines removed).
+- **TECH-065: ControllerTestWindow timer optimization** — Timer now only runs when recording or diagnostic is active. 0 CPU usage when idle.
+- **TECH-066: AdvancedLogger log rotation** — Log files capped at 10 MB each, max 5 rotated files (.log.1 → .log.5, oldest deleted). Automatic rotation before each write cycle.
 
 ### 🟩 SPRINT 15D — New Features
-- **FEAT-028: Profile Import/Export Backup** — "Export All" button in ProfileLibraryWindow exports all profiles as ZIP archive with individual JSON files per profile.
-- **FEAT-029: Automatic Updates with Changelog** — Added `AutoUpdateEnabled` setting (default: true). App checks for updates on startup via GitHub API and displays changelog before download.
-- **FEAT-030: Multi-Monitor Support** — Added `OverlayMonitorIndex` setting. `MonitorHelper` class with P/Invoke `EnumDisplayMonitors` for monitor enumeration. Overlay positions on selected monitor at startup.
+- **FEAT-028: Profile import/export backup** — "Export All" button in ProfileLibraryWindow exports all profiles as ZIP archive with individual JSON files per profile.
+- **FEAT-029: Automatic updates with changelog** — Added `AutoUpdateEnabled` setting (default: true). App checks for updates on startup via GitHub API and displays changelog before download.
+- **FEAT-030: Multi-monitor support** — Added `OverlayMonitorIndex` setting. `MonitorHelper` class with P/Invoke `EnumDisplayMonitors` for monitor enumeration. Overlay positions on selected monitor at startup.
 
 ### 🔴 Critical Bug Fixes (ERR-01 to ERR-04)
-- **ERR-01/ERR-02: Event-Handler Memory Leaks** — MainWindow and HandheldWindow lambda event handlers replaced with named delegate fields. All engine events properly unsubscribed in `Window_Closing`.
-- **ERR-03: App.xaml.cs null! Fields** — `HybridEngine?`/`ProfileManager?` as nullable. Try/catch around engine creation with clear error dialog. Null-check after `Task.Run` with graceful shutdown.
-- **ERR-04: Fire-and-Forget Tasks** — `TaskContinuationOptions.OnlyOnFaulted` with error logging added to UpdateChecker, EngineOrchestrator Restart, HandheldWindow Exit-Delay, CombatEngine WindowSwitcher.
+- **ERR-01/ERR-02: Event handler memory leaks** — MainWindow and HandheldWindow lambda event handlers replaced with named delegate fields. All engine events properly unsubscribed in `Window_Closing`.
+- **ERR-03: App.xaml.cs null! fields** — `HybridEngine?`/`ProfileManager?` as nullable. Try/catch around engine creation with clear error dialog. Null-check after `Task.Run` with graceful shutdown.
+- **ERR-04: Fire-and-forget tasks** — `TaskContinuationOptions.OnlyOnFaulted` with error logging added to UpdateChecker, EngineOrchestrator Restart, HandheldWindow Exit-Delay, CombatEngine WindowSwitcher.
 
 ### 🔧 InputRouter NRE Protection
-- **RouteInput() Validation** — Validates all engine fields at entry point. Throws clear `InvalidOperationException` listing missing engines if failover-only constructor instance is used incorrectly.
+- **RouteInput() validation** — Validates all engine fields at entry point. Throws clear `InvalidOperationException` listing missing engines if failover-only constructor instance is used incorrectly.
 
-### 📊 Success Metrics
-- Build: 0 Errors / 0 Warnings
+### 📊 Success metrics
+- Build: 0 errors / 0 warnings
 - Tests: 642/642 passing
 - Localization: 41 locale files updated with new keys
 
-### 🚀 Phase 16: Multi-Client & Profil-Switching (v2.4.0) — Partially Complete
-- **TASK-1601: Research: Win32 Multi-HWND Enum & Input-Isolation** — Research document created in `.workspace_temp/scratchpad/TASK-1601_Research_MultiHwnd.md`. Win32 APIs (EnumWindows, IsWindow, PostMessage) analyzed. MultiClientWindowTracker architecture designed with TTL caching (10s), PID→Name cache (TECH-020 pattern), and IProcessNameResolver integration for testability.
-- **TASK-1602: Multi-Client WindowTracker** — New `MultiClientWindowTracker` class tracks multiple RO client windows (same process name, different HWNDs) simultaneously. `INativeMethods` extended with `EnumWindows`, `IsWindow`, `PostMessage` + `WM_*` constants. `EnumWindowsProcDelegate` public delegate type. 5 Unit-Tests in `MultiClientWindowTrackerTests.cs`. Build: 0 Errors / 0 Warnings.
-- **TASK-1603: Multi-Client Input Router** — New `MultiClientInputRouter` class sends input targeted at specific client HWNDs via PostMessage (focus-independent) with SendInput fallback. Supports preferred HWND selection, active process name from Settings (RoExePath/FocusLockProcess), and process name extraction from executable path. 12 Unit-Tests in `MultiClientInputRouterTests.cs`. Build: 0 Errors / 0 Warnings. Tests: 664/664 PASS.
-
---
-
-
+### 🚀 Phase 16: Multi-Client & Profile Switching (v2.4.0) — Partially Complete
+- **TASK-1601: Research: Win32 Multi-HWND Enum & Input Isolation** — Research document created in `.workspace_temp/scratchpad/TASK-1601_Research_MultiHwnd.md`. Win32 APIs (EnumWindows, IsWindow, PostMessage) analyzed. MultiClientWindowTracker architecture designed with TTL caching (10s), PID→Name cache (TECH-020 pattern), and IProcessNameResolver integration for testability.
+- **TASK-1602: Multi-client WindowTracker** — New `MultiClientWindowTracker` class tracks multiple RO client windows (same process name, different HWNDs) simultaneously. `INativeMethods` extended with `EnumWindows`, `IsWindow`, `PostMessage` + `WM_*` constants. `EnumWindowsProcDelegate` public delegate type. 5 unit tests in `MultiClientWindowTrackerTests.cs`. Build: 0 errors / 0 warnings.
+- **TASK-1603: Multi-client input router** — New `MultiClientInputRouter` class sends input targeted at specific client HWNDs via PostMessage (focus-independent) with SendInput fallback. Supports preferred HWND selection, active process name from Settings (RoExePath/FocusLockProcess), and process name extraction from executable path. 12 unit tests in `MultiClientInputRouterTests.cs`. Build: 0 errors / 0 warnings. Tests: 664/664 PASS.
 
 ### GEX-013: Integration Test Suite — Full Engine Chain Headless ✅
-**`tests/RagnaController.Tests/EngineChainIntegrationTests.cs`** — 525 Tests, alle grün (Combat+Movement+Targeting+Buffs+Items gleichzeitig, headless, deterministisch). Build: 0 Errors/0 Warnings (Debug & Release).
+**`tests/RagnaController.Tests/EngineChainIntegrationTests.cs`** — 525 tests, all green (Combat+Movement+Targeting+Buffs+Items simultaneously, headless, deterministic). Build: 0 errors/0 warnings (Debug & Release).
 
 ### Phase 8: UI Modernization — Cyber-Gaming Design 2026 ✅ (9/9 Tasks)
 UI-001 App.xaml Design System, UI-002 MainWindow, UI-003 SettingsWindow, UI-004 InGameOverlayWindow, UI-005 Handheld/RadialMenu/DaisyWheel, UI-006 ProfileWizard/Library/CommunityBrowser, UI-007 ControllerTest/ButtonRemapping/ComboEditor/Tutorial/Splash/MiniMode/DeveloperConsole, UI-008 Build Verification, UI-009 Documentation.
@@ -364,27 +335,25 @@ UI-001 App.xaml Design System, UI-002 MainWindow, UI-003 SettingsWindow, UI-004 
 PERF-001 ETW EventSource, PERF-002 Structured Logging (Serilog), PERF-003 Frame-Time Budget Tracking, PERF-004 Memory Allocation Tracking, PERF-005 Input Latency Measurement, PERF-006 BenchmarkDotNet Regression Gate, PERF-007 BenchmarkDotNet Integration, PERF-008 GPU/Overlay Render Profiling, PERF-009 CI Performance Dashboard.
 
 ### Phase 10: Gameplay Depth, Robustness & UX ✅ (13/13 Tasks)
-ROB-001 Watchdog-Härtung, FEAT-011 ItemManagerEngine, UI-010 WindowControlButton Token-Fix, TEST-010 Unit-Tests für 6 Engines, TEST-011 Fuzzing/Robustness, TEST-015 FakeControllerProvider Pipeline-Goldtests, TEST-016 Controller-Replay Golden-Master, TEST-017 Eingabe-Selbsttest, FEAT-012 PartyManager + Auto-Heal, FEAT-013 Target-Management (Tab/Lock/Retarget), ROB-002 Input-Emulation-Failover, PERF-010 Zero-Allokation-Gate, UI-011 Live-Telemetrie-Dashboard, FEAT-014 Session-Replay, TEST-012 Long-Run Soak, TEST-013 Stryker-Scoping, TEST-014 PerformanceTests, UX-012 Accessibility, FEAT-015 Multi-Client-Routing, FEAT-024 Multi-Character-Profil-Switch, FEAT-023 Auto-Item-Einlagerung.
+ROB-001 Watchdog hardening, FEAT-011 ItemManagerEngine, UI-010 WindowControlButton token fix, TEST-010 Unit tests for 6 engines, TEST-011 Fuzzing/robustness, TEST-015 FakeControllerProvider pipeline gold tests, TEST-016 Controller replay golden master, TEST-017 Input self-test, FEAT-012 PartyManager + Auto-Heal, FEAT-013 Target management (Tab/Lock/Retarget), ROB-002 input emulation failover, PERF-010 zero allocation gate, UI-011 live telemetry dashboard, FEAT-014 session replay, TEST-012 long-run soak, TEST-013 Stryker scoping, TEST-014 performance tests, UX-012 accessibility, FEAT-015 multi-client routing, FEAT-024 multi-character profile switch, FEAT-023 auto-item storage.
 
 ### Phase 12: UX Polish & Accessibility ✅ (15/15 Tasks)
-UX-001 AutomationProperties, UX-002 Empty State ohne Profil, UX-003 CheckBox Persistenz, UX-004 ComboBox Initialwerte, UX-005 Overlay Disconnected State, UX-006 Drag-Drop Import, UX-007 Wizard Validation, UX-008 Empty/Error State, UX-009 Unsaved Changes Warning, UX-010 Emote Search/Filter, UX-011 Tooltip Placement, UX-012 Click-Through Escape-Hatch, UX-013 Share Code Format Hint, UX-014 Tutorial Localization, UX-015 Splash Skip/Cancel.
+UX-001 AutomationProperties, UX-002 empty state without profile, UX-003 checkbox persistence, UX-004 ComboBox initial values, UX-005 overlay disconnected state, UX-006 drag-drop import, UX-007 wizard validation, UX-008 empty/error state, UX-009 unsaved changes warning, UX-010 emote search/filter, UX-011 tooltip placement, UX-012 click-through escape hatch, UX-013 share code format hint, UX-014 tutorial localization, UX-015 splash skip/cancel.
 
 ### Phase 13A: Core Input & Emulation Verification ✅ (4/4)
-GEX-001 SendInput/Interception Parity, GEX-002 Input Latency Budget, GEX-003 Keyboard Emulation Parity, GEX-004 Focus Lock Reliability.
+GEX-001 SendInput/Interception parity, GEX-002 input latency budget, GEX-003 keyboard emulation parity, GEX-004 focus lock reliability.
 
 ### Phase 13B: Combat & Skill System Verification ✅ (4/4)
-GEX-005 Skill Casting Accuracy, GEX-006 Auto-Targeting Accuracy, GEX-007 Movement Engine, GEX-008 Combo Engine.
+GEX-005 skill casting accuracy, GEX-006 auto targeting accuracy, GEX-007 movement engine, GEX-008 combo engine.
 
 ### Phase 13C: Support Systems ✅ (GEX-010, GEX-011, GEX-012)
-GEX-010 Item Manager, GEX-011 Buff/Debuff Manager, GEX-012 Profile System.
+GEX-010 item manager, GEX-011 buff/debuff manager, GEX-012 profile system.
 
-### SPRINT D — Technical Debt ✅ (TECH-016 bis TECH-033, TECH-051 bis TECH-057)
-TECH-016 Empty Catch Blocks, TECH-017 CheckBox Handlers, TECH-018 HttpClient Disposal, TECH-019 LocalizationManager, TECH-020 WindowSwitcher Cache, TECH-021 God Class (WONT_FIX), TECH-022 Localization Keys, TECH-023 ProfileManager I/O (WONT_FIX), TECH-024 Logger Channel, TECH-025 Timer Cleanup, TECH-026 Debug-Only Lock, TECH-027 Kite Overshoot, TECH-028 TelemetryPanel Dispose, TECH-029 ClassDetector BuildSkillToClassMap, TECH-030 Window_Closing Duplikation, TECH-031 Settings.Load() pro Tick, TECH-032 Cursor Desync, TECH-033 MageEngine R2 Digital+Analog, TECH-034 Cursor Reset, TECH-035 DPI Awareness, TECH-036 VirtualCursorPosition, TECH-037 Deterministic RNG, TECH-038 Blocking Sleep (WONT_FIX), TECH-039 MoveAbsolute SendInput, TECH-040 Dispose on Failover, TECH-041 Interception Absolute (documented), TECH-042 InvalidateSettingsCache, TECH-043 10x8 Grid (WONT_FIX), TECH-044 Back/Shift Separation, TECH-045 Drag Trigger L1+BtnA, TECH-046 ScrollWheel Queue, TECH-047 MouseAbs Batch, TECH-048 SmartCursor Guard, TECH-051 Static Collections Cleanup, TECH-052 IDisposable Events, TECH-053 Thread Cleanup (partiell), TECH-054 Async Calibration, TECH-055 HttpClient Dispose, TECH-056 Nullable Safety, TECH-057 Gitignore.
+### Sprint D — Technical Debt ✅ (TECH-016 to TECH-033, TECH-051 to TECH-057)
+TECH-016 empty catch blocks, TECH-017 checkbox handlers, TECH-018 HttpClient disposal, TECH-019 LocalizationManager, TECH-020 WindowSwitcher cache, TECH-021 god class (WONT_FIX), TECH-022 localization keys, TECH-023 ProfileManager I/O (WONT_FIX), TECH-024 logger channel, TECH-025 timer cleanup, TECH-026 debug-only lock, TECH-027 kite overshoot, TECH-028 telemetry panel dispose, TECH-029 ClassDetector BuildSkillToClassMap, TECH-030 Window_Closing duplication, TECH-031 Settings.Load() per tick, TECH-032 cursor desync, TECH-033 MageEngine R2 digital+analog, TECH-034 cursor reset, TECH-035 DPI awareness, TECH-036 virtual cursor position, TECH-037 deterministic RNG, TECH-038 blocking sleep (WONT_FIX), TECH-039 MoveAbsolute SendInput, TECH-040 dispose on failover, TECH-041 interception absolute (documented), TECH-042 invalidate settings cache, TECH-043 10x8 grid (WONT_FIX), TECH-044 back/shift separation, TECH-045 drag trigger L1+BtnA, TECH-046 scroll wheel queue, TECH-047 mouse abs batch, TECH-048 smart cursor guard, TECH-051 static collections cleanup, TECH-052 IDisposable events, TECH-053 thread cleanup (partial), TECH-054 async calibration, TECH-055 HttpClient dispose, TECH-056 nullable safety, TECH-057 gitignore.
 
-### Comprehensive App Audit — New Findings ✅ (TECH-051–TECH-057 done, TECH-049/TECH-050 offen)
-Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join im Dispose, Async Calibration, HttpClient Dispose, Nullable Safety, Gitignore Hardening.
-
----
+### Comprehensive App Audit — New Findings ✅ (TECH-051–TECH-057 done, TECH-049/TECH-050 open)
+All static collections cleanup, IDisposable for event classes, thread join in dispose, async calibration, HttpClient dispose, nullable safety, gitignore hardening.
 
 ## [2.2.1] - 2026-10-10
 
@@ -394,7 +363,7 @@ Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join
 - **TECH-053: Background Thread Cleanup** — `InputCommandQueue.Dispose()` now joins consumer thread; `ControllerService.Dispose()` signals and joins SDL thread; `EngineOrchestrator.Shutdown()` disposes InputCommandQueue.
 - **TECH-054: Async Calibration (UI Non-Blocking)** — Fixed UI-blocking `Thread.Sleep(100)` in `HybridEngine.StartCalibrationAsync()` → `await Task.Delay(100)`. Updated `BtnCalibrateQuick_Click` to `async/await`.
 - **TECH-055: Static HttpClient Disposal** — Added thread-safe `DisposeHttpClient()` to `ProfileShareService` with lock-based disposal; called from `EngineOrchestrator.Shutdown()`.
-- **TECH-056: Nullable Safety Verified** — Release build: 0 Errors, 0 Warnings. All CS8602/CS8618/CS8625 risks resolved.
+- **TECH-056: Nullable Safety Verified** — Release build: 0 errors, 0 warnings. All CS8602/CS8618/CS8625 risks resolved.
 - **TECH-057: Gitignore Hardening** — Added `*.g.cs` and `*.g.i.cs` to `.gitignore`. Verified no generated files in Git.
 
 ### Changed
@@ -413,48 +382,44 @@ Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join
 - **TECH-055 Socket Exhaustion** — Static HttpClient now properly disposed to prevent connection pool leaks.
 
 ### Tests
-- **Build:** 0 Errors, 0 Warnings (Debug & Release) ✅
+- **Build:** 0 errors, 0 warnings (Debug & Release) ✅
 - **Unit/Integration Tests:** 325/325 PASS (Debug) ✅
 - **Release Fuzz Tests:** 40/40 PASS (Release Build) ✅
-- **Mutation Testing:** Stryker.NET Pipeline active (CI `windows-latest`)
-
----
+- **Mutation Testing:** Stryker.NET pipeline active (CI `windows-latest`)
 
 ## [2.2.0] - 2026-10-07
 
 ### Added
-- **TECH-027: KiteRetreatingState Overshoot-Schutz** — `_rem` (verbleibende Distanz) Tracking + `Math.Min(step, _rem)` Clamping eliminiert Overshoot bei `deltaMs >= RetreatDurationMs`. Normales Verhalten bit-exakt erhalten. 3 neue Unit-Tests (`KiteRetreatOvershootTests`): `GrosserDeltaMs_KeinOvershoot`, `NormalerBetrieb_GesamtdistanzUngeschaedigt`, `Null_Duration_SofortPivoting`.
-- **TECH-019: MainWindow → LocalizationManager Delegation** — Lokale `GetLocalizedString(key.Replace)` durch `LocalizationManager.GetLocalizedString(key)` ersetzt (wie SettingsWindow/CommunityBrowserWindow). Beide Aufrufstellen (`Tab_NoMappings`) nutzen jetzt echtes i18n.
-- **TECH-026: InputCommandQueue Lock Status bestätigt** — `_commandsLock` ist **bereits in Release & Debug aktiv** (kein `#if DEBUG`). Release-Build Fuzz-Tests: 40/40 PASS. Kein Code-Change nötig.
-- **TECH-025: ControllerDiagnosticRunner IDisposable** — Implementiert `IDisposable` mit `IsDisposed`, Subscriber-Referenzen werden freigegeben, `Start()`/`FeedSample()` nach Dispose inert. `ControllerTestWindow.OnClosed` ruft `_diagnostic?.Dispose()` auf. 5 neue Unit-Tests. **WICHTIG:** KANBAN-Eintrag korrigiert — `ControllerDiagnosticRunner` hatte KEINEN `_percentileTimer` (reine Zustandsmaschine), der echte Leak war Event-Delegates ohne Unsubscribe.
-- **TECH-024: AdvancedLogger Critical-Log-Channel** — Dedizierter ungebundener Channel für Warn/Error (nie Drop), `DropOldest` nur für Debug/Info. Konstruktor mit injectable Capacity für Tests. `ConsumeAsync` + `Dispose` drainen beide Channels. 5 neue Unit-Tests (`AdvancedLoggerTests`).
-- **TECH-018: CommunityBrowserWindow HttpClient Disposal** — Static `HttpClient` (`_http`) wird in `App.OnExit` via `CommunityBrowserWindow.DisposeRegistryClient()` sauber disposed. Verhindert Socket-Leaks bei Shutdown. Unit-Test für Singleton-Semantik.
-- **TECH-030: SettingsWindow SaveAllSettings() Extraktion** — Duplizierte `Window_Closing` / `BtnApply_Click` Logik in zentrale `SaveAllSettings()` Methode extrahiert. Checkbox-Werte werden jetzt konsistent gespeichert.
-- **TECH-029: ClassDetector BuildSkillToClassMap() Fix** — `AddEntry`-Akkumulation statt Keyed Collection Initializer → 25 duplicate `VirtualKey` (F1, F2, etc.) werden NICHT mehr stillschweigend überschrieben. 113 statt 51 Class-Tuples. 6 neue Unit-Tests.
+- **TECH-027: KiteRetreatingState overshoot protection** — `_rem` (remaining distance) tracking + `Math.Min(step, _rem)` clamping eliminates overshoot when `deltaMs >= RetreatDurationMs`. Normal behavior bit-exact preserved. 3 new unit tests (`KiteRetreatOvershootTests`): `GrosserDeltaMs_KeinOvershoot`, `NormalerBetrieb_GesamtdistanzUngeschaedigt`, `Null_Duration_SofortPivoting`.
+- **TECH-019: MainWindow → LocalizationManager delegation** — Local `GetLocalizedString(key.Replace)` replaced by `LocalizationManager.GetLocalizedString(key)` (like SettingsWindow/CommunityBrowserWindow). Both call sites (`Tab_NoMappings`) now use real i18n.
+- **TECH-026: InputCommandQueue lock status confirmed** — `_commandsLock` is **already active in Release & Debug** (no `#if DEBUG`). Release build fuzz tests: 40/40 PASS. No code change needed.
+- **TECH-025: ControllerDiagnosticRunner IDisposable** — Implemented `IDisposable` with `IsDisposed`, subscriber references released, `Start()`/`FeedSample()` inert after Dispose. `ControllerTestWindow.OnClosed` calls `_diagnostic?.Dispose()`. 5 new unit tests. **IMPORTANT:** KANBAN entry corrected — `ControllerDiagnosticRunner` did NOT have `_percentileTimer` (pure state machine), the real leak was event delegates without unsubscribe.
+- **TECH-024: AdvancedLogger critical log channel** — Dedicated unbounded channel for warn/error (never dropped), `DropOldest` only for debug/info. Constructor with injectable capacity for tests. `ConsumeAsync` + `Dispose` drain both channels. 5 new unit tests (`AdvancedLoggerTests`).
+- **TECH-018: CommunityBrowserWindow HttpClient disposal** — Static `HttpClient` (`_http`) disposed in `App.OnExit` via `CommunityBrowserWindow.DisposeRegistryClient()`. Prevents socket leaks at shutdown. Unit test for singleton semantics.
+- **TECH-030: SettingsWindow SaveAllSettings() extraction** — Duplicated `Window_Closing` / `BtnApply_Click` logic extracted to central `SaveAllSettings()` method. Checkbox values now saved consistently.
+- **TECH-029: ClassDetector BuildSkillToClassMap() fix** — `AddEntry` accumulation instead of keyed collection initializer → 25 duplicate `VirtualKey` (F1, F2, etc.) no longer silently overwritten. 113 instead of 51 class tuples. 6 new unit tests.
 
 ### Changed
-- **KANBAN.md** — Alle TECH-Tasks (016-030) Status aktualisiert: 29 ✅ ERLEDIGT, 1 ❌ WONT_FIX (TECH-023), 3 offen (TECH-020, 021, 022). Ehrliche Dokumentation von Korrekturen (TECH-025 Timer-Mythos, TECH-026 Debug-Only-Mythos, TECH-027 Division-by-Zero bereits behoben).
-- **Build System** — 0 Errors, 0 Warnings in Debug & Release.
-- **Test Suite** — 325/325 Tests PASS (Debug), 40/40 Fuzz-Tests PASS (Release).
+- **KANBAN.md** — All TECH tasks (016-030) status updated: 29 ✅ DONE, 1 ❌ WONT_FIX (TECH-023), 3 open (TECH-020, 021, 022). Honest documentation of corrections (TECH-025 timer myth, TECH-026 debug-only myth, TECH-027 division by zero already fixed).
+- **Build system** — 0 errors, 0 warnings in Debug & Release.
+- **Test suite** — 325/325 tests PASS (Debug), 40/40 fuzz tests PASS (Release).
 
 ### Tests
-- **NEU:** `KiteRetreatOvershootTests` (3), `ControllerDiagnosticRunnerTests` Dispose-Tests (5), `AdvancedLoggerTests` (5), `CommunityBrowserWindowHttpClientTests` (1), `TelemetryDashboardTests` Fix + 1 Test, `ClassDetectorTests` (6), `InputCommandQueueTests` Fuzz (40 Release).
-- **Gesamt:** 325 Unit/Integration Tests + 40 Release-Fuzz = 365 Tests grün.
-- **Mutation Testing:** Stryker.NET Pipeline konfiguriert (CI `windows-latest`).
+- **New:** `KiteRetreatOvershootTests` (3), `ControllerDiagnosticRunnerTests` dispose tests (5), `AdvancedLoggerTests` (5), `CommunityBrowserWindowHttpClientTests` (1), `TelemetryDashboardTests` fix + 1 test, `ClassDetectorTests` (6), `InputCommandQueueTests` fuzz (40 release).
+- **Total:** 325 unit/integration tests + 40 release fuzz = 365 tests green.
+- **Mutation testing:** Stryker.NET pipeline configured (CI `windows-latest`).
 
 ### Fixed
-- **TECH-017: SettingsWindow CheckBox Handler Missing** — Alle CheckBox-Events verdrahtet, `SaveAllSettings()` persistiert konsistent.
-- **TECH-016: Empty Catch Blocks** — Silent Error Swallowing eliminiert, strukturiertes Logging + Re-throw wo nötig.
-- **TECH-028: TelemetryPanel DispatcherTimer Dispose** — `StopUpdates()` ruft `_timer.Dispose()` + Event-Handler unsubscribe.
-
----
+- **TECH-017: SettingsWindow checkbox handler missing** — All checkbox events wired, `SaveAllSettings()` persists consistently.
+- **TECH-016: Empty catch blocks** — Silent error swallowing eliminated, structured logging + re-throw where needed.
+- **TECH-028: TelemetryPanel DispatcherTimer dispose** — `StopUpdates()` calls `_timer.Dispose()` + event handler unsubscribe.
 
 ## [2.1.0] - 2026-09-04
 
 ### Added
 - **Phase 8: UI Modernization — Cyber-Gaming Design 2026** — Complete UI overhaul across all 18 WPF windows
-- **New Design System** (`Resources/UI2026DesignSystem.xaml`) — Colors, gradients, glassmorphism, shadows, typography
-- **DarkComboBox Style** — Consistent dropdown styling (CornerRadius=5, Gold hover border, RaisedBg popup) across all windows
+- **New design system** (`Resources/UI2026DesignSystem.xaml`) — Colors, gradients, glassmorphism, shadows, typography
+- **DarkComboBox style** — Consistent dropdown styling (CornerRadius=5, gold hover border, raised bg popup) across all windows
 - **CardBorder, ConsolePrimaryBtn, ConsoleGhostBtn** — Reusable styled components with gold accents
 - **Sliders, Scrollbars, CheckBoxes, TabButton, IconButton** — Complete component library
 
@@ -476,8 +441,6 @@ Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join
 - **CS8618/CS8625** nullable warnings eliminated in updated code-behind files
 - **Missing using directives** — Added `using System.Windows.Media` where needed
 
----
-
 ## [2.0.3] - 2026-08-24
 
 ### Added
@@ -492,24 +455,20 @@ Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join
 ### Tests
 - Documentation build verified.
 
----
-
 ## [2.0.2] - 2026-08-23
 
 ### Fixed
-- **SDL2 Cleanup** — `System.AccessViolationException` in `ControllerService.SdlThreadLoop()` behoben: Static `_sdlInitialized`-Guard verhindert mehrfache `SDL.Init()`/`SDL.Quit()` Calls; `try/finally` garantiert sicheren Cleanup nur bei erfolgreicher Initialisierung. Behebt Crash in headless CI-Umgebung.
+- **SDL2 cleanup** — `System.AccessViolationException` in `ControllerService.SdlThreadLoop()` fixed: static `_sdlInitialized` guard prevents multiple `SDL.Init()`/`SDL.Quit()` calls; `try/finally` guarantees safe cleanup only after successful initialization. Fixes crash in headless CI environment.
 
 ### Tests
 - All 56 tests passing (verified locally + CI).
 - Build: 0 errors, 0 warnings (Stryker.NET mutation testing configured).
 
----
-
 ## [2.0.1] - 2026-08-23
 
 ### Added
-- **FEAT-007: Class-Specific Skill Orchestration** — 27 class-specific rotations with weighted heuristic scoring, `RotationStep`, `RotationConfig`, `RotationCondition` with 15 condition types. `SkillOrchestrator.Update()` handles evaluation and execution.
-- **FEAT-008: Buff / Debuff Tracking System** — `BuffManager` tracks buffs/debuffs with durations, expiration warnings, and auto-recast support, integrated into `EngineOrchestrator` via `action.TrackBuff`. Exposes `ActiveBuffNames`, `ActiveDebuffNames`, `GetBuffRemainingSec()`, `GetDebuffRemainingSec()`.
+- **FEAT-007: Class-specific skill orchestration** — 27 class-specific rotations with weighted heuristic scoring, `RotationStep`, `RotationConfig`, `RotationCondition` with 15 condition types. `SkillOrchestrator.Update()` handles evaluation and execution.
+- **FEAT-008: Buff/debuff tracking system** — `BuffManager` tracks buffs/debuffs with durations, expiration warnings, and auto-recast support, integrated into `EngineOrchestrator` via `action.TrackBuff`. Exposes `ActiveBuffNames`, `ActiveDebuffNames`, `GetBuffRemainingSec()`, `GetDebuffRemainingSec()`.
 - **POLISH-013:** Zero-allocation hot path optimizations across core engines — reusable lists, `ConcurrentDictionary` + `GetOrAdd`, `IReadOnlyCollection` instead of `.ToList()`.
 - **POLISH-014:** Human-like input timing — `JitterService.ClickHold()` with 15-46ms natural variance replaces hardcoded 50ms sleeps in `InputCommandQueue`.
 - **POLISH-015:** Memory leak prevention — `Commands` list in `InputCommandQueue` conditionalized under `#if DEBUG`; `_isInitialized` field removed from `InGameOverlayWindow.xaml.cs`.
@@ -529,7 +488,7 @@ Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join
 - **`ClassDetector.cs`** — Already optimized — weighted heuristic scoring with 37 new skill mappings across all RO classes including transcendent classes.
 - **`SkillOrchestrator.cs`** — Already optimized — 27 class-specific rotations working with cooldown tracking.
 - **`CooldownManager.cs`** — Already optimized — initialized with `IMessenger`, added public methods.
-- **`roadmap.md`** — All HW-005 through HW-013 + FEAT-007/008 marked `✅ COMPLETE`; Release Summary v2.1.0 section added.
+- **`roadmap.md`** — All HW-005 through HW-013 + FEAT-007/008 marked `✅ COMPLETE`; release summary v2.1.0 section added.
 - **`ControllerSnapshot.cs`** — Added `SkillCooldownMs` and `ActiveSkillId` fields for cooldown tracking in overlay UI.
 
 ### Tests
@@ -538,14 +497,12 @@ Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join
 - Mutation testing pipeline configured via Stryker.NET `stryker-config-core-only.json`.
 
 ### Fixed
-- **CS8618** nullable warnings eliminated across `ControllerManager.cs`, `XInputFallbackService.cs`, `SnapshotBuilder.cs` (Core + Controller paths).
+- **CS8618** nullable warnings eliminated across `ControllerManager.cs`, `XInputFallbackService.cs`, `SnapshotBuilder.cs` (core + controller paths).
 - **CS8625** nullable warnings fixed — all constructor params and fields properly annotated.
 - **Memory leak** in `InputCommandQueue.cs` — `Commands` list now DEBUG-only; `AtomicLeftClick`/`AtomicRightClick` use `JitterService.ClickHold()` (15-46ms) instead of hardcoded 50ms.
 - **Dead code** — Unused `_isInitialized` field eliminated from `InGameOverlayWindow.xaml.cs`.
 - **Nullability** — `MageEngine.cs` constructor param changed from `null` to `null!`; `SmartCursorService` dependency injected.
 - **Interface consistency** — `BuffManager.ActiveBuffNames`/`ActiveDebuffNames` return `IReadOnlyCollection<string>` instead of `IReadOnlyList<string>`.
-
----
 
 ## [2.0.0] - 2026-08-22
 
@@ -553,7 +510,7 @@ Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join
 - **Full autonomous development cycle** — Phases 1-7 completed without manual intervention per SOUL.md.
 - **FEAT-003: Community Hub** — Profile sharing via GitHub Gists with 3 starter profiles.
 - **FEAT-004: HybridEngine decomposition** — Split monolithic HybridEngine into focused components.
-- **FEAT-005: Full Class Engine Presets** — 27 class-specific rotation presets.
+- **FEAT-005: Full class engine presets** — 27 class-specific rotation presets.
 
 ### Changed
 - Architecture refactoring: HybridEngine → EngineOrchestrator + InputRouter + ProfileApplier + StandbyManager
@@ -562,7 +519,7 @@ Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join
 - `ControllerSnapshot.cs` and `SnapshotBuilder.cs` relocated from `Controller/` to `Core/`
 - `L3` button mapping refactored to `BtnL3`
 - Profile class added `ControllerGuid` field
-- `InGameOverlayWindow` updated with Profile Name and Class Badge UI elements
+- `InGameOverlayWindow` updated with profile name and class badge UI elements
 - `ButtonState` struct extracted to dedicated file, converted to `readonly record struct`
 - All nullable reference warnings resolved (CS8618/CS8625)
 - Build: 0 errors, 0 warnings
@@ -574,27 +531,23 @@ Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join
 - SOUL.md RULE-001..004: All satisfied.
 - FINAL-001: All 7 golden rules verified.
 
----
-
 ## [1.5.0] - 2026-08-18
 
 ### Added
-- **POLISH-003: EngineIntegrationTests Scaffold** — 7 integration tests for engine orchestration stability with mocked RO window.
+- **POLISH-003: EngineIntegrationTests scaffold** — 7 integration tests for engine orchestration stability with mocked RO window.
 
 ### Changed
-- **POLISH-002: Stryker CI Integration** — Push to `main` triggers mutation testing pipeline on `windows-latest`.
-- **POLISH-004: Release Package Prep** — Clean `release_final/` isolation verified.
-- **POLISH-001: Build Fixes** — XAML entity escaping, typo fixes, csproj cleanup.
+- **POLISH-002: Stryker CI integration** — Push to `main` triggers mutation testing pipeline on `windows-latest`.
+- **POLISH-004: Release package prep** — Clean `release_final/` isolation verified.
+- **POLISH-001: Build fixes** — XAML entity escaping, typo fixes, csproj cleanup.
 
 ### Tests
 - All 40 tests passing (32 unit + 8 integration).
 
----
-
 ## [1.4.1] - 2026-08-17
 
 ### Changed
-- **InputCommandQueue Migration** — All engines now accept `InputCommandQueue` via constructor for unified input dispatch.
+- **InputCommandQueue migration** — All engines now accept `InputCommandQueue` via constructor for unified input dispatch.
 
 ### Fixed
 - KiteEngine: corrected method name `MouseMoveRelative` → `MoveMouseRelative`.
@@ -603,12 +556,10 @@ Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join
 ### Tests
 - All 32 unit tests passing (updated KiteEngineTests to pass queue).
 
----
-
 ## [1.4.0] - 2026-08-17
 
 ### Added
-- **ARCH-001: HybridEngine Decomposition** — Split 605-line monolithic HybridEngine into 4 focused components: EngineOrchestrator, InputRouter, ProfileApplier, StandbyManager.
+- **ARCH-001: HybridEngine decomposition** — Split 605-line monolithic HybridEngine into 4 focused components: EngineOrchestrator, InputRouter, ProfileApplier, StandbyManager.
 - `HybridEngine` now acts as a thin façade maintaining full backward compatibility.
 
 ### Changed
@@ -620,8 +571,6 @@ Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join
 - All 32 unit tests passing (0 errors, 0 warnings).
 - Performance: < 50 allocations per tick, < 8ms end-to-end latency.
 
----
-
 ## [1.3.0] - 2026-08-15
 
 ### Added
@@ -630,7 +579,7 @@ Alle statischen Collections Cleanup, IDisposable für Event-Klassen, Thread-Join
 - Service providers (ITickProvider, IInputService).
 - Engine implementations (AutoTargetEngine, MovementEngine, etc.).
 - Default profiles for all RO Pre-Renewal classes (19 profiles).
-- Performance optimization patterns (String Pool, Message Pool, Value Types).
+- Performance optimization patterns (string pool, message pool, value types).
 - Comprehensive documentation (README, CONTRIBUTING, TESTING, PERFORMANCE).
 - CI/CD pipeline configuration (GitHub Actions workflow).
 
@@ -656,4 +605,4 @@ The version number follows Semantic Versioning (SemVer):
 
 ---
 
-*Last updated: 2026-10-10 | Documentation synchronized for v2.2.1 | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 325/325 (Debug) + 40/40 (Release Fuzz) | SOUL.md: All 7 golden rules satisfied*
+*Last updated: 2026-10-28 | Documentation synchronized for v2.6.1 | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 1139/1139 PASS | SOUL.md: All 7 golden rules satisfied*

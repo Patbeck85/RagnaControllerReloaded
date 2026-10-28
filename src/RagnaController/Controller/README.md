@@ -6,11 +6,11 @@ Handles all physical controller input: XInput polling, DualSense HID communicati
 
 | File | Responsibility |
 |------|----------------|
-|| `ButtonState.cs` | Readonly Record-Struct mit Button-Status-Flags |
-|| `ControllerSnapshot.cs` | Controller-Status-Snapshot für UI-Binding |
-|| `DualSenseHardwareService.cs` | DualSense-Lightbar-Farben und Adaptive Triggers via Raw HID |
-|| `SnapshotBuilder.cs` | Baut ControllerSnapshot aus Engine-Zustand |
-|| `XInputFallbackService.cs` | XInput-Fallback-Controller-Dienst |
+| `ButtonState.cs` | Readonly Record-Struct with button status flags |
+| `ControllerSnapshot.cs` | Controller status snapshot for UI binding |
+| `DualSenseHardwareService.cs` | DualSense Lightbar colors and Adaptive Triggers via Raw HID |
+| `SnapshotBuilder.cs` | Builds ControllerSnapshot from engine state |
+| `XInputFallbackService.cs` | XInput fallback controller service |
 
 ## Architecture
 

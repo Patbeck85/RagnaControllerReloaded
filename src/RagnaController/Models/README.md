@@ -6,23 +6,20 @@ Data transfer objects and record structs used across all layers.
 
 | File | Responsibility |
 |------|----------------|
-|| `AdaptiveTriggerMode.cs` | Enum für DualSense Adaptive-Trigger-Modi |
-|| `BuffRegistry.cs` | Registry für aktive Buff/Debuff-Verfolgung |
-|| `ButtonAction.cs` | Enum für Button-Action-Mappings |
-|| `ButtonKey.cs` | Enum passend zu Win32 VK-Codes mit Button-Key-Mappings |
-|| `ChordConfig.cs` | Konfiguration für Akkord-/Button-Kombinationen |
-|| `CommunityEntry.cs` | Datenmodell für Community-Hub-Einträge |
-|| `ItemConfig.cs` | Konfiguration für Spielgegenstände |
-|| `MobDatabase.cs` | Monster-Datenbank-Modell (Pre-Renewal & Renewal, erweiterte Abfragen) |
-|| `ItemDatabaseService.cs` | Item-Datenbank mit SellPrice, Filtern, GameMode |
-|| `MapDatabaseService.cs` | Map-Datenbank mit Level-Ranges, Spawns, Warp-Zielen |
-|| `Monster.cs` | Einzelnes Monster-Datenmodell |
-|| `Monster.cs` | Einzelnes Monster-Datenmodell |
-|| `ParsedInput.cs` | Readonly Record-Struct (aktueller/vorheriger Frame-Input) |
-|| `Settings.cs` | Globale App-Einstellungen (AppData) |
-|| `StorageDropPlanner.cs` | Storage-Drop-Organisations-Planer |
-|| `UpdateInfo.cs` | Update-Prüfungs-Informationen-Modell |
-|| `VirtualKey.cs` | Enum passend zu Win32 VK-Codes |
+| `AdaptiveTriggerMode.cs` | Enum for DualSense Adaptive Trigger modes |
+| `BuffRegistry.cs` | Registry for active buff/debuff tracking |
+| `ButtonAction.cs` | Enum for button action mappings |
+| `ButtonKey.cs` | Enum matching Win32 VK codes with button key mappings |
+| `ChordConfig.cs` | Configuration for chord/button combinations |
+| `CommunityEntry.cs` | Data model for community hub entries |
+| `ItemConfig.cs` | Configuration for game items |
+| `MobDatabase.cs` | Monster database model |
+| `Monster.cs` | Single monster data model |
+| `ParsedInput.cs` | Readonly Record-Struct (current/previous frame input) |
+| `Settings.cs` | Global app settings (AppData) |
+| `StorageDropPlanner.cs` | Storage drop organization planner |
+| `UpdateInfo.cs` | Update check information model |
+| `VirtualKey.cs` | Enum matching Win32 VK codes |
 
 ## Notes
 

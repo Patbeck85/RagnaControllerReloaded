@@ -8,7 +8,13 @@
 
 This release represents a complete autonomous development cycle executed per **SOUL.md v2.0 Enterprise** principles. All phases (1-11) were completed without manual intervention, with systematic file-by-file review and optimization of all ~323 `.cs` files.
 
-### Key Achievements (v2.2.1):
+### Key Achievements (v2.6.1):
+- **Complete Localization** — All language files translated to 48 languages with 1,289 keys each
+- **Flaky Test Fixed** — LogLevel_FiltertTiefereLevel deterministic (AdvancedLogger.Dispose waits for channel drain)
+- **Documentation Synchronized** — All 9 subfolder READMEs synced with actual file tree
+- **Stryker.NET Configuration Fixed** — `stryker.json` key `exclude-mutation` → `ignore-mutations`
+
+### Previous Achievements (v2.6.0):
 - **Static Collection Cleanup** — All registries and caches now dispose properly on shutdown (TECH-051)
 - **Event Subscription Leak Prevention** — 4 core classes now implement `IDisposable` with proper event cleanup (TECH-052)
 - **Background Thread Management** — Consumer thread and SDL thread properly joined on shutdown (TECH-053)
@@ -16,16 +22,6 @@ This release represents a complete autonomous development cycle executed per **S
 - **Socket Leak Prevention** — Static HttpClient now properly disposed (TECH-055)
 - **Nullable Safety** — 0 Errors, 0 Warnings in Release build (TECH-056)
 - **Git Hygiene** — Generated files excluded from source control (TECH-057)
-
-### Previous Achievements (v2.2.0):
-- **Zero-allocation hot paths** — Reusable lists, `ConcurrentDictionary`, `IReadOnlyCollection` instead of `.ToList()`
-- **Human-like input timing** — `JitterService.ClickHold()` with 15-46ms natural variance replaces hardcoded 50ms sleeps
-- **Memory leak prevention** — `Commands` list DEBUG-only; `_isInitialized` field eliminated
-- **Nullable safety** — All CS8618/CS8625 compiler warnings resolved across entire project
-- **Dead code removal** — Unused fields, unnecessary allocations eliminated
-- **Phase 8: Complete UI Modernization** — Cyber-Gaming 2026 design system across all 18 WPF windows
-- **Phase 9: Performance & Observability** — Frame Budget Monitor (PERF-003) with P50/P95/P99 tracking, ETW events
-- **All 7 SOUL.md Golden Rules** verified satisfied
 
 ### 🔴 Recent Fixes (Error Scan & Quality Assurance)
 
@@ -46,8 +42,8 @@ This release represents a complete autonomous development cycle executed per **S
 | 13 | `ProfileWizardWindow.xaml.cs` | `\\\\n` in MessageBox shown literally | Low | `Environment.NewLine` used |
 | 14 | `TutorialWindow.xaml.cs` | `IndexOutOfRangeException` at Slide 5 | High | Bounds-check added |
 
-**Build:** 0 Errors, 0 Warnings
-**Tests:** 1139/1139 passing
+**Build:** 0 Errors, 0 Warnings  
+**Tests:** 1139/1139 passing  
 **Empty catch blocks:** 0 remaining in entire project (SOUL.md ERROR-001 fully satisfied)
 
 ---
@@ -61,7 +57,7 @@ This release represents a complete autonomous development cycle executed per **S
 | 🧲 **Smart Grid** | Magnetic D-Pad UI snapping (32px slot jumps) for inventory management. |
 | 🎯 **Smart Aim Assist** | Micro-spiral right-stick targeting to guarantee hitbox clicks. |
 | ⚡ **Release-to-Cast** | Modern MOBA-style AoE spell placement. |
-| 🎮 **DualSense Adaptive Triggers** | Hardware-level mechanical resistance (Bow tension, Magic pulse, Weapon recoil). |
+| 🎮 **DualSense Adaptive Triggers** | Hardware-level mechanical resistance (bow tension, magic pulse, weapon recoil). |
 | 🖥️ **Kernel-Level Input Bypass** | Interception driver support for strict anti-cheat servers. |
 | 🗣️ **Voice-to-Chat & Daisy Wheel** | Talk to type, or use the circular on-screen keyboard. |
 | 🌐 **Community Hub** | Serverless in-app profile browser using GitHub Gists. |
@@ -164,19 +160,19 @@ RagnaController uses a **JSON-based localization system** with live language swi
 
 ### Supported Languages
 
-| **English** (`en.json`) — Default (Quellsprache)
-| **Deutsch** (`de.json`) — German
-| **Français** (`fr.json`), **Español** (`es.json`), **Italiano** (`it.json`), **Português** (`pt.json`), **Română** (`ro.json`)
-| **Nederlands** (`nl.json`), **Svenska** (`sv.json`), **Dansk** (`da.json`), **Norsk** (`no.json`)
-| **Polski** (`pl.json`), **Čeština** (`cs.json`), **Slovenčina** (`sk.json`), **Slovenščina** (`sl.json`), **Hrvatski** (`hr.json`), **Srpski** (`sr.json`)
-| **Русский** (`ru.json`), **Українська** (`uk.json`), **Български** (`bg.json`)
-| **Suomi** (`fi.json`), **Magyar** (`hu.json`), **Ελληνικά** (`el.json`), **Türkçe** (`tr.json`), **فارسی** (`fa.json`)
-| **Tiếng Việt** (`vi.json`), **Bahasa Indonesia** (`id.json`), **Bahasa Melayu** (`ms.json`), **Tagalog** (`tl.json`), **ไทย** (`th.json`), **မြန်မာ** (`my.json`)
-| **العربية** (`ar.json`), **עברית** (`he.json`)
-| **हिन्दी** (`hi.json`), **বাংলা** (`bn.json`), **தமிழ்** (`ta.json`), **తెలుగు** (`te.json`), **മലയാളം** (`ml.json`), **मराठी** (`mr.json`), **ગુજરાતી** (`gu.json`), **ਪੰਜਾਬੀ** (`pa.json`), **ଓଡ଼ିଆ** (`or.json`), **ಕನ್ನಡ** (`kn.json`), **اردو** (`ur.json`)
-| **日本語** (`ja.json`), **한국어** (`ko.json`), **中文** (`zh.json`), **简体中文** (`zh-cn.json`)
+- **English** (`en.json`) — Default (source language)
+- **Deutsch** (`de.json`) — German
+- **Français** (`fr.json`), **Español** (`es.json`), **Italiano** (`it.json`), **Português** (`pt.json`), **Română** (`ro.json`)
+- **Nederlands** (`nl.json`), **Svenska** (`sv.json`), **Dansk** (`da.json`), **Norsk** (`no.json`)
+- **Polski** (`pl.json`), **Čeština** (`cs.json`), **Slovenčina** (`sk.json`), **Slovenščina** (`sl.json`), **Hrvatski** (`hr.json`), **Srpski** (`sr.json`)
+- **Русский** (`ru.json`), **Українська** (`uk.json`), **Български** (`bg.json`)
+- **Suomi** (`fi.json`), **Magyar** (`hu.json`), **Ελληνικά** (`el.json`), **Türkçe** (`tr.json`), **فارسی** (`fa.json`)
+- **Tiếng Việt** (`vi.json`), **Bahasa Indonesia** (`id.json`), **Bahasa Melayu** (`ms.json`), **Tagalog** (`tl.json`), **ไทย** (`th.json`), **မြန်မာ** (`my.json`)
+- **العربية** (`ar.json`), **עברית** (`he.json`)
+- **हिन्दी** (`hi.json`), **বাংলা** (`bn.json`), **தமிழ்** (`ta.json`), **తెలుగు** (`te.json`), **മലയാളം** (`ml.json`), **मराठी** (`mr.json`), **ગુજરાતી** (`gu.json`), **ਪੰਜਾਬੀ** (`pa.json`), **ଓଡ଼ିଆ** (`or.json`), **ಕನ್ನಡ** (`kn.json`), **اردو** (`ur.json`)
+- **日本語** (`ja.json`), **한국어** (`ko.json`), **中文** (`zh.json`), **简体中文** (`zh-cn.json`)
 
-**48 Sprachen × 1289 Keys** — alle konsistent mit `en.json`
+**48 languages × 1,289 keys** — all consistent with `en.json`
 
 ### How It Works
 
@@ -211,12 +207,16 @@ src/RagnaController/
 │   │   ├── CommunityBrowserWindow.xaml    # GitHub Gists community hub
 │   │   ├── DeveloperConsoleWindow.xaml    # In-app developer console
 │   │   ├── DaisyWheelWindow.xaml          # Circular on-screen keyboard
-│   │   └── TutorialWindow.xaml            # Interactive tutorial overlay
+│   │   ├── TutorialWindow.xaml            # Interactive tutorial overlay
+│   │   ├── GyroCalibrationWindow.xaml     # DualSense gyro calibration wizard (TASK-2401)
+│   │   ├── SkillRecommendationWindow.xaml # Skill build recommendations (FEAT-2602)
+│   │   └── AutoBuildOptimizerWindow.xaml  # Auto stat allocation optimizer (FEAT-2603)
 │   │
 │   ├── Overlays/                          # In-game & overlay windows
 │   │   ├── InGameOverlayWindow.xaml       # Borderless in-game state HUD
 │   │   ├── HandheldWindow.xaml            # Big-Picture UI for ROG Ally / Steam Deck
 │   │   └── MiniModeWindow.xaml            # Compact click-through HUD
+│   │   └── OverlayDesignerWindow.xaml     # Drag & Drop overlay position designer
 │   │
 │   ├── Editors/                           # Configuration editors
 │   │   ├── ButtonRemappingWindow.xaml     # Layer-based button mapping
@@ -270,6 +270,7 @@ src/RagnaController/
 │   │   ├── IInputHandler.cs               # Input handler interface
 │   │   ├── IKeyboardEmulationStrategy.cs  # Keyboard emulation strategy interface
 │   │   └── IMouseEmulationStrategy.cs     # Mouse emulation strategy interface
+│   │   └── MultiClientInputRouter.cs      # Multi-client input routing
 │   │
 │   ├── Windows/                           # Window management & tracking
 │   │   ├── WindowTracker.cs               # WinEventHook for game client bounds/DPI
@@ -312,12 +313,8 @@ src/RagnaController/
 │   │   ├── ProfileShareService.cs         # GitHub Gists API for community profiles
 │   │   ├── DefaultProfileLoader.cs        # Built-in profile loading
 │   │   ├── DiscordRpcService.cs           # Discord Rich Presence integration
-│   │   ├── RoUiMenuService.cs             # RO in-game menu integration (UI-integriert via MainWindow BtnRadial)
+│   │   ├── RoUiMenuService.cs             # RO in-game menu integration
 │   │   ├── RadialMenuService.cs           # Radial menu service
-│   │   ├── ColorBlindService.cs           # Color blindness palettes (UI-integriert via Settings)
-│   │   ├── AccessibilityService.cs        # Screen reader support (UI-integriert via Settings)
-│   │   ├── GamepadNavigationService.cs    # Gamepad UI navigation (UI-integriert via Settings)
-│   │   ├── AdvancedInputService.cs        # Chorded/sequential input (UI-integriert via Settings)
 │   │   ├── TtsAnnouncerService.cs         # Text-to-speech announcements
 │   │   ├── HapticFeedbackService.cs       # Haptic feedback control
 │   │   ├── GamepadUiNavigator.cs          # Gamepad UI navigation
@@ -338,7 +335,11 @@ src/RagnaController/
 │   │   ├── OverlayRouter.cs               # Overlay window routing
 │   │   ├── PartyManager.cs                # Party management
 │   │   ├── PowerModeService.cs            # Windows power mode service
-│   │   └── CooldownManager.cs             # Cooldown tracking
+│   │   ├── CooldownManager.cs             # Cooldown tracking
+│   │   ├── ColorBlindService.cs           # Color blindness palettes (UI-integrated via Settings)
+│   │   ├── AccessibilityService.cs        # Screen reader support (UI-integrated via Settings)
+│   │   ├── GamepadNavigationService.cs    # Gamepad UI navigation (UI-integrated via Settings)
+│   │   └── AdvancedInputService.cs        # Chorded/sequential input (UI-integrated via Settings)
 │   │
 │   ├── Utilities/                         # Utility classes & helpers
 │   │   ├── EngineOrchestrator.cs          # Main tick coordination, lifecycle management
@@ -365,10 +366,12 @@ src/RagnaController/
 │   │
 │   ├── Benchmarks/                        # Performance benchmarks
 │   │   └── BenchmarkHarness.cs            # Benchmark test harness
-│   ├── AI/                                  # AI & recommendation services
+│   │
+│   ├── AI/                                # AI & recommendation services
 │   │   ├── SkillRecommendationEngine.cs   # Skill build recommendations (UI: SkillRecommendationWindow)
 │   │   └── ...                              # Future AI features
-│   ├── Calculators/                         # Game calculators
+│   │
+│   ├── Calculators/                       # Game calculators
 │   │   ├── AutoBuildOptimizer.cs          # Stat build optimizer (UI: AutoBuildOptimizerWindow)
 │   │   ├── StatCalculator.cs              # HP/SP/ASPD/Hit/Flee calculations
 │   │   ├── ExperienceCalculator.cs        # RO EXP tables (Pre-Renewal & Renewal)
@@ -381,6 +384,8 @@ src/RagnaController/
 │   ├── ControllerState.cs                 # Readonly record struct for UI binding
 │   ├── VirtualKey.cs                      # Enum matching Win32 VK codes
 │   ├── Settings.cs                        # Global app settings (AppData)
+│   ├── MobDatabase.cs                     # Monster database model (Pre-Renewal & Renewal)
+│   ├── Monster.cs                         # Single monster data model
 │   └── ...                                # Additional model classes
 │
 ├── Profiles/                              # Profile Management
@@ -419,14 +424,14 @@ Located in `tests/RagnaController.Tests/`:
 - No Win32 calls during tests (isolated from OS)
 - xUnit framework with NSubstitute and FluentAssertions
 
-**Current Test Suite:** 1076 tests passing across all core engines and integration tests.
+**Current Test Suite:** 1139 tests passing across all core engines and integration tests.
 
 ### Build Verification
 
 Before any deployment:
 
 1. **Compile** project (`dotnet build`) — **0 errors, 0 warnings** ✅
-2. **Run tests** (`dotnet test`) — **1076/1076 passing** ✅
+2. **Run tests** (`dotnet test`) — **1139/1139 passing** ✅
 3. **Manual Windows testing** (VS Code / Visual Studio)
 4. **Verify release isolation** — `release_final/` contains only end products ✅
 

@@ -1,13 +1,13 @@
-# Core/Services — Background Services & Manager
+# Core/Services — Background Services & Managers
 
-Alle Hintergrunddienste, Manager und langlaufenden Komponenten.
+All background services, managers, and long-running components.
 
-## Ordnerstruktur
+## Folder Structure
 
-Dienste sind nach Domänen in Unterordnern organisiert:
+Services are organized by domain into subfolders:
 
-| Unterordner | Dienste |
-|-------------|---------|
+| Subfolder | Services |
+|-----------|----------|
 | `Audio/` | `TtsAnnouncerService.cs`, `VoiceChatService.cs` |
 | `Battery/` | `BatteryOptimizationService.cs` |
 | `Config/` | `ConfigWatcher.cs`, `LocalizationManager.cs` |
@@ -25,10 +25,11 @@ Dienste sind nach Domänen in Unterordnern organisiert:
 | `Overlay/` | `OverlayRouter.cs`, `RoUiMenuService.cs` |
 | `Power/` | `PowerModeService.cs`, `PowerMonitor.cs`, `SleepModeService.cs`, `StandbyManager.cs` |
 | `Profile/` | `CloudSyncService.cs`, `DefaultProfileLoader.cs`, `ProfileApplier.cs`, `ProfileShareService.cs`, `ProfileValidator.cs` |
+| `UI/` | `ColorBlindService.cs`, `AccessibilityService.cs`, `GamepadNavigationService.cs`, `AdvancedInputService.cs` |
 
-## Hinweise
+## Notes
 
-- Dienste sind im DI-Container in `App.xaml.cs` registriert
-- Die meisten Dienste implementieren `IDisposable` für ordnungsgemäße Bereinigung
-- `ClassDetector` und `BuffManager` sind Schlüssel-Features (FEAT-009, FEAT-008)
-- `LocalizationManager` verwaltet die i18n-Sprachumschaltung für alle 48 unterstützten Sprachen
+- Services are registered in the DI container in `App.xaml.cs`
+- Most services implement `IDisposable` for proper cleanup
+- `ClassDetector` and `BuffManager` are key features (FEAT-009, FEAT-008)
+- `LocalizationManager` manages i18n language switching for all 48 supported languages
