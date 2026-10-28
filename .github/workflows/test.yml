@@ -32,8 +32,6 @@ jobs:
           --configuration Release
           --nologo
           --logger "console;verbosity=normal"
-          --collect:"XPlat Code Coverage"
-          --results-directory ./coverage
 
       - name: Coverage Threshold Check
         run: |
