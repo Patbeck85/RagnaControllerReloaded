@@ -27,11 +27,13 @@ jobs:
         run: dotnet restore src/RagnaController/RagnaController.csproj
 
       - name: Run Core Tests
+        timeout-minutes: 10
         run: >
           dotnet test tests/RagnaController.Tests/RagnaController.Tests.csproj
           --configuration Release
           --nologo
           --logger "console;verbosity=normal"
+          --no-restore --no-build
 
       - name: Coverage Threshold Check
         run: |

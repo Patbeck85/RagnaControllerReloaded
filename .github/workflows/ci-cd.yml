@@ -33,7 +33,8 @@ jobs:
       run: dotnet build src/RagnaController/RagnaController.csproj --configuration Release
 
     - name: Run Tests
-      run: dotnet test tests/RagnaController.Tests/RagnaController.Tests.csproj --configuration Release --verbosity normal
+      timeout-minutes: 10
+      run: dotnet test tests/RagnaController.Tests/RagnaController.Tests.csproj --configuration Release --verbosity normal --no-restore --no-build
 
   publish-release:
     name: Publish & Create Release

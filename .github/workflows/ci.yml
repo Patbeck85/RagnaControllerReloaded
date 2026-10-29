@@ -28,7 +28,8 @@ jobs:
       run: dotnet build --configuration Release
 
     - name: Run Unit Tests
-      run: dotnet test --verbosity minimal --configuration Release
+      timeout-minutes: 10
+      run: dotnet test --verbosity minimal --configuration Release --no-restore --no-build
 
     - name: Run Integration Tests
       run: dotnet test --filter "FullyQualifiedName~Integration" --verbosity minimal --configuration Release
