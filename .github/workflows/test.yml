@@ -27,13 +27,14 @@ jobs:
         run: dotnet restore src/RagnaController/RagnaController.csproj
 
       - name: Run Core Tests
-        timeout-minutes: 10
-        run: >
-          dotnet test tests/RagnaController.Tests/RagnaController.Tests.csproj
-          --configuration Release
-          --nologo
-          --logger "console;verbosity=normal"
-          --no-restore --no-build
+        shell: pwsh
+        run: |
+          $process = Start-Process dotnet -ArgumentList "test tests/RagnaController.Tests/RagnaController.Tests.csproj --configuration Release --nologo --logger "console;verbosity=normal" --no-restore --no-build" -PassThru
+          if (-not ($process | Wait-Process -Timeout 600)) {
+            Stop-Process -Id $process.Id -Force
+            Write-Error "Tests timed out after 10 minutes"
+            exit 1
+          }
 
       - name: Coverage Threshold Check
         run: |

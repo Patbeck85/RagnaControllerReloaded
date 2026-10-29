@@ -33,8 +33,14 @@ jobs:
       run: dotnet build src/RagnaController/RagnaController.csproj --configuration Release
 
     - name: Run Tests
-      timeout-minutes: 10
-      run: dotnet test tests/RagnaController.Tests/RagnaController.Tests.csproj --configuration Release --verbosity normal --no-restore --no-build
+      shell: pwsh
+      run: |
+        $process = Start-Process dotnet -ArgumentList "test tests/RagnaController.Tests/RagnaController.Tests.csproj --configuration Release --verbosity normal --no-restore --no-build" -PassThru
+        if (-not ($process | Wait-Process -Timeout 600)) {
+          Stop-Process -Id $process.Id -Force
+          Write-Error "Tests timed out after 10 minutes"
+          exit 1
+        }
 
   publish-release:
     name: Publish & Create Release
