@@ -123,7 +123,7 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <ComboBox x:Name="ProfileCombo" Width="200" Style="{StaticResource DarkComboBox}" SelectionChanged="ProfileCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_ProfileCombo_Tooltip}" AutomationProperties.Name="Profile selector" Grid.Column="0" Margin="8,4,0,4" VerticalAlignment="Center"/>
+                                                    <ComboBox x:Name="ProfileCombo" Width="180" MaxWidth="220" Style="{StaticResource DarkComboBox}" SelectionChanged="ProfileCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_ProfileCombo_Tooltip}" AutomationProperties.Name="Profile selector" Grid.Column="0" Margin="8,4,0,4" VerticalAlignment="Center"/>
                                                     <Border Grid.Column="1" Width="36" Height="36" Background="{StaticResource AccentBlue}" CornerRadius="0,{StaticResource RadiusMd},{StaticResource RadiusMd},0" Margin="0" VerticalAlignment="Center" HorizontalAlignment="Right" Effect="{StaticResource BlueGlow}">
                                                         <Path Data="M0,0 L4,4 L8,0" Stroke="{StaticResource TextPrimary}" StrokeThickness="1.8" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                     </Border>
@@ -137,7 +137,7 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Text="Client:" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
-                                                    <ComboBox x:Name="ClientCombo" Width="140" Style="{StaticResource DarkComboBox}" SelectionChanged="ClientCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_Tooltip_SelectClient}" AutomationProperties.Name="RO client selector" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center"/>
+                                                    <ComboBox x:Name="ClientCombo" Width="130" MaxWidth="160" Style="{StaticResource DarkComboBox}" SelectionChanged="ClientCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_Tooltip_SelectClient}" AutomationProperties.Name="RO client selector" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center"/>
                                                     <Button x:Name="BtnRefreshClients" Content="&#xE72C;" Width="28" Height="28" Style="{StaticResource WindowControlButton}" Click="BtnRefreshClients_Click" ToolTip="{core:Loc MainWindow_Tooltip_RefreshClients}" AutomationProperties.Name="{core:Loc MainWindow_Tooltip_RefreshClients}" Grid.Column="2" VerticalAlignment="Center"/>
                                                 </Grid>
                                             </Border>
@@ -149,7 +149,7 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Text="Preset:" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
-                                                    <ComboBox x:Name="PresetCombo" Width="140" Style="{StaticResource DarkComboBox}" SelectionChanged="PresetCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_Tooltip_SelectPreset}" AutomationProperties.Name="Profile preset selector" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center"/>
+                                                    <ComboBox x:Name="PresetCombo" Width="130" MaxWidth="160" Style="{StaticResource DarkComboBox}" SelectionChanged="PresetCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_Tooltip_SelectPreset}" AutomationProperties.Name="Profile preset selector" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center"/>
                                                     <Button x:Name="BtnSavePreset" Content="&#xE74E;" Width="28" Height="28" Style="{StaticResource WindowControlButton}" Click="BtnSavePreset_Click" ToolTip="{core:Loc MainWindow_Tooltip_SavePreset}" AutomationProperties.Name="{core:Loc MainWindow_Tooltip_SavePreset}" Grid.Column="2" VerticalAlignment="Center"/>
                                                 </Grid>
                                             </Border>
@@ -161,7 +161,7 @@
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
                                                     <TextBlock Text="Class:" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
-                                                    <ComboBox x:Name="ClassCharacterCombo" Width="130" Style="{StaticResource DarkComboBox}" SelectionChanged="ClassCharacterCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_Tooltip_SelectClass}" AutomationProperties.Name="Character class selector" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center">
+                                                    <ComboBox x:Name="ClassCharacterCombo" Width="120" MaxWidth="150" Style="{StaticResource DarkComboBox}" SelectionChanged="ClassCharacterCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_Tooltip_SelectClass}" AutomationProperties.Name="Character class selector" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center">
                                                         <ComboBox.ItemTemplate>
                                                             <DataTemplate>
                                                                 <StackPanel Orientation="Horizontal" Margin="4,2">

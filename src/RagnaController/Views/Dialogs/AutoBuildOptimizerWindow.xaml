@@ -241,8 +241,6 @@
                                 </Border>
 
                                 <!-- Leer Platz -->
-                                <Border Grid.Column="2" />
-                                <Border Grid.Column="3" />
                             </Grid>
 
                             <!-- Hinweis -->

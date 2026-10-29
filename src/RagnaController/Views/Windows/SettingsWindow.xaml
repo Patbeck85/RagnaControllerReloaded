@@ -55,42 +55,47 @@
                                                 </Border>
 
                                                 <!-- Profile Settings -->
-                            <TextBlock Text="{core:Loc Settings_Profile}" Style="{StaticResource Eyebrow}"/>
-                            <Border Style="{StaticResource GlassPanel}">
-                                <StackPanel>
-                                    <ComboBox x:Name="ProfileCombo" ItemsSource="{Binding}" SelectedIndex="-1"
-                                                                                   Style="{StaticResource DarkComboBox}"
-                                                                                   ToolTip="{core:Loc Settings_ActiveProfile_Tooltip}"
-                                                                                   SelectionChanged="ProfileCombo_SelectionChanged"/>
-                    
-                                    <CheckBox x:Name="ChkAutoLoadProfile" Content="{core:Loc Settings_AutoLoadProfile}"
-                                                                                  Click="ChkAutoLoadProfile_Click"/>
-                    
-                                    <TextBlock Text="{core:Loc Settings_SaveProfileOnClose}" Style="{StaticResource BodyText}" Margin="0,10,0,6"/>
-                                                                        <TextBlock x:Name="CurrentProfileText" Text="{core:Loc Settings_NoProfileLoaded}"
-                                                                                   Foreground="{StaticResource TextTertiary}" FontSize="9" FontFamily="Consolas" Margin="0,0,0,8"/>
-                                </StackPanel>
-                            </Border>
+                                                                            <TextBlock Text="{core:Loc Settings_Profile}" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
+                                                                            <Border Style="{StaticResource GlassPanel}">
+                                                                                <StackPanel>
+                                                                                    <ComboBox x:Name="ProfileCombo" ItemsSource="{Binding}" SelectedIndex="-1"
+                                                                                                                                   Style="{StaticResource DarkComboBox}"
+                                                                                                                                   ToolTip="{core:Loc Settings_ActiveProfile_Tooltip}"
+                                                                                                                                   SelectionChanged="ProfileCombo_SelectionChanged"
+                                                                                                                                   Margin="0,0,0,8"/>
 
-                            <!-- Engine Settings -->
-                            <TextBlock Text="{core:Loc Settings_Engine}" Style="{StaticResource Eyebrow}"/>
-                                                        <Border Style="{StaticResource GlassPanel}">
-                                                            <StackPanel>
-                                                                <CheckBox x:Name="ChkStartWithWindows" Content="{core:Loc Settings_StartWithWindows}"
-                                                                          Click="ChkStartWithWindows_Click"/>
-                    
-                                    <CheckBox x:Name="ChkMinimizeToTray" Content="{core:Loc Settings_MinimizeToTray}"
-                                                                                                              Click="ChkMinimizeToTray_Click"/>
+                                                                                    <CheckBox x:Name="ChkAutoLoadProfile" Content="{core:Loc Settings_AutoLoadProfile}"
+                                                                                                                                  Click="ChkAutoLoadProfile_Click"
+                                                                                                                                      Margin="0,4,0,0"/>
 
-                                                                        <!-- Engine State Display -->
-                                                                        <TextBlock x:Name="EngineStateText" Text="{core:Loc Settings_EngineState_Ready}"
-                                                                                   Foreground="{StaticResource TextSecondary}" FontSize="9" FontFamily="Consolas" Margin="0,10,0,6"/>
+                                                                                    <TextBlock Text="{core:Loc Settings_SaveProfileOnClose}" Style="{StaticResource BodyText}" Margin="0,10,0,6"/>
+                                                                                                                        <TextBlock x:Name="CurrentProfileText" Text="{core:Loc Settings_NoProfileLoaded}"
+                                                                                                                                   Foreground="{StaticResource TextTertiary}" FontSize="9" FontFamily="Consolas" Margin="0,0,0,8"/>
+                                                                                </StackPanel>
+                                                                            </Border>
 
-                                                                        <!-- Show Latency Checkbox -->
-                                                                        <CheckBox x:Name="ChkShowLatency" Content="{core:Loc Settings_ShowLatency}"
-                                                                                                              Click="ChkShowLatency_Click"/>
-                                </StackPanel>
-                            </Border>
+                                                                            <!-- Engine Settings -->
+                                                                            <TextBlock Text="{core:Loc Settings_Engine}" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
+                                                                                                        <Border Style="{StaticResource GlassPanel}">
+                                                                                                            <StackPanel>
+                                                                                                                <CheckBox x:Name="ChkStartWithWindows" Content="{core:Loc Settings_StartWithWindows}"
+                                                                                                                          Click="ChkStartWithWindows_Click"
+                                                                                                                                  Margin="0,4,0,0"/>
+
+                                                                                    <CheckBox x:Name="ChkMinimizeToTray" Content="{core:Loc Settings_MinimizeToTray}"
+                                                                                                                                                              Click="ChkMinimizeToTray_Click"
+                                                                                                                                      Margin="0,4,0,0"/>
+
+                                                                                                                        <!-- Engine State Display -->
+                                                                                                                        <TextBlock x:Name="EngineStateText" Text="{core:Loc Settings_EngineState_Ready}"
+                                                                                                                                   Foreground="{StaticResource TextSecondary}" FontSize="9" FontFamily="Consolas" Margin="0,10,0,6"/>
+
+                                                                                                                        <!-- Show Latency Checkbox -->
+                                                                                                                        <CheckBox x:Name="ChkShowLatency" Content="{core:Loc Settings_ShowLatency}"
+                                                                                                                                                              Click="ChkShowLatency_Click"
+                                                                                                                                      Margin="0,4,0,0"/>
+                                                                                </StackPanel>
+                                                                            </Border>
 
                             <!-- TASK-1902: DualSense Lightbar per Profil -->
                             <TextBlock Text="{core:Loc Settings_DualSenseLightbar}" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
@@ -388,9 +393,10 @@
                                                                                                                                                                                          Foreground="{StaticResource TextTertiary}" FontSize="9" FontFamily="Consolas" Margin="0,0,0,10"/>
 
                                                                                                             <!-- Calibrate Button -->
-                                                                                                            <Button x:Name="BtnCalibrate" Content="{core:Loc Settings_Btn_Calibrate}"
-                                                                                                                    Style="{StaticResource GhostButton}" Height="40" Padding="16,0"
-                                                                                                                    Margin="0,0,0,10" Click="BtnCalibrate_Click"/>
+                                                                                                                                                        <TextBlock Text="Calibrate" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
+                                                                                                                                                        <Button x:Name="BtnCalibrate" Content="{core:Loc Settings_Btn_Calibrate}"
+                                                                                                                                                                Style="{StaticResource GhostButton}" Height="40" Padding="16,0"
+                                                                                                                                                                Margin="0,0,0,10" Click="BtnCalibrate_Click"/>
 
                                     <!-- Version and Path Info -->
                                     <TextBlock x:Name="LblVersion" Text=""
