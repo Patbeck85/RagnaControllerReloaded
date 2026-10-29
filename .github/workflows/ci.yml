@@ -60,7 +60,7 @@ jobs:
         Write-Host "   Performance gate: PERF-005 PASSED"
 
   test-summary:
-    needs: [build, code-quality, benchmark]
+    needs: [build, benchmark]
     runs-on: windows-latest
 
     steps:
