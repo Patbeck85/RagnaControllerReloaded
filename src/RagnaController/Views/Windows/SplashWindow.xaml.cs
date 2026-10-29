@@ -34,7 +34,7 @@ namespace RagnaController.Views.Windows
             Closing += SplashWindow_Closing;
         }
 
-        private void SplashWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void SplashWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
             if (SkipCts != null)
             {

@@ -38,8 +38,8 @@ namespace RagnaController.Tests
                 // Prüfe MVP-Bosse
                 var mvps = monsters.Where(m => m.IsMvp).ToList();
                 Assert.NotEmpty(mvps);
-                Assert.True(mvps.Any(m => m.Name == "Lord Knight"));
-                Assert.True(mvps.Any(m => m.Name == "Golden Thief Bug"));
+                Assert.Contains("Lord Knight", mvps.Select(m => m.Name));
+                Assert.Contains("Golden Thief Bug", mvps.Select(m => m.Name));
 
                 // Prüfe alle Rassen und Elemente sind repräsentiert
                 var races = monsters.Select(m => m.Race).Distinct().ToList();

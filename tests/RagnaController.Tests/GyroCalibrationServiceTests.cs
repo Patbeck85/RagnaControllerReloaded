@@ -96,7 +96,7 @@ namespace RagnaController.Tests
             Assert.Contains("gyro_offset_pitch=0.0050", profile.Tags);
             Assert.Contains("gyro_offset_yaw=-0.0030", profile.Tags);
             Assert.Contains("gyro_threshold=42", profile.Tags);
-            Assert.True(profile.Tags.Any(t => t.StartsWith("gyro_calibrated=")));
+            Assert.NotNull(profile.Tags.FirstOrDefault(t => t.StartsWith("gyro_calibrated=")));
         }
 
         [Fact]

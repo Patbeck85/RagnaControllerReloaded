@@ -279,8 +279,8 @@ namespace RagnaController.Views.Windows
                 if (instance != null)
                 {
                     // Update MultiClientInputRouter to route to this client
-                    _multiClientRouter.SetPreferredClientHwnd(selectedTab.ProcessName, selectedTab.Hwnd);
-                    _multiClientRouter.SetActiveProcessName(selectedTab.ProcessName);
+                    _multiClientRouter!.SetPreferredClientHwnd(selectedTab.ProcessName, selectedTab.Hwnd);
+                    _multiClientRouter!.SetActiveProcessName(selectedTab.ProcessName);
 
                     // Update UI for selected client
                     UpdateUIForClient(instance);
@@ -1101,7 +1101,7 @@ namespace RagnaController.Views.Windows
                     var first = ClientCombo.Items[0] as ClientComboItem;
                     if (first != null)
                     {
-                        _multiClientRouter.SetPreferredClientHwnd(first.ProcessName, first.Hwnd);
+                        _multiClientRouter!.SetPreferredClientHwnd(first!.ProcessName, first!.Hwnd);
                     }
                 }
                 else
@@ -1133,7 +1133,7 @@ namespace RagnaController.Views.Windows
             if (_clientComboUpdating || ClientCombo.SelectedItem is not ClientComboItem item)
                 return;
 
-            _multiClientRouter.SetPreferredClientHwnd(item.ProcessName, item.Hwnd);
+            _multiClientRouter!.SetPreferredClientHwnd(item!.ProcessName, item!.Hwnd);
             ShowToast($"Client switched to {item.ProcessName} (PID {item.Pid})");
         }
 

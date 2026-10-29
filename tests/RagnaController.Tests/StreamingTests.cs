@@ -246,7 +246,7 @@ namespace RagnaController.Tests
             Assert.NotNull(loaded);
             Assert.Equal(session.SessionId, loaded.SessionId);
             Assert.Equal("TestChar", loaded.CharacterName);
-            Assert.Equal(1, loaded.InputEvents.Count);
+            Assert.Single(loaded.InputEvents);
         }
 
         [Fact]

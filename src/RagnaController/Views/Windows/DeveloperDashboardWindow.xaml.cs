@@ -61,7 +61,7 @@ namespace RagnaController.Views.Windows
             LuaScriptList.ItemsSource = _luaService.RegisteredScripts;
 
             // ── Standard-Tab anzeigen ──
-            TabPerf_Click(BtnTabPerf, null);
+            TabPerf_Click(BtnTabPerf, null!);
         }
 
         // ── Window-Events ──

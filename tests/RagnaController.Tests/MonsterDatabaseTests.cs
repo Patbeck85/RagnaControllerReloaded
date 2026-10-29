@@ -166,8 +166,8 @@ namespace RagnaController.Tests
 
             var results = db.Search("poring");
             Assert.Equal(2, results.Count);
-            Assert.True(results.Any(m => m.Name == "Poring"));
-            Assert.True(results.Any(m => m.Name == "Poporing"));
+            Assert.Contains("Poring", results.Select(m => m.Name));
+            Assert.Contains("Poporing", results.Select(m => m.Name));
         }
 
         [Fact]
@@ -196,7 +196,7 @@ namespace RagnaController.Tests
             var db = MonsterDatabase.CreateStarterDatabase();
             var mvps = db.GetMvps();
             Assert.NotEmpty(mvps);
-            Assert.True(mvps.Any(m => m.Name == "Lord Knight"));
+            Assert.Contains("Lord Knight", mvps.Select(m => m.Name));
         }
     }
 
@@ -297,14 +297,14 @@ namespace RagnaController.Tests
             var db = MonsterDatabase.CreateStarterDatabase();
             var mvps = db.GetMvps();
             Assert.True(mvps.Count >= 5, $"Erwartet >=5 MVP-Bosse, aber nur {mvps.Count} gefunden.");
-            Assert.True(mvps.Any(m => m.Name == "Lord Knight"));
-            Assert.True(mvps.Any(m => m.Name == "Golden Thief Bug"));
-            Assert.True(mvps.Any(m => m.Name == "Stormy Knight"));
-            Assert.True(mvps.Any(m => m.Name == "Queen Ant"));
-            Assert.True(mvps.Any(m => m.Name == "Baphomet Jr."));
-            Assert.True(mvps.Any(m => m.Name == "Dark Lord"));
-            Assert.True(mvps.Any(m => m.Name == "Turtle General"));
-            Assert.True(mvps.Any(m => m.Name == "General Glast Heim"));
+            Assert.Contains("Lord Knight", mvps.Select(m => m.Name));
+            Assert.Contains("Golden Thief Bug", mvps.Select(m => m.Name));
+            Assert.Contains("Stormy Knight", mvps.Select(m => m.Name));
+            Assert.Contains("Queen Ant", mvps.Select(m => m.Name));
+            Assert.Contains("Baphomet Jr.", mvps.Select(m => m.Name));
+            Assert.Contains("Dark Lord", mvps.Select(m => m.Name));
+            Assert.Contains("Turtle General", mvps.Select(m => m.Name));
+            Assert.Contains("General Glast Heim", mvps.Select(m => m.Name));
         }
 
         [Fact]
@@ -382,7 +382,7 @@ namespace RagnaController.Tests
             var db = MonsterDatabase.CreateStarterDatabase();
             var minibosses = db.GetMinibosses();
             // Drops ist ein Miniboss (Id 1050)
-            Assert.True(minibosses.Any(m => m.Name == "Drops"));
+            Assert.Contains("Drops", minibosses.Select(m => m.Name));
             Assert.All(minibosses, m => Assert.True(m.IsMiniboss));
         }
 
