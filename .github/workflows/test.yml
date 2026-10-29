@@ -16,6 +16,10 @@ jobs:
 
     steps:
       - name: Checkout
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup .NET 8
@@ -67,6 +71,10 @@ jobs:
       RAGNACONTROLLER_SKIP_SDL: "1"
 
     steps:
+      - name: Checkout
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -185,6 +193,9 @@ jobs:
       RAGNACONTROLLER_SKIP_SDL: "1"
 
     steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
         with:
