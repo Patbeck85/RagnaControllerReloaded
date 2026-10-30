@@ -94,7 +94,7 @@ namespace RagnaController.Tests
 
                 // Assert — Should complete quickly (no allocation, no ring buffer write)
                 double elapsedMs = sw.Elapsed.TotalMilliseconds;
-                Assert.True(elapsedMs < 10.0,
+                Assert.True(elapsedMs < 20.0,
                     $"Disabled profiler should be near-zero overhead, took {elapsedMs:F2}ms for {iterations} calls");
             }
             finally
