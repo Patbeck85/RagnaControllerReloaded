@@ -90,7 +90,7 @@ jobs:
 
       - name: Run Stryker Mutation Tests
         env:
-          STRYKER_DASHBOARD_API_KEY: 077092c3-2808-483a-a686-7d4fe5532a2f
+          STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_API_KEY }}
         run: |
           dotnet stryker `
           --project "src/RagnaController/RagnaController.csproj" `
