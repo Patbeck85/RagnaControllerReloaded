@@ -7,6 +7,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:RagnaController.Models"
+        xmlns:core="clr-namespace:RagnaController.Core"
         Title="RagnaController – Overlay Designer"
         Width="500" Height="450"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
@@ -36,15 +37,15 @@
                 <Grid Margin="20,0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Border Width="4" Height="28" Background="{StaticResource AccentBlue}" Effect="{StaticResource BlueGlow}" Margin="0,0,12,0" CornerRadius="2"/>
-                        <TextBlock Text="OVERLAY DESIGNER" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{core:Loc OverlayDesigner_Title}" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close window" AutomationProperties.Name="Close overlay designer"/>
+                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="{core:Loc Common.Close}" AutomationProperties.Name="{core:Loc Common.Close}"/>
                 </Grid>
             </Border>
 
             <!-- Snap-to-Grid & Controls -->
             <StackPanel Grid.Row="0" Grid.RowSpan="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-8,16,0">
-                <CheckBox x:Name="ChkSnapToGrid" Content="Snap to Grid" Style="{StaticResource ToggleSwitch}" IsChecked="True" ToolTip="Snap overlay elements to 10px grid" AutomationProperties.Name="Snap to grid" VerticalAlignment="Center"/>
+                <CheckBox x:Name="ChkSnapToGrid" Content="{core:Loc OverlayDesigner_SnapToGrid}" Style="{StaticResource ToggleSwitch}" IsChecked="True" ToolTip="{core:Loc OverlayDesigner_SnapToGridTooltip}" AutomationProperties.Name="{core:Loc OverlayDesigner_SnapToGrid}" VerticalAlignment="Center"/>
             </StackPanel>
 
             <!-- Designer Canvas -->
@@ -88,9 +89,9 @@
 
             <!-- Preset Controls -->
             <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,12,0,0" HorizontalAlignment="Right">
-                <Button x:Name="BtnReset" Content="Zurücksetzen" Click="BtnReset_Click" Margin="0,0,8,0" Padding="12,6" Style="{StaticResource GhostButton}"/>
-                <Button x:Name="BtnLoadPreset" Content="Preset laden" Click="BtnLoadPreset_Click" Margin="0,0,8,0" Padding="12,6" Style="{StaticResource GhostButton}"/>
-                <Button x:Name="BtnSavePreset" Content="Preset speichern" Click="BtnSavePreset_Click" Margin="0,0,8,0" Padding="12,6" Style="{StaticResource PrimaryButton}"/>
+                <Button x:Name="BtnReset" Content="{core:Loc Common.Reset}" Click="BtnReset_Click" Margin="0,0,8,0" Padding="12,6" Style="{StaticResource GhostButton}"/>
+                <Button x:Name="BtnLoadPreset" Content="{core:Loc Common.Load}" Click="BtnLoadPreset_Click" Margin="0,0,8,0" Padding="12,6" Style="{StaticResource GhostButton}"/>
+                <Button x:Name="BtnSavePreset" Content="{core:Loc Common.Save}" Click="BtnSavePreset_Click" Margin="0,0,8,0" Padding="12,6" Style="{StaticResource PrimaryButton}"/>
             </StackPanel>
         </Grid>
     </Border>

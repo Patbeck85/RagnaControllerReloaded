@@ -12,6 +12,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RagnaController.Views.Windows"
+        xmlns:core="clr-namespace:RagnaController.Core"
         mc:Ignorable="d"
         Title="RagnaController — Developer Dashboard"
         Width="1100" Height="700"
@@ -73,10 +74,10 @@
                 <Grid Margin="20,0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Border Width="4" Height="28" Background="{StaticResource AccentPurple}" Effect="{StaticResource PurpleGlow}" Margin="0,0,12,0" CornerRadius="2"/>
-                        <TextBlock Text="DEVELOPER DASHBOARD" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
-                        <TextBlock Text="— RO Game Controller Dev Tools" Style="{StaticResource BodyText}" VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}" Margin="8,0,0,0"/>
+                        <TextBlock Text="{core:Loc DevDashboard_Header}" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{core:Loc DevDashboard_Subtitle}" Style="{StaticResource BodyText}" VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}" Margin="8,0,0,0"/>
                     </StackPanel>
-                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close" AutomationProperties.Name="Close developer dashboard"/>
+                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="{core:Loc Common.Close}" AutomationProperties.Name="Close developer dashboard"/>
                 </Grid>
             </Border>
 
@@ -119,7 +120,7 @@
                                         <!-- Latency -->
                                         <Border Grid.Column="0" Style="{StaticResource GlassPanelCompact}" Padding="12" CornerRadius="{StaticResource RadiusSm}" Margin="0,0,8,0">
                                             <StackPanel>
-                                                <TextBlock Text="Input Latency" Style="{StaticResource Eyebrow}" Foreground="{StaticResource AccentBlue}"/>
+                                                <TextBlock Text="{core:Loc DevDashboard_InputLatency}" Style="{StaticResource Eyebrow}" Foreground="{StaticResource AccentBlue}"/>
                                                 <TextBlock x:Name="LblLatencyCurrent" Text="— ms" Style="{StaticResource StatValue}" Foreground="{StaticResource TextPrimary}"/>
                                                 <TextBlock Text="Last" Style="{StaticResource MutedText}" FontSize="10"/>
                                                 <TextBlock x:Name="LblLatencyAvg" Text="Avg: — ms" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
@@ -130,7 +131,7 @@
                                         <!-- Frame Budget -->
                                         <Border Grid.Column="1" Style="{StaticResource GlassPanelCompact}" Padding="12" CornerRadius="{StaticResource RadiusSm}" Margin="8,0,8,0">
                                             <StackPanel>
-                                                <TextBlock Text="Frame Budget (P99)" Style="{StaticResource Eyebrow}" Foreground="{StaticResource AccentPurple}"/>
+                                                <TextBlock Text="{core:Loc DevDashboard_FrameBudget}" Style="{StaticResource Eyebrow}" Foreground="{StaticResource AccentPurple}"/>
                                                 <TextBlock x:Name="LblFrameP99" Text="— ms" Style="{StaticResource StatValue}" Foreground="{StaticResource TextPrimary}"/>
                                                 <TextBlock Text="Target: 2.0 ms" Style="{StaticResource MutedText}" FontSize="10"/>
                                                 <TextBlock x:Name="LblFrameP50" Text="P50: — ms" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
@@ -140,7 +141,7 @@
                                         <!-- Memory -->
                                         <Border Grid.Column="2" Style="{StaticResource GlassPanelCompact}" Padding="12" CornerRadius="{StaticResource RadiusSm}" Margin="8,0,0,0">
                                             <StackPanel>
-                                                <TextBlock Text="Memory" Style="{StaticResource Eyebrow}" Foreground="{StaticResource AccentGold}"/>
+                                                <TextBlock Text="{core:Loc DevDashboard_Memory}" Style="{StaticResource Eyebrow}" Foreground="{StaticResource AccentGold}"/>
                                                 <TextBlock x:Name="LblMemWorkingSet" Text="— MB" Style="{StaticResource StatValue}" Foreground="{StaticResource TextPrimary}"/>
                                                 <TextBlock Text="Working Set" Style="{StaticResource MutedText}" FontSize="10"/>
                                                 <TextBlock x:Name="LblMemGen0" Text="Gen0: —" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}"/>
@@ -170,7 +171,7 @@
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
                                             <Button x:Name="BtnLogClear" Content="Clear" Click="BtnLogClear_Click" Style="{StaticResource GhostButton}" Width="80" Height="32" FontSize="11" AutomationProperties.Name="Clear action log"/>
                                             <Button x:Name="BtnLogExport" Content="Export" Click="BtnLogExport_Click" Style="{StaticResource GhostButton}" Width="80" Height="32" FontSize="11" Margin="8,0,0,0" AutomationProperties.Name="Export action log"/>
-                                            <TextBlock Text="Live events (last 20):" Style="{StaticResource BodyText}" VerticalAlignment="Center" Margin="16,0,0,0" Foreground="{StaticResource TextSecondary}"/>
+                                            <TextBlock Text="{core:Loc DevDashboard_LiveEvents}" Style="{StaticResource BodyText}" VerticalAlignment="Center" Margin="16,0,0,0" Foreground="{StaticResource TextSecondary}"/>
                                         </StackPanel>
                                         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                                             <ItemsControl x:Name="ActionLogList" AutomationProperties.Name="Action log entries">
@@ -215,12 +216,12 @@
                                     <Border Grid.Column="0" Style="{StaticResource GlassPanelCompact}" Padding="16" CornerRadius="{StaticResource RadiusMd}" Margin="0,0,8,0">
                                         <StackPanel>
                                             <TextBlock Text="Automated Test Recorder" Style="{StaticResource BodyText}" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,12"/>
-                                            <TextBlock Text="Records UI actions and generates xUnit test code." Style="{StaticResource MutedText}" FontSize="11" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                                            <TextBlock Text="{core:Loc DevDashboard_RecorderDesc}" Style="{StaticResource MutedText}" FontSize="11" Margin="0,0,0,12" TextWrapping="Wrap"/>
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                                 <Button x:Name="BtnRecordStart" Content="Start Recording" Click="BtnRecordStart_Click" Style="{StaticResource PrimaryButton}" Width="120" Height="36" FontSize="12" AutomationProperties.Name="Start test recording"/>
                                                 <Button x:Name="BtnRecordStop" Content="Stop" Click="BtnRecordStop_Click" Style="{StaticResource GhostButton}" Width="80" Height="36" FontSize="12" Margin="8,0,0,0" AutomationProperties.Name="Stop test recording"/>
                                             </StackPanel>
-                                            <TextBlock x:Name="LblRecordStatus" Text="Status: Idle" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}" Margin="0,8,0,0"/>
+                                            <TextBlock x:Name="LblRecordStatus" Text="{core:Loc DevDashboard_StatusIdle}" Style="{StaticResource Caption}" Foreground="{StaticResource TextTertiary}" Margin="0,8,0,0"/>
                                             <Button x:Name="BtnRecordExport" Content="Export Test Code" Click="BtnRecordExport_Click" Style="{StaticResource GhostButton}" Width="140" Height="32" FontSize="11" Margin="0,12,0,0" AutomationProperties.Name="Export test code"/>
                                         </StackPanel>
                                     </Border>
@@ -228,7 +229,7 @@
                                     <Border Grid.Column="1" Style="{StaticResource GlassPanelCompact}" Padding="16" CornerRadius="{StaticResource RadiusMd}" Margin="8,0,0,0">
                                         <StackPanel>
                                             <TextBlock Text="Lua Scripting" Style="{StaticResource BodyText}" FontWeight="SemiBold" Foreground="{StaticResource TextPrimary}" Margin="0,0,0,12"/>
-                                            <TextBlock Text="Event-based scripting API for engine events." Style="{StaticResource MutedText}" FontSize="11" Margin="0,0,0,12" TextWrapping="Wrap"/>
+                                            <TextBlock Text="{core:Loc DevDashboard_LuaDesc}" Style="{StaticResource MutedText}" FontSize="11" Margin="0,0,0,12" TextWrapping="Wrap"/>
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
                                                 <Button x:Name="BtnLuaEnable" Content="Enable" Click="BtnLuaEnable_Click" Style="{StaticResource PrimaryButton}" Width="100" Height="36" FontSize="12" AutomationProperties.Name="Enable Lua scripting"/>
                                                 <Button x:Name="BtnLuaDisable" Content="Disable" Click="BtnLuaDisable_Click" Style="{StaticResource GhostButton}" Width="80" Height="36" FontSize="12" Margin="8,0,0,0" AutomationProperties.Name="Disable Lua scripting"/>
@@ -298,7 +299,7 @@
             <!-- Footer -->
             <Border Grid.Row="2" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,1,0,0" Padding="16,8" CornerRadius="0,0,{StaticResource RadiusXl},{StaticResource RadiusXl}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="RagnaController Developer Dashboard — White-Hat tools only. No memory manipulation, no cheating." Style="{StaticResource Caption}" Foreground="{StaticResource TextMuted}"/>
+                    <TextBlock Text="{core:Loc DevDashboard_Disclaimer}" Style="{StaticResource Caption}" Foreground="{StaticResource TextMuted}"/>
                 </StackPanel>
             </Border>
         </Grid>

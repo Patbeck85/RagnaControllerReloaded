@@ -28,7 +28,7 @@
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Border Width="4" Height="28" Background="{StaticResource AccentGold}" 
                                 Effect="{StaticResource GoldGlow}" Margin="0,0,12,0" CornerRadius="2"/>
-                        <TextBlock Text="AUTO STAT OPTIMIERUNG" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{core:Loc AutoBuildOptimizer_Header}" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
                         <TextBlock Text=" — Empfohlene Attributs-Verteilung für deinen Build" Style="{StaticResource BodyText}" 
                                    VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}" Margin="8,0,0,0"/>
                     </StackPanel>

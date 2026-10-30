@@ -8,7 +8,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:core="clr-namespace:RagnaController.Core"
         xmlns:local="clr-namespace:RagnaController"
-        Title="Profile Diff / Compare" Width="1000" Height="750"
+        Title="{core:Loc ProfileDiff_Title}" Width="1000" Height="750"
         Background="Transparent" WindowStyle="None" AllowsTransparency="True"
         WindowStartupLocation="CenterOwner" MouseLeftButtonDown="Window_MouseLeftButtonDown">
 
@@ -25,10 +25,10 @@
                 <Grid Margin="20,0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Border Width="4" Height="28" Background="{StaticResource AccentGold}" Effect="{StaticResource GoldGlow}" Margin="0,0,12,0" CornerRadius="2"/>
-                        <TextBlock Text="PROFILE DIFF / COMPARE" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
-                        <TextBlock Text=" — Unterschiede zwischen zwei Profilen" Style="{StaticResource BodyText}" VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}" Margin="8,0,0,0"/>
+                        <TextBlock Text="{core:Loc ProfileDiff_Header}" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{core:Loc ProfileDiff_Subtitle}" Style="{StaticResource BodyText}" VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}" Margin="8,0,0,0"/>
                     </StackPanel>
-                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="Close diff window" AutomationProperties.Name="Close profile diff window"/>
+                    <Button Content="&#xE8BB;" Click="BtnClose_Click" HorizontalAlignment="Right" Style="{StaticResource WindowControlButtonClose}" ToolTip="{core:Loc Common.Close}" AutomationProperties.Name="{core:Loc Common.Close}"/>
                 </Grid>
             </Border>
 
@@ -54,18 +54,18 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="PROFIL A" Style="{StaticResource Eyebrow}" Foreground="{StaticResource TextMuted}"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="{core:Loc ProfileDiff_ProfileA}" Style="{StaticResource Eyebrow}" Foreground="{StaticResource TextMuted}"/>
                         <ComboBox x:Name="ProfileComboA" Grid.Row="1" Grid.Column="0" Style="{StaticResource DarkComboBox}" SelectionChanged="ProfileCombo_SelectionChanged" FontSize="14" Margin="0,6,12,0" VerticalAlignment="Center" AutomationProperties.Name="Profile A selector"/>
 
                         <TextBlock Grid.Row="0" Grid.Column="1" Text="vs" Style="{StaticResource BodyText}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource TextMuted}" FontWeight="Bold" Margin="0,6,0,0"/>
 
-                        <TextBlock Grid.Row="0" Grid.Column="2" Text="PROFIL B" Style="{StaticResource Eyebrow}" Foreground="{StaticResource TextMuted}"/>
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="{core:Loc ProfileDiff_ProfileB}" Style="{StaticResource Eyebrow}" Foreground="{StaticResource TextMuted}"/>
                         <ComboBox x:Name="ProfileComboB" Grid.Row="1" Grid.Column="2" Style="{StaticResource DarkComboBox}" SelectionChanged="ProfileCombo_SelectionChanged" FontSize="14" Margin="12,6,0,0" VerticalAlignment="Center" AutomationProperties.Name="Profile B selector"/>
 
                         <!-- Diff Controls -->
                         <StackPanel Grid.Row="0" Grid.Column="3" Grid.RowSpan="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="16,0,0,0">
-                            <CheckBox x:Name="ChkShowDifferencesOnly" Content="Nur Unterschiede" Style="{StaticResource ToggleSwitch}" IsChecked="False" ToolTip="Blendet identische Werte aus" AutomationProperties.Name="Show differences only" VerticalAlignment="Center" Margin="0,0,12,0"/>
-                            <Button x:Name="BtnExportReport" Content="&#xE74E;  Export" Style="{StaticResource GhostButton}" Margin="0,0,0,0" ToolTip="Diff-Report als Textdatei speichern" AutomationProperties.Name="Export diff report" Padding="12,4"/>
+                            <CheckBox x:Name="ChkShowDifferencesOnly" Content="{core:Loc ProfileDiff_ShowDifferencesOnly}" Style="{StaticResource ToggleSwitch}" IsChecked="False" ToolTip="{core:Loc ProfileDiff_ShowDifferencesOnlyTooltip}" AutomationProperties.Name="{core:Loc ProfileDiff_ShowDifferencesOnly}" VerticalAlignment="Center" Margin="0,0,12,0"/>
+                            <Button x:Name="BtnExportReport" Content="&#xE74E;  {core:Loc ProfileDiff_ExportReport}" Style="{StaticResource GhostButton}" Margin="0,0,0,0" ToolTip="{core:Loc ProfileDiff_ExportReport}" AutomationProperties.Name="{core:Loc ProfileDiff_ExportReport}" Padding="12,4"/>
                         </StackPanel>
                     </Grid>
                 </Border>
@@ -87,10 +87,10 @@
                                     <ColumnDefinition Width="250"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Eigenschaft" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="16,0,0,0" Foreground="{StaticResource TextMuted}"/>
-                                <TextBlock Text="Profil A" Grid.Column="1" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource TextMuted}"/>
-                                <TextBlock Text="Profil B" Grid.Column="2" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource TextMuted}"/>
-                                <TextBlock Text="Bemerkung" Grid.Column="3" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource TextMuted}"/>
+                                <TextBlock Text="{core:Loc ProfileDiff_Property}" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="16,0,0,0" Foreground="{StaticResource TextMuted}"/>
+                                <TextBlock Text="{core:Loc ProfileDiff_ProfileAColumn}" Grid.Column="1" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource TextMuted}"/>
+                                <TextBlock Text="{core:Loc ProfileDiff_ProfileBColumn}" Grid.Column="2" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource TextMuted}"/>
+                                <TextBlock Text="{core:Loc ProfileDiff_Remark}" Grid.Column="3" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource TextMuted}"/>
                             </Grid>
                         </Border>
 
@@ -127,7 +127,7 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="Zusammenfassung" Style="{StaticResource Eyebrow}" Foreground="{StaticResource TextMuted}" Margin="0,0,0,8"/>
+                        <TextBlock Grid.Row="0" Text="{core:Loc ProfileDiff_Summary}" Style="{StaticResource Eyebrow}" Foreground="{StaticResource TextMuted}" Margin="0,0,0,8"/>
                         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="100">
                             <TextBlock Style="{StaticResource Caption}" Foreground="{StaticResource TextPrimary}" TextWrapping="Wrap" Text="{Binding SummaryText, RelativeSource={RelativeSource AncestorType=Window}}"/>
                         </ScrollViewer>
@@ -138,7 +138,7 @@
             <!-- Footer -->
             <Border Grid.Row="2" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,1,0,0" Padding="16,12" CornerRadius="0,0,{StaticResource RadiusXl},{StaticResource RadiusXl}">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Vergleicht alle öffentlichen Profileigenschaften. Unterschiede werden farblich hervorgehoben (rot = unterschiedlich, grün = identisch)." Style="{StaticResource Caption}" Foreground="{StaticResource TextMuted}"/>
+                    <TextBlock Text="{core:Loc ProfileDiff_Tip}" Style="{StaticResource Caption}" Foreground="{StaticResource TextMuted}"/>
                 </StackPanel>
             </Border>
         </Grid>

@@ -16,10 +16,6 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup .NET 8
@@ -30,10 +26,8 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore src/RagnaController/RagnaController.csproj
 
-      - name: Verify Tests Passed Locally
-        run: |
-          Write-Host "✅ Unit tests verified locally: 1139/1139 PASS"
-          Write-Host "   Build: 0 errors, 0 warnings"
+      - name: Run Unit Tests
+        run: dotnet test src/RagnaController/RagnaController.csproj --configuration Release --no-restore --no-build
 
       - name: Coverage Threshold Check
         run: |
@@ -71,10 +65,6 @@ jobs:
       RAGNACONTROLLER_SKIP_SDL: "1"
 
     steps:
-      - name: Checkout
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
       - name: Checkout
         uses: actions/checkout@v4
 

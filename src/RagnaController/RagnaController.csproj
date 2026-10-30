@@ -13,7 +13,7 @@
     <RootNamespace>RagnaController</RootNamespace>
     <ApplicationIcon>Assets\icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.6.0</Version>
+    <Version>2.7.0</Version>
     <Authors>RagnaController Contributors</Authors>
     <Description>Hybrid Action Controller Layer for Ragnarok Online — Smart Cursor Edition</Description>
     
@@ -21,8 +21,7 @@
     
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
     
-    <NuGetPackageRoot>/home/patbe/.nuget/packages</NuGetPackageRoot>
-    
+
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
     <IncludeSymbols>true</IncludeSymbols>

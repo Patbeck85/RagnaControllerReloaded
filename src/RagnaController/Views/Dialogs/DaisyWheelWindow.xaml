@@ -4,7 +4,8 @@
 <Window x:Class="RagnaController.Views.Dialogs.DaisyWheelWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="DaisyWheel" Width="560" Height="560"
+        xmlns:core="clr-namespace:RagnaController.Core"
+        Title="{core:Loc DaisyWheel_Title}" Width="560" Height="560"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Topmost="True" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
 

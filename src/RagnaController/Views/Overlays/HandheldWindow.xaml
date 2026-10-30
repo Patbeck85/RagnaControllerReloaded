@@ -63,7 +63,7 @@
                             <Border Style="{StaticResource GlassPanelCompact}" Padding="12,4" CornerRadius="{StaticResource RadiusSm}" Margin="0,0,12,0" Effect="{StaticResource CardShadow}">
                                 <StackPanel Orientation="Horizontal">
                                     <Ellipse x:Name="BatteryDot" Width="8" Height="8" Fill="{StaticResource Live}" VerticalAlignment="Center" Margin="0,0,6,0" Effect="{StaticResource GoldGlow}"/>
-                                    <TextBlock x:Name="BatteryStatusText" Text="Battery: —" FontSize="13" Foreground="{StaticResource TextSecondary}" FontWeight="SemiBold" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI"/>
+                                    <TextBlock x:Name="BatteryStatusText" Text="{core:Loc Handheld_BatteryLabel}" FontSize="13" Foreground="{StaticResource TextSecondary}" FontWeight="SemiBold" VerticalAlignment="Center" FontFamily="Segoe UI Variable, Segoe UI"/>
                                 </StackPanel>
                             </Border>
                         </StackPanel>
@@ -77,22 +77,22 @@
                                             <StackPanel Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                 <TextBlock Text="▶" FontSize="56" Foreground="{StaticResource LiveColor}"
                                                            HorizontalAlignment="Center" Effect="{StaticResource GoldGlow}"/>
-                                                <TextBlock Text="PLAY GAME" FontSize="22" FontWeight="Black"
-                                                           Margin="0,16,0,0" HorizontalAlignment="Center"
-                                                           FontFamily="Segoe UI Variable, Segoe UI"/>
-                                                <TextBlock Text="Launch Ragnarok Online" FontSize="13"
-                                                           Foreground="{StaticResource TextTertiary}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                                                <TextBlock Text="{core:Loc Handheld_PlayTile}" FontSize="22" FontWeight="Black"
+                                                                                                           Margin="0,16,0,0" HorizontalAlignment="Center"
+                                                                                                           FontFamily="Segoe UI Variable, Segoe UI"/>
+                                                <TextBlock Text="{core:Loc Handheld_PlayDesc}" FontSize="13"
+                                                                                                           Foreground="{StaticResource TextTertiary}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
                                             </StackPanel>
                                         </Button>
 
                                         <Button x:Name="BtnProfiles" Style="{StaticResource GhostButton}" Height="180" Click="BtnProfiles_Click" ToolTip="Profile Management" AutomationProperties.Name="Profiles tile">
                                             <StackPanel Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                 <TextBlock Text="👥" FontSize="56" HorizontalAlignment="Center" Effect="{StaticResource GoldGlow}"/>
-                                                <TextBlock Text="PROFILES" FontSize="22" FontWeight="Black"
-                                                           Margin="0,16,0,0" HorizontalAlignment="Center"
-                                                           FontFamily="Segoe UI Variable, Segoe UI"/>
-                                                <TextBlock Text="Switch class profile" FontSize="13"
-                                                           Foreground="{StaticResource TextTertiary}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                                                <TextBlock Text="{core:Loc Handheld_ProfilesTile}" FontSize="22" FontWeight="Black"
+                                                                                                           Margin="0,16,0,0" HorizontalAlignment="Center"
+                                                                                                           FontFamily="Segoe UI Variable, Segoe UI"/>
+                                                <TextBlock Text="{core:Loc Handheld_ProfilesDesc}" FontSize="13"
+                                                                                                           Foreground="{StaticResource TextTertiary}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
                                             </StackPanel>
                                         </Button>
 
@@ -123,11 +123,11 @@
                                         <Button x:Name="BtnCommunity" Style="{StaticResource GhostButton}" Height="180" Click="BtnCommunity_Click" ToolTip="Community Hub" AutomationProperties.Name="Community hub tile">
                                             <StackPanel Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                 <TextBlock Text="🌐" FontSize="56" HorizontalAlignment="Center" Effect="{StaticResource GoldGlow}"/>
-                                                <TextBlock Text="COMMUNITY" FontSize="22" FontWeight="Black"
-                                                           Margin="0,16,0,0" HorizontalAlignment="Center"
-                                                           FontFamily="Segoe UI Variable, Segoe UI"/>
-                                                <TextBlock Text="Download profiles" FontSize="13"
-                                                           Foreground="{StaticResource TextTertiary}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                                                <TextBlock Text="{core:Loc Handheld_CommunityTile}" FontSize="22" FontWeight="Black"
+                                                                                                           Margin="0,16,0,0" HorizontalAlignment="Center"
+                                                                                                           FontFamily="Segoe UI Variable, Segoe UI"/>
+                                                <TextBlock Text="{core:Loc Handheld_CommunityDesc}" FontSize="13"
+                                                                                                           Foreground="{StaticResource TextTertiary}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
                                             </StackPanel>
                                         </Button>
 
@@ -147,11 +147,11 @@
                                             <StackPanel Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                 <TextBlock Text="⌨" FontSize="56" Foreground="{StaticResource AccentBlue}"
                                                            HorizontalAlignment="Center" Effect="{StaticResource BlueGlow}"/>
-                                                <TextBlock Text="MACRO EDITOR" FontSize="20" FontWeight="Black"
-                                                           Margin="0,16,0,0" HorizontalAlignment="Center"
-                                                           FontFamily="Segoe UI Variable, Segoe UI"/>
-                                                <TextBlock Text="Record &amp; replay macros" FontSize="13"
-                                                           Foreground="{StaticResource TextTertiary}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                                                <TextBlock Text="{core:Loc Handheld_MacroTile}" FontSize="20" FontWeight="Black"
+                                                                                                           Margin="0,16,0,0" HorizontalAlignment="Center"
+                                                                                                           FontFamily="Segoe UI Variable, Segoe UI"/>
+                                                <TextBlock Text="{core:Loc Handheld_MacroDesc}" FontSize="13"
+                                                                                                           Foreground="{StaticResource TextTertiary}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
                                             </StackPanel>
                                         </Button>
 
@@ -159,11 +159,11 @@
                                             <StackPanel Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                 <TextBlock Text="🔄" FontSize="56" Foreground="{StaticResource LiveColor}"
                                                            HorizontalAlignment="Center" Effect="{StaticResource GoldGlow}"/>
-                                                <TextBlock Text="QUICK PROFILE" FontSize="20" FontWeight="Black"
+                                                <TextBlock Text="{core:Loc Handheld_QuickProfileTile}" FontSize="20" FontWeight="Black"
                                                            Margin="0,16,0,0" HorizontalAlignment="Center"
                                                            FontFamily="Segoe UI Variable, Segoe UI"/>
-                                                <TextBlock Text="Switch active profile" FontSize="13"
-                                                           Foreground="{StaticResource TextTertiary}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                                                <TextBlock Text="{core:Loc Handheld_QuickProfileDesc}" FontSize="13"
+                                                                                                           Foreground="{StaticResource TextTertiary}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
                                             </StackPanel>
                                         </Button>
 
@@ -171,11 +171,11 @@
                                             <StackPanel Margin="0,20" HorizontalAlignment="Center" VerticalAlignment="Center">
                                                 <TextBlock Text="⏻" FontSize="56" Foreground="#FF5252"
                                                            HorizontalAlignment="Center" Effect="{StaticResource CardShadow}"/>
-                                                <TextBlock Text="EXIT" FontSize="22" FontWeight="Black"
-                                                           Margin="0,16,0,0" HorizontalAlignment="Center"
-                                                           FontFamily="Segoe UI Variable, Segoe UI"/>
-                                                <TextBlock Text="Close RagnaController" FontSize="13"
-                                                           Foreground="{StaticResource TextTertiary}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
+                                                <TextBlock Text="{core:Loc Handheld_ExitTile}" FontSize="22" FontWeight="Black"
+                                                                                                           Margin="0,16,0,0" HorizontalAlignment="Center"
+                                                                                                           FontFamily="Segoe UI Variable, Segoe UI"/>
+                                                <TextBlock Text="{core:Loc Handheld_ExitDesc}" FontSize="13"
+                                                                                                           Foreground="{StaticResource TextTertiary}" HorizontalAlignment="Center" Margin="0,6,0,0"/>
                                             </StackPanel>
                                         </Button>
                                     </UniformGrid>

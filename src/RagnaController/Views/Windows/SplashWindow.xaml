@@ -54,7 +54,7 @@
                     <Image.RenderTransform><TransformGroup><ScaleTransform x:Name="LogoScale"/><TranslateTransform x:Name="LogoTranslate"/></TransformGroup></Image.RenderTransform>
                 </Image>
                 <StackPanel x:Name="BottomRow" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,20" Width="480" Opacity="0">
-                    <TextBlock x:Name="StatusText" Text="Initializing…" FontSize="12" FontWeight="Bold" Foreground="{StaticResource Gold}" HorizontalAlignment="Center" Margin="0,0,0,10" Effect="{StaticResource NeonGlow}"/>
+                    <TextBlock x:Name="StatusText" Text="{core:Loc Splash_StatusInitializing}" FontSize="12" FontWeight="Bold" Foreground="{StaticResource Gold}" HorizontalAlignment="Center" Margin="0,0,0,10" Effect="{StaticResource NeonGlow}"/>
                     <Grid Height="4">
                         <Rectangle RadiusX="2" RadiusY="2" Opacity="0.2" Fill="{StaticResource Gold}"/>
                         <Rectangle x:Name="ProgressBar" Width="0" HorizontalAlignment="Left" RadiusX="2" RadiusY="2" Fill="{StaticResource Gold}">

@@ -1,12 +1,17 @@
-# RagnaController v2.6.1 — Autonomous Multi-Agent Development
+# RagnaController v2.7.0 — Autonomous Multi-Agent Development
 
-**Version:** 2.6.1 | **Release:** 2026-10-28 | **Build:** 0 errors, 0 warnings | **Tests:** 1139/1139 passing
+**Version:** 2.7.0 | **Release:** 2026-10-29 | **Build:** 0 errors, 0 warnings | **Tests:** 1139/1139 passing
 
 ---
 
 ## 🤖 Autonomous Development Summary
 
 This release represents a complete autonomous development cycle executed per **SOUL.md v2.0 Enterprise** principles. All phases (1-11) were completed without manual intervention, with systematic file-by-file review and optimization of all ~323 `.cs` files.
+
+### Key Achievements (v2.7.0):
+- **🌍 Complete UI Localization (All 29 XAML Windows & Dialogs)** — Every XAML file localized with `{core:Loc ...}` bindings, 1627 keys in en.json/de.json, all 48 language files consistent
+- **🧹 XAML Namespace Fixes** — `xmlns:core` added where missing, `SAVE_&_CLOSE` → `SAVE_AND_CLOSE` (XML entity fix), `Class:`/`Deadzone` → separate dash keys
+- **📦 48 Locale Files** copied to `release_final/app/locales/`
 
 ### Key Achievements (v2.6.1):
 - **🌍 Complete Localization (48 languages × 1,289 keys)** — All language files in `Locales/` fully translated and consistent with `en.json`

@@ -14,9 +14,6 @@ jobs:
       RAGNACONTROLLER_SKIP_SDL: "1"
 
     steps:
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '24'
     - uses: actions/checkout@v4
 
     - name: Setup .NET
@@ -30,18 +27,8 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release
 
-    - name: Verify Tests Passed Locally
-      run: |
-        Write-Host "✅ Unit tests verified locally: 1139/1139 PASS"
-        Write-Host "   Build: 0 errors, 0 warnings"
-
-    - name: Verify Integration Tests Locally
-      run: |
-        Write-Host "✅ Integration tests verified locally: part of 1139/1139 PASS"
-
-    - name: Verify Performance Tests Locally
-      run: |
-        Write-Host "✅ Performance tests verified locally: part of 1139/1139 PASS"
+    - name: Run Unit Tests
+      run: dotnet test --configuration Release --no-restore --no-build
 
     - name: Publish artifacts
       uses: actions/upload-artifact@v4
@@ -54,9 +41,6 @@ jobs:
     needs: build
 
     steps:
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '24'
     - uses: actions/checkout@v4
 
     - name: Verify Benchmarks Locally
@@ -70,9 +54,6 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '24'
     - uses: actions/checkout@v4
 
     - name: Generate Test Summary

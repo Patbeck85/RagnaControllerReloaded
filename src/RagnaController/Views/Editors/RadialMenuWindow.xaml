@@ -4,7 +4,8 @@
 <Window x:Class="RagnaController.Views.Editors.RadialMenuWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Radial Menu" Width="440" Height="440"
+        xmlns:core="clr-namespace:RagnaController.Core"
+        Title="{core:Loc RadialMenu_Title}" Width="440" Height="440"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent"
         Topmost="True" WindowStartupLocation="CenterScreen" ShowInTaskbar="False">
 
@@ -29,13 +30,13 @@
                 <Canvas x:Name="ItemsCanvas" Width="360" Height="360" HorizontalAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Radial menu items"/>
                 
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <TextBlock x:Name="SelectedText" Text="SELECT ITEM" Foreground="{StaticResource AccentBlue}" FontWeight="Black" FontSize="18" HorizontalAlignment="Center"
-                               FontFamily="Segoe UI Variable, Segoe UI">
+                    <TextBlock x:Name="SelectedText" Text="{core:Loc RadialMenu_SelectItem}" Foreground="{StaticResource AccentBlue}" FontWeight="Black" FontSize="18" HorizontalAlignment="Center"
+                                                   FontFamily="Segoe UI Variable, Segoe UI">
                         <TextBlock.Effect>
                             <DropShadowEffect Color="{StaticResource GlowBlue}" BlurRadius="15" ShadowDepth="0" Opacity="0.6"/>
                         </TextBlock.Effect>
                         <ToolTipService.ToolTip>
-                            <ToolTip Content="Select a radial menu item to configure" 
+                            <ToolTip Content="{core:Loc RadialMenu_SelectItemTooltip}" 
                                      Style="{StaticResource GlassPanel}"
                                      Foreground="{StaticResource TextPrimary}"
                                      FontSize="11"
@@ -43,10 +44,10 @@
                                      BorderBrush="{StaticResource BgBorder}"/>
                         </ToolTipService.ToolTip>
                     </TextBlock>
-                    <TextBlock Text="Release triggers to use" Foreground="{StaticResource TextSecondary}" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,8,0,0"
-                               FontFamily="Segoe UI Variable, Segoe UI">
+                    <TextBlock Text="{core:Loc RadialMenu_ReleaseTriggers}" Foreground="{StaticResource TextSecondary}" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,8,0,0"
+                                                   FontFamily="Segoe UI Variable, Segoe UI">
                         <ToolTipService.ToolTip>
-                            <ToolTip Content="Execute the selected action" 
+                            <ToolTip Content="{core:Loc RadialMenu_ReleaseTriggersTooltip}" 
                                      Style="{StaticResource GlassPanel}"
                                      Foreground="{StaticResource TextPrimary}"
                                      FontSize="11"

@@ -393,7 +393,7 @@
                                                                                                                                                                                          Foreground="{StaticResource TextTertiary}" FontSize="9" FontFamily="Consolas" Margin="0,0,0,10"/>
 
                                                                                                             <!-- Calibrate Button -->
-                                                                                                                                                        <TextBlock Text="Calibrate" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
+                                                                                                                                                        <TextBlock Text="{core:Loc Settings_Btn_Calibrate}" Style="{StaticResource Eyebrow}" Margin="0,14,0,4"/>
                                                                                                                                                         <Button x:Name="BtnCalibrate" Content="{core:Loc Settings_Btn_Calibrate}"
                                                                                                                                                                 Style="{StaticResource GhostButton}" Height="40" Padding="16,0"
                                                                                                                                                                 Margin="0,0,0,10" Click="BtnCalibrate_Click"/>

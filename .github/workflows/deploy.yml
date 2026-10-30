@@ -10,9 +10,6 @@ jobs:
     runs-on: windows-latest
     
     steps:
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '24'
     - uses: actions/checkout@v4
     
     - name: Setup .NET
@@ -25,12 +22,10 @@ jobs:
     
     - name: Build Release
       run: dotnet build --configuration Release
-    
-    - name: Verify Tests Passed Locally
-      run: |
-        Write-Host "✅ Unit tests verified locally: 1139/1139 PASS"
-        Write-Host "   Build: 0 errors, 0 warnings"
-    
+
+    - name: Run Unit Tests
+      run: dotnet test --configuration Release --no-restore --no-build
+
     - name: Publish (Release)
       run: dotnet publish src/RagnaController/RagnaController.csproj --configuration Release --output bin/Release/net8.0/publish
     

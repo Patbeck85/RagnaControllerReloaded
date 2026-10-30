@@ -4,7 +4,8 @@
 <Window x:Class="RagnaController.Views.Editors.RadialSetupWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Radial Menu Setup" Width="720" Height="760"
+        xmlns:core="clr-namespace:RagnaController.Core"
+        Title="{core:Loc RadialSetup_Title}" Width="720" Height="760"
         Background="Transparent" WindowStyle="None" AllowsTransparency="True"
         WindowStartupLocation="CenterOwner" MouseLeftButtonDown="Window_MouseLeftButtonDown">
     
@@ -29,8 +30,8 @@
                 <StackPanel>
                     <TextBlock Foreground="{StaticResource TextSecondary}" FontSize="12" TextWrapping="Wrap" LineHeight="18" FontWeight="SemiBold">
                         <Run Text="Trigger: Hold "/>
-                        <Run Foreground="{StaticResource AccentGold}" FontWeight="Black" Text="LT + RT"/>
-                        <Run Text=" simultaneously → Aim Right Stick → Release triggers to execute."/>
+                        <Run Foreground="{StaticResource AccentGold}" FontWeight="Black" Text="{core:Loc RadialSetup_TriggerHintPart1}"/>
+                        <Run Foreground="{StaticResource AccentGold}" Text="{core:Loc RadialSetup_TriggerHintPart2}"/>
                     </TextBlock>
                 </StackPanel>
             </Border>
@@ -49,10 +50,10 @@
                             <ColumnDefinition Width="110"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="#" Foreground="{StaticResource AccentGold}" FontWeight="Black" FontSize="11" VerticalAlignment="Center" Margin="15,0"/>
-                        <TextBlock Grid.Column="1" Text="DISPLAY NAME" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="10,0"/>
-                        <TextBlock Grid.Column="2" Text="COMMAND / CHAT" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="10,0"/>
-                        <TextBlock Grid.Column="3" Text="KEY BINDING" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="10,0"/>
-                        <TextBlock Grid.Column="4" Text="EMOTES" Foreground="{StaticResource AccentGold}" FontWeight="Bold" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="{core:Loc RadialSetup_DisplayName}" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="10,0"/>
+                        <TextBlock Grid.Column="2" Text="{core:Loc RadialSetup_CommandChat}" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="10,0"/>
+                        <TextBlock Grid.Column="3" Text="{core:Loc RadialSetup_KeyBinding}" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="10,0"/>
+                        <TextBlock Grid.Column="4" Text="{core:Loc RadialSetup_Emotes}" Foreground="{StaticResource AccentGold}" FontWeight="Bold" FontSize="10" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Grid>
                 </Border>
                 <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
@@ -62,11 +63,11 @@
             <Border Grid.Row="3" Style="{StaticResource GlassPanelCompact}" BorderBrush="{StaticResource BgBorder}" BorderThickness="0,1,0,0" Margin="16,0,16,16" CornerRadius="0,0,{StaticResource RadiusXl},{StaticResource RadiusXl}" Padding="20,0">
                 <Grid VerticalAlignment="Center">
                     <TextBlock Foreground="{StaticResource TextTertiary}" FontSize="10" FontWeight="Bold" VerticalAlignment="Center">
-                        <Run Text="Leave blank to disable a slot. "/>
-                        <Run Foreground="{StaticResource AccentGold}" Text="8 Slots"/>
-                        <Run Text=" = 8 directions."/>
+                        <Run Text="{core:Loc RadialSetup_SlotsHintPart1}"/>
+                        <Run Foreground="{StaticResource AccentGold}" Text="{core:Loc RadialSetup_SlotsHintPart2}"/>
+                        <Run Text="{core:Loc RadialSetup_SlotsHintPart3}"/>
                     </TextBlock>
-                    <Button Content="SAVE RADIAL" Click="BtnSave_Click" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Width="140" Height="40" ToolTip="Save radial menu configuration"/>
+                    <Button Content="{core:Loc RadialSetup_SaveRadial}" Click="BtnSave_Click" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" Width="140" Height="40" ToolTip="{core:Loc RadialSetup_SaveRadial}"/>
                 </Grid>
             </Border>
             <Grid x:Name="EmoteGalleryOverlay" Grid.RowSpan="4" Background="#E6080A0F" Visibility="Collapsed">
@@ -81,8 +82,8 @@
 
                         <!-- Header -->
                         <Grid Grid.Row="0" Margin="0,0,0,10">
-                            <TextBlock Text="SELECT EMOTE" Style="{StaticResource BrandWordmark}" FontSize="16" VerticalAlignment="Center"/>
-                            <Button Content="✕" Click="BtnCloseGallery_Click" HorizontalAlignment="Right" Width="36" Height="36" Style="{StaticResource GhostButton}" ToolTip="Close emote gallery" AutomationProperties.Name="Close emote gallery"/>
+                            <TextBlock Text="{core:Loc RadialSetup_SelectEmote}" Style="{StaticResource BrandWordmark}" FontSize="16" VerticalAlignment="Center"/>
+                            <Button Content="✕" Click="BtnCloseGallery_Click" HorizontalAlignment="Right" Width="36" Height="36" Style="{StaticResource GhostButton}" ToolTip="{core:Loc Common.Close}" AutomationProperties.Name="{core:Loc Common.Close}"/>
                         </Grid>
 
                         <!-- Status + Buttons -->
@@ -92,25 +93,25 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock x:Name="EmoteStatusText"
-                                       Grid.Column="0"
-                                       Text="Emoji fallback active"
-                                       Style="{StaticResource BodyText}" FontSize="10" FontWeight="SemiBold"
-                                       VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}"/>
+                                                                   Grid.Column="0"
+                                                                   Text="{core:Loc RadialSetup_EmojiFallback}"
+                                                                   Style="{StaticResource BodyText}" FontSize="10" FontWeight="SemiBold"
+                                                                   VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}"/>
                             <ProgressBar x:Name="DownloadProgressBar" Grid.Column="0" Height="4" Margin="0,24,0,0" Minimum="0" Maximum="100" Value="0" Visibility="Collapsed"/>
                             <Button Grid.Column="1"
-                                                         Content="⬇ Download from iROWiki"
-                                                         Click="BtnDownloadWiki_Click"
-                                                         Style="{StaticResource PrimaryButton}"
-                                                         Height="36" Padding="15,0"
-                                                         FontSize="11"
-                                                         ToolTip="Download emote images from iROWiki to improve gallery" AutomationProperties.Name="Download emotes from iROWiki"/>
+                                                                                     Content="{core:Loc RadialSetup_DownloadEmotes}"
+                                                                                     Click="BtnDownloadWiki_Click"
+                                                                                     Style="{StaticResource PrimaryButton}"
+                                                                                     Height="36" Padding="15,0"
+                                                                                     FontSize="11"
+                                                                                     ToolTip="{core:Loc RadialSetup_DownloadEmotes}" AutomationProperties.Name="{core:Loc RadialSetup_DownloadEmotes}"/>
                             <Button Grid.Column="1"
-                                                         Content="☑ Select All"
-                                                         Click="BtnSelectAllEmotes_Click"
-                                                         Style="{StaticResource GhostButton}"
-                                                         Height="36" Padding="15,0" Margin="12,0,0,0"
-                                                         FontSize="11"
-                                                         ToolTip="Select all visible emotes into the 8 slots" AutomationProperties.Name="Select all emotes"/>
+                                                                                     Content="{core:Loc RadialSetup_SelectAll}"
+                                                                                     Click="BtnSelectAllEmotes_Click"
+                                                                                     Style="{StaticResource GhostButton}"
+                                                                                     Height="36" Padding="15,0" Margin="12,0,0,0"
+                                                                                     FontSize="11"
+                                                                                     ToolTip="{core:Loc RadialSetup_SelectAll}" AutomationProperties.Name="{core:Loc RadialSetup_SelectAll}"/>
                         </Grid>
 
                         <!-- Search / Filter -->
@@ -122,18 +123,18 @@
                                                                    BorderThickness="0"
                                                                    VerticalContentAlignment="Center"
                                                                    TextChanged="EmoteSearchBox_TextChanged"
-                                                                   ToolTip="Search emotes by name or command" AutomationProperties.Name="Search emotes"/>
+                                                                                                                                      ToolTip="{core:Loc RadialSetup_SearchEmotes}" AutomationProperties.Name="{core:Loc RadialSetup_SearchEmotes}"/>
                         </Border>
 
                         <!-- Category Filter -->
                         <Border Grid.Row="2" Margin="0,44,0,0" Visibility="Collapsed">
                             <StackPanel Orientation="Horizontal">
-                                <Button x:Name="BtnCatAll" Content="ALL" Style="{StaticResource PrimaryButton}" Height="30" Padding="10,0" FontSize="10" Click="BtnCatFilter_Click" Tag="ALL" AutomationProperties.Name="Filter All emotes"/>
-                                <Button x:Name="BtnCatEmotions" Content="EMOTIONS" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="EMOTIONS" AutomationProperties.Name="Filter Emotions"/>
-                                <Button x:Name="BtnCatActions" Content="ACTIONS" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="ACTIONS" AutomationProperties.Name="Filter Actions"/>
-                                <Button x:Name="BtnCatReactions" Content="REACTIONS" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="REACTIONS" AutomationProperties.Name="Filter Reactions"/>
-                                <Button x:Name="BtnCatSocial" Content="SOCIAL" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="SOCIAL" AutomationProperties.Name="Filter Social"/>
-                                <Button x:Name="BtnCatGame" Content="GAME" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="GAME" AutomationProperties.Name="Filter Game"/>
+                                <Button x:Name="BtnCatAll" Content="{core:Loc RadialSetup_FilterAll}" Style="{StaticResource PrimaryButton}" Height="30" Padding="10,0" FontSize="10" Click="BtnCatFilter_Click" Tag="ALL" AutomationProperties.Name="{core:Loc RadialSetup_FilterAll}"/>
+                                <Button x:Name="BtnCatEmotions" Content="{core:Loc RadialSetup_FilterEmotions}" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="EMOTIONS" AutomationProperties.Name="{core:Loc RadialSetup_FilterEmotions}"/>
+                                <Button x:Name="BtnCatActions" Content="{core:Loc RadialSetup_FilterActions}" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="ACTIONS" AutomationProperties.Name="{core:Loc RadialSetup_FilterActions}"/>
+                                <Button x:Name="BtnCatReactions" Content="{core:Loc RadialSetup_FilterReactions}" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="REACTIONS" AutomationProperties.Name="{core:Loc RadialSetup_FilterReactions}"/>
+                                <Button x:Name="BtnCatSocial" Content="{core:Loc RadialSetup_FilterSocial}" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="SOCIAL" AutomationProperties.Name="{core:Loc RadialSetup_FilterSocial}"/>
+                                <Button x:Name="BtnCatGame" Content="{core:Loc RadialSetup_FilterGame}" Style="{StaticResource GhostButton}" Height="30" Padding="10,0" FontSize="10" Margin="6,0,0,0" Click="BtnCatFilter_Click" Tag="GAME" AutomationProperties.Name="{core:Loc RadialSetup_FilterGame}"/>
                             </StackPanel>
                         </Border>
 

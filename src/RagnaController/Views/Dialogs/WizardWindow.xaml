@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RagnaController"
+        xmlns:core="clr-namespace:RagnaController.Core"
         mc:Ignorable="d"
         Title="RagnaController — First-Run Wizard"
         Height="500" Width="700"
@@ -53,16 +54,16 @@
         <StackPanel Grid.Row="0" Margin="0,0,0,32">
             <Ellipse Width="48" Height="48" Fill="{StaticResource AccentBlue}"
                      HorizontalAlignment="Left" Margin="0,0,16,12"/>
-            <TextBlock Text="Welcome to RagnaController" Style="{StaticResource WizardTitle}"/>
-            <TextBlock Text="Set up your RO controller setup in a few steps." Style="{StaticResource WizardSubtitle}"/>
+            <TextBlock Text="{core:Loc Wizard_WelcomeTitle}" Style="{StaticResource WizardTitle}"/>
+            <TextBlock Text="{core:Loc Wizard_WelcomeSubtitle}" Style="{StaticResource WizardSubtitle}"/>
             <!-- Step Progress Indicator -->
             <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
                 <TextBlock Text="1" FontSize="12" FontWeight="Bold" Foreground="{StaticResource AccentBlue}" Width="24" Height="24" Background="{StaticResource BgSecondary}" TextAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Step 1 indicator"/>
-                <TextBlock Text="Setup" FontSize="11" Foreground="{StaticResource TextSecondary}" Margin="4,0,16,0" VerticalAlignment="Center"/>
+                <TextBlock Text="{core:Loc Wizard_StepIndicator_Setup}" FontSize="11" Foreground="{StaticResource TextSecondary}" Margin="4,0,16,0" VerticalAlignment="Center"/>
                 <TextBlock Text="2" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" Width="24" Height="24" Background="{StaticResource BgSecondary}" TextAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Step 2 indicator"/>
-                <TextBlock Text="Controller" FontSize="11" Foreground="{StaticResource TextSecondary}" Margin="4,0,16,0" VerticalAlignment="Center"/>
+                <TextBlock Text="{core:Loc UI.Controller}" FontSize="11" Foreground="{StaticResource TextSecondary}" Margin="4,0,16,0" VerticalAlignment="Center"/>
                 <TextBlock Text="3" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" Width="24" Height="24" Background="{StaticResource BgSecondary}" TextAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Step 3 indicator"/>
-                <TextBlock Text="Profile" FontSize="11" Foreground="{StaticResource TextSecondary}" Margin="4,0,16,0" VerticalAlignment="Center"/>
+                <TextBlock Text="{core:Loc UI.Profile}" FontSize="11" Foreground="{StaticResource TextSecondary}" Margin="4,0,16,0" VerticalAlignment="Center"/>
                 <TextBlock Text="4" FontSize="12" FontWeight="Bold" Foreground="{StaticResource TextTertiary}" Width="24" Height="24" Background="{StaticResource BgSecondary}" TextAlignment="Center" VerticalAlignment="Center" AutomationProperties.Name="Step 4 indicator"/>
             </StackPanel>
         </StackPanel>
@@ -138,15 +139,13 @@
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="Controller Type:" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{core:Loc Wizard_ControllerTypeLabel}" FontSize="12" Foreground="{StaticResource TextSecondary}" Margin="0,0,8,0" VerticalAlignment="Center"/>
                                         <ComboBox x:Name="ControllerTypeCombo" Grid.Column="1" Style="{StaticResource DarkComboBox}" Height="36"
                                                   SelectionChanged="ControllerTypeCombo_SelectionChanged"
                                                   AutomationProperties.Name="Controller type"/>
                                     </Grid>
-                                    <Button x:Name="BtnRefreshController" Content="Refresh" Style="{StaticResource WizardButton}"
-                                            Click="BtnRefreshController_Click"/>
-                                    <Button x:Name="BtnSkipController" Content="Skip" Style="{StaticResource WizardButton}"
-                                            Click="BtnSkipController_Click"/>
+                                    <Button x:Name="BtnRefreshController" Content="{core:Loc Wizard_RefreshControllerBtn}" Style="{StaticResource WizardButton}" Click="BtnRefreshController_Click"/>
+                                    <Button x:Name="BtnSkipController" Content="{core:Loc Wizard_SkipControllerBtn}" Style="{StaticResource WizardButton}" Click="BtnSkipController_Click"/>
                                 </StackPanel>
 
                 <!-- Schritt 4: Erstes Profil -->
@@ -287,7 +286,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button x:Name="BtnBack" Content="Back" Style="{StaticResource WizardButton}"
                         Click="BtnBack_Click" IsEnabled="False"/>
-                <Button x:Name="BtnNext" Content="Next" Style="{StaticResource WizardPrimaryButton}"
+                <Button x:Name="BtnNext" Content="{core:Loc Wizard_NextBtn}" Style="{StaticResource WizardPrimaryButton}" Click="BtnNext_Click"/>
                         Click="BtnNext_Click"/>
                 <Button x:Name="BtnFinish" Content="Finish" Style="{StaticResource WizardPrimaryButton}"
                         Click="BtnFinish_Click" Visibility="Collapsed"/>

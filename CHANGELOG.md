@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 --
 
+## [2.7.0] - 2026-10-29
+
+### 🌍 Complete UI Localization (All 29 XAML Windows & Dialogs)
+- **Every XAML file localized** with `{core:Loc ...}` bindings + `xmlns:core` namespace
+- **29/29 windows & dialogs** fully localized: MainWindow, Settings, Developer Dashboard, Splash, Gyro Calibration, Overlay Designer, Mini Mode, In-Game Overlay, Handheld, Combo Editor, Button Remapping, Radial Menu Setup, Radial Menu, Profile Collections, Profile Diff, Profile Validation, Profile Wizard, Rumble Editor, Developer Console, Daisy Wheel, Community Browser, Auto Build Optimizer, Tutorial, Skill Recommendation, Select Profiles, Update, Monster Import, Wizard
+- **1627 localization keys** in `en.json` & `de.json` (all 48 language files consistent)
+- **XAML fixes:** `xmlns:Core` namespace added where missing, `SAVE_&_CLOSE` → `SAVE_AND_CLOSE` (XML entity fix), `Class:`/`Deadzone` → separate dash keys (MarkupExtension boundary fix)
+- **Tested:** 1,139/1,139 PASS | Build: 0 errors, 0 warnings
+
 ## [2.6.1] - 2026-10-28
 
 ### 🌍 Complete Localization (48 Languages)

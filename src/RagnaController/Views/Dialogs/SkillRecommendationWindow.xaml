@@ -25,7 +25,7 @@
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Border Width="4" Height="28" Background="{StaticResource AccentGold}" 
                                 Effect="{StaticResource GoldGlow}" Margin="0,0,12,0" CornerRadius="2"/>
-                        <TextBlock Text="SKILL EMPFEHLUNGEN" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{core:Loc SkillRecommendation_Header}" Style="{StaticResource BrandWordmark}" VerticalAlignment="Center"/>
                         <TextBlock Text=" — Basierend auf Klasse, Level und Spielstil" Style="{StaticResource BodyText}" 
                                    VerticalAlignment="Center" Foreground="{StaticResource TextSecondary}" Margin="8,0,0,0"/>
                     </StackPanel>

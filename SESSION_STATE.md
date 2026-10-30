@@ -9,7 +9,7 @@
 **Git HEAD:** commit 1dcff17 (feat: Developer Dashboard - alle Dev/Monitoring-Services in einheitliches Fenster integriert)
 **Last Updated:** 2026-10-27
 **Status:** Alle Epics 1-28 COMPLETE + Developer Dashboard (Epic 20, TASK-2907) + vollständige Lokalisierung (48 Sprachen × 1329 Keys) + UI/UX Polish + Interception-Option mit Download vom Original-Repo oblitum/Interception + Alle Build-Warnungen eliminiert + Unbenutzte Felder entfernt
-**Release:** v2.6.1 (2026-10-26) — Alle Epics 1-28, vollständige Lokalisierung, RO Game Knowledge, UI/UX Polish, Interception-UI mit automatischem Download + Neustart, Unit Tests, Warnungsfreier Build
+**Release:** v2.7.0 (2026-10-29) — Vollständige UI-Lokalisierung aller 29 XAML-Dateien, 1627 Keys, Build 0 errors/0 warnings, Tests 1139/1139 PASS, Release-Paket erstellt (RagnaController_2.7.0.zip, 37.7 MB)
 
 ---
 

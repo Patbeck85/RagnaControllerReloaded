@@ -136,7 +136,7 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock Text="Client:" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
+                                                    <TextBlock Text="{core:Loc MainWindow_ClientLabel}" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
                                                     <ComboBox x:Name="ClientCombo" Width="130" MaxWidth="160" Style="{StaticResource DarkComboBox}" SelectionChanged="ClientCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_Tooltip_SelectClient}" AutomationProperties.Name="RO client selector" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center"/>
                                                     <Button x:Name="BtnRefreshClients" Content="&#xE72C;" Width="28" Height="28" Style="{StaticResource WindowControlButton}" Click="BtnRefreshClients_Click" ToolTip="{core:Loc MainWindow_Tooltip_RefreshClients}" AutomationProperties.Name="{core:Loc MainWindow_Tooltip_RefreshClients}" Grid.Column="2" VerticalAlignment="Center"/>
                                                 </Grid>
@@ -148,7 +148,7 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock Text="Preset:" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
+                                                    <TextBlock Text="{core:Loc MainWindow_PresetLabel}" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
                                                     <ComboBox x:Name="PresetCombo" Width="130" MaxWidth="160" Style="{StaticResource DarkComboBox}" SelectionChanged="PresetCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_Tooltip_SelectPreset}" AutomationProperties.Name="Profile preset selector" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center"/>
                                                     <Button x:Name="BtnSavePreset" Content="&#xE74E;" Width="28" Height="28" Style="{StaticResource WindowControlButton}" Click="BtnSavePreset_Click" ToolTip="{core:Loc MainWindow_Tooltip_SavePreset}" AutomationProperties.Name="{core:Loc MainWindow_Tooltip_SavePreset}" Grid.Column="2" VerticalAlignment="Center"/>
                                                 </Grid>
@@ -160,7 +160,7 @@
                                                         <ColumnDefinition Width="*"/>
                                                         <ColumnDefinition Width="Auto"/>
                                                     </Grid.ColumnDefinitions>
-                                                    <TextBlock Text="Class:" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
+                                                    <TextBlock Text="{core:Loc UI.Class:}" Style="{StaticResource Eyebrow}" VerticalAlignment="Center" Margin="4,0,0,0" Foreground="{StaticResource TextTertiary}" FontSize="10"/>
                                                     <ComboBox x:Name="ClassCharacterCombo" Width="120" MaxWidth="150" Style="{StaticResource DarkComboBox}" SelectionChanged="ClassCharacterCombo_SelectionChanged" ToolTip="{core:Loc MainWindow_Tooltip_SelectClass}" AutomationProperties.Name="Character class selector" Grid.Column="1" Margin="4,4,4,4" VerticalAlignment="Center">
                                                         <ComboBox.ItemTemplate>
                                                             <DataTemplate>
@@ -214,7 +214,7 @@
                             </Grid.RowDefinitions>
 
                             <!-- Controller Visualization Header -->
-                            <TextBlock Grid.Row="0" Text="CONTROLLER" Style="{StaticResource Eyebrow}" Margin="16,16,16,8"/>
+                            <TextBlock Grid.Row="0" Text="{core:Loc UI.CONTROLLER}" Style="{StaticResource Eyebrow}" Margin="16,16,16,8"/>
 
                             <!-- Controller SVG Canvas with Interactive Layout -->
                             <Border Grid.Row="1" Margin="16,0,16,8" Background="{StaticResource BgPanel}" CornerRadius="{StaticResource RadiusMd}" BorderBrush="{StaticResource BgBorder}" BorderThickness="1">
@@ -417,10 +417,10 @@
                                         <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
                                     <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                        <TextBlock Text="LIVE LOG" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
-                                        <CheckBox x:Name="ChkAutoScroll" Content="Auto-scroll" IsChecked="True" Margin="12,0,0,0" VerticalAlignment="Center" Foreground="{StaticResource TextTertiary}" FontSize="10" Style="{StaticResource ToggleSwitch}"/>
-                                        <Button x:Name="BtnClearLog" Content="Clear" Style="{StaticResource GhostButton}" Height="28" Padding="10,0" Margin="12,0,0,0" Click="BtnClearLog_Click"/>
-                                        <Button x:Name="BtnExportLog" Content="Export" Style="{StaticResource GhostButton}" Height="28" Padding="10,0" Margin="8,0,0,0" Click="BtnLogExport_Click"/>
+                                        <TextBlock Text="{core:Loc MainWindow_LiveLog}" Style="{StaticResource Eyebrow}" VerticalAlignment="Center"/>
+                                        <CheckBox x:Name="ChkAutoScroll" Content="{core:Loc MainWindow_AutoScroll}" IsChecked="True" Margin="12,0,0,0" VerticalAlignment="Center" Foreground="{StaticResource TextTertiary}" FontSize="10" Style="{StaticResource ToggleSwitch}"/>
+                                        <Button x:Name="BtnClearLog" Content="{core:Loc Common.Clear}" Style="{StaticResource GhostButton}" Height="28" Padding="10,0" Margin="12,0,0,0" Click="BtnClearLog_Click"/>
+                                        <Button x:Name="BtnExportLog" Content="{core:Loc MainWindow_ExportLog}" Style="{StaticResource GhostButton}" Height="28" Padding="10,0" Margin="8,0,0,0" Click="BtnLogExport_Click"/>
                                     </StackPanel>
                                     <ScrollViewer x:Name="LogScrollViewer" VerticalScrollBarVisibility="Auto" Margin="0,8,0,8" MinHeight="160" MaxHeight="240">
                                         <TextBlock x:Name="LogTextBlock" Text="" Foreground="#3A5020" FontSize="9" FontFamily="Consolas" TextWrapping="Wrap"/>
