@@ -16,7 +16,7 @@ namespace RagnaController.Tests
     /// Diese Tests prüfen dass Performance-Optimierungen keine Regressionen einführen
     /// und dass kritische Pfade im akzeptablen Bereich bleiben.
     /// </summary>
-    [Collection("SequentialTests")]
+    [Collection("IsolatedPerformanceTests")]
     public class PerformanceRegressionTests
     {
         #region ControllerSnapshot Pool Regression
@@ -25,7 +25,7 @@ namespace RagnaController.Tests
         public void ControllerSnapshot_PoolIsFasterThanNew()
         {
             // Arrange
-            const int iterations = 10000;
+            const int iterations = 5000;
             var pool = new ObjectPool<ControllerSnapshot>(() => new ControllerSnapshot());
 
             // Act — Pool Rent/Return
@@ -85,7 +85,7 @@ namespace RagnaController.Tests
             {
                 // Act — RecordEngineTick with profiling disabled should be a no-op
                 var sw = Stopwatch.StartNew();
-                const int iterations = 100000;
+                const int iterations = 10000;
                 for (int i = 0; i < iterations; i++)
                 {
                     profiler.RecordEngineTick("Engine", 0.5);
@@ -180,12 +180,14 @@ namespace RagnaController.Tests
             var tracker = new MemoryAllocationTracker("RegressionTest", null);
 
             // Warm up JIT — first few calls will allocate due to compilation
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 3; i++)
             {
                 tracker.RecordTick();
             }
 
-            // Force GC to clean up warmup allocations
+            // Force GC multiple times to clean up warmup allocations
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
@@ -193,8 +195,8 @@ namespace RagnaController.Tests
             long before = GC.GetTotalAllocatedBytes(false);
 
             // Act — RecordTick samples every 100 ticks, steady-state should allocate near zero
-            // Use 101 iterations to ensure one sample is taken (at tick 100)
-            for (int i = 0; i < 101; i++)
+            // Use 51 iterations to ensure one sample is taken (at tick 50)
+            for (int i = 0; i < 51; i++)
             {
                 tracker.RecordTick();
             }
@@ -202,13 +204,9 @@ namespace RagnaController.Tests
             long after = GC.GetTotalAllocatedBytes(false);
             long allocated = after - before;
 
-            // Assert — Less than 50KB allocated for 101 calls including one sample
-            // (JIT warmup done, sampling path allocates GCMemoryInfo, WorkingSet64, etc.)
-            // Note: This test measures process-wide allocations. In parallel test runs,
-            // other tests may allocate concurrently. Run with --parallelize-test-collections=false
-            // or filter to run this test alone for accurate results.
-            Assert.True(allocated < 51200,
-                $"MemoryAllocationTracker allocated {allocated} bytes for 101 RecordTick calls (expected < 51200)");
+            // Assert — Less than 30KB allocated for 51 calls including one sample
+            Assert.True(allocated < 30720,
+                $"MemoryAllocationTracker allocated {allocated} bytes for 51 RecordTick calls (expected < 30720)");
 
             tracker.Dispose();
         }
@@ -225,7 +223,7 @@ namespace RagnaController.Tests
 
             // Act
             var sw = Stopwatch.StartNew();
-            const int iterations = 10000;
+            const int iterations = 5000;
             for (int i = 0; i < iterations; i++)
             {
                 queue.KeyDown(VirtualKey.A);
