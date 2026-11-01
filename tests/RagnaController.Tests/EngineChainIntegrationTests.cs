@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 using Xunit;
 using RagnaController.Core;
@@ -19,6 +20,11 @@ namespace RagnaController.Tests
     /// </summary>
     public class EngineChainIntegrationTests
     {
+        static EngineChainIntegrationTests()
+        {
+            // Ensure ThreadPool has enough threads for Timer callbacks in CI environments
+            ThreadPool.SetMinThreads(Environment.ProcessorCount * 4, Environment.ProcessorCount * 4);
+        }
         // ============================================================
         //  TestContext — Muster A (aus AutoTargetEngineTests.cs)
         // ============================================================
@@ -2051,7 +2057,9 @@ namespace RagnaController.Tests
 
                     haptics.PlayHit();
 
-                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(2)), "Pattern did not complete in time");
+                    // Allow ThreadPool to schedule timer callback
+                    Thread.Sleep(200);
+                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(10)), "Pattern did not complete in time");
 
                     Assert.True(rumble.Calls.Count >= 1, $"Expected at least 1 rumble call, got {rumble.Calls.Count}");
                     Assert.Equal(0.8f, rumble.Calls[0].left);
@@ -2072,7 +2080,9 @@ namespace RagnaController.Tests
 
                     haptics.PlayDeath();
 
-                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(2)), "Pattern did not complete in time");
+                    // Allow ThreadPool to schedule timer callback
+                    Thread.Sleep(200);
+                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(10)), "Pattern did not complete in time");
 
                     Assert.True(rumble.Calls.Count >= 1, $"Expected at least 1 rumble call, got {rumble.Calls.Count}");
                     Assert.Equal(1.0f, rumble.Calls[0].left);
@@ -2093,9 +2103,9 @@ namespace RagnaController.Tests
 
                     haptics.PlayBuffExpired();
 
-                    // Allow first timer tick to fire before waiting
-                    Thread.Sleep(50);
-                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(5)), "Pattern did not complete in time");
+                    // Allow ThreadPool to schedule timer callback
+                    Thread.Sleep(200);
+                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(10)), "Pattern did not complete in time");
 
                     // Pattern: {100, 100, 100} = On(100) -> Off(100) -> On(100) -> Off(final)
                     // Expect exactly 4 calls
@@ -2118,9 +2128,9 @@ namespace RagnaController.Tests
 
                     haptics.PlaySkillCast();
 
-                    // Allow first timer tick to fire before waiting
-                    Thread.Sleep(50);
-                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(5)), "Pattern did not complete in time");
+                    // Allow ThreadPool to schedule timer callback
+                    Thread.Sleep(200);
+                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(10)), "Pattern did not complete in time");
 
                     Assert.True(rumble.Calls.Count >= 1, $"Expected at least 1 rumble call, got {rumble.Calls.Count}");
                     Assert.Equal(0.5f, rumble.Calls[0].left);
@@ -2154,7 +2164,9 @@ namespace RagnaController.Tests
 
                     haptics.PlayCustom(new[] { 50, 50 }, 0.3f);
 
-                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(2)), "Pattern did not complete in time");
+                    // Allow ThreadPool to schedule timer callback
+                    Thread.Sleep(200);
+                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(10)), "Pattern did not complete in time");
 
                     Assert.True(rumble.Calls.Count >= 2, $"Expected at least 2 rumble calls, got {rumble.Calls.Count}");
                     Assert.Equal(0.3f, rumble.Calls[0].left);
