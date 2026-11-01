@@ -2046,8 +2046,12 @@ namespace RagnaController.Tests
                     using var rumble = new MockRumbleProvider();
                     using var haptics = new HapticFeedbackService(rumble);
 
+                    var patternDone = new ManualResetEventSlim(false);
+                    haptics.PatternCompleted += (s, e) => patternDone.Set();
+
                     haptics.PlayHit();
-                    Thread.Sleep(300); // Pattern: 100ms on, dann aus — mehr Zeit für langsame Runner
+
+                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(2)), "Pattern did not complete in time");
 
                     Assert.True(rumble.Calls.Count >= 1, $"Expected at least 1 rumble call, got {rumble.Calls.Count}");
                     Assert.Equal(0.8f, rumble.Calls[0].left);
@@ -2063,8 +2067,12 @@ namespace RagnaController.Tests
                     using var rumble = new MockRumbleProvider();
                     using var haptics = new HapticFeedbackService(rumble);
 
+                    var patternDone = new ManualResetEventSlim(false);
+                    haptics.PatternCompleted += (s, e) => patternDone.Set();
+
                     haptics.PlayDeath();
-                    Thread.Sleep(800); // Pattern: 500ms an + aus — mehr Zeit für langsame Runner
+
+                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(2)), "Pattern did not complete in time");
 
                     Assert.True(rumble.Calls.Count >= 1, $"Expected at least 1 rumble call, got {rumble.Calls.Count}");
                     Assert.Equal(1.0f, rumble.Calls[0].left);
@@ -2104,8 +2112,12 @@ namespace RagnaController.Tests
                     using var rumble = new MockRumbleProvider();
                     using var haptics = new HapticFeedbackService(rumble);
 
+                    var patternDone = new ManualResetEventSlim(false);
+                    haptics.PatternCompleted += (s, e) => patternDone.Set();
+
                     haptics.PlaySkillCast();
-                    Thread.Sleep(500); // Pattern: 250ms an + aus — mehr Zeit für langsame Runner
+
+                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(2)), "Pattern did not complete in time");
 
                     Assert.True(rumble.Calls.Count >= 1, $"Expected at least 1 rumble call, got {rumble.Calls.Count}");
                     Assert.Equal(0.5f, rumble.Calls[0].left);
@@ -2134,8 +2146,12 @@ namespace RagnaController.Tests
                     using var rumble = new MockRumbleProvider();
                     using var haptics = new HapticFeedbackService(rumble);
 
+                    var patternDone = new ManualResetEventSlim(false);
+                    haptics.PatternCompleted += (s, e) => patternDone.Set();
+
                     haptics.PlayCustom(new[] { 50, 50 }, 0.3f);
-                    Thread.Sleep(400); // Pattern: 4×50ms — mehr Zeit für langsame Runner
+
+                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(2)), "Pattern did not complete in time");
 
                     Assert.True(rumble.Calls.Count >= 2, $"Expected at least 2 rumble calls, got {rumble.Calls.Count}");
                     Assert.Equal(0.3f, rumble.Calls[0].left);
