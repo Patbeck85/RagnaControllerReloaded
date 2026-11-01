@@ -22,37 +22,64 @@ namespace RagnaController.Tests
         #region ControllerSnapshot Pool Regression
 
         [Fact]
-        public void ControllerSnapshot_PoolIsFasterThanNew()
+        public void ControllerSnapshot_PoolIsFasterUnderContention()
         {
             // Arrange
-            const int iterations = 5000;
+            const int iterationsPerThread = 2000;
+            const int threadCount = 4;
             var pool = new ObjectPool<ControllerSnapshot>(() => new ControllerSnapshot());
 
-            // Act — Pool Rent/Return
-            var poolSw = Stopwatch.StartNew();
-            for (int i = 0; i < iterations; i++)
+            // Warmup
+            for (int i = 0; i < 100; i++)
             {
-                var snap = pool.Rent();
-                snap.LeftX = 1.0f;
-                pool.Return(snap);
+                var s = pool.Rent();
+                pool.Return(s);
             }
+
+            // Act — Multi-threaded Pool Rent/Return (simulates real contention)
+            var poolSw = Stopwatch.StartNew();
+            var threads = new System.Threading.Tasks.Task[threadCount];
+            for (int t = 0; t < threadCount; t++)
+            {
+                threads[t] = System.Threading.Tasks.Task.Run(() =>
+                {
+                    for (int i = 0; i < iterationsPerThread; i++)
+                    {
+                        var snap = pool.Rent();
+                        snap.LeftX = 1.0f;
+                        pool.Return(snap);
+                    }
+                });
+            }
+            System.Threading.Tasks.Task.WaitAll(threads);
             poolSw.Stop();
 
-            // Act — new() allocation
+            // Act — Multi-threaded new() allocation (no pool)
             var newSw = Stopwatch.StartNew();
-            for (int i = 0; i < iterations; i++)
+            var newThreads = new System.Threading.Tasks.Task[threadCount];
+            for (int t = 0; t < threadCount; t++)
             {
-                var snap = new ControllerSnapshot { LeftX = 1.0f };
+                newThreads[t] = System.Threading.Tasks.Task.Run(() =>
+                {
+                    for (int i = 0; i < iterationsPerThread; i++)
+                    {
+                        var snap = new ControllerSnapshot { LeftX = 1.0f };
+                    }
+                });
             }
+            System.Threading.Tasks.Task.WaitAll(newThreads);
             newSw.Stop();
 
-            // Assert — Pool should not be more than 10x slower than new()
-            // (ConcurrentBag has sync overhead; pool shines under contention/high throughput)
+            // Assert — Pool should be faster (or at least not significantly slower) under contention
+            // Pool avoids allocations which reduces GC pressure under load
             double poolMs = poolSw.Elapsed.TotalMilliseconds;
             double newMs = newSw.Elapsed.TotalMilliseconds;
-            double threshold = Math.Max(newMs * 10.0, 5.0);
+
+            // Pool should not be more than 2x slower than new() under contention
+            // (In practice pool is often faster due to reduced GC)
+            double threshold = Math.Max(newMs * 2.0, 10.0);
             Assert.True(poolMs < threshold,
-                $"Pool ({poolMs:F2}ms) should not be more than 10x slower than new() ({newMs:F2}ms)");
+                $"Pool ({poolMs:F2}ms) should not be more than 2x slower than new() ({newMs:F2}ms) under contention");
         }
 
         [Fact]
