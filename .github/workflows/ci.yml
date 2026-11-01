@@ -22,13 +22,16 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore src/RagnaController/RagnaController.csproj
 
     - name: Build
-      run: dotnet build --configuration Release
+      run: dotnet build src/RagnaController/RagnaController.csproj --configuration Release --no-restore
 
     - name: Run Unit Tests
-      run: dotnet test --configuration Release --no-restore --no-build
+      run: dotnet test src/RagnaController/RagnaController.csproj --configuration Release --no-restore --no-build
+
+    - name: Publish Release
+      run: dotnet publish src/RagnaController/RagnaController.csproj --configuration Release -o bin/Release/net8.0/publish
 
     - name: Publish artifacts
       uses: actions/upload-artifact@v4
