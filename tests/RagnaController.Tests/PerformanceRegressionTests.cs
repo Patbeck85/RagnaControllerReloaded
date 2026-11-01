@@ -22,7 +22,7 @@ namespace RagnaController.Tests
         #region ControllerSnapshot Pool Regression
 
         [Fact]
-        public void ControllerSnapshot_PoolIsFasterUnderContention()
+        public async Task ControllerSnapshot_PoolIsFasterUnderContention()
         {
             // Arrange
             const int iterationsPerThread = 2000;
@@ -51,7 +51,7 @@ namespace RagnaController.Tests
                     }
                 });
             }
-            System.Threading.Tasks.Task.WaitAll(threads);
+            await System.Threading.Tasks.Task.WhenAll(threads);
             poolSw.Stop();
 
             // Act — Multi-threaded new() allocation (no pool)
@@ -67,7 +67,7 @@ namespace RagnaController.Tests
                     }
                 });
             }
-            System.Threading.Tasks.Task.WaitAll(newThreads);
+            await System.Threading.Tasks.Task.WhenAll(newThreads);
             newSw.Stop();
 
             // Assert — Pool should be faster (or at least not significantly slower) under contention
