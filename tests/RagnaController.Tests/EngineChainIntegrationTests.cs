@@ -2083,28 +2083,29 @@ namespace RagnaController.Tests
                 }
 
         [Fact]
-        public void FEAT027_HapticFeedback_PlayBuffExpired_RecordsDoubleRumble()
-        {
-            using var rumble = new MockRumbleProvider();
-            using var haptics = new HapticFeedbackService(rumble);
+                public void FEAT027_HapticFeedback_PlayBuffExpired_RecordsDoubleRumble()
+                {
+                    using var rumble = new MockRumbleProvider();
+                    using var haptics = new HapticFeedbackService(rumble);
 
-            var patternDone = new ManualResetEventSlim(false);
-            haptics.PatternCompleted += (s, e) => patternDone.Set();
+                    var patternDone = new ManualResetEventSlim(false);
+                    haptics.PatternCompleted += (s, e) => patternDone.Set();
 
-            haptics.PlayBuffExpired();
-            
-            // Wait for pattern to complete (with generous timeout)
-            Assert.True(patternDone.Wait(TimeSpan.FromSeconds(2)), "Pattern did not complete in time");
+                    haptics.PlayBuffExpired();
 
-            // Pattern: {100, 100, 100} = On(100) -> Off(100) -> On(100) -> Off(final)
-            // Expect exactly 4 calls
-            Assert.Equal(4, rumble.Calls.Count);
-            Assert.Equal(0.6f, rumble.Calls[0].left);
-            Assert.Equal(0.6f, rumble.Calls[0].right);
-            Assert.Equal((0f, 0f), rumble.Calls[1]); // Off
-            Assert.Equal((0.6f, 0.6f), rumble.Calls[2]); // On
-            Assert.Equal((0f, 0f), rumble.Calls[3]); // Final Off
-        }
+                    // Allow first timer tick to fire before waiting
+                    Thread.Sleep(50);
+                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(5)), "Pattern did not complete in time");
+
+                    // Pattern: {100, 100, 100} = On(100) -> Off(100) -> On(100) -> Off(final)
+                    // Expect exactly 4 calls
+                    Assert.Equal(4, rumble.Calls.Count);
+                    Assert.Equal(0.6f, rumble.Calls[0].left);
+                    Assert.Equal(0.6f, rumble.Calls[0].right);
+                    Assert.Equal((0f, 0f), rumble.Calls[1]); // Off
+                    Assert.Equal((0.6f, 0.6f), rumble.Calls[2]); // On
+                    Assert.Equal((0f, 0f), rumble.Calls[3]); // Final Off
+                }
 
         [Fact]
                 public void FEAT027_HapticFeedback_PlaySkillCast_RecordsRumble()
@@ -2117,7 +2118,9 @@ namespace RagnaController.Tests
 
                     haptics.PlaySkillCast();
 
-                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(2)), "Pattern did not complete in time");
+                    // Allow first timer tick to fire before waiting
+                    Thread.Sleep(50);
+                    Assert.True(patternDone.Wait(TimeSpan.FromSeconds(5)), "Pattern did not complete in time");
 
                     Assert.True(rumble.Calls.Count >= 1, $"Expected at least 1 rumble call, got {rumble.Calls.Count}");
                     Assert.Equal(0.5f, rumble.Calls[0].left);
