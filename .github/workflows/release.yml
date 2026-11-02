@@ -22,8 +22,7 @@ jobs:
       - name: Run Tests (must pass before release)
         run: |
           dotnet restore tests/RagnaController.Tests/RagnaController.Tests.csproj
-          dotnet test tests/RagnaController.Tests/RagnaController.Tests.csproj
-            --configuration Release --nologo
+          dotnet test tests/RagnaController.Tests/RagnaController.Tests.csproj --configuration Release --nologo
 
       - name: Publish (framework-dependent)
         run: |
