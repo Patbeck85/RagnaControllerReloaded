@@ -8,7 +8,7 @@
 
 This release represents a complete autonomous development cycle executed per **SOUL.md v2.0 Enterprise** principles. All phases (1-11) were completed without manual intervention, with systematic file-by-file review and optimization of all ~323 `.cs` files.
 
-### Key Achievements (v2.6.1):
+### Key Achievements (v2.8.1):
 - **Complete Localization** — All language files translated to 48 languages with 1,289 keys each
 - **Flaky Test Fixed** — LogLevel_FiltertTiefereLevel deterministic (AdvancedLogger.Dispose waits for channel drain)
 - **Documentation Synchronized** — All 9 subfolder READMEs synced with actual file tree
