@@ -1,6 +1,6 @@
-# RagnaController v2.8.0 — Autonomous Multi-Agent Development
+# RagnaController v2.8.1 — Autonomous Multi-Agent Development
 
-**Version:** 2.8.0 | **Release:** 2026-11-02 | **Build:** 0 errors, 0 warnings | **Tests:** 1139/1139 passing
+**Version:** 2.8.1 | **Release:** 2026-11-02 | **Build:** 0 errors, 0 warnings | **Tests:** 1139/1139 passing
 
 ---
 
@@ -573,4 +573,4 @@ Automated checks for all 7 golden rules — all satisfied in v2.2.1.
 
 ---
 
-*Last updated: 2026-11-02 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 1139/1139 PASS | SOUL.md: All 7 golden rules satisfied | Version: 2.8.0*
+*Last updated: 2026-11-02 | Autonomous development cycle complete | Git: origin/main | Build: 0 errors, 0 warnings | Tests: 1139/1139 PASS | SOUL.md: All 7 golden rules satisfied | Version: 2.8.1*
